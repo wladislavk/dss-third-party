@@ -1,6 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import DeviceSelectorComponent from '../modal/DeviceSelector.vue'
+import AddTaskComponent from './AddTask.vue'
+import DeviceSelectorComponent from './device-selector/DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -18,10 +19,11 @@ export default {
   },
   computed: {
     currentView () {
-      const component = this.$store.state.main[symbols.state.modal]
-      if (this.hasComponent(component.name)) {
-        return component.name
+      const componentName = this.$store.state.main[symbols.state.modal].name
+      if (this.hasComponent(componentName)) {
+        return componentName
       }
+
       return ''
     },
     currentProperties () {
@@ -29,10 +31,7 @@ export default {
       return component.params
     },
     popupEnabled () {
-      if (this.currentView) {
-        return true
-      }
-      return false
+      return !!this.currentView
     }
   },
   created () {
@@ -43,6 +42,7 @@ export default {
     this.$off('keyup')
   },
   components: {
+    addTask: AddTaskComponent,
     deviceSelector: DeviceSelectorComponent,
     viewContact: ViewContactComponent,
     patientAccessCode: PatientAccessCodeComponent,
@@ -54,16 +54,10 @@ export default {
   },
   methods: {
     centering () {
-      const windowWidth = document.documentElement.clientWidth
-      const windowHeight = document.documentElement.clientHeight
-      let popupHeight = 0
-      let popupWidth = 0
-      const popupContact = document.getElementById('popupContact')
-      if (popupContact) {
-        popupHeight = popupContact.height()
-        popupWidth = popupContact.width()
-      }
-
+      const windowWidth = window.innerWidth
+      const windowHeight = window.innerHeight
+      const popupHeight = 400
+      const popupWidth = 750
       const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset)
       let leftPos = windowWidth / 2 - popupWidth / 2
       if (leftPos < 0) {
@@ -76,14 +70,13 @@ export default {
       if (!this.popupEnabled) {
         return
       }
-      let answer = true
       if (this.$store.state.main[symbols.state.popupEdit]) {
         const confirmText = 'Are you sure you want to exit without saving?'
-        answer = Alerter.isConfirmed(confirmText)
+        if (!Alerter.isConfirmed(confirmText)) {
+          return
+        }
       }
-      if (answer) {
-        this.$store.commit(symbols.state.modal, '')
-      }
+      this.$store.commit(symbols.mutations.resetModal)
     },
     onKeyUp (e) {
       if (!this.popupEnabled) {
@@ -94,9 +87,9 @@ export default {
         this.disable()
       }
     },
-    hasComponent (component) {
+    hasComponent (componentName) {
       const existedComponents = Object.keys(this.$options.components)
-      return (existedComponents.indexOf(component) > -1)
+      return (existedComponents.indexOf(componentName) > -1)
     }
   }
 }

@@ -1,15 +1,17 @@
 import Vue from 'vue'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import store from '../../../../src/store'
 import DashboardTaskMenuComponent from '../../../../src/components/manage/dashboard/DashboardTaskMenu.vue'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('DashboardTaskMenu component', () => {
   beforeEach(function () {
     moxios.install()
-
+    Vue.directive('legacy-href', LegacyHref)
     Vue.component('task-data', {
       template: '<div class="task_data"></div>'
     })
@@ -47,7 +49,7 @@ describe('DashboardTaskMenu component', () => {
       const children = vm.$el.querySelectorAll('div.task_data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')
-      expect(viewAllButton.getAttribute('href')).toBe('http://legacy/manage_tasks.php')
+      expect(viewAllButton.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/manage_tasks.php')
       done()
     })
   })

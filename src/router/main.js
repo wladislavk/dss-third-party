@@ -12,6 +12,7 @@ import PrintReferredByContact from '../components/manage/referredby/print/printR
 import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
+import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
 
 export default [
   {
@@ -92,6 +93,12 @@ export default [
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        path: 'sw-tutorials',
+        name: 'sw-tutorials',
+        component: SoftwareTutorialsComponent,
+        meta: STANDARD_META
       }
     ]
   }

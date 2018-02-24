@@ -1,6 +1,6 @@
 import symbols from '../../../symbols'
 import PatientWarningsComponent from './PatientWarnings.vue'
-import { LEGACY_URL } from '../../../constants/main'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -11,7 +11,7 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
     }
   },

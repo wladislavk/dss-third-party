@@ -1,5 +1,5 @@
 import populators from '../../../services/populators'
-import { LEGACY_URL } from '../../../constants/main'
+import LegacyModifier from '../../../services/LegacyModifier'
 
 export default {
   // name must be set explicitly to allow self-references
@@ -16,7 +16,6 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       showChildren: false,
       elementName: ''
     }
@@ -27,7 +26,7 @@ export default {
         if (this.menuItem.hasOwnProperty('legacy') && !this.menuItem.legacy) {
           return this.menuItem.link
         }
-        return this.legacyUrl + this.menuItem.link
+        return LegacyModifier.modifyLegacyLink(this.menuItem.link)
       }
       return '#'
     },
@@ -45,10 +44,10 @@ export default {
     },
     linkClass () {
       if (this.menuItemChildren.length && this.firstLevel) {
-        return 'main'
+        return 'mainfoldericon'
       }
       if ((this.menuItemChildren.length || this.menuItem.childrenFrom) && !this.firstLevel) {
-        return 'sub'
+        return 'subfoldericon'
       }
       return ''
     }

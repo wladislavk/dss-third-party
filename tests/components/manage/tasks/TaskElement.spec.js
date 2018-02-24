@@ -1,15 +1,19 @@
 import Vue from 'vue'
 import VueMoment from 'vue-moment'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import Alerter from '../../../../src/services/Alerter'
 
 describe('TaskElement component', () => {
   beforeEach(function () {
     moxios.install()
+    Vue.directive('legacy-href', LegacyHref)
     Vue.use(VueMoment)
     const Component = Vue.extend(TaskElementComponent)
     this.mount = function (propsData) {
@@ -83,7 +87,7 @@ describe('TaskElement component', () => {
     const nameSpan = vm.$el.querySelector('span.task_name')
     expect(nameSpan.textContent).toBe('(John Doe)')
     const nameLink = nameSpan.querySelector('a.task_name_link')
-    expect(nameLink.getAttribute('href')).toBe('http://legacy/add_patient.php?ed=2&addtopat=1&pid=2')
+    expect(nameLink.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php?ed=2&addtopat=1&pid=2')
   })
 
   it('should display HTML for patient with first name and last name', function () {
@@ -129,6 +133,12 @@ describe('TaskElement component', () => {
         data: {}
       }
     })
+    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
+      status: 200,
+      responseText: {
+        data: []
+      }
+    })
 
     const propsData = {
       task: this.task,
@@ -150,14 +160,14 @@ describe('TaskElement component', () => {
     input.click()
     moxios.wait(() => {
       expect(input.checked).toBe(true)
-      const request = moxios.requests.mostRecent()
+      expect(moxios.requests.count()).toBe(2)
+      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.update + '/1'))
+      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
+      const firstRequest = moxios.requests.at(0)
       const expectedRequest = {
         status: 1
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedRequest)
-      const tasks = vm.$store.state.tasks[symbols.state.tasks]
-      expect(tasks.length).toBe(1)
-      expect(tasks[0].id).toBe(2)
+      expect(JSON.parse(firstRequest.config.data)).toEqual(expectedRequest)
       input.click()
       vm.$nextTick(() => {
         expect(input.checked).toBe(true)
@@ -166,129 +176,18 @@ describe('TaskElement component', () => {
     })
   })
 
-  it('should update task to active for patient', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
-    })
-
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
-    vm.$store.commit(symbols.mutations.setTasksForPatient, [
-      {
-        id: 1
-      },
-      {
-        id: 2
-      }
-    ])
-
-    const input = vm.$el.querySelector('input')
-    expect(input.checked).toBe(false)
-    input.click()
-    moxios.wait(() => {
-      expect(input.checked).toBe(true)
-      const request = moxios.requests.mostRecent()
-      const expectedRequest = {
-        status: 1
-      }
-      expect(JSON.parse(request.config.data)).toEqual(expectedRequest)
-      const tasks = vm.$store.state.tasks[symbols.state.tasksForPatient]
-      expect(tasks.length).toBe(1)
-      expect(tasks[0].id).toBe(2)
-      done()
-    })
-  })
-
-  it('should update task unsuccessfully', function (done) {
-    let consoleMessage = ''
-    spyOn(console, 'error').and.callFake((message) => {
-      consoleMessage = message
-    })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.update + '/1'), {
-      status: 400,
-      responseText: {
-        data: {}
-      }
-    })
-
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
-    vm.$store.commit(symbols.mutations.setTasks, [
-      {
-        id: 1
-      },
-      {
-        id: 2
-      }
-    ])
-
-    const input = vm.$el.querySelector('input')
-    expect(input.checked).toBe(false)
-    input.click()
-    moxios.wait(() => {
-      const tasks = vm.$store.state.tasks[symbols.state.tasks]
-      expect(tasks.length).toBe(2)
-      expect(consoleMessage).toBe('updateTaskToActive [status]: 400')
-      expect(input.checked).toBe(false)
-      done()
-    })
-  })
-
   it('should delete task', function (done) {
-    spyOn(window, 'confirm').and.returnValue(true)
+    spyOn(Alerter, 'isConfirmed').and.returnValue(true)
     moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/1'), {
       status: 200,
       responseText: {
         data: {}
       }
     })
-
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
-    vm.$store.commit(symbols.mutations.setTasks, [
-      {
-        id: 1
-      },
-      {
-        id: 2
-      }
-    ])
-
-    const deleteLink = vm.$el.querySelector('a.task_delete')
-    deleteLink.click()
-    moxios.wait(() => {
-      const tasks = vm.$store.state.tasks[symbols.state.tasks]
-      expect(tasks.length).toBe(1)
-      expect(tasks[0].id).toBe(2)
-      done()
-    })
-  })
-
-  it('should delete task unsuccessfully', function (done) {
-    spyOn(window, 'confirm').and.returnValue(true)
-    let consoleMessage = ''
-    spyOn(console, 'error').and.callFake((message) => {
-      consoleMessage = message
-    })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/1'), {
-      status: 400,
+    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
+      status: 200,
       responseText: {
-        data: {}
+        data: []
       }
     })
 
@@ -298,21 +197,13 @@ describe('TaskElement component', () => {
       isPatient: false
     }
     const vm = this.mount(propsData)
-    vm.$store.commit(symbols.mutations.setTasks, [
-      {
-        id: 1
-      },
-      {
-        id: 2
-      }
-    ])
 
     const deleteLink = vm.$el.querySelector('a.task_delete')
     deleteLink.click()
     moxios.wait(() => {
-      expect(consoleMessage).toBe('deleteTask [status]: 400')
-      const tasks = vm.$store.state.tasks[symbols.state.tasks]
-      expect(tasks.length).toBe(2)
+      expect(moxios.requests.count()).toBe(2)
+      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.destroy + '/1'))
+      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
       done()
     })
   })

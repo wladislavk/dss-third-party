@@ -1,4 +1,3 @@
-import { LEGACY_URL } from '../../../constants/main'
 import symbols from '../../../symbols'
 
 export default {
@@ -30,11 +29,6 @@ export default {
     showAll: {
       type: Boolean,
       default: true
-    }
-  },
-  data () {
-    return {
-      legacyUrl: LEGACY_URL
     }
   },
   computed: {

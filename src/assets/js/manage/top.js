@@ -1,32 +1,54 @@
 import $ from 'jquery'
 
-const hasVB = false
+export function debounceCall (call, options) {
+  let timeoutId = 0
 
-// Patient Search Suggestion Script
-const localPatData = []
+  const newOptions = $.extend({
+    timeout: 600,
+    context: null,
+    onTick: null
+  }, options)
 
-function display () {
+  return function () {
+    const argumentArray = Array.prototype.slice.call(arguments, 0)
+
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = 0
+    }
+
+    if (newOptions.onTick) {
+      newOptions.onTick.apply(newOptions.context, argumentArray)
+    }
+
+    timeoutId = setTimeout(function () {
+      call.apply(newOptions.context, argumentArray)
+    }, newOptions.timeout)
+  }
+}
+
+export function display () {
   $('#future_dental_det').show()
 }
 
-function hide () {
+export function hide () {
   $('#future_dental_det').hide()
 }
 
-function displaysmoke () {
+export function displaysmoke () {
   $('#smoke').show()
 }
 
-function hidesmoke () {
+export function hidesmoke () {
   $('#smoke').hide()
 }
 
-function LinkUp () {
+export function LinkUp () {
   const link = $('[name=DDlinks]').val()
   window.location.href = link
 }
 
-function toggleTB (what) {
+export function toggleTB (what) {
   if ($(what).is(':checked')) {
     $('form[name=patientfrm] [name=premeddet]').prop('disabled', true)
   } else {
@@ -34,12 +56,12 @@ function toggleTB (what) {
   }
 }
 
-function jsConfirm (str) {
-  const results = (hasVB) ? vbConfirm(str) : confirm(str)
+export function jsConfirm (str) {
+  const results = confirm(str)
   $('#results').html(results)
 }
 
-function disableenable () {
+export function disableenable () {
   const bedTimePartner = $('form[name=q_page1frm] [name=bed_time_partner]')
   if (bedTimePartner.val() === 'No') {
     $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', true)
@@ -62,11 +84,11 @@ function disableenable () {
   }
 }
 
-function showMe (id) {
+export function showMe (id) {
   $('#' + id).toggle()
 }
 
-function showMe2 (id) {
+export function showMe2 (id) {
   $('#' + id).toggle()
 }
 
@@ -85,7 +107,7 @@ function createCookie (name, value, days) {
   }
 }
 
-function readCookie (name) {
+export function readCookie (name) {
   const nameEQ = name + '='
   const ca = document.cookie.explode(';')
 
@@ -103,11 +125,11 @@ function readCookie (name) {
   return null
 }
 
-function eraseCookie (name) {
+export function eraseCookie (name) {
   createCookie(name, '', -1)
 }
 
-function check () {
+export function check () {
   if (!(document.forms || []).length || !(document.forms[0].elements || []).length) {
     return
   }
@@ -142,14 +164,14 @@ function check () {
   }
 }
 
-function focusIt (dtControl) {
+export function focusIt (dtControl) {
   const mytext = $('#' + dtControl)
   setTimeout(function () {
     mytext.focus()
   }, 0)
 }
 
-function validateDate (dtControl) {
+export function validateDate (dtControl) {
   const input = $('#' + dtControl)
   const value = input.val() || ''
   const dateFormat = input.attr('data-date-format') || 'm/d/Y'
@@ -181,13 +203,13 @@ function validateDate (dtControl) {
   return true
 }
 
-function validate () {
+export function validate () {
   if (document.getElementById('service_date_ledger').value === '') {
     alert('service date must be filled!')
   }
 }
 
-function getKey (keyStroke) {
+export function getKey (keyStroke) {
   if (!window.event || !window.event.srcElement) {
     return
   }
@@ -205,21 +227,19 @@ function getKey (keyStroke) {
   }
 }
 
-function popitup (url) {
+export function popitup (url) {
   const newwindow = window.open(url, 'name', 'height=400,width=400')
-
   if (window.focus) {
     newwindow.focus()
   }
-
   return false
 }
 
-function areyousure (tturl) {
+export function areyousure (tturl) {
   window.location = tturl
 }
 
-function hideallblocksForFlowsheet (step) {
+export function hideallblocksForFlowsheet (step) {
   if (step.indexOf('2') !== -1) {
     $('#consultrow').hide()
   }
@@ -265,7 +285,7 @@ function hideallblocksForFlowsheet (step) {
   }
 }
 
-function hideallblocks () {
+export function hideallblocks () {
   $('#sleepstudyrow, #impressionrow, #delayingtreatmentrow').hide()
   $('#refusedtreatmentrow, #devicedeliveryrow, #checkuprow').hide()
   $('#patientnoncomprow, #starttreatmentrow, #annualrecallrow').hide()

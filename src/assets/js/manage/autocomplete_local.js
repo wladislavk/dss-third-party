@@ -1,14 +1,10 @@
 import $ from 'jquery'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
-import { LEGACY_URL } from '../../../constants/main'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
-let fff = 0
-let selectionref = 1
-let selectedrefUrl = ''
-let searchrefVal = '' // global variable to hold the last valid search string
 let localData = ''
 
-function setupAutocompleteLocal (inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
+export function setupAutocompleteLocal (inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
   $.getJSON(file).done(function (data) {
     localData = []
     let cpl = data
@@ -152,7 +148,7 @@ function templateListRefLocal (li, val) {
   return li
 }
 
-function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enrollment, checkEnrollment, npi, officeType, enrollmentMandatoryFields) {
+export function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enrollment, checkEnrollment, npi, officeType, enrollmentMandatoryFields) {
   if (enrollmentMandatoryFields !== '') {
     const emf = enrollmentMandatoryFields.split(',')
     $('.formControl').removeClass('required')
@@ -175,11 +171,12 @@ function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enr
           // Allow to be selected
         } else {
           alert(r.message)
+          const legacyUrl = ProcessWrapper.getLegacyRoot()
           if (officeType === 1) {
-            LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollment.php')
+            LocationWrapper.goToPage(legacyUrl + 'manage_enrollment.php')
             return
           }
-          LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollments.php?ed=' + r.userid)
+          LocationWrapper.goToPage(legacyUrl + 'manage_enrollments.php?ed=' + r.userid)
         }
       },
       failure: function () {
@@ -203,7 +200,7 @@ $('.autocomplete_search').click(function () {
   }
 })
 
-function updatevalLocal (t) {
+export function updatevalLocal (t) {
   if (t.value === 'Type referral name' || t.value === 'Type contact name' || t.value === 'Type insurance payer name') {
     t.value = ''
   }

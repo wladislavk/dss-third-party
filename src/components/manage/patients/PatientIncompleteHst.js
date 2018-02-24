@@ -1,4 +1,5 @@
-import { DSS_CONSTANTS, LEGACY_URL, PREAUTH_STATUS_LABELS } from '../../../constants/main'
+import { DSS_CONSTANTS, PREAUTH_STATUS_LABELS } from '../../../constants/main'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -33,7 +34,7 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       scheduledHst: DSS_CONSTANTS.DSS_HST_SCHEDULED,
       rejectedHst: DSS_CONSTANTS.DSS_HST_REJECTED,
       preauthLabels: PREAUTH_STATUS_LABELS

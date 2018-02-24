@@ -4,7 +4,7 @@ let popupStatus = 0
 let popupEdit = false
 let close = false
 
-function loadPopup (fa) {
+export function loadPopup (fa) {
   centerPopup()
   popupEdit = false
   $('#aj_pop').attr('src', fa).load(function () {
@@ -24,7 +24,7 @@ function loadPopup (fa) {
   }
 }
 
-function loadPopupWithClose (fa, c) {
+export function loadPopupWithClose (fa, c) {
   close = c
   centerPopup()
   popupEdit = false
@@ -44,7 +44,7 @@ function loadPopupWithClose (fa, c) {
   }
 }
 
-function loadPopupRefer (fa) {
+export function loadPopupRefer (fa) {
   centerPopupRef()
 
   document.getElementById('aj_ref').src = fa
@@ -60,7 +60,7 @@ function loadPopupRefer (fa) {
   }
 }
 
-function loadPopupClean (fa) {
+export function loadPopupClean (fa) {
   centerPopupClean()
 
   document.getElementById('aj_clean').src = fa
@@ -76,7 +76,7 @@ function loadPopupClean (fa) {
   }
 }
 
-function loadPopup1 (fa) {
+export function loadPopup1 (fa) {
   centerPopup1()
 
   document.getElementById('aj_pop').src = fa
@@ -102,7 +102,7 @@ function createCookie (name, value, days) {
   document.cookie = name + '=' + value + expires + '; path=/'
 }
 
-function readCookie (name) {
+export function readCookie (name) {
   const nameEQ = name + '='
   const ca = document.cookie.split(';')
   for (let i = 0; i < ca.length; i++) {
@@ -110,7 +110,9 @@ function readCookie (name) {
     while (c.charAt(0) === ' ') {
       c = c.substring(1, c.length)
     }
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length)
+    if (c.indexOf(nameEQ) === 0) {
+      return c.substring(nameEQ.length, c.length)
+    }
   }
   return null
 }
@@ -133,9 +135,9 @@ function disablePopup () {
     }
     if (close) {
       parent.window.location = close
-    } else {
-      parent.window.location.reload(true)
+      return
     }
+    parent.window.location.reload(true)
   }
 }
 
@@ -162,7 +164,7 @@ function disablePopupRef () {
   }
 }
 
-function disablePopupRefClean () {
+export function disablePopupRefClean () {
   if (popupStatus === 1) {
     $('#backgroundPopupRef').fadeOut('slow')
     $('#popupRefer').fadeOut('slow')
@@ -170,7 +172,7 @@ function disablePopupRefClean () {
   }
 }
 
-function disablePopup1 () {
+export function disablePopup1 () {
   if (popupStatus === 1) {
     $('#backgroundPopup').fadeOut('slow')
     $('#popupContact').fadeOut('slow')

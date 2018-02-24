@@ -42,7 +42,7 @@ export default {
     withImages: '/guide-devices/with-images'
   },
   guideSettingOptions: {
-    settingIds: 'guide-setting-options/settingIds'
+    settingIds: '/guide-setting-options/setting-ids'
   },
   homeSleepTests: {
     store: '/home-sleep-tests'
@@ -132,6 +132,8 @@ export default {
     nextWeek: '/tasks/next-week',
     overdue: '/tasks/overdue',
     overdueForPatient: '/tasks/overdue/pid',
+    show: '/tasks',
+    store: '/tasks',
     thisWeek: '/tasks/this-week',
     today: '/tasks/today',
     todayForPatient: '/tasks/today/pid',
@@ -139,11 +141,15 @@ export default {
     tomorrowForPatient: '/tasks/tomorrow/pid',
     update: '/tasks'
   },
+  tmjClinicalExams: {
+    updateFlowDevice: '/tmj-clinical-exams/update-flow-device'
+  },
   users: {
     check: '/users/check',
     checkLogout: '/users/check-logout',
     current: '/users/current',
     letterInfo: '/users/letter-info',
+    responsible: '/users/responsible',
     show: '/users'
   }
 }

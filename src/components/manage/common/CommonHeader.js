@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
 import PatientHeaderComponent from '../patients/PatientHeader.vue'
 import PatientSearchComponent from './PatientSearch.vue'
@@ -7,18 +6,16 @@ import TaskMenuComponent from '../tasks/TaskMenu.vue'
 import WelcomeTextComponent from './WelcomeText.vue'
 import RightTopMenuComponent from './RightTopMenu.vue'
 import LeftTopMenuComponent from './LeftTopMenu.vue'
+import http from '../../../services/http'
+import endpoints from '../../../endpoints'
+import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieverFactory'
 
 export default {
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       patientId: this.$store.state.patients[symbols.state.patientId],
-      showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
-    }
-  },
-  computed: {
-    companyLogo () {
-      return this.$store.state.main[symbols.state.companyLogo]
+      showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings],
+      companyLogo: ''
     }
   },
   components: {
@@ -30,18 +27,25 @@ export default {
     welcomeText: WelcomeTextComponent
   },
   created () {
-    // @todo: this is not likely to work in legacy, migrate after other modules are migrated
-    // this.$store.dispatch(symbols.actions.companyLogo)
+    http.token = this.$store.state.main[symbols.state.mainToken]
+    http.get(endpoints.companies.companyByUser).then((response) => {
+      const data = response.data.data
+      if (data.hasOwnProperty('logo') && data.logo) {
+        const factory = new FileRetrieverFactory()
+        this.companyLogo = factory.getFileRetriever().getMediaFile(data.logo, http.token)
+      }
+    })
   },
   methods: {
     goToAddPatient () {
-      LocationWrapper.goToPage(LEGACY_URL + 'add_patient.php')
+      LocationWrapper.goToLegacyPage('manage/add_patient.php')
     },
     addTaskPopup () {
       const props = {
+        id: 0,
         patientId: this.patientId
       }
-      this.$store.commit(symbols.mutations.modal, { name: 'add-task', params: props })
+      this.$store.commit(symbols.mutations.modal, { name: 'addTask', params: props })
     }
   }
 }

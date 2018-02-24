@@ -1,8 +1,5 @@
 import Alerter from '../../../services/Alerter'
-import endpoints from '../../../endpoints'
-import http from '../../../services/http'
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 
 export default {
   props: {
@@ -21,7 +18,6 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       isVisible: false
     }
   },
@@ -40,11 +36,8 @@ export default {
         return
       }
       const checkbox = event.target
-      this.updateTaskToActive().then(() => {
-        this.removeItemFromTaskList()
-        // component should be destroyed as a result of re-computing tasks on parent
-      }).catch((response) => {
-        console.error('updateTaskToActive [status]: ' + response.response.status)
+      this.$store.dispatch(symbols.actions.updateTaskStatus, this.task.id).then(() => {
+      }).catch(() => {
         // allow to try again; preventDefault() cannot be used because of async
         checkbox.checked = false
       })
@@ -54,24 +47,17 @@ export default {
       if (!Alerter.isConfirmed(confirmText)) {
         return
       }
-      http.delete(endpoints.tasks.destroy + '/' + this.task.id).then(() => {
-        this.removeItemFromTaskList()
-      }).catch((response) => {
-        console.error('deleteTask [status]: ' + response.response.status)
-      })
+      this.$store.dispatch(symbols.actions.deleteTask, this.task.id)
     },
-    updateTaskToActive () {
-      const data = {
-        status: 1
+    onClickTaskPopup (taskId) {
+      const modalData = {
+        name: 'addTask',
+        params: {
+          id: taskId,
+          patientId: 0
+        }
       }
-      return http.put(endpoints.tasks.update + '/' + this.task.id, data)
-    },
-    removeItemFromTaskList () {
-      if (this.isPatient) {
-        this.$store.commit(symbols.mutations.removeTaskForPatient, this.task)
-        return
-      }
-      this.$store.commit(symbols.mutations.removeTask, this.task)
+      this.$store.commit(symbols.mutations.modal, modalData)
     }
   }
 }

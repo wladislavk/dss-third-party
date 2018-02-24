@@ -2,12 +2,14 @@ import Vue from 'vue'
 import store from '../../../../src/store'
 import LeftMenuComponent from '../../../../src/components/manage/common/LeftTopMenu.vue'
 import symbols from '../../../../src/symbols'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 
 describe('LeftTopMenu component', () => {
   beforeEach(function () {
     store.state.main[symbols.state.userInfo].useCourse = 0
     store.state.main[symbols.state.docInfo].useCourseStaff = 0
 
+    Vue.directive('legacy-href', LegacyHref)
     const Component = Vue.extend(LeftMenuComponent)
     this.mount = function () {
       return new Component({

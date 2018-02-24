@@ -8,11 +8,14 @@ import store from './store'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
+import LegacyHref from './directives/LegacyHref'
 
 window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')
+const sliderUI = require('jquery-ui/slider')
 window.$.fn.extend = buttonUI
+window.$.fn.extend = sliderUI
 
 // centralized event hub
 window.eventHub = new Vue()
@@ -21,6 +24,7 @@ Vue.prototype.$http = axios
 
 Vue.use(VueMoment)
 Vue.use(VueVisible)
+Vue.directive('legacy-href', LegacyHref)
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,8 +1,5 @@
-const webpackConfig = require('../build/webpack.test.conf')
-delete webpackConfig.entry
-
-module.exports = function (config) {
-  config.set({
+module.exports = function (filename, webpackConfig) {
+  return {
     browsers: ['ChromeNoSandboxHeadless'],
     browserConsoleLogOptions: {
       level: 'log',
@@ -12,10 +9,11 @@ module.exports = function (config) {
     captureConsole: true,
     frameworks: ['jasmine'],
     // this is the entry file for all our tests.
-    files: ['index.js'],
+    files: [filename],
     // we will pass the entry file to webpack for bundling.
     preprocessors: {
-      './index.js': ['webpack']
+      './index-unit.js': ['webpack'],
+      './index-components.js': ['webpack']
     },
     // use the webpack config
     webpack: webpackConfig,
@@ -24,7 +22,6 @@ module.exports = function (config) {
       noInfo: true
     },
     singleRun: true,
-
     customLaunchers: {
       ChromeNoSandboxHeadless: {
         base: 'Chromium',
@@ -38,5 +35,5 @@ module.exports = function (config) {
         ]
       }
     }
-  })
+  }
 }

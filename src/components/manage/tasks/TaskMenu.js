@@ -1,11 +1,10 @@
-import { LEGACY_URL, TASK_TYPES } from '../../../constants/main'
+import { TASK_TYPES } from '../../../constants/main'
 import symbols from '../../../symbols'
 import TaskDataComponent from './TaskData.vue'
 
 export default {
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       showTaskList: false
     }
   },

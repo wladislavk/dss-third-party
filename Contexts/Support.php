@@ -3,7 +3,6 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use function PHPSTORM_META\type;
 use PHPUnit\Framework\Assert;
 
 class Support extends BaseContext
@@ -23,7 +22,7 @@ class Support extends BaseContext
      */
     public function clickOnSupportLink()
     {
-        $li = $this->findCss('li#header_support');
+        $li = $this->findCss('li.header_support');
         $link = $this->findCss('a', $li);
         $link->click();
     }

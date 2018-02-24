@@ -53,10 +53,6 @@ class CommonElements extends BaseContext
         while (!$input && $currentTry <= $tries) {
             $this->wait(self::SHORT_WAIT_TIME);
             $input = $this->findCss('input#patient_search');
-            if (!$input) {
-                var_dump($currentTry);
-                var_dump($this->page->getContent());
-            }
             $currentTry++;
         }
         Assert::assertNotNull($input);
@@ -115,5 +111,15 @@ class CommonElements extends BaseContext
         foreach ($expected as $key => $value) {
             Assert::assertEquals($value, $buttons[$key]->getText());
         }
+    }
+
+    /**
+     * @Then I see company logo next to welcome text
+     */
+    public function testCompanyLogo()
+    {
+        $taskMenu = $this->findCss('div#task_menu');
+        $logo = $this->findCss('img', $taskMenu->getParent());
+        Assert::assertNotNull($logo);
     }
 }

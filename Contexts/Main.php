@@ -212,6 +212,16 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I click on logo in top left corner
+     *
+     * @throws BehatException
+     */
+    public function clickLogo()
+    {
+        $this->clickLink('Dashboard');
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link
@@ -219,6 +229,7 @@ class Main extends BaseContext
      */
     public function testSeeLink($link)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('a', $link));
     }
 
@@ -377,5 +388,46 @@ class Main extends BaseContext
     {
         $spanHeader = $this->findCss('span.admin_head');
         Assert::assertEquals($header, trim($spanHeader->getText()));
+    }
+
+    /**
+     * @Then the modal window is :status
+     *
+     * @param string $status
+     */
+    public function testModalWindow($status)
+    {
+        $this->wait(self::MEDIUM_WAIT_TIME);
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame();
+        }
+        $modal = $this->findCss('div#popupContact');
+        if (SUT_HOST == 'vue') {
+            $modal = $this->findCss('div#modal');
+        }
+        Assert::assertNotNull($modal);
+        if ($status == 'open') {
+            Assert::assertTrue($modal->isVisible());
+            return;
+        }
+        Assert::assertFalse($modal->isVisible());
+    }
+
+    /**
+     * @Then I see main page with welcome text for user :user
+     *
+     * @param string $user
+     */
+    public function testSeeWelcomeText($user)
+    {
+        if (SUT_HOST != 'vue') {
+            $this->reloadStartPage();
+        }
+
+        $this->wait(self::MEDIUM_WAIT_TIME);
+
+        $welcomeDiv = $this->findCss('div.suckertreemenu');
+        Assert::assertNotNull($welcomeDiv);
+        Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());
     }
 }

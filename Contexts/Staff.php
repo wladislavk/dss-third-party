@@ -15,7 +15,6 @@ class Staff extends BaseContext
     public function testStaffList(TableNode $table)
     {
         $form = $this->findCss('form[name="sortfrm"]');
-        var_dump($form);
         $expectedRows = $table->getHash();
         foreach ($expectedRows as $rowNumber => $row) {
             $childNumber = $rowNumber + 2;

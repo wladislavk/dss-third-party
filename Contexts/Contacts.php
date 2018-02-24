@@ -13,6 +13,7 @@ class Contacts extends BaseContext
      * @When I select :option option for contact type
      *
      * @param string $option
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function selectContactType($option)
     {

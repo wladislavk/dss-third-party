@@ -18,9 +18,15 @@ class Dashboard extends BaseContext
      * @When I click on :menuPoint menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function clickMenu($menuPoint)
     {
+        // @todo: check for reasons of volatility
+        if (SUT_HOST === 'vue') {
+            $this->wait(self::MEDIUM_WAIT_TIME);
+        }
+
         $menu = $this->findCss('ul#homemenu');
         $nodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $nodeLink->click();
@@ -104,10 +110,11 @@ class Dashboard extends BaseContext
      * @Then I see :section dashboard section
      *
      * @param string $section
+     * @throws BehatException
      */
     public function testDashboardSection($section)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(self::MEDIUM_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('h3', $section));
     }
 
@@ -115,6 +122,7 @@ class Dashboard extends BaseContext
      * @Then navigation menu contains the following links:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationMenu(TableNode $table)
     {
@@ -132,6 +140,7 @@ class Dashboard extends BaseContext
      *
      * @param string $parent
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationSubmenu($parent, TableNode $table)
     {
@@ -158,6 +167,7 @@ class Dashboard extends BaseContext
      * @param string $parent
      * @param string $grandparent
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationSubSubmenu($parent, $grandparent, TableNode $table)
     {

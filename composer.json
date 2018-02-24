@@ -14,7 +14,9 @@
   "autoload": {
     "psr-4": {
       "Contexts\\": "Contexts/",
-      "Data\\": "Data/"
+      "Data\\": "Data/",
+      "Clients\\": "Clients/",
+      "Services\\": "Services/"
     }
   }
 }

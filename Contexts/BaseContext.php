@@ -8,6 +8,8 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
 
@@ -126,7 +128,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement|null
      */
-    protected function findCss($selector, NodeElement $parentElement = null)
+    public function findCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;
@@ -139,7 +141,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement[]
      */
-    protected function findAllCss($selector, NodeElement $parentElement = null)
+    public function findAllCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;

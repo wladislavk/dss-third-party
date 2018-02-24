@@ -46,10 +46,12 @@ services:
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
+      DUAL_APP: '"${DUAL_APP:-0}"'
     volumes:
       - "${ROOT_PATH:-..}/ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
       - "${ROOT_PATH:-..}/ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
       - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      - "${ROOT_PATH:-..}/ds3-private04-Docker/images:/opt/rh/httpd24/root/var/www/shared/q_file"
     labels:
       - "traefik.port=80"
       - "traefik.backend=loader"
@@ -77,6 +79,11 @@ services:
     environment:
       NODE_ENV: development
       # NODE_ENV: production
+      API_ROOT: '"https://api.docker.localhost/"'
+      API_PATH: '"https://api.docker.localhost/api/v1/"'
+      LEGACY_ROOT: '"https://loader.docker.localhost/"'
+      FILE_STORAGE: '"${FILE_STORAGE:-legacy}"'
+      BUCKET_URL: '"${BUCKET_URL}"'
       PORT: 80
     volumes:
       - "${ROOT_PATH:-..}/ds3-private06-Vue:/opt/app"
@@ -133,7 +140,20 @@ services:
   selenium:
     image: "selenium/standalone-chrome:2.53.1"
     # shm_size: 1g
+    environment:
+      TZ: 'US/Eastern'
     volumes:
       - "/dev/shm:/dev/shm"
     ports:
       - "${SELENIUM_PORT:-4444}:4444"
+
+  static:
+    image: "httpd:2.4"
+    ports:
+      - "${STATIC_PORT:-8084}:80"
+    volumes:
+      - "./images:/usr/local/apache2/htdocs"
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=static"
+      - "traefik.frontend.rule=HostRegexp:{host:static.docker.localhost}"

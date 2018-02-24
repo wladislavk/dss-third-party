@@ -6,7 +6,7 @@ manage/q_file
 manage/q_file/*
 manage/letterpdfs/*
 manage/admin/letterhead/*
-manage/edx_scripts
-manage/edx_scripts/*
+manage/edx_scripts/edxProductionToken.txt
 .idea
 .idea/*
+node_modules/

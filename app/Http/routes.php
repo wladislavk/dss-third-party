@@ -133,13 +133,13 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('gag-reflexes', 'GagReflexesController', ['except' => ['create', 'edit']]);
 
-    Route::post('guide-devices/with-images', 'GuideDevicesController@getWithImages');
+    Route::get('guide-devices/with-images', 'GuideDevicesController@getWithImages');
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);
 
     Route::post('guide-settings/sort', 'GuideSettingsController@getAllOrderBy');
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
 
-    Route::post('guide-setting-options/settingIds', 'GuideSettingOptionsController@getOptionsForSettingIds');
+    Route::get('guide-setting-options/setting-ids', 'GuideSettingOptionsController@getOptionsForSettingIds');
     Route::resource('guide-setting-options', 'GuideSettingOptionsController', ['except' => ['create', 'edit']]);
 
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);
@@ -201,7 +201,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
 
-    Route::post('logout', 'LoginsController@logout');
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
 
     Route::resource('login-details', 'LoginDetailsController', ['except' => ['create', 'edit']]);
@@ -322,6 +321,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('thortons', 'ThortonsController', ['except' => ['create', 'edit']]);
 
+    Route::put('tmj-clinical-exams/update-flow-device/{deviceId}', 'TmjClinicalExamsController@updateFlowDevice');
     Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);
@@ -338,6 +338,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('users/check', 'UsersController@check');
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
+    Route::get('users/responsible', 'UsersController@getResponsible');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
 
     Route::resource('user-companies', 'UserCompaniesController', ['except' => ['create', 'edit']]);

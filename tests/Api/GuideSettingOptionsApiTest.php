@@ -34,14 +34,13 @@ class GuideSettingOptionsApiTest extends ApiTestCase
 
     public function testGetOptionsForSettingIds()
     {
-        $this->post(self::ROUTE_PREFIX . '/guide-setting-options/settingIds');
+        $this->get(self::ROUTE_PREFIX . '/guide-setting-options/setting-ids');
         $this->assertResponseOk();
         $this->assertEquals(10, count($this->getResponseData()));
         $expectedFirst = [
             'id' => 13,
-            'labels' => 'Not Important,Neutral,Very Important',
+            'labels' => ['Not Important', 'Neutral', 'Very Important'],
             'name' => 'Comfort',
-            'setting_type' => 0,
             'number' => 3,
         ];
         $this->assertEquals($expectedFirst, $this->getResponseData()[0]);

@@ -16,6 +16,9 @@
         <testsuite name="api">
             <directory>./tests/Api/</directory>
         </testsuite>
+        <testsuite name="api-old">
+            <directory>./tests/ApiOld/</directory>
+        </testsuite>
         <testsuite name="command">
             <directory>./tests/Command/</directory>
         </testsuite>

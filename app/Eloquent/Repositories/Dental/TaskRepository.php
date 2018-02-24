@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class TaskRepository extends AbstractRepository
 {
@@ -202,19 +203,37 @@ class TaskRepository extends AbstractRepository
     }
 
     /**
+     * @param int $id
+     * @return Task|Model|null
+     */
+    public function getSpecificTask($id)
+    {
+        $checkStatus = false;
+        $query = $this->forPatient($checkStatus)->where('dt.id', $id);
+        return $query->first();
+    }
+
+    /**
+     * @param bool $checkStatus
      * @return Builder
      */
-    private function forPatient()
+    private function forPatient($checkStatus = true)
     {
-        return $this->model
+        $query = $this->model
             ->from(\DB::raw('dental_task dt'))
             ->select(\DB::raw('dt.*, du.name, p.firstname, p.lastname'))
             ->join(\DB::raw('dental_users du'), 'dt.responsibleid', '=', 'du.userid')
             ->leftJoin(\DB::raw('dental_patients p'), 'p.patientid', '=', 'dt.patientid')
-            ->where(function (Builder $query) {
-                $query->where('dt.status', '0')
-                    ->orWhereNull('dt.status');
+        ;
+        if ($checkStatus) {
+            $query = $query->where(function (Builder $query) {
+                $query
+                    ->where('dt.status', '' . Task::STATUS_INACTIVE)
+                    ->orWhereNull('dt.status')
+                ;
             });
+        }
+        return $query;
     }
 
     /**

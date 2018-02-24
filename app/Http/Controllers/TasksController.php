@@ -111,10 +111,14 @@ class TasksController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
      */
     public function show($id)
     {
-        return parent::show($id);
+        $task = $this->repository->getSpecificTask($id);
+        return ApiResponse::responseOk('', $task);
     }
 
     /**

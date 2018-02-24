@@ -3,6 +3,8 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingOptionRepository;
+use DentalSleepSolutions\Helpers\GuideSettingOptionsRetriever;
+use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Facades\ApiResponse;
 
 class GuideSettingOptionsController extends BaseRestController
@@ -122,16 +124,18 @@ class GuideSettingOptionsController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
-     *     path="/guide-setting-options/settingIds",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * @SWG\Get(
+     *     path="/guide-setting-options/setting-ids",
+     *     @SWG\Response(response="200", description="Get Device Guide Setting options")
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
      *
+     * @param GuideSettingOptionsRetriever $guideSettingOptionsRetriever
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getOptionsForSettingIds()
+    public function getOptionsForSettingIds(GuideSettingOptionsRetriever $guideSettingOptionsRetriever)
     {
-        $guideSettingOptions = $this->repository->getOptionsBySettingIds();
+        $guideSettingOptions = $guideSettingOptionsRetriever->get();
 
         return ApiResponse::responseOk('', $guideSettingOptions);
     }

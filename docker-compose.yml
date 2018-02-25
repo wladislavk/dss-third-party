@@ -68,7 +68,7 @@ services:
       DB_USERNAME: homestead
       DB_PASSWORD: secret
     volumes:
-      - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      - "${ROOT_PATH:-..}/ds3-private03:/var/www/html"
     labels:
       - "traefik.port=80"
       - "traefik.backend=api"
@@ -95,8 +95,8 @@ services:
  
   acceptance:
     build:
-      context: ..
-      dockerfile: ds3-private08-acceptance/Dockerfile
+      context: ../ds3-private08-acceptance
+      dockerfile: Dockerfile
     environment:
       NODE_ENV: development
       PORT: 80

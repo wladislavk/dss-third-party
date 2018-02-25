@@ -58,8 +58,9 @@ services:
       - "traefik.frontend.rule=HostRegexp:{host:loader.docker.localhost}"
 
   api:
-    build: ../ds3-private03
-    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/api
+    build:
+      context: ../ds3-private03
+      dockerfile: Dockerfile
     env_file: ../ds3-private03/.env.example
     environment:
       DB_HOST: db

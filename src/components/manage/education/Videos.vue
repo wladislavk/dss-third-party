@@ -67,8 +67,6 @@
             <iframe src="https://player.vimeo.com/video/65784955" height="281" width="500" allowfullscreen="" frameborder="0"></iframe>
 
         </div>
-
-        <a href="course.php" target="_blank" style="margin-left: 30px;" class="addButton">Course</a>
     </div>
 </template>
 

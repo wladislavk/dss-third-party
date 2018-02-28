@@ -218,6 +218,8 @@ return [
 
         'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
         'UserRepository' => \DentalSleepSolutions\Eloquent\Repositories\UserRepository::class,
+        'PHPUnit_Framework_Assert' => \PHPUnit\Framework\Assert::class,
+        'PHPUnit_Framework_TestCase' => \PHPUnit\Framework\TestCase::class,
     ],
 
 ];

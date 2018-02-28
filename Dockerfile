@@ -12,13 +12,13 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 RUN set -xe \
     yum update -y \
     && yum install -y \
-        php71w-fpm \
-        php71w-opcache \
-        php71w-cli \
-        php71w-mbstring \
-        php71w-xml \
-        php71w-pdo \
-        php71w-mysql \
+        php72w-fpm \
+        php72w-opcache \
+        php72w-cli \
+        php72w-mbstring \
+        php72w-xml \
+        php72w-pdo \
+        php72w-mysql \
         fontconfig \
         wget \
         mesa-libOSMesa-devel \
@@ -39,3 +39,10 @@ RUN wget http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 RUN yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
 
 RUN yum install -y mysql-community-client
+
+COPY composer.json ./
+COPY composer.lock ./
+RUN composer install --no-scripts --no-autoloader
+
+COPY . ./
+RUN composer install

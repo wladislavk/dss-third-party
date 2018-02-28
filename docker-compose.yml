@@ -58,8 +58,9 @@ services:
       - "traefik.frontend.rule=HostRegexp:{host:loader.docker.localhost}"
 
   api:
-    build: ../ds3-private03
-    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/api
+    build:
+      context: ../ds3-private03
+      dockerfile: Dockerfile
     env_file: ../ds3-private03/.env.example
     environment:
       DB_HOST: db
@@ -67,7 +68,7 @@ services:
       DB_USERNAME: homestead
       DB_PASSWORD: secret
     volumes:
-      - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      - "${ROOT_PATH:-..}/ds3-private03:/var/www/html"
     labels:
       - "traefik.port=80"
       - "traefik.backend=api"
@@ -94,8 +95,8 @@ services:
  
   acceptance:
     build:
-      context: ..
-      dockerfile: ds3-private08-acceptance/Dockerfile
+      context: ../ds3-private08-acceptance
+      dockerfile: Dockerfile
     environment:
       NODE_ENV: development
       PORT: 80

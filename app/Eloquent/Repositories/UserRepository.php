@@ -32,9 +32,10 @@ class UserRepository extends AbstractRepository
      */
     public function findByCredentials(array $where)
     {
-        return $this->findWhere($where)
+        return $this
+            ->findWhere($where)
             ->first()
-            ;
+        ;
     }
 
     /**

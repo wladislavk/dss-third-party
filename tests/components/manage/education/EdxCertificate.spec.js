@@ -51,14 +51,13 @@ describe('EdxCertificate component', () => {
     moxios.uninstall()
   })
 
-  it('should show certificate HTML', function (done) {
+  it('should show certificate links', function (done) {
     const vm = this.mount()
     moxios.wait(function () {
-      console.log('html', vm.$el.querySelectorAll('ul')[0].innerHTML)
-      const children = vm.$el.querySelectorAll('ul li')
+      const children = vm.$el.querySelectorAll('ul li a')
       expect(children.length).toEqual(2)
-      // const viewAllButton = vm.$el.querySelector('a.task_view_all')
-      // expect(viewAllButton.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/manage_tasks.php')
+      expect(children[0].getAttribute('href')).toEqual('http://some_url.com')
+      expect(children[1].getAttribute('href')).toEqual('http://some_url2.com')
       done()
     })
   })

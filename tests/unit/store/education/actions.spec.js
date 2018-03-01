@@ -17,7 +17,6 @@ describe('Education module actions', () => {
 
   describe('getEdxCertificatesData action', () => {
     it('should get Edx Certificates data', function (done) {
-      const patientId = 1
       const postData = []
       const result = {
         data: {
@@ -59,30 +58,31 @@ describe('Education module actions', () => {
       const expectedMutations = [
         {
           type: symbols.mutations.edxCertificatesData,
-          payload: {
-            insuranceType: '2',
-            preMed: 'foo',
-            preMedCheck: '3',
-            alertText: 'alert',
-            displayAlert: '1',
-            firstName: 'John',
-            lastName: 'Doe',
-            questionnaireData: {
-              symptomsStatus: '4',
-              treatmentsStatus: '5',
-              historyStatus: '6',
+          payload: [
+            {
+              id: 1,
+              url: 'http://some_url.com',
+              edx_id: 3,
+              course_name: 'Course001',
+              course_section: 'Now',
+              course_subsection: 'Section 1',
+              number_ce: 1,
+              adddate: '2014-03-17 22:15:41',
+              ip_address: '10.20.1.168'
             },
-            isEmailBounced: '0',
-            patientContactsNumber: '7',
-            patientInsurancesNumber: '8',
-            subPatientsNumber: '9',
-            rejectedClaims: ['foo', 'bar'],
-            hasAllergen: '1',
-            otherAllergens: 'other',
-            hstStatus: '10',
-            incompleteHomeSleepTests: ['baz'],
-          },
-        },
+            {
+              id: 2,
+              url: 'http://some_url2.com',
+              edx_id: 3,
+              course_name: 'DSS10',
+              course_section: 'Always',
+              course_subsection: 'Module 1: Introduction / Getting Started',
+              number_ce: 1,
+              adddate: '2014-04-01 11:39:11',
+              ip_address: '10.20.1.168'
+            }
+          ]
+        }
       ]
 
       setTimeout(() => {
@@ -97,27 +97,26 @@ describe('Education module actions', () => {
       }, 100)
     })
 
-    // it('should handle error', function (done) {
-    //   const patientId = 1
-    //   this.sandbox.stub(http, 'get').callsFake(() => {
-    //     return Promise.reject(new Error())
-    //   })
-    //
-    //   EducationModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
-    //   const expectedActions = [
-    //     {
-    //       type: symbols.actions.handleErrors,
-    //       payload: {
-    //         title: 'getPatientByIdAndDocId',
-    //         response: new Error(),
-    //       },
-    //     },
-    //   ]
-    //
-    //   setTimeout(() => {
-    //     expect(this.testCase.actions).toEqual(expectedActions)
-    //     done()
-    //   }, 100)
-    // })
+    it('should handle error', function (done) {
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+
+      EducationModule.actions[symbols.actions.getEdxCertificatesData](this.testCase.mocks)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'getEdxCertificatesData',
+            response: new Error()
+          }
+        }
+      ]
+
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
   })
 })

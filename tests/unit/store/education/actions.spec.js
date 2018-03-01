@@ -22,26 +22,10 @@ describe('Education module actions', () => {
         data: {
           data: [
             {
-              id: 1,
-              url: 'http://some_url.com',
-              edx_id: 3,
-              course_name: 'Course001',
-              course_section: 'Now',
-              course_subsection: 'Section 1',
-              number_ce: 1,
-              adddate: '2014-03-17 22:15:41',
-              ip_address: '10.20.1.168'
+              someData: 'http://some_url.com'
             },
             {
-              id: 2,
-              url: 'http://some_url2.com',
-              edx_id: 3,
-              course_name: 'DSS10',
-              course_section: 'Always',
-              course_subsection: 'Module 1: Introduction / Getting Started',
-              number_ce: 1,
-              adddate: '2014-04-01 11:39:11',
-              ip_address: '10.20.1.168'
+              someData: 'http://some_url2.com'
             }
           ]
         }
@@ -60,26 +44,10 @@ describe('Education module actions', () => {
           type: symbols.mutations.edxCertificatesData,
           payload: [
             {
-              id: 1,
-              url: 'http://some_url.com',
-              edx_id: 3,
-              course_name: 'Course001',
-              course_section: 'Now',
-              course_subsection: 'Section 1',
-              number_ce: 1,
-              adddate: '2014-03-17 22:15:41',
-              ip_address: '10.20.1.168'
+              someData: 'http://some_url.com'
             },
             {
-              id: 2,
-              url: 'http://some_url2.com',
-              edx_id: 3,
-              course_name: 'DSS10',
-              course_section: 'Always',
-              course_subsection: 'Module 1: Introduction / Getting Started',
-              number_ce: 1,
-              adddate: '2014-04-01 11:39:11',
-              ip_address: '10.20.1.168'
+              someData: 'http://some_url2.com'
             }
           ]
         }

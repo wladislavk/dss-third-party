@@ -2,10 +2,11 @@
     <div>
         <br/>
         <span class="admin_head">EdX Certificates</span>
+
         <br/>
         <br/>
 
-        <ul v-if="edxCertificates.length" class="fullwidth" style="list-style:none;">
+        <ul class="fullwidth" style="list-style:none;">
             <li v-for="edxCertificate in edxCertificates">
                 <a v-bind:href="edxCertificate.url" target="_blank">
                     {{ edxCertificate.course_name }} -

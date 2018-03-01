@@ -7,7 +7,7 @@ export default {
       return this.$store.getters[symbols.getters.edxCertificates]
     }
   },
-  mounted () {
+  created () {
     this.$store.dispatch(symbols.actions.getEdxCertificatesData)
   }
 }

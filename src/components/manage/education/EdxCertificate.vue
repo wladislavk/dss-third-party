@@ -6,7 +6,7 @@
         <br/>
         <br/>
 
-        <ul class="fullwidth" style="list-style:none;">
+        <ul class="fullwidth">
             <li v-for="edxCertificate in edxCertificates">
                 <a v-bind:href="edxCertificate.url" target="_blank">
                     {{ edxCertificate.course_name }} -
@@ -22,5 +22,5 @@
 <script src="./EdxCertificate.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../assets/css/old/admin.scss";
+    @import "../../../assets/css/manage/education/edx_certificate.scss";
 </style>

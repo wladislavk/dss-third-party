@@ -6,8 +6,7 @@ use DateTime;
 use Carbon\Carbon;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Structs\JwtPayload;
-use Tymon\JWTAuth\Providers\JWT\JWTInterface;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Contracts\Providers\JWT as JWTInterface;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
@@ -28,8 +27,7 @@ class JwtHelper
         Config $config,
         Carbon $carbon,
         JWTInterface $jwtProvider
-    )
-    {
+    ) {
         $this->config = $config;
         $this->carbon = $carbon;
         $this->jwtProvider = $jwtProvider;
@@ -40,7 +38,6 @@ class JwtHelper
      * @param DateTime $notBefore
      * @param DateTime $expireDate
      * @return string
-     * @throws InvalidPayloadException
      */
     public function createToken(array $customClaims = [], DateTime $expireDate = null, DateTime $notBefore = null)
     {
@@ -64,9 +61,6 @@ class JwtHelper
         $baseClaims = $payload->toArray();
         $claims = array_merge($baseClaims, $customClaims);
 
-        /**
-         * @todo: Unreachable JWTException in NamshiAdapter::encode()
-         */
         $token = $this->jwtProvider->encode($claims);
 
         return $token;
@@ -75,16 +69,10 @@ class JwtHelper
     /**
      * @param string $token
      * @return array
-     * @throws InvalidTokenException
      */
     public function parseToken($token)
     {
-        try {
-            $payload = $this->jwtProvider->decode($token);
-        } catch (TokenInvalidException $e) {
-            throw new InvalidTokenException($e->getMessage());
-        }
-
+        $payload = $this->jwtProvider->decode($token);
         return $payload;
     }
 

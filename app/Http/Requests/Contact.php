@@ -42,11 +42,12 @@ class Contact extends Request
     /**
      * @todo: this logic should be moved to services
      *
+     * @param array|mixed $keys
      * @return array
      */
-    public function all()
+    public function all($keys = null)
     {
-        $data = parent::all();
+        $data = parent::all($keys);
 
         $phoneFields = ['phone1', 'phone2', 'fax'];
         foreach ($phoneFields as $field) {

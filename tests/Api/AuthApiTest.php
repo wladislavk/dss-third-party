@@ -16,12 +16,12 @@ use Tests\TestCases\BaseApiTestCase;
 
 class AuthApiTest extends BaseApiTestCase
 {
+    use DatabaseTransactions;
+
     const ENDPOINT = 'auth';
     const HEALTH_ENDPOINT = 'auth-health';
     const PASSWORD = 'secret';
     const ADMIN_PREFIX = 'a_';
-
-    use DatabaseTransactions;
 
     /** @var PasswordGenerator */
     private $passwordGenerator;
@@ -34,10 +34,7 @@ class AuthApiTest extends BaseApiTestCase
         parent::setUp();
         $this->passwordGenerator = $this->app->make(PasswordGenerator::class);
         $this->jwtHelper = $this->app->make(JwtHelper::class);
-        $this->app
-            ->config
-            ->set('app.debug', true)
-        ;
+        $this->app->config->set('app.debug', true);
     }
 
     public function testAuthInvalidCredentials()
@@ -48,7 +45,7 @@ class AuthApiTest extends BaseApiTestCase
 
     public function testAuthUserCredentials()
     {
-        $user = $this->newUser();
+        $user = $this->newAuthenticatable(User::class);
         $this->post(self::ENDPOINT, [
             'username' => $user->username,
             'password' => self::PASSWORD,
@@ -62,7 +59,7 @@ class AuthApiTest extends BaseApiTestCase
 
     public function testAuthAdminCredentials()
     {
-        $admin = $this->newAdmin();
+        $admin = $this->newAuthenticatable(Admin::class);
         $this->post(self::ENDPOINT, [
             'username' => $admin->username,
             'password' => self::PASSWORD,
@@ -83,7 +80,7 @@ class AuthApiTest extends BaseApiTestCase
 
     public function testAuthHealthNoDebug()
     {
-        $admin = $this->newAdmin();
+        $admin = $this->newAuthenticatable(Admin::class);
         $authHeader = $this->generateAuthHeader($admin);
 
         $this->disableDebugConfig();
@@ -93,35 +90,34 @@ class AuthApiTest extends BaseApiTestCase
 
     public function testAuthHealth()
     {
-        $admin = $this->newAdmin();
+        $admin = $this->newAuthenticatable(Admin::class);
         $authHeader = $this->generateAuthHeader($admin);
 
-        $user = $this->newUser();
+        $user = $this->newAuthenticatable(User::class);
         $sudoQuery = $this->generateSudoQuery($user);
 
         $this->get(self::HEALTH_ENDPOINT . '?' . $sudoQuery, $authHeader);
         $this->assertResponseOk();
-        $this->seeJson([
-            'status' => 'Health',
-        ]);
-        $this->seeJson([
-            'username' => $user->username,
-            AuthController::ADMIN_FLAG_INDEX => 0,
-        ]);
-        $this->seeJson([
-            'username' => $admin->username,
-            AuthController::ADMIN_FLAG_INDEX => 1,
-        ]);
+        $response = json_decode($this->response->getContent(), true);
+        $this->assertEquals('Health', $response['status']);
+        $data = $response['data'];
+        $this->assertNotNull($data['admin']);
+        $this->assertNotNull($data['user']);
+        $this->assertEquals($user->username, $data['user']['username']);
+        $this->assertEquals(0, $data['user'][AuthController::ADMIN_FLAG_INDEX]);
+        $this->assertEquals($admin->username, $data['admin']['username']);
+        $this->assertEquals(1, $data['admin'][AuthController::ADMIN_FLAG_INDEX]);
     }
 
     private function disableDebugConfig()
     {
-        $this->app
-            ->config
-            ->set('app.debug', false)
-        ;
+        $this->app->config->set('app.debug', false);
     }
 
+    /**
+     * @param User $user
+     * @return string
+     */
     private function generateSudoQuery(User $user)
     {
         $query = http_build_query([
@@ -130,6 +126,10 @@ class AuthApiTest extends BaseApiTestCase
         return $query;
     }
 
+    /**
+     * @param Admin $admin
+     * @return array
+     */
     private function generateAuthHeader(Admin $admin)
     {
         $token = $this->generateToken($admin);
@@ -140,6 +140,10 @@ class AuthApiTest extends BaseApiTestCase
         return $header;
     }
 
+    /**
+     * @param Admin $admin
+     * @return string
+     */
     private function generateToken(Admin $admin)
     {
         $token = $this->jwtHelper->createToken([
@@ -149,17 +153,11 @@ class AuthApiTest extends BaseApiTestCase
         return $token;
     }
 
-    private function newUser()
-    {
-        return $this->newAuthenticatable(User::class);
-    }
-
-    private function newAdmin()
-    {
-        return $this->newAuthenticatable(Admin::class);
-    }
-
-    private function newAuthenticatable($authenticatableClass)
+    /**
+     * @param string $authenticatableClass
+     * @return mixed
+     */
+    private function newAuthenticatable(string $authenticatableClass)
     {
         $passwordStruct = new Password();
         $this->passwordGenerator->generatePassword(self::PASSWORD, $passwordStruct);

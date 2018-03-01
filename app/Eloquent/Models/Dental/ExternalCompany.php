@@ -60,4 +60,12 @@ class ExternalCompany extends AbstractModel implements AuthenticatableContract
     public function users() {
         return $this->hasManyThrough(User::class, ExternalCompanyUser::class, 'user_id', 'userid');
     }
+
+    /**
+     * @return string
+     */
+    public function getAuthIdentifierName(): string
+    {
+        return 'id';
+    }
 }

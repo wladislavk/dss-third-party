@@ -125,7 +125,6 @@ return [
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
-        Illuminate\Routing\ControllerServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
@@ -146,7 +145,6 @@ return [
         /*
          * 3rd party providers...
          */
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
@@ -216,7 +214,7 @@ return [
         // DomPdf
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
-        'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
+        'ApiResponse' => \DentalSleepSolutions\Facades\ApiResponse::class,
         'UserRepository' => \DentalSleepSolutions\Eloquent\Repositories\UserRepository::class,
         'PHPUnit_Framework_Assert' => \PHPUnit\Framework\Assert::class,
         'PHPUnit_Framework_TestCase' => \PHPUnit\Framework\TestCase::class,

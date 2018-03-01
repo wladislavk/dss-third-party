@@ -14,7 +14,7 @@ use Illuminate\Config\Repository as Config;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Tymon\JWTAuth\Providers\JWT\JWTInterface;
+use Tymon\JWTAuth\Contracts\Providers\JWT as JWTInterface;
 
 class JwtHelperTest extends UnitTestCase
 {
@@ -83,12 +83,12 @@ class JwtHelperTest extends UnitTestCase
         $this->assertEquals(self::PAYLOAD, $payload);
     }
 
-    public function testParseTokenException()
-    {
-        $this->expectException(InvalidTokenException::class);
-        $this->helper->parseToken(self::TOKEN_FLAG);
-    }
-
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidIssuer()
     {
         $payload = new JwtPayload();
@@ -99,6 +99,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidSubject()
     {
         $payload = new JwtPayload();
@@ -109,6 +115,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidAudience()
     {
         $payload = new JwtPayload();
@@ -119,6 +131,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidNotBefore()
     {
         $payload = new JwtPayload();
@@ -129,6 +147,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidIssuedAt()
     {
         $payload = new JwtPayload();
@@ -139,6 +163,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidExpireDate()
     {
         $payload = new JwtPayload();
@@ -149,6 +179,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray());
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidExpectedValue()
     {
         $payload = new JwtPayload();
@@ -158,6 +194,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload->toArray(), self::EXPECTED_VALUES);
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaimsInvalidSetValues()
     {
         $payload = new JwtPayload();
@@ -168,6 +210,12 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload, self::EXPECTED_VALUES, [self::EXPECTED_SET]);
     }
 
+    /**
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testValidateClaims()
     {
         $payload = new JwtPayload();
@@ -206,30 +254,17 @@ class JwtHelperTest extends UnitTestCase
     {
         /** @var Carbon|MockInterface $mock */
         $mock = \Mockery::mock(Carbon::class);
-        $mock->shouldReceive('now')
-            ->atMost(1)
-            ->andReturnSelf()
-        ;
-        $mock->shouldReceive('copy')
-            ->atMost(2)
-            ->andReturnUsing([$this, 'mockCarbon'])
-        ;
-        $mock->shouldReceive('addSeconds')
-            ->atMost(1)
-        ;
-        $mock->shouldReceive('getTimestamp')
-            ->atMost(1)
-            ->andReturn(0)
-        ;
+        $mock->shouldReceive('now')->atMost(1)->andReturnSelf();
+        $mock->shouldReceive('copy')->atMost(2)->andReturnUsing([$this, 'mockCarbon']);
+        $mock->shouldReceive('addSeconds')->atMost(1)->andReturnNull();
+        $mock->shouldReceive('getTimestamp')->atMost(1)->andReturn(0);
         $mock->shouldReceive('setTimestamp')
-            ->atMost(3)
             ->andReturnUsing(function ($timestamp) use ($mock) {
                 $this->carbonState = $timestamp;
                 return $mock;
             })
         ;
         $mock->shouldReceive('isFuture')
-            ->atMost(2)
             ->andReturnUsing(function () {
                 if (self::TIMESTAMP_FLAG === $this->carbonState) {
                     return true;
@@ -239,16 +274,13 @@ class JwtHelperTest extends UnitTestCase
             })
         ;
         $mock->shouldReceive('isPast')
-            ->atMost(1)
             ->andReturnUsing(function () {
                 if (self::TIMESTAMP_FLAG === $this->carbonState) {
                     return true;
                 }
-
                 return false;
             })
         ;
-
         return $mock;
     }
 
@@ -256,10 +288,7 @@ class JwtHelperTest extends UnitTestCase
     {
         /** @var JWTInterface|MockInterface $mock */
         $mock = \Mockery::mock(JWTInterface::class);
-        $mock->shouldReceive('encode')
-            ->atMost(1)
-            ->andReturn(self::TOKEN)
-        ;
+        $mock->shouldReceive('encode')->atMost(1)->andReturn(self::TOKEN);
         $mock->shouldReceive('decode')
             ->atMost(1)
             ->withAnyArgs([self::TOKEN, self::TOKEN_FLAG])
@@ -271,7 +300,6 @@ class JwtHelperTest extends UnitTestCase
                 return self::PAYLOAD;
             })
         ;
-
         return $mock;
     }
 }

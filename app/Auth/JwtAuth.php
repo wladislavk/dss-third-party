@@ -40,8 +40,7 @@ class JwtAuth
         UserGuard $userGuard,
         AdminGuard $adminGuard,
         JwtHelper $jwtHelper
-    )
-    {
+    ) {
         $this->userGuard = $userGuard;
         $this->adminGuard = $adminGuard;
         $this->jwtHelper = $jwtHelper;
@@ -51,28 +50,19 @@ class JwtAuth
      * @param string $role
      * @return string
      * @throws AuthenticatableNotFoundException
-     * @throws ExpiredTokenException
-     * @throws InactiveTokenException
      * @throws InvalidPayloadException
-     * @throws InvalidTokenException
      */
     public function toToken($role = '')
     {
-        $user = $this->guard($role)
-            ->user()
-        ;
-
+        $guard = $this->guard($role);
+        $user = $guard->user();
         if (!$user) {
             throw new AuthenticatableNotFoundException();
         }
-
-        $token = $this->jwtHelper
-            ->createToken([
-                self::CLAIM_ROLE_INDEX => $role,
-                self::CLAIM_ID_INDEX  => $user->getAuthIdentifier(),
-            ])
-        ;
-
+        $token = $this->jwtHelper->createToken([
+            self::CLAIM_ROLE_INDEX => $role,
+            self::CLAIM_ID_INDEX  => $user->getAuthIdentifier(),
+        ]);
         return $token;
     }
 
@@ -90,18 +80,12 @@ class JwtAuth
     {
         $claims = $this->jwtHelper->parseToken($token);
         $this->jwtHelper->validateClaims($claims, [self::CLAIM_ROLE_INDEX => $role], [self::CLAIM_ID_INDEX]);
-
-        $authenticated = $this->guard($role)
-            ->once([
-                self::MODEL_KEY => $claims[self::CLAIM_ID_INDEX]
-            ])
-        ;
-
+        $authenticated = $this->guard($role)->once([self::MODEL_KEY => $claims[self::CLAIM_ID_INDEX]]);
         if (!$authenticated) {
             throw new AuthenticatableNotFoundException(JwtAuthErrors::USER_NOT_FOUND);
         }
-
-        return $this->guard($role)->user();
+        $guard = $this->guard($role);
+        return $guard->user();
     }
 
     /**
@@ -113,7 +97,6 @@ class JwtAuth
         if ($role === self::ROLE_ADMIN) {
             return $this->adminGuard;
         }
-
         return $this->userGuard;
     }
 }

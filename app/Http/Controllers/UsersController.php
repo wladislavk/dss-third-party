@@ -343,7 +343,9 @@ class UsersController extends BaseRestController
             self::DSS_USER_STATUS_SUSPENDED,
         ];
 
-        $data = [];
+        $data = [
+            'type' => '',
+        ];
 
         if (in_array($this->user->status, $accountStatuses)) {
             $data['type'] = self::STATUS_LABELS[$this->user->status];

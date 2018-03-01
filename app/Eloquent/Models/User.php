@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * is made read-only by disabling saving via model events.
  *
  * @see self::boot
+ * @property string $id
  * @property int|null $userid
  * @property int|null $docid
  * @property string|null $ip_address
@@ -40,6 +41,8 @@ class User extends AbstractModel implements AuthenticatableContract, UserInterfa
      * @var array
      */
     protected $hidden = ['password', 'salt'];
+
+    public $incrementing = false;
 
     /**
      * Boot the model and make it read-only via eloquent events.

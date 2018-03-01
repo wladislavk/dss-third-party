@@ -73,6 +73,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->assertEquals($expected, $content);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testResponseWithSuccess()
     {
         $data = [
@@ -93,6 +96,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->assertEquals($expected, $content);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testResponseWithError()
     {
         $data = [
@@ -113,6 +119,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->assertEquals($expected, $content);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testResponseWithoutData()
     {
         $data = [];
@@ -123,6 +132,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->apiResponseHelper->response($data, $messageSuccess, $messageError);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testResponseWithoutStatus()
     {
         $data = [
@@ -135,6 +147,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->apiResponseHelper->response($data, $messageSuccess, $messageError);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testGetPaginateStructure()
     {
         $items = ['foo', 'bar'];
@@ -152,10 +167,16 @@ class ApiResponseHelperTest extends UnitTestCase
             'from' => 1,
             'to' => 2,
             'items' => ['foo', 'bar'],
+            'first_page_url' => '/?page=1',
+            'last_page_url' => '/?page=3',
+            'path' => '/',
         ];
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testTransform()
     {
         $data = 'foo';
@@ -163,6 +184,9 @@ class ApiResponseHelperTest extends UnitTestCase
         $this->assertEquals('foo', $result);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testTransformWithFractalData()
     {
         $data = 'foo';

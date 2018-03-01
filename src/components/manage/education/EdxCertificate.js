@@ -1,21 +1,13 @@
-import http from '../../../services/http'
+import symbols from '../../../symbols'
 
 export default {
   name: 'edx-certificate',
-  data () {
-    return {
-      edxCertificates: []
+  computed: {
+    edxCertificates () {
+      return this.$store.getters[symbols.getters.edxCertificates]
     }
   },
   mounted () {
-    this.getCertificates()
-  },
-  methods: {
-    getCertificates () {
-      let that = this
-      http.get('edx-certificates').then((response) => {
-        that.edxCertificates = response.data.data
-      })
-    }
+    this.$store.dispatch(symbols.actions.getEdxCertificatesData)
   }
 }

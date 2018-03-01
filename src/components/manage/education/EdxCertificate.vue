@@ -5,7 +5,7 @@
         <br/>
         <br/>
 
-        <ul v-if="edxCertificates.length > 0" class="fullwidth" style="list-style:none;">
+        <ul v-if="edxCertificates.length" class="fullwidth" style="list-style:none;">
             <li v-for="edxCertificate in edxCertificates">
                 <a v-bind:href="edxCertificate.url" target="_blank">
                     {{ edxCertificate.course_name }} -

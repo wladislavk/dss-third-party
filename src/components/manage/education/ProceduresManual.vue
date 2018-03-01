@@ -225,6 +225,7 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
                 closely, managing their titration, their side effects, and adjusting their
                 device based on subjective findings. </p>
 
+            
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
             <p class="MsoNormal" style="text-align:justify">When you believe the device is

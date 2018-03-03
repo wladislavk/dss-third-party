@@ -2,25 +2,25 @@
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 
-if(isset($_REQUEST['del_note'])){
+if (isset($_REQUEST['del_note'])) {
     $s = "UPDATE dental_notes SET status=0 
           WHERE parentid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'
           	OR notesid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'";
     $db->query($s);
 }
 
-if(isset($_REQUEST['sid'])){
+if (isset($_REQUEST['sid'])) {
     $s = "UPDATE dental_notes SET signed_id='".mysqli_real_escape_string($con, $_SESSION['userid'])."', signed_on=now() 
           WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'
           	AND notesid='".mysqli_real_escape_string($con, $_REQUEST['sid'])."'
             AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
     $db->query($s);
-    if(isset($_REQUEST['return'])){
-        if($_REQUEST['return']=='unsigned'){
+    if (isset($_REQUEST['return'])) {
+        if ($_REQUEST['return']=='unsigned') {
         ?>
-<script type="text/javascript">
-window.location = 'manage_unsigned_notes.php';
-</script>
+            <script type="text/javascript">
+                window.location = 'manage_unsigned_notes.php';
+            </script>
         <?php
         }
     }
@@ -43,7 +43,7 @@ $notes_q = $db->getResults($notes_sql);
 $num_unsigned_notes = 0;
 if ($notes_q) {
     foreach ($notes_q as $notes_r) {
-        if($notes_r['signed_id']==''){
+        if ($notes_r['signed_id'] == '') {
             $num_unsigned_notes++;
         }
     }

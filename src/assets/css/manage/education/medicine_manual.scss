@@ -224,6 +224,7 @@ h2 {
   font-weight: bold;
 }
 
+
 h3 {
   line-height: 115%;
   page-break-after: avoid;
@@ -579,23 +580,4 @@ div.WordSection2 {
 
 div.WordSection3 {
   page: WordSection3;
-}
-
-.no-bottom-margin {
-  margin-bottom: 0in;
-  margin-bottom: .0001pt;
-  line-height: normal;
-}
-
-.small-indent {
-  margin-left: .5in;
-  text-indent: -.5in;
-}
-
-.font-times-new-roman {
-  font: 7.0pt "Times New Roman";
-}
-
-.font-franklin-gothic-book {
-  font-family: "Franklin Gothic Book", "sans-serif"
 }

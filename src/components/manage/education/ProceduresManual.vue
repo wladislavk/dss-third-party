@@ -1411,7 +1411,7 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
 text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
-
+            
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
 text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
 

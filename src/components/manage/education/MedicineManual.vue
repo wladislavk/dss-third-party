@@ -7,21 +7,25 @@
 text-align:center;line-height:normal"><b><span style="font-size:36.0pt;
 font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">DENTAL SLEEP MEDICINE</span></b></p>
 
-            <p class="MsoNormal no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
 
-            <p class="MsoNormal no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><b><span style="font-size:50.0pt;
 font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">TRAINING MANUAL</span></b></p>
 
-            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><span style="font-size:12.0pt;font-family:
 &quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;"><img width="477" height="477" id="Picture 65" src="../../../assets/images/medicine_manual_assets/image001.jpg"></span></p>
 
-            <p class="MsoNormal no-bottom-margin"><span style="font-size:12.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:12.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><span style="font-size:12.0pt;font-family:
@@ -57,7 +61,7 @@ text-align:center;line-height:normal"><span style="font-size:22.0pt;font-family:
 
             <p class="MsoNormal" style="line-height:normal">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span class="font-franklin-gothic-book">Information in this
+            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span style="font-family:&quot;Franklin Gothic Book&quot;,&quot;sans-serif&quot;">Information in this
                 document CANNOT be considered a substitute for appropriate medical training.&nbsp;
                 Practitioners who intend to treat patients in the field of sleep medicine
                 should only do so AFTER they have received appropriate medical training and
@@ -70,13 +74,13 @@ text-align:center;line-height:normal"><span style="font-size:22.0pt;font-family:
                 individual.&nbsp; Individual facts and circumstances will determine the treatment
                 that is most appropriate for any particular patient.&nbsp; </span></p>
 
-            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span class="font-franklin-gothic-book">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span style="font-family:&quot;Franklin Gothic Book&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
             <p class="MsoNormal" align="center" style="text-align:center;line-height:normal"><span style="font-size:20.0pt;font-family:&quot;Bodoni MT&quot;,&quot;serif&quot;">COPYRIGHT NOTICE</span></p>
 
             <p class="MsoNormal" style="line-height:normal">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span class="font-franklin-gothic-book">Information in this
+            <p class="MsoNormal" style="text-align:justify;line-height:normal"><span style="font-family:&quot;Franklin Gothic Book&quot;,&quot;sans-serif&quot;">Information in this
                 document is proprietary and confidential to Dental Sleep Solutions (“DSS”).&nbsp;
                 You are licensed to view this information as part of the services DSS provides
                 to you and in consideration for your fees within your agreement with DSS.&nbsp; You
@@ -84,9 +88,11 @@ text-align:center;line-height:normal"><span style="font-size:22.0pt;font-family:
                 reproduce, or share this material DS3 will be harmed, and DS3 will prosecute
                 you to the full extent of the law.</span></p>
 
-            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
-            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
         </div>
 
@@ -375,12 +381,12 @@ line-height:150%">From <u>Don Quixote</u> by S. M. de Cervantes</p>
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u><span style="font-size:12.0pt;line-height:150%">SLEEP</span></u></b><u><span style="font-size:12.0pt;line-height:150%">:</span></u></p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>The cyclic, temporary
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>The cyclic, temporary
                 and physiologic loss of consciousness that is readily, promptly and completely
                 reversed with appropriate stimuli.</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>The purpose of sleep
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>The purpose of sleep
                 has simply been defined as the provision of a feeling of restoration and
                 wakefulness. </p>
 
@@ -422,23 +428,23 @@ line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span clas
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Stage I</b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Thoughts begin to drift</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Thinking is no longer reality-oriented</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Short dreams often develop</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Patients subjectively feel they are awake</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Comprises approximately 13% of Non REM sleep</p>
 
             <p class="MsoNormal" align="center" style="text-align:center;line-height:150%"><img width="645" height="130" id="Picture 1" src="../../../assets/images/medicine_manual_assets/image005.jpg" alt="Stage 1 sleep"></p>
@@ -446,19 +452,19 @@ line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Stage II</b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>First bona fide sleep stage</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Majority of sleep is spent here</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Mentation consists of short mundane and fragmented thoughts</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Appearance of sleep spindles and K complexes</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -471,15 +477,15 @@ line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-
                 IV (Now called 3N)</b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Also called slow wave or deep sleep or delta sleep</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>About 10-20% of sleep</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Decreases with advancing age</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -498,44 +504,44 @@ font-family:&quot;Cambria&quot;,&quot;serif&quot;;color:#4F81BD"><img width="479
             <p class="MsoNoSpacing" style="line-height:150%">&nbsp;</p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Approximately 25% of sleep</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Alternates with Non-REM every 90-110 minutes</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Reduced temperature regulation: body moves toward ambient
                 temperature</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Muscle hypotonicity or atonia</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Rapid, erratic breathing</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Increased heart rate</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Increased cerebral blood flow</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Dreaming</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Erection</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Reduced diameter of upper airway</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><img width="623" height="132" src="../../../assets/images/medicine_manual_assets/image009.jpg"></p>
@@ -548,45 +554,45 @@ line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-
             <p class="MsoNoSpacing" style="line-height:150%">&nbsp;</p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Sleep is entered through NREM sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>NREM sleep and REM sleep alternate with a period near 90 minutes.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Slow Wave Sleep (SWS) predominates in the first third of the night and
                 is linked to the initiation of sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>REM sleep predominates in the last third of the night and is linked to
                 the circadian rhythm of body temperature.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Wakefulness in sleep usually accounts for less than 5% of the night.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Stage 1 sleep generally constitutes approximately 2% to 5% of sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">7.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Stage 2 sleep generally constitutes approximately 45% to 55% of sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">8.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">8.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Stage 3 sleep generally constitutes approximately 3% to 8% of sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">9.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">9.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Stage 4 sleep generally constitutes approximately 10% to 15% of sleep.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">10.<span class="font-times-new-roman">&nbsp;&nbsp; </span>NREM
+line-height:150%">10.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span>NREM
                 sleep, therefore, is usually 75% to 80% of sleep and REM sleep comprises the remainder,
                 occurring in four to six discrete episodes. <sup>(Kryger R. D., 2005)</sup> </p>
 
@@ -603,17 +609,17 @@ line-height:150%">10.<span class="font-times-new-roman">&nbsp;&nbsp; </span>NREM
                 discussions:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Freud’s <i>Interpretation of Dreams</i><sup>&nbsp; </sup>at the end of
                 the 19<sup>th</sup> century<sup>&nbsp;(Freud, 1955)</sup></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>A report in the 1950s of a correlation between dreaming and the
                 newly discovered REM sleep <sup>&nbsp;(Dement WC, 1957)</sup></p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>A proposal of the activation-synthesis model of dreaming in the
                 1970s<sup>&nbsp;(Hobson JA, 1977)</sup><sup>&nbsp; </sup></p>
 
@@ -671,35 +677,35 @@ line-height:150%">Primary Sleep Disorders</span></i></b></p>
                 ICSD-2 has eight major categories:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The insomnias</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The sleep-related breathing disorders</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The hypersomnias not due to breathing disorders</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The circadian rhythm sleep disorders</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The parasomnias</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The sleep-related movement disorder</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">7.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Isolated symptoms, apparently normal variants, and unresolved issues</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%">8.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">8.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Other sleep disorders</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u>1.&nbsp;
@@ -716,41 +722,41 @@ line-height:150%">8.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Primary</b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Psychophysiological insomnia</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Paradoxical insomnia</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Adjustment sleep disorder</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Inadequate sleep hygiene</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Insomnia due to mental disorder</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Idiopathic insomnia</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Secondary</b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Insomnia due to a medical condition</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Insomnia due to a drug or substance</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Other insomnia not due to a substance or known physiological condition</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">Most all of us
@@ -924,39 +930,39 @@ line-height:150%">Sleep Restriction&nbsp; </span></i></b></p>
                 the physiologic effects of long term sleep deprivation can result in:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Aching muscles</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Dizziness</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Nausea</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Headaches</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Hallucinations</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Hand tremors</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Irritability</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VIII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VIII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Memory loss</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IX.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IX.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Symptoms similar to ADHD or psychosis<sup>&nbsp;(Sleep Deprivation, 2011)</sup></p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">How we sleep,
@@ -1109,7 +1115,7 @@ line-height:150%">&nbsp;</span></b></p>
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt">
                         <p class="MsoListParagraph" style="margin-bottom:0in;margin-bottom:.0001pt;
-  text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-size:12.0pt;line-height:150%;font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp; </span></span><span style="font-size:12.0pt;line-height:150%">30</span></p>
+  text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-size:12.0pt;line-height:150%;font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span style="font-size:12.0pt;line-height:150%">30</span></p>
                     </td>
                 </tr>
                 <tr>
@@ -1527,19 +1533,19 @@ font-family:&quot;Cambria&quot;,&quot;serif&quot;;color:#4F81BD">Current Medical
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u><span style="font-size:12.0pt;line-height:150%">TREATMENT OPTIONS</span></u></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>&nbsp;Behavioral</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Mandibular Advancement Devices</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Continuous Positive Airway Pressure (CPAP)</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Surgery</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">1.&nbsp; Behavioral</span></i></b></p>
@@ -1584,35 +1590,35 @@ line-height:150%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">Studies
                 along to your patients include the following:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Establish a pre-sleep routine </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>No alcohol after 6 PM</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>No caffeine after lunch</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Exercise regularly but avoid strenuous exercise right before bed</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Try and avoid taking naps</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Don’t take your worries to bed</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Don’t watch television in the bedroom</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Establish a comfortable (cool) temperature in your bedroom</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><u>Positional
@@ -1907,66 +1913,66 @@ text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span cl
                 surgical procedures.&nbsp;&nbsp; Surgery can be: </p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Intrapharyngeal</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Soft palate:
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Soft palate:
                 UPPP, LAUP, RFVTR Somnoplasty, Pillar</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Tongue:
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Tongue:
                 glossectomy/plasty, lingualplasty, LMG, repose</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Tonsils &amp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Tonsils &amp;
                 Adenoids (removal)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Epiglottis:
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Epiglottis:
                 epiglottidectomy/plasty</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Combinations</p>
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Combinations</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Extrapharyngeal</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Maxilla:&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Maxilla:&nbsp;
                 LeFort I osteotomy, RPE</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Mandible:
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Mandible:
                 BSSRO, AIMO Genial Tubercle Advancement, lingual tori removal</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Hyoid:&nbsp; AIMO
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Hyoid:&nbsp; AIMO
                 Indirect Hyoid suspension</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Nasal:&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Nasal:&nbsp;
                 septoplasty, turbinate reduction</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Sinus:&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Sinus:&nbsp;
                 polypectomy, curettage</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span class="font-times-new-roman">&nbsp;&nbsp; </span></span>Cervicofacial:&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Cervicofacial:&nbsp;
                 subcutaneous lipectomy<sup>&nbsp;(Prinsell, 1999)</sup></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Unilevel or multilevel</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Can be used as an adjunctive procedure </p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Or, can be a staging protocol for a future surgery</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">“The surgery”
@@ -2258,7 +2264,7 @@ line-height:150%">&nbsp;</span></b></p>
                 carefully reviewing the PSG.&nbsp; Look specifically for the following data: </p>
 
             <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the date of the study and the type of test that was done.&nbsp;
                 This may be a PSG baseline, or a PSG as a split-night study (half baseline and
                 the other half CPAP titration or dental device titration).&nbsp; “Test Type” may
@@ -2266,7 +2272,7 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
                 be at a specific sleep lab or in the home.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the total apneas, as well as the number of apneas that
                 were obstructive, mixed, and central.&nbsp; It is important to note the <i>different
                     types</i> of apneas.&nbsp; If this information is not available, we recommend that
@@ -2274,36 +2280,36 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
                 and also ask the physician to provide this information with all future studies.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the total number of hypopneas.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the AHI for the study; if listed, also record AHI when
                 supine and lateral, as well as REM AHI.&nbsp; Some reports will give an RDI instead
                 of an AHI.&nbsp; Just make sure you list each independently.&nbsp; They are <i>not the
                     same thing</i>, though some reports and physicians use them interchangeably.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the lowest O2 saturation and in what stage of sleep it
                 occurred (if given).</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the time the patient spent at less than 90% O2 saturation.
                 This can be in actual minutes or percentage of the night’s sleep.&nbsp; Percentage
                 is preferable and can be calculated if necessary by dividing the minutes below
                 90% by the total sleep time.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Record the sleep efficiency.&nbsp; This will be reported as “the
                 patient slept for 322 minutes out of 389 minutes of bed time for an efficiency
                 of xx%."</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>If CPAP or a dental device was used, record the level or setting
                 to which it was titrated.</p>
 
@@ -2417,34 +2423,34 @@ Dealing with Patients
                 undiagnosed patients, you must find a way to:</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Identify these patients.</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Get them tested.</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Get them diagnosed, if needed.</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Get them appropriate treatment.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">For the CPAP
                 intolerant patients, you must:</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Identify these patients. </p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Consult with them about treatment options. </p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Get them appropriate treatment.</p>
 
             <p class="MsoNormal" style="line-height:150%"><b><u><span style="font-size:12.0pt;
@@ -2490,7 +2496,7 @@ line-height:150%"><span style="text-decoration:none">&nbsp;</span></span></u></b
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Logan at al. High prevalence of unrecognized sleep apnoea
                 in drug-resistant hypertension. </span><i><span style="font-size:9.0pt;
@@ -2500,7 +2506,7 @@ line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;backg
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">O’Keeffe &amp; Patterson. Evidence of supporting routine
                 polysomnography before bariatric surgery. </span><i><span style="font-size:
@@ -2510,7 +2516,7 @@ background:lightgrey">2004 </span></p>
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Oldenburg et al. Sleep-disordered breathing in patients
                 with symptomatic heart failure: a contemporary study of prevalence in and
@@ -2521,7 +2527,7 @@ font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Garrigue et al. High prevalence of sleep apnea syndrome
                 in patients with long-term pacing, the European multicenter polysomnographic
@@ -2531,7 +2537,7 @@ background:lightgrey"> 2007;15:1-7 </span></p>
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Gami et al. Association of atrial fibrillation and
                 obstructive sleep apnea. </span><i><span style="font-size:9.0pt;line-height:
@@ -2540,7 +2546,7 @@ background:lightgrey"> 2004;1104:364-367 </span></p>
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Einhorn et al. Prevalence of sleep apnea in population of
                 adults with type 2 diabetes mellitus. </span><i><span style="font-size:9.0pt;
@@ -2550,7 +2556,7 @@ background:lightgrey"> 2007;13:355-362 </span></p>
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">7.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Sjostrom et al. Prevalence of sleep apnoea and snoring in
                 hypertensive men: a population based study. </span><i><span style="font-size:
@@ -2559,7 +2565,7 @@ background:lightgrey"> 2002;57:602-607 </span></p>
 
             <p class="MsoNormal" style="margin-top:1.4pt;margin-right:0in;margin-bottom:1.4pt;
 margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-size:
-9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">8.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;background:lightgrey">8.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span style="font-size:9.0pt;line-height:150%;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
 background:lightgrey">Schafer et al. Obstructive sleep apnea as a risk marker
                 in coronary artery disease. </span><i><span style="font-size:9.0pt;line-height:
@@ -2596,13 +2602,13 @@ line-height:150%">&nbsp;</span></b></p>
 
             <p class="MsoNoSpacing" style="line-height:150%">&nbsp;</p>
 
-            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
+            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
                 from Within the Dental Practice</p>
 
-            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
+            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
                 from Professional Referrals (Sleep Lab, Sleep Doctor, Primary Care Physician)</p>
 
-            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
+            <p class="MsoListParagraph" style="text-indent:-.25in;line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Patients&nbsp;
                 from Media-Generated Marketing</p>
 
             <p class="MsoNormal" style="line-height:150%">&nbsp;</p>
@@ -2733,35 +2739,35 @@ line-height:150%">&nbsp;</span></b></p>
                 patient will enjoy as a result of successful treatment using this program:&nbsp; </p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Quieter sleep with less snoring.</p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>More restful sleep. </p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Less disrupted, more consolidated sleep.</p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Awakening more rested, more refreshed, and with fewer headaches. </p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Increased mentation, less forgetfulness. </p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Better tolerance of others, and better general mood.</p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">7.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Less sleepiness during the day. </p>
 
             <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in;line-height:150%">8.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">8.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Decrease in blood pressure</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Next, </b>present
@@ -2816,12 +2822,12 @@ justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">
 
             <p class="MsoListParagraphCxSpFirst" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>All adult patients should be screened utilizing the DSS tablet screener.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>If the screener comes back with a high or severe risk assessment, then
                 you &nbsp;schedule the patient for a HST (as outlined in Section 6), or refer the
                 patient for a full PSG. </p>
@@ -2830,40 +2836,40 @@ text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;
 justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">Consultation</span></i></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Listen to the patient’s chief complaint.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Educate the patient about his disease.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review Sleep Study.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review Medical History.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review Meds.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review recent dental radiographs or imaging studies.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review previous treatments and evaluations by other specialists.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VIII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VIII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review ESS, TSS scores.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">IX.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IX.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Confirm adequate dentition and ROM. </p>
 
             <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;text-align:
@@ -2872,38 +2878,38 @@ justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">
 
             <p class="MsoListParagraphCxSpFirst" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Evaluate and document condition of teeth, periodontium, bony structures,
                 muscles of face, head, and neck, and the TM Joint. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Upper and lower impressions and George Gauge bite if necessary.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Pictures of patient as outlined in Operations Manual. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Take vital signs, weight, and measurements of neck. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Measure Mandibular ROM. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document Mallampati classification. </p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document the size of the soft palate, tongue, uvula, and tonsils.</p>
 
             <p class="MsoNormal" style="margin-bottom:0in;margin-bottom:.0001pt;text-align:
@@ -2911,11 +2917,11 @@ justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">
                 Charting</span></i></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Basic outline.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>SOAP notes. </p>
 
             <h2 style="text-align:justify;line-height:150%">&nbsp;</h2>
@@ -2931,32 +2937,32 @@ justify;line-height:150%">&nbsp;</p>
                 appointment are:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Introduction of doctor and staff. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Cursory review of PMH, teeth, muscles, ROM, and TM Joint to evaluate
                 candidacy for Oral Appliance Therapy (OAT). </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review previous SDB evaluations, including PSG and prior treatments. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review ESS and TSS scores. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Discuss treatment options and recommend plan of action. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Discuss treatment protocol. </p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Disclose relevant fees and secure financial arrangements.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">We cannot stress
@@ -2997,108 +3003,108 @@ justify;line-height:150%">&nbsp;</p>
                 may be connected to or in some way affected by an oral appliance.</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Teeth</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Free of decay</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>All restorations adequate</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Minimum of six per arch</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">d.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">d.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document open contacts</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">e.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">e.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Occlusion classification</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Periodontium</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Healthy</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>No active disease present</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document mobility</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">d.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">d.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Complete periodontal exam is recommended.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>TM Joint</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Recommend digital pano + evaluation</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>i.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Pathology, joint and disc, bone levels</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>&nbsp;ROM and noise</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Muscle splinting or trigger points (pterygoids, masseter, temporalis)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Soft tissue</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Mallampati classification</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tongue size</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tonsils</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">d.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">d.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Nasal patency</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">e.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">e.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Neck size</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Additional Records</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Pano or FMX or ceph (Keep radiation exposure to a minimum!)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>U and L models</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Photos (full face, anterior, L and R bite, Mallampati, Upper and Lower
                 full arch) </p>
 
@@ -3126,83 +3132,83 @@ justify;line-height:150%">&nbsp;</p>
                 appointment should include the following chart entries.</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>HPI (History of Present Illness)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>History of snoring, witnessed apneas, previous sleep studies, diagnosis,
                 treatment attempts, etc.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>PMH (Past Medical History)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Medications</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Subjective</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>How the patient is feeling in his own words</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Objective</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Things you can measure</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>PSG date, AHI and/or RDI score, Low O2, Time less than 90% O2</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>ESS and TSS scores</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">d.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">d.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>TMJ, teeth, muscles, contacts -- at a minimum you should include a
                 statement like “The patient has an adequate ROM and dentition for OAT.&nbsp; There
                 is no pain or noise in the TM Joint or muscle splinting or apparent periodontal
                 disease.”</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Assessment</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>List diagnosis, how the patient has responded to prior therapies, and
                 whether or not he is a candidate for OAT</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Plan</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document your plan, including</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>i.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Recommended treatment, appropriate referrals if not a candidate for OAT</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>ii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Choice of appliance</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>iii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Treatment time and follow up schedule</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">Subsequent chart
@@ -3272,216 +3278,216 @@ line-height:150%">&nbsp;</span></b></p>
                 dental devices according to the following guidelines.</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%"><b>I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%"><b>I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></b><b>Tongue Retaining Devices (TRD)</b></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tongue Stabilizer</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>TSD (Aveo)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">c.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tongue Repositioning Device (Great Lakes Ortho)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%"><b>II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%"><b>II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></b><b>Mandibular Advancement Devices (MAD)</b></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Non adjustable</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>i.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Clasp Retained Mandibular Appliance (CRMA)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>ii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Elastomeric Sleep Appliance</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>iii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Mandibular Inclined Repositioner</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>iv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>iv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>OSAP</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>v.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>v.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>SnoreFree</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>vi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>vi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Snoreguard</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">b.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Adjustable</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>i.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Elastomeric Mandibular Appliance (EMA)*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>ii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>EMA Titratable*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>iii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Equalizer*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><b><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>iv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><b><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>iv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></b>Full Breath Sleep Appliance*&nbsp; </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>v.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>v.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Herbst Appliance*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>vi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>vi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Hilsen *</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>vii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>vii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Klearway*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>viii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>viii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>MDSA*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>ix.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>ix.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Moses Appliance*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>x.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>x.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Narval*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>OPAP*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>OASYS*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xiii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xiii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>OSAP*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xiv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xiv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>PM Positioner*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Quiet Night*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xvi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xvi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Respire</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xvii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xvii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Respironics Custom Oral Appliance*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xviii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xviii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Restful Nights 1<sup>st*</sup></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xix.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xix.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Silencer</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xx.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xx.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Silent nite*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Silent Partner*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Sleep and Nocturnal Obstruction Patency Appliance (SNOAR)*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxiii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxiii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Sleep Splint*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxiv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxiv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Snore Hook Discluder*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxv.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Somnomed MAS*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxvi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxvi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Somnoguard</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxvii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxvii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>SUAD*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxviii.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxviii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>TAP*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxix.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxix.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>The Moses*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxx.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxx.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tongue Locking Device</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>xxxi.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-1.5in;line-height:150%"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>xxxi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Snore-Aid Plus*</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -3499,27 +3505,27 @@ text-indent:-1.5in;line-height:150%"><span class="font-times-new-roman">&nbsp;&n
                 retaining devices may be indicated for use in:</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Edentulous patients</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Patients with too few teeth (Less than six per arch)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Active TM Joint Disease</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Muscle splinting</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Non apneics snorers or mild OSA</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Interim appliance during dental treatment</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
@@ -3629,43 +3635,43 @@ line-height:150%">&nbsp;</p>
             <p class="MsoListParagraphCxSpMiddle" style="line-height:150%">&nbsp;</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Stability</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Retention</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Durability</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Adjustability</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Efficacy</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Ease of use by clinician</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Ease of use by patient</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">VIII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">VIII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Patient comfort, which is crucial for compliance</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%">IX.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">IX.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Cost</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-indent:-.5in;
-line-height:150%"><span lang="PT-BR">X.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span lang="PT-BR">X.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><span lang="PT-BR">Posterior contact vs. no posterior contact</span></p>
 
             <p class="MsoNormal" style="margin-left:.5in;line-height:150%">When you are
@@ -3775,84 +3781,84 @@ margin-left:.5in;margin-bottom:.0001pt;line-height:150%">As you can see,
             <p class="MsoNormal" style="margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.5in;margin-bottom:.0001pt;line-height:150%">&nbsp;</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Adjustability</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>Vertical</i></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>Horizontal</i></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>Patient or Dentist</i></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>Increments</i></p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Small as possible – No Boil and Bite except for provisional</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Doesn’t interfere with tongue space</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Doesn’t irritate cheeks</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Allows lateral and/or protrusive movement</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Prevents lateral and/or protrusive movement</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Prevents jaw opening</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>Lips sealed</i></p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Allows jaw opening</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Sturdy – Breaks and deterioration</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Retentive</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>&nbsp;Hard acrylic with/without clasps</i></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>&nbsp;Laminate types</i></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-indent:-.25in;line-height:
-150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><i>&nbsp;ThermAcryl</i></p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Places less pressure on teeth – minimal teeth/lots C &amp; B</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Easy to place and use – elderly and physically impaired</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Decreases bruxism – anterior stops</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Supports TMJ – posterior stops</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Comfort</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.5in;text-indent:-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;Cost</p>
 
             <p class="MsoNormal" style="margin-left:.5in;line-height:150%">&nbsp;</p>
@@ -3924,23 +3930,23 @@ line-height:150%;font-family:&quot;Cambria&quot;,&quot;serif&quot;;color:#8DB3E2
                 you are delivering, certain protocols should be followed.</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">1.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Ensure proper fit and comfort:&nbsp; the importance of proper fit cannot be
                 overemphasized.&nbsp; If a device is not comfortable, patients will not want to wear
                 it.&nbsp; </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">2.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Make sure your device is not an orthodontic appliance:&nbsp; it should not be
                 pushing or pulling or pinching anywhere, soft tissue or otherwise</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">3.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>When possible, fit the upper and lower portions of the device
                 independently, then proceed to proper bite and alignment.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Start the patient in a forward but comfortable position.&nbsp; Too far
                 forward is harder to get used to; not far enough means it’s probably not
                 working.&nbsp; Reach for the middle ground.&nbsp; This should have been done properly
@@ -3948,12 +3954,12 @@ line-height:150%">4.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&
                 leeway by always giving yourself the option to move the patient back.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">5.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Review the Informed Consent and have the patient sign this document.&nbsp;
                 Specifically ask if they have any questions.&nbsp; Document this.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">6.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Set the patient up for realistic expectations.&nbsp; Establish sidelines of
                 normal (a few can wear it through the night from the beginning; some must take
                 it out halfway through the night due to pain and discomfort.)&nbsp; A reasonable
@@ -3962,7 +3968,7 @@ line-height:150%">6.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&
                 which means you can “congratulate” them on their quick adaptation.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-indent:-.25in;
-line-height:150%">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%">7.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>After accomplishing proper fit and position and bite, then proceed to &nbsp;talking
                 about recapturing the bite (below).</p>
 
@@ -4083,31 +4089,31 @@ line-height:150%">7.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&
                 it’s going.&nbsp;&nbsp; Specifically,</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">1)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">1)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Are you wearing the appliance?</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">2)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">2)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Are you making it through the night with the appliance in place?</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">3)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">3)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Ask about sore teeth or soft tissue or muscles or TM joints. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">4)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">4)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Is a bed partner present to assess changes in snoring?&nbsp; If so, report.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">5)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">5)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Do you feel like you are sleeping better?</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">6)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">6)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Do you feel any different during the day?</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">7)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">7)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>If side effects are minimal, then it is OK to start the titration phase.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -4143,7 +4149,7 @@ text-indent:-.25in;line-height:150%">7)<span class="font-times-new-roman">&nbsp;
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u>TAP: </u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b></p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Place wrench in the middle slot and count half turns (180
                 degrees).&nbsp; As you hold the appliance in your hand and you are looking straight
                 at it, “right to tight and left to loose.”&nbsp; As a general rule, instruct your
@@ -4160,7 +4166,7 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u>Somnodent:</u></b></p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The adjustment wrench goes into the holes of the jack screw on
                 each side.&nbsp; Turning in the direction of the arrow advances the mandible forward.&nbsp;
                 Again, count “clicks” here.&nbsp; Patient can adjust 1-5 clicks on each side per
@@ -4176,7 +4182,7 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u>SUAD:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b></p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The SUAD device can be made with a sliding bar and set screw or
                 with standard shims as you would recognize from the traditional Herbst.&nbsp; The
                 advantage of the sliding bar and screw is that you don’t have to take the
@@ -4191,7 +4197,7 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><u>EMA:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b></p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Titration forward is accomplished by going to the next smaller
                 size of rubber band.&nbsp; A stiffer band allows less side-to-side movement and
                 doesn’t stretch out as quickly as a softer band.&nbsp; Have the patient experiment
@@ -4201,7 +4207,7 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
             <p class="MsoNormal" style="text-align:justify;line-height:150%">Narval:</p>
 
             <p class="MsoListParagraph" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>&nbsp;There are numbers on the connecting rods (yes, there are, and
                 yes, they are very small and you may need your loops to see them).&nbsp; Going from
                 a higher number to a lower number moves the jaw forward more.</p>
@@ -4209,46 +4215,46 @@ line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">Week 3 </span></i></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">1)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">1)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document current position or band. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">2)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">2)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document improvements in snoring and sleeping and energy levels.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">3)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">3)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Address side effects. </p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">4)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">4)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Continue titration based on clinical findings.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">Week 6</span></i></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">1)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">1)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document current position or band.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">2)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">2)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Document improvements in snoring and sleeping and energy levels.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">3)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">3)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Address side effects. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">4)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">4)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Continue titration based on clinical findings.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">5)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">5)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>If it appears to be working well subjectively, then schedule the patient
                 for a home sleep monitor test.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">6)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">6)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Evaluate the HST and if it shows success (RDI cut in half and reduced
                 below 15, AHI cut in half and reduced to below 10), then send the report to the
                 DSS physician to be interpreted.&nbsp; If not successful, continue to titrate.&nbsp; It
@@ -4258,7 +4264,7 @@ text-indent:-.25in;line-height:150%">6)<span class="font-times-new-roman">&nbsp;
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">Week 12 </span></i></b></p>
 
             <p class="MsoListParagraph" style="margin-left:64.5pt;text-align:justify;
-text-indent:-.25in;line-height:150%">1)<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">1)<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Same as for week 6</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -4282,62 +4288,62 @@ text-indent:-.25in;line-height:150%">1)<span class="font-times-new-roman">&nbsp;
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">MADs</span></i></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Joint pain/discomfort</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tooth pain/discomfort</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Muscle spasms/pain</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Too much saliva</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Not enough saliva</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Crowns/fillings dislodged</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Implants/perio teeth increased mobility</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VIII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VIII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tooth movement</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in;line-height:150%">a.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Max: linguoversion, Man: labioversion, tooth spacing</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IX.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IX.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Allergic reactions</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">X.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">X.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Posterior open Bite</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:0in;text-align:justify;
 line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">TRDs</span></i></b></p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Tongue elongation</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Soft tissue irritation</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Posterior teeth extrusion</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">The last few
@@ -4357,23 +4363,23 @@ text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp
                 found that 81% of them reported side effects<sup>&nbsp;(Pantin &amp; et.al, 1999)</sup>:</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Excessive salivation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (30%)</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Dry mouth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (23%)</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>TM Joint pain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (26%)</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Myofacial pain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (25%)</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-.25in;line-height:150%"><span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Occlusal changes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (16%)</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">Many of your
@@ -4415,27 +4421,27 @@ text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp
                 caused by an improper bite registration.&nbsp; It is managed by:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Back up and slow down.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Discontinue wearing (Go back to CPAP).</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Moist heat, massage.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>NSAIDs. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Sometimes decreasing vertical height can help.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Retaking the bite and having the lab reset the device with the new bite.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b>Unilateral</b>
@@ -4444,34 +4450,34 @@ text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;
                 posterior stops, and as a last resort from Mandibular eccentricity.&nbsp; </p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Ensure that midlines are aligned. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Check occlusion on appliance as well as in the mouth after the appliance
                 is removed. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Encourage wearing of morning repositioner or AM aligner. &nbsp;</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Encourage leaf gauge and tongue and chin push exercises. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Provide a balanced tripod. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VI.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VI.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Add to posterior of asymptomatic side or subtract from posterior of
                 symptomatic side:&nbsp; remember that the side that is hitting is the side that is
                 hurting</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">VII.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Discontinue wear and go back to CPAP.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">The study by <i>Almeida
@@ -4508,24 +4514,24 @@ text-indent:-.5in;line-height:150%">VII.<span class="font-times-new-roman">&nbsp
                 into the neck.&nbsp; It can be very intense and painful.&nbsp; It is managed by:</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">I.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">I.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Discontinuing wearing the appliance until pain subsides (use CPAP
                 instead). </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">II.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">II.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>NSAIDs.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">III.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">III.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Moist heat. </p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">IV.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">IV.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Physical therapy.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.5in;line-height:150%">V.<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.5in;line-height:150%">V.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Flexeril (5 to 10 mg tid) or Valium (5 to 10 mg) bid.</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%"><b><i><span style="font-size:12.0pt;line-height:150%">Salivary Flow</span></i></b></p>
@@ -4805,21 +4811,21 @@ line-height:150%">&nbsp;</span></b></p>
                 Testing devices are categorized as level one through four:</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span class="font-times-new-roman">&nbsp; </span></span>Level I: Standard
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Level I: Standard
                 laboratory polysomnography<b><span style="color:#0070C0"> </span></b></p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span class="font-times-new-roman">&nbsp; </span></span>Level II: Portable
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Level II: Portable
                 full polysomnography- heart rate rather than ECG acceptable and attendance by
                 trained personnel not always required&nbsp; </p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span class="font-times-new-roman">&nbsp; </span></span>Level III: Modified
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Level III: Modified
                 portable sleep apnea testing, with ventilatory recording (i.e. effort and
                 flow), ECG or heart rate, and oximetry </p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span class="font-times-new-roman">&nbsp; </span></span>Level IV: Continuous
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;;color:black">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Level IV: Continuous
                 single or dual parameter recording</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">Most of the
@@ -4891,25 +4897,25 @@ line-height:150%">&nbsp;</span></p>
                 from healthy subjects.</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>Two emitters opposite
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Two emitters opposite
                 a photo receptor </p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>Oxygenated Hb absorbs
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Oxygenated Hb absorbs
                 more infrared and de-oxygenated more red light</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>The pulsitile nature
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>The pulsitile nature
                 of arterial blood flow creates a “waveform,” with peaks and troughs as surges
                 occur</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>An R:R ratio is
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>An R:R ratio is
                 calculated based on empirical formulas and calibration curves from healthy
                 subjects and an SpO2 value is generated</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span class="font-times-new-roman">&nbsp; </span></span>Spo2 has limitations</p>
+line-height:150%"><span style="font-family:&quot;Wingdings 2&quot;">¡<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Spo2 has limitations</p>
 
             <p class="MsoNormal" style="line-height:150%"><img width="462" height="160" src="../../../assets/images/medicine_manual_assets/image044.jpg" align="left" hspace="12" alt="pulse-ox finger dia"></p>
 
@@ -5149,43 +5155,43 @@ line-height:150%">We hope that you will take an active role in marketing your
                 include:</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Patient brochures (printing cost)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Business cards (printing cost)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Letterhead&nbsp; (printing cost)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Posters and signs for your office (printing cost)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Appliance sample models</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Instructional videos with online access</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Web site updated and professional</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Educational information online</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>PowerPoint lecture for speaking opportunities</p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in;
-line-height:150%"><span style="font-family:Wingdings">Ø<span class="font-times-new-roman">&nbsp;
+line-height:150%"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Letter writing/correspondence to patients and doctors</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">You cannot do
@@ -5249,23 +5255,23 @@ line-height:150%">&nbsp;</span></b></p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:
-Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain a copy of the patient’s medical insurance card, front and
                 back, scanned into the DS3 software</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-bottom:0in;margin-bottom:
-.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain a copy of the patient’s baseline and/or latest sleep study</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-bottom:0in;margin-bottom:
-.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Request and Obtain a prescription for dental device therapy as
                 well as a Letter of Medical Necessity (LOMN) from the patient’s primary care
                 physician or sleep physician</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:
-Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain signature and completion of Affidavit for CPAP intolerance
                 form&nbsp; if applicable</p>
 
@@ -5283,20 +5289,20 @@ Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 
             <p class="MsoListParagraphCxSpFirst" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:
-Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Health Insurance Claim Form (CMS 1500)</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-bottom:0in;margin-bottom:
-.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Billing and Insurance Policy</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-bottom:0in;margin-bottom:
-.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.0001pt;text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Insurance Information Sheet</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:justify;text-indent:-.25in;line-height:150%"><span style="font-family:
-Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>LOMN (Letter of Medical Necessity)</p>
 
             <p class="MsoNormal" style="text-align:justify;line-height:150%">&nbsp;</p>
@@ -5358,13 +5364,13 @@ line-height:150%">• Excludes items that are disposable</p>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.25in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Title I – preserves health insurance coverage for workers and
                 their familieswhen they change or lose their jobs.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.25in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Title II – referred to as “Administrative Simplification
                 provision of HIPAA.” Contains rules for privacy and security of protected
                 health information (PHI), as well as electronic transfer of information.&nbsp; This
@@ -5379,23 +5385,23 @@ text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span cl
 
             <p class="MsoListParagraphCxSpFirst" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Any information in the chart or record</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Any conversation between health care providers &amp; others about
                 care</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Any information in the computer system</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>All billing information</p>
 
             <p class="MsoNormal" style="margin-left:.25in;text-align:justify;line-height:
@@ -5406,24 +5412,24 @@ text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span cl
 
             <p class="MsoListParagraphCxSpFirst" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Provide patients with a copy of their health records within 30 days
                 if requested.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Make any requested corrections to health information within 60 days.</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Provide patients with a notice that tells them how their
                 information may be used or shared.</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-top:0in;margin-right:0in;
 margin-bottom:0in;margin-left:.75in;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+text-indent:-.25in;line-height:150%"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Provide patients with a report if information was shared telling them
                 when and why.</p>
 
@@ -5863,534 +5869,534 @@ line-height:150%">&nbsp;</span></b></p>
 
             <h1 style="line-height:150%"><a name="_Toc359595798"></a><span class="TitleChar"><span style="font-size:26.0pt;line-height:150%">Works Cited</span></span></h1>
 
-            <p class="MsoBibliography small-indent"><i>Sleep Deprivation</i>. (2011, March 11). Retrieved March 11, 2011, from Wikipedia:
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in"><i>Sleep Deprivation</i>. (2011, March 11). Retrieved March 11, 2011, from Wikipedia:
                 http://en.wikipedia.org/wiki/Sleep_deprivation</p>
 
-            <p class="MsoBibliography small-indent">Aarab G, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Aarab G, e.
                 a. (2009). Variabiliy in the AHI and its consequences for diagnosis and therapy
                 evaluation. <i>Respiration</i>, 32-37.</p>
 
-            <p class="MsoBibliography small-indent">Aber WR, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Aber WR, e.
                 a. (1989). Consistency of repsiratory measurements from night to night during
                 the sleep of elderly men. <i>Chest</i>, 747-751.</p>
 
-            <p class="MsoBibliography small-indent">Ahmadi N,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ahmadi N,
                 e. a. (2008). Clinical diagnosis of sleep apnea based on single night of PSG vs
                 two nights of PSG. <i>Sleep Bretah</i>.</p>
 
-            <p class="MsoBibliography small-indent">Ahmed M, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ahmed M, e.
                 a. (2007). Portable monitors in the diagnosis of OSA. <i>Chest</i>, 1672-1677.</p>
 
-            <p class="MsoBibliography small-indent">AHRQ.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">AHRQ.
                 (2007). Home diagnosis of obstructive sleep apnea-hypopnea syndrome. <i>Agency
                     for Healthcare Research and Quality</i> (p. 127). AHRQ.</p>
 
-            <p class="MsoBibliography small-indent">AHRQ.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">AHRQ.
                 (2007). OSA: modeling different diagnostic strategies. <i>AHRQ</i>, (p. 116).
                 Rockville.</p>
 
-            <p class="MsoBibliography small-indent">Almeida F,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Almeida F,
                 e. a. (2006). Long-term sequelae of OAT in OSA patients: part 2. Study-model
                 analysis. <i>Am J Orthod Dentofacial Orthop</i>, 205-213.</p>
 
-            <p class="MsoBibliography small-indent">Almeida FR,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Almeida FR,
                 e. a. (2002). Effects of mandibular posture on obstructive sleep apnea severity
                 and the temporomandibular joint in patients fitted with an oral appliance. <i>Sleep</i>,
                 507-13.</p>
 
-            <p class="MsoBibliography small-indent">Ancoli-Israel
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ancoli-Israel
                 S, e. a. (1991). Sleep disordered breathing in community dwelling elderly. <i>Sleep</i>,
                 486-495.</p>
 
-            <p class="MsoBibliography small-indent">Ayas NT, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ayas NT, e.
                 a. (2004). Auto titrating versus standard CPAP for the treatment of OSA:
                 Results of a meta-analysis. <i>Sleep</i>, 249-253.</p>
 
-            <p class="MsoBibliography small-indent">Barthlen
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Barthlen
                 GM, e. a. (2000). Comparison of three oral appliances for the treatment of
                 severe OSAS. <i>Sleep Medicine</i>, 299-305.</p>
 
-            <p class="MsoBibliography small-indent">Battagel
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Battagel
                 JM, K. B. (2005). Dental side0effects of MAS wear in patients who snore. <i>Clin
                     Otolaryngol</i>, 149-156.</p>
 
-            <p class="MsoBibliography small-indent">Bearpark H,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bearpark H,
                 e. a. (1993). Occurrence and correlates of sleep disordered breathing in the
                 Australian town of Busselton: a preliminary analysis. <i>Sleep</i>, 53-55.</p>
 
-            <p class="MsoBibliography small-indent">Bennet L,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bennet L,
                 e. a. (1998). Sleep fragmentation indices as predictors of daytime sleepiness
                 and nCPAP response in OSA. <i>Am J Respir Crit Care Med</i>, 778-786.</p>
 
-            <p class="MsoBibliography small-indent">Berry RB,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Berry RB,
                 e. a. (2008). Portable montioring and autotitration versus PSG for the
                 diagnosis and treatment of sleep apnea. <i>Sleep</i>, 1423-1431.</p>
 
-            <p class="MsoBibliography small-indent">Bixler E,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bixler E,
                 e. a. (1998). Effects of age on sleep apnea in men. <i>Am J Respir Crit Care
                     Med</i>, 144-148.</p>
 
-            <p class="MsoBibliography small-indent">Bixler E,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bixler E,
                 e. a. (2001). Prevalence of sleep disordered breathing in women. <i>Am J Respir
                     Crit Care Med</i>, 608-613.</p>
 
-            <p class="MsoBibliography small-indent">Bixler E,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bixler E,
                 V. A. (1998). Effects of age on sleep apnea in men. <i>Am J Respir Crit Care
                     Med</i>, 144-148.</p>
 
-            <p class="MsoBibliography small-indent"><span lang="PT-BR">Bixler E, V. A.-B. (2001). </span>Prevalence of sleep-disordered
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in"><span lang="PT-BR">Bixler E, V. A.-B. (2001). </span>Prevalence of sleep-disordered
                 breathing in women. <i>Am J Respir Crit Care Med</i>, 608-613.</p>
 
-            <p class="MsoBibliography small-indent">Bloch KE,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bloch KE,
                 e. a. (2000). A randomized controlled crossover trial of two oral appliances. <i>AJRCCM</i>,
                 246-251.</p>
 
-            <p class="MsoBibliography small-indent">Bloch KE,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bloch KE,
                 e. a. (2007). Ambulatory management of OSA without PSG. <i>Ann Intern Med</i>,
                 350.</p>
 
-            <p class="MsoBibliography small-indent">Bondemark
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bondemark
                 L, e. a. (2000). Craniomandibular status and function in patients with habitual
                 snoring and obstructive sleep apnoea after nocturnal treatment with a mandibular
                 advancement splint: a 2-year follow up. <i>Eur J Orthod</i>, 53-60.</p>
 
-            <p class="MsoBibliography small-indent">Bondemark,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Bondemark,
                 L. (1999). Does 2 years' nocturnal treatment with a mandibular advancement
                 splint in adult patients with snoring and OSAS cause a change in the posture of
                 the mandible? <i>Am J of Orthod Dentafacial Orthop</i>, 621-628.</p>
 
-            <p class="MsoBibliography small-indent">Boyer S, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Boyer S, e.
                 a. (2003). Role of portable sleep studies for diagnosis of OSA. <i>Curr Opin
                     Pulm Med</i>, 465-470.</p>
 
-            <p class="MsoBibliography small-indent">Broughton
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Broughton
                 R, e. a. (1996). Home assessment of sleep disorders by portable monitoring. <i>J
                     Clin Neurophys</i>, 272-284.</p>
 
-            <p class="MsoBibliography small-indent">Chediak AD,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Chediak AD,
                 e. a. (1996). Nightly variability in the indices of SDB in men being evaluated
                 for impotence with consecutive night PSGs. <i>Sleep</i>, 589-592.</p>
 
-            <p class="MsoBibliography small-indent">Chervin RD,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Chervin RD,
                 e. a. (1999). Cost-utility of three approaches to the diagnosis of sleep apnea:
                 PST, HST, and empirical therapy. <i>Ann Intern Med</i>, 496-505.</p>
 
-            <p class="MsoBibliography small-indent">Collop, N.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Collop, N.
                 (2008). Portable monitoring for the diagnosis of obstructive sleep apnea. <i>Curr
                     Opin Pulm Med</i>, 525-529.</p>
 
-            <p class="MsoBibliography small-indent">Deane SA,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Deane SA,
                 e. a. (2009). Comparison of mandibular advancement splint and tongue
                 stabilizing device in obstructive sleep apnea: a randomized controlled trial. <i>Sleep</i>,
                 648-653.</p>
 
-            <p class="MsoBibliography small-indent">Dement WC,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Dement WC,
                 K. N. (1957). Cyclic variations in EEG during sleep and their relation to eye
                 movements, body motility, and dreaming. <i>Electroencephalogr Clin Neurophysiol</i>,
                 673.</p>
 
-            <p class="MsoBibliography small-indent">Duran J, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Duran J, e.
                 a. (2001). Obstructive sleep apnea-hypopnea and related clinical features in a
                 population based sample of subjects aged 30 to 70 yr. <i>Am J Respir Crit Care
                     Med</i>, 685-689.</p>
 
-            <p class="MsoBibliography small-indent">Duran J, E.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Duran J, E.
                 S. (2001). Obstructive sleep apnea-hypopnea and related clinical features in a population-based
                 sample of subjects aged 30 to 70 yr. <i>Am J Respir Crit Care Med</i>, 685-689.</p>
 
-            <p class="MsoBibliography small-indent">Einhorn, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Einhorn, e.
                 a. (2007). Prevalence of sleep apnea in populatio of adults with type 2
                 diabetes millitus. <i>Endocr Pract</i>, 355-362.</p>
 
-            <p class="MsoBibliography small-indent">Elshaug, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Elshaug, e.
                 a. (2007). Redefining success in airway surgery for obstructive sleep apnea: a
                 meta analysis and synthesis of the evidence. <i>Sleep</i>, 461-7.</p>
 
-            <p class="MsoBibliography small-indent">Emsellem
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Emsellem
                 HA, e. a. (1990). Verification of sleep apnea using a portable sleep apnea
                 screening device. <i>South Med J</i>, 748-752.</p>
 
-            <p class="MsoBibliography small-indent">Ferber R,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ferber R,
                 e. a. (1994). Portable recording in the assessment of OSA. ASDA standards of
                 practice. <i>Sleep</i>, 378-392.</p>
 
-            <p class="MsoBibliography small-indent">Ferguson
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ferguson
                 KA, e. a. (1996). A randomized crossover study of an oral appliance vs nasal
                 cpap in the treatment of mild to moderate OSA. <i>Chest</i>, 1269-75.</p>
 
-            <p class="MsoBibliography small-indent">Ferguson
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ferguson
                 KA, e. a. (1997). A short-term controlled trial of an adjustoral oral appliance
                 for the treatment of mild to moderate OSA. <i>Thorax</i>, 362-8.</p>
 
-            <p class="MsoBibliography small-indent">Flemons WW,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Flemons WW,
                 e. a. (1994). Likelihood ratios for a sleep apnea clinical prediction rule. <i>Am
                     J Respir Crit Care Med</i>, 1279-1285.</p>
 
-            <p class="MsoBibliography small-indent">Flemons WW,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Flemons WW,
                 e. a. (2003). Home diagnosis of sleep apnea: a systematic review of the
                 literature. <i>Chest</i>, 1543-1579.</p>
 
-            <p class="MsoBibliography small-indent">Flemons WW,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Flemons WW,
                 e. a. (2004). Access to diagnosis and treatment of patients with suspected
                 sleep apnea. <i>Am J Respir Crit Care Med</i>, 668-672.</p>
 
-            <p class="MsoBibliography small-indent">Flemons WW,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Flemons WW,
                 R. J. (1996). The diagnosis of sleep apnea: questionnaires and home studies. <i>Sleep</i>,
                 243-247.</p>
 
-            <p class="MsoBibliography small-indent">Force, A.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Force, A.
                 T. (1999). <i>Sleep related breathing disorders in adults: recommendations for
                     syndrome definition and measurement techniques in clinical research.</i> Sleep.</p>
 
-            <p class="MsoBibliography small-indent">Freud, S.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Freud, S.
                 (1955). <i>The Interpretation of Dreams.</i> New York: Basic Books.</p>
 
-            <p class="MsoBibliography small-indent">Fritsch KM,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Fritsch KM,
                 e. a. (2001). Side effects of mandibular advancement devices for sleep apnea
                 treatment. <i>Am J Respir Crit Care Med</i>, 813-8.</p>
 
-            <p class="MsoBibliography small-indent">Fujita, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Fujita, e.
                 a. (1981). Surgical correction of anatomic abnormalities of obstructive sleep
                 apnea syndrome; uvulopalatopharyngoplasty. <i>Otolaryngol Head Neck Surg</i>,
                 89:923.</p>
 
-            <p class="MsoBibliography small-indent">Gami, e. a.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Gami, e. a.
                 (2004). Association of atrial fibrillation and obstuctive sleep apnea. <i>Circulation</i>,
                 364-367.</p>
 
-            <p class="MsoBibliography small-indent">Garrigue,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Garrigue,
                 e. a. (2004). Association of atrial fibrillation and obstructive sleep apnea. <i>Circulation</i>,
                 364-367.</p>
 
-            <p class="MsoBibliography small-indent">Gauthier L,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Gauthier L,
                 e. a. (2009). Efficacy of two mandibular advancement appliances in the
                 management of snoring and mild-moderate OSA; a cross-over randomized study. <i>Sleep
                     Medicine</i>, 329-36.</p>
 
-            <p class="MsoBibliography small-indent">Ghegan MD,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ghegan MD,
                 e. a. (2006). Laboratory versus portable sleep studies: a metanalysis. <i>Laryngoscope</i>,
                 859-864.</p>
 
-            <p class="MsoBibliography small-indent">Gislason T,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Gislason T,
                 e. a. (1988). Prevalence of sleep apnea syndrome among Swedish men: an
                 epidemiological study. <i>J Clin Epidemiol</i>, 571-576.</p>
 
-            <p class="MsoBibliography small-indent">Gleadhill
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Gleadhill
                 IC, e. a. (1991). Upper airway colapsibility in snorers and in patients with
                 obstructive hypopneas and apnea. <i>Am Rev Respir Dis</i>, 1300-1303.</p>
 
-            <p class="MsoBibliography small-indent">Hans MG, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Hans MG, e.
                 a. (1997). Comparison of two dental devices for treatment of OSAS. <i>AJODO</i>,
                 562-70.</p>
 
-            <p class="MsoBibliography small-indent">HM, L. (2005).
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">HM, L. (2005).
                 A comparison of the twin Block and Herbst advancement splints in treatment of
                 patients with OSA: a prospective study. <i>Eur J of Orthodontics</i>, 82-90.</p>
 
-            <p class="MsoBibliography small-indent">Hobson JA,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Hobson JA,
                 M. R. (1977). The brain as a dream-state generator: An activation-synthesis
                 hypothesis of the dream process. <i>Am J Psychiatry</i>, 1335-1348.</p>
 
-            <p class="MsoBibliography small-indent">Issa, F.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Issa, F.,
                 &amp; et.al. (1993). Digital monitoring of OSA using snoring sound and arterial
                 oxygen saturation. <i>Sleep</i>, 132.</p>
 
-            <p class="MsoBibliography small-indent">issa, F.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">issa, F.,
                 &amp; et.al. (1993). Digital monitoring of SDB using snoring sound and arterial
                 oxygen saturation. <i>Am Rev Respir Dis</i>, 1023-1029.</p>
 
-            <p class="MsoBibliography small-indent">Katsantonis,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Katsantonis,
                 G., &amp; et.al. (1988). Management of obstructive sleep apnea: comparison of
                 various treatment modalities. <i>Laryngoscope</i>, 304-309.</p>
 
-            <p class="MsoBibliography small-indent">Kingshott,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Kingshott,
                 R., &amp; et.al. (1998). Does arousal frequency predict daytime function? <i>Eur
                     Respir J</i>, 1264-1270.</p>
 
-            <p class="MsoBibliography small-indent">Kripske,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Kripske,
                 D., &amp; et.al. (1997). Prevalence of sleep disordered breathing in ages 40-64
                 years: a population-based survey. <i>Sleep</i>, 65-76.</p>
 
-            <p class="MsoBibliography small-indent">Kryger, R.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Kryger, R.
                 D. (2005). <i>Normal human sleep: an overview.</i> Philadelphia:
                 Elsevier/Saunders.</p>
 
-            <p class="MsoBibliography small-indent">Kryger,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Kryger,
                 Roth, &amp; Dement. (2005). <i>Principles and Practice of sleep medicine.</i>
                 Philadelphia: Elsevier / Saunders.</p>
 
-            <p class="MsoBibliography small-indent">Lamont.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Lamont.
                 (1988). Mouthguard type splints.</p>
 
-            <p class="MsoBibliography small-indent">Levendowski
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Levendowski
                 D, e. a. (2009). The impact of OSA variability measured in lab versus in honme
                 on sample size calculations. <i>Int Arch Med</i>, 2.</p>
 
-            <p class="MsoBibliography small-indent">Lindberg E,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Lindberg E,
                 e. a. (2001). Role of snoring and daytime sleepiness in occupational accidents.
                 <i>Am J Respir Crit Care Med</i>, 2031-2035.</p>
 
-            <p class="MsoBibliography small-indent">Lloberes P,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Lloberes P,
                 e. a. (2004). Predictive factors of QOL improvement and CPAP use in patients
                 with OSA: study at 1 year. <i>Chest</i>, 1241-1247.</p>
 
-            <p class="MsoBibliography small-indent">Logan, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Logan, e.
                 a. (2001). High prevalence of unrecognized sleep apnooea in drug-resistant
                 hypertension. <i>J Hypertens</i>, 2271-2277.</p>
 
-            <p class="MsoBibliography small-indent">Lowe A, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Lowe A, e.
                 a. (1986). Facial morphology abd obstructive sleep apnea. <i>Am J Orthod
                     Dentofacial Orthop</i>, 484-91.</p>
 
-            <p class="MsoBibliography small-indent">Mahotra A,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Mahotra A,
                 W. D. (2002). Obstructive sleep apnoea. <i><span lang="PT-BR">Lancet</span></i><span lang="PT-BR">, 237-245.</span></p>
 
-            <p class="MsoBibliography small-indent"><span lang="PT-BR">Malhotra A, W. D. (2002). </span>Obstructive sleep apnooea. <i>Lancet</i>,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in"><span lang="PT-BR">Malhotra A, W. D. (2002). </span>Obstructive sleep apnooea. <i>Lancet</i>,
                 237-245.</p>
 
-            <p class="MsoBibliography small-indent">Man GC, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Man GC, e.
                 a. (1995). Validation of a portable sleep apnea monitoring device. <i>Chest</i>,
                 388-393.</p>
 
-            <p class="MsoBibliography small-indent">Manber R,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Manber R,
                 e. a. (1999). Sex, steroids, and sleep: A review. <i>Sleep</i>, 540-555.</p>
 
-            <p class="MsoBibliography small-indent">Marklund M,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Marklund M,
                 e. a. (2004). Mandibular Advancement Devices in 630 men and women with obstructive
                 sleep apnea and snoring: tolberability and predictors of treatment success. <i>Chest</i>,
                 1270-1278.</p>
 
-            <p class="MsoBibliography small-indent">Marklund,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Marklund,
                 M. (2006). Predictors of long-term orthodontic side effects from MAD's in
                 patients with snoring and OSA. <i>Am J Orthod Dentofacial Orthop</i>, 214-221.</p>
 
-            <p class="MsoBibliography small-indent">Marklund,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Marklund,
                 M., &amp; Franklin, K. (2007). Long-term effects of mandibular repositioning
                 appliances on symptoms of sleep apnoea. <i>J Sleep Res</i>, 414-420.</p>
 
-            <p class="MsoBibliography small-indent">Martinez-Gomis
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Martinez-Gomis
                 J, e. a. (2010). Five years of sleep apnea treatment with a MAD: Side effects
                 and technical complications. <i>Angle Orthodontist</i>, 30-36.</p>
 
-            <p class="MsoBibliography small-indent">Med, A. J.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Med, A. J.
                 (2004). Executive summary on the systematic review and practice parameters for
                 portable monitoring in the investigation of suspected sleep apnea in adults. <i>Am
                     J Respir Crit Care Med</i>, 1160-1163.</p>
 
-            <p class="MsoBibliography small-indent">Meurice JC,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Meurice JC,
                 e. a. (1994). Predictive factors of long term compliance with nasal CPAP
                 treatment in sleep apnea syndrome. <i>Chest</i>, 429-433.</p>
 
-            <p class="MsoBibliography small-indent">Michaelson
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Michaelson
                 PG, e. a. (2006). Validations of a portable home sleep study with twelve lead
                 PSG: conparisons and insights into a variable gold standard. <i>Ann Otol Rhinol
                     Laryngol</i>, 802-809.</p>
 
-            <p class="MsoBibliography small-indent">Morgenthaler
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Morgenthaler
                 TI, e. a. (2006). Complex sleep apnea syndrome: Is it a unique clinical
                 syndrome? <i>Sleep</i>, 1203-09.</p>
 
-            <p class="MsoBibliography small-indent">Mulgrew AT,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Mulgrew AT,
                 e. a. (2007). Diagnosis and initial management of OSA without PSG: a randomized
                 validation study. <i>Ann Intern Med</i>, 157-166.</p>
 
-            <p class="MsoBibliography small-indent">NA, C.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">NA, C.
                 (2002). Scoring variability between PSG technologists in different sleep
                 laboratories. <i>Sleep Med</i>, 43-47.</p>
 
-            <p class="MsoBibliography small-indent">Noseda A,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Noseda A,
                 e. a. (2000). Compliance with nCPAP assessed with a pressure monitor: pattern
                 of use and influence of sleep habits. <i>Respir Med</i>, 76-81.</p>
 
-            <p class="MsoBibliography small-indent">Ohayon MM,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ohayon MM,
                 e. a. (1997). How a general population perceives its sleep and how this relates
                 to the complaint of insomnia. <i>Sleep</i>, 715-723.</p>
 
-            <p class="MsoBibliography small-indent">O'Keefe, P.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">O'Keefe, P.
                 &amp;. (2004). Evidence of supporting routine polysomnography before bariatric
                 surgery. <i>Obes Surg</i>.</p>
 
-            <p class="MsoBibliography small-indent">Oldenburg,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Oldenburg,
                 &amp; et.al. (2007). Sleep-disordered breathing in patients with symptomatic
                 heart failure: a contemporary study of prevalence in and characteristics of 700
                 patients. <i>Eur JHeart Fail</i>, 251-257.</p>
 
-            <p class="MsoBibliography small-indent">Palmer, L.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Palmer, L.,
                 &amp; et.al. (2003). A whole-gehoe nscan for obstructive sleep apnea and
                 obesity. <i>Am J Hum Genet</i>, 340-350.</p>
 
-            <p class="MsoBibliography small-indent">Pancer, J.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Pancer, J.,
                 &amp; et.al. (1999). Evaluation of variable mandibular advancement appliance
                 for treatment of snoring and sleep apnea. <i>Chest</i>, 1511-8.</p>
 
-            <p class="MsoBibliography small-indent">Pantin, C.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Pantin, C.,
                 &amp; et.al. (1999). Dental side effects of an oral appliance to treat snoring
                 and sleep apnea. <i>Sleep</i>, 237-240.</p>
 
-            <p class="MsoBibliography small-indent">Parra, O.,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Parra, O.,
                 &amp; et.al. (1997). Should patients with sleep apnoea/hypopnoea syndrome be
                 diagnosed and managed on the basis of home sleep studies? <i>Eur Respir J</i>,
                 1720-24.</p>
 
-            <p class="MsoBibliography small-indent">Peppard P,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Peppard P,
                 e. a. (2000). Longitudinal study of moderate weight change and sleep disordered
                 breathing. <i>JAMA</i>, 3015-3021.</p>
 
-            <p class="MsoBibliography small-indent">Phihal W,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Phihal W,
                 P. R. (1999). Dexamethasone blocks sleep induced improvement of declarative
                 memory. <i>Psychoneuroendocrinology</i>, 313-331.</p>
 
-            <p class="MsoBibliography small-indent">Prinsell,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Prinsell,
                 J. (1999). Maxillomandibular advancement surgery in a site-specific treatment
                 approach for obstructive sleep apnea in 50 consecutive patients. <i>Chest</i>,
                 1519-29.</p>
 
-            <p class="MsoBibliography small-indent">Quera-Salva
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Quera-Salva
                 MA, e. a. (1991). Insomnia and use of hypnotics: study of a French population. <i>Sleep</i>,
                 386-391.</p>
 
-            <p class="MsoBibliography small-indent">Randerath
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Randerath
                 WJ, e. a. (2002). An individually adjustable oral appliance vs continous
                 positive airway pressure in mild to moderate obstructive sleep apnea syndrome. <i>Chest</i>,
                 569-75.</p>
 
-            <p class="MsoBibliography small-indent">Rauscher H,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Rauscher H,
                 e. a. (1991). Acceptance of CPAP therapy for sleep apnea. <i>Chest</i>,
                 1019-1023.</p>
 
-            <p class="MsoBibliography small-indent">Redline S,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Redline S,
                 e. a. (1995). The familial aggregation of obstructive sleep apnea. <i>Am J Resp
                     Crit Care Med</i>, 682-687.</p>
 
-            <p class="MsoBibliography small-indent">Reuven H,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Reuven H,
                 e. a. (2001). A cost-effectiveness analysis of alternative at home or in
                 laboratory technologies for the diagnosis of OSAS. <i>Med Decis Making</i>,
                 451-458.</p>
 
-            <p class="MsoBibliography small-indent">Rice KL, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Rice KL, e.
                 a. (2006). Unattended cardiopulmonary sleep studies to diagnosis OSA. <i>Federal
                     Practitioner</i>, 17-31.</p>
 
-            <p class="MsoBibliography small-indent">Ringqvist
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ringqvist
                 M, e. a. (2003). Dental and skeletal changes after 4 years of obstructive sleep
                 apnea treatment with a mandibular advancement device: a prospective, randomized
                 study. <i>Am J Orthod Dentofacial Orthop</i>, 53-60.</p>
 
-            <p class="MsoBibliography small-indent">Robertson
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Robertson
                 C, e. a. (2003). Dental and occlusal changes during mandibular advancement
                 splint therapy in sleep disordered patients. <i>Eur J Orthod</i>, 371-6.</p>
 
-            <p class="MsoBibliography small-indent">Robertson,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Robertson,
                 C. (2001). Dental and skeletal changes associated with long-term mandibular
                 advancement. <i>Sleep</i>, 531-7.</p>
 
-            <p class="MsoBibliography small-indent">Rose E, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Rose E, e.
                 a. (2002). A comparative study of two mandibular advancement appliances for the
                 treatment of OSA. <i>Eur J of Ortho</i>, 191-8.</p>
 
-            <p class="MsoBibliography small-indent">Rosenow F,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Rosenow F,
                 e. a. (1998). Sleep apnoea in endocrine diseases. <i>J Sleep Res</i>, 3-11.</p>
 
-            <p class="MsoBibliography small-indent">Schafer, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Schafer, e.
                 a. (1999). Obstructive sleep apnea as a risk marker i coronary artery disease. <i>Cardiology</i>,
                 79-84.</p>
 
-            <p class="MsoBibliography small-indent">Schwab, J.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Schwab, J.
                 (1999). Sex differences and sleep apnooea. <i>Thorax</i>, 284-285.</p>
 
-            <p class="MsoBibliography small-indent">Senn O, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Senn O, e.
                 a. (2006). A CPAP trial as a novel approach to the diagnosis of OSAS. <i>Chest</i>,
                 67-75.</p>
 
-            <p class="MsoBibliography small-indent">Shariq, K.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Shariq, K.
                 (2005). Sleep centers in the U.S. reach 2515 in 2004. <i>Sleep</i>, 145-146.</p>
 
-            <p class="MsoBibliography small-indent">Sjostrom,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Sjostrom,
                 e. a. (2002). Prevalence of sleep apnoea and snoring in hypertensive men: a
                 population based study. <i>Thorax</i>, 602-607.</p>
 
-            <p class="MsoBibliography small-indent">Stepnowsky
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Stepnowsky
                 CJ, e. a. (2004). Nightly variability of SDB measured over 3 nights. <i>Otolaryngol
                     Head Neck Surg</i>, 837-843.</p>
 
-            <p class="MsoBibliography small-indent">Stoohs R,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Stoohs R,
                 e. a. (1992). MESAM 4: an ambulatory device for the detection of patients at
                 risk for OSAS. <i>Chest</i>, 1221-1227.</p>
 
-            <p class="MsoBibliography small-indent">Stradling
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Stradling
                 JR, C. J. (1991). Predictors and prevalence of obstructive sleep apnoea and
                 snoring in 1001 middle aged men. <i>Thorax</i>, 85-90.</p>
 
-            <p class="MsoBibliography small-indent">Strickgold
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Strickgold
                 R, e. a. (2000). Visual discrimination task improvement: a multi-step process
                 occuring during sleep. <i>J Cogn Neurosci</i>, 246-254.</p>
 
-            <p class="MsoBibliography small-indent">Su S, e. a.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Su S, e. a.
                 (2004). A comparison of PSG an a portable HST in the diagnosis of OSAS. <i>Otolaryngol
                     Head Neck Surg</i>, 844-850.</p>
 
-            <p class="MsoBibliography small-indent">Tarasiuk A,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Tarasiuk A,
                 e. a. (2004). OSAS: the diagnostic strategy dilemma. <i>Isr Med Assoc J</i>,
                 686-690.</p>
 
-            <p class="MsoBibliography small-indent">Townsend D,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Townsend D,
                 e. a. (2007). Assessing efficacy, outcomes and cost savings for patients with
                 OSA using two diagnostic and treatment strategies. <i>Sleep Diagnosis and
                     Therapy</i>, 1-8.</p>
 
-            <p class="MsoBibliography small-indent">Ueda H, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Ueda H, e.
                 a. (2008). Changes in occlusal contact area during OAT assessed on study
                 models. <i>Angle Orthodontist</i>, 866-872.</p>
 
-            <p class="MsoBibliography small-indent">Vanderveken
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Vanderveken
                 OM, e. a. (2008). Comparison of custom made and a thermoplastic oral appliance
                 for the treatment of mild sleep apnea. <i>AJRCC</i>, 197-202.</p>
 
-            <p class="MsoBibliography small-indent">Vazquez JC,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Vazquez JC,
                 e. a. (2000). Automated analysis of digital oximetry in the diagnosis of OSA. <i>Thorax</i>,
                 302-307.</p>
 
-            <p class="MsoBibliography small-indent">Wagner U,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Wagner U,
                 e. a. (2004). Sleep inspires insight. <i>Nature</i>, 352-355.</p>
 
-            <p class="MsoBibliography small-indent">Wagner U,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Wagner U,
                 G. S. (2001). Emotional memory formation is enhanced across sleep intervals
                 with high amounts of rapid eye movement sleep. <i>Learn Mem</i>, 112-119.</p>
 
-            <p class="MsoBibliography small-indent">Weaver T,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Weaver T,
                 e. a. (1997). Night to night variability in CPAP use over the first three
                 months of treatment. <i>Sleep</i>, 278-283.</p>
 
-            <p class="MsoBibliography small-indent">White DP,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">White DP,
                 e. a. (1995). Assessment of accuracy and analysis time of a novel device to
                 monitor sleep and breathing in the home. <i>Sleep</i>, 115-126.</p>
 
-            <p class="MsoBibliography small-indent">Whitelaw
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Whitelaw
                 WA, e. a. (2005). Clinical usefulness of home oximetry compared with PSG for assessment
                 of sleep apnea. <i>Am J Respir Crit Care Med</i>, 188-193.</p>
 
-            <p class="MsoBibliography small-indent">Wittig RM,
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Wittig RM,
                 e. a. (1984). Night to night consistency of apneas during sleep. <i>Am Rev
                     Respir Dis</i>, 244-246.</p>
 
-            <p class="MsoBibliography small-indent">Wolk R, K.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Wolk R, K.
                 T. (2003). Sleep disordered breathing and cardiovascular disease. <i>Circulation</i>,
                 9-12.</p>
 
-            <p class="MsoBibliography small-indent">Young T, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Young T, e.
                 a. (1993). The occurrence of sleep disordered breathing among middle-aged
                 adults. <i>N Engl J Med</i>, 1230-1235.</p>
 
-            <p class="MsoBibliography small-indent">Young T, e.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Young T, e.
                 a. (2002). Epidemiology of Obstructive sleep apnea, a population health
             </p>
-            <p class="MsoBibliography small-indent"> perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in"> perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
 
-            <p class="MsoBibliography small-indent">Young T, E.
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Young T, E.
                 L. (1997). Estimation of the clinically diagnosed proportion of sleep apnea
                 syndrome in middle-aged men and women. <i>Sleep</i>, 705-708.</p>
 
-            <p class="MsoBibliography small-indent">Zimmerman
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Zimmerman
                 JT, e. a. (1992). A Comparison of Sleep Data Acquisition and Analysis Systems. <i>Journal
                     of Polysomnographic Technology</i>, 30-44.</p>
 

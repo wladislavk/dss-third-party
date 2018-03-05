@@ -4,7 +4,7 @@
         <p class="MsoNormal">QUICK FACTS &amp; REFERENCE</p>
         <p class="MsoNormal">&nbsp;</p>
 
-        <p class="MsoListParagraphCxSpFirst" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpFirst indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -12,7 +12,7 @@
             AASM Practice Parameters: 2006 Practice Parameters stating that Oral Appliance can be used as first line of treatment for mild-moderate OSA: <a href="http://www.aasmnet.org/Resources/PracticeParameters/PP_Update_OralApplicance.pdf">http://www.aasmnet.org/Resources/PracticeParameters/PP_Update_OralApplicance.pdf</a>
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -21,7 +21,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -30,7 +30,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -39,7 +39,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -49,7 +49,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -57,7 +57,7 @@
             Apnea:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No air moving for ten seconds or more
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -66,7 +66,7 @@
             Can also go to this link and put in ht and wt and it will calculate it for you:&nbsp; <a href="http://www.nhlbi.nih.gov/guidelines/obesity/BMI/bmicalc.htm">http://www.nhlbi.nih.gov/guidelines/obesity/BMI/bmicalc.htm</a>
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -75,7 +75,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -86,7 +86,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -94,7 +94,7 @@
             DME:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Durable Medical Equipment
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -102,7 +102,7 @@
             DMERC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Durable Medical Equipment Regional Carrier
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -110,7 +110,7 @@
             EDS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Excessive Daytime Sleepiness
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -121,7 +121,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -130,7 +130,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -139,7 +139,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -148,7 +148,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -156,7 +156,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -167,7 +167,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -177,7 +177,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -186,7 +186,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -194,7 +194,7 @@
             NB:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nocturnal Bruxism
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -203,7 +203,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -211,7 +211,7 @@
             PLMI:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Periodic Limb Movement Index
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -219,7 +219,7 @@
             PSG:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Polysomnogram, or sleep study, in lab
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -230,7 +230,7 @@
 
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -239,7 +239,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -248,7 +248,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -256,7 +256,7 @@
             RLS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Restless Leg Syndrome
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -265,7 +265,7 @@
         </p>
 
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -273,7 +273,7 @@
             SDB:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sleep Disordered Breathing
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -281,7 +281,7 @@
             TRD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tongue Retaining Device
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -289,7 +289,7 @@
             TSS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thornton Snoring Scale:&nbsp; scale for bed partner to evaluate and score snoring
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -298,7 +298,7 @@
             not necessarily apnea
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
@@ -307,7 +307,7 @@
             and brain waves mimic the awake state
         </p>
 
-        <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpMiddle indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span><span class="font-times-new-roman"> </span>
@@ -316,7 +316,7 @@
             Spindles and is considered being asleep; Stage 3N is also known as slow wave or deep sleep
         </p>
 
-        <p class="MsoListParagraphCxSpLast" style="text-indent:-.25in">
+        <p class="MsoListParagraphCxSpLast indent-small">
             <span class="font-symbol">
                 ·<span class="font-times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>

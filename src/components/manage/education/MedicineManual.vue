@@ -7,21 +7,21 @@
 text-align:center;line-height:normal"><b><span style="font-size:36.0pt;
 font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">DENTAL SLEEP MEDICINE</span></b></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
+            <p class="MsoNormal no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
+            <p class="MsoNormal no-bottom-margin"><b><span style="font-size:18.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></b></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><b><span style="font-size:50.0pt;
 font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">TRAINING MANUAL</span></b></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><span style="font-size:12.0pt;font-family:
 &quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;"><img width="477" height="477" id="Picture 65" src="../../../assets/images/medicine_manual_assets/image001.jpg"></span></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><span style="font-size:12.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal no-bottom-margin"><span style="font-size:12.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><span style="font-size:12.0pt;font-family:
@@ -84,9 +84,9 @@ text-align:center;line-height:normal"><span style="font-size:22.0pt;font-family:
                 reproduce, or share this material DS3 will be harmed, and DS3 will prosecute
                 you to the full extent of the law.</span></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
-            <p class="MsoNormal" class="no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
+            <p class="MsoNormal no-bottom-margin"><span style="font-size:22.0pt;font-family:&quot;Franklin Gothic Medium&quot;,&quot;sans-serif&quot;">&nbsp;</span></p>
 
         </div>
 
@@ -5863,534 +5863,534 @@ line-height:150%">&nbsp;</span></b></p>
 
             <h1 style="line-height:150%"><a name="_Toc359595798"></a><span class="TitleChar"><span style="font-size:26.0pt;line-height:150%">Works Cited</span></span></h1>
 
-            <p class="MsoBibliography" class="small-indent"><i>Sleep Deprivation</i>. (2011, March 11). Retrieved March 11, 2011, from Wikipedia:
+            <p class="MsoBibliography small-indent"><i>Sleep Deprivation</i>. (2011, March 11). Retrieved March 11, 2011, from Wikipedia:
                 http://en.wikipedia.org/wiki/Sleep_deprivation</p>
 
-            <p class="MsoBibliography" class="small-indent">Aarab G, e.
+            <p class="MsoBibliography small-indent">Aarab G, e.
                 a. (2009). Variabiliy in the AHI and its consequences for diagnosis and therapy
                 evaluation. <i>Respiration</i>, 32-37.</p>
 
-            <p class="MsoBibliography" class="small-indent">Aber WR, e.
+            <p class="MsoBibliography small-indent">Aber WR, e.
                 a. (1989). Consistency of repsiratory measurements from night to night during
                 the sleep of elderly men. <i>Chest</i>, 747-751.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ahmadi N,
+            <p class="MsoBibliography small-indent">Ahmadi N,
                 e. a. (2008). Clinical diagnosis of sleep apnea based on single night of PSG vs
                 two nights of PSG. <i>Sleep Bretah</i>.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ahmed M, e.
+            <p class="MsoBibliography small-indent">Ahmed M, e.
                 a. (2007). Portable monitors in the diagnosis of OSA. <i>Chest</i>, 1672-1677.</p>
 
-            <p class="MsoBibliography" class="small-indent">AHRQ.
+            <p class="MsoBibliography small-indent">AHRQ.
                 (2007). Home diagnosis of obstructive sleep apnea-hypopnea syndrome. <i>Agency
                     for Healthcare Research and Quality</i> (p. 127). AHRQ.</p>
 
-            <p class="MsoBibliography" class="small-indent">AHRQ.
+            <p class="MsoBibliography small-indent">AHRQ.
                 (2007). OSA: modeling different diagnostic strategies. <i>AHRQ</i>, (p. 116).
                 Rockville.</p>
 
-            <p class="MsoBibliography" class="small-indent">Almeida F,
+            <p class="MsoBibliography small-indent">Almeida F,
                 e. a. (2006). Long-term sequelae of OAT in OSA patients: part 2. Study-model
                 analysis. <i>Am J Orthod Dentofacial Orthop</i>, 205-213.</p>
 
-            <p class="MsoBibliography" class="small-indent">Almeida FR,
+            <p class="MsoBibliography small-indent">Almeida FR,
                 e. a. (2002). Effects of mandibular posture on obstructive sleep apnea severity
                 and the temporomandibular joint in patients fitted with an oral appliance. <i>Sleep</i>,
                 507-13.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ancoli-Israel
+            <p class="MsoBibliography small-indent">Ancoli-Israel
                 S, e. a. (1991). Sleep disordered breathing in community dwelling elderly. <i>Sleep</i>,
                 486-495.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ayas NT, e.
+            <p class="MsoBibliography small-indent">Ayas NT, e.
                 a. (2004). Auto titrating versus standard CPAP for the treatment of OSA:
                 Results of a meta-analysis. <i>Sleep</i>, 249-253.</p>
 
-            <p class="MsoBibliography" class="small-indent">Barthlen
+            <p class="MsoBibliography small-indent">Barthlen
                 GM, e. a. (2000). Comparison of three oral appliances for the treatment of
                 severe OSAS. <i>Sleep Medicine</i>, 299-305.</p>
 
-            <p class="MsoBibliography" class="small-indent">Battagel
+            <p class="MsoBibliography small-indent">Battagel
                 JM, K. B. (2005). Dental side0effects of MAS wear in patients who snore. <i>Clin
                     Otolaryngol</i>, 149-156.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bearpark H,
+            <p class="MsoBibliography small-indent">Bearpark H,
                 e. a. (1993). Occurrence and correlates of sleep disordered breathing in the
                 Australian town of Busselton: a preliminary analysis. <i>Sleep</i>, 53-55.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bennet L,
+            <p class="MsoBibliography small-indent">Bennet L,
                 e. a. (1998). Sleep fragmentation indices as predictors of daytime sleepiness
                 and nCPAP response in OSA. <i>Am J Respir Crit Care Med</i>, 778-786.</p>
 
-            <p class="MsoBibliography" class="small-indent">Berry RB,
+            <p class="MsoBibliography small-indent">Berry RB,
                 e. a. (2008). Portable montioring and autotitration versus PSG for the
                 diagnosis and treatment of sleep apnea. <i>Sleep</i>, 1423-1431.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bixler E,
+            <p class="MsoBibliography small-indent">Bixler E,
                 e. a. (1998). Effects of age on sleep apnea in men. <i>Am J Respir Crit Care
                     Med</i>, 144-148.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bixler E,
+            <p class="MsoBibliography small-indent">Bixler E,
                 e. a. (2001). Prevalence of sleep disordered breathing in women. <i>Am J Respir
                     Crit Care Med</i>, 608-613.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bixler E,
+            <p class="MsoBibliography small-indent">Bixler E,
                 V. A. (1998). Effects of age on sleep apnea in men. <i>Am J Respir Crit Care
                     Med</i>, 144-148.</p>
 
-            <p class="MsoBibliography" class="small-indent"><span lang="PT-BR">Bixler E, V. A.-B. (2001). </span>Prevalence of sleep-disordered
+            <p class="MsoBibliography small-indent"><span lang="PT-BR">Bixler E, V. A.-B. (2001). </span>Prevalence of sleep-disordered
                 breathing in women. <i>Am J Respir Crit Care Med</i>, 608-613.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bloch KE,
+            <p class="MsoBibliography small-indent">Bloch KE,
                 e. a. (2000). A randomized controlled crossover trial of two oral appliances. <i>AJRCCM</i>,
                 246-251.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bloch KE,
+            <p class="MsoBibliography small-indent">Bloch KE,
                 e. a. (2007). Ambulatory management of OSA without PSG. <i>Ann Intern Med</i>,
                 350.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bondemark
+            <p class="MsoBibliography small-indent">Bondemark
                 L, e. a. (2000). Craniomandibular status and function in patients with habitual
                 snoring and obstructive sleep apnoea after nocturnal treatment with a mandibular
                 advancement splint: a 2-year follow up. <i>Eur J Orthod</i>, 53-60.</p>
 
-            <p class="MsoBibliography" class="small-indent">Bondemark,
+            <p class="MsoBibliography small-indent">Bondemark,
                 L. (1999). Does 2 years' nocturnal treatment with a mandibular advancement
                 splint in adult patients with snoring and OSAS cause a change in the posture of
                 the mandible? <i>Am J of Orthod Dentafacial Orthop</i>, 621-628.</p>
 
-            <p class="MsoBibliography" class="small-indent">Boyer S, e.
+            <p class="MsoBibliography small-indent">Boyer S, e.
                 a. (2003). Role of portable sleep studies for diagnosis of OSA. <i>Curr Opin
                     Pulm Med</i>, 465-470.</p>
 
-            <p class="MsoBibliography" class="small-indent">Broughton
+            <p class="MsoBibliography small-indent">Broughton
                 R, e. a. (1996). Home assessment of sleep disorders by portable monitoring. <i>J
                     Clin Neurophys</i>, 272-284.</p>
 
-            <p class="MsoBibliography" class="small-indent">Chediak AD,
+            <p class="MsoBibliography small-indent">Chediak AD,
                 e. a. (1996). Nightly variability in the indices of SDB in men being evaluated
                 for impotence with consecutive night PSGs. <i>Sleep</i>, 589-592.</p>
 
-            <p class="MsoBibliography" class="small-indent">Chervin RD,
+            <p class="MsoBibliography small-indent">Chervin RD,
                 e. a. (1999). Cost-utility of three approaches to the diagnosis of sleep apnea:
                 PST, HST, and empirical therapy. <i>Ann Intern Med</i>, 496-505.</p>
 
-            <p class="MsoBibliography" class="small-indent">Collop, N.
+            <p class="MsoBibliography small-indent">Collop, N.
                 (2008). Portable monitoring for the diagnosis of obstructive sleep apnea. <i>Curr
                     Opin Pulm Med</i>, 525-529.</p>
 
-            <p class="MsoBibliography" class="small-indent">Deane SA,
+            <p class="MsoBibliography small-indent">Deane SA,
                 e. a. (2009). Comparison of mandibular advancement splint and tongue
                 stabilizing device in obstructive sleep apnea: a randomized controlled trial. <i>Sleep</i>,
                 648-653.</p>
 
-            <p class="MsoBibliography" class="small-indent">Dement WC,
+            <p class="MsoBibliography small-indent">Dement WC,
                 K. N. (1957). Cyclic variations in EEG during sleep and their relation to eye
                 movements, body motility, and dreaming. <i>Electroencephalogr Clin Neurophysiol</i>,
                 673.</p>
 
-            <p class="MsoBibliography" class="small-indent">Duran J, e.
+            <p class="MsoBibliography small-indent">Duran J, e.
                 a. (2001). Obstructive sleep apnea-hypopnea and related clinical features in a
                 population based sample of subjects aged 30 to 70 yr. <i>Am J Respir Crit Care
                     Med</i>, 685-689.</p>
 
-            <p class="MsoBibliography" class="small-indent">Duran J, E.
+            <p class="MsoBibliography small-indent">Duran J, E.
                 S. (2001). Obstructive sleep apnea-hypopnea and related clinical features in a population-based
                 sample of subjects aged 30 to 70 yr. <i>Am J Respir Crit Care Med</i>, 685-689.</p>
 
-            <p class="MsoBibliography" class="small-indent">Einhorn, e.
+            <p class="MsoBibliography small-indent">Einhorn, e.
                 a. (2007). Prevalence of sleep apnea in populatio of adults with type 2
                 diabetes millitus. <i>Endocr Pract</i>, 355-362.</p>
 
-            <p class="MsoBibliography" class="small-indent">Elshaug, e.
+            <p class="MsoBibliography small-indent">Elshaug, e.
                 a. (2007). Redefining success in airway surgery for obstructive sleep apnea: a
                 meta analysis and synthesis of the evidence. <i>Sleep</i>, 461-7.</p>
 
-            <p class="MsoBibliography" class="small-indent">Emsellem
+            <p class="MsoBibliography small-indent">Emsellem
                 HA, e. a. (1990). Verification of sleep apnea using a portable sleep apnea
                 screening device. <i>South Med J</i>, 748-752.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ferber R,
+            <p class="MsoBibliography small-indent">Ferber R,
                 e. a. (1994). Portable recording in the assessment of OSA. ASDA standards of
                 practice. <i>Sleep</i>, 378-392.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ferguson
+            <p class="MsoBibliography small-indent">Ferguson
                 KA, e. a. (1996). A randomized crossover study of an oral appliance vs nasal
                 cpap in the treatment of mild to moderate OSA. <i>Chest</i>, 1269-75.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ferguson
+            <p class="MsoBibliography small-indent">Ferguson
                 KA, e. a. (1997). A short-term controlled trial of an adjustoral oral appliance
                 for the treatment of mild to moderate OSA. <i>Thorax</i>, 362-8.</p>
 
-            <p class="MsoBibliography" class="small-indent">Flemons WW,
+            <p class="MsoBibliography small-indent">Flemons WW,
                 e. a. (1994). Likelihood ratios for a sleep apnea clinical prediction rule. <i>Am
                     J Respir Crit Care Med</i>, 1279-1285.</p>
 
-            <p class="MsoBibliography" class="small-indent">Flemons WW,
+            <p class="MsoBibliography small-indent">Flemons WW,
                 e. a. (2003). Home diagnosis of sleep apnea: a systematic review of the
                 literature. <i>Chest</i>, 1543-1579.</p>
 
-            <p class="MsoBibliography" class="small-indent">Flemons WW,
+            <p class="MsoBibliography small-indent">Flemons WW,
                 e. a. (2004). Access to diagnosis and treatment of patients with suspected
                 sleep apnea. <i>Am J Respir Crit Care Med</i>, 668-672.</p>
 
-            <p class="MsoBibliography" class="small-indent">Flemons WW,
+            <p class="MsoBibliography small-indent">Flemons WW,
                 R. J. (1996). The diagnosis of sleep apnea: questionnaires and home studies. <i>Sleep</i>,
                 243-247.</p>
 
-            <p class="MsoBibliography" class="small-indent">Force, A.
+            <p class="MsoBibliography small-indent">Force, A.
                 T. (1999). <i>Sleep related breathing disorders in adults: recommendations for
                     syndrome definition and measurement techniques in clinical research.</i> Sleep.</p>
 
-            <p class="MsoBibliography" class="small-indent">Freud, S.
+            <p class="MsoBibliography small-indent">Freud, S.
                 (1955). <i>The Interpretation of Dreams.</i> New York: Basic Books.</p>
 
-            <p class="MsoBibliography" class="small-indent">Fritsch KM,
+            <p class="MsoBibliography small-indent">Fritsch KM,
                 e. a. (2001). Side effects of mandibular advancement devices for sleep apnea
                 treatment. <i>Am J Respir Crit Care Med</i>, 813-8.</p>
 
-            <p class="MsoBibliography" class="small-indent">Fujita, e.
+            <p class="MsoBibliography small-indent">Fujita, e.
                 a. (1981). Surgical correction of anatomic abnormalities of obstructive sleep
                 apnea syndrome; uvulopalatopharyngoplasty. <i>Otolaryngol Head Neck Surg</i>,
                 89:923.</p>
 
-            <p class="MsoBibliography" class="small-indent">Gami, e. a.
+            <p class="MsoBibliography small-indent">Gami, e. a.
                 (2004). Association of atrial fibrillation and obstuctive sleep apnea. <i>Circulation</i>,
                 364-367.</p>
 
-            <p class="MsoBibliography" class="small-indent">Garrigue,
+            <p class="MsoBibliography small-indent">Garrigue,
                 e. a. (2004). Association of atrial fibrillation and obstructive sleep apnea. <i>Circulation</i>,
                 364-367.</p>
 
-            <p class="MsoBibliography" class="small-indent">Gauthier L,
+            <p class="MsoBibliography small-indent">Gauthier L,
                 e. a. (2009). Efficacy of two mandibular advancement appliances in the
                 management of snoring and mild-moderate OSA; a cross-over randomized study. <i>Sleep
                     Medicine</i>, 329-36.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ghegan MD,
+            <p class="MsoBibliography small-indent">Ghegan MD,
                 e. a. (2006). Laboratory versus portable sleep studies: a metanalysis. <i>Laryngoscope</i>,
                 859-864.</p>
 
-            <p class="MsoBibliography" class="small-indent">Gislason T,
+            <p class="MsoBibliography small-indent">Gislason T,
                 e. a. (1988). Prevalence of sleep apnea syndrome among Swedish men: an
                 epidemiological study. <i>J Clin Epidemiol</i>, 571-576.</p>
 
-            <p class="MsoBibliography" class="small-indent">Gleadhill
+            <p class="MsoBibliography small-indent">Gleadhill
                 IC, e. a. (1991). Upper airway colapsibility in snorers and in patients with
                 obstructive hypopneas and apnea. <i>Am Rev Respir Dis</i>, 1300-1303.</p>
 
-            <p class="MsoBibliography" class="small-indent">Hans MG, e.
+            <p class="MsoBibliography small-indent">Hans MG, e.
                 a. (1997). Comparison of two dental devices for treatment of OSAS. <i>AJODO</i>,
                 562-70.</p>
 
-            <p class="MsoBibliography" class="small-indent">HM, L. (2005).
+            <p class="MsoBibliography small-indent">HM, L. (2005).
                 A comparison of the twin Block and Herbst advancement splints in treatment of
                 patients with OSA: a prospective study. <i>Eur J of Orthodontics</i>, 82-90.</p>
 
-            <p class="MsoBibliography" class="small-indent">Hobson JA,
+            <p class="MsoBibliography small-indent">Hobson JA,
                 M. R. (1977). The brain as a dream-state generator: An activation-synthesis
                 hypothesis of the dream process. <i>Am J Psychiatry</i>, 1335-1348.</p>
 
-            <p class="MsoBibliography" class="small-indent">Issa, F.,
+            <p class="MsoBibliography small-indent">Issa, F.,
                 &amp; et.al. (1993). Digital monitoring of OSA using snoring sound and arterial
                 oxygen saturation. <i>Sleep</i>, 132.</p>
 
-            <p class="MsoBibliography" class="small-indent">issa, F.,
+            <p class="MsoBibliography small-indent">issa, F.,
                 &amp; et.al. (1993). Digital monitoring of SDB using snoring sound and arterial
                 oxygen saturation. <i>Am Rev Respir Dis</i>, 1023-1029.</p>
 
-            <p class="MsoBibliography" class="small-indent">Katsantonis,
+            <p class="MsoBibliography small-indent">Katsantonis,
                 G., &amp; et.al. (1988). Management of obstructive sleep apnea: comparison of
                 various treatment modalities. <i>Laryngoscope</i>, 304-309.</p>
 
-            <p class="MsoBibliography" class="small-indent">Kingshott,
+            <p class="MsoBibliography small-indent">Kingshott,
                 R., &amp; et.al. (1998). Does arousal frequency predict daytime function? <i>Eur
                     Respir J</i>, 1264-1270.</p>
 
-            <p class="MsoBibliography" class="small-indent">Kripske,
+            <p class="MsoBibliography small-indent">Kripske,
                 D., &amp; et.al. (1997). Prevalence of sleep disordered breathing in ages 40-64
                 years: a population-based survey. <i>Sleep</i>, 65-76.</p>
 
-            <p class="MsoBibliography" class="small-indent">Kryger, R.
+            <p class="MsoBibliography small-indent">Kryger, R.
                 D. (2005). <i>Normal human sleep: an overview.</i> Philadelphia:
                 Elsevier/Saunders.</p>
 
-            <p class="MsoBibliography" class="small-indent">Kryger,
+            <p class="MsoBibliography small-indent">Kryger,
                 Roth, &amp; Dement. (2005). <i>Principles and Practice of sleep medicine.</i>
                 Philadelphia: Elsevier / Saunders.</p>
 
-            <p class="MsoBibliography" class="small-indent">Lamont.
+            <p class="MsoBibliography small-indent">Lamont.
                 (1988). Mouthguard type splints.</p>
 
-            <p class="MsoBibliography" class="small-indent">Levendowski
+            <p class="MsoBibliography small-indent">Levendowski
                 D, e. a. (2009). The impact of OSA variability measured in lab versus in honme
                 on sample size calculations. <i>Int Arch Med</i>, 2.</p>
 
-            <p class="MsoBibliography" class="small-indent">Lindberg E,
+            <p class="MsoBibliography small-indent">Lindberg E,
                 e. a. (2001). Role of snoring and daytime sleepiness in occupational accidents.
                 <i>Am J Respir Crit Care Med</i>, 2031-2035.</p>
 
-            <p class="MsoBibliography" class="small-indent">Lloberes P,
+            <p class="MsoBibliography small-indent">Lloberes P,
                 e. a. (2004). Predictive factors of QOL improvement and CPAP use in patients
                 with OSA: study at 1 year. <i>Chest</i>, 1241-1247.</p>
 
-            <p class="MsoBibliography" class="small-indent">Logan, e.
+            <p class="MsoBibliography small-indent">Logan, e.
                 a. (2001). High prevalence of unrecognized sleep apnooea in drug-resistant
                 hypertension. <i>J Hypertens</i>, 2271-2277.</p>
 
-            <p class="MsoBibliography" class="small-indent">Lowe A, e.
+            <p class="MsoBibliography small-indent">Lowe A, e.
                 a. (1986). Facial morphology abd obstructive sleep apnea. <i>Am J Orthod
                     Dentofacial Orthop</i>, 484-91.</p>
 
-            <p class="MsoBibliography" class="small-indent">Mahotra A,
+            <p class="MsoBibliography small-indent">Mahotra A,
                 W. D. (2002). Obstructive sleep apnoea. <i><span lang="PT-BR">Lancet</span></i><span lang="PT-BR">, 237-245.</span></p>
 
-            <p class="MsoBibliography" class="small-indent"><span lang="PT-BR">Malhotra A, W. D. (2002). </span>Obstructive sleep apnooea. <i>Lancet</i>,
+            <p class="MsoBibliography small-indent"><span lang="PT-BR">Malhotra A, W. D. (2002). </span>Obstructive sleep apnooea. <i>Lancet</i>,
                 237-245.</p>
 
-            <p class="MsoBibliography" class="small-indent">Man GC, e.
+            <p class="MsoBibliography small-indent">Man GC, e.
                 a. (1995). Validation of a portable sleep apnea monitoring device. <i>Chest</i>,
                 388-393.</p>
 
-            <p class="MsoBibliography" class="small-indent">Manber R,
+            <p class="MsoBibliography small-indent">Manber R,
                 e. a. (1999). Sex, steroids, and sleep: A review. <i>Sleep</i>, 540-555.</p>
 
-            <p class="MsoBibliography" class="small-indent">Marklund M,
+            <p class="MsoBibliography small-indent">Marklund M,
                 e. a. (2004). Mandibular Advancement Devices in 630 men and women with obstructive
                 sleep apnea and snoring: tolberability and predictors of treatment success. <i>Chest</i>,
                 1270-1278.</p>
 
-            <p class="MsoBibliography" class="small-indent">Marklund,
+            <p class="MsoBibliography small-indent">Marklund,
                 M. (2006). Predictors of long-term orthodontic side effects from MAD's in
                 patients with snoring and OSA. <i>Am J Orthod Dentofacial Orthop</i>, 214-221.</p>
 
-            <p class="MsoBibliography" class="small-indent">Marklund,
+            <p class="MsoBibliography small-indent">Marklund,
                 M., &amp; Franklin, K. (2007). Long-term effects of mandibular repositioning
                 appliances on symptoms of sleep apnoea. <i>J Sleep Res</i>, 414-420.</p>
 
-            <p class="MsoBibliography" class="small-indent">Martinez-Gomis
+            <p class="MsoBibliography small-indent">Martinez-Gomis
                 J, e. a. (2010). Five years of sleep apnea treatment with a MAD: Side effects
                 and technical complications. <i>Angle Orthodontist</i>, 30-36.</p>
 
-            <p class="MsoBibliography" class="small-indent">Med, A. J.
+            <p class="MsoBibliography small-indent">Med, A. J.
                 (2004). Executive summary on the systematic review and practice parameters for
                 portable monitoring in the investigation of suspected sleep apnea in adults. <i>Am
                     J Respir Crit Care Med</i>, 1160-1163.</p>
 
-            <p class="MsoBibliography" class="small-indent">Meurice JC,
+            <p class="MsoBibliography small-indent">Meurice JC,
                 e. a. (1994). Predictive factors of long term compliance with nasal CPAP
                 treatment in sleep apnea syndrome. <i>Chest</i>, 429-433.</p>
 
-            <p class="MsoBibliography" class="small-indent">Michaelson
+            <p class="MsoBibliography small-indent">Michaelson
                 PG, e. a. (2006). Validations of a portable home sleep study with twelve lead
                 PSG: conparisons and insights into a variable gold standard. <i>Ann Otol Rhinol
                     Laryngol</i>, 802-809.</p>
 
-            <p class="MsoBibliography" class="small-indent">Morgenthaler
+            <p class="MsoBibliography small-indent">Morgenthaler
                 TI, e. a. (2006). Complex sleep apnea syndrome: Is it a unique clinical
                 syndrome? <i>Sleep</i>, 1203-09.</p>
 
-            <p class="MsoBibliography" class="small-indent">Mulgrew AT,
+            <p class="MsoBibliography small-indent">Mulgrew AT,
                 e. a. (2007). Diagnosis and initial management of OSA without PSG: a randomized
                 validation study. <i>Ann Intern Med</i>, 157-166.</p>
 
-            <p class="MsoBibliography" class="small-indent">NA, C.
+            <p class="MsoBibliography small-indent">NA, C.
                 (2002). Scoring variability between PSG technologists in different sleep
                 laboratories. <i>Sleep Med</i>, 43-47.</p>
 
-            <p class="MsoBibliography" class="small-indent">Noseda A,
+            <p class="MsoBibliography small-indent">Noseda A,
                 e. a. (2000). Compliance with nCPAP assessed with a pressure monitor: pattern
                 of use and influence of sleep habits. <i>Respir Med</i>, 76-81.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ohayon MM,
+            <p class="MsoBibliography small-indent">Ohayon MM,
                 e. a. (1997). How a general population perceives its sleep and how this relates
                 to the complaint of insomnia. <i>Sleep</i>, 715-723.</p>
 
-            <p class="MsoBibliography" class="small-indent">O'Keefe, P.
+            <p class="MsoBibliography small-indent">O'Keefe, P.
                 &amp;. (2004). Evidence of supporting routine polysomnography before bariatric
                 surgery. <i>Obes Surg</i>.</p>
 
-            <p class="MsoBibliography" class="small-indent">Oldenburg,
+            <p class="MsoBibliography small-indent">Oldenburg,
                 &amp; et.al. (2007). Sleep-disordered breathing in patients with symptomatic
                 heart failure: a contemporary study of prevalence in and characteristics of 700
                 patients. <i>Eur JHeart Fail</i>, 251-257.</p>
 
-            <p class="MsoBibliography" class="small-indent">Palmer, L.,
+            <p class="MsoBibliography small-indent">Palmer, L.,
                 &amp; et.al. (2003). A whole-gehoe nscan for obstructive sleep apnea and
                 obesity. <i>Am J Hum Genet</i>, 340-350.</p>
 
-            <p class="MsoBibliography" class="small-indent">Pancer, J.,
+            <p class="MsoBibliography small-indent">Pancer, J.,
                 &amp; et.al. (1999). Evaluation of variable mandibular advancement appliance
                 for treatment of snoring and sleep apnea. <i>Chest</i>, 1511-8.</p>
 
-            <p class="MsoBibliography" class="small-indent">Pantin, C.,
+            <p class="MsoBibliography small-indent">Pantin, C.,
                 &amp; et.al. (1999). Dental side effects of an oral appliance to treat snoring
                 and sleep apnea. <i>Sleep</i>, 237-240.</p>
 
-            <p class="MsoBibliography" class="small-indent">Parra, O.,
+            <p class="MsoBibliography small-indent">Parra, O.,
                 &amp; et.al. (1997). Should patients with sleep apnoea/hypopnoea syndrome be
                 diagnosed and managed on the basis of home sleep studies? <i>Eur Respir J</i>,
                 1720-24.</p>
 
-            <p class="MsoBibliography" class="small-indent">Peppard P,
+            <p class="MsoBibliography small-indent">Peppard P,
                 e. a. (2000). Longitudinal study of moderate weight change and sleep disordered
                 breathing. <i>JAMA</i>, 3015-3021.</p>
 
-            <p class="MsoBibliography" class="small-indent">Phihal W,
+            <p class="MsoBibliography small-indent">Phihal W,
                 P. R. (1999). Dexamethasone blocks sleep induced improvement of declarative
                 memory. <i>Psychoneuroendocrinology</i>, 313-331.</p>
 
-            <p class="MsoBibliography" class="small-indent">Prinsell,
+            <p class="MsoBibliography small-indent">Prinsell,
                 J. (1999). Maxillomandibular advancement surgery in a site-specific treatment
                 approach for obstructive sleep apnea in 50 consecutive patients. <i>Chest</i>,
                 1519-29.</p>
 
-            <p class="MsoBibliography" class="small-indent">Quera-Salva
+            <p class="MsoBibliography small-indent">Quera-Salva
                 MA, e. a. (1991). Insomnia and use of hypnotics: study of a French population. <i>Sleep</i>,
                 386-391.</p>
 
-            <p class="MsoBibliography" class="small-indent">Randerath
+            <p class="MsoBibliography small-indent">Randerath
                 WJ, e. a. (2002). An individually adjustable oral appliance vs continous
                 positive airway pressure in mild to moderate obstructive sleep apnea syndrome. <i>Chest</i>,
                 569-75.</p>
 
-            <p class="MsoBibliography" class="small-indent">Rauscher H,
+            <p class="MsoBibliography small-indent">Rauscher H,
                 e. a. (1991). Acceptance of CPAP therapy for sleep apnea. <i>Chest</i>,
                 1019-1023.</p>
 
-            <p class="MsoBibliography" class="small-indent">Redline S,
+            <p class="MsoBibliography small-indent">Redline S,
                 e. a. (1995). The familial aggregation of obstructive sleep apnea. <i>Am J Resp
                     Crit Care Med</i>, 682-687.</p>
 
-            <p class="MsoBibliography" class="small-indent">Reuven H,
+            <p class="MsoBibliography small-indent">Reuven H,
                 e. a. (2001). A cost-effectiveness analysis of alternative at home or in
                 laboratory technologies for the diagnosis of OSAS. <i>Med Decis Making</i>,
                 451-458.</p>
 
-            <p class="MsoBibliography" class="small-indent">Rice KL, e.
+            <p class="MsoBibliography small-indent">Rice KL, e.
                 a. (2006). Unattended cardiopulmonary sleep studies to diagnosis OSA. <i>Federal
                     Practitioner</i>, 17-31.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ringqvist
+            <p class="MsoBibliography small-indent">Ringqvist
                 M, e. a. (2003). Dental and skeletal changes after 4 years of obstructive sleep
                 apnea treatment with a mandibular advancement device: a prospective, randomized
                 study. <i>Am J Orthod Dentofacial Orthop</i>, 53-60.</p>
 
-            <p class="MsoBibliography" class="small-indent">Robertson
+            <p class="MsoBibliography small-indent">Robertson
                 C, e. a. (2003). Dental and occlusal changes during mandibular advancement
                 splint therapy in sleep disordered patients. <i>Eur J Orthod</i>, 371-6.</p>
 
-            <p class="MsoBibliography" class="small-indent">Robertson,
+            <p class="MsoBibliography small-indent">Robertson,
                 C. (2001). Dental and skeletal changes associated with long-term mandibular
                 advancement. <i>Sleep</i>, 531-7.</p>
 
-            <p class="MsoBibliography" class="small-indent">Rose E, e.
+            <p class="MsoBibliography small-indent">Rose E, e.
                 a. (2002). A comparative study of two mandibular advancement appliances for the
                 treatment of OSA. <i>Eur J of Ortho</i>, 191-8.</p>
 
-            <p class="MsoBibliography" class="small-indent">Rosenow F,
+            <p class="MsoBibliography small-indent">Rosenow F,
                 e. a. (1998). Sleep apnoea in endocrine diseases. <i>J Sleep Res</i>, 3-11.</p>
 
-            <p class="MsoBibliography" class="small-indent">Schafer, e.
+            <p class="MsoBibliography small-indent">Schafer, e.
                 a. (1999). Obstructive sleep apnea as a risk marker i coronary artery disease. <i>Cardiology</i>,
                 79-84.</p>
 
-            <p class="MsoBibliography" class="small-indent">Schwab, J.
+            <p class="MsoBibliography small-indent">Schwab, J.
                 (1999). Sex differences and sleep apnooea. <i>Thorax</i>, 284-285.</p>
 
-            <p class="MsoBibliography" class="small-indent">Senn O, e.
+            <p class="MsoBibliography small-indent">Senn O, e.
                 a. (2006). A CPAP trial as a novel approach to the diagnosis of OSAS. <i>Chest</i>,
                 67-75.</p>
 
-            <p class="MsoBibliography" class="small-indent">Shariq, K.
+            <p class="MsoBibliography small-indent">Shariq, K.
                 (2005). Sleep centers in the U.S. reach 2515 in 2004. <i>Sleep</i>, 145-146.</p>
 
-            <p class="MsoBibliography" class="small-indent">Sjostrom,
+            <p class="MsoBibliography small-indent">Sjostrom,
                 e. a. (2002). Prevalence of sleep apnoea and snoring in hypertensive men: a
                 population based study. <i>Thorax</i>, 602-607.</p>
 
-            <p class="MsoBibliography" class="small-indent">Stepnowsky
+            <p class="MsoBibliography small-indent">Stepnowsky
                 CJ, e. a. (2004). Nightly variability of SDB measured over 3 nights. <i>Otolaryngol
                     Head Neck Surg</i>, 837-843.</p>
 
-            <p class="MsoBibliography" class="small-indent">Stoohs R,
+            <p class="MsoBibliography small-indent">Stoohs R,
                 e. a. (1992). MESAM 4: an ambulatory device for the detection of patients at
                 risk for OSAS. <i>Chest</i>, 1221-1227.</p>
 
-            <p class="MsoBibliography" class="small-indent">Stradling
+            <p class="MsoBibliography small-indent">Stradling
                 JR, C. J. (1991). Predictors and prevalence of obstructive sleep apnoea and
                 snoring in 1001 middle aged men. <i>Thorax</i>, 85-90.</p>
 
-            <p class="MsoBibliography" class="small-indent">Strickgold
+            <p class="MsoBibliography small-indent">Strickgold
                 R, e. a. (2000). Visual discrimination task improvement: a multi-step process
                 occuring during sleep. <i>J Cogn Neurosci</i>, 246-254.</p>
 
-            <p class="MsoBibliography" class="small-indent">Su S, e. a.
+            <p class="MsoBibliography small-indent">Su S, e. a.
                 (2004). A comparison of PSG an a portable HST in the diagnosis of OSAS. <i>Otolaryngol
                     Head Neck Surg</i>, 844-850.</p>
 
-            <p class="MsoBibliography" class="small-indent">Tarasiuk A,
+            <p class="MsoBibliography small-indent">Tarasiuk A,
                 e. a. (2004). OSAS: the diagnostic strategy dilemma. <i>Isr Med Assoc J</i>,
                 686-690.</p>
 
-            <p class="MsoBibliography" class="small-indent">Townsend D,
+            <p class="MsoBibliography small-indent">Townsend D,
                 e. a. (2007). Assessing efficacy, outcomes and cost savings for patients with
                 OSA using two diagnostic and treatment strategies. <i>Sleep Diagnosis and
                     Therapy</i>, 1-8.</p>
 
-            <p class="MsoBibliography" class="small-indent">Ueda H, e.
+            <p class="MsoBibliography small-indent">Ueda H, e.
                 a. (2008). Changes in occlusal contact area during OAT assessed on study
                 models. <i>Angle Orthodontist</i>, 866-872.</p>
 
-            <p class="MsoBibliography" class="small-indent">Vanderveken
+            <p class="MsoBibliography small-indent">Vanderveken
                 OM, e. a. (2008). Comparison of custom made and a thermoplastic oral appliance
                 for the treatment of mild sleep apnea. <i>AJRCC</i>, 197-202.</p>
 
-            <p class="MsoBibliography" class="small-indent">Vazquez JC,
+            <p class="MsoBibliography small-indent">Vazquez JC,
                 e. a. (2000). Automated analysis of digital oximetry in the diagnosis of OSA. <i>Thorax</i>,
                 302-307.</p>
 
-            <p class="MsoBibliography" class="small-indent">Wagner U,
+            <p class="MsoBibliography small-indent">Wagner U,
                 e. a. (2004). Sleep inspires insight. <i>Nature</i>, 352-355.</p>
 
-            <p class="MsoBibliography" class="small-indent">Wagner U,
+            <p class="MsoBibliography small-indent">Wagner U,
                 G. S. (2001). Emotional memory formation is enhanced across sleep intervals
                 with high amounts of rapid eye movement sleep. <i>Learn Mem</i>, 112-119.</p>
 
-            <p class="MsoBibliography" class="small-indent">Weaver T,
+            <p class="MsoBibliography small-indent">Weaver T,
                 e. a. (1997). Night to night variability in CPAP use over the first three
                 months of treatment. <i>Sleep</i>, 278-283.</p>
 
-            <p class="MsoBibliography" class="small-indent">White DP,
+            <p class="MsoBibliography small-indent">White DP,
                 e. a. (1995). Assessment of accuracy and analysis time of a novel device to
                 monitor sleep and breathing in the home. <i>Sleep</i>, 115-126.</p>
 
-            <p class="MsoBibliography" class="small-indent">Whitelaw
+            <p class="MsoBibliography small-indent">Whitelaw
                 WA, e. a. (2005). Clinical usefulness of home oximetry compared with PSG for assessment
                 of sleep apnea. <i>Am J Respir Crit Care Med</i>, 188-193.</p>
 
-            <p class="MsoBibliography" class="small-indent">Wittig RM,
+            <p class="MsoBibliography small-indent">Wittig RM,
                 e. a. (1984). Night to night consistency of apneas during sleep. <i>Am Rev
                     Respir Dis</i>, 244-246.</p>
 
-            <p class="MsoBibliography" class="small-indent">Wolk R, K.
+            <p class="MsoBibliography small-indent">Wolk R, K.
                 T. (2003). Sleep disordered breathing and cardiovascular disease. <i>Circulation</i>,
                 9-12.</p>
 
-            <p class="MsoBibliography" class="small-indent">Young T, e.
+            <p class="MsoBibliography small-indent">Young T, e.
                 a. (1993). The occurrence of sleep disordered breathing among middle-aged
                 adults. <i>N Engl J Med</i>, 1230-1235.</p>
 
-            <p class="MsoBibliography" class="small-indent">Young T, e.
+            <p class="MsoBibliography small-indent">Young T, e.
                 a. (2002). Epidemiology of Obstructive sleep apnea, a population health
             </p>
-            <p class="MsoBibliography" class="small-indent"> perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
+            <p class="MsoBibliography small-indent"> perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
 
-            <p class="MsoBibliography" class="small-indent">Young T, E.
+            <p class="MsoBibliography small-indent">Young T, E.
                 L. (1997). Estimation of the clinically diagnosed proportion of sleep apnea
                 syndrome in middle-aged men and women. <i>Sleep</i>, 705-708.</p>
 
-            <p class="MsoBibliography" class="small-indent">Zimmerman
+            <p class="MsoBibliography small-indent">Zimmerman
                 JT, e. a. (1992). A Comparison of Sleep Data Acquisition and Analysis Systems. <i>Journal
                     of Polysomnographic Technology</i>, 30-44.</p>
 

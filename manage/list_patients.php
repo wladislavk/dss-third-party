@@ -49,9 +49,7 @@ if ($result) {
         $patients[$i]['patient_info'] = $row['patient_info'];
         $i++;
     }
-}
-
-if (!$result) {
+} else {
     $patients = ["error" => $sql ." Error: Could not select patients from database"];
 }
 

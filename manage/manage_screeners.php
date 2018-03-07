@@ -136,27 +136,27 @@ if (!empty($_GET['create_for'])) {
     ;
 
     $risk = '';
-    if (isset($_GET['risk'])) {
+    if (isset($_GET['risk']) && $_GET['risk'] !== '') {
         $risk = $_GET['risk'];
     }
     $contacted = '';
-    if (isset($_GET['contacted'])) {
+    if (isset($_GET['contacted']) && $_GET['contacted'] !== '') {
         $contacted = $_GET['contacted'];
     }
     $contactedRisk = '';
-    if (isset($_GET['contacted_risk'])) {
+    if (isset($_GET['contacted_risk']) && $_GET['contacted_risk'] !== '') {
         $contactedRisk = $_GET['contacted_risk'];
     }
 
-    if ($risk) {
+    if ($risk !== '') {
         $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $risk)." ";
     }
 
-    if ($contacted) {
+    if ($contacted !== '') {
         $mainScreenerSql .= " AND contacted = ".mysqli_real_escape_string($con, $contacted)." ";
 	}
 
-	if ($contactedRisk) {
+	if ($contactedRisk !== '') {
         $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $contactedRisk)." ";
         $mainScreenerSql .= " AND contacted = 0 ";
     }
@@ -216,7 +216,7 @@ if (!empty($_GET['create_for'])) {
 	<?php } ?>
 </div>
 
-<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?= $_SERVER['PHP_SELF']?>" method="post">
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<?php
         if ($totalRecords > $rec_disp) { ?>

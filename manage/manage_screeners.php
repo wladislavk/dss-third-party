@@ -278,8 +278,8 @@ if (!empty($_GET['create_for'])) {
                 FROM dental_screener_epworth se
                 JOIN dental_epworth e ON se.epworth_id = e.epworthid
                 WHERE se.response > 0
-                AND se.screener_id IN ($doctorIdsString);"
-            ;
+                AND se.screener_id IN ($doctorIdsString);
+            ";
             $epworthResult = $db->getResults($epworthSql);
             foreach ($doctorScreeners as $doctorScreener) :
                 $epworthTotal = 0;

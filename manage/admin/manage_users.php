@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 
@@ -33,24 +34,26 @@ if (!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
         edx_user_delete($r['edx_id']);
 
         if ($r['cc_id'] != '') {
-            require_once '../3rdParty/stripe/lib/Stripe.php';
             $sql = "SELECT stripe_secret_key FROM companies c
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
                  WHERE uc.userid='$deleteId'";
             $key_r = $db->getRow($sql);
 
-            \Stripe::setApiKey($key_r['stripe_secret_key']);
+            $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
+            \Stripe\ApiRequestor::setHttpClient($curl);
+            \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
 
             try {
-                $cu = \Stripe_Customer::retrieve($r['cc_id']);
+                /** @var \Stripe\Customer $cu */
+                $cu = \Stripe\Customer::retrieve($r['cc_id']);
                 $cu->delete();
-            } catch(\Stripe_CardError $e) {
+            } catch(\Stripe\Error\Card $e) {
                 // Since it's a decline, Stripe_CardError will be caught
                 $body = $e->getJsonBody();
                 $err  = $body['error'];
                 echo $err['message'];
-            } catch (\Stripe_InvalidRequestError $e) {
+            } catch (\Stripe\Error\InvalidRequest $e) {
                 // Invalid parameters were supplied to Stripe's API
                 $body = $e->getJsonBody();
                 $err  = $body['error'];

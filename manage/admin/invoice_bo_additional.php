@@ -1037,7 +1037,9 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     
     $key_q = mysqli_query($con,$key_sql);
     $key_r= mysqli_fetch_assoc($key_q);
-    
+
+    $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
+    \Stripe\ApiRequestor::setHttpClient($curl);
     \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
     $status = 1;
     

@@ -1,6 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+    require_once __DIR__ . '/../vendor/autoload.php';
     include "includes/top.htm";
-    include_once '3rdParty/stripe/lib/Stripe.php';
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
     $r = $db->getRow($sql);
@@ -143,15 +143,15 @@
                                 
                                 $key_r= $db->getRow($key_sql);
 
-                                \Stripe::setApiKey($key_r['stripe_secret_key']);
+                                $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
+                                \Stripe\ApiRequestor::setHttpClient($curl);
+                                \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
 
                                 try{
-                                    $charge = \Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+                                    $charge = \Stripe\Charge::retrieve($charge_r["stripe_charge"]);
                                 } catch (Exception $e) {
                                     // Something else happened, completely unrelated to Stripe
-                                    $body = $e->getJsonBody();
-                                    $err  = $body['error'];
-                                    echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+                                    echo $e->getMessage().". Please contact your Credit Card billing administrator to resolve this issue.";
                                 } 
 
                                 echo $charge->card->last4;

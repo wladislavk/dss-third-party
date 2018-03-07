@@ -1,6 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php namespace Ds3\Libraries\Legacy; ?><?
+require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
-  require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 include 'includes/invoice_functions.php';
 
@@ -1038,17 +1038,17 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     $key_q = mysqli_query($con,$key_sql);
     $key_r= mysqli_fetch_assoc($key_q);
     
-    \Stripe::setApiKey($key_r['stripe_secret_key']);
+    \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
     $status = 1;
     
     try{
-        $charge = \Stripe_Charge::create(array(
+        $charge = \Stripe\Charge::create(array(
             "amount" => ($amount*100), # $15.00 this time
             "currency" => "usd",
             "customer" => $customerID
         ));
     }
-    catch (\Stripe_CardError $e) {
+    catch (\Stripe\Error\Card $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
@@ -1056,7 +1056,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con,$invoice_sql);
         $status = 2;
     }
-    catch (\Stripe_InvalidRequestError $e) {
+    catch (\Stripe\Error\InvalidRequest $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
@@ -1064,7 +1064,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con,$invoice_sql);
         $status = 2;
     }
-    catch (\Stripe_AuthenticationError $e) {
+    catch (\Stripe\Error\Authentication $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
@@ -1072,15 +1072,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con,$invoice_sql);
         $status = 2;
     }
-    catch (\Stripe_ApiConnectionError $e) {
-        $invoice_sql = "UPDATE dental_percase_invoice SET
-            status=2
-            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
-        
-        mysqli_query($con,$invoice_sql);
-        $status = 2;
-    }
-    catch (\Stripe_Error $e) {
+    catch (\Stripe\Error\ApiConnection $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";

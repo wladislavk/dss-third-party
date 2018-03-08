@@ -1,10 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include_once('admin/includes/main_include.php'); ?>
+<?php namespace Ds3\Libraries\Legacy;
+require_once __DIR__ . '/../vendor/autoload.php';
+include_once 'admin/includes/main_include.php';
+?>
 
 <h3>Credit Card Information</h3>
 
 <?php
-    include_once '3rdParty/stripe/lib/Stripe.php';
-
     $key_sql = "SELECT c.stripe_secret_key, u.cc_id, u.userid, c.id, c.name, u.email, CONCAT(u.first_name, ' ', u.last_name) user_name FROM companies c 
                 JOIN dental_user_company uc
                 ON c.id = uc.companyid
@@ -14,7 +15,9 @@
 
     $key_r = $db->getRow($key_sql);
 
-    \Stripe::setApiKey($key_r['stripe_secret_key']);
+    $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
+    \Stripe\ApiRequestor::setHttpClient($curl);
+    \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
 
     if ($key_r['cc_id'] == '') {
         ?>No card on record.<?php
@@ -22,7 +25,7 @@
 
 <?php
     }else{
-        $customer = \Stripe_Customer::retrieve($key_r['cc_id']);
+        $customer = \Stripe\Customer::retrieve($key_r['cc_id']);
         ?>Active card is <?php echo  $customer->active_card['type']; ?> ending in: <?php
         echo($customer->active_card['last4']);
         ?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a>

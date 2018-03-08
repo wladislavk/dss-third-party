@@ -13,10 +13,11 @@ if ($myarray) { ?>
                     JOIN dental_epworth e ON se.epworth_id =e.epworthid
                     WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con, $myarray['id'])."'";
         $ep_q = $db->getResults($ep_sql);
-        foreach ($ep_q as $ep_r) {
-            echo $ep_r['response'] . ' - <strong>' . $ep_r['epworth'] . '</strong><br />';
-        }
-        echo $ep['ep_total']; ?> - Total
+        foreach ($ep_q as $ep_r) { ?>
+            <?= $ep_r['response'] ?> - <strong><?= $ep_r['epworth'] ?></strong><br />
+            <?php
+        } ?>
+        <?= $ep['ep_total']; ?> - Total
         <br /><br />
         <strong>Health Symptoms</strong><br />
         <?php

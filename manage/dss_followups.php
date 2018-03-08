@@ -1,6 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once 'admin/includes/main_include.php';
-include 'includes/sescheck.php';
+include_once 'includes/sescheck.php';
 
 if (isset($_POST['submitaddfu'])) {
     if (isset($db) && $db instanceof Db) {

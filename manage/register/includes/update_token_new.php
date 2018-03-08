@@ -1,8 +1,9 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
 require_once __DIR__ . '/../../admin/includes/main_include.php';
-require_once __DIR__ . '/../../3rdParty/stripe/lib/Stripe.php';
 require_once __DIR__ . '/../../includes/constants.inc';
 require_once __DIR__ . '/../../includes/general_functions.php';
 
@@ -25,11 +26,13 @@ $zip = $_REQUEST['zip'];
 $key_sql = "SELECT stripe_secret_key FROM companies WHERE id = '" . $db->escape($companyid) . "'";
 $key_r= $db->getRow($key_sql);
 
-\Stripe::setApiKey($key_r['stripe_secret_key']);
+$curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
+\Stripe\ApiRequestor::setHttpClient($curl);
+\Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
 
 try {
     // create a Customer
-    $customer = \Stripe_Customer::create(array(
+    $customer = \Stripe\Customer::create(array(
         "card" => array(
             "number" => $number,
             "exp_month" => $exp_month,
@@ -41,28 +44,24 @@ try {
         "email" => $email,
         "description" => $desc
     ));
-} catch (\Stripe_CardError $e) {
+} catch (\Stripe\Error\Card $e) {
     // Since it's a decline, Stripe_CardError will be caught
     $body = $e->getJsonBody();
     $err  = $body['error'];
     echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
     trigger_error("Die called", E_USER_ERROR);
-} catch (\Stripe_InvalidRequestError $e) {
+} catch (\Stripe\Error\InvalidRequest $e) {
     // Invalid parameters were supplied to Stripe's API
     $body = $e->getJsonBody();
     $err  = $body['error'];
     echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
     trigger_error("Die called", E_USER_ERROR);
-} catch (\Stripe_AuthenticationError $e) {
+} catch (\Stripe\Error\Authentication $e) {
     // Authentication with Stripe's API failed
     // (maybe you changed API keys recently)
     return $e;
-} catch (\Stripe_ApiConnectionError $e) {
+} catch (\Stripe\Error\ApiConnection $e) {
     // Network communication with Stripe failed
-    return $e;
-} catch (\Stripe_Error $e) {
-    // Display a very generic error to the user, and maybe send
-    // yourself an email
     return $e;
 } catch (Exception $e) {
     // Something else happened, completely unrelated to Stripe

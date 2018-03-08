@@ -59,6 +59,6 @@ class Education extends BaseContext
         $this->wait(self::SHORT_WAIT_TIME);
         $heading = $this->findCss('#contentMain');
         Assert::assertNotNull($heading);
-        Assert::assertEquals('EdX Certificates', $this->sanitizeText($heading->getText()));
+        Assert::assertContains('EdX Certificates', $this->sanitizeText($heading->getText()));
     }
 }

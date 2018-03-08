@@ -10,7 +10,7 @@ Feature: Task Management
     And the modal window is "closed"
     When I click button with text "+ Add Task"
     Then the modal window is "open"
-    Then I see add task form with header "Add new task"
+    And I see add task form with header "Add new task"
     And add task form has following fields:
       | field       | type     | required |
       | Task        | text     | yes      |
@@ -82,7 +82,6 @@ Feature: Task Management
     When I click delete task link for "asdasdasd"
     And I confirm browser alert
     Then the modal window is "closed"
-    # will not work in legacy because of redirect
     #And I see checkboxes with these tasks under "Overdue" section in "dashboard":
     #  | task                                        |
     #  | Set up webinar for Dr. X software training. |

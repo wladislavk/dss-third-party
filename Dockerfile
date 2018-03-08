@@ -2,9 +2,8 @@ FROM 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
 
 ARG LEGACY_DIR
 ARG LOADER_DIR
-ARG API_DIR
 
-ENV LEGACY_PATH=${DOCUMENT_ROOT}/legacy LOADER_PATH=${DOCUMENT_ROOT}/loader API_PATH=${DOCUMENT_ROOT}/api
+ENV LEGACY_PATH=${DOCUMENT_ROOT}/legacy LOADER_PATH=${DOCUMENT_ROOT}/loader
 ENV SHARED_PATH=${LEGACY_PATH}/../../shared
 ENV FILES_PATH=${SHARED_PATH}/q_file
 WORKDIR $LOADER_PATH
@@ -13,16 +12,15 @@ WORKDIR $LOADER_PATH
 # all requirements and cache this build step. Use --no-autoloader --no-scripts
 # because there is no app source code yet.
 COPY $LOADER_DIR/composer* $LOADER_PATH/
-COPY $API_DIR/composer* $API_PATH/
+COPY $LEGACY_DIR/composer* $LEGACY_PATH/
 RUN set -x \
     && source /opt/rh/rh-php56/enable \
     && composer install --no-autoloader --no-scripts -d $LOADER_PATH \
-    && composer install --no-autoloader --no-scripts -d $API_PATH
+    && composer install --no-autoloader --no-scripts -d $LEGACY_PATH
 
 # Copy the project's source code.
 COPY $LEGACY_DIR $LEGACY_PATH
 COPY $LOADER_DIR $LOADER_PATH
-COPY $API_DIR $API_PATH
 
 RUN set -x \
     # Create shared folder
@@ -35,7 +33,7 @@ RUN set -x \
     # Do composer install again to apply autoloader and scripts sections.
     && source /opt/rh/rh-php56/enable \
     && composer install -d $LOADER_PATH \
-    && composer install -d $API_PATH \
+    && composer install -d $LEGACY_PATH \
     # Fix permissions
     && chown -R apache ${DOCUMENT_ROOT} \
     && chown -R apache ${SHARED_PATH}

@@ -22,7 +22,7 @@ if (isset($my)) {
             }
             $users = [];
             if (count($userIds)) {
-                $userIdsString = '\'' . join('\', \'', $userIds) . '\'';
+                $userIdsString = $db->escapeList($userIds);
                 $userSql = "SELECT * FROM dental_users WHERE userid IN ($userIdsString);";
                 $users = $db->getResults($userSql);
             }

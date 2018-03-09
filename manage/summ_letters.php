@@ -175,7 +175,7 @@ if (isset($patient_info) && $patient_info) {
         $patientIds[] = $row['patientid'];
     }
     if (count($letterIds)) {
-        $letterIdsString = '\'' . join('\', \'', $letterIds) . '\'';
+        $letterIdsString = $db->escapeList($letterIds);
         $childLettersSql = "
             SELECT letterid, topatient, patientid, md_list, md_referral_list, pat_referral_list 
             FROM dental_letters
@@ -192,12 +192,12 @@ if (isset($patient_info) && $patient_info) {
         }
     }
     if (count($templateIds)) {
-        $templateIdsString = '\'' . join('\', \'', $templateIds) . '\'';
+        $templateIdsString = $db->escapeList($templateIds);
         $template_sql = "SELECT id, name FROM dental_letter_templates WHERE id IN ($templateIdsString);";
         $templates = $db->getResults($template_sql) || [];
     }
     if (count($customTemplateIds)) {
-        $templateIdsString = '\'' . join('\', \'', $customTemplateIds) . '\'';
+        $templateIdsString = $db->escapeList($customTemplateIds);
         $template_sql = "SELECT id, name FROM dental_letter_templates_custom WHERE id IN ($templateIdsString);";
         $customTemplates = $db->getResults($template_sql) || [];
     }

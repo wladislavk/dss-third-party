@@ -272,7 +272,7 @@ if (!empty($_GET['create_for'])) {
             foreach ($doctorScreeners as $doctorScreener) {
                 $doctorIds[] = (int)$doctorScreener['id'];
             }
-            $doctorIdsString = '\'' . join('\', \'', $doctorIds) . '\'';
+            $doctorIdsString = $db->escapeList($doctorIds);
             $epworthSql = "
                 SELECT se.response, e.epworth, se.screener_id
                 FROM dental_screener_epworth se

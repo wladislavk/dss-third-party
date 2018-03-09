@@ -584,8 +584,8 @@ if ($sleepLabResult) {
         $sleepLabIds[] = $sleepLab['place'];
         $sleepLabDeviceIds[] = $sleepLab['dentaldevice'];
     }
-    $sleepLabIdsString = '\'' . join('\', \'', $sleepLabIds) . '\'';
-    $sleepLabDeviceIdsString = '\'' . join('\', \'', $sleepLabDeviceIds) . '\'';
+    $sleepLabIdsString = $db->escapeList($sleepLabIds);
+    $sleepLabDeviceIdsString = $db->escapeList($sleepLabDeviceIds);
     $sleepLabCompanyQuery = "SELECT company FROM dental_sleeplab WHERE sleeplabid IN ($sleepLabIdsString);";
     /** @var array $sleepLabCompanies */
     $sleepLabCompanies = $db->getResults($sleepLabCompanyQuery) || [];

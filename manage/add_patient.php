@@ -282,7 +282,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         if ($_POST['email'] != $s_r['email']) {
             $ed_sql .= "email_bounce = 0,";
         }
-        $ed_sql .=" 
+        $ed_sql .= " 
                 patient_notes = '".s_for($_POST["patient_notes"])."', 
                 display_alert = '".s_for($_POST["display_alert"])."',
                 alert_text = '".s_for(!empty($_POST["alert_text"]) ? $_POST["alert_text"] : '')."', 

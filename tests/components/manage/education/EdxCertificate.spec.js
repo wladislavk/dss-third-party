@@ -53,7 +53,7 @@ describe('EdxCertificate component', () => {
 
   it('should show certificate links', function (done) {
     const vm = this.mount()
-    moxios.wait(function () {
+    moxios.wait(() => {
       const children = vm.$el.querySelectorAll('ul li a')
       expect(children.length).toEqual(2)
       expect(children[0].getAttribute('href')).toEqual('http://some_url.com')

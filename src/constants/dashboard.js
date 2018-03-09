@@ -157,7 +157,7 @@ export const NAVIGATION_MENU = [
       },
       {
         name: 'Dental Sleep Medicine Manual',
-        route: 'medicine_manual'
+        route: 'medicine-manual'
       },
       {
         name: 'DSS Franchise Operations Manual',
@@ -166,7 +166,7 @@ export const NAVIGATION_MENU = [
       },
       {
         name: 'Quick Facts Reference',
-        route: 'quick_facts'
+        route: 'quick-facts'
       },
       {
         name: 'Watch Videos',
@@ -180,7 +180,7 @@ export const NAVIGATION_MENU = [
       },
       {
         name: 'Certificates',
-        route: 'edx_certificate'
+        route: 'edx-certificate'
       }
     ]
   },

@@ -106,14 +106,14 @@ export default [
         meta: STANDARD_META
       },
       {
-        path: 'medicine_manual',
-        name: 'medicine_manual',
+        path: 'medicine-manual',
+        name: 'medicine-manual',
         component: MedicineManualComponent,
         meta: STANDARD_META
       },
       {
-        path: 'quick_facts',
-        name: 'quick_facts',
+        path: 'quick-facts',
+        name: 'quick-facts',
         component: QuickFactsReferenceComponent,
         meta: STANDARD_META
       },
@@ -124,8 +124,8 @@ export default [
         meta: STANDARD_META
       },
       {
-        path: 'edx_certificate',
-        name: 'edx_certificate',
+        path: 'edx-certificate',
+        name: 'edx-certificate',
         component: EdxCertificateComponent,
         meta: STANDARD_META
       },

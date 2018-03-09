@@ -329,6 +329,161 @@
 </template>
 
 
-<style lang="scss" scoped>
-    @import "../../../assets/css/manage/education/quick_facts.scss";
+<style type="text/css" scoped>
+    h1 {
+        mso-style-link: "Heading 1 Char";
+        margin-top: 24.0pt;
+        margin-right: 0in;
+        margin-bottom: 0in;
+        margin-left: 0in;
+        margin-bottom: .0001pt;
+        line-height: 120%;
+        page-break-after: avoid;
+        font-size: 14.0pt;
+        font-family: "Cambria", "serif";
+        color: #365F91;
+    }
+
+    h2 {
+        mso-style-link: "Heading 2 Char";
+        margin-top: 10.0pt;
+        margin-right: 0in;
+        margin-bottom: 0in;
+        margin-left: 0in;
+        margin-bottom: .0001pt;
+        text-align: center;
+        line-height: 120%;
+        page-break-after: avoid;
+        font-size: 18.0pt;
+        font-family: "Cambria", "serif";
+        text-transform: uppercase;
+        text-decoration: underline;
+    }
+
+    h3 {
+        mso-style-link: "Heading 3 Char";
+        margin-top: 10.0pt;
+        margin-right: 0in;
+        margin-bottom: 0in;
+        margin-left: 0in;
+        margin-bottom: .0001pt;
+        line-height: 120%;
+        page-break-after: avoid;
+        font-size: 12.0pt;
+        font-family: "Cambria", "serif";
+        color: #4F81BD;
+    }
+
+    /* List Definitions */
+    ol {
+        margin-bottom: 0in;
+    }
+
+    ul {
+        margin-bottom: 0in;
+    }
+
+    /* Font Definitions */
+    @font-face {
+        font-family: Wingdings;
+        panose-1: 5 0 0 0 0 0 0 0 0 0;
+    }
+
+    @font-face {
+        font-family: "Cambria Math";
+        panose-1: 2 4 5 3 5 4 6 3 2 4;
+    }
+
+    @font-face {
+        font-family: Calibri;
+        panose-1: 2 15 5 2 2 2 4 3 2 4;
+    }
+
+    /* Style Definitions */
+    p.MsoNormal, li.MsoNormal, div.MsoNormal {
+        margin-top: 0in;
+        margin-right: 0in;
+        margin-bottom: 8.0pt;
+        margin-left: 0in;
+        line-height: 107%;
+        font-size: 11.0pt;
+        font-family: "Calibri", "sans-serif";
+    }
+
+    a:link, span.MsoHyperlink {
+        color: #0563C1;
+        text-decoration: underline;
+    }
+
+    a:visited, span.MsoHyperlinkFollowed {
+        color: #954F72;
+        text-decoration: underline;
+    }
+
+    p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph {
+        margin-top: 0in;
+        margin-right: 0in;
+        margin-bottom: 8.0pt;
+        margin-left: .5in;
+        line-height: 107%;
+        font-size: 11.0pt;
+        font-family: "Calibri", "sans-serif";
+    }
+
+    p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst {
+        margin-top: 0in;
+        margin-right: 0in;
+        margin-bottom: 0in;
+        margin-left: .5in;
+        margin-bottom: .0001pt;
+        line-height: 107%;
+        font-size: 11.0pt;
+        font-family: "Calibri", "sans-serif";
+    }
+
+    p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle {
+        margin-top: 0in;
+        margin-right: 0in;
+        margin-bottom: 0in;
+        margin-left: .5in;
+        margin-bottom: .0001pt;
+        line-height: 107%;
+        font-size: 11.0pt;
+        font-family: "Calibri", "sans-serif";
+    }
+
+    p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast {
+        margin-top: 0in;
+        margin-right: 0in;
+        margin-bottom: 0pt;
+        margin-left: .5in;
+        line-height: 107%;
+        font-size: 11.0pt;
+        font-family: "Calibri", "sans-serif";
+    }
+
+    .MsoChpDefault {
+        font-family: "Calibri", "sans-serif";
+    }
+
+    .MsoPapDefault {
+        margin-bottom: 8.0pt;
+        line-height: 107%;
+    }
+
+    .WordSection1 {
+        margin: 0 40px;
+    }
+
+    .font-symbol {
+        font-family: Symbol;
+    }
+
+    .font-times-new-roman {
+        font: 7.0pt "Times New Roman";
+    }
+
+    .indent-small {
+        text-indent: -.25in;
+    }
 </style>

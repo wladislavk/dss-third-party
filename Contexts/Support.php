@@ -22,7 +22,7 @@ class Support extends BaseContext
      */
     public function clickOnSupportLink()
     {
-        $li = $this->findCss('li.header_support');
+        $li = $this->findCss('li#header_support');
         $link = $this->findCss('a', $li);
         $link->click();
     }

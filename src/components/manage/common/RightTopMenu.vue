@@ -4,7 +4,7 @@
             <li>
                 <router-link v-bind:to="{name: 'dashboard'}">Notifications({{ notificationsNumber }})</router-link>
             </li>
-            <li class="header_support" v-bind:class="{'pending': supportTicketsNumber}">
+            <li class="header_support" id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                 <a v-legacy-href="'manage/support.php'">
                     Support <span v-if="supportTicketsNumber">({{ supportTicketsNumber }})</span>
                 </a>

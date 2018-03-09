@@ -11,14 +11,4 @@ class DentrixUserGuard extends AbstractGuard
     {
         parent::__construct($repository);
     }
-
-    public function setUser(Authenticatable $user)
-    {
-        return $this->user();
-    }
-
-    public function id()
-    {
-        return $this->user()->getAuthIdentifier();
-    }
 }

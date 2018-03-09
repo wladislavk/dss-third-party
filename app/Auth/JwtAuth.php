@@ -50,7 +50,6 @@ class JwtAuth
      * @param string $role
      * @return string
      * @throws AuthenticatableNotFoundException
-     * @throws InvalidPayloadException
      */
     public function toToken($role = '')
     {

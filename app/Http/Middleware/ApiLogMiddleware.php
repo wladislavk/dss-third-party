@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ApiLogRepository;
 use DentalSleepSolutions\Http\Requests\Request;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class ApiLogMiddleware
 {
@@ -16,6 +17,12 @@ class ApiLogMiddleware
         $this->apiLogRepository = $apiLogRepository;
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     * @throws ValidatorException
+     */
     public function handle(Request $request, Closure $next)
     {
         $this->apiLogRepository->create([

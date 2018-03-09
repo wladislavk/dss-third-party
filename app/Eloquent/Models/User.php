@@ -6,6 +6,7 @@ use DentalSleepSolutions\Contracts\UserInterface;
 use DentalSleepSolutions\Eloquent\Traits\UserTrait;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @DSS\Manual
@@ -21,7 +22,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @property string|null $ip_address
  * @mixin \Eloquent
  */
-class User extends AbstractModel implements AuthenticatableContract, UserInterface
+class User extends AbstractModel implements AuthenticatableContract, UserInterface, JWTSubject
 {
     use Authenticatable, UserTrait;
 
@@ -57,5 +58,26 @@ class User extends AbstractModel implements AuthenticatableContract, UserInterfa
         static::saving(function () {
             return false;
         });
+    }
+
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

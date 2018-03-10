@@ -1241,7 +1241,7 @@ if (isset($msg) && $msg != '') { ?>
             url: "includes/check_email.php",
             type: "post",
             data: {
-                email: fa.email.value<?- (isset($_GET['pid'])) ? ", id: ".$_GET['pid'] : ''; ?>
+                email: fa.email.value<?= (isset($_GET['pid'])) ? ", id: ".$_GET['pid'] : ''; ?>
             },
             async: false,
             success: function (data) {

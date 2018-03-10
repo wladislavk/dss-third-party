@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Helpers;
 
 use DateTime;
 use Carbon\Carbon;
+use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Structs\JwtPayload;
 use Tymon\JWTAuth\Contracts\Providers\JWT as JWTInterface;
@@ -57,6 +58,9 @@ class JwtHelper
         $payload->notBefore = $notBefore->getTimestamp();
         $payload->expiresAt = $expireDate->getTimestamp();
         $payload->jwtUniqueId = md5($payload->issuer . '-' . $payload->issuedAt);
+        if (isset($customClaims[JwtAuth::CLAIM_ID_INDEX])) {
+            $payload->subject = $customClaims[JwtAuth::CLAIM_ID_INDEX];
+        }
 
         $baseClaims = $payload->toArray();
         $claims = array_merge($baseClaims, $customClaims);
@@ -109,9 +113,12 @@ class JwtHelper
             throw new InvalidTokenException("Invalid Issuer (iss): expected '{$payload->issuer}', got '$issuer'");
         }
 
+        // @todo: Current version of JWTAuth requires subject to correspond to user ID so it cannot be validated statically
+        /*
         if ($subject !== $payload->subject) {
             throw new InvalidTokenException("Invalid Subject (sub): expected '{$payload->subject}', got '$subject'");
         }
+        */
 
         if ($audience !== $payload->audience) {
             throw new InvalidTokenException("Invalid Audience (aud): expected '{$payload->audience}', got '$audience'");

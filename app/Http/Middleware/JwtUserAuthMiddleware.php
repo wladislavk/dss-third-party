@@ -53,8 +53,6 @@ class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
         }
 
         $request->setUserResolver(function () use ($request) {
-            if ($request->route()->uri != 'auth' && !strstr($request->route()->uri, 'check')) {
-            }
             $user = $this->auth
                 ->guard(JwtAuth::ROLE_USER)
                 ->user()

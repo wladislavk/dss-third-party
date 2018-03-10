@@ -105,22 +105,6 @@ class JwtHelperTest extends UnitTestCase
      * @throws InvalidPayloadException
      * @throws InvalidTokenException
      */
-    public function testValidateClaimsInvalidSubject()
-    {
-        $payload = new JwtPayload();
-        $payload->subject = '';
-
-        $this->expectException(InvalidTokenException::class);
-        $this->expectExceptionMessageRegExp('/^Invalid Subject \(sub\)/');
-        $this->helper->validateClaims($payload->toArray());
-    }
-
-    /**
-     * @throws ExpiredTokenException
-     * @throws InactiveTokenException
-     * @throws InvalidPayloadException
-     * @throws InvalidTokenException
-     */
     public function testValidateClaimsInvalidAudience()
     {
         $payload = new JwtPayload();

@@ -94,15 +94,10 @@ class JwtHelper
         $payload = new JwtPayload();
 
         $issuer = '';
-        $subject = '';
         $audience = '';
 
         if (isset($claims['iss'])) {
             $issuer = $claims['iss'];
-        }
-
-        if (isset($claims['sub'])) {
-            $subject = $claims['sub'];
         }
 
         if (isset($claims['aud'])) {
@@ -112,13 +107,6 @@ class JwtHelper
         if ($issuer !== $payload->issuer) {
             throw new InvalidTokenException("Invalid Issuer (iss): expected '{$payload->issuer}', got '$issuer'");
         }
-
-        // @todo: Current version of JWTAuth requires subject to correspond to user ID so it cannot be validated statically
-        /*
-        if ($subject !== $payload->subject) {
-            throw new InvalidTokenException("Invalid Subject (sub): expected '{$payload->subject}', got '$subject'");
-        }
-        */
 
         if ($audience !== $payload->audience) {
             throw new InvalidTokenException("Invalid Audience (aud): expected '{$payload->audience}', got '$audience'");

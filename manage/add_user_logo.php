@@ -24,15 +24,15 @@
       </script>
 <?php
     } else {
-      $file_name = "user_logo_".$_SESSION["docid"].".".$extension; 
-      $file_path = "../../../shared/q_file/".$file_name;
+      $file_name = "user_logo_" . $_SESSION["docid"] . "." . $extension;
+      $file_path = "../../../shared/q_file/" . $file_name;
       $max_width = 120;
       $max_height = 80;
       list($width,$height) = getimagesize($uploadedfile);
       if(($width>$max_width || $height>$max_height) || $filesize > DSS_IMAGE_MAX_SIZE ){
-        if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" ) {
+        if(strtolower($extension) == "jpg" || strtolower($extension) == "jpeg" ) {
           $src = imagecreatefromjpeg($uploadedfile);
-        } elseif(strtolower($extension)=="png") {
+        } elseif(strtolower($extension) == "png") {
           $src = imagecreatefrompng($uploadedfile);
         } else {
           $src = imagecreatefromgif($uploadedfile);
@@ -116,19 +116,19 @@
       @chmod($file_path,0777);
 
 			$ed_sql = "update dental_users set 
-				         logo = '".mysqli_real_escape_string($con, $file_name)."',
+				         logo = '" . mysqli_real_escape_string($con, $file_name) . "',
 				         updated_at=now()
-			           where userid='".$_SESSION["docid"]."'";
+			           where userid='" . $_SESSION["docid"] . "'";
 
 			$db->query($ed_sql);
 
       //not updating forms for the time being since this is not being used anywhere there isn't auto creating forms
       //form_update_all($_SESSION['docid']);
 			//echo $ed_sql.mysqli_error($con);
-			$msg = "Edited Successfully";
+			$message = "Edited Successfully";
 ?>
 			<script type="text/javascript">
-				parent.window.location = 'manage_profile.php?msg=<?php echo $msg;?>';
+				parent.window.location = 'manage_profile.php?msg=<?php echo urlencode($message); ?>';
 			</script>
 <?php
 			trigger_error("Die called", E_USER_ERROR);
@@ -148,45 +148,37 @@
   </head>
   <body>
     <?php
-      $thesql = "select * from dental_users where userid='".$_SESSION['docid']."'";
+        $docId = (int)$_SESSION['docid'];
+        $theSql = "select * from dental_users where userid='$docId'";
+        $message = $_GET['msg'];
+        $logo = null;
+        $buttonText = 'Add ';
+        $theMyArray = $db->getRow($theSql);
+        $name = $theMyArray['name'];
 
-    	$themyarray = $db->getRow($thesql);
-   	  $name = st($themyarray['name']);
-
-    	if(!empty($msg)) {
-    		$logo = $_POST['logo'];
-    	} else {
-    		$logo = st($themyarray['logo']);
-    		$but_text = "Add ";
-    	}
-  	
-    	if(!empty($themyarray["id"])) {
-    		$but_text = "Edit ";
-    	} else {
-    		$but_text = "Add ";
-    	}
+    	if(!empty($theMyArray["logo"])) {
+    		$buttonText = "Edit ";
+            $logo = $theMyArray['logo'];
+        }
 	  ?>
 	
 	  <br /><br />
 	
-	  <?php if(!empty($msg)) { ?>
       <div align="center" class="red">
-        <?php echo $msg;?>
+          <?= e($message) ?>
+          <?php if($logo != '') {?>
+              <br>
+              <img src="/manage/display_file.php?f=<?= e($logo) ?>">
+              <br>
+          <?php } ?>
       </div>
-    <?php } ?>
 
-    <?php if($logo <> "") { ?>
-      <img src="../../../shared/q_file/<?php echo $logo;?>" />
-    <?php } ?>
-
-    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" enctype="multipart/form-data">
+    <form name="userfrm" action="<?= e($_SERVER['PHP_SELF']) ?>?add=1" method="post" enctype="multipart/form-data">
       <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
           <td colspan="2" class="cat_head">
-             <?php echo $but_text?> User Logo
-             <?php if($name <> "") { ?>
-             		&quot;<?php echo $name;?>&quot;
-             <?php } ?>
+             <?= e($buttonText) ?> User Logo
+              &quot;<?= e($name) ?>&quot;
           </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -204,8 +196,8 @@
                   * Image must be 120x80pix or less.					
               </span><br />
               <input type="hidden" name="compsub" value="1" />
-              <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>" />
-              <input type="submit" value=" <?php echo $but_text?> User Logo" class="button" />
+              <input type="hidden" name="ed" value="<?php echo $docId; ?>" />
+              <input type="submit" value=" <?php echo $buttonText; ?> User Logo" class="button" />
           </td>
         </tr>
       </table>

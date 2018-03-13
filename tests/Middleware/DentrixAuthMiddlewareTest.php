@@ -7,7 +7,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors;
 use Illuminate\Http\Response;
 use Tests\TestCases\MiddlewareTestCase;

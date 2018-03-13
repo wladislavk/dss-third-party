@@ -5,7 +5,7 @@ use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
 use Illuminate\Http\Response;
 use Tests\TestCases\JwtAuthMiddlewateTestCase;

@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User as DentalUser;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class CurrentUserInfoRetriever
 {
@@ -20,7 +21,12 @@ class CurrentUserInfoRetriever
         $this->userRepository = $userRepository;
     }
 
-    public function getCurrentUserInfo(BaseUser $user)
+    /**
+     * @param BaseUser $user
+     * @return array
+     * @throws RepositoryException
+     */
+    public function getCurrentUserInfo(BaseUser $user): array
     {
         $userData = $this->userNumberRetriever->addUserNumbers($user);
         /** @var DentalUser|null $dentalUser */

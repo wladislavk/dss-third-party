@@ -2,7 +2,7 @@
 namespace Tests\TestCases;
 
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Dummies\Http\NoMiddlewareKernel;

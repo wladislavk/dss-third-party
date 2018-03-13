@@ -21,6 +21,9 @@ class RoutePathRetrieverTest extends UnitTestCase
         $this->routePathRetriever = new RoutePathRetriever($router);
     }
 
+    /**
+     * @throws SwaggerGeneratorException
+     */
     public function testWithRoute()
     {
         $controllerClassName = 'MyController';
@@ -29,6 +32,9 @@ class RoutePathRetrieverTest extends UnitTestCase
         $this->assertEquals('/my-controller/index/{id}', $path);
     }
 
+    /**
+     * @throws SwaggerGeneratorException
+     */
     public function testWithoutRoute()
     {
         $controllerClassName = 'foo';
@@ -59,7 +65,7 @@ class RoutePathRetrieverTest extends UnitTestCase
     {
         /** @var Route|MockInterface $route */
         $route = \Mockery::mock(Route::class);
-        $route->shouldReceive('getPath')->andReturnUsing([$this, 'getPathCallback']);
+        $route->shouldReceive('uri')->andReturnUsing([$this, 'getPathCallback']);
         $route->shouldReceive('getPrefix')->andReturnUsing([$this, 'getPrefixCallback']);
         return $route;
     }

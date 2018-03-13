@@ -48,7 +48,8 @@ abstract class Controller extends BaseController
         $this->user->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
         $this->admin->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
 
-        if ($request->user()) {
+        $requestedUser = $request->user();
+        if ($requestedUser) {
             $this->user = $request->user();
         }
 

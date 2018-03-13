@@ -8,7 +8,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Tests\TestCases\JwtAuthMiddlewateTestCase;
 
 class JwtSudoAuthMiddlewareTest extends JwtAuthMiddlewateTestCase

@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Helpers;
 
 use DateTime;
 use Carbon\Carbon;
+use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Structs\JwtPayload;
-use Tymon\JWTAuth\Providers\JWT\JWTInterface;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Contracts\Providers\JWT as JWTInterface;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
@@ -28,8 +28,7 @@ class JwtHelper
         Config $config,
         Carbon $carbon,
         JWTInterface $jwtProvider
-    )
-    {
+    ) {
         $this->config = $config;
         $this->carbon = $carbon;
         $this->jwtProvider = $jwtProvider;
@@ -40,7 +39,6 @@ class JwtHelper
      * @param DateTime $notBefore
      * @param DateTime $expireDate
      * @return string
-     * @throws InvalidPayloadException
      */
     public function createToken(array $customClaims = [], DateTime $expireDate = null, DateTime $notBefore = null)
     {
@@ -60,13 +58,13 @@ class JwtHelper
         $payload->notBefore = $notBefore->getTimestamp();
         $payload->expiresAt = $expireDate->getTimestamp();
         $payload->jwtUniqueId = md5($payload->issuer . '-' . $payload->issuedAt);
+        if (isset($customClaims[JwtAuth::CLAIM_ID_INDEX])) {
+            $payload->subject = $customClaims[JwtAuth::CLAIM_ID_INDEX];
+        }
 
         $baseClaims = $payload->toArray();
         $claims = array_merge($baseClaims, $customClaims);
 
-        /**
-         * @todo: Unreachable JWTException in NamshiAdapter::encode()
-         */
         $token = $this->jwtProvider->encode($claims);
 
         return $token;
@@ -75,16 +73,10 @@ class JwtHelper
     /**
      * @param string $token
      * @return array
-     * @throws InvalidTokenException
      */
     public function parseToken($token)
     {
-        try {
-            $payload = $this->jwtProvider->decode($token);
-        } catch (TokenInvalidException $e) {
-            throw new InvalidTokenException($e->getMessage());
-        }
-
+        $payload = $this->jwtProvider->decode($token);
         return $payload;
     }
 
@@ -102,15 +94,10 @@ class JwtHelper
         $payload = new JwtPayload();
 
         $issuer = '';
-        $subject = '';
         $audience = '';
 
         if (isset($claims['iss'])) {
             $issuer = $claims['iss'];
-        }
-
-        if (isset($claims['sub'])) {
-            $subject = $claims['sub'];
         }
 
         if (isset($claims['aud'])) {
@@ -119,10 +106,6 @@ class JwtHelper
 
         if ($issuer !== $payload->issuer) {
             throw new InvalidTokenException("Invalid Issuer (iss): expected '{$payload->issuer}', got '$issuer'");
-        }
-
-        if ($subject !== $payload->subject) {
-            throw new InvalidTokenException("Invalid Subject (sub): expected '{$payload->subject}', got '$subject'");
         }
 
         if ($audience !== $payload->audience) {

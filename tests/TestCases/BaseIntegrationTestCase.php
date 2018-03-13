@@ -2,7 +2,7 @@
 
 namespace Tests\TestCases;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use Illuminate\Contracts\Console\Kernel;
 
 class BaseIntegrationTestCase extends BaseTestCase

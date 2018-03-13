@@ -132,7 +132,10 @@ class UsersApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/users/check');
         $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
+        $expected = [
+            'type' => '',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 
     public function testGetCurrentUserInfo()

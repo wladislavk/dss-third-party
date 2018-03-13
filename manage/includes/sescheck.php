@@ -4,21 +4,23 @@ namespace Ds3\Libraries\Legacy;
 include_once __DIR__ . '/../admin/includes/main_include.php';
 include_once __DIR__ . '/../../config.php';
 
-function getUserByToken($token)
-{
-    $handle = curl_init(API_URL . 'users/current');
-    curl_setopt($handle, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token]);
-    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-    $result = json_decode(curl_exec($handle), true);
-    curl_close($handle);
-    return $result;
-}
+if (!function_exists('getUserByToken')) {
+    function getUserByToken($token)
+    {
+        $handle = curl_init(API_URL . 'users/current');
+        curl_setopt($handle, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token]);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        $result = json_decode(curl_exec($handle), true);
+        curl_close($handle);
+        return $result;
+    }
 
-function setSessionData(array $data)
-{
-    $_SESSION['userid'] = intval($data['userid']);
-    $_SESSION['docid'] = intval($data['docid']);
-    $_SESSION['username'] = $data['username'];
+    function setSessionData(array $data)
+    {
+        $_SESSION['userid'] = intval($data['userid']);
+        $_SESSION['docid'] = intval($data['docid']);
+        $_SESSION['username'] = $data['username'];
+    }
 }
 
 $loggedIn = false;

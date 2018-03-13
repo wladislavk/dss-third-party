@@ -18,7 +18,7 @@ class AppointmentSummaryRepository extends AbstractRepository
      * @param int $patientId
      * @return AppointmentSummary[]|\Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function getByPatient($patientId)
+    public function getByPatient(int $patientId): iterable
     {
         return $this->model
             ->select('*')
@@ -33,7 +33,7 @@ class AppointmentSummaryRepository extends AbstractRepository
      * @param int $patientId
      * @return array
      */
-    public function getLastAppointmentDevice($patientId)
+    public function getLastAppointmentDevice(int $patientId): array
     {
         $result = $this->model
             ->select('id')
@@ -54,7 +54,11 @@ class AppointmentSummaryRepository extends AbstractRepository
         return $arrayResult;
     }
 
-    public function getLastTrackerStep($patientId)
+    /**
+     * @param int $patientId
+     * @return array|null
+     */
+    public function getLastTrackerStep(int $patientId): ?array
     {
         $result = $this->model
             ->select('*')
@@ -73,8 +77,13 @@ class AppointmentSummaryRepository extends AbstractRepository
         return null;
     }
 
-    public function getFutureAppointment($patientId)
+    /**
+     * @param int $patientId
+     * @return AppointmentSummary|null
+     */
+    public function getFutureAppointment(int $patientId): ?AppointmentSummary
     {
+        /** @var AppointmentSummary|null $result */
         $result = $this->model
             ->where('appointment_type', 0)
             ->where('patientid', $patientId)
@@ -87,9 +96,10 @@ class AppointmentSummaryRepository extends AbstractRepository
      * @param int $patientId
      * @return AppointmentSummary|null
      */
-    public function getDeviceDelivery($patientId)
+    public function getDeviceDelivery(int $patientId): ?AppointmentSummary
     {
         $deviceSegments = [4, 7];
+        /** @var AppointmentSummary|null $result */
         $result = $this->model
             ->where('patientid', $patientId)
             ->where('appointment_type', 1)

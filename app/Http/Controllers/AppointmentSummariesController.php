@@ -11,6 +11,7 @@ use DentalSleepSolutions\Helpers\AppointmentSummaryCreator;
 use DentalSleepSolutions\Helpers\TrackerStepRetriever;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class AppointmentSummariesController extends BaseRestController
@@ -116,9 +117,9 @@ class AppointmentSummariesController extends BaseRestController
      * )
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getFutureAppointment($id)
+    public function getFutureAppointment(int $id): JsonResponse
     {
         $data = $this->repository->getFutureAppointment($id);
         return ApiResponse::responseOk('', $data);
@@ -172,14 +173,21 @@ class AppointmentSummariesController extends BaseRestController
         */
     }
 
-    public function addAppointment(Request $request, AppointmentSummaryCreator $appointmentSummaryCreator)
+    /**
+     * @param Request $request
+     * @param AppointmentSummaryCreator $appointmentSummaryCreator
+     * @return JsonResponse
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     */
+    public function addAppointment(Request $request, AppointmentSummaryCreator $appointmentSummaryCreator): JsonResponse
     {
         $stepId = (int)$request->input('step_id');
         $patientId = (int)$request->input('patient_id');
         $docId = $this->user->getDocIdOrZero();
+        $userId = $this->user->getUserIdOrZero();
 
         try {
-            $result = $appointmentSummaryCreator->createAppointmentSummary($stepId, $patientId, $docId);
+            $result = $appointmentSummaryCreator->createAppointmentSummary($stepId, $patientId, $docId, $userId);
         } catch (GeneralException $e) {
             // @todo: check if 400 should be returned
             return ApiResponse::responseError($e->getMessage(), 400);

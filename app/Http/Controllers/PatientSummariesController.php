@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class PatientSummariesController extends BaseRestController
 {
@@ -145,9 +146,9 @@ class PatientSummariesController extends BaseRestController
      * )
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getTrackerNotes($id)
+    public function getTrackerNotes(int $id): JsonResponse
     {
         $notes = $this->repository->getTrackerNotes($id);
         return ApiResponse::responseOk('', $notes);
@@ -160,9 +161,9 @@ class PatientSummariesController extends BaseRestController
      * )
      *
      * @param PatientSummaryRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function updateTrackerNotes(PatientSummaryRequest $request)
+    public function updateTrackerNotes(PatientSummaryRequest $request): JsonResponse
     {
         $this->validate($request, $request->updateRules());
 

@@ -2,7 +2,12 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
+use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\SummaryLetterTriggers\AnnualRecallTrigger;
@@ -30,26 +35,44 @@ class AppointmentSummaryCreator
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var TmjClinicalExamRepository */
+    private $clinicalExamRepository;
+
+    /** @var ContactRepository */
+    private $contactRepository;
+
+    /** @var LetterRepository */
+    private $letterRepository;
+
     public function __construct(
         LetterTrigger $letterTrigger,
         IdListCleaner $idListCleaner,
         AppointmentSummaryRepository $appointmentSummaryRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        TmjClinicalExamRepository $clinicalExamRepository,
+        ContactRepository $contactRepository,
+        LetterRepository $letterRepository
     ) {
         $this->letterTrigger = $letterTrigger;
         $this->idListCleaner = $idListCleaner;
         $this->appointmentSummaryRepository = $appointmentSummaryRepository;
         $this->userRepository = $userRepository;
+        $this->clinicalExamRepository = $clinicalExamRepository;
+        $this->contactRepository = $contactRepository;
+        $this->letterRepository = $letterRepository;
     }
 
     /**
      * @param int $stepId
      * @param int $patientId
      * @param int $docId
+     * @param int $userId
      * @return array
      * @throws GeneralException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     * @throws \Exception
      */
-    public function createAppointmentSummary($stepId, $patientId, $docId)
+    public function createAppointmentSummary(int $stepId, int $patientId, int $docId, int $userId): array
     {
         $numSteps = null;
         $impressionDevice = true;
@@ -69,53 +92,59 @@ class AppointmentSummaryCreator
             }
         }
         if ($stepId == 7) {
-            $sql = "SELECT * FROM dental_ex_page5 where patientid=$patientId";
-            if ($db->getNumberRows($sql) == 0) {
-                $sqlex = "INSERT INTO dental_ex_page5 set
-                  dentaldevice_date = CURDATE(),
-                  patientid = $patientId,
-                  userid = {$_SESSION['userid']},
-                  docid = {$_SESSION['docid']},
-                  adddate = now(),
-                  ip_address = '{$_SERVER['REMOTE_ADDR']}'";
+            /** @var TmjClinicalExam[] $clinicalExams */
+            $clinicalExams = $this->clinicalExamRepository->findByField('patientid', $patientId);
+            if (isset($clinicalExams[0])) {
+                $clinicalExam = $clinicalExams[0];
             } else {
-                $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where patientid=$patientId";
+                $clinicalExam = new TmjClinicalExam();
+                $clinicalExam->patientid = $patientId;
+                $clinicalExam->userid = $userId;
+                $clinicalExam->docid = $docId;
             }
-            $db->query($sqlex);
+            $clinicalExam->dentaldevice_date = new \DateTime();
+            $clinicalExam->save();
         }
         if (empty($create)) {
             // @todo: set error message
             throw new GeneralException('');
         }
-        $query = "INSERT INTO dental_flow_pg2_info SET
-          patientid=$patientId,
-          segmentid=$stepId,
-          appointment_type=1,";
-        if ($impressionDevice) {
-            $query .= " device_id='$impressionDevice',";
-        }
-        $query .= ' date_completed = CURDATE()';
-        $insertId = $db->getInsertId($query);
+        $newAppointmentSummary = new AppointmentSummary();
+        $newAppointmentSummary->patientid = $patientId;
+        $newAppointmentSummary->segmentid = $stepId;
+        $newAppointmentSummary->appointment_type = 1;
+        $newAppointmentSummary->date_completed = new \DateTime();
+        $newAppointmentSummary->save();
+        $insertId = $newAppointmentSummary->id;
         if ($insertId) {
-            $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid=$patientId");
+            $futureAppointment = $this->appointmentSummaryRepository->getFutureAppointment($patientId);
+            if ($futureAppointment) {
+                $futureAppointment->delete();
+            }
         }
-        if (!empty($createLetters)) {
+        if ($createLetters) {
             switch ($stepId) {
                 case 8: // Follow-Up/Check
-                    $triggerQuery = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = $patientId";
+                    $triggerQuery = "
+SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed 
+FROM dental_flow_pg2_info 
+WHERE dental_flow_pg2_info.segmentid = '7' 
+AND dental_flow_pg2_info.date_completed != '0000-00-00' 
+AND dental_flow_pg2_info.patientid = $patientId
+";
                     $numRows = $db->getNumberRows($triggerQuery);
                     if ($numRows > 0) {
                         $trigger = new FollowUpTrigger();
-                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     }
                     break;
                 case 13: // Termination
                     $trigger = new TerminationTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
                 case 4: // Impressions
                     $trigger = new ImpressionTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
             }
         }
@@ -134,32 +163,32 @@ class AppointmentSummaryCreator
                 case 5:
                     if ($consulted) {
                         $trigger = new DelayingTreatmentTrigger();
-                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     }
                     break;
                 case 6:
                     if ($consulted) {
                         $firstTrigger = new FirstRefusedTreatmentTrigger();
-                        $letterIds[] = $firstTrigger->triggerLetter($patientId, $insertId);
+                        $letterIds[] = $firstTrigger->triggerLetter($patientId, $insertId, $userId, $docId);
                         $secondTrigger = new SecondRefusedTreatmentTrigger();
-                        $letterIds[] = $secondTrigger->triggerLetter($patientId, $insertId);
+                        $letterIds[] = $secondTrigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     }
                     break;
                 case 9:
                     $trigger = new NonCompliantTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
                 case 11:
                     $trigger = new TreatmentCompleteTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
                 case 12:
                     $trigger = new AnnualRecallTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
                 case 14:
                     $trigger = new NotCandidateTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId);
+                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
                     break;
             }
         }
@@ -178,19 +207,16 @@ class AppointmentSummaryCreator
         $letter_count = 0;
         if (count($letterIds) > 0 && $createLetters) {
             $letterIdList = implode(',', $letterIds);
-            $dentalLettersQuery = "SELECT patientid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = $patientId AND (letterid IN($letterIdList) OR parentid IN($letterIdList));";
-            $dentalLettersResult = $db->getResults($dentalLettersQuery);
+            $dentalLettersResult = $this->letterRepository->getByPatientAndIdList($patientId, $letterIdList);
             $dentalLetters = [];
-            if (!empty($dentalLettersResult)) {
-                foreach ($dentalLettersResult as $row) {
-                    $dentalLetters[] = $row;
-                    $rowPatient = '';
-                    if ($row['topatient'] == "1") {
-                        $rowPatient = $row['patientid'];
-                    };
-                    $contacts = $this->getContactInfo($rowPatient, $row['md_list'], $row['md_referral_list']);
-                    $letter_count += count($contacts['patient']) + count($contacts['md_referrals']) + count($contacts['mds']);
-                }
+            foreach ($dentalLettersResult as $row) {
+                $dentalLetters[] = $row;
+                $rowPatient = '';
+                if ($row['topatient'] == "1") {
+                    $rowPatient = $row['patientid'];
+                };
+                $contacts = $this->getContactInfo($rowPatient, $row['md_list'], $row['md_referral_list']);
+                $letter_count += count($contacts['patient']) + count($contacts['md_referrals']) + count($contacts['mds']);
             }
         }
         $segments = [];
@@ -234,10 +260,14 @@ class AppointmentSummaryCreator
         return $result;
     }
 
-    private function getContactInfo ($patient, $md_list, $md_referral_list, $pat_referral_list = null, $letterid = 0) {
-
-        $db = new Db();
-        $contact_info = array();
+    private function getContactInfo (
+        ?string $patient,
+        ?string $md_list,
+        ?string $md_referral_list,
+        ?string $pat_referral_list = null,
+        int $letterid = 0
+    ) {
+        $contact_info = [];
 
         $patient = $this->idListCleaner->clearIdList($patient);
         $md_list = $this->idListCleaner->clearIdList($md_list);
@@ -245,7 +275,10 @@ class AppointmentSummaryCreator
         $pat_referral_list = $this->idListCleaner->clearIdList($pat_referral_list);
 
         if (isset($patient)) {
-            $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN('".$patient."');";
+            $sql = "
+            SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid 
+            FROM dental_patients 
+            WHERE patientid IN('".$patient."');";
             $result = $db->getResults($sql);
             if ($result) {
                 foreach ($result as $row) {
@@ -254,21 +287,17 @@ class AppointmentSummaryCreator
             }
         }
         if (isset($md_list) && $md_list != "") {
-            $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype, ".$letterid." AS letterid, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
-            $result = $db->getResults($sql);
-            if ($result) {
-                foreach ($result as $row) {
-                    $contact_info['mds'][] = $row;
-                }
+            $result = $this->contactRepository->getWithContactTypeByList($md_list);
+            foreach ($result as $row) {
+                $row['letterid'] = $letterid;
+                $contact_info['mds'][] = $row;
             }
         }
         if (isset($md_referral_list) && $md_referral_list != "") {
-            $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid, ".$letterid." AS letterid, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
-            $result = $db->getResults($sql);
-            if ($result) {
-                foreach ($result as $row) {
-                    $contact_info['md_referrals'][] = $row;
-                }
+            $result = $this->contactRepository->getWithContactTypeByList($md_referral_list);
+            foreach ($result as $row) {
+                $row['letterid'] = $letterid;
+                $contact_info['md_referrals'][] = $row;
             }
         }
 

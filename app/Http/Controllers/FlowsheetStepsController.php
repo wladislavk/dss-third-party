@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FlowsheetStepRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Helpers\TrackerStepRetriever;
+use Illuminate\Http\JsonResponse;
 
 class FlowsheetStepsController extends BaseRestController
 {
@@ -129,9 +130,9 @@ class FlowsheetStepsController extends BaseRestController
      * )
      *
      * @param TrackerStepRetriever $trackerStepRetriever
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getBySection(TrackerStepRetriever $trackerStepRetriever)
+    public function getBySection(TrackerStepRetriever $trackerStepRetriever): JsonResponse
     {
         $steps = $trackerStepRetriever->getRanksBySection();
         return ApiResponse::responseOk('', $steps);
@@ -145,9 +146,9 @@ class FlowsheetStepsController extends BaseRestController
      * )
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getByNextStep($id)
+    public function getByNextStep(int $id): JsonResponse
     {
         $steps = $this->repository->getStepsByNext($id);
         return ApiResponse::responseOk('', $steps);

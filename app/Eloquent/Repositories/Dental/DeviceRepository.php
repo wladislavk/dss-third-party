@@ -15,7 +15,7 @@ class DeviceRepository extends AbstractRepository
     /**
      * @return array|\Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function getByStatus()
+    public function getByStatus(): iterable
     {
         return $this->model->select('deviceid', 'device')
             ->where('status', 1)

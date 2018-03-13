@@ -277,7 +277,7 @@ class LettersController extends BaseRestController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getByPatientAndInfo(Request $request)
+    public function getByPatientAndInfo(Request $request): JsonResponse
     {
         $patientId = (int)$request->input('patient_id', 0);
         $infoIds = $request->input('info_ids', '');

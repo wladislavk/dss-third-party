@@ -12,7 +12,11 @@ class FlowsheetStepRepository extends AbstractRepository
         return FlowsheetStep::class;
     }
 
-    public function getStepsByRank($section = 1)
+    /**
+     * @param int $section
+     * @return array
+     */
+    public function getStepsByRank(int $section = 1): array
     {
         $steps = $this->model
             ->where('section', $section)
@@ -26,7 +30,11 @@ class FlowsheetStepRepository extends AbstractRepository
         return $steps;
     }
 
-    public function getStepsByNext($id)
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getStepsByNext(int $id): array
     {
         $next_sql = $this->model
             ->select('steps.*')

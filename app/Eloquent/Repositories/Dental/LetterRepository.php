@@ -266,7 +266,7 @@ class LetterRepository extends AbstractRepository
      * @param int[] $infoIds
      * @return array|Collection|static[]
      */
-    public function getByPatientAndInfo($patientId, array $infoIds)
+    public function getByPatientAndInfo(int $patientId, array $infoIds): iterable
     {
         $result = $this->model
             ->select('topatient', 'md_list', 'md_referral_list', 'status')
@@ -277,5 +277,28 @@ class LetterRepository extends AbstractRepository
             ->get()
         ;
         return $result;
+    }
+
+    /**
+     * @param int $patientId
+     * @param string $letterIdList
+     * @return Collection|array
+     */
+    public function getByPatientAndIdList(int $patientId, string $letterIdList): iterable
+    {
+        $query = $this->model
+            ->select(\DB::raw('COUNT(letterid) AS total, patientid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted'))
+            ->leftJoin('dental_letter_templates', 'dental_letters.templateid', '=', 'dental_letter_templates.id')
+            ->where('patientid', $patientId)
+            ->where(function (Builder $query) use ($letterIdList) {
+                /** @var Builder|QueryBuilder $builder */
+                $builder = $query;
+                return $builder
+                    ->whereIn('letterid', $letterIdList)
+                    ->orWhereIn('parentid', $letterIdList)
+                ;
+            })
+        ;
+        return $query->get();
     }
 }

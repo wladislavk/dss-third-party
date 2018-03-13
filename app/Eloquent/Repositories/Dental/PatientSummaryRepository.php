@@ -12,7 +12,11 @@ class PatientSummaryRepository extends AbstractRepository
         return PatientSummary::class;
     }
 
-    public function getTrackerNotes($patientId)
+    /**
+     * @param int $patientId
+     * @return string
+     */
+    public function getTrackerNotes(int $patientId): string
     {
         $trackerNotes = $this->model->where('pid', $patientId)->first();
         if ($trackerNotes) {
@@ -28,7 +32,7 @@ class PatientSummaryRepository extends AbstractRepository
      * @param string $notes
      * @return bool|int
      */
-    public function updateTrackerNotes($patientId, $docId, $notes)
+    public function updateTrackerNotes(int $patientId, int $docId, string $notes)
     {
         return $this->model->from(\DB::raw('dental_patient_summary summary'))
             ->leftJoin(\DB::raw('dental_patients patient'), 'patient.patientid', '=', 'summary.pid')
@@ -41,11 +45,13 @@ class PatientSummaryRepository extends AbstractRepository
      * @param int $patientId
      * @return PatientSummary|null
      */
-    public function getPatientInfo($patientId)
+    public function getPatientInfo(int $patientId): ?PatientSummary
     {
-        return $this->model->select('patient_info')
+        /** @var PatientSummary|null $patientSummary */
+        $patientSummary = $this->model->select('patient_info')
             ->where('pid', $patientId)
             ->first();
+        return $patientSummary;
     }
 
     /**
@@ -53,7 +59,7 @@ class PatientSummaryRepository extends AbstractRepository
      * @param array $data
      * @return bool|int
      */
-    public function updatePatientSummary($patientId, array $data)
+    public function updatePatientSummary(int $patientId, array $data)
     {
         return $this->model
             ->where('pid', $patientId)

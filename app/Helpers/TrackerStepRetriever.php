@@ -21,7 +21,10 @@ class TrackerStepRetriever
         $this->flowsheetStepRepository = $flowsheetStepRepository;
     }
 
-    public function getRanksBySection()
+    /**
+     * @return array
+     */
+    public function getRanksBySection(): array
     {
         return [
             'first' => $this->flowsheetStepRepository->getStepsByRank(1),
@@ -29,7 +32,11 @@ class TrackerStepRetriever
         ];
     }
 
-    public function getFinalRank($patientId)
+    /**
+     * @param int $patientId
+     * @return array
+     */
+    public function getFinalRank(int $patientId): array
     {
         $steps = $this->appointmentSummaryRepository->getLastTrackerStep($patientId);
         $lastSegment = null;

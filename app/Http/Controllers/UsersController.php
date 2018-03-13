@@ -8,6 +8,8 @@ use DentalSleepSolutions\Helpers\CurrentUserInfoRetriever;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class UsersController extends BaseRestController
 {
@@ -343,7 +345,9 @@ class UsersController extends BaseRestController
             self::DSS_USER_STATUS_SUSPENDED,
         ];
 
-        $data = [];
+        $data = [
+            'type' => '',
+        ];
 
         if (in_array($this->user->status, $accountStatuses)) {
             $data['type'] = self::STATUS_LABELS[$this->user->status];
@@ -365,7 +369,11 @@ class UsersController extends BaseRestController
      */
     public function getCurrentUserInfo(CurrentUserInfoRetriever $currentUserInfoRetriever)
     {
-        $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user);
+        try {
+            $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user);
+        } catch (RepositoryException $e) {
+            return ApiResponse::responseError($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
         return ApiResponse::responseOk('', $userData);
     }
 

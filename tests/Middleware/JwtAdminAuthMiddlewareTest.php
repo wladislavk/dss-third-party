@@ -5,7 +5,7 @@ use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Admin;
 use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Tests\TestCases\JwtAuthMiddlewateTestCase;
 
 class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewateTestCase

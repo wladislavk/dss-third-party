@@ -52,7 +52,7 @@ class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
             return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $request->setUserResolver(function () {
+        $request->setUserResolver(function () use ($request) {
             $user = $this->auth
                 ->guard(JwtAuth::ROLE_USER)
                 ->user()

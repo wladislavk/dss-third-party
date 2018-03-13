@@ -147,6 +147,8 @@ class InsurancePreauthApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/insurance-preauth/pending-VOB');
         $this->assertResponseOk();
-        $this->assertNull($this->getResponseData());
+        $response = $this->getResponseData();
+        $this->assertNotNull($response);
+        $this->assertEquals(83, $response['id']);
     }
 }

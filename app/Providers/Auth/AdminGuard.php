@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Providers\Auth;
 
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AdminGuard extends AbstractGuard
 {

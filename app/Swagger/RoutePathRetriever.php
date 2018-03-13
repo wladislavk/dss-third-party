@@ -30,7 +30,7 @@ class RoutePathRetriever
         if (!$route) {
             throw new SwaggerGeneratorException("Route not found for action $qualifiedAction");
         }
-        $path = '/' . $route->getPath();
+        $path = '/' . $route->uri();
         $path = str_replace($route->getPrefix(), '', $path);
         $regexp = '/(?<=\/)\{([a-z0-9_]+?)\}(?=\/|$)/';
         $path = preg_replace($regexp, '{id}', $path);

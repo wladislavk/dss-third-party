@@ -2,18 +2,24 @@
 namespace DentalSleepSolutions\Services;
 
 use Illuminate\Validation\Validator;
-use Symfony\Component\Translation\TranslatorInterface;
+use Illuminate\Contracts\Translation\Translator;
 
 class CustomValidator extends Validator
 {
     /**
-     * @param TranslatorInterface $translator
+     * @param Translator $translator
      * @param array $data
      * @param array $rules
      * @param array $messages
      * @param array $customAttributes
      */
-    public function __construct($translator, $data, $rules, $messages = [], $customAttributes = []) {
+    public function __construct(
+        Translator $translator,
+        array $data,
+        array $rules,
+        array $messages = [],
+        array $customAttributes = []
+    ) {
         parent::__construct($translator, $data, $rules, $messages, $customAttributes);
 
         $this->implicitRules[] = 'Present';
@@ -22,29 +28,33 @@ class CustomValidator extends Validator
 
     /**
      * Check if the given attribute is set
-     *
+     **
+     * @param string $attribute
+     * @param mixed $value
      * @return bool
      */
-    public function validatePresent ($attribute, $value, $parameters) {
+    public function validatePresent($attribute, $value)
+    {
         return array_has($this->data, $attribute);
     }
 
     /**
      * Check if the given attribute is set when other fields are set
      *
+     * @param string $attribute
+     * @param mixed $value
+     * @param array $parameters
      * @return bool
      */
-    public function validatePresentWith ($attribute, $value, $parameters) {
+    public function validatePresentWith(string $attribute, $value, array $parameters): bool
+    {
         $anySet = true;
-
         foreach ($parameters as $each) {
             $anySet = $anySet || array_has($this->data, $each);
         }
-
         if ($anySet) {
             return array_has($this->data, $attribute);
         }
-
         return true;
     }
 

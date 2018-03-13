@@ -20,10 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \DB::listen(function ($query, $bindings, $time) {
+        \DB::listen(function ($query) {
             $dbLog = new Logger('Query');
             $dbLog->pushHandler(new RotatingFileHandler(storage_path('logs/query.log'), 5, Logger::DEBUG));
-            $dbLog->info($query, ['Bindings' => $bindings, 'Time' => $time]);
+            $dbLog->info($query->sql, ['Bindings' => $query->bindings, 'Time' => $query->time]);
         });
     }
 

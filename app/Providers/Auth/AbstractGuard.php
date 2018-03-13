@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Providers\Auth;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 abstract class AbstractGuard implements Guard
 {
@@ -65,35 +64,6 @@ abstract class AbstractGuard implements Guard
 
     /**
      * @param array $credentials
-     * @param bool $remember
-     * @param bool $login
-     * @return Authenticatable|null
-     */
-    public function attempt(array $credentials = [], $remember = false, $login = true)
-    {
-        return $this->once($credentials);
-    }
-
-    /**
-     * @param string $field
-     * @return null
-     */
-    public function basic($field = 'email')
-    {
-        return null;
-    }
-
-    /**
-     * @param string $field
-     * @return null
-     */
-    public function onceBasic($field = 'email')
-    {
-        return null;
-    }
-
-    /**
-     * @param array $credentials
      * @return Authenticatable|null
      */
     public function validate(array $credentials = [])
@@ -104,41 +74,21 @@ abstract class AbstractGuard implements Guard
 
     /**
      * @param Authenticatable $model
-     * @param bool $remember
      * @return void
      */
-    public function login(Authenticatable $model, $remember = false)
+    public function login(Authenticatable $model)
     {
         $this->model = $model;
     }
 
-    /**
-     * @param int|string $id
-     * @param bool $remember
-     * @return Authenticatable|null
-     */
-    public function loginUsingId($id, $remember = false)
+    public function setUser(Authenticatable $user)
     {
-        $this->model = $this->modelByCredentials([
-            $this->modelPrimaryKey => $id
-        ]);
         return $this->user();
     }
 
-    /**
-     * @return bool
-     */
-    public function viaRemember()
+    public function id()
     {
-        return false;
-    }
-
-    /**
-     * @return void
-     */
-    public function logout()
-    {
-
+        return $this->user()->getAuthIdentifier();
     }
 
     /**
@@ -152,20 +102,6 @@ abstract class AbstractGuard implements Guard
         $model = $this->repository
             ->findWhere($credentials)
             ->first()
-        ;
-
-        return $model;
-    }
-
-    /**
-     * @param string|int $id
-     * @return Authenticatable
-     * @throws ModelNotFoundException
-     */
-    protected function modelById($id)
-    {
-        $model = $this->repository
-            ->find($id)
         ;
 
         return $model;

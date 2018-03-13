@@ -114,17 +114,6 @@ return [
 
     'providers' => [
 
-        /*
-        |--------------------------------------------------------------------------
-        | User Provider
-        |--------------------------------------------------------------------------
-        |
-        | Specify the provider that is used to find the user based
-        | on the subject claim
-        |
-        */
-
-        'user' => Tymon\JWTAuth\Providers\User\EloquentUserAdapter::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -134,9 +123,7 @@ return [
         | Specify the provider that is used to create and decode the tokens.
         |
         */
-
-        'jwt' => 'Tymon\JWTAuth\Providers\JWT\NamshiAdapter',
-
+        'jwt' => Tymon\JWTAuth\Providers\JWT\Lcobucci::class,
         /*
         |--------------------------------------------------------------------------
         | Authentication Provider
@@ -145,21 +132,16 @@ return [
         | Specify the provider that is used to authenticate users.
         |
         */
-
-        'auth' => DentalSleepSolutions\Auth\LegacyAuth::class,
-
+        'auth' => Tymon\JWTAuth\Providers\Auth\Illuminate::class,
         /*
         |--------------------------------------------------------------------------
         | Storage Provider
         |--------------------------------------------------------------------------
         |
-        | Specify the provider that is used to store tokens in the blacklist
+        | Specify the provider that is used to store tokens in the blacklist.
         |
         */
-
-        'storage' => function ($app) {
-            return new Tymon\JWTAuth\Providers\Storage\IlluminateCacheAdapter($app['cache']);
-        }
+        'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
 
     ]
 

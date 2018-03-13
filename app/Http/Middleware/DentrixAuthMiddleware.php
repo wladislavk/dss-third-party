@@ -5,6 +5,7 @@ use Closure;
 use DentalSleepSolutions\Auth\DentrixAuth;
 use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Exceptions\JWT\EmptyTokenException;
+use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors as MiddlewareErrors;
@@ -23,6 +24,13 @@ class DentrixAuthMiddleware
         $this->auth = $auth;
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return \Illuminate\Http\JsonResponse|mixed
+     * @throws EmptyTokenException
+     * @throws InvalidTokenException
+     */
     public function handle(Request $request, Closure $next)
     {
         $companyToken = $request->input(self::COMPANY_TOKEN_INDEX, '');

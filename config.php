@@ -1,9 +1,10 @@
 <?php
 $dualApp = getenv('DUAL_APP');
 $vueUrl = getenv('VUE_URL');
-$isDockerUsed = getenv('IS_DOCKER_USED');
+$isDockerUsed = getenv('DOCKER_USED');
 $headlessVueUrl = $vueUrl;
 $apiUrl = getenv('API_URL');
+
 if ($isDockerUsed) {
     $apiContainer = getenv('API_CONTAINER');
     $vueContainer = getenv('VUE_CONTAINER');

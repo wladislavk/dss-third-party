@@ -6,7 +6,17 @@ export default {
   [symbols.actions.getEdxCertificatesData] ({commit, dispatch}) {
     http.get(endpoints.education.edxCertificates).then((response) => {
       const data = response.data.data
-      commit(symbols.mutations.edxCertificatesData, data)
+      const edxData = {
+        id: data.id,
+        url: data.url,
+        courseName: data.course_name,
+        courseSection: data.course_section,
+        courseSubsection: data.course_subsection,
+        numberCe: data.number_ce,
+        addDate: data.adddate,
+        ipAddress: data.ip_address
+      }
+      commit(symbols.mutations.edxCertificatesData, edxData)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getEdxCertificatesData', response: response})
     })

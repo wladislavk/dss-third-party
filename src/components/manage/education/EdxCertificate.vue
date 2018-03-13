@@ -9,10 +9,10 @@
         <ul class="fullwidth">
             <li v-for="edxCertificate in edxCertificates">
                 <a v-bind:href="edxCertificate.url" target="_blank">
-                    {{ edxCertificate.course_name }} -
-                    {{ edxCertificate.course_section }} -
-                    {{ edxCertificate.course_subsection }} -
-                    {{ edxCertificate.number_ce }}
+                    {{ edxCertificate.courseName }} -
+                    {{ edxCertificate.courseSection }} -
+                    {{ edxCertificate.courseSubsection }} -
+                    {{ edxCertificate.numberCe }}
                 </a>
             </li>
         </ul>

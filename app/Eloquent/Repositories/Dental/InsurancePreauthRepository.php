@@ -95,7 +95,7 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     public function getPendingVOBByContactId($contactId)
     {
-        return $this->model
+        $query = $this->model
             ->select('ip.*')
             ->from(\DB::raw('dental_insurance_preauth ip'))
             ->join(\DB::raw('dental_patients p'), 'p.patientid', '=', 'ip.patient_id')
@@ -116,8 +116,8 @@ class InsurancePreauthRepository extends AbstractRepository
                 ;
             })
             ->orderBy('ip.front_office_request_date', 'desc')
-            ->first()
         ;
+        return $query->first();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 use DentalSleepSolutions\Contracts\UserInterface;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\UserTrait;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * @SWG\Definition(
@@ -281,5 +282,13 @@ class User extends AbstractModel implements UserInterface
     public function externalCompany()
     {
         return $this->externalCompanyPivot->belongsTo(ExternalCompany::class, 'company_id', 'id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthIdentifierName(): string
+    {
+        return 'userid';
     }
 }

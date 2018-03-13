@@ -58,4 +58,12 @@ class ExternalUser extends AbstractModel implements AuthenticatableContract
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'userid');
     }
+
+    /**
+     * @return string
+     */
+    public function getAuthIdentifierName(): string
+    {
+        return 'id';
+    }
 }

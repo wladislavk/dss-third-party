@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Providers;
 use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
 use Illuminate\Routing\Router;
 use DentalSleepSolutions\Exceptions\ResourceNotFoundException;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -22,12 +23,11 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        $router->bind('payer_id', function ($uid) {
+        Route::bind('payer_id', function ($uid) {
             try {
                 /** @var PayerRepository $payerRepository */
                 $payerRepository = $this->app[PayerRepository::class];
@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        parent::boot($router);
+        parent::boot();
     }
 
     /**

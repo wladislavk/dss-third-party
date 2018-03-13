@@ -5,9 +5,9 @@ namespace DentalSleepSolutions\Auth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
-use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
+use Tymon\JWTAuth\Providers\Auth\Illuminate as IlluminateAuthAdapter;
+use Illuminate\Contracts\Auth\Guard as GuardContract;
 
 /**
  * This class is used as Authentication provider implementation
@@ -25,16 +25,15 @@ class LegacyAuth extends IlluminateAuthAdapter
     private $passwordGenerator;
 
     /**
-     * @param AuthManager       $auth
+     * @param GuardContract     $auth
      * @param UserRepository    $userRepository
      * @param PasswordGenerator $passwordGenerator
      */
     public function __construct(
-        AuthManager $auth,
+        GuardContract $auth,
         UserRepository $userRepository,
         PasswordGenerator $passwordGenerator
-    )
-    {
+    ) {
         parent::__construct($auth);
 
         $this->userRepository = $userRepository;
@@ -50,9 +49,7 @@ class LegacyAuth extends IlluminateAuthAdapter
      */
     protected function check(User $user, $password)
     {
-        return $this->passwordGenerator
-            ->verify($password, $user->password, $user->salt)
-            ;
+        return $this->passwordGenerator->verify($password, $user->password, $user->salt);
     }
 
     /**
@@ -65,12 +62,10 @@ class LegacyAuth extends IlluminateAuthAdapter
     {
         $password = Arr::pull($credentials, 'password');
         $user = $this->userRepository->findByCredentials($credentials);
-
         if ($user && $this->check($user, $password)) {
-            $this->auth->login($user, false);
+            $this->auth->setUser($user);
             return true;
         }
-
         return false;
     }
 
@@ -81,12 +76,10 @@ class LegacyAuth extends IlluminateAuthAdapter
     public function byId($id)
     {
         $user = $this->userRepository->findById($id);
-
         if ($user) {
-            $this->auth->login($user, false);
+            $this->auth->setUser($user);
             return true;
         }
-
         return false;
     }
 }

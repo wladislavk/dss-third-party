@@ -470,7 +470,7 @@ class PatientRepository extends AbstractRepository
      */
     public function getByContact($contactId)
     {
-        return $this->model
+        $query = $this->model
             ->select('patientid', 'firstname', 'lastname')
             ->where(function ($query) {
                 /** @var Builder|QueryBuilder $queryBuilder */
@@ -485,8 +485,8 @@ class PatientRepository extends AbstractRepository
                     $query = $this->addDocFieldToQuery($query, $field, $key, $contactId);
                 }
             })
-            ->get()
         ;
+        return $query->get();
     }
 
     /**

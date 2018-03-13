@@ -17,6 +17,9 @@ class PaginatorTest extends UnitTestCase
         $this->paginator = new Paginator();
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithArray()
     {
         $array = [
@@ -39,6 +42,9 @@ class PaginatorTest extends UnitTestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithArrayAndZeroethPage()
     {
         $array = [
@@ -61,6 +67,9 @@ class PaginatorTest extends UnitTestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithCollection()
     {
         $collection = new Collection();
@@ -75,13 +84,16 @@ class PaginatorTest extends UnitTestCase
         $recordsPerPage = 3;
         $result = $this->paginator->limitResultToPage($collection, $page, $recordsPerPage);
         $expected = [
-            'fourth',
-            'fifth',
-            'sixth',
+            3 => 'fourth',
+            4 => 'fifth',
+            5 => 'sixth',
         ];
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithoutRecordsPerPage()
     {
         $array = [
@@ -99,6 +111,9 @@ class PaginatorTest extends UnitTestCase
         $this->assertEquals($array, $result);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithBadArgument()
     {
         $collection = 'foo';

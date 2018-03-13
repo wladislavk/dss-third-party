@@ -8,6 +8,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use DentalSleepSolutions\Helpers\ExternalPatientDataRetriever;
 use DentalSleepSolutions\Helpers\ExternalPatientSyncManager;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Mockery\MockInterface;
 use Tests\TestCases\BaseIntegrationTestCase;
 
 class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
@@ -49,6 +50,9 @@ class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
         $this->syncManager = new ExternalPatientSyncManager($repository, $dataRetriever);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testUpdateExistingModels()
     {
         $requestData = self::SIMPLE_REQUEST_DATA;
@@ -63,6 +67,9 @@ class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
         $this->assertEquals(1, $externalPatient->{ExternalPatientSyncManager::MODEL_DIRTY_KEY});
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testCreateModels()
     {
         $requestData = self::SIMPLE_REQUEST_DATA;
@@ -78,6 +85,9 @@ class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
         $this->assertEquals(0, $externalPatient->{ExternalPatientSyncManager::MODEL_DIRTY_KEY});
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testCreateModelsWithNull()
     {
         $requestData = self::NULLABLE_REQUEST_DATA;
@@ -109,8 +119,10 @@ class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
         return $model;
     }
 
+
     private function mockRepository()
     {
+        /** @var ExternalPatientRepository|MockInterface $mock */
         $mock = \Mockery::mock(ExternalPatientRepository::class);
         $mock->shouldReceive('findByExternalCompanyAndPatient')
             ->atMost(1)
@@ -135,6 +147,7 @@ class ExternalPatientSyncManagerTest extends BaseIntegrationTestCase
 
     private function mockDataRetriever()
     {
+        /** @var ExternalPatientDataRetriever|MockInterface $mock */
         $mock = \Mockery::mock(ExternalPatientDataRetriever::class);
         $mock->shouldReceive('toExternalPatientData')
             ->once()

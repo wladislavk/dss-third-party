@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Http\Controllers\Auth;
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Auth\LegacyAuth;
 use DentalSleepSolutions\Exceptions\AuthException;
-use DentalSleepSolutions\Exceptions\JwtException;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
@@ -69,31 +68,11 @@ class AuthController extends Controller
 
         try {
             $token = $this->jwtAuth->toToken($role);
-        } catch (JwtException $e) {
-            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (AuthException $e) {
             return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         return ['status' => 'Authenticated', 'token' => $token];
-    }
-
-    /**
-     * @return array|JsonResponse
-     */
-    public function authHealth()
-    {
-        if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
-            return ApiResponse::responseError('Unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
-
-        return [
-            'status' => 'Health',
-            'data' => [
-                'admin' => $this->request->admin(),
-                'user' => $this->request->user(),
-            ]
-        ];
     }
 
     /**

@@ -9,6 +9,7 @@ abstract class AbstractModel extends Model implements SingularAndPluralInterface
 {
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getSingular()
     {
@@ -18,6 +19,7 @@ abstract class AbstractModel extends Model implements SingularAndPluralInterface
 
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getPlural()
     {

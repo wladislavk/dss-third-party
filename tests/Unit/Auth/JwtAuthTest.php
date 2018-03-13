@@ -5,10 +5,15 @@ namespace Tests\Unit\Auth;
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
+use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
+use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
+use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
+use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Helpers\JwtHelper;
 use DentalSleepSolutions\Providers\Auth\AdminGuard;
 use DentalSleepSolutions\Providers\Auth\UserGuard;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
 class JwtAuthTest extends UnitTestCase
@@ -54,6 +59,10 @@ class JwtAuthTest extends UnitTestCase
         $this->auth = new JwtAuth($userGuard, $adminGuard, $jwtHelper);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws InvalidPayloadException
+     */
     public function testToTokenNoUser()
     {
         $this->setUserGuardState(self::EMPTY_ID);
@@ -61,6 +70,10 @@ class JwtAuthTest extends UnitTestCase
         $this->auth->toToken(JwtAuth::ROLE_USER);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws InvalidPayloadException
+     */
     public function testToToken()
     {
         $this->setUserGuardState(self::USER_ID);
@@ -68,25 +81,54 @@ class JwtAuthTest extends UnitTestCase
         $this->assertEquals(self::USER_TOKEN, $token);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws InvalidPayloadException
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidTokenException
+     */
     public function testToRoleAdminNoUser()
     {
         $this->expectException(AuthenticatableNotFoundException::class);
         $this->auth->toRole(JwtAuth::ROLE_ADMIN, self::INVALID_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testToRoleAdmin()
     {
+        /** @var User $model */
         $model = $this->auth->toRole(JwtAuth::ROLE_ADMIN, self::ADMIN_TOKEN);
-        $this->assertInstanceOf(Authenticatable::class, $model);
+        $this->assertInstanceOf(User::class, $model);
         $this->assertEquals(self::ADMIN_ID, $model->getAuthIdentifier());
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testToRoleUserNoUser()
     {
         $this->expectException(AuthenticatableNotFoundException::class);
         $this->auth->toRole(JwtAuth::ROLE_USER, self::INVALID_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
+     */
     public function testToRoleUser()
     {
         $model = $this->auth->toRole(JwtAuth::ROLE_USER, self::USER_TOKEN);
@@ -114,17 +156,15 @@ class JwtAuthTest extends UnitTestCase
 
     private function mockUserGuard()
     {
+        /** @var UserGuard|MockInterface $mock */
         $mock = \Mockery::mock(UserGuard::class);
         $mock->shouldReceive('user')
-            ->atMost(1)
             ->andReturnUsing(function () {
                 if (self::USER_ID === $this->userGuardState) {
                     $user = new User();
                     $user->id = self::USER_ID;
-
                     return $user;
                 }
-
                 return null;
             })
         ;
@@ -133,14 +173,11 @@ class JwtAuthTest extends UnitTestCase
                 [JwtAuth::CLAIM_ID_INDEX => self::USER_ID],
                 [JwtAuth::CLAIM_ID_INDEX => self::EMPTY_ID],
             ])
-            ->atMost(1)
             ->andReturnUsing(function (array $credentials) {
                 $this->userGuardState = $credentials[JwtAuth::CLAIM_ID_INDEX];
-
                 if (self::USER_ID === $this->userGuardState) {
                     return true;
                 }
-
                 return false;
             })
         ;
@@ -150,17 +187,15 @@ class JwtAuthTest extends UnitTestCase
 
     private function mockAdminGuard()
     {
+        /** @var AdminGuard|MockInterface $mock */
         $mock = \Mockery::mock(AdminGuard::class);
         $mock->shouldReceive('user')
-            ->atMost(1)
             ->andReturnUsing(function () {
                 if (self::ADMIN_ID === $this->adminGuardState) {
                     $user = new User();
                     $user->id = self::ADMIN_ID;
-
                     return $user;
                 }
-
                 return null;
             })
         ;
@@ -169,14 +204,11 @@ class JwtAuthTest extends UnitTestCase
                 [JwtAuth::CLAIM_ID_INDEX => self::ADMIN_ID],
                 [JwtAuth::CLAIM_ID_INDEX => self::EMPTY_ID],
             ])
-            ->atMost(1)
             ->andReturnUsing(function (array $credentials) {
                 $this->adminGuardState = $credentials[JwtAuth::CLAIM_ID_INDEX];
-
                 if (self::ADMIN_ID === $this->adminGuardState) {
                     return true;
                 }
-
                 return false;
             })
         ;
@@ -186,32 +218,27 @@ class JwtAuthTest extends UnitTestCase
 
     private function mockJwtHelper()
     {
+        /** @var JwtHelper|MockInterface $mock */
         $mock = \Mockery::mock(JwtHelper::class);
-        $mock->shouldReceive('createToken')
-            ->atMost(1)
-            ->andReturn(self::USER_TOKEN)
-        ;
+        $mock->shouldReceive('createToken')->andReturn(self::USER_TOKEN);
         $mock->shouldReceive('parseToken')
-            ->atMost(1)
             ->andReturnUsing(function ($token) {
                 if (self::USER_TOKEN === $token) {
                     return self::USER_CLAIMS;
                 }
-
                 if (self::ADMIN_TOKEN === $token) {
                     return self::ADMIN_CLAIMS;
                 }
-
                 return self::INVALID_CLAIMS;
             })
         ;
-        $mock->shouldReceive('validateClaims')
-            ->atMost(1)
-        ;
-
+        $mock->shouldReceive('validateClaims')->andReturnNull();
         return $mock;
     }
 
+    /**
+     * @param string $state
+     */
     private function setUserGuardState($state)
     {
         $this->userGuardState = $state;

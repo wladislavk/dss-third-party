@@ -6,8 +6,9 @@ use DentalSleepSolutions\Auth\LegacyAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
-use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Auth\Guard as GuardInterface;
 use Illuminate\Support\Arr;
+use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
 class LegacyAuthTest extends UnitTestCase
@@ -25,10 +26,10 @@ class LegacyAuthTest extends UnitTestCase
 
     public function setUp()
     {
-        $authManager = $this->mockAuthManager();
+        $authGuard = $this->mockAuthGuard();
         $userRepository = $this->mockUserRepository();
         $passwordGenerator = $this->mockPasswordGenerator();
-        $this->legacyAuth = new LegacyAuth($authManager, $userRepository, $passwordGenerator);
+        $this->legacyAuth = new LegacyAuth($authGuard, $userRepository, $passwordGenerator);
     }
 
     public function testInvalidUsername()
@@ -73,18 +74,18 @@ class LegacyAuthTest extends UnitTestCase
         $this->assertTrue($result);
     }
 
-    private function mockAuthManager()
+    private function mockAuthGuard()
     {
-        $mock = \Mockery::mock(AuthManager::class);
-        $mock->shouldReceive('login')
-            ->atMost(1)
-        ;
-
+        /** @var GuardInterface|MockInterface $mock */
+        $mock = \Mockery::mock(GuardInterface::class);
+        $mock->shouldReceive('login')->atMost(1)->andReturnNull();
+        $mock->shouldReceive('setUser')->andReturnNull();
         return $mock;
     }
 
     private function mockUserRepository()
     {
+        /** @var UserRepository|MockInterface $mock */
         $mock = \Mockery::mock(UserRepository::class);
         $mock->shouldReceive('findByCredentials')
             ->atMost(1)
@@ -97,21 +98,19 @@ class LegacyAuthTest extends UnitTestCase
             })
         ;
         $mock->shouldReceive('findById')
-            ->atMost(1)
             ->andReturnUsing(function ($id) {
                 if ($id === self::USER_ID) {
-                    return true;
+                    return $this->newUser();
                 }
-
-                return false;
+                return null;
             })
         ;
-
         return $mock;
     }
 
     private function mockPasswordGenerator()
     {
+        /** @var PasswordGenerator|MockInterface $mock */
         $mock = \Mockery::mock(PasswordGenerator::class);
         $mock->shouldReceive('verify')
             ->andReturnUsing(function ($password, $hashedPassword, $salt) {

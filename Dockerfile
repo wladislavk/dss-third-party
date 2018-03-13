@@ -71,7 +71,7 @@ RUN set -xe \
       || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) \
     && gpg --fingerprint "$GPG_KEYS" \
     # Download phpunit and its signature
-    && export PHPUNIT_VERSION=5.7 \
+    && export PHPUNIT_VERSION=6.5 \
     && curl -sSLo phpunit.phar https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar \
     && curl -sSLo phpunit.phar.asc https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar.asc \
     && ls -la \

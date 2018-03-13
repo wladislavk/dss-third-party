@@ -167,7 +167,9 @@ class PatientsApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/patients/by-contact');
         $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
+        $response = $this->getResponseData();
+        $this->assertEquals(142, sizeof($response));
+        $this->assertEquals('P_first', $response[0]['firstname']);
     }
 
     public function testGetDataForFillingPatientForm()

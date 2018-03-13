@@ -159,7 +159,7 @@ class SwaggerTest extends UnitTestCase
     {
         /** @var Route|MockInterface $route */
         $route = \Mockery::mock(Route::class);
-        $route->shouldReceive('getPath')->andReturnUsing([$this, 'getPathCallback']);
+        $route->shouldReceive('uri')->andReturnUsing([$this, 'getPathCallback']);
         $route->shouldReceive('getPrefix')->andReturnUsing([$this, 'getPrefixCallback']);
         return $route;
     }

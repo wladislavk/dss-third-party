@@ -62,7 +62,7 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
 <script src="js/dss_summ.js" type="text/javascript"></script>
 <div id="content">
 <ul id="summ_nav">
-  <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ">SUMMARY</a></li>
+  <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ" class="active">SUMMARY</a></li>
   <li><a href="#" onclick="event.preventDefault(); show_sect('notes')" id="link_notes">PROG NOTES <?= ($num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a></li>
   <li><a href="#" onclick="event.preventDefault(); show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
   <li><a href="#" onclick="event.preventDefault(); show_sect('health')" id="link_health">HEALTH Hx</a></li>

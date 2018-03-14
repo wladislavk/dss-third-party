@@ -68,6 +68,7 @@ $dental_letters_query = "
 $pending_letters = $db->getNumberRows($dental_letters_query);
 ?>
 
+<script src="js/dss_summ.js" type="text/javascript"></script>
 <div id="content">
 <ul id="summ_nav">
     <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ">SUMMARY</a></li>
@@ -82,22 +83,22 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
         <div id="sect_summ">
             <?php include 'summ_summ.php'; ?>
         </div>
-        <div id="sect_notes">
+        <div id="sect_notes" style="display: none">
             <?php include 'summ_notes.php'; ?>
         </div>
-        <div id="sect_treatment">
+        <div id="sect_treatment" style="display: none">
             <?php include 'summ_treatment.php'; ?>
         </div>
-        <div id="sect_health">
+        <div id="sect_health" style="display: none">
             <?php include 'summ_health.php'; ?>		
         </div>
-        <div id="sect_letters">
+        <div id="sect_letters" style="display: none">
             <?php include 'summ_letters.php'; ?>
         </div>
-        <div id="sect_sleep">
+        <div id="sect_sleep" style="display: none">
             <?php include 'summ_sleep.php'; ?>
         </div>
-        <div id="sect_subj">
+        <div id="sect_subj" style="display: none">
             <?php include 'summ_subj.php'; ?>
         </div>
     </div>

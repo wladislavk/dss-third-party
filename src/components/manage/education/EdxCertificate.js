@@ -4,7 +4,7 @@ export default {
   name: 'edx-certificate',
   computed: {
     edxCertificates () {
-      return this.$store.getters[symbols.getters.edxCertificates]
+      return this.$store.state.education[symbols.state.edxCertificates]
     }
   },
   created () {

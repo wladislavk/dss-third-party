@@ -5,7 +5,7 @@ describe('Education module mutations', () => {
   describe('edxCertificates data mutation', () => {
     beforeEach(function () {
       this.state = {
-        [symbols.state.edxCertificates]: [{someData: 1, otherData: 2}]
+        [symbols.state.edxCertificates]: []
       }
     })
     it('sets edxCertificates data', function () {

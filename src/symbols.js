@@ -55,7 +55,6 @@ export default {
   getters: {
     calculateRisk: 'CALCULATE_RISK',
     documentCategories: 'DOCUMENT_CATEGORIES',
-    edxCertificates: 'EDX_CERTIFICATES',
     filteredContact: 'FILTERED_CONTACT',
     fullContactData: 'FULL_CONTACT_DATA',
     fullName: 'FULL_NAME',

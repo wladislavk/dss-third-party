@@ -30,7 +30,7 @@ if (!empty($_POST['compsub']) && $_POST['compsub'] == 1) {
         $file_path = '../../../shared/q_file/' . $file_name;
         $max_width = 120;
         $max_height = 80;
-        list($width,$height) = getimagesize($uploadedfile);
+        list($width, $height) = getimagesize($uploadedfile);
 
         if (($width > $max_width || $height > $max_height) || $filesize > DSS_IMAGE_MAX_SIZE ) {
             if (strtolower($extension) == 'jpg' || strtolower($extension) == 'jpeg') {

@@ -93,8 +93,9 @@ export default {
       if (listElement.patientType === 'no') {
         return
       }
+      const token = this.$store.state.main[symbols.state.mainToken]
       if (listElement.link) {
-        LocationWrapper.goToLegacyPage(listElement.link)
+        LocationWrapper.goToLegacyPage(listElement.link, token)
         return
       }
       this.inputValue = listElement.name

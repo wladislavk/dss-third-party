@@ -1,145 +1,153 @@
 <?php
-    namespace Ds3\Libraries\Legacy;
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-    include_once('includes/constants.inc');
-    include_once 'includes/general_functions.php';
-    include_once 'admin/includes/form_updates.php';
+namespace Ds3\Libraries\Legacy;
+include 'includes/sescheck.php';
+include_once 'admin/includes/main_include.php';
+include_once 'includes/constants.inc';
+include_once 'includes/general_functions.php';
+include_once 'admin/includes/form_updates.php';
 
-    if (!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
+if (!empty($_POST['compsub']) && $_POST['compsub'] == 1) {
 ?>
-        <img  id="loading_gif" src="images/DSS-ajax-animated_loading-gif.gif" />
+    <img  id="loading_gif" src="images/DSS-ajax-animated_loading-gif.gif" />
 <?php
-        $image = $_FILES['logo'];
-        $uploadedfile = $image['tmp_name'];
-        $fname = $image["name"];
-        $lastdot = strrpos($fname,".");
-        $name = substr($fname,0,$lastdot);
-        $filesize = $image["size"];
-        $extension = substr($fname,$lastdot+1);
+    $image = $_FILES['logo'];
+    $uploadedfile = $image['tmp_name'];
+    $fname = $image['name'];
+    $lastdot = strrpos($fname, '.');
+    $name = substr($fname, 0, $lastdot);
+    $filesize = $image['size'];
+    $extension = substr($fname, $lastdot + 1);
 
-        if (strtolower($extension) != 'png' && strtolower($extension) != 'gif' && strtolower($extension) != 'jpg' && strtolower($extension) != 'jpeg') {
+    if (strtolower($extension) != 'png' && strtolower($extension) != 'gif' && strtolower($extension) != 'jpg' && strtolower($extension) != 'jpeg') {
 ?>
-            <script type="text/javascript">
-                alert('Logo must be a png, jpg or gif');
-                document.getElementById('loading_gif').remove();
-            </script>
+        <script type="text/javascript">
+            alert('Logo must be a png, jpg or gif');
+            document.getElementById('loading_gif').remove();
+        </script>
 <?php
-        } else {
-            $file_name = "user_logo_" . $_SESSION["docid"] . "." . $extension;
-            $file_path = "../../../shared/q_file/" . $file_name;
-            $max_width = 120;
-            $max_height = 80;
-            list($width,$height) = getimagesize($uploadedfile);
+    } else {
+        $file_name = 'user_logo_' . $_SESSION['docid'] . '.' . $extension;
+        $file_path = '../../../shared/q_file/' . $file_name;
+        $max_width = 120;
+        $max_height = 80;
+        list($width,$height) = getimagesize($uploadedfile);
 
-            if (($width > $max_width || $height > $max_height) || $filesize > DSS_IMAGE_MAX_SIZE ) {
-                if (strtolower($extension) == "jpg" || strtolower($extension) == "jpeg") {
-                    $src = imagecreatefromjpeg($uploadedfile);
-                } elseif(strtolower($extension) == "png") {
-                    $src = imagecreatefrompng($uploadedfile);
-                } else {
-                    $src = imagecreatefromgif($uploadedfile);
-                }
-
-                if (($width > $max_width || $height > $max_height)) {
-                    $resize_width = $max_width;
-                    $resize_height = $max_height;
-                    $prop_width = $width / $max_width;
-                    $prop_height = $height / $max_height;
-
-                    if ($prop_width > $prop_height) {
-                        $newwidth = $resize_width;
-                        $newheight = ($height / $width) * $newwidth;
-                    } elseif ($prop_height > $prop_width) {
-                        $newheight = $resize_height;
-                        $newwidth = ($width / $height) * $newheight;
-                    } else {
-                        $newwidth = $resize_width;
-                        $newheight = $resize_height;
-                    }
-                } else {
-                    $newwidth = $width;
-                    $newheight = $height;
-                }
-
-                //$newwidth=DSS_IMAGE_MAX_WIDTH;
-                //$newheight=($height/$width)*$newwidth;
-                $tmp = imagecreatetruecolor($newwidth,$newheight);
-
-                switch (strtolower($extension)) {
-                    case "png":
-                        // integer representation of the color black (rgb: 0,0,0)
-                        $background = imagecolorallocate($tmp, 0, 0, 0);
-                        // removing the black from the placeholder
-                        imagecolortransparent($tmp, $background);
-
-                        // turning off alpha blending (to ensure alpha channel information
-                        // is preserved, rather than removed (blending with the rest of the
-                        // image in the form of black))
-                        imagealphablending($tmp, false);
-
-                        // turning on alpha channel information saving (to ensure the full range
-                        // of transparency is preserved)
-                        imagesavealpha($tmp, true);
-
-                        break;
-                    case "gif":
-                        // integer representation of the color black (rgb: 0,0,0)
-                        $background = imagecolorallocate($tmp, 0, 0, 0);
-                        // removing the black from the placeholder
-                        imagecolortransparent($tmp, $background);
-
-                        break;
-                }
-                imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-
-                if ($extension == "jpg" || $extension == "jpeg") {
-                    imagejpeg($tmp,$file_path,60);
-                } elseif ($extension == "png") {
-                    imagepng($tmp,$file_path,6);
-                } else {
-                    imagegif($tmp,$file_path,60);
-                }
-
-                $uploaded = true;
-
-                if (filesize($file_path) > DSS_FILE_MAX_SIZE) {
-                    @unlink($file_path);
-                    $uploaded = false;
-                }
-                imagedestroy($src);
-                imagedestroy($tmp);
+        if (($width > $max_width || $height > $max_height) || $filesize > DSS_IMAGE_MAX_SIZE ) {
+            if (strtolower($extension) == 'jpg' || strtolower($extension) == 'jpeg') {
+                $src = imagecreatefromjpeg($uploadedfile);
+            } elseif (strtolower($extension) == 'png') {
+                $src = imagecreatefrompng($uploadedfile);
             } else {
-                if ($image['size'] <= DSS_FILE_MAX_SIZE) {
-                    @move_uploaded_file($image["tmp_name"],$file_path);
-                    $uploaded = true;
-                } else {
-                    $uploaded = false;
-                }
+                $src = imagecreatefromgif($uploadedfile);
             }
-            @chmod($file_path,0777);
 
-            $ed_sql = "
-                update dental_users set 
-                logo = '" . mysqli_real_escape_string($con, $file_name) . "',
-                updated_at=now()
-                where userid='" . $_SESSION["docid"] . "'"
-            ;
+            if (($width > $max_width || $height > $max_height)) {
+                $resize_width = $max_width;
+                $resize_height = $max_height;
+                $prop_width = $width / $max_width;
+                $prop_height = $height / $max_height;
 
-            $db->query($ed_sql);
+                if ($prop_width > $prop_height) {
+                    $newwidth = $resize_width;
+                    $newheight = ($height / $width) * $newwidth;
+                } elseif ($prop_height > $prop_width) {
+                    $newheight = $resize_height;
+                    $newwidth = ($width / $height) * $newheight;
+                } else {
+                    $newwidth = $resize_width;
+                    $newheight = $resize_height;
+                }
+            } else {
+                $newwidth = $width;
+                $newheight = $height;
+            }
 
-            //not updating forms for the time being since this is not being used anywhere there isn't auto creating forms
-            //form_update_all($_SESSION['docid']);
-            //echo $ed_sql.mysqli_error($con);
-            $message = "Edited Successfully";
-?>
-            <script type="text/javascript">
-                parent.window.location = 'manage_profile.php?msg=<?php echo urlencode($message); ?>';
-            </script>
-<?php
-            trigger_error("Die called", E_USER_ERROR);
+            $tmp = imagecreatetruecolor($newwidth, $newheight);
+
+            switch (strtolower($extension)) {
+                case 'png':
+                    // integer representation of the color black (rgb: 0,0,0)
+                    $background = imagecolorallocate($tmp, 0, 0, 0);
+                    // removing the black from the placeholder
+                    imagecolortransparent($tmp, $background);
+
+                    // turning off alpha blending (to ensure alpha channel information
+                    // is preserved, rather than removed (blending with the rest of the
+                    // image in the form of black))
+                    imagealphablending($tmp, false);
+
+                    // turning on alpha channel information saving (to ensure the full range
+                    // of transparency is preserved)
+                    imagesavealpha($tmp, true);
+
+                    break;
+                case 'gif':
+                    // integer representation of the color black (rgb: 0,0,0)
+                    $background = imagecolorallocate($tmp, 0, 0, 0);
+                    // removing the black from the placeholder
+                    imagecolortransparent($tmp, $background);
+
+                    break;
+            }
+            imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+            if ($extension == 'jpg' || $extension == 'jpeg') {
+                imagejpeg($tmp, $file_path, 60);
+            } elseif ($extension == 'png') {
+                imagepng($tmp, $file_path, 6);
+            } else {
+                imagegif($tmp, $file_path, 60);
+            }
+
+            $uploaded = true;
+
+            if (filesize($file_path) > DSS_FILE_MAX_SIZE) {
+                @unlink($file_path);
+                $uploaded = false;
+            }
+            imagedestroy($src);
+            imagedestroy($tmp);
+        } else {
+            if ($image['size'] <= DSS_FILE_MAX_SIZE) {
+                @move_uploaded_file($image['tmp_name'], $file_path);
+                $uploaded = true;
+            } else {
+                $uploaded = false;
+            }
         }
+        @chmod($file_path, 0777);
+
+        $ed_sql = "
+            update dental_users set 
+            logo = '" . mysqli_real_escape_string($con, $file_name) . "',
+            updated_at=now()
+            where userid='" . $_SESSION["docid"] . "'"
+        ;
+
+        $db->query($ed_sql);
+
+        //not updating forms for the time being since this is not being used anywhere there isn't auto creating forms
+        $message = 'Edited Successfully';
+?>
+        <script type="text/javascript">
+            parent.window.location = 'manage_profile.php?msg=<?php echo urlencode($message); ?>';
+        </script>
+<?php
+        trigger_error('Die called', E_USER_ERROR);
     }
+}
+$docId = (int)$_SESSION['docid'];
+$theSql = "select * from dental_users where userid='$docId'";
+$message = $_GET['msg'];
+$logo = '';
+$buttonText = 'Add ';
+$theMyArray = $db->getRow($theSql);
+$name = $theMyArray['name'];
+
+if (!empty($theMyArray['logo'])) {
+    $buttonText = 'Edit ';
+    $logo = $theMyArray['logo'];
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -153,21 +161,7 @@
         <script type="text/javascript" src="script/validation.js"></script>
     </head>
     <body>
-<?php
-        $docId = (int)$_SESSION['docid'];
-        $theSql = "select * from dental_users where userid='$docId'";
-        $message = $_GET['msg'];
-        $logo = null;
-        $buttonText = 'Add ';
-        $theMyArray = $db->getRow($theSql);
-        $name = $theMyArray['name'];
 
-        if (!empty($theMyArray["logo"])) {
-            $buttonText = "Edit ";
-            $logo = $theMyArray['logo'];
-        }
-?>
-	
         <br /><br />
 	
         <div align="center" class="red">

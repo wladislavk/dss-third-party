@@ -1,5 +1,6 @@
 import populators from '../../../services/populators'
 import LegacyModifier from '../../../services/LegacyModifier'
+import symbols from '../../../symbols'
 
 export default {
   // name must be set explicitly to allow self-references
@@ -26,7 +27,8 @@ export default {
         if (this.menuItem.hasOwnProperty('legacy') && !this.menuItem.legacy) {
           return this.menuItem.link
         }
-        return LegacyModifier.modifyLegacyLink(this.menuItem.link)
+        const token = this.$store.state.main[symbols.state.mainToken]
+        return LegacyModifier.modifyLegacyLink(this.menuItem.link, token)
       }
       return '#'
     },

@@ -17,7 +17,7 @@
 
 <script src="./ModalRoot.js"></script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     @import "../../../assets/css/manage/calendar.scss";
 </style>
 

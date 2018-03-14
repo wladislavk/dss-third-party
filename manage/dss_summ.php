@@ -2,25 +2,25 @@
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 
-if(isset($_REQUEST['del_note'])){
+if (isset($_REQUEST['del_note'])) {
     $s = "UPDATE dental_notes SET status=0 
           WHERE parentid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'
           	OR notesid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'";
     $db->query($s);
 }
 
-if(isset($_REQUEST['sid'])){
+if (isset($_REQUEST['sid'])) {
     $s = "UPDATE dental_notes SET signed_id='".mysqli_real_escape_string($con, $_SESSION['userid'])."', signed_on=now() 
           WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'
           	AND notesid='".mysqli_real_escape_string($con, $_REQUEST['sid'])."'
             AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
     $db->query($s);
-    if(isset($_REQUEST['return'])){
-        if($_REQUEST['return']=='unsigned'){
+    if (isset($_REQUEST['return'])) {
+        if ($_REQUEST['return']=='unsigned') {
         ?>
-<script type="text/javascript">
-window.location = 'manage_unsigned_notes.php';
-</script>
+            <script type="text/javascript">
+                window.location = 'manage_unsigned_notes.php';
+            </script>
         <?php
         }
     }
@@ -28,33 +28,42 @@ window.location = 'manage_unsigned_notes.php';
 ?>
 <link rel="stylesheet" href="css/summ.css" />
 
+<script src="js/dss_summ.js" type="text/javascript"></script>
+
 <!-- PUT TOP SECTION HERE -->
 <?php
-$notes_sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
-              (
-              select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' and patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."' order by adddate desc
-              ) as n
-              LEFT JOIN dental_users u on u.userid=n.signed_id
-              LEFT JOIN dental_notes p ON p.notesid = n.parentid
-              group by n.parentid
-              order by n.procedure_date DESC, n.adddate desc
-              ";
+$notes_sql = "
+    select n.*, u.name signed_name, p.adddate as parent_adddate 
+    from (
+        select * from dental_notes 
+        where status!=0 
+        AND docid='".$_SESSION['docid']."' 
+        and patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."' 
+        order by adddate desc
+    ) as n
+    LEFT JOIN dental_users u on u.userid=n.signed_id
+    LEFT JOIN dental_notes p ON p.notesid = n.parentid
+    group by n.parentid
+    order by n.procedure_date DESC, n.adddate desc
+";
 $notes_q = $db->getResults($notes_sql);
 $num_unsigned_notes = 0;
 if ($notes_q) {
     foreach ($notes_q as $notes_r) {
-        if($notes_r['signed_id']==''){
+        if ($notes_r['signed_id'] == '') {
             $num_unsigned_notes++;
         }
     }
 }
 
-$dental_letters_query = "SELECT letterid FROM dental_letters
-                        JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
-                        WHERE dental_letters.status = '0' AND 
-                        dental_letters.deleted = '0' AND 
-                        dental_patients.docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND
-                        dental_letters.patientid= '".mysqli_real_escape_string($con, (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : ''))."';";
+$dental_letters_query = "
+    SELECT letterid FROM dental_letters
+    JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
+    WHERE dental_letters.status = '0' 
+    AND dental_letters.deleted = '0' 
+    AND dental_patients.docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+    AND dental_letters.patientid= '".mysqli_real_escape_string($con, (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : ''))."';
+";
 
 $pending_letters = $db->getNumberRows($dental_letters_query);
 ?>
@@ -62,13 +71,13 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
 <script src="js/dss_summ.js" type="text/javascript"></script>
 <div id="content">
 <ul id="summ_nav">
-  <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ" class="active">SUMMARY</a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('notes')" id="link_notes">PROG NOTES <?= ($num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('health')" id="link_health">HEALTH Hx</a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters>0)?"(".$pending_letters.")":''; ?></a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
-  <li><a href="#" onclick="event.preventDefault(); show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ">SUMMARY</a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('notes')" id="link_notes">PROG NOTES <?= ($num_unsigned_notes > 0) ? "(".$num_unsigned_notes.")" : ''; ?></a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('health')" id="link_health">HEALTH Hx</a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters > 0) ? "(".$pending_letters.")" : ''; ?></a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
+    <li><a href="#" onclick="event.preventDefault(); show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
 </ul>
     <div id="sections">
         <div id="sect_summ">

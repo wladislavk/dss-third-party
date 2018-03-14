@@ -22,10 +22,26 @@ describe('Education module actions', () => {
         data: {
           data: [
             {
-              someData: 'http://some_url.com'
+              id: '1',
+              url: 'http://preprod.edx.dss.xforty.com/courses/x40/Course001/Now/3/retrieve_cert',
+              edx_id: '3',
+              course_name: 'Course001',
+              course_section: 'Now',
+              course_subsection: 'Section 1',
+              number_ce: '1',
+              adddate: '2014-03-17 22:15:41',
+              ip_address: '10.20.1.168'
             },
             {
-              someData: 'http://some_url2.com'
+              id: '2',
+              url: 'http://preprod.edx.dss.xforty.com/courses/DentalSleepSolutions/DSS10/Always/3/courseware/50bfaf05aaa548bb98ca123f888bde57/retrieve_cert',
+              edx_id: '3',
+              course_name: 'DSS10',
+              course_section: 'Always',
+              course_subsection: 'Module 1: Introduction / Getting Started',
+              number_ce: '1',
+              adddate: '2014-04-01 11:39:11',
+              ip_address: '10.20.1.168'
             }
           ]
         }
@@ -44,10 +60,20 @@ describe('Education module actions', () => {
           type: symbols.mutations.edxCertificatesData,
           payload: [
             {
-              someData: 'http://some_url.com'
+              id: 1,
+              url: 'http://preprod.edx.dss.xforty.com/courses/x40/Course001/Now/3/retrieve_cert',
+              courseName: 'Course001',
+              courseSection: 'Now',
+              courseSubsection: 'Section 1',
+              numberCe: 1
             },
             {
-              someData: 'http://some_url2.com'
+              id: 2,
+              url: 'http://preprod.edx.dss.xforty.com/courses/DentalSleepSolutions/DSS10/Always/3/courseware/50bfaf05aaa548bb98ca123f888bde57/retrieve_cert',
+              courseName: 'DSS10',
+              courseSection: 'Always',
+              courseSubsection: 'Module 1: Introduction / Getting Started',
+              numberCe: 1
             }
           ]
         }

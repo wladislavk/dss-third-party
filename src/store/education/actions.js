@@ -5,9 +5,7 @@ import symbols from '../../symbols'
 export default {
   [symbols.actions.getEdxCertificatesData] ({commit, dispatch}) {
     http.get(endpoints.education.edxCertificates).then((response) => {
-      const data = response.data.data
       const edxData = []
-      console.log('data', data)
       response.data.data.forEach((data) => {
         const certificate = {
           id: parseInt(data.id),

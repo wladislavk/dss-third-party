@@ -11,8 +11,10 @@
     }
 
     $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-    
-    $pat_myarray = $db->getRow($pat_sql);
+
+    if (isset($db) && $db instanceof Db) {
+        $pat_myarray = $db->getRow($pat_sql);
+    }
     $name = strtoupper(st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']));
     $pat_lastname = $pat_myarray['lastname'];
     $pat_firstname = $pat_myarray['firstname'];
@@ -71,7 +73,9 @@
     $dent_rows = count($my);
 
     if (!empty($myarray)) {
-        $is_sent = ($status == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_SEC_SENT) ? true : false;
+        if (isset($status)) {
+            $is_sent = ($status == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_SEC_SENT) ? true : false;
+        }
         $is_pending = ($status == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_SEC_PENDING) ? true : false;
         $insuranceid = st($myarray['insuranceid']);
         $eligible_id = $myarray['p_m_eligible_payer_id'];
@@ -630,8 +634,8 @@
     $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
     $api_key_query = mysqli_query($con, $api_key_sql);
     $api_key_result = mysqli_fetch_assoc($api_key_query);
-    if($api_key_result){
-      if(!empty(trim($api_key_result['eligible_api_key'])){
+    if ($api_key_result) {
+      if (!empty(trim($api_key_result['eligible_api_key']))) {
         $api_key = $api_key_result['eligible_api_key'];
       }
     }

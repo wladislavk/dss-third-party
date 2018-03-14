@@ -9,23 +9,24 @@ include_once('includes/general_functions.php');
 include("includes/calendarinc.php");
 
 // $preferDefault allows to ignore post data when the form has been saved
-function postField ($name, $default='', $preferDefault=false) {
+function postField($name, $default = '', $preferDefault = false)
+{
     if (!$preferDefault && isset($_POST[$name])) {
         return $_POST[$name];
     }
-
     return $default;
 }
 
-function escapedField ($name, $default='', $preferDefault=false) {
+function escapedField($name, $default = '', $preferDefault = false)
+{
     return htmlspecialchars(postField($name, $default, $preferDefault));
 }
 
-function selected ($value, $reference) {
+function selected($value, $reference)
+{
     if ($value == $reference) {
         return 'selected="selected"';
     }
-
     return '';
 }
 
@@ -33,8 +34,10 @@ $errorMessage = '';
 
 $patientId = intval($_GET['pid']);
 $isBackOffice = !empty($is_back_office);
-$formAction = $isBackOffice ?
-    "/manage/admin/patient_summary.php?pid=$patientId" : "/manage/dss_summ.php?pid=$patientId&addtopat=1";
+$formAction = $isBackOffice
+    ? "/manage/admin/patient_summary.php?pid=$patientId"
+    : "/manage/dss_summ.php?pid=$patientId&addtopat=1"
+;
 
 $isDeleteStudy = isset($_POST['submitdeletesleeplabsumm']);
 $isUpdateStudy = isset($_POST['submitupdatesleeplabsumm']);
@@ -43,7 +46,7 @@ $isNewStudy = isset($_POST['submitnewsleeplabsumm']);
 $changesSaved = false;
 
 // If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
-if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024 * 1024) && !$_FILES) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
     $errorMessage = $maxFileSizeExceeded;
 
@@ -54,28 +57,31 @@ if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*10
 }
 
 // Determine Type of Appliance
-$sql = "SELECT dentaldevice
+$sql = "
+    SELECT dentaldevice
     FROM dental_summ_sleeplab
     WHERE patiendid = '$patientId'
     ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC
-    LIMIT 1;";
-$result = $db->getResults($sql);
+    LIMIT 1;
+";
+if (isset($db) && $db instanceof Db) {
+    $result = $db->getResults($sql);
+}
 
 if ($result) {
     $deviceid = 0;
-
-    foreach ($result as $row) 
-    {
+    foreach ($result as $row) {
         $deviceid = $row['dentaldevice'];
     }
-
     update_patient_summary($patientId, 'appliance', $deviceid);
 }
 
-$s_lab_query = "SELECT *
+$s_lab_query = "
+    SELECT *
     FROM dental_summ_sleeplab
     WHERE patiendid = '$patientId'
-    ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
+    ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC
+";
 $num_labs = $db->getNumberRows($s_lab_query);
 
 if ($isNewStudy) {
@@ -91,7 +97,7 @@ if ($isDeleteStudy) {
     $changesSaved = !!$db->query($q);
 
     $msg = $changesSaved ? 'Successfully deleted sleep lab study.' : 'Could not delete sleep lab study, please try again.';
-} else if ($isUpdateStudy) {
+} elseif ($isUpdateStudy) {
     $id = s_for($_POST['sleeplabid']);
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
@@ -123,7 +129,6 @@ if ($isDeleteStudy) {
 
     if (isset($_FILES['ss_file'])) {
         $errorNo = $_FILES['ss_file']['error'];
-
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
@@ -147,27 +152,28 @@ if ($isDeleteStudy) {
 
             if ($uploaded) {
                 if ($image_id) {
-                    $ins_sql = " update dental_q_image set
-                            image_file = '".s_for($banner1)."'
-                            WHERE imageid='".$image_id."'
-                            AND patientid='".$patientid."'
-                            ;";
+                    $ins_sql = "
+                        update dental_q_image set
+                        image_file = '".s_for($banner1)."'
+                        WHERE imageid='".$image_id."'
+                        AND patientid='".$patientid."';
+                    ";
                     $db->query($ins_sql);
-
                     if (file_exists("../../../shared/q_file/" . $prev_filename)) {
                         unlink("../../../shared/q_file/" . $prev_filename);
                     }
                 } else {
-                    $ins_sql = " insert into dental_q_image set
-                            patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
-                            title = '".$sleeptesttype." ".$date."',
-                            imagetypeid = '1',
-                            image_file = '".s_for($banner1)."',
-                            userid = '".s_for($_SESSION['userid'])."',
-                            docid = '".s_for($_SESSION['docid'])."',
-                            adddate = now(),
-                            ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
+                    $ins_sql = "
+                        insert into dental_q_image set
+                        patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
+                        title = '".$sleeptesttype." ".$date."',
+                        imagetypeid = '1',
+                        image_file = '".s_for($banner1)."',
+                        userid = '".s_for($_SESSION['userid'])."',
+                        docid = '".s_for($_SESSION['docid'])."',
+                        adddate = now(),
+                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'
+                    ";
                     $image_id = $db->getInsertId($ins_sql);
                 }
             } else {
@@ -184,7 +190,7 @@ if ($isDeleteStudy) {
     $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
     $q = "UPDATE dental_summ_sleeplab SET
         `date` = '$date',
-        `sleeptesttype`  = '$sleeptesttype',
+        `sleeptesttype` = '$sleeptesttype',
         `place`  = '$place',
         `diagnosising_doc` = '$diagnosising_doc',
         `diagnosising_npi` = '$diagnosising_npi',
@@ -214,7 +220,7 @@ if ($isDeleteStudy) {
     if( empty($errorMessage) ) {
         $msg = $changesSaved ? 'Successfully updated sleep lab study.' : 'Could not update sleep lab study, please try again.';
     }
-} else if ($isNewStudy) {
+} elseif ($isNewStudy) {
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
     $place = s_for($_POST['place']);
@@ -341,15 +347,19 @@ if ($isDeleteStudy) {
     }
 }
 
-$sleepstudies = "SELECT ss.*
+$sleepstudies = "
+    SELECT ss.*
     FROM dental_summ_sleeplab ss
-        JOIN dental_patients p ON ss.patiendid=p.patientid
-    WHERE (p.p_m_ins_type != '1' OR (
+    JOIN dental_patients p ON ss.patiendid=p.patientid
+    WHERE (
+        p.p_m_ins_type != '1' OR (
             (ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '')
             AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')
-        ))
-        AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
-        AND ss.filename IS NOT NULL AND ss.patiendid = '$patientId'";
+        )
+    )
+    AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
+    AND ss.filename IS NOT NULL AND ss.patiendid = '$patientId'
+";
 
 $numsleepstudy = $db->getNumberRows($sleepstudies);
 $sleepstudy = $numsleepstudy > 0;
@@ -378,16 +388,17 @@ if ($msg && $msg != $errorMessage) { ?>
 <form id="new_sleep_study_form" class="sleep-study-form" action="<?= $formAction ?>" method="POST"
     style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
     <input type="hidden" name="submitnewsleeplabsumm" value="1" />
-    <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
+    <table class="sleeplabstable new_table <?= ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
         <tr>
             <td valign="top" class="odd">
-                <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?php echo date('m/d/Y'); ?>">
+                <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">
             </td>
         </tr>
         <tr>
             <td valign="top" class="even">
                 <select name="sleeptesttype" onchange="update_home(this.form)">
-                    <?php $selected = postField('sleeptesttype', '', $changesSaved) ?>
+                    <?php
+                    $selected = postField('sleeptesttype', '', $changesSaved); ?>
                     <option value="HST Baseline" <?= selected($selected, 'HST Baseline') ?>>HST Baseline</option>
                     <option value="PSG Baseline" <?= selected($selected, 'PSG Baseline') ?>>PSG Baseline</option>
                     <option value="HST Titration" <?= selected($selected, 'HST Titration') ?>>HST Titration</option>
@@ -400,10 +411,16 @@ if ($msg && $msg != $errorMessage) { ?>
             <td valign="top" class="odd">
                 <select name="place" id="new_place" class="place_select" onchange="addstudylab(this.value, 'new_place')">
                     <option>SELECT</option>
-                    <?php $selected = postField('place', '', $changesSaved) ?>
+                    <?php
+                    $selected = postField('place', '', $changesSaved) ?>
                     <option value="0" <?= selected($selected, 0) ?>>Home</option>
                     <?php
-                    $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY company ASC";
+                    $lab_place_q = "
+                        SELECT sleeplabid, company 
+                        FROM dental_sleeplab 
+                        WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' 
+                        ORDER BY company ASC
+                    ";
                     $lab_place_r = $db->getResults($lab_place_q);
 
                     foreach ($lab_place_r as $each) { ?>
@@ -549,26 +566,53 @@ $s_lab_query = "SELECT *
         STR_TO_DATE(ss.date, '%m%d%Y'),
         STR_TO_DATE(ss.date, '%m%d%y')
     ) DESC, ss.id DESC";
-$s_lab_result = $db->getResults($s_lab_query);
+$sleepLabResult = $db->getResults($s_lab_query);
 
-if ($s_lab_result) {
-    foreach ($s_lab_result as $s_lab) {
+if ($sleepLabResult) {
+    $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY company ASC";
+    $lab_place_r = $db->getResults($lab_place_q);
 
-        $sleeplab_query = "SELECT company FROM dental_sleeplab WHERE sleeplabid = '".$s_lab['place']."';";
-        $sleeplab_result = $db->getRow($sleeplab_query);
-        $place = $sleeplab_result['company'];
+    $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
+    $ins_diag_my = $db->getResults($ins_diag_sql);
 
-        $device_query = "SELECT device FROM dental_device WHERE deviceid = '".$s_lab['dentaldevice']."';";
-        $device_result = $db->getRow($device_query);
-        $device = $device_result['device'];
+    $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+    $device_my = $db->getResults($device_sql);
 
+    $sleepLabIds = [];
+    $sleepLabDeviceIds = [];
+    foreach ($sleepLabResult as $sleepLab) {
+        $sleepLabIds[] = $sleepLab['place'];
+        $sleepLabDeviceIds[] = $sleepLab['dentaldevice'];
+    }
+    $sleepLabIdsString = $db->escapeList($sleepLabIds);
+    $sleepLabDeviceIdsString = $db->escapeList($sleepLabDeviceIds);
+    $sleepLabCompanyQuery = "SELECT company FROM dental_sleeplab WHERE sleeplabid IN ($sleepLabIdsString);";
+    /** @var array $sleepLabCompanies */
+    $sleepLabCompanies = $db->getResults($sleepLabCompanyQuery) || [];
+    $sleepLabDeviceQuery = "SELECT device FROM dental_device WHERE deviceid IN ($sleepLabDeviceIdsString);";
+    /** @var array $sleepLabDevices */
+    $sleepLabDevices = $db->getResults($sleepLabDeviceQuery) || [];
+
+    foreach ($sleepLabResult as $s_lab) {
+        $place = '';
+        foreach ($sleepLabCompanies as $sleepLabCompany) {
+            if ($sleepLabCompany['sleeplabid'] == $s_lab['place']) {
+                $place = $sleepLabCompany['company'];
+            }
+        }
+        $device = '';
+        foreach ($sleepLabDevices as $sleepLabDevice) {
+            if ($sleepLabDevice['deviceid'] == $s_lab['dentaldevice']) {
+                $device = $sleepLabDevice['device'];
+            }
+        }
         ?>
         <form class="sleep-study-form" action="<?= $formAction ?>" style="float:left;" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
-            <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
+            <input type="hidden" name="sleeplabid" value="<?= $s_lab['id']; ?>" />
+            <table id="sleepstudycrolltable" class="sleeplabstable <?= ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="date" id="date<?php echo $s_lab['id']; ?>" class="calendar" value="<?php echo $s_lab['date']; ?>" />
+                        <input type="text" name="date" id="date<?= $s_lab['id']; ?>" class="calendar" value="<?= $s_lab['date']; ?>" />
                     </td>
                 </tr>
                 <tr>
@@ -584,19 +628,17 @@ if ($s_lab_result) {
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <select name="place" id="place_<?php echo $s_lab['id'];?>" class="place_select" onchange="addstudylab(this.value, 'place_<?php echo $s_lab['id'];?>')">
+                        <select name="place" id="place_<?= $s_lab['id']; ?>" class="place_select" onchange="addstudylab(this.value, 'place_<?= $s_lab['id']; ?>')">
                             <option>SELECT</option>
-                            <option <?php echo ($s_lab['place']=='0')?'selected="selected"':''; ?> value="0">Home</option>
+                            <option <?= ($s_lab['place']=='0') ? 'selected="selected"' : ''; ?> value="0">Home</option>
                             <?php
-                            $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY company ASC";
-                            $lab_place_r = $db->getResults($lab_place_q);
-
                             foreach ($lab_place_r as $each) { ?>
                                 <option <?= selected($s_lab['place'], $each['sleeplabid']) ?>
                                     value="<?= $each['sleeplabid'] ?>">
                                     <?= htmlspecialchars($each['company']) ?>
                                 </option>
-                            <?php } ?>
+                                <?php
+                            } ?>
                             <option value="add">ADD SLEEP LAB</option>
                         </select>
                     </td>
@@ -606,29 +648,35 @@ if ($s_lab_result) {
                         <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
                             <option value="">SELECT</option>
                             <?php
-                            $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-                            $ins_diag_my = $db->getResults($ins_diag_sql);
-
                             foreach ($ins_diag_my as $each) { ?>
                                 <option value="<?= $each['ins_diagnosisid'] ?>"
                                     <?= selected($s_lab['diagnosis'], $each['ins_diagnosisid']) ?>>
                                     <?= htmlspecialchars($each['ins_diagnosis'] . " " . $each['description']) ?>
                                 </option>
-                            <?php } ?>
+                                <?php
+                            } ?>
                         </select>
                         <span id="req_0" class="req">*</span>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" id="diagnosising_doc_<?php echo $s_lab['id']; ?>" name="diagnosising_doc"
-                               value="<?= $s_lab['diagnosising_doc'] ?>" style="width:100px;" autocomplete="off" />
-                        <?php if($pat_r['p_m_ins_type'] == 1) { ?>
+                        <input
+                            type="text"
+                            id="diagnosising_doc_<?= $s_lab['id']; ?>"
+                            name="diagnosising_doc"
+                            value="<?= $s_lab['diagnosising_doc'] ?>"
+                            style="width:100px;"
+                            autocomplete="off"
+                        />
+                        <?php
+                        if ($pat_r['p_m_ins_type'] == 1) { ?>
                             <span id="req_0" class="req">*</span>
-                        <?php } ?>
+                            <?php
+                        } ?>
                         <br />
-                        <div id="diagnosising_doc_<?php echo $s_lab['id']; ?>_hints" class="search_hints" style="display:none;">
-                            <ul id="diagnosising_doc_<?php echo $s_lab['id']; ?>_list" class="search_list">
+                        <div id="diagnosising_doc_<?= $s_lab['id']; ?>_hints" class="search_hints" style="display:none;">
+                            <ul id="diagnosising_doc_<?= $s_lab['id']; ?>_list" class="search_list">
                                 <li class="template" style="display:none">Doe, John S</li>
                             </ul>
                         </div>
@@ -636,55 +684,65 @@ if ($s_lab_result) {
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" id="diagnosising_npi_<?php echo $s_lab['id']; ?>" name="diagnosising_npi"
-                               value="<?= $s_lab['diagnosising_npi'] ?>" style="width:100px;" />
-                        <?php if ($pat_r['p_m_ins_type'] == 1) { ?>
+                        <input
+                            type="text"
+                            id="diagnosising_npi_<?= $s_lab['id']; ?>"
+                            name="diagnosising_npi"
+                            value="<?= $s_lab['diagnosising_npi'] ?>"
+                            style="width:100px;"
+                        />
+                        <?php
+                        if ($pat_r['p_m_ins_type'] == 1) { ?>
                             <span id="req_0" class="req">*</span>
-                        <?php } ?>
+                            <?php
+                        } ?>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <?php if ($s_lab['filename'] != '') { ?>
-                            <div id="file_edit_<?php echo $s_lab['id']; ?>">
+                        <?php
+                        if ($s_lab['filename'] != '') { ?>
+                            <div id="file_edit_<?= $s_lab['id']; ?>">
                                 <a href="display_file.php?f=<?= rawurlencode($s_lab['filename']) ?>" target="_blank" class="button">View</a>
                                 <input type="button" id="edit" class="file-input-edit" data-id="<?= $s_lab['id'] ?>" value="Edit" title="Edit" />
                             </div>
-                            <input id="file_<?php echo $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
-                        <?php } else { ?>
+                            <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
+                            <?php
+                        } else { ?>
                             <input id="file_<?= $s_lab['id'] ?>" style="width:140px;" size="8" type="file" name="ss_file" />
                             <span id="req_0" class="req">*</span>
-                        <?php } ?>
+                            <?php
+                        } ?>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="ahi" value="<?php echo $s_lab['ahi']; ?>" />
+                        <input type="text" name="ahi" value="<?= $s_lab['ahi']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="ahisupine" value="<?php echo $s_lab['ahisupine']; ?>" />
+                        <input type="text" name="ahisupine" value="<?= $s_lab['ahisupine']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="rdi" value="<?php echo $s_lab['rdi']; ?>" />
+                        <input type="text" name="rdi" value="<?= $s_lab['rdi']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="rdisupine" value="<?php echo $s_lab['rdisupine']; ?>" />
+                        <input type="text" name="rdisupine" value="<?= $s_lab['rdisupine']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="o2nadir" value="<?php echo $s_lab['o2nadir']; ?>" />
+                        <input type="text" name="o2nadir" value="<?= $s_lab['o2nadir']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="t9002" value="<?php echo $s_lab['t9002']; ?>" />
+                        <input type="text" name="t9002" value="<?= $s_lab['t9002']; ?>" />
                     </td>
                 </tr>
                 <tr>
@@ -692,26 +750,24 @@ if ($s_lab_result) {
                         <select name="dentaldevice" style="width:150px;">
                             <option value="">SELECT</option>
                             <?php
-                            $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                            $device_my = $db->getResults($device_sql);
-
                             foreach ($device_my as $each) { ?>
                                 <option <?= selected($device, $each['device']) ?>
                                     value="<?= $each['deviceid'] ?>">
                                     <?= htmlspecialchars($each['device']) ?>
                                 </option>
-                            <?php } ?>
+                                <?php
+                            } ?>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="devicesetting" value="<?php echo $s_lab['devicesetting']; ?>" />
+                        <input type="text" name="devicesetting" value="<?= $s_lab['devicesetting']; ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />
+                        <input type="text" name="notes" value="<?= $s_lab['notes']; ?>" />
                     </td>
                 </tr>
                 <tr>
@@ -723,5 +779,6 @@ if ($s_lab_result) {
                 </tr>
             </table>
         </form>
-    <?php }
+        <?php
+    }
 } ?>

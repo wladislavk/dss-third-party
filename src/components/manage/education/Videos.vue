@@ -75,3 +75,5 @@
         </div>
     </div>
 </template>
+
+<script src="./Videos.js"></script>

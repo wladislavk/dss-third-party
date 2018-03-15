@@ -2,8 +2,13 @@
 
 namespace DentalSleepSolutions\Helpers\SummaryLetterTriggers;
 
-class FollowUpTrigger extends AbstractSummaryLetterTrigger
+class FollowUpTrigger extends AbstractSummaryCompletedTrigger
 {
+    protected function getStepId(): int
+    {
+        return 7;
+    }
+
     protected function getLetterId()
     {
         return 16;

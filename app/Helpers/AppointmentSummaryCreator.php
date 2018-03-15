@@ -10,21 +10,35 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\AnnualRecallTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\DelayingTreatmentTrigger;
+use DentalSleepSolutions\Factories\LetterTriggerFactory;
 use DentalSleepSolutions\Helpers\SummaryLetterTriggers\FirstRefusedTreatmentTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\FollowUpTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\ImpressionTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\NonCompliantTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\NotCandidateTrigger;
 use DentalSleepSolutions\Helpers\SummaryLetterTriggers\SecondRefusedTreatmentTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\TerminationTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\TreatmentCompleteTrigger;
+use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 
 class AppointmentSummaryCreator
 {
-    /** @var LetterTrigger */
-    private $letterTrigger;
+    private const SEGMENTS = [
+        1 => 'Initial Contact',
+        2 => 'Consult',
+        3 => 'Sleep Study',
+        4 => 'Impressions',
+        5 => 'Delaying Tx / Waiting',
+        6 => 'Refused Treatment',
+        7 => 'Device Delivery',
+        8 => 'Check / Follow Up',
+        9 => 'Pt. Non-Compliant',
+        10 => 'Home Sleep Test',
+        11 => 'Treatment Complete',
+        12 => 'Annual Recall',
+        13 => 'Termination',
+        14 => 'Not a Candidate',
+        15 => 'Baseline Sleep Test',
+    ];
+
+    private const STEPS_WITH_LETTERS = [4, 5, 6, 8, 9, 11, 12, 13, 14];
+
+    /** @var LetterTriggerFactory */
+    private $letterTriggerFactory;
 
     /** @var IdListCleaner */
     private $idListCleaner;
@@ -45,7 +59,7 @@ class AppointmentSummaryCreator
     private $letterRepository;
 
     public function __construct(
-        LetterTrigger $letterTrigger,
+        LetterTriggerFactory $letterTriggerFactory,
         IdListCleaner $idListCleaner,
         AppointmentSummaryRepository $appointmentSummaryRepository,
         UserRepository $userRepository,
@@ -53,7 +67,7 @@ class AppointmentSummaryCreator
         ContactRepository $contactRepository,
         LetterRepository $letterRepository
     ) {
-        $this->letterTrigger = $letterTrigger;
+        $this->letterTriggerFactory = $letterTriggerFactory;
         $this->idListCleaner = $idListCleaner;
         $this->appointmentSummaryRepository = $appointmentSummaryRepository;
         $this->userRepository = $userRepository;
@@ -122,88 +136,50 @@ class AppointmentSummaryCreator
                 $futureAppointment->delete();
             }
         }
-        if ($createLetters) {
+        $stepId = 2;
+        $completed = $this->appointmentSummaryRepository->getCompletedByPatient($stepId, $patientId);
+        $trigger = $this->letterTriggerFactory->getLetterTrigger($stepId);
+        $triggerData = new SummaryLetterTriggerData();
+        $triggerData->patientId = $patientId;
+        $triggerData->infoId = $insertId;
+        $triggerData->userId = $userId;
+        $triggerData->docId = $docId;
+        if ($createLetters && in_array($stepId, self::STEPS_WITH_LETTERS)) {
             switch ($stepId) {
-                case 8: // Follow-Up/Check
-                    $triggerQuery = "
-SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed 
-FROM dental_flow_pg2_info 
-WHERE dental_flow_pg2_info.segmentid = '7' 
-AND dental_flow_pg2_info.date_completed != '0000-00-00' 
-AND dental_flow_pg2_info.patientid = $patientId
-";
-                    $numRows = $db->getNumberRows($triggerQuery);
-                    if ($numRows > 0) {
-                        $trigger = new FollowUpTrigger();
-                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    }
-                    break;
-                case 13: // Termination
-                    $trigger = new TerminationTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    break;
-                case 4: // Impressions
-                    $trigger = new ImpressionTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    break;
-            }
-        }
-        $consultQuery = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = $patientId LIMIT 1";
-        $consultResult = $db->getResults($consultQuery);
-        $consulted = false;
-        if (count($consultResult) > 0) {
-            $consult_date = $consultResult[0]['date_completed'];
-            if ($consult_date != "0000-00-00") {
-                $consulted = true;
-            }
-        }
-        if (!empty($createLetters)) {
-            switch ($stepId) {
-                // Delaying Treatment / Waiting
-                case 5:
-                    if ($consulted) {
-                        $trigger = new DelayingTreatmentTrigger();
-                        $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    }
-                    break;
                 case 6:
-                    if ($consulted) {
+                    if ($completed) {
                         $firstTrigger = new FirstRefusedTreatmentTrigger();
-                        $letterIds[] = $firstTrigger->triggerLetter($patientId, $insertId, $userId, $docId);
+                        $letterIds[] = $firstTrigger->triggerLetter($triggerData);
                         $secondTrigger = new SecondRefusedTreatmentTrigger();
-                        $letterIds[] = $secondTrigger->triggerLetter($patientId, $insertId, $userId, $docId);
+                        $letterIds[] = $secondTrigger->triggerLetter($triggerData);
                     }
                     break;
+                case 4:
+                    // fall through
+                case 5:
+                    // fall through
+                case 8:
+                    // fall through
                 case 9:
-                    $trigger = new NonCompliantTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    break;
+                    // fall through
                 case 11:
-                    $trigger = new TreatmentCompleteTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    break;
+                    // fall through
                 case 12:
-                    $trigger = new AnnualRecallTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
-                    break;
+                    // fall through
+                case 13:
+                    // fall through
                 case 14:
-                    $trigger = new NotCandidateTrigger();
-                    $letterIds[] = $trigger->triggerLetter($patientId, $insertId, $userId, $docId);
+                    $newLetterId = $trigger->triggerLetter($triggerData);
+                    if ($newLetterId) {
+                        $letterIds[] = $newLetterId;
+                    }
                     break;
             }
         }
-        if (!empty($letterIds)) {
-            // Cast values to integers
-            array_walk($letterIds, function (&$each) {
-                $each = (int)$each;
-            });
-            // Remove duplicates
-            $letterIds = array_unique($letterIds);
-            // Keep values greater than zero
-            $letterIds = array_filter($letterIds, function ($each) {
-                return $each > 0;
-            });
-        }
+        $letterIds = array_unique($letterIds);
+        $letterIds = array_filter($letterIds, function ($each) {
+            return $each > 0;
+        });
         $letter_count = 0;
         if (count($letterIds) > 0 && $createLetters) {
             $letterIdList = implode(',', $letterIds);
@@ -219,24 +195,8 @@ AND dental_flow_pg2_info.patientid = $patientId
                 $letter_count += count($contacts['patient']) + count($contacts['md_referrals']) + count($contacts['mds']);
             }
         }
-        $segments = [];
-        $segments[1] = "Initial Contact";
-        $segments[15] = "Baseline Sleep Test";
-        $segments[2] = "Consult";
-        $segments[4] = "Impressions";
-        $segments[7] = "Device Delivery";
-        $segments[8] = "Check / Follow Up";
-        $segments[10] = "Home Sleep Test";
-        $segments[3] = "Sleep Study";
-        $segments[11] = "Treatment Complete";
-        $segments[12] = "Annual Recall";
-        $segments[14] = "Not a Candidate";
-        $segments[5] = "Delaying Tx / Waiting";
-        $segments[9] = "Pt. Non-Compliant";
-        $segments[6] = "Refused Treatment";
-        $segments[13] = "Termination";
 
-        $title = $segments[$stepId];
+        $title = self::SEGMENTS[$stepId];
 
         $nextSql = "SELECT steps.* FROM dental_flowsheet_steps steps
             JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id

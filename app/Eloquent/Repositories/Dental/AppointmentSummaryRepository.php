@@ -110,4 +110,20 @@ class AppointmentSummaryRepository extends AbstractRepository
         ;
         return $result;
     }
+
+    /**
+     * @param int $stepId
+     * @param int $patientId
+     * @return int
+     */
+    public function getCompletedByPatient(int $stepId, int $patientId): int
+    {
+        $query = $this->model
+            ->where('segmentid', $stepId)
+            ->where('patientid', $patientId)
+            ->where('date_completed', '!=', '0000-00-00');
+        ;
+        $result = $query->get();
+        return sizeof($result->toArray());
+    }
 }

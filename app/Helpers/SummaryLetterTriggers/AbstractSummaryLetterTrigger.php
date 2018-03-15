@@ -11,6 +11,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Helpers\IdListCleaner;
+use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 
 abstract class AbstractSummaryLetterTrigger
 {
@@ -39,37 +40,28 @@ abstract class AbstractSummaryLetterTrigger
     }
 
     /**
-     * @param int $patientId
-     * @param int $infoId
-     * @param int $userId
-     * @param int $docId
-     * @return int|null|string
+     * @param SummaryLetterTriggerData $data
+     * @return int
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function triggerLetter($patientId, $infoId, $userId, $docId)
+    public function triggerLetter(SummaryLetterTriggerData $data): int
     {
         $mdList = '';
         if ($this->hasMdList()) {
-            $mdList = $this->getMdContactIds($patientId);
+            $mdList = $this->getMdContactIds($data->patientId);
         }
         $mdReferralList = '';
         if ($this->hasMdReferralList()) {
-            $mdReferralList = $this->getMdReferralIds($patientId);
+            $mdReferralList = $this->getMdReferralIds($data->patientId);
         }
         $letter = $this->createLetter(
+            $data,
             $this->getLetterId(),
-            $patientId,
-            $infoId,
             $this->isToPatient(),
             $mdList,
-            $mdReferralList,
-            $userId,
-            $docId
+            $mdReferralList
         );
-        if (is_numeric($letter)) {
-            return $letter;
-        }
-        return null;
+        return $letter;
     }
 
     /**
@@ -157,30 +149,24 @@ abstract class AbstractSummaryLetterTrigger
     }
 
     /**
+     * @param SummaryLetterTriggerData $data
      * @param int $templateId
-     * @param int $patientId
-     * @param int $infoId
      * @param bool $toPatient
      * @param string $mdList
      * @param string $mdReferralList
-     * @param int $userId
-     * @param int $docId
      * @return int
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     private function createLetter (
-        $templateId,
-        $patientId,
-        $infoId,
-        $toPatient,
-        $mdList,
-        $mdReferralList,
-        $userId,
-        $docId
-    ) {
-        if ($docId) {
+        SummaryLetterTriggerData $data,
+        int $templateId,
+        bool $toPatient,
+        string $mdList,
+        string $mdReferralList
+    ): int {
+        if ($data->docId) {
             /** @var User|null $user */
-            $user = $this->userRepository->findOrNull($docId);
+            $user = $this->userRepository->findOrNull($data->docId);
             if ($user->use_letters != 1) {
                 return -1;
             }
@@ -198,8 +184,8 @@ abstract class AbstractSummaryLetterTrigger
 
         $newLetter = new Letter();
         $newLetter->templateid = $templateId;
-        $newLetter->patientid = $patientId;
-        $newLetter->info_id = $infoId;
+        $newLetter->patientid = $data->patientId;
+        $newLetter->info_id = $data->infoId;
         $newLetter->topatient = $toPatient;
         $newLetter->cc_topatient = $toPatient;
         $newLetter->md_list = $mdList;
@@ -209,11 +195,11 @@ abstract class AbstractSummaryLetterTrigger
         $newLetter->status = 0;
         $newLetter->deleted = 0;
         $newLetter->deleted_on = new \DateTime();
-        $newLetter->deleted_by = $userId;
+        $newLetter->deleted_by = $data->userId;
         $newLetter->generated_date = new \DateTime();
         $newLetter->delivered = 0;
-        $newLetter->docid = $docId;
-        $newLetter->userid = $userId;
+        $newLetter->docid = $data->docId;
+        $newLetter->userid = $data->userId;
         $newLetter->save();
         return $newLetter->letterid;
     }

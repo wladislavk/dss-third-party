@@ -2,8 +2,13 @@
 
 namespace DentalSleepSolutions\Helpers\SummaryLetterTriggers;
 
-class DelayingTreatmentTrigger extends AbstractSummaryLetterTrigger
+class DelayingTreatmentTrigger extends AbstractSummaryCompletedTrigger
 {
+    protected function getStepId(): int
+    {
+        return 2;
+    }
+
     protected function getLetterId()
     {
         return 10;

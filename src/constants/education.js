@@ -13,7 +13,7 @@ export const VIDEOS = [
   },
   {
     heading: 'Consultation',
-    text: 'We\'ve been consulting with patients for years about how and why to fix teeth; treating sleep apnea is different and requires that you do some homework. Learn a process to efficiently evaluate patients for candidacy for text: \'Dental device therapy and how to steer patients toward appropriate treatment.\'',
+    text: 'We\'ve been consulting with patients for years about how and why to fix teeth; treating sleep apnea is different and requires that you do some homework. Learn a process to efficiently evaluate patients for candidacy for text: \'Dental device therapy and how to steer patients toward appropriate treatment.',
     time: 58,
     video: 'https://player.vimeo.com/video/65683866'
   },
@@ -25,7 +25,7 @@ export const VIDEOS = [
   },
   {
     heading: 'Comprehensive Exam and Impressions',
-    text: 'Learn about "the other things" that you should look for, evaluate, and document, with regards to upper airway and text: \'Dental device treatment, as well as tips and tricks for getting accurate impressions for your devices.\'',
+    text: 'Learn about "the other things" that you should look for, evaluate, and document, with regards to upper airway and text: \'Dental device treatment, as well as tips and tricks for getting accurate impressions for your devices.',
     time: 37,
     video: 'https://player.vimeo.com/video/65686917'
   },

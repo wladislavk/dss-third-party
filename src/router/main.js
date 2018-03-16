@@ -15,7 +15,7 @@ import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerRep
 import ProceduresManualComponent from '../components/manage/education/ProceduresManual.vue'
 import MedicineManualComponent from '../components/manage/education/MedicineManual.vue'
 import QuickFactsReferenceComponent from '../components/manage/education/QuickFacts.vue'
-import VideosComponent from '../components/manage/education/Videos.vue'
+import EducationVideosComponent from '../components/manage/education/EducationVideos.vue'
 import EdxCertificateComponent from '../components/manage/education/EdxCertificate.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
 
@@ -120,7 +120,7 @@ export default [
       {
         path: 'videos',
         name: 'videos',
-        component: VideosComponent,
+        component: EducationVideosComponent,
         meta: STANDARD_META
       },
       {

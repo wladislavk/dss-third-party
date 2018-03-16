@@ -19,6 +19,11 @@ class ContactData
     /** @var array */
     private $patientReferrals = [];
 
+    /**
+     * @param array $patients
+     * @return $this
+     * @throws GeneralException
+     */
     public function setPatients(array $patients)
     {
         $this->patients = $this->useToArrayOnModels($patients);
@@ -30,6 +35,11 @@ class ContactData
         return $this->patients;
     }
 
+    /**
+     * @param array $mds
+     * @return $this
+     * @throws GeneralException
+     */
     public function setMds(array $mds)
     {
         $this->mds = $this->useToArrayOnModels($mds);
@@ -41,6 +51,11 @@ class ContactData
         return $this->mds;
     }
 
+    /**
+     * @param array $mdReferrals
+     * @return $this
+     * @throws GeneralException
+     */
     public function setMdReferrals(array $mdReferrals)
     {
         $this->mdReferrals = $this->useToArrayOnModels($mdReferrals);
@@ -52,6 +67,11 @@ class ContactData
         return $this->mdReferrals;
     }
 
+    /**
+     * @param array $patientReferrals
+     * @return $this
+     * @throws GeneralException
+     */
     public function setPatientReferrals(array $patientReferrals)
     {
         $this->patientReferrals = $this->useToArrayOnModels($patientReferrals);

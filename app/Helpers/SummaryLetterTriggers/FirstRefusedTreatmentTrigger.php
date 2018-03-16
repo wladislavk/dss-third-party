@@ -2,8 +2,13 @@
 
 namespace DentalSleepSolutions\Helpers\SummaryLetterTriggers;
 
-class FirstRefusedTreatmentTrigger extends AbstractSummaryLetterTrigger
+class FirstRefusedTreatmentTrigger extends AbstractSummaryCompletedTrigger
 {
+    protected function getStepId(): int
+    {
+        return 2;
+    }
+
     protected function getLetterId()
     {
         return 8;

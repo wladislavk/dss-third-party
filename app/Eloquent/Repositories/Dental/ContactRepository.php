@@ -154,23 +154,6 @@ class ContactRepository extends AbstractRepository
     }
 
     /**
-     * @param string $list
-     * @return array
-     */
-    public function getWithContactTypeByList(string $list): array
-    {
-        $result = $this->model
-            ->select('c.*', 'ct.contacttype')
-            ->from(\DB::raw('dental_contact c'))
-            ->leftJoin(\DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
-            ->whereIn('c.contactid', $list)
-            ->get()
-            ->toArray()
-        ;
-        return $result;
-    }
-
-    /**
      * @param int $docId
      * @return array|\Illuminate\Database\Eloquent\Collection
      */
@@ -422,7 +405,6 @@ class ContactRepository extends AbstractRepository
                 'dental_contacttype.contacttype',
                 'dental_contact.contacttypeid',
                 'dental_contact.status',
-                // @todo: integer cannot be aliased
                 \DB::raw($letterId . ' AS letterid')
             )
             ->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')

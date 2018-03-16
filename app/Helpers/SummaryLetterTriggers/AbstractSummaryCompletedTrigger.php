@@ -27,16 +27,22 @@ abstract class AbstractSummaryCompletedTrigger extends AbstractSummaryLetterTrig
 
     /**
      * @param SummaryLetterTriggerData $data
-     * @return int
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function triggerLetter(SummaryLetterTriggerData $data): int
+    public function triggerLetter(SummaryLetterTriggerData $data): void
+    {
+        if ($this->hasCompletedRows($data)) {
+            parent::triggerLetter($data);
+        }
+    }
+
+    protected function hasCompletedRows(SummaryLetterTriggerData $data): bool
     {
         $completedRows = $this->appointmentSummaryRepository->getCompletedByPatient($this->getStepId(), $data->patientId);
         if ($completedRows > 0) {
-            return parent::triggerLetter($data);
+            return true;
         }
-        return 0;
+        return false;
     }
 
     abstract protected function getStepId(): int;

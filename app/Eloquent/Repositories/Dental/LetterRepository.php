@@ -281,10 +281,10 @@ class LetterRepository extends AbstractRepository
 
     /**
      * @param int $patientId
-     * @param string $letterIdList
+     * @param int[] $letterIdList
      * @return Collection|array
      */
-    public function getByPatientAndIdList(int $patientId, string $letterIdList): iterable
+    public function getByPatientAndIdList(int $patientId, array $letterIdList): iterable
     {
         $query = $this->model
             ->select(\DB::raw('COUNT(letterid) AS total, patientid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted'))

@@ -734,7 +734,6 @@ class PatientRepository extends AbstractRepository
                 \DB::raw("'' AS fax"),
                 'p.preferredcontact',
                 \DB::raw("'' AS contacttypeid"),
-                // @todo: int cannot be aliased
                 \DB::raw($letterId . ' AS letterid'),
                 'p.status'
             )

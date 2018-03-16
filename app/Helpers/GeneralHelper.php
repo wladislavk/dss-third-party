@@ -71,14 +71,15 @@ class GeneralHelper
      * @param string|null $patientReferralList
      * @param int $letterId
      * @return ContactData
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
      */
     public function getContactInfo(
-        $patient,
-        $mdList,
-        $mdReferralList,
-        $patientReferralList = null,
-        $letterId = 0
-    ) {
+        int $patient,
+        string $mdList,
+        string $mdReferralList,
+        ?string $patientReferralList = null,
+        int $letterId = 0
+    ): ContactData {
         $contactInfo = new ContactData();
         $mdList = $this->clearIdList($mdList);
         $mdReferralList = $this->clearIdList($mdReferralList);

@@ -41,10 +41,9 @@ abstract class AbstractSummaryLetterTrigger
 
     /**
      * @param SummaryLetterTriggerData $data
-     * @return int
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function triggerLetter(SummaryLetterTriggerData $data): int
+    public function triggerLetter(SummaryLetterTriggerData $data): void
     {
         $mdList = '';
         if ($this->hasMdList()) {
@@ -54,14 +53,13 @@ abstract class AbstractSummaryLetterTrigger
         if ($this->hasMdReferralList()) {
             $mdReferralList = $this->getMdReferralIds($data->patientId);
         }
-        $letter = $this->createLetter(
+        $this->createLetter(
             $data,
             $this->getLetterId(),
             $this->isToPatient(),
             $mdList,
             $mdReferralList
         );
-        return $letter;
     }
 
     /**
@@ -154,7 +152,6 @@ abstract class AbstractSummaryLetterTrigger
      * @param bool $toPatient
      * @param string $mdList
      * @param string $mdReferralList
-     * @return int
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     private function createLetter (
@@ -163,16 +160,16 @@ abstract class AbstractSummaryLetterTrigger
         bool $toPatient,
         string $mdList,
         string $mdReferralList
-    ): int {
+    ): void {
         if ($data->docId) {
             /** @var User|null $user */
             $user = $this->userRepository->findOrNull($data->docId);
             if ($user->use_letters != 1) {
-                return -1;
+                return;
             }
         }
         if (!$toPatient && !$mdReferralList && !$mdList) {
-            return false;
+            return;
         }
         //To remove referral source from md list if exists
         $mdArray = explode(',', $mdList);
@@ -201,6 +198,5 @@ abstract class AbstractSummaryLetterTrigger
         $newLetter->docid = $data->docId;
         $newLetter->userid = $data->userId;
         $newLetter->save();
-        return $newLetter->letterid;
     }
 }

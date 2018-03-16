@@ -15,4 +15,7 @@ class SummaryLetterTriggerData
 
     /** @var int */
     public $docId = 0;
+
+    /** @var int */
+    public $stepId = 0;
 }

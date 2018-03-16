@@ -8,8 +8,10 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Helpers\AppointmentSummaryCreator;
+use DentalSleepSolutions\Helpers\AppointmentSummaryUpdater;
 use DentalSleepSolutions\Helpers\TrackerStepRetriever;
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -22,8 +24,12 @@ class AppointmentSummariesController extends BaseRestController
     /** @var LetterRepository */
     private $letterRepository;
 
-    public function __construct(Config $config, BaseRepository $repository, Request $request, LetterRepository $letterRepository)
-    {
+    public function __construct(
+        Config $config,
+        BaseRepository $repository,
+        Request $request,
+        LetterRepository $letterRepository
+    ) {
         parent::__construct($config, $repository, $request);
         $this->letterRepository = $letterRepository;
     }
@@ -125,59 +131,37 @@ class AppointmentSummariesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function updateAppointment()
-    {
-        /*
-        $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
-        $comp_date = (!empty($_REQUEST['comp_date']) ? $_REQUEST['comp_date'] : '');
-        $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
-        $s = "SELECT * FROM dental_flow_pg2_info WHERE id=".mysqli_real_escape_string($con,$id)." AND patientid=".mysqli_real_escape_string($con,$pid);
-
-        $r = $db->getRow($s);
-
-        if(!empty($r['segmentid']) && $r['segmentid'] == 7){ //Update dental device date for device delivery step
-            $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysqli_real_escape_string($con,$pid)." ORDER BY date_completed DESC";
-
-            $last_r = $db->getRow($last_sql);
-            if(!empty($last_r['id']) && $id == $last_r['id']){
-                $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
-
-                if($db->getNumberRows($sql) == 0){
-                    $s = "INSERT INTO dental_ex_page5 set
-        			  dentaldevice_date='".date('Y-m-d', strtotime(mysqli_real_escape_string($con,$comp_date)))."',
-        			  patientid='".$pid."',
-        			  userid = '".s_for($_SESSION['userid'])."',
-       	 			  docid = '".s_for($_SESSION['docid'])."',
-        			  adddate = now(),
-        			  ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-                } else {
-                    $db->query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysqli_real_escape_string($con,$comp_date)))."' where patientid='".$pid."'");
-                }
-            }
+    /**
+     * @param int $id
+     * @param Request $request
+     * @param AppointmentSummaryUpdater $appointmentSummaryUpdater
+     * @return JsonResponse
+     */
+    public function updateAppointment(
+        int $id,
+        Request $request,
+        AppointmentSummaryUpdater $appointmentSummaryUpdater
+    ): JsonResponse {
+        $patientId = (int)$request->input('patient_id');
+        $docId = $this->user->getDocIdOrZero();
+        $userId = $this->user->getUserIdOrZero();
+        $completionDate = null;
+        $rawCompletionDate = $request->input('comp_date', '');
+        if ($rawCompletionDate) {
+            $completionDate = new \DateTime($rawCompletionDate);
         }
-
-        if (!empty($comp_date)) {
-            $dateCompleted = date('Y-m-d', strtotime($comp_date));
-        } else {
-            $dateCompleted = date('Y-m-d');
+        try {
+            $appointmentSummaryUpdater->updateAppointmentSummary($id, $patientId, $userId, $docId, $completionDate);
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError($e->getMessage(), 422);
         }
-
-        $s = "update dental_flow_pg2_info set date_completed='" . $dateCompleted . "' WHERE id=".mysqli_real_escape_string($con,$id)." AND patientid=".mysqli_real_escape_string($con,$pid);
-        $q = $db->query($s);
-
-        if(!empty($q)) {
-            echo '{"success":true}';
-        } else {
-            echo '{"error":true}';
-        }
-        */
+        return ApiResponse::responseOk('');
     }
 
     /**
      * @param Request $request
      * @param AppointmentSummaryCreator $appointmentSummaryCreator
      * @return JsonResponse
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function addAppointment(Request $request, AppointmentSummaryCreator $appointmentSummaryCreator): JsonResponse
     {
@@ -186,12 +170,16 @@ class AppointmentSummariesController extends BaseRestController
         $docId = $this->user->getDocIdOrZero();
         $userId = $this->user->getUserIdOrZero();
 
+        $triggerData = new SummaryLetterTriggerData();
+        $triggerData->patientId = $patientId;
+        $triggerData->stepId = $stepId;
+        $triggerData->userId = $userId;
+        $triggerData->docId = $docId;
         try {
-            $result = $appointmentSummaryCreator->createAppointmentSummary($stepId, $patientId, $docId, $userId);
+            $appointmentSummaryCreator->createAppointmentSummary($triggerData);
         } catch (GeneralException $e) {
-            // @todo: check if 400 should be returned
             return ApiResponse::responseError($e->getMessage(), 400);
         }
-        return ApiResponse::responseOk('', $result);
+        return ApiResponse::responseOk('');
     }
 }

@@ -467,7 +467,7 @@ describe('Main module actions', () => {
               {
                 name: 'Add patient with this name\u2026',
                 patientType: 'new',
-                link: ProcessWrapper.getLegacyRoot() + 'add_patient.php?search=John'
+                link: 'add_patient.php?search=John'
               }
             ]
           }
@@ -491,14 +491,14 @@ describe('Main module actions', () => {
         data: {
           data: [
             {
-              patientId: 1,
+              patientid: 1,
               name: 'John Doe',
-              patientInfo: 0
+              patient_info: 0
             },
             {
-              patientId: 2,
+              patientid: 2,
               name: 'John Little',
-              patientInfo: 1
+              patient_info: 1
             }
           ]
         }
@@ -520,12 +520,12 @@ describe('Main module actions', () => {
               {
                 name: 'John Doe',
                 patientType: 'json',
-                link: ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php?pid=1&ed=1'
+                link: 'manage/add_patient.php?pid=1&ed=1'
               },
               {
                 name: 'John Little',
                 patientType: 'json',
-                link: ProcessWrapper.getLegacyRoot() + 'manage/manage_flowsheet3.php?pid=2'
+                link: 'manage/manage_flowsheet3.php?pid=2'
               }
             ]
           }

@@ -30,7 +30,7 @@ Feature: Education manuals
     And I run mouse over "Education" menu point
     Then I see "Watch Videos" link
     When I click "Watch Videos" link
-    Then I see videos
+    Then I see videos education page
 
   Scenario: Check certificates
     Given I am logged in as "doc1f"
@@ -38,6 +38,13 @@ Feature: Education manuals
     And I run mouse over "Education" menu point
     Then I see "Certificates" link
     When I click "Certificates" link
-    Then I see certificates
-
-
+    Then I see certificates education page
+    And I see the list of certificates:
+      | name                                                                   |
+      | Course001 - Now - Section 1 - 1                                        |
+      | DSS10 - Always - Module 1: Introduction / Getting Started - 1          |
+      | DSS10 - Always - Module 2: Treatment Options - 1                       |
+      | DSS10 - Always - Module 3: Screening - 1                               |
+      | DSS10 - Always - Module 2: Treatment Options - 1                       |
+      | DSS10 - Module 2: Treatment Options - Module 2 - 1                     |
+      | DSS10 - Module 1: Introduction / Getting Started - Module One Quiz - 1 |

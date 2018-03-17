@@ -5,4 +5,5 @@ div.main-template {
   color: #000000;
   padding-top: 3px;
   margin: 0;
+  min-height: calc(100vh - 3px);
 }

@@ -1,10 +1,5 @@
 @import "education";
 
-.fullwidth {
-  width: 98%;
-  margin: 0 1%;
-}
-
 .admin_head {
   color: rgb(0, 69, 124);
   display: block;
@@ -21,13 +16,12 @@
   padding: 0 0 0 10px;
 }
 
-ul {
-  list-style: none;
+ul.fullwidth {
+  width: 98%;
+  margin: 0 1%;
+  padding-left: 40px;
 
   li {
-    font: normal normal normal normal 12px / normal Arial, Helvetica, sans-serif;
-    list-style: none outside none;
-
     a {
       color: rgb(9, 93, 129);
       text-align: left;

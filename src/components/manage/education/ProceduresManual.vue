@@ -1,9 +1,9 @@
 <template>
-    <div style="padding:0 20px; width:920px;height: 600px; overflow-y: scroll;">
+    <div class="root-div">
+        <br />
         <div class="WordSection1">
 
-            <p class="MsoNormal" align="center" style="text-align:center;line-height:normal"><a name="_Toc298865471"></a><a name="_top"></a><span style="font-size:20.0pt;
-font-family:&quot;Bodoni MT&quot;,&quot;serif&quot;">INFORMATION DISCLAIMER</span></p>
+            <p class="MsoNormal" align="center" style="text-align:center;line-height:normal"><a name="_Toc298865471"></a><a name="_top"></a><span style="font-size:20.0pt;font-family:&quot;Bodoni MT&quot;,&quot;serif&quot;">INFORMATION DISCLAIMER</span></p>
 
             <p class="MsoNormal" style="line-height:normal">&nbsp;</p>
 
@@ -253,32 +253,32 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
             <p class="MsoNormal" style="text-align:justify">Your treatment protocol should
                 include the following:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Screen</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Test <i>(Baseline/Diagnostic Test)</i></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Establish Diagnosis / Insurance Benefits </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Consultation</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Impressions / Bite Registration / Clinical Exam / Device
                 Selection </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Device Delivery</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Titration / Follow Up / Manage Side Effects</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Test <i>(Device Titration Test)</i></p>
 
-            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Annual Recall</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -335,8 +335,7 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoListParagraph" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>It is
+            <p class="MsoListParagraph" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>It is
                 recommended that you obtain a copy of the patient's medical insurance card
                 prior to beginning the screening process so that you will already have it on
                 file for the future. You may want to say to the patient that some of the procedures
@@ -357,53 +356,43 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>You can access
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>You can access
                 the screener through a tablet (IPad, Samsung, etc.) that has internet access or
                 a computer. Log into "Dentalsleepsolutions.com/screener" utilizing a web
                 browser with your log in and password. <i>Note: We recommend using Firefox as
                     your web browser.</i></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Enter the first
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Enter the first
                 and last name and telephone number of the patient you are about to screen. </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Ask the patient
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Ask the patient
                 to answer the questions and touch "next" until they are finished.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>The tablet will
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>The tablet will
                 assess and display the patient's risk for sleep disordered breathing.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Review the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Review the
                 findings of the screener with the patient. </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Any high or
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Any high or
                 severe risk assessment justifies the need for the patient to undergo a sleep
                 test <i>(HST or PSG) </i>and will require you to enter additional information
                 at this point in order to activate them as a patient into the DSS software and
                 to initiate a sleep test.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Complete the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Complete the
                 remaining questions as prompted by the software and speak with the patient
                 about the importance of following through with the sleep test.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Complete the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Complete the
                 referral for the sleep test (procedures vary depending on PSG or HST and who is
                 doing HST and will be updated in this manual periodically).</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Schedule the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Schedule the
                 patient for a consultation three to four weeks out to review the results of
                 their sleep test and discuss possible treatment options.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Have the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Have the
                 patient complete their NP information online via the web portal. </p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.5in;text-align:justify"><b>NOTE:
@@ -479,20 +468,16 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify"><b>Summary of
                 steps for adding a patient via the web portal:</b></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "+
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "+
                 Add Patient" button</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Enter the
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Enter the
                 patients' name, email address, and cellular phone number</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "Add
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "Add
                 Patient" button</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "Send
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "Send
                 Patient Registration Email" button</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify"><b><img border="0" width="735" height="523" id="Picture 226" src="../../../assets/images/manual_assets/image005.gif"></b></p>
@@ -612,13 +597,13 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
 
             <h3><a name="_Toc350778750">The goals of the consultation appointment:</a></h3>
 
-            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review Sleep Test and Patient Questionnaire</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Establish candidacy for dental device therapy</p>
 
-            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Get the patient to agree to treatment and secure financial
                 arrangements</p>
 
@@ -636,10 +621,10 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
                 confirm that you are ready and have all your ducks in a row. Patients want to
                 know: </p>
 
-            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>What does it cost?</p>
 
-            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Does my insurance cover it?</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -655,12 +640,10 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
             <p class="MsoNormal" style="text-align:justify">You may request a Verification of
                 Benefits (VOB) once you have scanned into the software the following:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:39.0pt;text-align:justify;
-text-indent:-.25in">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:39.0pt;text-align:justify;text-indent:-.25in">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Patient's medical card and information</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:39.0pt;text-align:justify;
-text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:39.0pt;text-align:justify;text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
             </span>Sleep study </p>
 
             <p class="MsoNormal" style="text-align:justify">The VOB's are completed in a
@@ -698,29 +681,23 @@ text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Basic exam instruments (mouth mirror, periodontal probe and
                 explorer)</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>George Gauge or TAP Gauge</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Anatomical photo and/or other educational materials</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Device Models</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Eccovision unit and Airway Metrics Kit <i>(if applicable)</i></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>DVD player and Obstructive Sleep Apnea DVD <i>(if applicable)</i></p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -732,59 +709,47 @@ text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp
 
             <h3><a name="_Toc350778752">Consultation protocol:</a></h3>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review patient's information in Summary Sheet of software.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review the patient's sleep test with them</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Educate the patient:</p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The patient should watch the snoring and Obstructive Sleep Apnea
                 DVD or should be educated directly about snoring and OSA.</p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review with the patient that there are two goals of treatment -
                 Subjective <i>(symptoms) </i>and Objective <i>(lowering AHI, SPO2, etc.)</i>.
                 Set the expectations for improvement in each and emphasize health risks with
                 untreated OSA.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review Medical History</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Establish a Chief Complaint</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Explain dental device therapy and show the patient dental device
                 models </p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Discuss other treatment alternatives and side effects of
                 treatments (Risks, Benefits and Alternatives of treatment)</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Perform limited exam including range of motion (ROM) to establish
                 that patient is indeed a candidate for your treatment </p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Secure financial arrangements</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Schedule the patient for next appointment - Comprehensive Exam
                 &amp; Impressions, or if time permits, do this the same day </p>
 
@@ -815,21 +780,17 @@ text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp
 
             <h3><a name="_Toc350778754">Software:</a></h3>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entry <i>(if applicable)</i></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>If patient has declined treatment then you can charge office
                 visit for this appointment.</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span><img width="765" height="568" src="../../../assets/images/manual_assets/image009.gif" align="left" hspace="12">Write Progress Note</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s) generated</p>
 
             <b><span style="font-size:12.0pt;line-height:120%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><br clear="all" style="page-break-before:always">
@@ -849,25 +810,20 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <h3><img width="227" height="180" src="../../../assets/images/manual_assets/image011.jpg" align="left" hspace="12" alt="http://static8.depositphotos.com/1350582/941/v/950/depositphotos_9413940-Getting-a-dental-exam.jpg"><a name="_Toc350778756">The goals of the Exam and Impressions appointment:</a></h3>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Perform exam and document findings in software <i>(Exam Tab in
                 software)</i></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain accurate impressions of the teeth</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain a protrusive bite record</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Obtain a signed Informed Consent </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Decide on specific dental device for the patient</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify">&nbsp;</p>
@@ -890,56 +846,43 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam set-up</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>George or TAP Gauge</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Scale</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Device Models</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>BP Cuff</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Tape measure &amp; scale</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Bite registration material</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Impression trays and material</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>X-ray equipment</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Digital camera</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Occlusal mirror</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>ROM triangle</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Eccovision (if applicable)</p>
 
             <p class="MsoNormal" style="text-align:justify"><img border="0" width="670" height="509" src="../../../assets/images/manual_assets/image012.gif"></p>
@@ -951,41 +894,33 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778758"><span class="Heading3Char">Exam and Impression Protocol</span></a><b>:</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>This appointment consists of a comprehensive examination, taking
                 impressions, and a bite registration. It may take from one half to two hours. </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Using your professional judgment regarding the risk (radiation
                 exposure) vs. reward (information gained), determine the proper number and
                 types of X-rays and imaging studies and obtain them.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Nine documentation and diagnostic digital photographs should be
                 taken to record the patient's occlusal bite, profile and Mallampati
                 classifications. They are listed below along with sample photos:</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 3) Facials - Left, right and front</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 2) Occlusals- Full upper and lower arch </p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 3) Retracted. Closed bite (frontal, right side, left side)</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 1) Airway- Non-retracted (Mallampati)</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Additional images of teeth and existing restorations may also be
                 taken. </p>
 
@@ -1007,66 +942,53 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The following examination should be done and the results input
                 into the DSS Software <i>(Exam Tab in software)</i>:</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Height, weight &amp; neck measurements</p>
 
             <p class="MsoListParagraph" style="margin-left:1.5in;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Record the patient's blood pressure</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>A soft tissue &amp; oral cancer exam </p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Dental exam </p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Periodontal exam</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Airway exam</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>TMD (TMJ) muscle exam</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Range of Motion (ROM) recorded</p>
 
-            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span><i></i><img border="0" width="621" height="473" src="../../../assets/images/manual_assets/image022.gif"></p>
 
-            <p class="MsoListParagraph" style="margin-left:1.0in;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraph" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>If you have not already done so at the consultation appointment,
                 you should then discuss with the patient which dental device is best suited for
                 him.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Upper and lower full arch polyvinyl impressions should be taken. </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Eccovision should be used (if applicable).</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>George or TAP Gauge protrusive bite registration should be
                 taken. </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Impressions should then be sent out to the lab and patient should
                 be scheduled for a Device Delivery appointment based on when the device will be
                 ready <i>(typically 3 weeks)</i></p>
@@ -1078,31 +1000,25 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778759"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Complete exam</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Choose appropriate dental device and fill out lab prescription</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write progress note</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office visit charged
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office visit charged
                 out</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update tracker</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-indent:-.25in"><a name="_Toc298865475"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-indent:-.25in"><a name="_Toc298865475"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s) generated</a></p>
 
             <p class="MsoNormal" style="text-align:justify"><img border="0" width="765" height="490" id="Picture 4" src="../../../assets/images/manual_assets/image023.gif"></p>
@@ -1112,23 +1028,18 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <h1><a name="_Toc350778760">DEVICE DELIVERY</a></h1>
 
-            <p class="MsoNormal" style="text-align:justify"><span style="font-size:11.0pt;
-line-height:120%;color:black">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:justify"><span style="font-size:11.0pt;line-height:120%;color:black">&nbsp;</span></p>
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778761"><span class="Heading3Char">Goals of Device Delivery Appointment</span></a><span style="color:black">:</span></p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Confirm proper fit and bite of device</span></p>
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Confirm proper fit and bite of device</span></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Determine starting position</span></p>
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Determine starting position</span></p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Educate patient on titration protocols, jaw exercises and
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Educate patient on titration protocols, jaw exercises and
                 proper home care</span></p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Review expectations</span></p>
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="color:black">Review expectations</span></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -1139,37 +1050,29 @@ text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style=
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam kit (mouth mirror, explorer &amp; periodontal probe) </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Dental Sleep Device</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Bite tabs</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Articulating paper and holder</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Slow speed hand piece<span style="color:#0070C0"> </span>with
                 acrylic bur and polishing kit</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Hot water pot and bowls </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Bard parker and blade (if utilizing thermacryl)</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>AM Aligner or other morning repositioning device</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1179,33 +1082,27 @@ text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style=
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778763"><span class="Heading3Char">Device Delivery protocols</span></a><b>:</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Explain to patient it may feel tight on all of their teeth PRIOR
                 to trying the device in the first time.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Fit and adjust the device to the patient. </p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Fit and adjust the AM aligner or the Morning Repositioner and
                 instruct on daily use.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Instruct the patient on how to properly clean and store the
                 device. Give the patient a copy of <b>Home Care Instructions</b>.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Instruct the patient on how and when to titrate the device <i>(if
                 applicable)</i>. Typically it is not advisable to have the patient begin
                 titration until the first check.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Instruct the patient that the main goal is to wear the device
                 every night and the secondary goal is to see how their symptoms are improving.
                 Let them know that their teeth may be sore for a few days or weeks and if they
@@ -1214,8 +1111,7 @@ text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style=
                 appliance is the primary goal and that further adjustments may be necessary to
                 alleviate symptoms in subsequent visits.</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Schedule the patient to return in approximately three weeks. However,
                 make sure the patient understands that he can call you at any time with
                 concerns or questions.</p>
@@ -1227,23 +1123,18 @@ text-indent:-.25in"><span style="font-family:Symbol;color:black">•<span style=
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778764"><span class="Heading3Char">Software</span></a><b>:</b></p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Note</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Device billed</p>
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Device billed</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Tracker</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1258,16 +1149,13 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778766"><span class="Heading3Char">Goals of First Follow-Up Appointment</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Address Side Effects</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Encourage the patient</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Assess subjective improvements</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -1344,28 +1232,22 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam kit</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Titration log</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Titration key or bands</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Acrylic bur and polishing kit</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Hot water pot and bowls and knife</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Eccovision (if applicable)</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1400,31 +1282,24 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778769"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Subjective Tests</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Notes</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
-            
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
+
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Tracker </p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)</p>
 
-            <p class="MsoNormal" style="text-align:justify"><u><span style="text-decoration:
- none">&nbsp;</span></u></p>
+            <p class="MsoNormal" style="text-align:justify"><u><span style="text-decoration:none">&nbsp;</span></u></p>
 
             <p class="MsoNormal">An appointment should be made for follow-up in 3-4 weeks.</p>
 
@@ -1440,24 +1315,19 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778771"><span class="Heading3Char">Goals of subsequent Follow-Up appointments</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate integrity of device</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Manage side effects</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Confirm patient is titrating device correctly</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Work to recapture the bite</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate subjective tests <i>(Subjective section of Summary
                 Sheet)</i> and provide guidance for titration</p>
 
@@ -1513,28 +1383,22 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam kit</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Titration Log</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Titration key or bands</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Acrylic bur and polishing kit</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Hot water pot and bowls and knife</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Eccovision (if applicable)</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1544,27 +1408,21 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778773"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Subjective Tests</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Notes</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Patient Tracker</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)</p>
 
             <p class="MsoNormal">&nbsp;</p>
@@ -1592,12 +1450,10 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778775"><span class="Heading3Char">Goals of Titration HST appointment</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Get the patient to agree to the sleep test</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate efficacy of your dental device ideally at two different
                 settings</p>
 
@@ -1610,16 +1466,13 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
                 section outlines the steps for this procedure. Titration sleep tests may be done
                 through:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>A home sleep testing company </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>A PSG through a local sleep lab</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Utilizing your own home sleep testing unit</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1633,16 +1486,13 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Referral form to local sleep lab</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Referral form to home sleep testing company</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Your own Home Sleep Test unit and appropriate disposables and <b>Sleep
                 Recorder Release</b> form (if you are utilizing your own HST device)</p>
 
@@ -1650,31 +1500,25 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify">At this appointment, you should:</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate integrity of device.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Address and handle any side effects.</p>
 
-            <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraph" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review patient's titration notes<b> </b>on<b> </b>the<b> Device
                 Titration </b>Form.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Confirm that the patient is titrating the device correctly. </p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Discuss the need for the titration sleep test and the method in
                 which you recommend this be done (lab, outsourced HST Company, or your own
                 device) and direct the patient accordingly.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>If possible order a multi-night study. Have the patient titrate
                 the device to different positions each night carefully noting the position for
                 the perspective nights. Often positions varying 1 to 2 mm in protrusion on a
@@ -1682,14 +1526,12 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
                 patient to return the device to the initial position after the HST and await
                 further instructions.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>When you receive the results of the titration sleep test, record
                 the data in the Sleep Studies tab of the summary sheet, making sure you choose
                 the appropriate sleep test type in the drop down menu.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Schedule the patient for an appointment to review the findings of
                 the titration sleep test or alternatively call the patients with the results</p>
 
@@ -1749,29 +1591,25 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778777"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Subjective Tests</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Enter sleep test results in Summary Sheet</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Notes</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>None usually but may qualify for office visit</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Patient Tracker</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)</p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
@@ -1790,24 +1628,19 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <h3><a name="_Toc350778779">Goals of yearly evaluation:</a></h3>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate dental device integrity</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Check on patient compliance </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate efficacy of continued treatment</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Discover and manage side effects</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Medical History</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -1841,20 +1674,16 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam kit</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Camera</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Occlusal Mirror</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Scale</p>
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
@@ -1862,61 +1691,51 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
 
-            <p class="MsoNormal" style="text-align:justify"><b><u><span style="text-decoration:
- none">&nbsp;</span></u></b></p>
+            <p class="MsoNormal" style="text-align:justify"><b><u><span style="text-decoration:none">&nbsp;</span></u></b></p>
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778781"><span class="Heading3Char">The Yearly Evaluation Appointment Protocols</span></a><b>:</b></p>
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update patient's Medical insurance information. </p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The patient should be weighed and measured, and weight and height
                 should be entered into the software, which will provide the patient's current
                 BMI.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The<b> Medical History Update</b><span style="color:#0070C0"> </span>should
                 be reviewed and any health changes, including changes in BMI, should be
                 discussed and then entered into the software.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Five photographs should be taken to document the patient's bite
                 as follows: </p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 3) Retracted closed bite (frontal, right side and left side)
             </p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 2) Upper/lower occlusal</p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="143" height="95" id="Picture 11" src="../../../assets/images/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 12" src="../../../assets/images/manual_assets/image030.gif"></p>
 
             <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="141" height="94" src="../../../assets/images/manual_assets/image031.jpg" alt="DSS photos (4)"><img border="0" width="141" height="94" id="Picture 22" src="../../../assets/images/manual_assets/image032.jpg" alt="DSS photos (3)"><img border="0" width="143" height="95" id="Picture 21" src="../../../assets/images/manual_assets/image033.gif"></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate the integrity and fit of the dental device</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Address any side effects. Check for any TMJ or bite changes. If
                 changes are present then inform patient and let them know other treatment
                 alternatives. Determine if the patient desires to continue using the dental
                 device <i>(which is usually the case) </i>and if so document this in the
                 Progress Notes.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Determine plan going forward and update the patient's progress
                 notes accordingly.</p>
 
@@ -1927,27 +1746,21 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778782"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Subjective Tests</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Notes</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit </p>
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Patient Tracker</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)<a name="_Toc298865480"></a></p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -1963,28 +1776,22 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778784"><span class="Heading3Char">Goals of Thirty Month Evaluation appointment</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate Device integrity </p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Check to see if insurance will cover a new device</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Observe and manage side effects</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Check on patient compliance</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Medical History</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate continued efficacy of treatment</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -2016,20 +1823,16 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Exam kit</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Camera</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Occlusal mirror</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Scale</p>
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
@@ -2043,53 +1846,45 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><b>&nbsp;</b></p>
 
-            <p class="MsoListParagraph" style="margin-left:.75in;text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraph" style="margin-left:.75in;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update patient's Medical insurance information. </p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The patient should be weighed and measured, and weight and height
                 should be entered into the DSS Software, which will provide the patient's
                 current BMI.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>The<b> Medical History Update</b><span style="color:#0070C0"> </span>should
                 be reviewed and any health changes, including changes in BMI, should be
                 discussed and then entered into the DSS Software.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Five photographs should be taken to document the patient's bite
                 as follows: </p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 3) Retracted closed bite (frontal, right side and left side)
             </p>
 
-            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:
--.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+            <p class="MsoNormal" style="margin-left:1.25in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 2) Upper/lower occlusal</p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 16" src="../../../assets/images/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 17" src="../../../assets/images/manual_assets/image030.gif"></p>
 
             <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 18" src="../../../assets/images/manual_assets/image034.gif"><img border="0" width="143" height="95" id="Picture 19" src="../../../assets/images/manual_assets/image035.gif"><img border="0" width="143" height="95" id="Picture 20" src="../../../assets/images/manual_assets/image033.gif"></p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Evaluate the integrity and fit of the dental device</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Address any side effects. Check for any TMJ or bite changes. If
                 changes are present then inform patient and let them know other treatment
                 alternatives. Determine if the patient desires to continue using the dental
                 device (which is usually the case) and if so document this in the Progress
                 Notes.</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
--.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Determine plan going forward and update the patient's progress
                 notes accordingly.</p>
 
@@ -2100,27 +1895,21 @@ text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;T
 
             <p class="MsoNormal" style="text-align:justify"><a name="_Toc350778787"><span class="Heading3Char">Software</span></a>:</p>
 
-            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpFirst" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Subjective Tests</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Write Progress Notes</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Ledger Entries</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;
-text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;text-align:justify;text-indent:-.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>Office Visit</p>
 
-            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Update Patient Tracker </p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;
-text-indent:-.25in"><span class="font-symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify;text-indent:-.25in"><span style="font-family: Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s)</p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
@@ -2529,6 +2318,10 @@ margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%"><spa
         </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/education/procedures-manual.scss";
+</style>
 
 <style type="text/css" scoped>
     h1 {

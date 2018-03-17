@@ -1,6 +1,6 @@
 <template>
     <div class="WordSection1">
-
+        <br />
         <p class="MsoNormal">QUICK FACTS &amp; REFERENCE</p>
         <p class="MsoNormal">&nbsp;</p>
 
@@ -328,6 +328,9 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/education/quick-facts.scss";
+</style>
 
 <style type="text/css" scoped>
     h1 {

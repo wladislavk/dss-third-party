@@ -9,31 +9,25 @@ describe('EdxCertificate component', () => {
   beforeEach(function () {
     moxios.install()
 
-    moxios.stubRequest(http.formUrl(endpoints.education.edxCertificates), {
+    moxios.stubRequest(http.formUrl(endpoints.edxCertificates.byUser), {
       status: 200,
       responseText: {
         data: [
           {
             id: 1,
             url: 'http://some_url.com',
-            edx_id: 3,
             course_name: 'Course001',
             course_section: 'Now',
             course_subsection: 'Section 1',
-            number_ce: 1,
-            adddate: '2014-03-17 22:15:41',
-            ip_address: '10.20.1.168'
+            number_ce: 1
           },
           {
             id: 2,
             url: 'http://some_url2.com',
-            edx_id: 3,
             course_name: 'DSS10',
             course_section: 'Always',
             course_subsection: 'Module 1: Introduction / Getting Started',
-            number_ce: 1,
-            adddate: '2014-04-01 11:39:11',
-            ip_address: '10.20.1.168'
+            number_ce: 1
           }
         ]
       }

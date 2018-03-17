@@ -29,8 +29,8 @@ export default {
   documentCategories: {
     active: '/document-categories/active'
   },
-  education: {
-    edxCertificates: '/edx-certificates'
+  edxCertificates: {
+    byUser: '/edx-certificates/by-user'
   },
   eligible: {
     payers: '/eligible/payers'

@@ -22,5 +22,5 @@
 <script src="./EdxCertificate.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../assets/css/manage/education/edx_certificate.scss";
+    @import "../../../assets/css/manage/education/edx-certificate.scss";
 </style>

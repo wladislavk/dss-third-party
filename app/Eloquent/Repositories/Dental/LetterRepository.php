@@ -264,12 +264,11 @@ class LetterRepository extends AbstractRepository
     /**
      * @param int $patientId
      * @param int[] $infoIds
-     * @return array|Collection|static[]
+     * @return Letter[]|Collection
      */
     public function getByPatientAndInfo(int $patientId, array $infoIds): iterable
     {
         $result = $this->model
-            ->select('topatient', 'md_list', 'md_referral_list', 'status')
             ->where('patientid', $patientId)
             ->where('deleted', 0)
             ->whereIn('info_id', $infoIds)

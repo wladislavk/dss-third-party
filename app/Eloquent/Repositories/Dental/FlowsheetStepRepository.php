@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\FlowsheetStep;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Support\Collection;
 
 class FlowsheetStepRepository extends AbstractRepository
 {
@@ -32,17 +33,17 @@ class FlowsheetStepRepository extends AbstractRepository
 
     /**
      * @param int $id
-     * @return array
+     * @return FlowsheetStep[]|Collection
      */
-    public function getStepsByNext(int $id): array
+    public function getStepsByNext(int $id): iterable
     {
-        $next_sql = $this->model
+        $query = $this->model
             ->select('steps.*')
             ->from(\DB::raw('dental_flowsheet_steps steps'))
             ->join(\DB::raw('dental_flowsheet_steps_next next'), 'steps.id', '=', 'next.child_id')
             ->where('next.parent_id', $id)
             ->orderBy('next.sort_by')
         ;
-        return $next_sql->get()->toArray();
+        return $query->get();
     }
 }

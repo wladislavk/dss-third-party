@@ -271,6 +271,8 @@ class LettersController extends BaseRestController
     /**
      * @SWG\Get(
      *     path="/letters/by-patient-and-info",
+     *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
+     *     @SWG\Parameter(name="info_ids", in="query", type="string", required=true),
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
 
@@ -279,8 +281,8 @@ class LettersController extends BaseRestController
      */
     public function getByPatientAndInfo(Request $request): JsonResponse
     {
-        $patientId = (int)$request->input('patient_id', 0);
-        $infoIds = $request->input('info_ids', '');
+        $patientId = (int)$request->input('patient_id');
+        $infoIds = $request->input('info_ids', []);
         array_walk($infoIds, function ($element) {
             return (int)$element;
         });

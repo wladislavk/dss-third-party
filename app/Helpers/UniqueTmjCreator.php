@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 
 class UniqueTmjCreator
@@ -20,12 +20,12 @@ class UniqueTmjCreator
      * @param User $user
      * @param int $patientId
      * @param string $device
-     * @return TmjClinicalExam|null
+     * @return TmjClinicalExam
      */
-    public function createUniqueTmj(User $user, $patientId, $device)
+    public function createUniqueTmj(User $user, int $patientId, string $device): TmjClinicalExam
     {
         /** @var TmjClinicalExam|null $existing */
-        $existing = $this->repository->findByField('patientid', $patientId);
+        $existing = $this->repository->getOneBy('patientid', $patientId);
         if ($existing) {
             $resource = $existing;
             $resource->dentaldevice = $device;

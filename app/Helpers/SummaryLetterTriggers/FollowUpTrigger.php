@@ -2,11 +2,13 @@
 
 namespace DentalSleepSolutions\Helpers\SummaryLetterTriggers;
 
+use DentalSleepSolutions\Constants\TrackerSteps;
+
 class FollowUpTrigger extends AbstractSummaryCompletedTrigger
 {
     protected function getStepId(): int
     {
-        return 7;
+        return TrackerSteps::DEVICE_DELIVERY_ID;
     }
 
     protected function getLetterId()

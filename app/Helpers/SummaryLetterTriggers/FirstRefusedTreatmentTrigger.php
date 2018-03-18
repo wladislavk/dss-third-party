@@ -2,11 +2,13 @@
 
 namespace DentalSleepSolutions\Helpers\SummaryLetterTriggers;
 
+use DentalSleepSolutions\Constants\TrackerSteps;
+
 class FirstRefusedTreatmentTrigger extends AbstractSummaryCompletedTrigger
 {
     protected function getStepId(): int
     {
-        return 2;
+        return TrackerSteps::CONSULT_ID;
     }
 
     protected function getLetterId()

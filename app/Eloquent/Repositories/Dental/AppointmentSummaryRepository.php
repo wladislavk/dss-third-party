@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Collection;
 
 class AppointmentSummaryRepository extends AbstractRepository
 {
@@ -16,12 +17,11 @@ class AppointmentSummaryRepository extends AbstractRepository
 
     /**
      * @param int $patientId
-     * @return AppointmentSummary[]|\Illuminate\Database\Eloquent\Collection|static[]
+     * @return AppointmentSummary[]|Collection
      */
     public function getByPatient(int $patientId): iterable
     {
         return $this->model
-            ->select('*')
             ->where('patientid', $patientId)
             ->orderBy('date_completed', 'desc')
             ->orderBy('id', 'desc')

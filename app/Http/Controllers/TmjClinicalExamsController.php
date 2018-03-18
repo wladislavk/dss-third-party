@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Helpers\UniqueTmjCreator;
@@ -243,11 +242,18 @@ class TmjClinicalExamsController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/tmj-clinical-exams/store-for-patient",
+     *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
+     *     @SWG\Parameter(name="dentaldevice", in="query", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * @param Request $request
      * @param UniqueTmjCreator $uniqueTmjCreator
      * @return JsonResponse
      */
-    public function storeForPatient(Request $request, UniqueTmjCreator $uniqueTmjCreator)
+    public function storeForPatient(Request $request, UniqueTmjCreator $uniqueTmjCreator): JsonResponse
     {
         $patientId = $request->input('patient_id');
         $device = $request->input('dentaldevice');

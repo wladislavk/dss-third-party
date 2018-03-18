@@ -39,9 +39,54 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     protected function getUpdateData()
     {
-        return [
-           'delay_reason' => 'new reason',
+        return [];
+    }
+
+    public function testStore()
+    {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+
+        $stepId = 1;
+        $patientId = 200;
+        $requestData = [
+            'step_id' => $stepId,
+            'patient_id' => $patientId,
         ];
+        $this->post(self::ROUTE_PREFIX . '/appt-summaries', $requestData);
+        $this->assertResponseOk();
+        $this->seeInDatabase('dental_flow_pg2_info', [
+            'patientid' => $patientId,
+            'segmentid' => $stepId,
+            'appointment_type' => 1,
+            'date_completed' => (new \DateTime())->format('Y-m-d'),
+        ]);
+    }
+
+    public function testUpdate()
+    {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+
+        $summaryId = 15;
+        $patientId = 51;
+        $completionDate = '06/25/2016';
+        $requestData = [
+            'patient_id' => $patientId,
+            'comp_date' => $completionDate,
+        ];
+        $this->put(self::ROUTE_PREFIX . '/appt-summaries/' . $summaryId, $requestData);
+        $this->assertResponseOk();
+        $this->seeInDatabase('dental_flow_pg2_info', [
+            'id' => $summaryId,
+            'date_completed' => '2016-06-25',
+        ]);
+        $this->notSeeInDatabase('dental_ex_page5', [
+            'patientid' => $patientId,
+            'dentaldevice_date' => '2016-06-25',
+        ]);
     }
 
     public function testDestroy()
@@ -92,5 +137,28 @@ class AppointmentSummariesApiTest extends ApiTestCase
             'final_rank' => 4,
         ];
         $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetByPatient()
+    {
+        $patientId = 10;
+        $this->get(self::ROUTE_PREFIX . '/appt-summaries/by-patient/' . $patientId);
+        $this->assertResponseOk();
+        $ids = array_column($this->getResponseData(), 'id');
+        $expected = [448, 233, 232, 231, 228, 164, 142, 450];
+        $this->assertEquals($expected, $ids);
+    }
+
+    public function testGetFutureAppointment()
+    {
+        /** @var AppointmentSummary $testRecord */
+        $testRecord = factory($this->getModel())->create();
+        $patientId = $testRecord->patientid;
+        $testRecord->appointment_type = 0;
+        $testRecord->save();
+        $this->get(self::ROUTE_PREFIX . '/appt-summaries/future-appointment/' . $patientId);
+        $this->assertResponseOk();
+        $response = $this->getResponseData();
+        $this->assertEquals($testRecord->id, $response['id']);
     }
 }

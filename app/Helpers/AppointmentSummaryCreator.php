@@ -1,6 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Constants\TrackerSteps;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
@@ -13,8 +14,6 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class AppointmentSummaryCreator
 {
-    private const STEPS_WITH_LETTERS = [4, 5, 6, 8, 9, 11, 12, 13, 14];
-
     /** @var LetterTriggerFactory */
     private $letterTriggerFactory;
 
@@ -53,7 +52,7 @@ class AppointmentSummaryCreator
             $createLetters = true;
         }
 
-        if ($data->stepId == 7) {
+        if ($data->stepId == TrackerSteps::DEVICE_DELIVERY_ID) {
             $this->createClinicalExam($data);
         }
         $newAppointmentSummary = new AppointmentSummary();
@@ -63,19 +62,13 @@ class AppointmentSummaryCreator
         $newAppointmentSummary->date_completed = new \DateTime();
         $newAppointmentSummary->save();
         $data->infoId = $newAppointmentSummary->id;
-        if ($data->infoId) {
-            $this->deleteFutureAppointment($data->patientId);
-        }
-        $trigger = $this->letterTriggerFactory->getLetterTrigger($data->stepId);
-        if ($createLetters && in_array($data->stepId, self::STEPS_WITH_LETTERS)) {
-            $trigger->triggerLetter($data);
-            switch ($data->stepId) {
-                case 6:
-                    $firstTrigger = new FirstRefusedTreatmentTrigger();
-                    $letterIds[] = $firstTrigger->triggerLetter($data);
-                    $secondTrigger = new SecondRefusedTreatmentTrigger();
-                    $letterIds[] = $secondTrigger->triggerLetter($data);
-                    break;
+
+        $this->deleteFutureAppointment($data->patientId);
+
+        if ($createLetters && in_array($data->stepId, TrackerSteps::STEPS_WITH_LETTERS)) {
+            $triggers = $this->letterTriggerFactory->getLetterTriggers($data->stepId);
+            foreach ($triggers as $trigger) {
+                $trigger->triggerLetter($data);
             }
         }
     }
@@ -85,11 +78,9 @@ class AppointmentSummaryCreator
      */
     private function createClinicalExam(SummaryLetterTriggerData $data): void
     {
-        /** @var TmjClinicalExam[] $clinicalExams */
-        $clinicalExams = $this->clinicalExamRepository->findByField('patientid', $data->patientId);
-        if (isset($clinicalExams[0])) {
-            $clinicalExam = $clinicalExams[0];
-        } else {
+        /** @var TmjClinicalExam|null $clinicalExams */
+        $clinicalExam = $this->clinicalExamRepository->getOneBy('patientid', $data->patientId);
+        if (!$clinicalExam) {
             $clinicalExam = new TmjClinicalExam();
             $clinicalExam->patientid = $data->patientId;
             $clinicalExam->userid = $data->userId;
@@ -106,12 +97,13 @@ class AppointmentSummaryCreator
     private function deleteFutureAppointment(int $patientId): void
     {
         $futureAppointment = $this->appointmentSummaryRepository->getFutureAppointment($patientId);
-        if ($futureAppointment) {
-            try {
-                $futureAppointment->delete();
-            } catch (\Exception $e) {
-                throw new GeneralException('Could not delete future appointment: ' . $e->getMessage());
-            }
+        if (!$futureAppointment) {
+            return;
+        }
+        try {
+            $futureAppointment->delete();
+        } catch (\Exception $e) {
+            throw new GeneralException('Could not delete future appointment: ' . $e->getMessage());
         }
     }
 }

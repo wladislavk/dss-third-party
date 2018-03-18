@@ -173,4 +173,14 @@ class FlowsheetStepsApiTest extends ApiTestCase
         ];
         $this->assertEquals($expected, $this->getResponseData());
     }
+
+    public function testGetByNextStep()
+    {
+        $stepId = 6;
+        $this->get(self::ROUTE_PREFIX . '/flowsheet-steps/by-next-step/' . $stepId);
+        $this->assertResponseOk();
+        $stepIds = array_column($this->getResponseData(), 'id');
+        $expected = [15, 2, 4, 8, 7, 3, 11, 12, 14, 5, 9, 13];
+        $this->assertEquals($expected, $stepIds);
+    }
 }

@@ -405,22 +405,6 @@ class UsersController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
-     *     path="/users/letter-info",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getLetterInfo(Request $request)
-    {
-        $data = $this->repository->getLetterInfo($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
      * @SWG\Get(
      *     path="/users/responsible",
      *     @SWG\Response(response="200", description="TODO: specify the response")

@@ -95,7 +95,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property string|null $deviation_r_l
  * @property string|null $deflection_r_l
  * @property int|null $dentaldevice
- * @property string|null $dentaldevice_date
+ * @property \DateTime|null $dentaldevice_date
  * @mixin \Eloquent
  */
 class TmjClinicalExam extends AbstractModel
@@ -173,4 +173,13 @@ class TmjClinicalExam extends AbstractModel
     protected $primaryKey = 'ex_page5id';
 
     const CREATED_AT = 'adddate';
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'dentaldevice_date',
+    ];
 }

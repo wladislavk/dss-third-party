@@ -32,7 +32,7 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  * @property int|null $stepid
  * @property int|null $segmentid
  * @property string|null $date_scheduled
- * @property string|null $date_completed
+ * @property \DateTime|null $date_completed
  * @property string|null $delay_reason
  * @property string|null $study_type
  * @property string|null $letterid

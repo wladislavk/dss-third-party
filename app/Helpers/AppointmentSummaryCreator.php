@@ -4,12 +4,15 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Constants\TrackerSteps;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Factories\LetterTriggerFactory;
+use DentalSleepSolutions\Factories\RepositoryFactory;
 use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
+use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class AppointmentSummaryCreator
@@ -26,16 +29,25 @@ class AppointmentSummaryCreator
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var DBChangeWrapper */
+    private $dbChangeWrapper;
+
+    /**
+     * @param LetterTriggerFactory $letterTriggerFactory
+     * @param RepositoryFactory $repositoryFactory
+     * @param DBChangeWrapper $dbChangeWrapper
+     * @throws GeneralException
+     */
     public function __construct(
         LetterTriggerFactory $letterTriggerFactory,
-        AppointmentSummaryRepository $appointmentSummaryRepository,
-        TmjClinicalExamRepository $clinicalExamRepository,
-        UserRepository $userRepository
+        RepositoryFactory $repositoryFactory,
+        DBChangeWrapper $dbChangeWrapper
     ) {
         $this->letterTriggerFactory = $letterTriggerFactory;
-        $this->appointmentSummaryRepository = $appointmentSummaryRepository;
-        $this->clinicalExamRepository = $clinicalExamRepository;
-        $this->userRepository = $userRepository;
+        $this->appointmentSummaryRepository = $repositoryFactory->getRepository(AppointmentSummaryRepository::class);
+        $this->clinicalExamRepository = $repositoryFactory->getRepository(TmjClinicalExamRepository::class);
+        $this->userRepository = $repositoryFactory->getRepository(UserRepository::class);
+        $this->dbChangeWrapper = $dbChangeWrapper;
     }
 
     /**
@@ -45,10 +57,10 @@ class AppointmentSummaryCreator
      */
     public function createAppointmentSummary(SummaryLetterTriggerData $data): void
     {
-        $numSteps = null;
-        $letterRow = $this->userRepository->getLetterInfo($data->docId);
+        /** @var User|null $doctor */
+        $doctor = $this->userRepository->find($data->docId);
         $createLetters = false;
-        if ($letterRow && $letterRow->use_letters && $letterRow->tracker_letters) {
+        if ($doctor && $doctor->use_letters && $doctor->tracker_letters) {
             $createLetters = true;
         }
 
@@ -60,7 +72,7 @@ class AppointmentSummaryCreator
         $newAppointmentSummary->segmentid = $data->stepId;
         $newAppointmentSummary->appointment_type = 1;
         $newAppointmentSummary->date_completed = new \DateTime();
-        $newAppointmentSummary->save();
+        $this->dbChangeWrapper->save($newAppointmentSummary);
         $data->infoId = $newAppointmentSummary->id;
 
         $this->deleteFutureAppointment($data->patientId);
@@ -87,7 +99,7 @@ class AppointmentSummaryCreator
             $clinicalExam->docid = $data->docId;
         }
         $clinicalExam->dentaldevice_date = new \DateTime();
-        $clinicalExam->save();
+        $this->dbChangeWrapper->save($clinicalExam);
     }
 
     /**
@@ -101,7 +113,7 @@ class AppointmentSummaryCreator
             return;
         }
         try {
-            $futureAppointment->delete();
+            $this->dbChangeWrapper->delete($futureAppointment);
         } catch (\Exception $e) {
             throw new GeneralException('Could not delete future appointment: ' . $e->getMessage());
         }

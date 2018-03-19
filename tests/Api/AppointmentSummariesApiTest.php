@@ -21,20 +21,7 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     protected function getStoreData()
     {
-        return [
-            'patientid' => 1,
-            'stepid' => 2,
-            'segmentid' => 3,
-            'date_scheduled' => '2013-04-03',
-            'date_completed' => '2013-04-03',
-            'delay_reason' => 'test reason',
-            'study_type' => 'test type',
-            'letterid' => '4',
-            'description' => 'test description',
-            'noncomp_reason' => 'test noncomp reason',
-            'appointment_type' => 1,
-            'device_id' => 5,
-        ];
+        return [];
     }
 
     protected function getUpdateData()

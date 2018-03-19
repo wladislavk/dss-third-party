@@ -27,18 +27,6 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param int $docId
-     * @return User|null
-     */
-    public function getLetterInfo($docId)
-    {
-        return $this->model
-            ->select('use_letters', 'intro_letters', 'tracker_letters')
-            ->where('userid', $docId)
-            ->first();
-    }
-
-    /**
-     * @param int $docId
      * @param int $patientId
      * @param int $locationId
      * @return User|null

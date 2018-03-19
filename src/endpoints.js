@@ -167,7 +167,6 @@ export default {
     check: '/users/check',
     checkLogout: '/users/check-logout',
     current: '/users/current',
-    letterInfo: '/users/letter-info',
     responsible: '/users/responsible',
     show: '/users'
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Helpers\DescriptionModifiers;
+namespace Tests\Unit\Helpers\LedgerDescriptionModifiers;
 
 use DentalSleepSolutions\Helpers\LedgerDescriptionModifiers\InsuranceDescriptionModifier;
 use Tests\TestCases\UnitTestCase;

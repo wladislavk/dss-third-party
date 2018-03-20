@@ -9,6 +9,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryReposito
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Structs\AppointmentSummaryData;
+use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 
 class AppointmentSummaryUpdater
 {
@@ -18,12 +19,17 @@ class AppointmentSummaryUpdater
     /** @var AppointmentSummaryRepository */
     private $appointmentSummaryRepository;
 
+    /** @var DBChangeWrapper */
+    private $dbChangeWrapper;
+
     public function __construct(
         TmjClinicalExamRepository $clinicalExamRepository,
-        AppointmentSummaryRepository $appointmentSummaryRepository
+        AppointmentSummaryRepository $appointmentSummaryRepository,
+        DBChangeWrapper $dbChangeWrapper
     ) {
         $this->clinicalExamRepository = $clinicalExamRepository;
         $this->appointmentSummaryRepository = $appointmentSummaryRepository;
+        $this->dbChangeWrapper = $dbChangeWrapper;
     }
 
     /**
@@ -38,13 +44,13 @@ class AppointmentSummaryUpdater
             throw new GeneralException("Appointment summary with ID {$data->summaryId} not found");
         }
         if ($summary->segmentid == TrackerSteps::DEVICE_DELIVERY_ID && $this->isLastSummaryForPatient($data)) {
-            $this->updateExamDate($data);
+            $this->updateClinicalExam($data);
         }
         if (!$data->completionDate) {
             $data->completionDate = new \DateTime();
         }
         $summary->date_completed = $data->completionDate;
-        $summary->save();
+        $this->dbChangeWrapper->save($summary);
     }
 
     /**
@@ -63,7 +69,7 @@ class AppointmentSummaryUpdater
     /**
      * @param AppointmentSummaryData $data
      */
-    private function updateExamDate(AppointmentSummaryData $data): void
+    private function updateClinicalExam(AppointmentSummaryData $data): void
     {
         /** @var TmjClinicalExam|null $clinicalExam */
         $clinicalExam = $this->clinicalExamRepository->getOneBy('patientid', $data->patientId);
@@ -77,6 +83,6 @@ class AppointmentSummaryUpdater
         if ($data->completionDate) {
             $clinicalExam->dentaldevice_date = $data->completionDate;
         }
-        $clinicalExam->save();
+        $this->dbChangeWrapper->save($clinicalExam);
     }
 }

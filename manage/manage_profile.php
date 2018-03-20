@@ -533,7 +533,7 @@ Aliquam aliquam eleifend vestibulum. Curabitur vitae feugiat dui. Vivamus interd
       <img src="display_file.php?f=<?php echo $practice['logo'];?>" />
     <?php } ?>
 
-    <a href="#" onclick="loadPopup('add_user_logo.php')" class="editlink" title="EDIT">
+    <a href="#" onclick="loadPopup('add_user_logo.php?msg=' + <?= e(json_encode((string)$_GET['msg'])) ?>)" class="editlink" title="EDIT">
       Edit
     </a>
 

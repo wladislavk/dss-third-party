@@ -18,6 +18,7 @@ default:
                 - Contexts\Dashboard
                 - Contexts\Auth
                 - Contexts\DeviceSelector
+                - Contexts\Education
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
         legacy:
@@ -30,7 +31,6 @@ default:
                 - Contexts\Claims
                 - Contexts\ClinicalExam
                 - Contexts\Contacts
-                - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance
                 - Contexts\Ledger

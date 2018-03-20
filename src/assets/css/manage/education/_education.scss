@@ -1,0 +1,36 @@
+@import "../manage";
+
+div.root-div {
+  padding: 0 20px;
+  width: 920px;
+  height: 600px;
+  overflow-y: scroll;
+}
+
+a {
+  font-size: inherit;
+}
+
+h1 a {
+  font-size: 14.0pt;
+  font-family: Cambria, serif;
+}
+
+h2 {
+  text-align: left;
+
+  a {
+    text-transform: none;
+    font-size: 13.0pt;
+    font-family: Cambria, serif;
+  }
+}
+
+h3 {
+  text-align: left;
+
+  a {
+    font-size: 12.0pt;
+    font-family: Cambria, serif;
+  }
+}

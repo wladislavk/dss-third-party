@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy;
+
+include_once __DIR__ . '/includes/dual_app.php';
+dualAppRedirect('main/manual');
+
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 ?>

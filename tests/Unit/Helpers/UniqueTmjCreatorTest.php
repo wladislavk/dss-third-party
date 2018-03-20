@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\Helpers;
 
-class UniqueTmjCreatorTest
+use Tests\TestCases\UnitTestCase;
+
+class UniqueTmjCreatorTest extends UnitTestCase
 {
 
 }

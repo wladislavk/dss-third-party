@@ -108,6 +108,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('document-categories/active', 'DocumentCategoriesController@active');
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);
 
+    Route::get('edx-certificates/by-user', 'EdxCertificatesController@getByUser');
     Route::resource('edx-certificates', 'EdxCertificatesController', ['except' => ['create', 'edit']]);
 
     Route::resource('epworth-home-sleep-tests', 'EpworthHomeSleepTestsController', ['except' => ['create', 'edit']]);

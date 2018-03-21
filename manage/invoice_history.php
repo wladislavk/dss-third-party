@@ -1,6 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-    require_once __DIR__ . '/../vendor/autoload.php';
-    include "includes/top.htm";
+include "includes/top.htm";
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
     $r = $db->getRow($sql);

@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy;
-require_once __DIR__ . '/../vendor/autoload.php';
 include_once 'admin/includes/main_include.php';
 ?>
 

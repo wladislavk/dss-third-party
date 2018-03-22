@@ -2,8 +2,10 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 
 class PatientSummaryUpdater
 {
@@ -16,12 +18,17 @@ class PatientSummaryUpdater
     /** @var PatientSummaryRepository */
     private $patientSummaryRepository;
 
+    /** @var DBChangeWrapper */
+    private $dbChangeWrapper;
+
     public function __construct(
         LedgerRepository $ledgerRepository,
-        PatientSummaryRepository $patientSummaryRepository
+        PatientSummaryRepository $patientSummaryRepository,
+        DBChangeWrapper $dbChangeWrapper
     ) {
         $this->ledgerRepository = $ledgerRepository;
         $this->patientSummaryRepository = $patientSummaryRepository;
+        $this->dbChangeWrapper = $dbChangeWrapper;
     }
 
     /**
@@ -29,24 +36,22 @@ class PatientSummaryUpdater
      * @param int $patientId
      * @return string
      */
-    public function updatePatientSummary($docId, $patientId)
+    public function updatePatientSummary(int $docId, int $patientId): string
     {
-        $patientSummary = $this->patientSummaryRepository->getPatientInfo($patientId);
+        /** @var PatientSummary|null $patientSummary */
+        $patientSummary = $this->patientSummaryRepository->getOneBy('pid', $patientId);
 
         if ($patientSummary) {
             $ledgerBalance = $this->modifyLedgerBalance($docId, $patientId);
-
-            $updateData = ['ledger' => $ledgerBalance];
-            $this->patientSummaryRepository->updatePatientSummary($patientId, $updateData);
-
+            $patientSummary->ledger = $ledgerBalance;
+            $this->dbChangeWrapper->save($patientSummary);
             return self::UPDATED;
         }
 
-        $this->patientSummaryRepository->create([
-            'pid'    => $patientId,
-            'ledger' => 0,
-        ]);
-
+        $newPatientSummary = new PatientSummary();
+        $newPatientSummary->pid = $patientId;
+        $newPatientSummary->ledger = 0;
+        $this->dbChangeWrapper->save($newPatientSummary);
         return self::CREATED;
     }
 
@@ -57,8 +62,7 @@ class PatientSummaryUpdater
      */
     private function modifyLedgerBalance($docId, $patientId)
     {
-        $rowsForCountingLedgerBalance = $this->ledgerRepository
-            ->getRowsForCountingLedgerBalance($docId, $patientId);
+        $rowsForCountingLedgerBalance = $this->ledgerRepository->getRowsForCountingLedgerBalance($docId, $patientId);
 
         $ledgerBalance = 0;
         foreach ($rowsForCountingLedgerBalance as $row) {

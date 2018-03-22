@@ -44,6 +44,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         );
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testCreateWelcomeLetter()
     {
         $docId = 1;
@@ -67,6 +70,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals($expectedLetters, $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithUserTypeSoftware()
     {
         $docId = 1;
@@ -85,6 +91,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals($expectedLetters, $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithoutLetterInfo()
     {
         $this->letterInfo = null;
@@ -98,6 +107,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals([], $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithoutUseLetters()
     {
         $this->letterInfo->use_letters = false;
@@ -111,6 +123,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals([], $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithoutIntroLetters()
     {
         $this->letterInfo->intro_letters = false;
@@ -124,6 +139,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals([], $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithoutContactType()
     {
         $this->contactType = null;
@@ -137,6 +155,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
         $this->assertEquals([], $this->createdLetters);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testWithBadPhysician()
     {
         $this->contactType->physician = 99;
@@ -169,10 +190,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
     {
         /** @var UserRepository|MockInterface $userRepository */
         $userRepository = \Mockery::mock(UserRepository::class);
-        $userRepository->shouldReceive('getLetterInfo')
-            ->andReturnUsing(function () {
-                return $this->letterInfo;
-            });
+        $userRepository->shouldReceive('find')->andReturnUsing(function () {
+            return $this->letterInfo;
+        });
         return $userRepository;
     }
 

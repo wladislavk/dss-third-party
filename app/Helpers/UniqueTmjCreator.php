@@ -19,21 +19,20 @@ class UniqueTmjCreator
     /**
      * @param User $user
      * @param int $patientId
-     * @param string $device
+     * @param int $deviceId
      * @return TmjClinicalExam
      */
-    public function createUniqueTmj(User $user, int $patientId, string $device): TmjClinicalExam
+    public function createUniqueTmj(User $user, int $patientId, int $deviceId): TmjClinicalExam
     {
         /** @var TmjClinicalExam|null $existing */
         $existing = $this->repository->getOneBy('patientid', $patientId);
         if ($existing) {
-            $resource = $existing;
-            $resource->dentaldevice = $device;
-            return $resource;
+            $existing->dentaldevice = $deviceId;
+            return $existing;
         }
         $resource = new TmjClinicalExam();
         $resource->patientid = $patientId;
-        $resource->dentaldevice = $device;
+        $resource->dentaldevice = $deviceId;
         $resource->userid = $user->userid;
         $resource->docid = $user->docid;
         return $resource;

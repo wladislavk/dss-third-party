@@ -2,6 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use Tests\TestCases\ApiTestCase;
 
 class LettersApiTest extends ApiTestCase
@@ -79,7 +80,14 @@ class LettersApiTest extends ApiTestCase
 
     public function testCreateWelcomeLetter()
     {
-        $this->post(self::ROUTE_PREFIX . '/letters/create-welcome-letter');
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $requestData = [
+            'template_id' => '1',
+            'contact_type_id' => '11',
+        ];
+        $this->post(self::ROUTE_PREFIX . '/letters/create-welcome-letter', $requestData);
         $this->assertResponseOk();
         $this->assertEquals([], $this->getResponseData());
     }

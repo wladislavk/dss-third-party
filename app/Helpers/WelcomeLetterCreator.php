@@ -50,7 +50,7 @@ class WelcomeLetterCreator
      * @return array
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function createWelcomeLetter($docId, $templateId, $contactTypeId, $userType)
+    public function createWelcomeLetter(int $docId, int $templateId, int $contactTypeId, int $userType): array
     {
         /** @var User|null $doctor */
         $doctor = $this->userRepository->find($docId);

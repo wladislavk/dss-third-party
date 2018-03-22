@@ -255,8 +255,8 @@ class TmjClinicalExamsController extends BaseRestController
      */
     public function storeForPatient(Request $request, UniqueTmjCreator $uniqueTmjCreator): JsonResponse
     {
-        $patientId = $request->input('patient_id');
-        $device = $request->input('dentaldevice');
+        $patientId = (int)$request->input('patient_id');
+        $device = (int)$request->input('dentaldevice');
         $resource = $uniqueTmjCreator->createUniqueTmj($this->user, $patientId, $device);
         $resource->save();
         return ApiResponse::responseOk('Resource created', $resource);

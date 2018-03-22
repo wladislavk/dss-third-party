@@ -11,30 +11,4 @@ class PatientSummaryRepository extends AbstractRepository
     {
         return PatientSummary::class;
     }
-
-    /**
-     * @param int $patientId
-     * @return PatientSummary|null
-     */
-    public function getPatientInfo(int $patientId): ?PatientSummary
-    {
-        /** @var PatientSummary|null $patientSummary */
-        $patientSummary = $this->model->select('patient_info')
-            ->where('pid', $patientId)
-            ->first();
-        return $patientSummary;
-    }
-
-    /**
-     * @param int $patientId
-     * @param array $data
-     * @return bool|int
-     */
-    public function updatePatientSummary(int $patientId, array $data)
-    {
-        return $this->model
-            ->where('pid', $patientId)
-            ->update($data)
-        ;
-    }
 }

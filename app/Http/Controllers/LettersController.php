@@ -7,6 +7,7 @@ use DentalSleepSolutions\Helpers\WelcomeLetterCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class LettersController extends BaseRestController
 {
@@ -240,12 +241,16 @@ class LettersController extends BaseRestController
         WelcomeLetterCreator $welcomeLetterCreator,
         Request $request
     ) {
-        $templateId = $request->input('template_id', 0);
-        $contactTypeId = $request->input('contact_type_id', 0);
+        $templateId = (int)$request->input('template_id', 0);
+        $contactTypeId = (int)$request->input('contact_type_id', 0);
 
-        $data = $welcomeLetterCreator->createWelcomeLetter(
-            $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
-        );
+        try {
+            $data = $welcomeLetterCreator->createWelcomeLetter(
+                $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
+            );
+        } catch (ValidatorException $e) {
+            return ApiResponse::responseError($e->getMessage());
+        }
 
         return ApiResponse::responseOk('', $data);
     }

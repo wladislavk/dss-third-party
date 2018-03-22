@@ -50,6 +50,8 @@ class LetterDeleter
      * @param int $docId
      * @param int $userId
      * @param string|null $template
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function deleteLetter(Letter $letter, $type, $recipientId, $docId, $userId, $template = null)
     {
@@ -119,6 +121,8 @@ class LetterDeleter
      * @param int $docId
      * @param int $userId
      * @param string|null $template
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     private function deleteLetterWithMultipleContacts(Letter $letter, $type, $recipientId, $docId, $userId, $template)
     {

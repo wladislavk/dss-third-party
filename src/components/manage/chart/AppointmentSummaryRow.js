@@ -84,6 +84,12 @@ export default {
       }
       return ''
     },
+    isDeviceSegment () {
+      if (this.segmentName === 'Impressions' || this.segmentName === 'Device Delivery') {
+        return true
+      }
+      return false
+    },
     letterCount () {
       let result = 0
       for (let letter of this.rowLetters) {

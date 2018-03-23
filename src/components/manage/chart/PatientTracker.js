@@ -5,9 +5,9 @@ import TrackerSectionOneComponent from './TrackerSectionOne.vue'
 import TrackerSectionTwoComponent from './TrackerSectionTwo.vue'
 
 export default {
-  data () {
-    return {
-      patientId: this.$store.state.patients[symbols.state.patientId]
+  computed: {
+    patientId () {
+      return this.$store.state.patients[symbols.state.patientId]
     }
   },
   components: {
@@ -19,5 +19,10 @@ export default {
   created () {
     this.$store.dispatch(symbols.actions.trackerSteps)
     this.$store.dispatch(symbols.actions.finalTrackerRank, this.patientId)
+  },
+  watch: {
+    patientId (newPatientId) {
+      this.$store.dispatch(symbols.actions.finalTrackerRank, newPatientId)
+    }
   }
 }

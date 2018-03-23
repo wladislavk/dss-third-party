@@ -16,7 +16,6 @@
               v-bind:device-id="flowElement.deviceId"
               v-bind:element-type="flowElement.type"
               v-bind:date-completed="flowElement.dateCompleted"
-              v-bind:devices="devices"
               v-bind:letters="letters"
               v-bind:key="flowElement.id"
           ></appointment-summary-row>

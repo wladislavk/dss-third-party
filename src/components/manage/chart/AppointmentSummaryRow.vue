@@ -70,7 +70,7 @@
                     v-show="nonComplianceReason === 'other'"
                 >Show Reason</a>
             </template>
-            <template v-else-if="segmentName === 'Impressions' || segmentName === 'Device Delivery'">
+            <template v-else-if="isDeviceSegment">
                 <select class="dentaldevice form-control" v-bind:id="'dentaldevice_' + elementId" v-model="defaultDeviceId">
                     <option value=""></option>
                     <option v-for="device in devices" v-bind:value="device.id">{{ device.device }}</option>
@@ -103,5 +103,5 @@
 </style>
 
 <style lang="scss">
-  @import "../../../assets/css/manage/chart/chart-calendar.scss";
+    @import "../../../assets/css/manage/chart/chart-calendar.scss";
 </style>

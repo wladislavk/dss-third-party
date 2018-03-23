@@ -67,7 +67,6 @@ Feature: Patient Summary
 #      | Patient: Mr. TEST PATIENT |
 #    And I see add button with text "Create Letter"
 
-  @active
   Scenario: View sleep tests
     Given I am logged in as "doc1f"
     When I go to "start" page

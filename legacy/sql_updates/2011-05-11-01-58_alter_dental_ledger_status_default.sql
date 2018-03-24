@@ -1,0 +1,2 @@
+ALTER TABLE dental_ledger
+  ALTER COLUMN status SET DEFAULT 0;

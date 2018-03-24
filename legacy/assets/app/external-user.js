@@ -1,0 +1,82 @@
+Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
+
+var userId = $('[name=ed]').val();
+var apiPath = apiRoot + 'api/v1/external-user/';
+
+var user = new Vue({
+    el: '#add-user-form',
+    data: {
+        fields: {
+            id: 0,
+            user_id: userId,
+            api_key: '',
+            valid_from: '',
+            valid_to: '',
+            enabled: false
+        }
+    },
+    methods: {
+        saveUser: function (e) {
+            e.preventDefault();
+
+            if (typeof userabc_warn !== 'undefined' && !userabc_warn(this.$el)) {
+                return;
+            }
+
+            var method = this.fields.id ? 'put' : 'post';
+            var id = this.fields.id ? userId : '';
+
+            this.$http[method](apiPath + id, this.fields, function() {
+                this.$el.submit();
+            }).error(function () {
+                this.$el.submit();
+            });
+        },
+        deleteUser: function (e) {
+            e.preventDefault();
+
+            if (!confirm('Do Your Really want to Delete?.')) {
+                return;
+            }
+
+            this.$http.delete(apiPath + userId, function () {
+                this.enabled = false;
+
+                if (e.target && e.target.href) {
+                    window.location = e.target.href;
+                }
+            }).error(function () {
+                if (e.target && e.target.href) {
+                    window.location = e.target.href;
+                }
+            });
+        },
+        generateApiKey: function (fields) {
+            function guid () {
+                function s4 () {
+                    return Math.floor((1 + Math.random()) * 0x10000)
+                        .toString(16)
+                        .substring(1);
+                }
+
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                    s4() + '-' + s4() + s4() + s4();
+            }
+            fields.api_key = guid();
+        },
+        onSuccess: function () {
+            if (this.fields.enabled) {
+                $('#dentrix-api-checkbox :checkbox').closest('span').addClass('checked');
+            }
+        },
+        onReady: function() {
+            this.$http.get(apiPath + userId, function (data) {
+                this.$set('fields', data.data);
+                this.onSuccess();
+            });
+        }
+    },
+    ready: function() {
+        this.onReady();
+    }
+});

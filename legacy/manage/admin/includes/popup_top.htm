@@ -1,0 +1,61 @@
+<?php namespace Ds3\Libraries\Legacy; ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title><?= e(config('app.name')) ?> - Admin Popup</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/uniform/css/uniform.default.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/pages/login-soft.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/components.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/themes/default.css" id="style_color" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/layout.css?v=20160208" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/custom.css" />
+    <link rel="stylesheet" type="text/css" id="applied-stylesheet" href="/manage/admin/css/bootstrap-default-3.1.0.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/css/bootstrap-datepicker.css" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery.cokie.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/uniform/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/select2/select2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/core/metronic.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/custom/layout.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/custom/login-soft.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
+    <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/reskin.js?v=20160719"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            Metronic.init(); // init metronic core components
+
+            $('input, select, textarea').change( function(){
+                parent.modal_change = true;
+            });
+
+            $('.date').datepicker();
+
+            $(':file').filestyle({
+                classButton: 'btn btn-primary',
+                classIcon: 'glyphicon glyphicon-folder-open'
+            });
+
+            $('.sort_table').tablesorter();
+        });
+    </script>
+</head>
+<body>

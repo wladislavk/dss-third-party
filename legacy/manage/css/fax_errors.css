@@ -1,0 +1,15 @@
+.info { }
+.info label {
+	line-height: 20px;
+	width: 150px;
+	display: block;
+	float: left;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.info .value {
+	line-height: 20px;
+	width:500px;
+	display:inline-block;
+}

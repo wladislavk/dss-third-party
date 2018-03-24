@@ -1,0 +1,51 @@
+TD {
+	FONT-FAMILY: Arial, Verdana, Helvetica; FONT-SIZE: 9pt
+}
+BODY {
+	FONT-FAMILY: Arial, Verdana, Helvetica; FONT-SIZE: 9pt
+}
+A {
+	COLOR: #0000ff
+}
+TD.small {
+	FONT-FAMILY: Verdana, Arial, Helvetica; FONT-SIZE: 8pt
+}
+TD.big {
+	FONT-FAMILY: Verdana, Helvetica, Arial; FONT-SIZE: 10pt
+}
+TD.topheader {
+	BACKGROUND-COLOR: #210063; COLOR: #ffffff; FONT-FAMILY: Arial, Helvetica, Verdana; FONT-SIZE: 14pt; FONT-WEIGHT: bold
+}
+TD.topleftheader {
+	BACKGROUND-COLOR: #395d9c; COLOR: #ffffff; FONT-FAMILY: Arial, Helvetica, Verdana; FONT-WEIGHT: bold
+}
+TD.colornormal {
+	COLOR: #002c7b; FONT-FAMILY: Verdana, Helvetica, Arial; FONT-SIZE: 10pt
+}
+B.colorbold {
+	COLOR: #002c7b; FONT-SIZE: 11pt
+}
+B.redfont {
+	COLOR: #ff0000; FONT-WEIGHT: normal
+}
+B.boldbig {
+	FONT-FAMILY: Arial, Helvetica, Verdana; FONT-SIZE: 10pt
+}
+B.redbold {
+	COLOR: #ff0000; FONT-SIZE: 11pt; FONT-WEIGHT: bold
+}
+B.bluebold {
+	COLOR: #000080; FONT-SIZE: 11pt; FONT-WEIGHT: bold
+}
+B.whitebold {
+	COLOR: #ffffff; FONT-SIZE: 12pt; FONT-WEIGHT: bold
+}
+A.fontbold {
+	FONT-FAMILY: Verdana, Helvetica, Arial; FONT-SIZE: 8pt; FONT-WEIGHT: bold
+}
+.nf {
+	COLOR: black; FONT-FAMILY: arial; FONT-SIZE: 11px
+}
+.rf {
+	COLOR: red; FONT-FAMILY: arial; FONT-SIZE: 11px
+}

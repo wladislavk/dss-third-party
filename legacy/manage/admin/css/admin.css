@@ -1,0 +1,135 @@
+body {
+    font-family: 'Open Sans',sans-serif;	
+}
+.notetip {
+    position:absolute;
+    display:none;
+    background: #fff;
+    padding: 10px;
+    z-index:1000;
+    border: 1px solid black;
+    opacity: 1;
+}
+
+.logout {
+    float: right;
+    font-size: 12px;
+    color:#000;
+    margin-top:-25px;
+    margin-right: 5px;
+}
+.page-container{margin-top:42px;}
+/**
+ * Submenus for Bootstrap >= 3.0
+ */
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #cccccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+.dropdown-submenu:hover > a:after {
+    border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+    float:none;
+}
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+body.loading-new-theme > *{
+    visibility: hidden;
+}
+
+body.loading-new-theme:before {
+    content: "Loading bootstrap theme...";
+}
+
+#go-to-sleep.fade.in {
+    background-color: #000;
+}
+
+td.header, th.header {
+    background: transparent url(../images/arrow-both.gif) no-repeat 100% 5px;
+}
+
+.header.headerSortUp {
+    background-image: url(../images/arrow-desc.gif);
+}
+
+.header.headerSortDown {
+    background-image: url(../images/arrow-asc.gif);
+}
+
+.table-responsive > .table {
+    width: auto;
+}
+
+.table-responsive > .fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+    border-right: 1px solid #ddd;
+}
+
+@media(min-width:768px) {
+    .table-responsive > .fixed-column {
+        display: none;
+    }
+}
+
+.page-header{
+  margin-top:0px;
+  }
+
+
+.arrow_asc{
+  background-image: url(../../images/arrow-black-up.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+.arrow_desc{
+  background-image: url(../../images/arrow-black-down.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+
+.page-content{
+  padding-top:10px;
+}
+
+.table tr.low td{
+  background:#ccc !important;
+}
+
+
+.radio input[type=radio], .radio-inline input[type=radio], .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox]{
+  margin-left:0;
+}

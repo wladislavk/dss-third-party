@@ -1,0 +1,26 @@
+.data {
+    margin: 0 0 10px 30px;
+    clear: both;
+    display: block;
+    height: 15px;
+}
+
+.data label {
+    display: block;
+    margin-right: 20px;
+    float: left;
+    width: 200px;
+}
+
+.data .value {
+    display: block;
+    float: left;
+}
+
+.half {
+  float: left;
+}
+
+.half h3 {
+  margin-left:20px;
+}

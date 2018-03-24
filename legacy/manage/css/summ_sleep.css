@@ -1,0 +1,9 @@
+.sleeplabstable tr{ 
+	height: 28px; 
+}
+.odd{ 
+	background: #F9FFDF; 
+}
+.even{ 
+	background: #e4ffcf; 
+}

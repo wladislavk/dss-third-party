@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>Lagu Admin</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="css/style.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="lib/jquery-ui/css/smoothness/jquery-ui-1.8.15.custom.css" type="text/css" />
+    <link rel="stylesheet" href="lib/harvesthq-chosen/chosen.css" type="text/css" />
+    <link rel="stylesheet" href="lib/elfinder/css/elfinder.full.css" type="text/css" />
+    <link rel="stylesheet" href="lib/visualize/visualize.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="lib/datatables/css/table_jui.css" type="text/css" />
+    <link rel="stylesheet" href="lib/gritter/css/jquery.gritter.css" type="text/css" />
+    <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
+    <link rel="stylesheet" href="lib/file-uploader/fileuploader.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans" type="text/css" />
+
+    <script type="text/javascript" src="js/head.load.min.js"></script>
+
+</head>
+<body class="bg_c sidebar fixed stE">
+
+    <div id="slide_wrapper">
+        <div id="slide_panel" class="wrapper">
+            <div id="slide_content">
+                <span id="slide_close"><img src="images/blank.gif" alt="" class="round_x16_b" /></span>
+
+				<div class="row cf">
+					<div class="dp100">
+
+                    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+
+	<div id="top_bar">
+		<div class="wrapper cf">
+			<ul class="fl">
+				<li class="sep">Welcome <a href="#">Admin</a></li>
+				<li class="sep"><a href="#">Logout</a></li>
+				<li><a href="#">Front End Preview</a></li>
+			</ul>
+			<ul class="new_items fr">
+				<li class="sep"><span class="count_el">2</span> <a href="#">new messages</a></li>
+				<li class="sep"><span class="count_el">10</span> <a href="#">new comments</a></li>
+				<li class="sep"><span class="count_el">4</span> <a href="#">tasks</a></li>
+				<li id="slide_open">sliding panel<img src="images/blank.gif" alt="" class="arrow_down_a" /></li>
+			 </ul>
+		</div>
+	</div>
+
+	<div id="header">
+		<div class="wrapper cf">
+			<div class="logo fl">
+				<a href="#"><img src="images/logo.png" alt="" /></a>
+			</div>
+			<ul class="fr cf" id="main_nav">
+				<li class="nav_item active"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/computer_imac.png)" alt="" src="images/blank.gif"/><span>Dashboard</span></a><img class="tick tick_a" alt="" src="images/blank.gif" /></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/file_cabinet.png)" alt="" src="images/blank.gif"/><span>Content</span></a></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/image2_2.png)" alt="" src="images/blank.gif"/><span>Media library</span></a></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/users2.png)" alt="" src="images/blank.gif"/><span>Users</span></a></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/create_write.png)" alt="" src="images/blank.gif"/><span>Tasks</span></a></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/chart8.png)" alt="" src="images/blank.gif"/><span>Reports</span></a></li>
+				<li class="nav_item"><a href="#" class="main_link"><img class="img_holder" style="background-image: url(images/icons/help.png)" alt="" src="images/blank.gif"/><span>Documentation</span></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="main">
+		<div class="wrapper cf">
+			<div id="main_section" class="cf brdrrad_a">
+
+				<div id="content_wrapper">
+					<div id="main_content" class="cf">
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="footer">
+	   <div class="wrapper">
+		  <div class="cf ftr_content">
+			<p class="fl">Copyright &copy; 2012 tzd-themes.com</p>
+			<a href="javascript:void(0)" class="toTop">Back to top</a>
+		  </div>
+	   </div>
+	</div>
+
+	<script type="text/javascript">
+		head.js(
+			"js/jquery-1.6.2.min.js",
+			"lib/jquery-ui/jquery-ui-1.8.15.custom.min.js",
+			"lib/datatables/jquery.dataTables.min.js",
+			"lib/datatables/dataTables.plugins.js",
+			"lib/harvesthq-chosen/chosen.jquery.min.js",
+			"lib/elfinder/js/elfinder.full.js",
+			"lib/visualize/visualize.jQuery.js",
+			"lib/visualize/excanvas.js",
+			"lib/fusion-charts/FusionCharts.js",
+			"lib/gritter/jquery.gritter.min.js",
+			"lib/fancybox/jquery.easing-1.3.pack.js",
+			"lib/fancybox/jquery.fancybox-1.3.4.pack.js",
+			"lib/file-uploader/fileuploader.js",
+			"lib/tiny-mce/jquery.tinymce.js",
+			"js/jquery.microaccordion.js",
+			"js/jquery.tools.min.js",
+			"js/jquery.stickyPanel.js",
+			"js/jquery.text-overflow.min.js",
+			"js/xbreadcrumbs.js",
+			"js/lagu.js"
+		)
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+@import "chart";
+
+select.study_type, select.dentaldevice {
+  width: 150px;
+}
+
+select.delay_reason, select.noncomp_reason {
+  width: 94px;
+}
+
+a.deleteButton {
+  font-size: 11px;
+  font-weight: normal;
+  padding: 2px;
+}

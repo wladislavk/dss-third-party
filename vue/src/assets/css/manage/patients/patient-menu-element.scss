@@ -1,0 +1,28 @@
+@import "patients";
+
+li {
+  float: left;
+  display: block;
+  margin: 0;
+  height: 30px;
+  padding: 0;
+
+  a {
+    color: #000;
+    font-size: 14px;
+    padding: 7px;
+    border-right: solid 1px #000;
+    height: 30px;
+    line-height: 30px;
+    text-decoration: none;
+
+    &:hover, &.nav_active {
+      background: #fff;
+      text-decoration: none;
+    }
+  }
+
+  &.last a {
+    border-right: none;
+  }
+}

@@ -1,0 +1,157 @@
+.clear {
+  clear: both;
+}
+
+.fifth {
+  width: 19%;
+  float: left;
+  display: block;
+}
+
+.third {
+  width: 32%;
+  float: left;
+  display: block;
+}
+
+.half {
+  width: 49%;
+  float: left;
+  display: block;
+
+  &.num {
+    width: 44%;
+  }
+
+  &.string {
+    width: 55%;
+  }
+}
+
+.formEl_a {
+  .fifth .inpt_a {
+    width: 150px;
+  }
+
+  .third .inpt_a {
+    width: 200px;
+  }
+
+  .half {
+    & .inpt_a {
+      width: 300px;
+    }
+
+    &.num {
+      .lbl_in {
+        width: 325px;
+        display: block;
+        float: left;
+        padding-top: 6px;
+      }
+
+      .inpt_in {
+        width: 50px;
+        float: left;
+      }
+    }
+
+    &.string {
+      .lbl_in {
+        width: 315px;
+        display: block;
+        float: left;
+        padding-top: 6px;
+      }
+
+      .inpt_in {
+        width: 180px;
+        float: left;
+      }
+    }
+  }
+
+  .lbl_in {
+    width: 455px;
+    display: block;
+    float: left;
+    padding-left: 7px;
+    padding-top: 6px;
+  }
+
+  .inpt_in {
+    width: 70px;
+    float: left;
+  }
+
+  .lbl_in2 {
+    width: 255px;
+    text-align: right;
+    display: block;
+    float: left;
+    padding-right: 7px;
+    padding-top: 6px;
+  }
+
+  .inpt_in2 {
+    width: 150px;
+    float: left;
+  }
+
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.legend {
+  width: 300px;
+  margin: 10px auto;
+  border: solid 1px #ccc;
+  padding: 10px;
+}
+
+.btn_large {
+  font: 700 24px/50px Helvetica, Arial, sans-serif;
+  background-image: url(../../images/grd_dl.png);
+}
+
+.btn_medium {
+  font: 700 18px/36px Helvetica, Arial, sans-serif;
+  background-image: url(../../images/grd_dl.png);
+}
+
+
+.buttonset {
+  #sect2 &, #sect3 & {
+    float: left;
+  }
+}
+
+.sepH_b {
+  &.ui-buttonset {
+    float: left;
+  }
+
+  .screener #sect3 &, .register #sect2 & {
+    clear: both;
+    margin-top: 10px;
+    height: 30px;
+  }
+}
+
+.screener {
+  #sect3 label {
+    font-size: 16px;
+
+    &.question {
+      display: block;
+      padding-top: 8px;
+    }
+  }
+}
+
+.btn.disabled {
+  display: none;
+  background: #999;
+}

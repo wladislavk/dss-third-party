@@ -1,0 +1,66 @@
+@import "manage";
+
+div.root {
+  background: #b4c6d4 url(../../images/login_bg.gif) repeat-x 0 0;
+  padding-top: 80px;
+  height: calc(100vh - 80px);
+}
+
+div.login_container {
+  background: url(../../images/login_box.png) no-repeat 0 0;
+  width: 625px;
+  height: 162px;
+  margin: 0 auto;
+}
+
+span.root-text {
+  & > a, &.screener {
+    font-size: 10px;
+    color: #00457C;
+    font-family: sans-serif;
+  }
+
+  &.screener {
+    margin-top: 4px;
+    float: right;
+  }
+}
+
+form {
+  padding: 20px 0 0 200px;
+  width: 400px;
+}
+
+table {
+  width: 400px;
+  background-color: #00457C;
+
+  tr {
+    background-color: #ffffff;
+
+    td.t_head {
+      background: #00457c;
+      text-align: center;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 12px;
+    }
+
+    td.t_data {
+      font-family: serif;
+      font-size: initial;
+    }
+  }
+}
+
+input {
+  font: 400 13.3333px Arial;
+}
+
+span.red {
+  color: #FF0000;
+}
+
+span.registration_links {
+  float: right;
+}

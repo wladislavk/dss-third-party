@@ -1,0 +1,194 @@
+import endpoints from '../../../endpoints'
+import http from '../../../services/http'
+import symbols from '../../../symbols'
+
+export default {
+  name: 'sleeplabs',
+  data () {
+    return {
+      routeParameters: {
+        currentPageNumber: 0,
+        sortDirection: 'asc',
+        sortColumn: 'lab',
+        currentLetter: null
+      },
+      letters: 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
+      message: '',
+      sleeplabsTotalNumber: 0,
+      sleeplabsPerPage: 20,
+      sleeplabs: [],
+      tableHeaders: {
+        'lab': {
+          title: 'Lab Name',
+          with_link: true,
+          width: 30
+        },
+        'name': {
+          title: 'Name',
+          with_link: true,
+          width: 40
+        },
+        'patients-number': {
+          title: '# Patients',
+          width: 10
+        },
+        'action': {
+          title: 'Action',
+          width: 20
+        }
+      }
+    }
+  },
+  watch: {
+    '$route.query.page': function () {
+      const queryPage = this.$route.query.page
+      if (queryPage !== undefined && queryPage <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', +queryPage)
+      }
+    },
+    '$route.query.sort': function () {
+      const querySortColumn = this.$route.query.sort
+      let sortColumn = 'lab'
+      if (querySortColumn in this.tableHeaders) {
+        sortColumn = querySortColumn
+      }
+      this.$set(this.routeParameters, 'sortColumn', sortColumn)
+    },
+    '$route.query.sortdir': function () {
+      const querySortDir = this.$route.query.sortdir
+      let sortDir = 'asc'
+      if (querySortDir && querySortDir.toLowerCase() === 'desc') {
+        sortDir = 'desc'
+      }
+      this.$set(this.routeParameters, 'sortDirection', sortDir)
+    },
+    '$route.query.letter': function () {
+      const queryLetter = this.$route.query.letter
+      let letter = null
+      if (this.letters.indexOf(queryLetter) > -1) {
+        letter = queryLetter
+      }
+      this.$set(this.routeParameters, 'currentLetter', letter)
+    },
+    '$route.query.delid': function () {
+      const queryDelId = this.$route.query.delid
+      if (queryDelId > 0) {
+        this.removeSleeplab(queryDelId)
+      }
+    },
+    'routeParameters': {
+      handler: function () {
+        this.getListOfSleeplabs()
+      },
+      deep: true
+    }
+  },
+  computed: {
+    totalPages () {
+      return Math.ceil(this.sleeplabsTotalNumber / this.sleeplabsPerPage)
+    }
+  },
+  created () {
+    window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+  },
+  mounted () {
+    this.getListOfSleeplabs()
+  },
+  beforeDestroy () {
+    window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+  },
+  methods: {
+    onSettingDataFromModal (data) {
+      this.message = data.message
+
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.message = ''
+        }, 3000)
+      })
+    },
+    onClickAdd () {
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.editSleeplab })
+    },
+    onClickEdit (id) {
+      const modalData = {
+        name: symbols.modals.editSleeplab,
+        params: {
+          sleeplabId: id
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
+    },
+    onClickQuickView (id) {
+      const modalData = {
+        name: symbols.modals.viewSleeplab,
+        params: {
+          sleeplabId: id
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
+    },
+    removeSleeplab (id) {
+      this.deleteSleeplab(id).then(() => {
+        this.message = 'Deleted Successfully'
+
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.message = ''
+          }, 3000)
+        })
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'deleteSleeplab', response: response})
+      })
+    },
+    getListOfSleeplabs () {
+      this.getSleeplabs(
+        this.routeParameters.currentPageNumber,
+        this.sleeplabsPerPage,
+        this.routeParameters.sortColumn,
+        this.routeParameters.sortDirection,
+        this.routeParameters.currentLetter
+      ).then((response) => {
+        const data = response.data.data
+
+        data.result = data.result.map((value) => {
+          value['name'] = (value.salutation ? value.salutation + ' ' : '') +
+            (value.firstname ? value.firstname + ' ' : '') +
+            (value.middlename ? value.middlename + ' ' : '') +
+            (value.lastname || '')
+
+          value['show_patients'] = false
+
+          return value
+        })
+
+        this.sleeplabs = data.result
+        this.sleeplabsTotalNumber = data.total
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getSleeplabs', response: response})
+      })
+    },
+    getCurrentDirection (sort) {
+      if (this.routeParameters.sortColumn === sort) {
+        return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
+      }
+      return 'asc'
+    },
+    getSleeplabs (pageNumber, rowsPerPage, sort, sortDir, letter) {
+      const data = {
+        page: pageNumber,
+        rows_per_page: rowsPerPage,
+        sort: sort,
+        sort_dir: sortDir,
+        letter: letter
+      }
+
+      return http.post(endpoints.sleeplabs.list, data)
+    },
+    deleteSleeplab (id) {
+      id = id || 0
+
+      return http.delete(endpoints.sleeplabs.destroy + '/' + id)
+    }
+  }
+}

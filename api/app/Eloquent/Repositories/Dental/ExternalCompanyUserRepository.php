@@ -1,0 +1,14 @@
+<?php
+
+namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
+
+use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompanyUser;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+
+class ExternalCompanyUserRepository extends AbstractRepository
+{
+    public function model()
+    {
+        return ExternalCompanyUser::class;
+    }
+}

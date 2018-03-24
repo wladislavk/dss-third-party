@@ -1,0 +1,40 @@
+.response_type_0, .response_type_1{
+  width:60%;
+  clear:both;
+  margin: 10px 0;
+  padding: 5px;
+  }
+
+.response_type_0{
+  float:right;
+  border:solid 2px #aaf;
+  background: #ccf; 
+  }
+
+.response_type_1{
+  float:left;
+  border:solid 2px #afa;
+  background: #cfc;
+  }
+
+.unviewed{
+  background:#ccf;
+  }
+
+#respond{  
+  clear:both;
+  margin-top:20px;
+  }
+
+.info{
+  font-size:11px;
+  float:right;
+  margin-top:20px;
+  }
+
+.attachment{
+  display:inline-block;
+  width:16px;
+  height:16px;
+  background: url(../../images/paperclip.png) no-repeat 0 0;
+  }

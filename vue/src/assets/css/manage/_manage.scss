@@ -1,0 +1,68 @@
+div, td, a, input, ul {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+div.clear {
+  clear: both;
+}
+
+a {
+  color: #095D81;
+  text-decoration: none;
+
+  &:hover {
+    color: #095D81;
+    text-decoration: none;
+  }
+
+  &:visited {
+    color: #095D81;
+    text-decoration: none;
+  }
+}
+
+h3 {
+  font-family: Times, serif;
+  color: #095D81;
+  font-size: 32px;
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+}
+
+.addButton {
+  border: 0;
+  border-top: 1px solid #464747;
+  background: #5c8cb7;
+  padding: 2px 4px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+  -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+  box-shadow: rgba(0,0,0,1) 0 1px 0;
+  text-shadow: rgba(0,0,0,.4) 0 1px 0;
+  color: #ffffff !important;
+  vertical-align: middle;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    border-top-color: #174d7c;
+    background: #174d7c;
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  &:active {
+    border-top-color: #1f303b;
+    background: #1f303b;
+  }
+}

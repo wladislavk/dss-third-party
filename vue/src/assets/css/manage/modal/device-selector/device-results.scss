@@ -1,0 +1,38 @@
+@import "device-selector";
+
+div.sort-devices-button {
+  float: left;
+  width: 13%;
+  margin-left: 2%;
+
+  > a {
+    border: 1px solid #000;
+    padding: 5px;
+  }
+}
+
+div.device-results-div {
+  float: left;
+  width: 50%;
+
+  ul {
+    border: solid 2px #a7cefa;
+    padding-left: 40px;
+    list-style-type: disc;
+  }
+}
+
+li.box_go {
+  position: relative;
+
+  div.ico {
+    position: absolute;
+    left: 80px;
+    display: none;
+    z-index: 100;
+  }
+
+  &:hover div.ico {
+    display: block;
+  }
+}

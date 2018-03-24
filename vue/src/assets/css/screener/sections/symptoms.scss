@@ -1,0 +1,20 @@
+@import "sections";
+
+div.msg_box {
+  font-size: 16px;
+
+  div.error {
+    padding: 2px 0;
+  }
+}
+
+div.sepH_b {
+  margin-top: 10px;
+  height: 30px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  padding-top: 8px;
+}

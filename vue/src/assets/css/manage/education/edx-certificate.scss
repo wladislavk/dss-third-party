@@ -1,0 +1,36 @@
+@import "education";
+
+.admin_head {
+  color: rgb(0, 69, 124);
+  display: block;
+  float: left;
+  height: 21px;
+  text-decoration: none solid rgb(0, 69, 124);
+  width: 129.062px;
+  column-rule-color: rgb(0, 69, 124);
+  perspective-origin: 69.5312px 10.5px;
+  transform-origin: 69.5312px 10.5px;
+  border: 0 none rgb(0, 69, 124);
+  font: normal normal normal normal 18px / normal Arial, Helvetica, sans-serif;
+  outline: rgb(0, 69, 124) none 0;
+  padding: 0 0 0 10px;
+}
+
+ul.fullwidth {
+  width: 98%;
+  margin: 0 1%;
+  padding-left: 40px;
+
+  li {
+    a {
+      color: rgb(9, 93, 129);
+      text-align: left;
+      text-decoration: none solid rgb(9, 93, 129);
+    }
+
+    a:hover {
+      color: #095D81;
+      text-decoration: underline;
+    }
+  }
+}

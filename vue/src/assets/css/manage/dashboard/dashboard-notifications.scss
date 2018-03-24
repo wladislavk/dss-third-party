@@ -1,0 +1,12 @@
+@import "dashboard";
+
+.warning {
+  a.close_but {
+    float: right;
+    color: #fff;
+
+    &:hover {
+      color: #c11;
+    }
+  }
+}

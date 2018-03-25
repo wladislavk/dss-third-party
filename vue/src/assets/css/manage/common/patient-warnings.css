@@ -1,0 +1,17 @@
+div.warning-div > a, div.warning-div > span {
+  padding: 10px;
+  display: block;
+  width: 500px;
+  margin: 0 auto;
+  background: #f46;
+  border: solid 3px #c11;
+  color: #000;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+div.warning-div > a:hover {
+  color: #000;
+  text-decoration: none;
+  background: #e35;
+}

@@ -1,56 +1,22 @@
 import symbols from '../../symbols'
 
 export default {
-  [symbols.mutations.getAppointmentSummary] (state, element) {
-    let newSummary = {
-      id: parseInt(element.id),
-      segmentId: parseInt(element.segmentid),
-      deviceId: parseInt(element.device_id),
-      description: element.description,
-      type: '',
-      studyType: '',
-      delayReason: '',
-      nonComplianceReason: '',
-      dateCompleted: new Date(element.date_completed)
-    }
-    if (element.study_type) {
-      newSummary.type = 'study_type'
-      newSummary.studyType = element.study_type
-    }
-    if (element.delay_reason) {
-      newSummary.type = 'delay_reason'
-      newSummary.delayReason = element.delay_reason
-    }
-    if (element.noncomp_reason) {
-      newSummary.type = 'noncomp_reason'
-      newSummary.nonComplianceReason = element.noncomp_reason
-    }
-    state[symbols.state.appointmentSummaries].push(newSummary)
-  },
-
-  [symbols.mutations.addAppointmentSummary] (state, data) {
-    // @todo: transform data into new summary
-    const newSummary = data
-    state[symbols.state.appointmentSummaries].push(newSummary)
-  },
-
-  [symbols.mutations.updateAppointmentSummary] (state, {id, data}) {
-    for (let summary of state[symbols.state.appointmentSummaries]) {
-      if (summary.id === id) {
-        // @todo: transform data into new summary
-        summary = data
+  [symbols.mutations.appointmentSummaries] (state, data) {
+    const appointmentSummaries = []
+    for (let element of data) {
+      let newSummary = {
+        id: parseInt(element.id),
+        segmentId: parseInt(element.segmentid),
+        deviceId: parseInt(element.device_id),
+        description: element.description,
+        studyType: element.study_type,
+        delayReason: element.delay_reason,
+        nonComplianceReason: element.noncomp_reason,
+        dateCompleted: new Date(element.date_completed)
       }
+      appointmentSummaries.push(newSummary)
     }
-  },
-
-  [symbols.mutations.removeAppointmentSummary] (state, id) {
-    const newArray = []
-    for (let summary of state[symbols.state.appointmentSummaries]) {
-      if (summary.id !== id) {
-        newArray.push(summary)
-      }
-    }
-    state[symbols.state.appointmentSummaries] = newArray
+    state[symbols.state.appointmentSummaries] = appointmentSummaries
   },
 
   [symbols.mutations.devices] (state, data) {
@@ -78,54 +44,5 @@ export default {
       letters.push(newLetter)
     }
     state[symbols.state.letters] = letters
-  },
-
-  [symbols.mutations.finalTrackerRank] (state, rank) {
-    state[symbols.state.finalTrackerRank] = rank
-  },
-
-  [symbols.mutations.finalTrackerSegment] (state, data) {
-    state[symbols.state.finalTrackerSegment] = data
-  },
-
-  [symbols.mutations.lastTrackerSegment] (state, data) {
-    state[symbols.state.lastTrackerSegment] = data
-  },
-
-  [symbols.mutations.trackerSteps] (state, {data, section}) {
-    const steps = []
-    for (let element of data) {
-      let newStep = {
-        id: parseInt(element.id),
-        name: element.name,
-        rank: parseInt(element.rank)
-      }
-      steps.push(newStep)
-    }
-    if (section === 1) {
-      state[symbols.state.trackerStepsFirst] = steps
-      return
-    }
-    if (section === 2) {
-      state[symbols.state.trackerStepsSecond] = steps
-    }
-  },
-
-  [symbols.mutations.trackerStepsNext] (state, data) {
-    state[symbols.state.trackerStepsNext] = data
-  },
-
-  [symbols.mutations.patientTrackerNotes] (state, data) {
-    state[symbols.state.patientTrackerNotes] = data
-  },
-
-  [symbols.mutations.futureAppointment] (state, data) {
-    const transformed = {
-      id: parseInt(data.id),
-      segmentId: parseInt(data.segmentid),
-      dateScheduled: new Date(data.date_scheduled),
-      dateUntil: new Date(data.date_until)
-    }
-    state[symbols.state.futureAppointment] = transformed
   }
 }

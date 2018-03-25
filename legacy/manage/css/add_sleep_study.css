@@ -1,0 +1,19 @@
+.sleeplabstable tr{
+	height:28px; 
+}
+.yellow .odd, .yellow .even{
+	background:#edeb46;
+}
+
+.odd{ 
+	background: #F9FFDF; 
+}
+.even{ 
+	background: #e4ffcf; 
+}
+.new_table .odd, .new_table .even {
+	background: #add8e6; 
+}
+select{
+  	width:140px;
+}

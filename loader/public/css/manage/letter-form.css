@@ -1,0 +1,12 @@
+form.letter li {
+	display: list-item;
+}
+
+form.letter ul {
+	padding-left: 50px;
+	list-style-type: disc;
+}
+
+form.letter ul ul {
+	list-style-type: circle;
+}

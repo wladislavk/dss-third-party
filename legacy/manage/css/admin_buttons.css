@@ -1,0 +1,35 @@
+.button, .addButton {
+border: 0px;
+border-top: 1px solid #464747;
+background: #5c8cb7;
+padding: 2px 4px;
+-webkit-border-radius: 6px;
+-moz-border-radius: 6px;
+border-radius: 6px;
+-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+box-shadow: rgba(0,0,0,1) 0 1px 0;
+text-shadow: rgba(0,0,0,.4) 0 1px 0;
+color: #ffffff;
+font-size: 12px;
+font-family: Helvetica, Arial, Sans-Serif;
+text-decoration: none;
+vertical-align: middle;
+font-weight:bold;
+cursor:pointer;
+}
+.button:hover, .addButton:hover {
+border-top-color: #174d7c;
+background: #174d7c;
+color: #ffffff;
+text-decoration:none;
+}
+.button:active, .addButton:active {
+border-top-color: #1f303b;
+background: #1f303b;
+}
+
+.button.grayButton, .addButton.grayButton{
+  background:#666;
+}
+

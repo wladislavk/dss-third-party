@@ -1,0 +1,21 @@
+.redbg {
+	background:red;
+	color: white;
+}
+
+tr.redbg > td {
+	color: white;
+}
+
+.yellowbg {
+	background: yellow;
+}
+
+.greenbg {
+	background:green;
+	color: white;
+}
+
+tr.greenbg > td {
+	color: white;
+}

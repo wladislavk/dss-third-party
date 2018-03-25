@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>Lagu Admin Login Page</title>
+
+	<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+	<script type="text/javascript" src="js/head.load.min.js"></script>
+
+</head>
+<body class="bg_c">
+
+	<div class="login_wrapper">
+		<div class="loginBox">
+			<div class="heading cf">
+				<ul class="login_tabs fr cf">
+					<li><a href="#login">Login</a></li>
+					<li><a href="#register">Register</a></li>
+					<li style="display:none"><a href="#password">Forgoten password</a></li>
+				</ul>
+				<img src="images/logoS.png" alt="" class="fl"/>
+			</div>
+			<div class="content">
+				<div class="login_panes formEl_a">
+					<div>
+						<p class="sepH_b">If you want to see jQ validation do not enter any data, just press "Login" button. To log in type anything and press "Login".</p>
+						<form action="dashboard.html" method="post" class="formEl sepH_c" id="form_login">
+							<div class="msg_box msg_error" id="allErrors" style="display:none"></div>
+							<div class="sepH_a">
+								<label for="lusername" class="lbl_a">Username:</label>
+								<input type="text" id="lusername" name="lusername" class="inpt_a" />
+							</div>
+							<div class="sepH_b">
+								<label for="lpassword" class="lbl_a">Password:</label>
+								<input type="password" id="lpassword" name="lpassword" class="inpt_a" />
+							</div>
+							<div class="sepH_b">
+								<input type="checkbox" class="inpt_c" id="remember" />
+								<label for="remember" class="lbl_c">Remember me</label>
+							</div>
+							<button class="btn_a btn" type="submit">Login</button>
+						</form>
+						<div class="content_btm">
+							<a href="#password" class="small">Forgot your username or password?</a>
+						</div>
+					</div>
+					<div>
+						<div class="msg_box msg_error">You must enter E-mail adress.</div>
+						<p class="sepH_b">You just need to enter a username and your e-mail adress. Password will be e-mailed to You.</p>
+						<form action="" method="post" class="formEl sepH_c">
+							<div class="sepH_a">
+								<label for="rusername" class="lbl_a">Username:</label>
+								<input type="text" id="rusername" class="inpt_a" />
+							</div>
+							<div class="sepH_b error">
+								<label for="remail" class="lbl_a">E-mail:</label>
+								<input type="text" id="remail" class="inpt_a" />
+							</div>
+							<button class="btn_a btn">Register</button>
+						</form>
+					</div>
+					<div>
+						<p class="sepH_b">Please enter your username or email address. You will receive a link to create a new password via email.</p>
+						<form action="" method="post" class="formEl sepH_c">
+							<div class="sepH_b">
+								<label for="user_email" class="lbl_a">Username or E-mail:</label>
+								<input type="text" id="user_email" name="user_email" class="inpt_a" />
+							</div>
+							<button class="btn_a btn">Get new password</button>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		head.js(
+			"js/jquery-1.6.2.min.js",
+			"js/jquery.tools.min.js",
+			"lib/jquery-validation/jquery.validate.js",
+			"js/login.js",
+			function(){
+				lga_loginTabs.init();
+				lga_formFocus.init();
+				lga_validation.init();
+			}
+		)
+	</script>
+
+</body>
+</html>

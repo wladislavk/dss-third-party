@@ -1,0 +1,121 @@
+{
+  "Outputs": {
+    "CDNDomain": {
+      "Value": {
+        "Fn::GetAtt": [
+          "MediaDistribution",
+          "DomainName"
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "BucketName": {
+      "Default": "dev.media.ds3",
+      "Description": "A bucket to store media files",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "MediaBucket": {
+      "Properties": {
+        "AccessControl": "PublicRead",
+        "BucketName": {
+          "Ref": "BucketName"
+        }
+      },
+      "Type": "AWS::S3::Bucket"
+    },
+    "MediaBucketPolicy": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "MediaBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject"
+              ],
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "MediaBucket"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "Type": "AWS::S3::BucketPolicy"
+    },
+    "MediaBucketWriter": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "MediaBucket"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Type": "AWS::IAM::ManagedPolicy"
+    },
+    "MediaDistribution": {
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "Compress": "true",
+            "ForwardedValues": {
+              "QueryString": "false"
+            },
+            "TargetOriginId": {
+              "Ref": "MediaBucket"
+            },
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "Enabled": "true",
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "MediaBucket",
+                  "DomainName"
+                ]
+              },
+              "Id": {
+                "Ref": "MediaBucket"
+              },
+              "S3OriginConfig": {}
+            }
+          ]
+        }
+      },
+      "Type": "AWS::CloudFront::Distribution"
+    }
+  }
+}

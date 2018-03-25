@@ -99,6 +99,7 @@ export default {
     addStoredContact: 'ADD_STORED_CONTACT',
     addStoredCpap: 'ADD_STORED_CPAP',
     addStoredSymptom: 'ADD_STORED_SYMPTOM',
+    appointmentSummaries: 'APPOINTMENT_SUMMARIES',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     coMorbidity: 'CO_MORBIDITY',

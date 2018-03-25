@@ -1,0 +1,11 @@
+.cb_half {
+	width:200px; float: left;
+}
+
+.ta_half {
+	width:200px; float:left;
+}
+
+.ta_half textarea {
+	width: 400px;
+}

@@ -92,13 +92,18 @@ export default {
       if (listElement.patientType === 'no') {
         return
       }
+      const token = this.$store.state.main[symbols.state.mainToken]
       if (listElement.link) {
+<<<<<<< HEAD:vue/src/components/manage/common/PatientSearch.js
         this.inputValue = ''
         this.$store.commit(symbols.mutations.patientId, listElement.id)
         const query = {
           pid: listElement.id
         }
         this.$router.push({ name: 'patient-tracker', query: query })
+=======
+        LocationWrapper.goToLegacyPage(listElement.link, token)
+>>>>>>> DSS-655-epic-migrate-legacy:vue/src/components/manage/common/PatientSearch.js
         return
       }
       this.inputValue = listElement.name

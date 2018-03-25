@@ -1,14 +1,7 @@
 <template>
     <li v-bind:class="{ 'last': lastElement }">
-        <a v-bind:class="{ 'nav_active': isActive }" v-bind:href="parsedLink" v-if="elementLegacy">{{ elementName }}</a>
-        <router-link
-            v-bind:class="{ 'nav_active': isActive }"
-            v-bind:to="{ name: elementLink }"
-            v-else
-        >{{ elementName }}</router-link>
+        <a v-bind:class="{ 'nav_active': isActive }" v-bind:href="parsedLink">{{ elementName }}</a>
     </li>
 </template>
 
 <script src="./PatientMenuElement.js"></script>
-
-<style src="../../../assets/css/manage/patients/patient-menu-element.css" scoped></style>

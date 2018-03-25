@@ -1,0 +1,6 @@
+composer.lock
+/vendor
+.env
+.phpintel
+.idea
+.DS_Store

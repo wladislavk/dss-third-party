@@ -132,7 +132,6 @@ export default {
   */
 
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
-    const legacyUrl = ProcessWrapper.getLegacyRoot()
     http.token = state[symbols.state.mainToken]
     const queryData = {
       partial_name: searchTerm
@@ -153,7 +152,7 @@ export default {
           id: 0,
           name: 'Add patient with this name\u2026',
           patientType: 'new',
-          link: legacyUrl + 'add_patient.php?search=' + searchTerm
+          link: 'add_patient.php?search=' + searchTerm
         }
         const newList = [
           noMatchesElement,
@@ -170,14 +169,18 @@ export default {
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
         let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
+<<<<<<< HEAD:vue/src/store/main/actions.js
         if (element.patientInfo === 1) {
+=======
+        if (parseInt(element.patient_info) === 1) {
+>>>>>>> DSS-655-epic-migrate-legacy:vue/src/store/main/actions.js
           link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
         }
         const patientElement = {
           id: element.patientid,
           name: fullName,
           patientType: 'json',
-          link: legacyUrl + link
+          link: link
         }
         newList.push(patientElement)
         // @todo: add transition

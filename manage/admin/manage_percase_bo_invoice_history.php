@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?
-require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.companyid='".mysqli_real_escape_string($con, $_GET['companyid'])."' AND pi.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";

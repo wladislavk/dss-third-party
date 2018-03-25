@@ -2,7 +2,6 @@
     "name": "root/ds3-private01",
     "type": "project",
     "require": {
-        "tymon/jwt-auth": "^0.5.4",
-        "stripe/stripe-php": "^6.4"
+        "tymon/jwt-auth": "^0.5.4"
     }
 }

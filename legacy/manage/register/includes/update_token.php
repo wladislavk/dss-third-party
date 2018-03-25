@@ -1,6 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-  require_once __DIR__ . '/../../../vendor/autoload.php';
-  include_once '../../admin/includes/main_include.php';
+include_once '../../admin/includes/main_include.php';
   include_once '../../includes/constants.inc';
 
   $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');

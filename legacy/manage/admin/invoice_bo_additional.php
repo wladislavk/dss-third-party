@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?
-require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
 include '../includes/calendarinc.php';
 include 'includes/invoice_functions.php';

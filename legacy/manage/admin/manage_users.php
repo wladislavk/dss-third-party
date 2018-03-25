@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 

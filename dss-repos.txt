@@ -1,0 +1,6 @@
+https://github.com/dentalsleepsolutions/ds3-private01.git legacy
+https://github.com/dentalsleepsolutions/ds3-private02.git loader
+https://github.com/dentalsleepsolutions/ds3-private03.git api
+https://github.com/dentalsleepsolutions/ds3-private04-Docker.git docker
+https://github.com/dentalsleepsolutions/ds3-private06-Vue.git vue
+https://github.com/dentalsleepsolutions/ds3-private08-acceptance.git acceptance

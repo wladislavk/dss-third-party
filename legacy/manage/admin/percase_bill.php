@@ -1,6 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-
-require_once __DIR__ . '/../../vendor/autoload.php';
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');

@@ -1,6 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-  require_once __DIR__ . '/../../vendor/autoload.php';
-  include_once 'includes/main_include.php';
+include_once 'includes/main_include.php';
   include_once '../includes/constants.inc';
  $no_card = array();
   $sql = "SELECT du.*, c.name AS company_name, c.free_fax,

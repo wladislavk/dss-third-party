@@ -132,7 +132,6 @@ export default {
   */
 
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
-    const legacyUrl = ProcessWrapper.getLegacyRoot()
     http.token = state[symbols.state.mainToken]
     const queryData = {
       partial_name: searchTerm
@@ -151,7 +150,7 @@ export default {
         const newElement = {
           name: 'Add patient with this name\u2026',
           patientType: 'new',
-          link: legacyUrl + 'add_patient.php?search=' + searchTerm
+          link: 'add_patient.php?search=' + searchTerm
         }
         const newList = [
           noMatchesElement,
@@ -167,14 +166,14 @@ export default {
       const newList = []
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
-        let link = 'manage/add_patient.php?pid=' + element.patientId + '&ed=' + element.patientId
-        if (element.patientInfo === 1) {
-          link = 'manage/manage_flowsheet3.php?pid=' + element.patientId
+        let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
+        if (parseInt(element.patient_info) === 1) {
+          link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
         }
         const patientElement = {
           name: fullName,
           patientType: 'json',
-          link: legacyUrl + link
+          link: link
         }
         newList.push(patientElement)
         // @todo: add transition

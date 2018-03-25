@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?
-require_once __DIR__ . '/../../vendor/autoload.php';
 include "includes/top.htm";
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.docid=".mysqli_real_escape_string($con, $_GET['docid'])." 

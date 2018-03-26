@@ -1,0 +1,51 @@
+a {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.notification {
+  width: 217px;
+  height: 53px;
+  text-align: center;
+  line-height: 53px;
+  display: block;
+  margin: 5px 0 0 20px;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.notification:hover {
+  text-decoration: none;
+  color: #095D81;
+}
+
+.notification span.count {
+  padding-right: 5px;
+}
+.good_count {
+  background: url(../../../images/count_blue.png) no-repeat 0 0;
+}
+
+.bad_count {
+  background: url(../../../images/count_red.png) no-repeat 0 0;
+}
+
+.great_count {
+  background: url(../../../images/count_green.png) no-repeat 0 0;
+}
+
+.arrow_right {
+  width: 0;
+  height: 0;
+  float: right;
+  margin-top: 15px;
+  margin-right: 10px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #666;
+}
+
+a, a:hover {
+  color: #095D81;
+}

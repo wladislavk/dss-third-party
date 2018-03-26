@@ -1,0 +1,30 @@
+    post:
+      tags: [enrollment]
+      description: Request from Eligible with informations about enrollment
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - event
+              - details
+            properties:
+              event:
+                type: string
+                default: enrollment_status
+                description: value = "enrollment_status"
+              details:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  status:
+                    type: string
+                    enum:
+                    - submitted
+                    - accepted
+                    - rejected
+      responses:
+        200:
+          description: Successful response

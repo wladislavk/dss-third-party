@@ -1,8 +1,5 @@
 <?php
 namespace Ds3\Libraries\Legacy;
-
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
 require_once __DIR__ . '/../../admin/includes/main_include.php';
 require_once __DIR__ . '/../../includes/constants.inc';
 require_once __DIR__ . '/../../includes/general_functions.php';

@@ -88,4 +88,4 @@
 
 <script src="./PatientTracker.js"></script>
 
-<style src="../../../assets/css/manage/patient-tracker.css" scoped></style>
+<!--<style src="../../../assets/css/manage/patient-tracker.scss" scoped></style>-->

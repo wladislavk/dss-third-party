@@ -169,11 +169,7 @@ export default {
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
         let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
-<<<<<<< HEAD:vue/src/store/main/actions.js
-        if (element.patientInfo === 1) {
-=======
         if (parseInt(element.patient_info) === 1) {
->>>>>>> DSS-655-epic-migrate-legacy:vue/src/store/main/actions.js
           link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
         }
         const patientElement = {

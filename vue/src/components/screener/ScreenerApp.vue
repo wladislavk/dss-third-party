@@ -42,9 +42,6 @@
 
 <script src="./ScreenerApp.js"></script>
 
-<style src="../../assets/css/screener/lagu.css"></style>
-<style src="../../assets/css/screener/screener.css"></style>
-<!--[if IE]>
-<style src="../../assets/css/screener/style_ie.css"></style>
-<![endif]-->
-<style src="../../../static/third-party/jquery.fancybox.css"></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/screener/app.scss";
+</style>

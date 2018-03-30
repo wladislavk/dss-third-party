@@ -25,7 +25,8 @@ export default {
     screenerNavigation: ScreenerNavigationComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.getCompanyData)
+    const isScreener = true
+    this.$store.dispatch(symbols.actions.getCompanyData, isScreener)
   },
   methods: {
     updateCompany (event) {

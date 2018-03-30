@@ -154,4 +154,62 @@ class PatientSummary extends BaseContext
             Assert::assertEquals($label, $this->sanitizeText($div->getText()));
         }
     }
+
+    /**
+     * @Then I see the following sleep tests:
+     *
+     * @param \Behat\Gherkin\Node\TableNode $table
+     */
+    public function testSeeSleepTests(TableNode $table)
+    {
+        $expectedStudies = $table->getHash();
+        /** @var NodeElement[] $actualStudies */
+        $actualStudies = $this->findAllCss('#sleepstudies table.sleeplabstable:not(.new_table)');
+        Assert::assertEquals(sizeof($expectedStudies), sizeof($actualStudies));
+
+        foreach ($expectedStudies as $row => $expectedStudy) {
+            $studyTable = $actualStudies[$row];
+            /** @var NodeElement[] $actualStudy */
+            $actualStudy = $studyTable->findAll('css', 'td');
+            Assert::assertEquals(sizeof($expectedStudy), sizeof($actualStudy) - 1);
+
+            $comparisonStudy = [];
+            $column = -1;
+            foreach ($expectedStudy as $fieldName => $expectedColumn) {
+                $column++;
+                $actualColumn = $actualStudy[$column];
+                $element = $actualColumn->find('css', 'input[type=file], input[type=button], input[type=text], select');
+                $value = '';
+
+                if (!$element) {
+                    $value = trim($actualColumn->getText());
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                if ($element->getTagName() === 'select') {
+                    $element = $element->find('css', 'option[selected]');
+                    if ($element) {
+                        $value = trim($element->getText());
+                    }
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                $nodeType = $element->getAttribute('type');
+                if ($nodeType === 'file' || $nodeType === 'button') {
+                    if ($element->getValue() === 'Edit') {
+                        $value = 'x';
+                    }
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                $value = trim($element->getValue());
+                $comparisonStudy[$fieldName] = $value;
+            }
+
+            Assert::assertEquals($expectedStudy, $comparisonStudy);
+        }
+    }
 }

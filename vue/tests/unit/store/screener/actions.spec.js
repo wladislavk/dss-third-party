@@ -61,56 +61,6 @@ describe('Screener module actions', () => {
     })
   })
 
-  describe('getCompanyData action', () => {
-    it('should set company data', function (done) {
-      const postData = []
-      const payload = [
-        {
-          id: 1,
-          name: 'first'
-        },
-        {
-          id: 2,
-          name: 'second'
-        }
-      ]
-      const result = {
-        data: {
-          data: payload
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
-      this.testCase.setState({
-        [symbols.state.screenerToken]: 'token'
-      })
-
-      ScreenerModule.actions[symbols.actions.getCompanyData](this.testCase.mocks)
-
-      const expectedMutations = [
-        {
-          type: symbols.mutations.companyData,
-          payload: payload
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.companies.homeSleepTest
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        done()
-      }, 100)
-    })
-  })
-
   describe('submitScreener action', () => {
     it('should submit screener data', function (done) {
       this.testCase.setState({

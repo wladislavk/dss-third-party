@@ -496,11 +496,9 @@ describe('Dashboard module actions', () => {
       this.sandbox.stub(Alerter, 'alert').callsFake((message) => {
         alertText = message
       })
-      this.testCase.setRootState({
-        patients: {
-          [symbols.state.patientId]: PATIENT_ID
-        }
-      })
+      this.testCase.rootState.patients = {
+        [symbols.state.patientId]: PATIENT_ID
+      }
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
       setTimeout(() => {
@@ -521,11 +519,9 @@ describe('Dashboard module actions', () => {
       this.sandbox.stub(http, 'put').callsFake(() => {
         return Promise.reject(new Error())
       })
-      this.testCase.setRootState({
-        patients: {
-          [symbols.state.patientId]: PATIENT_ID
-        }
-      })
+      this.testCase.rootState.patients = {
+        [symbols.state.patientId]: PATIENT_ID
+      }
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
       const expectedActions = [
         {

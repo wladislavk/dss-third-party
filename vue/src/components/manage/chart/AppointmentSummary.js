@@ -37,14 +37,8 @@ export default {
           if (letter.toPatient) {
             toPatient = 1
           }
-          let mdNumber = 0
-          if (letter.mdList.length) {
-            mdNumber = letter.mdList.split(',').length
-          }
-          let mdReferralNumber = 0
-          if (letter.mdReferralList.length) {
-            mdReferralNumber = letter.mdReferralList.split(',').length
-          }
+          const mdNumber = letter.mdList.length
+          const mdReferralNumber = letter.mdReferralList.length
           result += toPatient + mdNumber + mdReferralNumber
         }
       }

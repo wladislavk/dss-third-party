@@ -19,12 +19,16 @@ class AppointmentSummariesController extends BaseRestController
 {
     /** @var AppointmentSummaryRepository */
     protected $repository;
+
     /** @var LetterRepository */
     private $letterRepository;
+
     /** @var AppointmentSummaryCreator */
     private $appointmentSummaryCreator;
+
     /** @var AppointmentSummaryUpdater */
     private $appointmentSummaryUpdater;
+
     public function __construct(
         Config $config,
         BaseRepository $repository,
@@ -38,6 +42,7 @@ class AppointmentSummariesController extends BaseRestController
         $this->appointmentSummaryCreator = $appointmentSummaryCreator;
         $this->appointmentSummaryUpdater = $appointmentSummaryUpdater;
     }
+
     /**
      * @SWG\Get(
      *     path="/appt-summaries",
@@ -66,6 +71,7 @@ class AppointmentSummariesController extends BaseRestController
     {
         return parent::index();
     }
+
     /**
      * @SWG\Get(
      *     path="/appt-summaries/{id}",
@@ -93,6 +99,7 @@ class AppointmentSummariesController extends BaseRestController
     {
         return parent::show($id);
     }
+
     /**
      * @SWG\Post(
      *     path="/appt-summaries",
@@ -116,6 +123,7 @@ class AppointmentSummariesController extends BaseRestController
      *
      * @return JsonResponse
      */
+
     public function store(): JsonResponse
     {
         $stepId = (int)$this->request->input('step_id');
@@ -134,6 +142,7 @@ class AppointmentSummariesController extends BaseRestController
         }
         return ApiResponse::responseOk('');
     }
+
     /**
      * @SWG\Put(
      *     path="/appt-summaries/{id}",
@@ -163,6 +172,7 @@ class AppointmentSummariesController extends BaseRestController
         }
         return ApiResponse::responseOk('');
     }
+
     /**
      * @SWG\Delete(
      *     path="/appt-summaries/{id}",
@@ -196,6 +206,7 @@ class AppointmentSummariesController extends BaseRestController
         $this->letterRepository->updateBy($criteria, $data);
         return ApiResponse::responseOk('Resource deleted');
     }
+
     /**
      * @SWG\Get(
      *     path="/appt-summaries/by-patient/{id}",
@@ -211,6 +222,7 @@ class AppointmentSummariesController extends BaseRestController
         $data = $this->repository->getByPatient($id);
         return ApiResponse::responseOk('', $data);
     }
+
     /**
      * @SWG\Get(
      *     path="/appt-summaries/final-rank/{id}",
@@ -225,8 +237,9 @@ class AppointmentSummariesController extends BaseRestController
     public function getFinalRank(int $id, TrackerStepRetriever $trackerStepRetriever): JsonResponse
     {
         $finalRank = $trackerStepRetriever->getFinalRank($id);
-        return ApiResponse::responseOk('', $finalRank);
+        return ApiResponse::responseOk('', $finalRank->toArray());
     }
+
     /**
      * @SWG\Get(
      *     path="/appt-summaries/future-appointment/{id}",

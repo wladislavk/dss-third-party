@@ -69,6 +69,7 @@ export default {
     const letters = []
     for (let element of data) {
       let newLetter = {
+        id: parseInt(element.letterid),
         infoId: parseInt(element.info_id),
         toPatient: !!element.topatient,
         mdList: element.md_list,
@@ -103,7 +104,11 @@ export default {
       }
       steps.push(newStep)
     }
-    state[symbols.state.trackerSteps] = steps
+    state[symbols.state.trackerSteps] = state[symbols.state.trackerSteps].concat(steps)
+  },
+
+  [symbols.mutations.clearTrackerSteps] (state) {
+    state[symbols.state.trackerSteps] = []
   },
 
   [symbols.mutations.trackerStepsNext] (state, data) {

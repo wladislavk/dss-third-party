@@ -155,6 +155,7 @@ export default {
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.flowsheetSteps.bySection).then((response) => {
       const data = response.data.data
+      commit(symbols.mutations.clearTrackerSteps)
       commit(symbols.mutations.trackerSteps, {data: data.first, section: 1})
       commit(symbols.mutations.trackerSteps, {data: data.second, section: 2})
     }).catch((response) => {

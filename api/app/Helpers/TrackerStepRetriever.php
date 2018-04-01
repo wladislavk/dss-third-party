@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FlowsheetStepRepository;
+use DentalSleepSolutions\Structs\FinalRankData;
 
 class TrackerStepRetriever
 {
@@ -34,57 +35,71 @@ class TrackerStepRetriever
 
     /**
      * @param int $patientId
-     * @return array
+     * @return FinalRankData
      */
-    public function getFinalRank(int $patientId): array
+    public function getFinalRank(int $patientId): FinalRankData
     {
         $steps = $this->appointmentSummaryRepository->getLastTrackerStep($patientId);
-        $lastSegment = null;
-        $finalSegment = null;
-        $finalRank = 0;
+        $finalRankData = new FinalRankData();
         if (!sizeof($steps)) {
-            return [
-                'last_segment' => $lastSegment,
-                'final_segment' => $finalSegment,
-                'final_rank' => $finalRank,
-            ];
+            return $finalRankData;
         }
         $lastStep = $steps[0];
-        $lastSegment = $lastStep['segmentid'];
+        $finalRankData->lastSegment = $lastStep['segmentid'];
         if ($lastStep['section'] == 1) {
-            $steps = array_filter($steps, function (array $element) {
-                if ($element['section'] == 1) {
-                    return true;
-                }
-                return false;
-            });
+            $steps = $this->getOnlyFirstSection($steps);
         }
-        if (sizeof($steps)) {
-            usort($steps, function (array $a, array $b) {
-                if ($a['section'] > $b['section']) {
-                    return -1;
-                }
-                if ($a['section'] < $b['section']) {
-                    return 1;
-                }
-                if ($a['sort_by'] > $b['sort_by']) {
-                    return -1;
-                }
-                return 1;
-            });
-            $finalStep = $steps[0];
-            $ranks = $this->flowsheetStepRepository->getStepsByRank();
-            foreach ($ranks as $rank) {
-                if ($finalStep['segmentid'] == $rank['id']) {
-                    $finalRank = $rank['rank'];
-                }
+        $steps = $this->compareStepsBySectionAndSortBy($steps);
+        $finalStep = $steps[0];
+        $finalSegmentId = $finalStep['segmentid'];
+        $finalRankData->finalSegment = $finalSegmentId;
+        $ranks = $this->flowsheetStepRepository->getStepsByRank();
+        $finalRankData->finalRank = $this->retrieveFinalRankId($ranks, $finalSegmentId);
+        return $finalRankData;
+    }
+
+    /**
+     * @param array[] $steps
+     * @return array[]
+     */
+    private function getOnlyFirstSection(array $steps): array
+    {
+        return array_filter($steps, function (array $element) {
+            if ($element['section'] == 1) {
+                return true;
             }
-            $finalSegment = $finalStep['segmentid'];
+            return false;
+        });
+    }
+
+    /**
+     * @param array[] $ranks
+     * @param int $finalSegmentId
+     * @return int
+     */
+    private function retrieveFinalRankId(array $ranks, int $finalSegmentId)
+    {
+        foreach ($ranks as $rank) {
+            if ($finalSegmentId == $rank['id']) {
+                return $rank['rank'];
+            }
         }
-        return [
-            'last_segment' => $lastSegment,
-            'final_segment' => $finalSegment,
-            'final_rank' => $finalRank,
-        ];
+        return 0;
+    }
+
+    /**
+     * @param array[] $steps
+     * @return array[]
+     */
+    private function compareStepsBySectionAndSortBy(array $steps): array
+    {
+        usort($steps, function (array $a, array $b) {
+            $sectionComparison = $b['section'] <=> $a['section'];
+            if ($sectionComparison !== 0) {
+                return $sectionComparison;
+            }
+            return $b['sort_by'] <=> $a['sort_by'];
+        });
+        return $steps;
     }
 }

@@ -18,14 +18,16 @@ class FlowsheetStepRepository extends AbstractRepository
      * @param int $section
      * @return array
      */
-    public function getStepsByRank(int $section = 1): array
+    public function getStepsByRank(int $section = 0): array
     {
-        $steps = $this->model
-            ->where('section', $section)
+        $query = $this->model
+            ->orderBy('section')
             ->orderBy('sort_by')
-            ->get()
-            ->toArray()
         ;
+        if ($section) {
+            $query->where('section', $section);
+        }
+        $steps = $query->get()->toArray();
         foreach ($steps as $key => $step) {
             $steps[$key]['rank'] = $key + 1;
         }

@@ -103,6 +103,7 @@ export default {
     appointmentSummaries: 'APPOINTMENT_SUMMARIES',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearPatientData: 'CLEAR_PATIENT_DATA',
+    clearTrackerSteps: 'CLEAR_TRACKER_STEPS',
     coMorbidity: 'CO_MORBIDITY',
     coMorbidityWeight: 'CO_MORBIDITY_WEIGHT',
     companyData: 'COMPANY_DATA',

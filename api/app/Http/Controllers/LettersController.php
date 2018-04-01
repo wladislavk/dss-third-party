@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Helpers\LetterModelTransformer;
 use DentalSleepSolutions\Helpers\WelcomeLetterCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -280,11 +281,12 @@ class LettersController extends BaseRestController
      *     @SWG\Parameter(name="info_ids", in="query", type="string", required=true),
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
-
+     *
+     * @param LetterModelTransformer $letterModelTransformer
      * @param Request $request
      * @return JsonResponse
      */
-    public function getByPatientAndInfo(Request $request): JsonResponse
+    public function getByPatientAndInfo(LetterModelTransformer $letterModelTransformer, Request $request): JsonResponse
     {
         $patientId = (int)$request->input('patient_id');
         $infoIds = $request->input('info_ids', []);
@@ -292,6 +294,7 @@ class LettersController extends BaseRestController
             return (int)$element;
         });
         $data = $this->repository->getByPatientAndInfo($patientId, $infoIds);
+        $data = $letterModelTransformer->transformLetters($data);
         return ApiResponse::responseOk('', $data);
     }
 }

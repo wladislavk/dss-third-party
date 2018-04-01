@@ -5,6 +5,7 @@ import endpoints from '../../endpoints'
 
 export default {
   [symbols.actions.appointmentSummariesByPatient] ({ rootState, commit, dispatch }, patientId) {
+    commit(symbols.mutations.clearAppointmentSummary)
     http.token = rootState.main[symbols.state.mainToken]
     return new Promise((resolve, reject) => {
       http.get(endpoints.appointmentSummaries.byPatient + '/' + patientId).then((response) => {

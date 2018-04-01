@@ -102,6 +102,7 @@ export default {
     addStoredSymptom: 'ADD_STORED_SYMPTOM',
     appointmentSummaries: 'APPOINTMENT_SUMMARIES',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
+    clearAppointmentSummary: 'CLEAR_APPOINTMENT_SUMMARY',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     clearTrackerSteps: 'CLEAR_TRACKER_STEPS',
     coMorbidity: 'CO_MORBIDITY',

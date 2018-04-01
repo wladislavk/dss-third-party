@@ -32,7 +32,7 @@ export default {
       return this.$store.getters[symbols.getters.hasScheduledAppointment]
     },
     showLast () {
-      if (this.section === 1) {
+      if (this.last && this.section === 1) {
         return true
       }
       return false

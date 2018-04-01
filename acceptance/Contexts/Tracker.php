@@ -226,6 +226,7 @@ class Tracker extends BaseContext
      */
     public function testTopRightButtons(TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $calendarLink = $this->findElementWithText('a', 'View Calendar Appts');
         $buttonDiv = $calendarLink->getParent();
         $buttons = array_column($table->getHash(), 'name');
@@ -305,7 +306,7 @@ class Tracker extends BaseContext
     {
         $this->getCommonClient()->switchToIFrame();
         $this->wait(self::SHORT_WAIT_TIME);
-        $rows = $this->findAllCss('div#appt_summ table > tbody > tr');
+        $rows = $this->findAllCss('div#appt_summ tr');
         /** @var NodeElement[] $visibleRows */
         $visibleRows = [];
         foreach ($rows as $row) {
@@ -315,12 +316,13 @@ class Tracker extends BaseContext
         }
         $expected = $table->getHash();
         $today = (new \DateTime())->format('m/d/Y');
+        Assert::assertEquals(sizeof($expected), sizeof($visibleRows));
         foreach ($expected as $key => $expectedRow) {
             $expectedDate = $expectedRow['date'];
             if ($expectedDate == 'today') {
                 $expectedDate = $today;
             }
-            $inputDate = $this->findCss('td:nth-child(1) > input', $visibleRows[$key]);
+            $inputDate = $this->findCss('td:nth-child(1) input', $visibleRows[$key]);
             Assert::assertEquals($expectedDate, $inputDate->getValue());
             Assert::assertEquals($expectedRow['name'], $this->findCss('td:nth-child(2) > span.title', $visibleRows[$key])->getText());
             $select = $this->findCss('td:nth-child(2) select', $visibleRows[$key]);

@@ -28,6 +28,10 @@ export default {
     state[symbols.state.appointmentSummaries].push(newSummary)
   },
 
+  [symbols.mutations.clearAppointmentSummary] (state) {
+    state[symbols.state.appointmentSummaries] = []
+  },
+
   [symbols.mutations.addAppointmentSummary] (state, data) {
     // @todo: transform data into new summary
     const newSummary = data

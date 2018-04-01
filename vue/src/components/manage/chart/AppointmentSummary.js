@@ -25,6 +25,13 @@ export default {
     })
     this.$store.dispatch(symbols.actions.devicesByStatus)
   },
+  watch: {
+    patientId (newPatientId) {
+      this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, newPatientId).then(() => {
+        this.$store.dispatch(symbols.actions.lettersByPatientAndInfo, newPatientId)
+      })
+    }
+  },
   methods: {
     deleteSegment (summaryId) {
       this.$store.dispatch(symbols.actions.deleteAppointmentSummary, summaryId)

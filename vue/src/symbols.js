@@ -59,9 +59,8 @@ export default {
     totalPatientContacts: 'TOTAL_PATIENT_CONTACTS',
     totalPatientInsurances: 'TOTAL_PATIENT_INSURANCES',
     totalSubPatients: 'TOTAL_SUB_PATIENTS',
-    trackerStepsFirst: 'TRACKER_STEPS_FIRST',
+    trackerSteps: 'TRACKER_STEPS',
     trackerStepsNext: 'TRACKER_STEPS_NEXT',
-    trackerStepsSecond: 'TRACKER_STEPS_SECOND',
     userInfo: 'USER_INFO'
   },
   getters: {
@@ -92,7 +91,9 @@ export default {
     tasksByType: 'TASKS_BY_TYPE',
     tasksNumber: 'TASKS_NUMBER',
     tasksPatientByType: 'TASKS_PATIENT_BY_TYPE',
-    tasksPatientNumber: 'TASKS_PATIENT_NUMBER'
+    tasksPatientNumber: 'TASKS_PATIENT_NUMBER',
+    trackerStepsFirst: 'TRACKER_STEPS_FIRST',
+    trackerStepsSecond: 'TRACKER_STEPS_SECOND'
   },
   mutations: {
     addAppointmentSummary: 'ADD_APPOINTMENT_SUMMARY',

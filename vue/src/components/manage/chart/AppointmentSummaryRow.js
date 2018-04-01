@@ -32,9 +32,21 @@ export default {
         return value instanceof Date
       }
     },
-    letters: {
-      type: Array,
-      required: true
+    delayReason: {
+      type: String,
+      default: ''
+    },
+    nonComplianceReason: {
+      type: String,
+      default: ''
+    },
+    studyType: {
+      type: String,
+      default: ''
+    },
+    letterCount: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -56,16 +68,6 @@ export default {
         }
       }
       return this.deviceId
-    },
-    defaultStudyType () {
-      const studyTypes = this.$store.state.flowsheet[symbols.state.trackerSteps].studyTypes
-      let defaultStudyType = ''
-      for (let studyType of studyTypes) {
-        if (studyType.id === this.elementId) {
-          defaultStudyType = studyType.value
-        }
-      }
-      return defaultStudyType
     },
     rowLetters () {
       const rowLetters = []
@@ -89,25 +91,6 @@ export default {
         return true
       }
       return false
-    },
-    letterCount () {
-      let result = 0
-      for (let letter of this.rowLetters) {
-        let toPatient = 0
-        if (letter.toPatient) {
-          toPatient = 1
-        }
-        let mdNumber = 0
-        if (letter.mdList.length) {
-          mdNumber = letter.mdList.split(',').length
-        }
-        let mdReferralNumber = 0
-        if (letter.mdReferralList.length) {
-          mdReferralNumber = letter.mdReferralList.split(',').length
-        }
-        result += toPatient + mdNumber + mdReferralNumber
-      }
-      return result
     }
   },
   components: {

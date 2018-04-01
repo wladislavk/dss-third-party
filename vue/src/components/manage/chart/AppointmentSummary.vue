@@ -1,50 +1,33 @@
-<!--
 <template>
-    <table width="98%" class="table table-bordered table-hover">
-        <tr>
-            <th>Date</th>
-            <th>Treatment</th>
-            <th style="width: 80px">Letters</th>
-            <th></th>
-        </tr>
-        <tr id="completed_row_temp" style="display:none;">
-            <td>
-                <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_" type="text" />
-            </td>
-            <td>
-                <span class="title">Test</span>
-            </td>
-            <td class="letters">
-                <a
-                    v-legacy-href="'dss_summ.php?sect=leters&pid=' + patientId"
-                    class="btn btn-info btn-sm"
-                >Letters</a>
-            </td>
-            <td>
-                <a
-                    href="#"
-                    v-on:click.prevent="deleteSegment(flowElement.id)"
-                    class="addButton deleteButton btn btn-danger btn-sm"
-                >Delete</a>
-            </td>
-        </tr>
-        <appointment-summary-row
-            v-for="flowElement in flowElements"
-            v-if="flowElement.dateCompleted"
-            v-bind:patient-id="patientId"
-            v-bind:element-id="flowElement.id"
-            v-bind:segment-id="flowElement.segmentId"
-            v-bind:device-id="flowElement.deviceId"
-            v-bind:study-type="flowElement.studyType"
-            v-bind:delay-reason="flowElement.delayReason"
-            v-bind:non-compliance-reason="flowElement.nonComplianceReason"
-            v-bind:date-completed="flowElement.dateCompleted"
-            v-bind:devices="devices"
-            v-bind:letters="letters"
-            v-bind:key="flowElement.id"
-        ></appointment-summary-row>
-    </table>
+    <div id="appt_summ" class="appt_summ">
+        <table width="98%" class="table table-bordered table-hover">
+            <tr>
+                <th>Date</th>
+                <th>Treatment</th>
+                <th class="letters">Letters</th>
+                <th></th>
+            </tr>
+            <appointment-summary-row
+                v-for="summary in summaries"
+                v-if="summary.dateCompleted"
+                v-bind:patient-id="patientId"
+                v-bind:element-id="summary.id"
+                v-bind:segment-id="summary.segmentId"
+                v-bind:device-id="summary.deviceId"
+                v-bind:element-type="summary.type"
+                v-bind:date-completed="summary.dateCompleted"
+                v-bind:delay-reason="summary.delayReason"
+                v-bind:non-compliance-reason="summary.nonComplianceReason"
+                v-bind:study-type="summary.studyType"
+                v-bind:letter-count="letterCount(summary.id)"
+                v-bind:key="summary.id"
+            ></appointment-summary-row>
+        </table>
+    </div>
 </template>
 
 <script src="./AppointmentSummary.js"></script>
--->
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/chart/appointment-summary.scss";
+</style>

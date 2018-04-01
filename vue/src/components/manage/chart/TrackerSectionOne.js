@@ -13,10 +13,10 @@ export default {
       return this.$store.getters[symbols.getters.hasScheduledAppointment]
     },
     stepsFirst () {
-      return this.$store.state.flowsheet[symbols.state.trackerStepsFirst]
+      return this.$store.getters[symbols.getters.trackerStepsFirst]
     },
     stepsSecond () {
-      return this.$store.state.flowsheet[symbols.state.trackerStepsSecond]
+      return this.$store.getters[symbols.getters.trackerStepsSecond]
     },
     finalRank () {
       return this.$store.state.flowsheet[symbols.state.finalTrackerRank]

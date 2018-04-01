@@ -18,7 +18,7 @@
                     class="study_type form-control"
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
-                    v-model="defaultStudyType"
+                    v-model="studyType"
                 >
                     <option value="">Select Type</option>
                     <option v-for="titrationType in titrationTypes" v-bind:value="titrationType">{{ titrationType }}</option>
@@ -30,7 +30,7 @@
                     class="study_type form-control"
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
-                    v-model="defaultStudyType"
+                    v-model="studyType"
                 >
                     <option value="">Select Type</option>
                     <option v-for="baselineType in baselineTypes" v-bind:value="baselineType">{{ baselineType }}</option>
@@ -41,8 +41,9 @@
                     class="delay_reason form-control"
                     v-bind:id="'delay_reason_' + elementId"
                     v-bind:name="'data[' + elementId + '][delay_reason]'"
+                    v-model="delayReason"
                 >
-                    <option v-for="reason in delayReasons" v-model="delayReason" v-bind:value="reason.value">{{ reason.text }}</option>
+                    <option v-for="reason in delayReasons" v-bind:value="reason.value">{{ reason.text }}</option>
                 </select>
                 <br />
                 <a
@@ -71,7 +72,11 @@
                 >Show Reason</a>
             </template>
             <template v-else-if="isDeviceSegment">
-                <select class="dentaldevice form-control" v-bind:id="'dentaldevice_' + elementId" v-model="defaultDeviceId">
+                <select
+                    class="dentaldevice form-control"
+                    v-bind:id="'dentaldevice_' + elementId"
+                    v-model="defaultDeviceId"
+                >
                     <option value=""></option>
                     <option v-for="device in devices" v-bind:value="device.id">{{ device.device }}</option>
                 </select>

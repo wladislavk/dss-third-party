@@ -31,21 +31,14 @@ export default {
     })
   },
 
-  [symbols.actions.addAppointmentSummary] ({ rootState, state, commit, dispatch }, {segmentId, patientId}) {
+  [symbols.actions.addAppointmentSummary] ({ rootState, commit, dispatch }, {segmentId, patientId}) {
     http.token = rootState.main[symbols.state.mainToken]
-    const today = new Date()
-    let stepTitle = ''
-    for (let step of state[symbols.state.trackerSteps]) {
-      if (segmentId === step.id) {
-        stepTitle = step.name
-      }
-    }
     const newStep = {
-      segmentId: segmentId,
-      title: stepTitle,
-      date_comp: today
+      step_id: segmentId,
+      patient_id: patientId
     }
-    http.post(endpoints.appointmentSummaries.store, newStep).then(() => {
+    http.post(endpoints.appointmentSummaries.store, newStep).then((response) => {
+      const data = response.data.data
       let modalData = {}
       let hasPatient = false
       let modalName = ''
@@ -74,7 +67,8 @@ export default {
         modalData = {
           name: modalName,
           params: {
-            flowId: segmentId
+            flowId: data.id,
+            segmentId: segmentId
           }
         }
         if (hasPatient) {
@@ -82,7 +76,9 @@ export default {
         }
         commit(symbols.mutations.modal, modalData)
       }
-      commit(symbols.mutations.addAppointmentSummary, newStep)
+      dispatch(symbols.actions.appointmentSummariesByPatient, patientId).then(() => {
+        dispatch(symbols.actions.lettersByPatientAndInfo, patientId)
+      })
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'addAppointmentSummary', response: response})
     })

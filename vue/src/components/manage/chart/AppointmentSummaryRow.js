@@ -47,6 +47,10 @@ export default {
     letterCount: {
       type: Number,
       default: 0
+    },
+    lettersSent: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -68,15 +72,6 @@ export default {
         }
       }
       return this.deviceId
-    },
-    rowLetters () {
-      const rowLetters = []
-      for (let letter of this.letters) {
-        if (letter.infoId === this.elementId) {
-          rowLetters.push(letter)
-        }
-      }
-      return rowLetters
     },
     segmentName () {
       for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
@@ -118,12 +113,10 @@ export default {
       this.$store.commit(symbols.mutations.modal, modalData)
     },
     deleteStep () {
-      for (let letter of this.rowLetters) {
-        if (letter.status === 1) {
-          const alertText = 'Letters have been sent. Unable to delete step.'
-          Alerter.alert(alertText)
-          return
-        }
+      if (this.lettersSent) {
+        const alertText = 'Letters have been sent. Unable to delete step.'
+        Alerter.alert(alertText)
+        return
       }
       const confirmText = 'Are you sure you want to delete this appointment?'
       if (Alerter.isConfirmed(confirmText)) {

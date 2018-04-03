@@ -136,11 +136,11 @@ class AppointmentSummariesController extends BaseRestController
         $triggerData->userId = $userId;
         $triggerData->docId = $docId;
         try {
-            $this->appointmentSummaryCreator->createAppointmentSummary($triggerData);
+            $summary = $this->appointmentSummaryCreator->createAppointmentSummary($triggerData);
         } catch (GeneralException | RepositoryException $e) {
             return ApiResponse::responseError($e->getMessage(), 400);
         }
-        return ApiResponse::responseOk('');
+        return ApiResponse::responseOk('', $summary);
     }
 
     /**

@@ -20,6 +20,7 @@
                 v-bind:non-compliance-reason="summary.nonComplianceReason"
                 v-bind:study-type="summary.studyType"
                 v-bind:letter-count="letterCount(summary.id)"
+                v-bind:letters-sent="areLettersSent(summary.id)"
                 v-bind:key="summary.id"
             ></appointment-summary-row>
         </table>

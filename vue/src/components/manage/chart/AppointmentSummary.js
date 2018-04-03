@@ -50,6 +50,14 @@ export default {
         }
       }
       return result
+    },
+    areLettersSent (summaryId) {
+      for (let letter of this.letters) {
+        if (letter.infoId === summaryId && letter.status === 1) {
+          return true
+        }
+      }
+      return false
     }
   }
 }

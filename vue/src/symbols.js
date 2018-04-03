@@ -96,7 +96,6 @@ export default {
     trackerStepsSecond: 'TRACKER_STEPS_SECOND'
   },
   mutations: {
-    addAppointmentSummary: 'ADD_APPOINTMENT_SUMMARY',
     addStoredContact: 'ADD_STORED_CONTACT',
     addStoredCpap: 'ADD_STORED_CPAP',
     addStoredSymptom: 'ADD_STORED_SYMPTOM',

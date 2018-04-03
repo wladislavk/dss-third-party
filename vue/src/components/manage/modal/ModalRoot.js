@@ -28,7 +28,6 @@ export default {
       if (this.hasComponent(componentName)) {
         return componentName
       }
-
       return ''
     },
     currentProperties () {

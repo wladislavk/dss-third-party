@@ -36,6 +36,7 @@ class Tracker extends BaseContext
      */
     public function clickOnFirstSection($point)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $parent = $this->findCss('div#treatment_list');
         Assert::assertNotNull($parent);
         $firstList = $this->findAllCss('ul.sect1 > li', $parent);

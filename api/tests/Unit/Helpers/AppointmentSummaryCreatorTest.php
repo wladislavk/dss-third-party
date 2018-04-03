@@ -80,11 +80,12 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $data = new SummaryLetterTriggerData();
         $data->stepId = self::STEP_ID;
         $data->patientId = self::PATIENT_ID;
-        $this->appointmentSummaryCreator->createAppointmentSummary($data);
+        $newSummary = $this->appointmentSummaryCreator->createAppointmentSummary($data);
         $this->assertEquals(1, sizeof($this->savedModels));
-        /** @var AppointmentSummary $newSummary */
-        $newSummary = $this->savedModels[0];
+        /** @var AppointmentSummary $savedSummary */
+        $savedSummary = $this->savedModels[0];
         $this->assertEquals(self::PATIENT_ID, $newSummary->patientid);
+        $this->assertEquals(self::PATIENT_ID, $savedSummary->patientid);
         $this->assertEquals(self::STEP_ID, $newSummary->segmentid);
         $this->assertEquals(1, $newSummary->appointment_type);
         $today = (new \DateTime())->format('Y-m-d');

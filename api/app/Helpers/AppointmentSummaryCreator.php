@@ -52,10 +52,11 @@ class AppointmentSummaryCreator
 
     /**
      * @param SummaryLetterTriggerData $data
+     * @return AppointmentSummary
      * @throws GeneralException
      * @throws RepositoryException
      */
-    public function createAppointmentSummary(SummaryLetterTriggerData $data): void
+    public function createAppointmentSummary(SummaryLetterTriggerData $data): AppointmentSummary
     {
         /** @var User|null $doctor */
         $doctor = $this->userRepository->find($data->docId);
@@ -83,6 +84,7 @@ class AppointmentSummaryCreator
                 $trigger->triggerLetter($data);
             }
         }
+        return $newAppointmentSummary;
     }
 
     /**

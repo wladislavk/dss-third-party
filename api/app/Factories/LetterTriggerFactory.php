@@ -51,7 +51,7 @@ class LetterTriggerFactory
      */
     public function getLetterTriggers(int $stepId): array
     {
-        if (!array_key_exists($stepId, self::TYPES[$stepId])) {
+        if (!array_key_exists($stepId, self::TYPES)) {
             throw new GeneralException("Step ID $stepId is not valid");
         }
         $classes = self::TYPES[$stepId];

@@ -126,8 +126,11 @@ export default {
     updateCompletedDate () {
       const postData = {
         id: this.elementId,
-        comp_date: this.dateCompleted,
-        pid: this.patientId
+        data: {
+          comp_date: this.dateCompleted,
+          pid: this.patientId
+        },
+        patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
     }

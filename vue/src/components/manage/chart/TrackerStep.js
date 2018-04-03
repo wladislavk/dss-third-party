@@ -41,7 +41,6 @@ export default {
   methods: {
     addAction () {
       const postData = {
-        flowId: 0,
         segmentId: this.id,
         patientId: this.patientId
       }

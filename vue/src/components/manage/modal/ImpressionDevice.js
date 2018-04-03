@@ -1,35 +1,39 @@
-/*
 import symbols from '../../../symbols'
 
 export default {
   computed: {
+    patientDevice () {
+      return this.$store.getters[symbols.getters.firstDevice]
+    },
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
+    },
+    devices () {
+      return this.$store.state.flowsheet[symbols.state.devices]
+    },
     patientId () {
       return this.$store.state.main[symbols.state.modal].params.patientId
     },
-    deviceId () {
-      return this.$store.state.main[symbols.state.modal].params.deviceId
+    flowId () {
+      return this.$store.state.main[symbols.state.modal].params.flowId
+    }
+  },
+  created () {
+    this.$store.dispatch(symbols.actions.devicesByStatus)
+  },
+  methods: {
+    selectDevice () {
+      const data = {
+        id: this.flowId,
+        data: {
+          device_id: this.patientDevice
+        }
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, data).then(() => {
+        this.$store.dispatch(symbols.actions.patientClinicalExam, this.patientDevice).then(() => {
+          this.$store.commit(symbols.mutations.resetModal)
+        })
+      })
     }
   }
 }
-
-/*
-<?php if(isset($_REQUEST['submit'])) {
-  $sql = "SELECT * FROM dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-  if($db->getNumberRows($sql) == 0){
-    $sqlex = "INSERT INTO dental_ex_page5 set
-    dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."',
-    patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."',
-    userid = '".s_for($_SESSION['userid'])."',
-    docid = '".s_for($_SESSION['docid'])."',
-    adddate = now(),
-    ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-  } else {
-    $sqlex = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-  }
-  $qex = $db->query($sqlex);
-  $flow_sql = "UPDATE dental_flow_pg2_info SET
-    device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
-    WHERE id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
-  $db->query($flow_sql);
-?>
-*/

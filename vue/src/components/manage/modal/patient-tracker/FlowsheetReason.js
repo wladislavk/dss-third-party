@@ -45,7 +45,8 @@ export default {
         id: this.flowId,
         data: {
           reason: this.description
-        }
+        },
+        patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, payload).then(() => {
         this.$store.commit(symbols.mutations.resetModal)

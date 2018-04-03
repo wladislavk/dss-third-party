@@ -7,6 +7,9 @@ export default {
     }
   },
   computed: {
+    patientId () {
+      return this.$store.state.main[symbols.state.modal].params.patientId
+    },
     patientName () {
       return this.$store.state.patients[symbols.state.patientName]
     },
@@ -20,7 +23,8 @@ export default {
         id: this.flowId,
         data: {
           noncomp_reason: this.selectedReason
-        }
+        },
+        patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, queryData).then(() => {
         if (this.selectedReason !== 'other') {

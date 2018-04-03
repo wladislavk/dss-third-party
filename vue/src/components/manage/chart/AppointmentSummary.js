@@ -20,16 +20,12 @@ export default {
     appointmentSummaryRow: AppointmentSummaryRowComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, this.patientId).then(() => {
-      this.$store.dispatch(symbols.actions.lettersByPatientAndInfo, this.patientId)
-    })
+    this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, this.patientId)
     this.$store.dispatch(symbols.actions.devicesByStatus)
   },
   watch: {
     patientId (newPatientId) {
-      this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, newPatientId).then(() => {
-        this.$store.dispatch(symbols.actions.lettersByPatientAndInfo, newPatientId)
-      })
+      this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, newPatientId)
     }
   },
   methods: {

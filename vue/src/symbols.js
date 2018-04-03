@@ -99,7 +99,6 @@ export default {
     addStoredContact: 'ADD_STORED_CONTACT',
     addStoredCpap: 'ADD_STORED_CPAP',
     addStoredSymptom: 'ADD_STORED_SYMPTOM',
-    appointmentSummaries: 'APPOINTMENT_SUMMARIES',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearAppointmentSummary: 'CLEAR_APPOINTMENT_SUMMARY',
     clearPatientData: 'CLEAR_PATIENT_DATA',
@@ -159,7 +158,6 @@ export default {
     symptoms: 'SYMPTOMS',
     trackerSteps: 'TRACKER_STEPS',
     trackerStepsNext: 'TRACKER_STEPS_NEXT',
-    updateAppointmentSummary: 'UPDATE_APPOINTMENT_SUMMARY',
     userInfo: 'USER_INFO'
   },
   actions: {
@@ -178,7 +176,6 @@ export default {
     dualAppLogin: 'DUAL_APP_LOGIN',
     enablePopupEdit: 'ENABLE_POPUP_EDIT',
     exportMDModal: 'EXPORT_MD_MODAL',
-    getAppointmentSummary: 'GET_APPOINTMENT_SUMMARY',
     getCompanyData: 'GET_COMPANY_DATA',
     getDoctorData: 'GET_DOCTOR_DATA',
     getDeviceGuideResults: 'GET_DEVICE_GUIDE_RESULTS',

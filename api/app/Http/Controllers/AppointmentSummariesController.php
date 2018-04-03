@@ -123,7 +123,6 @@ class AppointmentSummariesController extends BaseRestController
      *
      * @return JsonResponse
      */
-
     public function store(): JsonResponse
     {
         $stepId = (int)$this->request->input('step_id');

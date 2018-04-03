@@ -378,8 +378,13 @@ class Tracker extends BaseContext
         $options = $this->findAllCss('select > option', $summaryRow);
         $expected = array_column($table->getHash(), 'name');
         Assert::assertEquals(sizeof($expected), sizeof($options));
-        foreach ($expected as $key => $value) {
-            Assert::assertEquals($value, $options[$key]->getText());
+        // order of elements cannot be guaranteed
+        $optionValues = [];
+        foreach ($options as $option) {
+            $optionValues[] = $option->getText();
+        }
+        foreach ($expected as $value) {
+            Assert::assertTrue(in_array($value, $optionValues));
         }
     }
 
@@ -499,7 +504,7 @@ SQL;
      */
     private function getSummaryRow($text)
     {
-        $rows = $this->findAllCss('div#appt_summ table > tbody > tr');
+        $rows = $this->findAllCss('div#appt_summ table tr');
         /** @var NodeElement[] $visibleRows */
         foreach ($rows as $row) {
             $rowTitle = $this->findCss('td:nth-child(2) > span.title', $row);

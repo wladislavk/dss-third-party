@@ -91,6 +91,16 @@ export default {
         return true
       }
       return false
+    },
+    // @todo: property inserted for compatibility with legacy, delete after migration
+    currentDelayReason () {
+      if (this.delayReason) {
+        return this.delayReason
+      }
+      if (this.delayReasons.length) {
+        return this.delayReasons[0].value
+      }
+      return ''
     }
   },
   components: {

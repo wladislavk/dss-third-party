@@ -37,11 +37,12 @@
                 </select>
             </template>
             <template v-else-if="segmentName === 'Delaying Tx / Waiting'">
+                <!-- @todo: after the migration replace "currentDelayReason" with "delayReason" -->
                 <select
                     class="delay_reason form-control"
                     v-bind:id="'delay_reason_' + elementId"
                     v-bind:name="'data[' + elementId + '][delay_reason]'"
-                    v-model="delayReason"
+                    v-model="currentDelayReason"
                 >
                     <option v-for="reason in delayReasons" v-bind:value="reason.value">{{ reason.text }}</option>
                 </select>

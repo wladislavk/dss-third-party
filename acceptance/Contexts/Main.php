@@ -8,6 +8,8 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
+use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Main extends BaseContext
 {
@@ -32,6 +34,24 @@ class Main extends BaseContext
     }
 
     /**
+     * @Given I am logged in as admin :admin
+     *
+     * @param string $admin
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
+    public function loginAsAdmin($admin)
+    {
+        $password = '';
+
+        if (array_key_exists($admin, self::PASSWORDS)) {
+            $password = self::PASSWORDS[$admin];
+        }
+
+        $this->visitAdminStartPage();
+        $this->adminLogin($admin, $password, self::CAPTCHA_PASSPHRASE);
+    }
+
+    /**
      * @When I go to :page page
      *
      * @param string $page
@@ -47,6 +67,13 @@ class Main extends BaseContext
                 return;
             }
             $this->visitStartPage();
+            return;
+        }
+        if ($page == 'admin start') {
+            if (SUT_HOST == 'vue') {
+                return;
+            }
+            $this->visitAdminStartPage();
             return;
         }
         $url = Pages::getUrl($page);
@@ -101,9 +128,27 @@ class Main extends BaseContext
     {
         $buttonElement = $this->findElementWithText('button', $button, null, true);
         if (!$buttonElement) {
+            $buttonElement = $this->findElementWithText('a[contains(@class, "addButton")]', $button, null, true);
+        }
+        if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
         }
         $buttonElement->click();
+    }
+
+    /**
+     * @When I click button with text :button in popup window
+     *
+     * @param string $button
+     * @throws BehatException
+     */
+    public function clickButtonInIframe($button)
+    {
+        $iframe = 'modal-iframe';
+        $this->client->switchToIFrame($iframe);
+        $this->clickButton($button);
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->client->switchToIFrame();
     }
 
     /**
@@ -167,6 +212,17 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I type :name into user search form
+     *
+     * @param string $name
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
+    public function fillUserSearchForm($name)
+    {
+        $this->page->fillField('search', $name);
+    }
+
+    /**
      * @When I close the iframe
      */
     public function closeIFrame()
@@ -188,6 +244,40 @@ class Main extends BaseContext
         $this->wait(self::SHORT_WAIT_TIME);
         $menu = $this->findCss('ul#homemenu');
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
+        $parentNode = $parentNodeLink->getParent();
+        $parentNode->mouseOver();
+    }
+
+    /**
+     * @When I run mouse over :menuPoint admin menu point
+     *
+     * @param string $menuPoint
+     * @throws BehatException
+     */
+    public function runMouseOverAdminMenu($menuPoint)
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $menu = $this->findCss('ul.page-sidebar-menu');
+        Assert::assertNotNull($menu);
+        $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
+        Assert::assertNotNull($parentNodeLink);
+        $parentNode = $parentNodeLink->getParent();
+        $parentNode->mouseOver();
+    }
+
+    /**
+     * @When I run mouse over :menuPoint admin top menu point
+     *
+     * @param string $menuPoint
+     * @throws BehatException
+     */
+    public function runMouseOverAdminTopMenu($menuPoint)
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $menu = $this->findCss('div.top-menu ul.nav');
+        Assert::assertNotNull($menu);
+        $parentNodeLink = $this->findElementWithText('a/span', $menuPoint, $menu);
+        Assert::assertNotNull($parentNodeLink);
         $parentNode = $parentNodeLink->getParent();
         $parentNode->mouseOver();
     }
@@ -302,6 +392,39 @@ class Main extends BaseContext
     }
 
     /**
+     * @Then I see marker :marker in button :button
+     *
+     * @param string $marker
+     * @param string $button
+     * @throws BehatException
+     */
+    public function testSeeMarker($marker, $button)
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $buttonElement = $this->findElementWithText('button | //a', $button, null, true);
+        Assert::assertNotNull($buttonElement);
+        $markerElement = $buttonElement->find('css', ".fa.fa-$marker");
+        Assert::assertNotNull($markerElement);
+        Assert::assertTrue($markerElement->isVisible());
+    }
+
+    /**
+     * @Then I see marker :marker in button :button in popup window
+     *
+     * @param string $marker
+     * @param string $button
+     * @throws BehatException
+     */
+    public function testSeeMarkerInIframe($marker, $button)
+    {
+        $iframe = 'modal-iframe';
+        $this->client->switchToIFrame($iframe);
+        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->testSeeMarker($marker, $button);
+        $this->client->switchToIFrame();
+    }
+
+    /**
      * @Then I see :page page
      *
      * @param string $page
@@ -343,6 +466,39 @@ class Main extends BaseContext
     }
 
     /**
+     * @Then I see :text text with delay
+     *
+     * @param string $text
+     */
+    public function testSeeTextWithDelay($text)
+    {
+        $maxWait = 6;
+
+        for ($n = 0; $n < $maxWait; $n++) {
+            try {
+                $this->wait(self::SHORT_WAIT_TIME);
+                Assert::assertContains($text, $this->page->getText());
+                return;
+            } catch (ExpectationFailedException $e) { /* Fall through */ }
+        }
+        $screenshot = $this->client->getScreenshot();
+        Assert::assertContains($text, $this->page->getText());
+    }
+
+    /**
+     * @Then I see :text text in popup window
+     *
+     * @param string $text
+     */
+    public function testSeeTextInIframe($text)
+    {
+        $iframe = 'modal-iframe';
+        $this->client->switchToIFrame($iframe);
+        Assert::assertContains($text, $this->page->getText());
+        $this->client->switchToIFrame();
+    }
+
+    /**
      * @Then I see table with columns:
      *
      * @param TableNode $table
@@ -377,6 +533,27 @@ class Main extends BaseContext
     {
         $this->wait(self::SHORT_WAIT_TIME);
         $this->testBrowserConfirm($text);
+    }
+
+    /**
+     * @Then I see browser alert with text :text with delay
+     *
+     * @param string $text
+     * @throws BehatException
+     */
+    public function testBrowserAlertWithDelay($text)
+    {
+        $maxWait = 6;
+
+        for ($n = 0; $n < $maxWait; $n++) {
+            try {
+                $this->wait(self::SHORT_WAIT_TIME);
+            } catch (UnexpectedAlertOpen $e) {
+                $this->testBrowserConfirm($text);
+                return;
+            }
+        }
+        throw new BehatException('No alert open');
     }
 
     /**

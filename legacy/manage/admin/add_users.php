@@ -1211,6 +1211,13 @@ $thesql = "SELECT
                         ?>
                         <a href="#" onclick="alert('<?php echo  $registration_link; ?>');return false;">Registration Link</a>
                 <?php } ?>
+                    <?php if (getenv('DOCKER_USED') && $isSuperAdmin) { ?>
+                        <a class="btn btn-danger delete-stripe-customer"
+                           data-docid="<?= (int)$themyarray['userid'] ?>" href="#">
+                            Delete Stripe data for this user
+                            <span class="fa fa-spinner hidden"></span>
+                        </a>
+                    <?php } ?>
                 </div>
             </div>
         </form>
@@ -1226,6 +1233,51 @@ $thesql = "SELECT
         <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
             $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
         <?php } ?>
+
+        function resetFontAwesomeIndicator ($indicator) {
+            $indicator.removeClass('fa-exclamation-triangle fa-spinner fa-spin hidden')
+                .attr('title', '')
+            ;
+        }
+
+        $('a.btn.delete-stripe-customer').on('click', function (e) {
+            e.preventDefault();
+
+            var $this = $(this),
+                $indicator = $this.find('.fa');
+
+            $this.addClass('disabled');
+            resetFontAwesomeIndicator($indicator);
+            $indicator.addClass('fa-spinner fa-spin');
+
+            $.ajax({
+                url: '/manage/admin/delete-stripe-customer.php',
+                type: 'post',
+                data: { docid: $this.data('docid') },
+                dataType: 'json',
+                success: function (response) {
+                    resetFontAwesomeIndicator($indicator);
+                    $indicator.addClass('fa-check');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var response = errorThrown;
+
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('status')) {
+                        response = jqXHR.responseJSON.status;
+                    }
+
+                    resetFontAwesomeIndicator($indicator);
+                    $indicator.addClass('fa-exclamation-triangle')
+                        .attr('title', response)
+                    ;
+                },
+                complete: function () {
+                    $this.removeClass('disabled');
+                }
+            });
+
+            return false;
+        });
 
         $('[name=status]').on('change keydown',function(){
             var $this = $(this);

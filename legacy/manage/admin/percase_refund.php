@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/includes/stripe-functions.php';
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
@@ -22,21 +23,15 @@ $r = mysqli_fetch_assoc($q);
 				AND id='".mysqli_real_escape_string($con,$_GET['cid'])."'";
 $charge_q = mysqli_query($con,$charge_sql);
 $charge_r = mysqli_fetch_assoc($charge_q);
-$key_sql = "SELECT stripe_secret_key FROM companies c 
-                JOIN dental_user_company uc
-                        ON c.id = uc.companyid
-                 WHERE uc.userid='".mysqli_real_escape_string($con,$id)."'";
-$key_q = mysqli_query($con,$key_sql);
-$key_r= mysqli_fetch_assoc($key_q);
-$curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-\Stripe\ApiRequestor::setHttpClient($curl);
-\Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
-\Stripe\Stripe::setApiVersion("2014-06-17");
+$key_r = getStripeRelatedUserData($_GET['docid']);
+setupStripeConnection($key_r['stripe_secret_key']);
+$customer = getStripeCustomer($key_r['cc_id']);
+$card = getActiveStripeCard($customer);
+$last4 = '';
 
-
-$cards = \Stripe\Customer::retrieve($r['cc_id'])->cards->all();
-$last4 = $cards['data'][0]['last4'];
-
+if ($card) {
+    $last4 = $card->last4;
+}
 
 if(isset($_POST['bill_submit'])){
   $charge = $_POST['cid'];
@@ -48,23 +43,25 @@ if(isset($_POST['bill_submit'])){
     $cr = mysqli_fetch_assoc($cq);
 try{
     $charge = \Stripe\Charge::retrieve($cr['stripe_charge']);
+    $refundDetails = [
+        'charge' => $charge->id,
+    ];
+
     if ($amount) {
-        $charge->refunds->create(array('amount' => $amount));
-    } else {
-        $charge->refunds->create();
+        $refundDetails['amount'] = $amount;
     }
 } catch(\Stripe\Error\Card $e) {
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
 } catch (\Stripe\Error\InvalidRequest $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
 } catch (\Stripe\Error\Authentication $e) {
@@ -79,14 +76,13 @@ try{
   // Network communication with Stripe failed
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Exception $e) {
+} catch (\Exception $e) {
   // Something else happened, completely unrelated to Stripe
-  $body = $e->getJsonBody();
-  $err  = $body['error'];
-  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  $body = $e->getMessage();
+  echo e($body).". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
 

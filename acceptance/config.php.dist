@@ -5,3 +5,4 @@ define('API_URL', 'https://api.docker.localhost/api/v1');
 
 define('BROWSER', getenv('BEHAT_BROWSER'));
 define('SUT_HOST', getenv('SUT_HOST'));
+define('CAPTCHA_PASSPHRASE', getenv('CAPTCHA_PASSPHRASE'));

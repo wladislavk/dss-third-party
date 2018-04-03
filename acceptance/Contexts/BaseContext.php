@@ -8,16 +8,16 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\DriverException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
+use PHPUnit\Framework\Assert;
 
 require_once __DIR__ . '/../config.php';
 
 abstract class BaseContext extends RawMinkContext
 {
     const START_URL = 'http://' . SUT_HOST . '/manage';
+    const ADMIN_START_URL = self::START_URL . '/admin/home.php';
 
     const REALLY_LONG_WAIT_TIME = 30000;
     const RATHER_LONG_WAIT_TIME = 10000;
@@ -32,7 +32,10 @@ abstract class BaseContext extends RawMinkContext
 
     const PASSWORDS = [
         'doc1f' => 'cr3at1vItY',
+        'admin' => 'cr3at1vItY',
     ];
+
+    const CAPTCHA_PASSPHRASE = CAPTCHA_PASSPHRASE;
 
     /**
      * @var DocumentElement
@@ -162,7 +165,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$parentElement) {
             $parentElement = $this->page;
         }
-        $element = $parentElement->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
+        $element = $parentElement->find('xpath', '(//' . $selector . ')[normalize-space()="' . $text . '"]');
         if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }
@@ -176,7 +179,7 @@ abstract class BaseContext extends RawMinkContext
      */
     protected function findAndClickText($selector, $text)
     {
-        $element = $this->page->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
+        $element = $this->page->find('xpath', '(//' . $selector . ')[normalize-space()="' . $text . '"]');
         if (!$element) {
             throw new BehatException("Element with text $text not found");
         }
@@ -190,6 +193,11 @@ abstract class BaseContext extends RawMinkContext
             $url .= '/main';
         }
         $this->getCommonClient()->visit($url);
+    }
+
+    protected function visitAdminStartPage()
+    {
+        $this->getCommonClient()->visit(self::ADMIN_START_URL);
     }
 
     /**
@@ -206,6 +214,26 @@ abstract class BaseContext extends RawMinkContext
         $this->page->fillField('password', $password);
         $loginButton = $this->findCss('input[value=" Login "]');
         $loginButton->click();
+    }
+
+    /**
+     * @param string $admin
+     * @param string $password
+     * @param string $captcha
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
+    protected function adminLogin($admin, $password, $captcha)
+    {
+        if (!$password && array_key_exists($admin, self::PASSWORDS)) {
+            $password = self::PASSWORDS[$admin];
+        }
+        $this->page->fillField('username', $admin);
+        $this->page->fillField('password', $password);
+        $this->page->fillField('captcha', $captcha);
+        $loginButton = $this->findCss('button[type="submit"]');
+        $loginButton->click();
+        $error = $this->findCss('.has-error');
+        Assert::assertNull($error);
     }
 
     /**

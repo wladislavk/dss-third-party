@@ -17,7 +17,7 @@ services:
     labels:
       - "traefik.enable=false"
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "${MYSQL_PORT:-3306}:3306"
 
   baseimage:
     build: .
@@ -40,6 +40,7 @@ services:
       API_URL: "https://api.docker.localhost/"
       VUE_URL: "https://vue.docker.localhost/"
       DOCKER_USED: 1
+      CAPTCHA_PASSPHRASE: EPbptoNJpcqcqACtIGKWOPrBgkj9Bk33n2hwutqX
       API_CONTAINER: "api"
       VUE_CONTAINER: "vue"
       LEGACY_PATH: /opt/rh/httpd24/root/var/www/html/legacy

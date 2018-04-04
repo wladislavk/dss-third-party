@@ -62,9 +62,8 @@ if ($r['homepage'] != '1') {
     $docid = intval($_SESSION['docid']);
 
     $dental_letters_query = "
-        SELECT UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date
+        SELECT dental_letters.generated_date AS generated_date
         FROM dental_letters
-        LEFT JOIN dental_patients ON dental_letters.patientid = dental_patients.patientid
         WHERE dental_letters.status = '0'
         AND dental_letters.delivered = '0'
         AND dental_letters.deleted = '0'
@@ -82,7 +81,8 @@ if ($r['homepage'] != '1') {
 
     $oldest_letter = 0;
     if ($generated_date != 0) {
-        $oldest_letter = floor((time() - $generated_date['generated_date']) / $seconds_per_day);
+        $timestamp = strtotime($generated_date['generated_date']);
+        $oldest_letter = floor((time() - $timestamp) / $seconds_per_day);
     }
 
     $dental_letters_query = "

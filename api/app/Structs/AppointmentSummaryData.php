@@ -16,6 +16,9 @@ class AppointmentSummaryData
     /** @var int */
     public $docId = 0;
 
+    /** @var string|null */
+    public $studyType = null;
+
     /** @var \DateTime|null */
     public $completionDate = null;
 

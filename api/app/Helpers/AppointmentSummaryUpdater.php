@@ -50,6 +50,9 @@ class AppointmentSummaryUpdater
             $data->completionDate = new \DateTime();
         }
         $summary->date_completed = $data->completionDate;
+        if ($data->studyType !== null) {
+            $summary->study_type = $data->studyType;
+        }
         $this->dbChangeWrapper->save($summary);
     }
 

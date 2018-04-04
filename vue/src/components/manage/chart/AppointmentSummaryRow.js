@@ -133,6 +133,20 @@ export default {
         patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
+    },
+    updateStudyType (event) {
+      const newValue = event.target.value
+      if (!newValue) {
+        return
+      }
+      const postData = {
+        id: this.elementId,
+        data: {
+          type: newValue
+        },
+        patientId: this.patientId
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
     }
   }
 }

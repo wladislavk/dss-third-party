@@ -10,17 +10,14 @@ export default {
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
     },
-    firstName () {
-      return this.$store.state.main[symbols.state.modal].params.firstName
-    },
-    lastName () {
-      return this.$store.state.main[symbols.state.modal].params.lastName
-    },
     segmentId () {
-      return this.$store.state.flowsheet[symbols.state.currentAppointmentSummary].segmentId
+      return this.$store.state.main[symbols.state.modal].params.segmentId
     },
     patientId () {
       return this.$store.state.main[symbols.state.modal].params.patientId
+    },
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
     },
     isTitration () {
       if (this.segmentId === 3) {

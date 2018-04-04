@@ -60,15 +60,18 @@ class AppointmentSummariesApiTest extends ApiTestCase
         $summaryId = 15;
         $patientId = 51;
         $completionDate = '06/25/2016';
+        $type = 'foo';
         $requestData = [
             'patient_id' => $patientId,
             'comp_date' => $completionDate,
+            'type' => $type,
         ];
         $this->put(self::ROUTE_PREFIX . '/appt-summaries/' . $summaryId, $requestData);
         $this->assertResponseOk();
         $this->seeInDatabase('dental_flow_pg2_info', [
             'id' => $summaryId,
             'date_completed' => '2016-06-25',
+            'study_type' => $type,
         ]);
         $this->notSeeInDatabase('dental_ex_page5', [
             'patientid' => $patientId,

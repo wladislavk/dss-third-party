@@ -19,6 +19,7 @@
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
                     v-model="studyType"
+                    v-on:change="updateStudyType($event)"
                 >
                     <option value="">Select Type</option>
                     <option v-for="titrationType in titrationTypes" v-bind:value="titrationType">{{ titrationType }}</option>
@@ -31,6 +32,7 @@
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
                     v-model="studyType"
+                    v-on:change="updateStudyType($event)"
                 >
                     <option value="">Select Type</option>
                     <option v-for="baselineType in baselineTypes" v-bind:value="baselineType">{{ baselineType }}</option>

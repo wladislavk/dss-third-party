@@ -74,7 +74,8 @@ export default {
           params: {
             flowId: data.id,
             segmentId: segmentId,
-            patientId: patientId
+            patientId: patientId,
+            white: true
           }
         }
         commit(symbols.mutations.modal, modalData)

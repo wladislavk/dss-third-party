@@ -163,6 +163,7 @@ class AppointmentSummariesController extends BaseRestController
         $data->patientId = (int)$this->request->input('patient_id');
         $data->docId = $this->user->getDocIdOrZero();
         $data->userId = $this->user->getUserIdOrZero();
+        $data->studyType = $this->request->input('type', null);
         $data->setCompletionDate($this->request->input('comp_date', ''));
         try {
             $this->appointmentSummaryUpdater->updateAppointmentSummary($data);

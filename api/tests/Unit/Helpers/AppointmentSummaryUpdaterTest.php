@@ -23,6 +23,8 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
     private const EXISTING_PATIENT_ID = 21;
     private const USER_ID = 30;
     private const DOC_ID = 40;
+    private const EXISTING_STUDY_TYPE = 'foo';
+    private const NEW_STUDY_TYPE = 'bar';
 
     /** @var AppointmentSummary|null */
     private $summary;
@@ -42,6 +44,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $this->summary->id = self::SUMMARY_ID;
         $this->summary->segmentid = self::SEGMENT_ID;
         $this->summary->date_completed = new \DateTime('2016-01-01');
+        $this->summary->study_type = self::EXISTING_STUDY_TYPE;
 
         $clinicalExamRepository = $this->mockClinicalExamRepository();
         $appointmentSummaryRepository = $this->mockAppointmentSummaryRepository();
@@ -58,6 +61,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
     {
         $data = new AppointmentSummaryData();
         $data->summaryId = self::SUMMARY_ID;
+        $data->studyType = self::NEW_STUDY_TYPE;
         $newDate = '2017-02-02';
         $data->setCompletionDate($newDate);
         $this->appointmentSummaryUpdater->updateAppointmentSummary($data);
@@ -65,6 +69,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         /** @var AppointmentSummary $newSummary */
         $newSummary = $this->savedModels[0];
         $this->assertEquals($newDate, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::NEW_STUDY_TYPE, $newSummary->study_type);
     }
 
     /**
@@ -117,7 +122,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
     /**
      * @throws GeneralException
      */
-    public function testWithExamAndWithoutCompletionDate()
+    public function testWithExamAndWithoutNewData()
     {
         $this->clinicalExam = new TmjClinicalExam();
         $this->clinicalExam->patientid = self::EXISTING_PATIENT_ID;
@@ -136,6 +141,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         /** @var AppointmentSummary $newSummary */
         $newSummary = $this->savedModels[1];
         $this->assertEquals($today, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::EXISTING_STUDY_TYPE, $newSummary->study_type);
     }
 
     /**

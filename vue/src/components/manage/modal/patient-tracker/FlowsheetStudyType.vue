@@ -1,6 +1,6 @@
 <template>
     <form action="#" method="post" v-if="isTitration || isBaseline">
-        <h2>What type of sleep test will be performed on {{ firstName }} {{ lastName }}?</h2>
+        <h2>What type of sleep test will be performed on {{ patientName }}?</h2>
         Study Type
         <select name="study_type" v-model="selectedType">
             <option value=""></option>

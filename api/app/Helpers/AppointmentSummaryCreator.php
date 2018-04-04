@@ -1,6 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Constants\SummaryLetterTable;
 use DentalSleepSolutions\Constants\TrackerSteps;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
@@ -9,7 +10,6 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryReposito
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Factories\LetterTriggerFactory;
 use DentalSleepSolutions\Factories\RepositoryFactory;
 use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use DentalSleepSolutions\Wrappers\DBChangeWrapper;
@@ -17,8 +17,8 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class AppointmentSummaryCreator
 {
-    /** @var LetterTriggerFactory */
-    private $letterTriggerFactory;
+    /** @var SummaryLetterTrigger */
+    private $summaryLetterTrigger;
 
     /** @var AppointmentSummaryRepository */
     private $appointmentSummaryRepository;
@@ -33,17 +33,17 @@ class AppointmentSummaryCreator
     private $dbChangeWrapper;
 
     /**
-     * @param LetterTriggerFactory $letterTriggerFactory
+     * @param SummaryLetterTrigger $summaryLetterTrigger
      * @param RepositoryFactory $repositoryFactory
      * @param DBChangeWrapper $dbChangeWrapper
      * @throws GeneralException
      */
     public function __construct(
-        LetterTriggerFactory $letterTriggerFactory,
+        SummaryLetterTrigger $summaryLetterTrigger,
         RepositoryFactory $repositoryFactory,
         DBChangeWrapper $dbChangeWrapper
     ) {
-        $this->letterTriggerFactory = $letterTriggerFactory;
+        $this->summaryLetterTrigger = $summaryLetterTrigger;
         $this->appointmentSummaryRepository = $repositoryFactory->getRepository(AppointmentSummaryRepository::class);
         $this->clinicalExamRepository = $repositoryFactory->getRepository(TmjClinicalExamRepository::class);
         $this->userRepository = $repositoryFactory->getRepository(UserRepository::class);
@@ -79,12 +79,29 @@ class AppointmentSummaryCreator
         $this->deleteFutureAppointment($data->patientId);
 
         if ($createLetters && in_array($data->stepId, TrackerSteps::STEPS_WITH_LETTERS)) {
-            $triggers = $this->letterTriggerFactory->getLetterTriggers($data->stepId);
-            foreach ($triggers as $trigger) {
-                $trigger->triggerLetter($data);
-            }
+            $this->triggerLetters($data);
         }
         return $newAppointmentSummary;
+    }
+
+    /**
+     * @param SummaryLetterTriggerData $data
+     * @throws GeneralException
+     * @throws RepositoryException
+     */
+    private function triggerLetters(SummaryLetterTriggerData $data)
+    {
+        if (
+            !isset(SummaryLetterTable::SUMMARY_LETTERS[$data->stepId])
+            ||
+            !is_array(SummaryLetterTable::SUMMARY_LETTERS[$data->stepId])
+        ) {
+            throw new GeneralException("Letter data for step with ID {$data->stepId} is not set");
+        }
+        $tableElements = SummaryLetterTable::SUMMARY_LETTERS[$data->stepId];
+        foreach ($tableElements as $tableElement) {
+            $this->summaryLetterTrigger->triggerLetter($data, $tableElement);
+        }
     }
 
     /**

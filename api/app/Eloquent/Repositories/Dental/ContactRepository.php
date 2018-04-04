@@ -9,6 +9,7 @@ use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Collection;
 
 class ContactRepository extends AbstractRepository
 {
@@ -370,13 +371,15 @@ class ContactRepository extends AbstractRepository
      */
     public function getDocShortInfo($contactId)
     {
-        return $this->model
+        /** @var Contact|null $result */
+        $result = $this->model
             ->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
             ->from(\DB::raw('dental_contact dc'))
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
             ->where('contactid', $contactId)
             ->first()
         ;
+        return $result;
     }
 
     /**
@@ -419,25 +422,30 @@ class ContactRepository extends AbstractRepository
      */
     public function getActiveContact($contactId)
     {
-        return $this->model
+        /** @var Contact|null $result */
+        $result = $this->model
             ->where('contactid', $contactId)
             ->where('status', 1)
             ->first()
         ;
+        return $result;
     }
 
-    public function getReferralIds($patientId)
+    /**
+     * @param int $patientId
+     * @return Collection|Contact[]
+     */
+    public function getReferralIds(int $patientId): iterable
     {
-        $contactSql = $this->model
+        $query = $this->model
             ->from('dental_contact')
             ->join('dental_patients', 'dental_contact.contactid', '=', 'dental_patients.referred_by')
             ->join('dental_contacttype', 'dental_contacttype.contacttypeid', '=', 'dental_contact.contacttypeid')
             ->where('dental_patients.patientid', $patientId)
             ->where('dental_patients.referred_source', '2')
             ->where('dental_contacttype.physician', 1)
-            ->groupBy('dental_contact.contactid')
             ->orderBy('dental_contact.contactid')
         ;
-        return $contactSql->get();
+        return $query->get();
     }
 }

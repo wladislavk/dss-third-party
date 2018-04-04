@@ -18,4 +18,10 @@ class SummaryLetterTriggerData
 
     /** @var int */
     public $stepId = 0;
+
+    /** @var int */
+    public $letterId = 0;
+
+    /** @var bool */
+    public $toPatient = false;
 }

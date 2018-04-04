@@ -37,7 +37,7 @@ export default {
       const queryData = {
         id: this.flowId,
         data: {
-          study_type: this.selectedType
+          type: this.selectedType
         },
         patientId: this.patientId
       }

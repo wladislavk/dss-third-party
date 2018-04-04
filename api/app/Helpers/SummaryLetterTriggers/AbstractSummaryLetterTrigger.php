@@ -124,7 +124,7 @@ abstract class AbstractSummaryLetterTrigger
      * @param bool $active
      * @return null|string|string[]
      */
-    private function getMdReferralIds($patientId, $active = true)
+    private function getMdReferralIds(int $patientId, bool $active = true)
     {
         $contactResult = $this->contactRepository->getReferralIds($patientId);
         $contactIds = [];

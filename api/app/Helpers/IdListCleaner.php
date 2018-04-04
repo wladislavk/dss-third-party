@@ -6,11 +6,11 @@ class IdListCleaner
 {
     /**
      * @param string|null $stringList
-     * @return null|string|string[]
+     * @return null|string
      */
-    public function clearIdList($stringList = null)
+    public function clearIdList(?string $stringList = null): ?string
     {
-        if (!$stringList === null) {
+        if ($stringList === null) {
             return null;
         }
         $stringList = preg_replace('/,+/', ',', $stringList);

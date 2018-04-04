@@ -10,7 +10,6 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
-use PHPUnit\Framework\Assert;
 
 require_once __DIR__ . '/../config.php';
 
@@ -232,8 +231,6 @@ abstract class BaseContext extends RawMinkContext
         $this->page->fillField('captcha', $captcha);
         $loginButton = $this->findCss('button[type="submit"]');
         $loginButton->click();
-        $error = $this->findCss('.has-error');
-        Assert::assertNull($error);
     }
 
     /**

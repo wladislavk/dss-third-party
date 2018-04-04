@@ -34,7 +34,7 @@ class Main extends BaseContext
     }
 
     /**
-     * @Given I am logged in as admin :admin
+     * @When I am logged in as admin :admin
      *
      * @param string $admin
      * @throws \Behat\Mink\Exception\ElementNotFoundException
@@ -145,10 +145,10 @@ class Main extends BaseContext
     public function clickButtonInIframe($button)
     {
         $iframe = 'modal-iframe';
-        $this->client->switchToIFrame($iframe);
+        $this->switchToIframe($iframe);
         $this->clickButton($button);
         $this->wait(self::SHORT_WAIT_TIME);
-        $this->client->switchToIFrame();
+        $this->switchToIframe();
     }
 
     /**
@@ -258,9 +258,7 @@ class Main extends BaseContext
     {
         $this->wait(self::SHORT_WAIT_TIME);
         $menu = $this->findCss('ul.page-sidebar-menu');
-        Assert::assertNotNull($menu);
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
-        Assert::assertNotNull($parentNodeLink);
         $parentNode = $parentNodeLink->getParent();
         $parentNode->mouseOver();
     }
@@ -418,10 +416,10 @@ class Main extends BaseContext
     public function testSeeMarkerInIframe($marker, $button)
     {
         $iframe = 'modal-iframe';
-        $this->client->switchToIFrame($iframe);
+        $this->switchToIframe($iframe);
         $this->wait(self::MEDIUM_WAIT_TIME);
         $this->testSeeMarker($marker, $button);
-        $this->client->switchToIFrame();
+        $this->switchToIframe();
     }
 
     /**
@@ -431,7 +429,7 @@ class Main extends BaseContext
      */
     public function testSeePage($page)
     {
-        $title = $this->findCss('span.admin_head');
+        $title = $this->findCss('span.admin_head, .page-title');
         Assert::assertNotNull($title);
         Assert::assertEquals($page, trim($title->getText()));
     }
@@ -472,16 +470,7 @@ class Main extends BaseContext
      */
     public function testSeeTextWithDelay($text)
     {
-        $maxWait = 6;
-
-        for ($n = 0; $n < $maxWait; $n++) {
-            try {
-                $this->wait(self::SHORT_WAIT_TIME);
-                Assert::assertContains($text, $this->page->getText());
-                return;
-            } catch (ExpectationFailedException $e) { /* Fall through */ }
-        }
-        $screenshot = $this->client->getScreenshot();
+        $this->wait(self::LONG_WAIT_TIME);
         Assert::assertContains($text, $this->page->getText());
     }
 
@@ -493,9 +482,9 @@ class Main extends BaseContext
     public function testSeeTextInIframe($text)
     {
         $iframe = 'modal-iframe';
-        $this->client->switchToIFrame($iframe);
+        $this->switchToIframe($iframe);
         Assert::assertContains($text, $this->page->getText());
-        $this->client->switchToIFrame();
+        $this->switchToIframe();
     }
 
     /**
@@ -543,15 +532,11 @@ class Main extends BaseContext
      */
     public function testBrowserAlertWithDelay($text)
     {
-        $maxWait = 6;
-
-        for ($n = 0; $n < $maxWait; $n++) {
-            try {
-                $this->wait(self::SHORT_WAIT_TIME);
-            } catch (UnexpectedAlertOpen $e) {
-                $this->testBrowserConfirm($text);
-                return;
-            }
+        try {
+            $this->wait(self::LONG_WAIT_TIME);
+        } catch (UnexpectedAlertOpen $e) {
+            $realText = $this->getDriverSession()->getAlert_text();
+            Assert::assertEquals($text, $realText);
         }
         throw new BehatException('No alert open');
     }
@@ -606,5 +591,15 @@ class Main extends BaseContext
         $welcomeDiv = $this->findCss('div.suckertreemenu');
         Assert::assertNotNull($welcomeDiv);
         Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());
+    }
+
+    /**
+     * @param string|null $iframe
+     */
+    protected function switchToIframe($iframe = null)
+    {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame($iframe);
+        }
     }
 }

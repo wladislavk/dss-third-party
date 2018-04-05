@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Factories\ReferredNameSetterFactory;
-use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 
 class FullNameComposer
 {
@@ -38,7 +38,7 @@ class FullNameComposer
     public function getFormedFullNames(Patient $foundPatient)
     {
         $formedFullNames = [];
-        foreach (PatientFormDataUpdater::DOC_FIELDS as $field) {
+        foreach (PatientContactFields::DOC_FIELDS as $field) {
             $nameField = $field . '_name';
             $name = $this->setNameForDocField($foundPatient, $field);
             $formedFullNames[$nameField] = $name;

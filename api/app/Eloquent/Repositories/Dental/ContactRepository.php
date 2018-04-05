@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
+use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Http\Controllers\ContactsController;
-use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -297,7 +297,7 @@ class ContactRepository extends AbstractRepository
                             ->orWhere('dp_pat.parent_patientid', '=', '');
                     })
                     ->where(function (JoinClause $join) {
-                        $docFields = PatientFormDataUpdater::DOC_FIELDS;
+                        $docFields = PatientContactFields::DOC_FIELDS;
                         $firstId = array_shift($docFields);
                         $join = $join->on('dp_pat.' . $firstId, '=', 'dc.contactid');
                         foreach ($docFields as $docField) {

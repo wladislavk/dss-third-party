@@ -24,4 +24,10 @@ class SummaryLetterTriggerData
 
     /** @var bool */
     public $toPatient = false;
+
+    /** @var int[] */
+    public $mdList = [];
+
+    /** @var int[] */
+    public $mdReferralList = [];
 }

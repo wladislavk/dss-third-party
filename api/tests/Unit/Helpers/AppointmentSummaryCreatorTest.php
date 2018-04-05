@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use DentalSleepSolutions\Constants\SummaryLetterTable;
 use DentalSleepSolutions\Constants\TrackerSteps;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
@@ -10,11 +11,9 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryReposito
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Factories\LetterTriggerFactory;
 use DentalSleepSolutions\Factories\RepositoryFactory;
 use DentalSleepSolutions\Helpers\AppointmentSummaryCreator;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\FirstRefusedTreatmentTrigger;
-use DentalSleepSolutions\Helpers\SummaryLetterTriggers\SecondRefusedTreatmentTrigger;
+use DentalSleepSolutions\Helpers\SummaryLetterTrigger;
 use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 use Illuminate\Database\Eloquent\Model;
@@ -63,11 +62,11 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $this->doctor->use_letters = false;
         $this->doctor->tracker_letters = false;
 
-        $letterTriggerFactory = $this->mockLetterTriggerFactory();
+        $summaryLetterTrigger = $this->mockSummaryLetterTrigger();
         $repositoryFactory = $this->mockRepositoryFactory();
         $dbChangeWrapper = $this->mockDBChangeWrapper();
         $this->appointmentSummaryCreator = new AppointmentSummaryCreator(
-            $letterTriggerFactory, $repositoryFactory, $dbChangeWrapper
+            $summaryLetterTrigger, $repositoryFactory, $dbChangeWrapper
         );
     }
 
@@ -104,10 +103,14 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $this->doctor->use_letters = true;
         $this->doctor->tracker_letters = true;
         $data = new SummaryLetterTriggerData();
-        $data->stepId = 6;
+        $data->stepId = TrackerSteps::REFUSED_TREATMENT_ID;
         $data->patientId = self::PATIENT_ID;
         $this->appointmentSummaryCreator->createAppointmentSummary($data);
-        $this->assertEquals(['first', 'second'], $this->triggeredLetters);
+        $expected = [
+            SummaryLetterTable::SUMMARY_LETTERS[TrackerSteps::REFUSED_TREATMENT_ID][0],
+            SummaryLetterTable::SUMMARY_LETTERS[TrackerSteps::REFUSED_TREATMENT_ID][1],
+        ];
+        $this->assertEquals($expected, $this->triggeredLetters);
     }
 
     /**
@@ -187,35 +190,14 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $this->appointmentSummaryCreator->createAppointmentSummary($data);
     }
 
-    private function mockLetterTriggerFactory()
+    private function mockSummaryLetterTrigger()
     {
-        /** @var LetterTriggerFactory|MockInterface $letterTriggerFactory */
-        $letterTriggerFactory = \Mockery::mock(LetterTriggerFactory::class);
-        $letterTriggerFactory->shouldReceive('getLetterTriggers')->andReturn([
-            $this->mockFirstRefusedTreatmentTrigger(),
-            $this->mockSecondRefusedTreatmentTrigger(),
-        ]);
-        return $letterTriggerFactory;
-    }
-
-    private function mockFirstRefusedTreatmentTrigger()
-    {
-        /** @var FirstRefusedTreatmentTrigger|MockInterface $trigger */
-        $trigger = \Mockery::mock(FirstRefusedTreatmentTrigger::class);
-        $trigger->shouldReceive('triggerLetter')->andReturnUsing(function () {
-            $this->triggeredLetters[] = 'first';
+        /** @var SummaryLetterTrigger|MockInterface $summaryLetterTrigger */
+        $summaryLetterTrigger = \Mockery::mock(SummaryLetterTrigger::class);
+        $summaryLetterTrigger->shouldReceive('triggerLetter')->andReturnUsing(function ($data, $tableElement) {
+            $this->triggeredLetters[] = $tableElement;
         });
-        return $trigger;
-    }
-
-    private function mockSecondRefusedTreatmentTrigger()
-    {
-        /** @var SecondRefusedTreatmentTrigger|MockInterface $trigger */
-        $trigger = \Mockery::mock(SecondRefusedTreatmentTrigger::class);
-        $trigger->shouldReceive('triggerLetter')->andReturnUsing(function () {
-            $this->triggeredLetters[] = 'second';
-        });
-        return $trigger;
+        return $summaryLetterTrigger;
     }
 
     private function mockRepositoryFactory()

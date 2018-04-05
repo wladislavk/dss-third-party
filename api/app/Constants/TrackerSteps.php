@@ -15,16 +15,4 @@ interface TrackerSteps
     public const ANNUAL_RECALL_ID = 12;
     public const TERMINATION_ID = 13;
     public const NOT_CANDIDATE_ID = 14;
-
-    public const STEPS_WITH_LETTERS = [
-        self::IMPRESSION_ID,
-        self::DELAYING_TREATMENT_ID,
-        self::REFUSED_TREATMENT_ID,
-        self::FOLLOW_UP_ID,
-        self::NON_COMPLIANT_ID,
-        self::TREATMENT_COMPLETE_ID,
-        self::ANNUAL_RECALL_ID,
-        self::TERMINATION_ID,
-        self::NOT_CANDIDATE_ID,
-    ];
 }

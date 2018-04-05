@@ -78,7 +78,8 @@ class AppointmentSummaryCreator
 
         $this->deleteFutureAppointment($data->patientId);
 
-        if ($createLetters && in_array($data->stepId, TrackerSteps::STEPS_WITH_LETTERS)) {
+        $stepsWithLetters = array_keys(SummaryLetterTable::SUMMARY_LETTERS);
+        if ($createLetters && in_array($data->stepId, $stepsWithLetters)) {
             $this->triggerLetters($data);
         }
         return $newAppointmentSummary;
@@ -91,11 +92,7 @@ class AppointmentSummaryCreator
      */
     private function triggerLetters(SummaryLetterTriggerData $data)
     {
-        if (
-            !isset(SummaryLetterTable::SUMMARY_LETTERS[$data->stepId])
-            ||
-            !is_array(SummaryLetterTable::SUMMARY_LETTERS[$data->stepId])
-        ) {
+        if (!is_array(SummaryLetterTable::SUMMARY_LETTERS[$data->stepId])) {
             throw new GeneralException("Letter data for step with ID {$data->stepId} is not set");
         }
         $tableElements = SummaryLetterTable::SUMMARY_LETTERS[$data->stepId];

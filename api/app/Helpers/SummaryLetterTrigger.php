@@ -13,8 +13,8 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class SummaryLetterTrigger
 {
-    /** @var DoctorIDRetriever */
-    private $doctorIDRetriever;
+    /** @var SummaryLetterDataUpdater */
+    private $summaryLetterDataUpdater;
 
     /** @var UserRepository */
     private $userRepository;
@@ -26,12 +26,12 @@ class SummaryLetterTrigger
     private $dbChangeWrapper;
 
     public function __construct(
-        DoctorIDRetriever $doctorIDRetriever,
+        SummaryLetterDataUpdater $summaryLetterDataUpdater,
         UserRepository $userRepository,
         AppointmentSummaryRepository $appointmentSummaryRepository,
         DBChangeWrapper $dbChangeWrapper
     ) {
-        $this->doctorIDRetriever = $doctorIDRetriever;
+        $this->summaryLetterDataUpdater = $summaryLetterDataUpdater;
         $this->userRepository = $userRepository;
         $this->appointmentSummaryRepository = $appointmentSummaryRepository;
         $this->dbChangeWrapper = $dbChangeWrapper;
@@ -44,76 +44,67 @@ class SummaryLetterTrigger
      */
     public function triggerLetter(SummaryLetterTriggerData $data, array $tableElement): void
     {
-        if ($data->docId) {
-            /** @var User|null $docUser */
-            $docUser = $this->userRepository->findOrNull($data->docId);
-            if ($docUser->use_letters != 1) {
-                return;
-            }
-        }
-        if ($tableElement[SummaryLetterTable::STEP_ID_COLUMN]) {
-            $completedRows = $this->appointmentSummaryRepository
-                ->getCompletedByPatient($tableElement[SummaryLetterTable::STEP_ID_COLUMN], $data->patientId);
-            if (!$completedRows) {
-                return;
-            }
-        }
-        $data->toPatient = $this->isToPatient($tableElement);
-        $mdList = [];
-        if ($tableElement[SummaryLetterTable::MD_LIST_COLUMN]) {
-            $mdList = $this->doctorIDRetriever->getMdContactIds($data->patientId);
-        }
-        $mdReferralList = [];
-        if ($tableElement[SummaryLetterTable::MD_REFERRAL_LIST_COLUMN]) {
-            $mdReferralList = $this->doctorIDRetriever->getMdReferralIds($data->patientId);
-        }
-        if (!$data->toPatient && !$mdReferralList && !$mdList) {
+        $stepId = $tableElement[SummaryLetterTable::STEP_ID_COLUMN];
+        if (!$this->doesDocUseLetters($data->docId) || !$this->isStepCompleted($stepId, $data->patientId)) {
             return;
         }
-        $mdList = $this->removeReferralSourceFromMDList($mdList, $mdReferralList);
-        $data->letterId = $this->getLetterId($tableElement);
-        $newLetter = $this->createLetter($data, $mdList, $mdReferralList);
+        $this->summaryLetterDataUpdater->completeSummaryLetterData($data, $tableElement);
+        if (!$data->toPatient && !sizeof($data->mdReferralList) && !sizeof($data->mdList)) {
+            return;
+        }
+        $newLetter = $this->createLetter($data);
         $this->dbChangeWrapper->save($newLetter);
     }
 
     /**
-     * @param array $tableElement
-     * @return int
+     * @param int $docId
+     * @return bool
+     * @throws RepositoryException
      */
-    private function getLetterId(array $tableElement): int
+    private function doesDocUseLetters(int $docId): bool
     {
-        return $tableElement[SummaryLetterTable::LETTER_ID_COLUMN];
+        if (!$docId) {
+            return true;
+        }
+        /** @var User|null $docUser */
+        $docUser = $this->userRepository->findOrNull($docId);
+        if ($docUser && $docUser->use_letters == 1) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * @param array $tableElement
+     * @param int $stepId
+     * @param int $patientId
      * @return bool
      */
-    private function isToPatient(array $tableElement): bool
+    private function isStepCompleted(int $stepId, int $patientId): bool
     {
-        return $tableElement[SummaryLetterTable::TO_PATIENT_COLUMN];
+        if (!$stepId) {
+            return true;
+        }
+        $completedRows = $this->appointmentSummaryRepository->getCompletedByPatient($stepId, $patientId);
+        if ($completedRows) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param SummaryLetterTriggerData $data
-     * @param int[] $mdList
-     * @param int[] $mdReferralList
      * @return Letter
      */
-    private function createLetter (
-        SummaryLetterTriggerData $data,
-        array $mdList,
-        array $mdReferralList
-    ): Letter {
-        $mdListString = implode(',', $mdList);
-        $mdReferralListString = implode(',', $mdReferralList);
-
+    private function createLetter (SummaryLetterTriggerData $data): Letter
+    {
+        $mdListString = implode(',', $data->mdList);
+        $mdReferralListString = implode(',', $data->mdReferralList);
         $newLetter = new Letter();
         $newLetter->templateid = $data->letterId;
         $newLetter->patientid = $data->patientId;
         $newLetter->info_id = $data->infoId;
-        $newLetter->topatient = $data->toPatient;
-        $newLetter->cc_topatient = $data->toPatient;
+        $newLetter->topatient = (int)$data->toPatient;
+        $newLetter->cc_topatient = (int)$data->toPatient;
         $newLetter->md_list = $mdListString;
         $newLetter->cc_md_list = $mdListString;
         $newLetter->md_referral_list = $mdReferralListString;
@@ -127,21 +118,5 @@ class SummaryLetterTrigger
         $newLetter->docid = $data->docId;
         $newLetter->userid = $data->userId;
         return $newLetter;
-    }
-
-    /**
-     * @param int[] $mdList
-     * @param int[] $mdReferralList
-     * @return int[]
-     */
-    private function removeReferralSourceFromMDList(array $mdList, array $mdReferralList): array
-    {
-        $mdList = array_filter($mdList, function (int $element) use ($mdReferralList): bool {
-            if (in_array($element, $mdReferralList)) {
-                return false;
-            }
-            return true;
-        });
-        return $mdList;
     }
 }

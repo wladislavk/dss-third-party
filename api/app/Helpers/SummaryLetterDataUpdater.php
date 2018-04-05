@@ -80,5 +80,6 @@ class SummaryLetterDataUpdater
             }
             return true;
         });
+        $data->mdList = array_values($data->mdList);
     }
 }

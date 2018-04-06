@@ -38,7 +38,8 @@ export default {
           name: symbols.modals.flowsheetReason,
           params: {
             flowId: this.flowId,
-            segmentId: 5
+            segmentId: 5,
+            patientId: this.patientId
           }
         }
         this.$store.commit(symbols.mutations.modal, modalData)

@@ -3,7 +3,7 @@
         <a v-bind:class="{ 'nav_active': isActive }" v-bind:href="parsedLink" v-if="elementLegacy">{{ elementName }}</a>
         <router-link
             v-bind:class="{ 'nav_active': isActive }"
-            v-bind:to="{ name: elementLink }"
+            v-bind:to="{ name: elementLink, query: { pid: patientId } }"
             v-else
         >{{ elementName }}</router-link>
     </li>

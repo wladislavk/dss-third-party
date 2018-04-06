@@ -20,7 +20,7 @@
                 >Hide Warnings</a>
             </span>
             <welcome-text></welcome-text>
-            <patient-menu></patient-menu>
+            <patient-menu v-bind:patient-id="patientId"></patient-menu>
         </div>
         <div class="clear"></div>
     </div>

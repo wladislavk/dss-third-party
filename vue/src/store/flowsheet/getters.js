@@ -1,14 +1,6 @@
 import symbols from '../../symbols'
 
 export default {
-  [symbols.getters.firstDevice] (state) {
-    let firstDevice = ''
-    for (let device of state[symbols.state.devices]) {
-      firstDevice = device.dentaldevice
-    }
-    return firstDevice
-  },
-
   [symbols.getters.hasScheduledAppointment] (state) {
     const appointmentSummaries = state[symbols.state.appointmentSummaries]
     for (let summary of appointmentSummaries) {

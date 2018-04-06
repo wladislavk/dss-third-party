@@ -20,6 +20,10 @@ li a {
   height: 30px;
   line-height: 30px;
   text-decoration: none;
+
+  &:visited, &:hover {
+    color: #000;
+  }
 }
 
 li a:hover, li a.nav_active {

@@ -39,7 +39,7 @@ export default {
     })
   },
 
-  [symbols.actions.addAppointmentSummary] ({ rootState, commit, dispatch }, {segmentId, patientId}) {
+  [symbols.actions.addAppointmentSummary] ({ rootState, state, commit, dispatch }, {segmentId, patientId}) {
     http.token = rootState.main[symbols.state.mainToken]
     const newStep = {
       step_id: segmentId,
@@ -64,7 +64,24 @@ export default {
         case 4:
         // fall through
         case 7:
-          modalName = symbols.modals.impressionDevice
+          let existingDeviceId = 0
+          for (let summary of state[symbols.state.appointmentSummaries]) {
+            if (summary.deviceId) {
+              existingDeviceId = summary.deviceId
+              const postData = {
+                id: data.id,
+                data: {
+                  device_id: existingDeviceId
+                },
+                patientId: patientId
+              }
+              dispatch(symbols.actions.updateAppointmentSummary, postData)
+              break
+            }
+          }
+          if (!existingDeviceId) {
+            modalName = symbols.modals.impressionDevice
+          }
           break
         // end switch cases
       }

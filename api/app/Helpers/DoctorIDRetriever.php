@@ -8,6 +8,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\UntestableException;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class DoctorIDRetriever
@@ -83,10 +84,10 @@ class DoctorIDRetriever
     }
 
     /**
-     * @param Contact[] $contacts
+     * @param Contact[]|Collection|iterable $contacts
      * @return int[]
      */
-    private function getActiveContactIds(array $contacts): array
+    private function getActiveContactIds(iterable $contacts): array
     {
         $contactIds = [];
         foreach ($contacts as $contact) {

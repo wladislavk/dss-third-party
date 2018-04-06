@@ -9,6 +9,7 @@
                 v-bind:element-active-like="menuElement.activeLike"
                 v-bind:element-legacy="menuElement.legacy"
                 v-bind:last-element="(loopIndex === menuElements.length - 1)"
+                v-bind:patient-id="patientId"
                 v-bind:key="loopIndex"
             ></patient-menu-element>
         </ul>

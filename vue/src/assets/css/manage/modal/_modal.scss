@@ -1,1 +1,19 @@
 @import "../manage";
+
+td.cat_head {
+  background-color: #00457C;
+  color: #fff;
+  padding: 4px;
+  line-height: 20px;
+  text-align: left;
+  border-bottom: 1px #fff solid;
+  font-weight: bold;
+}
+
+td.frmhead {
+  background-color: #e2ecf8;
+  font-weight: bold;
+  font-size: 12px;
+  color: #333333;
+  text-align: left;
+}

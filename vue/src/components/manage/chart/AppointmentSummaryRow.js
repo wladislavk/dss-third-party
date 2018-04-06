@@ -58,7 +58,9 @@ export default {
       delayReasons: DELAY_REASONS,
       nonComplianceReasons: NON_COMPLIANCE_REASONS,
       titrationTypes: TITRATION_TYPES,
-      baselineTypes: BASELINE_TYPES
+      baselineTypes: BASELINE_TYPES,
+      previousDelayReason: this.delayReason,
+      previousNonComplianceReason: this.nonComplianceReason
     }
   },
   computed: {
@@ -87,7 +89,6 @@ export default {
       }
       return false
     },
-    // @todo: property inserted for compatibility with legacy, delete after migration
     currentDelayReason () {
       if (this.delayReason) {
         return this.delayReason
@@ -96,6 +97,14 @@ export default {
         return this.delayReasons[0].value
       }
       return ''
+    }
+  },
+  watch: {
+    delayReason (newValue, oldValue) {
+      this.previousDelayReason = oldValue
+    },
+    nonComplianceReason (newValue, oldValue) {
+      this.previousNonComplianceReason = oldValue
     }
   },
   components: {
@@ -107,6 +116,7 @@ export default {
         name: symbols.modals.flowsheetReason,
         params: {
           flowId: this.elementId,
+          segmentId: this.segmentId,
           patientId: this.patientId
         }
       }
@@ -143,6 +153,60 @@ export default {
         id: this.elementId,
         data: {
           type: newValue
+        },
+        patientId: this.patientId
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
+    },
+    updateDelayReason (event) {
+      const newValue = event.target.value
+      if (!newValue) {
+        return
+      }
+      if (newValue !== 'other' && this.previousDelayReason === 'other') {
+        const confirmText = 'Are you sure you want to change the reason?'
+        if (!Alerter.isConfirmed(confirmText)) {
+          return
+        }
+      }
+      const postData = {
+        id: this.elementId,
+        data: {
+          delay_reason: newValue
+        },
+        patientId: this.patientId
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
+    },
+    updateNonComplianceReason (event) {
+      const newValue = event.target.value
+      if (!newValue) {
+        return
+      }
+      if (newValue !== 'other' && this.previousNonComplianceReason === 'other') {
+        const confirmText = 'Are you sure you want to change the reason?'
+        if (!Alerter.isConfirmed(confirmText)) {
+          return
+        }
+      }
+      const postData = {
+        id: this.elementId,
+        data: {
+          noncomp_reason: newValue
+        },
+        patientId: this.patientId
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
+    },
+    updateDeviceId (event) {
+      const newValue = event.target.value
+      if (!newValue) {
+        return
+      }
+      const postData = {
+        id: this.elementId,
+        data: {
+          device_id: newValue
         },
         patientId: this.patientId
       }

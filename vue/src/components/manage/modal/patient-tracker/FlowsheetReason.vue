@@ -1,5 +1,7 @@
 <template>
     <form name="flowsheet_other_reason">
+        <br />
+        <br />
         <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr>
                 <td class="cat_head">Reason for {{ segmentType }}</td>
@@ -11,13 +13,14 @@
                         id="reason"
                         class="field text reason tbox"
                         tabindex="1"
-                        v-model="description"
+                        v-bind:value="description"
+                        v-on:change="changeDescription($event)"
                     ></textarea>
                 </td>
             </tr>
             <tr>
                 <td align="center">
-                    <input type="submit" value="Submit Reason" class="button" v-on:click.prevent="submitForm()" />
+                    <input type="submit" value="Submit Reason" class="button addButton" v-on:click.prevent="submitForm()" />
                 </td>
             </tr>
         </table>

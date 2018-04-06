@@ -19,6 +19,18 @@ class AppointmentSummaryData
     /** @var string|null */
     public $studyType = null;
 
+    /** @var string|null */
+    public $delayReason = null;
+
+    /** @var string|null */
+    public $nonComplianceReason = null;
+
+    /** @var string|null */
+    public $description = null;
+
+    /** @var int */
+    public $deviceId = 0;
+
     /** @var \DateTime|null */
     public $completionDate = null;
 

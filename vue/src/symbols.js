@@ -67,7 +67,6 @@ export default {
     calculateRisk: 'CALCULATE_RISK',
     documentCategories: 'DOCUMENT_CATEGORIES',
     filteredContact: 'FILTERED_CONTACT',
-    firstDevice: 'FIRST_DEVICE',
     fullContactData: 'FULL_CONTACT_DATA',
     fullName: 'FULL_NAME',
     hasScheduledAppointment: 'HAS_SCHEDULED_APPOINTMENT',

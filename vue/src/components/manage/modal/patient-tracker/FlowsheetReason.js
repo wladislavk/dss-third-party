@@ -1,16 +1,17 @@
 import symbols from '../../../../symbols'
 
 export default {
+  data () {
+    return {
+      currentDescription: ''
+    }
+  },
   computed: {
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
     },
     segmentId () {
-      const params = this.$store.state.main[symbols.state.modal].params
-      if (params.hasOwnProperty('segmentId')) {
-        return params.segmentId
-      }
-      return this.appointmentSummary.segmentId
+      return this.$store.state.main[symbols.state.modal].params.segmentId
     },
     appointmentSummary () {
       for (let summary of this.$store.state.flowsheet[symbols.state.appointmentSummaries]) {
@@ -40,11 +41,18 @@ export default {
     }
   },
   methods: {
+    changeDescription (event) {
+      this.currentDescription = event.target.value
+    },
     submitForm () {
+      let description = this.description
+      if (this.currentDescription !== '') {
+        description = this.currentDescription
+      }
       const payload = {
         id: this.flowId,
         data: {
-          reason: this.description
+          reason: description
         },
         patientId: this.patientId
       }

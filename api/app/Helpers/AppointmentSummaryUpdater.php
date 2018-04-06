@@ -53,6 +53,19 @@ class AppointmentSummaryUpdater
         if ($data->studyType !== null) {
             $summary->study_type = $data->studyType;
         }
+        if ($data->delayReason !== null) {
+            $summary->delay_reason = $data->delayReason;
+        }
+        if ($data->nonComplianceReason !== null) {
+            $summary->noncomp_reason = $data->nonComplianceReason;
+        }
+        if ($data->description !== null) {
+            $summary->description = $data->description;
+        }
+        $summary->device_id = null;
+        if ($data->deviceId) {
+            $summary->device_id = $data->deviceId;
+        }
         $this->dbChangeWrapper->save($summary);
     }
 

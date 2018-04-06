@@ -45,6 +45,7 @@
                     v-bind:id="'delay_reason_' + elementId"
                     v-bind:name="'data[' + elementId + '][delay_reason]'"
                     v-model="currentDelayReason"
+                    v-on:change="updateDelayReason($event)"
                 >
                     <option v-for="reason in delayReasons" v-bind:value="reason.value">{{ reason.text }}</option>
                 </select>
@@ -63,6 +64,7 @@
                     v-bind:id="'noncomp_reason' + elementId"
                     v-bind:name="'data[' + elementId + '][noncomp_reason]'"
                     v-model="nonComplianceReason"
+                    v-on:change="updateNonComplianceReason($event)"
                 >
                     <option v-for="reason in nonComplianceReasons" v-bind:value="reason.value">{{ reason.text }}</option>
                 </select>
@@ -79,6 +81,7 @@
                     class="dentaldevice form-control"
                     v-bind:id="'dentaldevice_' + elementId"
                     v-model="defaultDeviceId"
+                    v-on:change="updateDeviceId($event)"
                 >
                     <option value=""></option>
                     <option v-for="device in devices" v-bind:value="device.id">{{ device.device }}</option>

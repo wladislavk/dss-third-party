@@ -34,7 +34,7 @@ export default {
     const queryString = QueryStringComposer.stringify(queryStringData)
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.letters.byPatientAndInfo + '?' + queryString).then((response) => {
-      commit(symbols.mutations.letters, response.data.data)
+      commit(symbols.mutations.appointmentSummaryLetters, response.data.data)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getLettersByPatientAndInfo', response: response})
     })

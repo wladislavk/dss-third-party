@@ -7,24 +7,26 @@ export default {
       segmentId: parseInt(element.segmentid),
       deviceId: parseInt(element.device_id),
       description: element.description,
-      type: parseInt(element.appointment_type),
       studyType: '',
       delayReason: '',
       nonComplianceReason: '',
-      dateCompleted: new Date(element.date_completed),
-      dateScheduled: new Date(element.date_scheduled)
+      dateCompleted: null,
+      dateScheduled: null
     }
     if (element.study_type) {
-      newSummary.type = 'study_type'
       newSummary.studyType = element.study_type
     }
     if (element.delay_reason) {
-      newSummary.type = 'delay_reason'
       newSummary.delayReason = element.delay_reason
     }
     if (element.noncomp_reason) {
-      newSummary.type = 'noncomp_reason'
       newSummary.nonComplianceReason = element.noncomp_reason
+    }
+    if (element.date_completed) {
+      newSummary.dateCompleted = new Date(element.date_completed)
+    }
+    if (element.date_scheduled) {
+      newSummary.dateScheduled = new Date(element.date_scheduled)
     }
     state[symbols.state.appointmentSummaries].push(newSummary)
   },
@@ -55,20 +57,20 @@ export default {
     state[symbols.state.devices] = devices
   },
 
-  [symbols.mutations.letters] (state, data) {
+  [symbols.mutations.appointmentSummaryLetters] (state, data) {
     const letters = []
     for (let element of data) {
       let newLetter = {
         id: parseInt(element.letterid),
         infoId: parseInt(element.info_id),
-        toPatient: !!element.topatient,
+        toPatient: !!(+element.topatient),
         mdList: element.md_list,
         mdReferralList: element.md_referral_list,
         status: parseInt(element.status)
       }
       letters.push(newLetter)
     }
-    state[symbols.state.letters] = letters
+    state[symbols.state.appointmentSummaryLetters] = letters
   },
 
   [symbols.mutations.finalTrackerRank] (state, rank) {

@@ -13,7 +13,7 @@ export default {
       return this.$store.state.flowsheet[symbols.state.appointmentSummaries]
     },
     letters () {
-      return this.$store.state.flowsheet[symbols.state.letters]
+      return this.$store.state.flowsheet[symbols.state.appointmentSummaryLetters]
     }
   },
   components: {

@@ -62,8 +62,7 @@ class AppointmentSummaryUpdater
         if ($data->description !== null) {
             $summary->description = $data->description;
         }
-        $summary->device_id = null;
-        if ($data->deviceId) {
+        if ($data->deviceId !== null) {
             $summary->device_id = $data->deviceId;
         }
         $this->dbChangeWrapper->save($summary);

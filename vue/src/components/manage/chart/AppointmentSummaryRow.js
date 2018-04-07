@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
   APPOINTMENT_SUMMARY_SEGMENTS, BASELINE_TYPES, DELAY_REASONS, NON_COMPLIANCE_REASONS, TITRATION_TYPES
 } from '../../../constants/chart'
@@ -60,7 +61,8 @@ export default {
       titrationTypes: TITRATION_TYPES,
       baselineTypes: BASELINE_TYPES,
       previousDelayReason: this.delayReason,
-      previousNonComplianceReason: this.nonComplianceReason
+      previousNonComplianceReason: this.nonComplianceReason,
+      currentDateCompleted: this.dateCompleted
     }
   },
   computed: {
@@ -133,12 +135,12 @@ export default {
         this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
       }
     },
-    updateCompletedDate () {
+    updateCompletedDate (newDate) {
+      const momentDate = moment(newDate)
       const postData = {
         id: this.elementId,
         data: {
-          comp_date: this.dateCompleted,
-          pid: this.patientId
+          comp_date: momentDate.format('YYYY-MM-DD')
         },
         patientId: this.patientId
       }

@@ -6,8 +6,8 @@
                 v-bind:id="'completed_date_' + elementId"
                 input-class="completed_date flow_comp_calendar form-control date text-center"
                 format="MM/dd/yyyy"
-                v-model="dateCompleted"
-                v-on:selected="updateCompletedDate()"
+                v-model="currentDateCompleted"
+                v-on:selected="updateCompletedDate($event)"
             ></datepicker>
         </td>
         <td class="form-inline">

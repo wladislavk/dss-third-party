@@ -167,7 +167,11 @@ class AppointmentSummariesController extends BaseRestController
         $data->delayReason = $this->request->input('delay_reason', null);
         $data->nonComplianceReason = $this->request->input('noncomp_reason', null);
         $data->description = $this->request->input('reason', null);
-        $data->deviceId = (int)$this->request->input('device_id', 0);
+        $deviceId = $this->request->input('device_id', null);
+        if ($deviceId !== null) {
+            $deviceId = (int)$deviceId;
+        }
+        $data->deviceId = $deviceId;
         $data->setCompletionDate($this->request->input('comp_date', ''));
         try {
             $this->appointmentSummaryUpdater->updateAppointmentSummary($data);

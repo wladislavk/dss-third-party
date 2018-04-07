@@ -166,7 +166,7 @@ class PatientSummariesController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
+     * @SWG\Put(
      *     path="/patient-summaries/update-tracker-notes",
      *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
      *     @SWG\Parameter(name="tracker_notes", in="query", type="string", required=true),

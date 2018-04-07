@@ -25,6 +25,18 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
     private const DOC_ID = 40;
     private const EXISTING_STUDY_TYPE = 'foo';
     private const NEW_STUDY_TYPE = 'bar';
+    private const EXISTING_COMPLETION_DATE = '2016-01-01';
+    private const NEW_COMPLETION_DATE = '2017-02-02';
+    private const EXISTING_SCHEDULED_DATE = '2016-10-01';
+    private const NEW_SCHEDULED_DATE = '2017-11-02';
+    private const EXISTING_DELAY_REASON = 'existing delay';
+    private const NEW_DELAY_REASON = 'new delay';
+    private const EXISTING_NC_REASON = 'existing non-compliance';
+    private const NEW_NC_REASON = 'new non-compliance';
+    private const EXISTING_DESCRIPTION = 'existing description';
+    private const NEW_DESCRIPTION = 'new description';
+    private const EXISTING_DEVICE_ID = 55;
+    private const NEW_DEVICE_ID = 56;
 
     /** @var AppointmentSummary|null */
     private $summary;
@@ -43,8 +55,13 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $this->summary = new AppointmentSummary();
         $this->summary->id = self::SUMMARY_ID;
         $this->summary->segmentid = self::SEGMENT_ID;
-        $this->summary->date_completed = new \DateTime('2016-01-01');
+        $this->summary->date_completed = new \DateTime(self::EXISTING_COMPLETION_DATE);
+        $this->summary->date_scheduled = new \DateTime(self::EXISTING_SCHEDULED_DATE);
         $this->summary->study_type = self::EXISTING_STUDY_TYPE;
+        $this->summary->delay_reason = self::EXISTING_DELAY_REASON;
+        $this->summary->noncomp_reason = self::EXISTING_NC_REASON;
+        $this->summary->description = self::EXISTING_DESCRIPTION;
+        $this->summary->device_id = self::EXISTING_DEVICE_ID;
 
         $clinicalExamRepository = $this->mockClinicalExamRepository();
         $appointmentSummaryRepository = $this->mockAppointmentSummaryRepository();
@@ -62,14 +79,23 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $data = new AppointmentSummaryData();
         $data->summaryId = self::SUMMARY_ID;
         $data->studyType = self::NEW_STUDY_TYPE;
-        $newDate = '2017-02-02';
-        $data->setCompletionDate($newDate);
+        $data->delayReason = self::NEW_DELAY_REASON;
+        $data->nonComplianceReason = self::NEW_NC_REASON;
+        $data->description = self::NEW_DESCRIPTION;
+        $data->deviceId = self::NEW_DEVICE_ID;
+        $data->setCompletionDate(self::NEW_COMPLETION_DATE);
+        $data->setScheduledDate(self::NEW_SCHEDULED_DATE);
         $this->appointmentSummaryUpdater->updateAppointmentSummary($data);
         $this->assertEquals(1, sizeof($this->savedModels));
         /** @var AppointmentSummary $newSummary */
         $newSummary = $this->savedModels[0];
-        $this->assertEquals($newDate, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::NEW_COMPLETION_DATE, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::NEW_SCHEDULED_DATE, $newSummary->date_scheduled->format('Y-m-d'));
         $this->assertEquals(self::NEW_STUDY_TYPE, $newSummary->study_type);
+        $this->assertEquals(self::NEW_DELAY_REASON, $newSummary->delay_reason);
+        $this->assertEquals(self::NEW_NC_REASON, $newSummary->noncomp_reason);
+        $this->assertEquals(self::NEW_DESCRIPTION, $newSummary->description);
+        $this->assertEquals(self::NEW_DEVICE_ID, $newSummary->device_id);
     }
 
     /**
@@ -83,8 +109,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $data->patientId = self::PATIENT_ID;
         $data->userId = self::USER_ID;
         $data->docId = self::DOC_ID;
-        $newDate = '2017-02-02';
-        $data->setCompletionDate($newDate);
+        $data->setCompletionDate(self::NEW_COMPLETION_DATE);
         $this->appointmentSummaryUpdater->updateAppointmentSummary($data);
         $this->assertEquals(2, sizeof($this->savedModels));
         /** @var TmjClinicalExam $newExam */
@@ -92,7 +117,7 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $this->assertEquals(self::PATIENT_ID, $newExam->patientid);
         $this->assertEquals(self::USER_ID, $newExam->userid);
         $this->assertEquals(self::DOC_ID, $newExam->docid);
-        $this->assertEquals($newDate, $newExam->dentaldevice_date->format('Y-m-d'));
+        $this->assertEquals(self::NEW_COMPLETION_DATE, $newExam->dentaldevice_date->format('Y-m-d'));
     }
 
     /**
@@ -108,15 +133,14 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $data = new AppointmentSummaryData();
         $data->summaryId = self::SUMMARY_ID;
         $data->patientId = self::PATIENT_ID;
-        $newDate = '2017-02-02';
-        $data->setCompletionDate($newDate);
+        $data->setCompletionDate(self::NEW_COMPLETION_DATE);
 
         $this->appointmentSummaryUpdater->updateAppointmentSummary($data);
         $this->assertEquals(2, sizeof($this->savedModels));
         /** @var TmjClinicalExam $existingExam */
         $existingExam = $this->savedModels[0];
         $this->assertEquals(self::EXISTING_PATIENT_ID, $existingExam->patientid);
-        $this->assertEquals($newDate, $existingExam->dentaldevice_date->format('Y-m-d'));
+        $this->assertEquals(self::NEW_COMPLETION_DATE, $existingExam->dentaldevice_date->format('Y-m-d'));
     }
 
     /**
@@ -127,7 +151,6 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $this->clinicalExam = new TmjClinicalExam();
         $this->clinicalExam->patientid = self::EXISTING_PATIENT_ID;
         $this->clinicalExam->dentaldevice_date = new \DateTime('2016-02-02');
-        $today = (new \DateTime())->format('Y-m-d');
 
         $this->summary->segmentid = TrackerSteps::DEVICE_DELIVERY_ID;
         $data = new AppointmentSummaryData();
@@ -140,8 +163,13 @@ class AppointmentSummaryUpdaterTest extends UnitTestCase
         $this->assertNull($existingExam->dentaldevice_date);
         /** @var AppointmentSummary $newSummary */
         $newSummary = $this->savedModels[1];
-        $this->assertEquals($today, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::EXISTING_COMPLETION_DATE, $newSummary->date_completed->format('Y-m-d'));
+        $this->assertEquals(self::EXISTING_SCHEDULED_DATE, $newSummary->date_scheduled->format('Y-m-d'));
         $this->assertEquals(self::EXISTING_STUDY_TYPE, $newSummary->study_type);
+        $this->assertEquals(self::EXISTING_DELAY_REASON, $newSummary->delay_reason);
+        $this->assertEquals(self::EXISTING_NC_REASON, $newSummary->noncomp_reason);
+        $this->assertEquals(self::EXISTING_DESCRIPTION, $newSummary->description);
+        $this->assertEquals(self::EXISTING_DEVICE_ID, $newSummary->device_id);
     }
 
     /**

@@ -24,10 +24,6 @@ export default {
       type: Number,
       required: true
     },
-    elementType: {
-      type: String,
-      required: true
-    },
     dateCompleted: {
       validator: function (value) {
         return value instanceof Date

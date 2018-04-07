@@ -2,6 +2,7 @@ import QueryStringComposer from 'qs'
 import symbols from '../../symbols'
 import http from '../../services/http'
 import endpoints from '../../endpoints'
+import { INITIAL_FUTURE_APPOINTMENT } from '../../constants/chart'
 
 export default {
   [symbols.actions.appointmentSummariesByPatient] ({ rootState, commit, dispatch }, patientId) {
@@ -43,7 +44,8 @@ export default {
     http.token = rootState.main[symbols.state.mainToken]
     const newStep = {
       step_id: segmentId,
-      patient_id: patientId
+      patient_id: patientId,
+      appt_type: 1
     }
     http.post(endpoints.appointmentSummaries.store, newStep).then((response) => {
       const data = response.data.data
@@ -168,26 +170,66 @@ export default {
     })
   },
 
-  [symbols.actions.patientTrackerNotes] ({ rootState, commit, dispatch }) {
+  [symbols.actions.patientTrackerNotes] ({ rootState, commit, dispatch }, patientId) {
     http.token = rootState.main[symbols.state.mainToken]
-    const patientId = rootState.patients[symbols.state.patientId]
-    http.get(endpoints.patientSummaries.getTrackerNotes + '/' + patientId).then((response) => {
+    return http.get(endpoints.patientSummaries.getTrackerNotes + '/' + patientId).then((response) => {
       commit(symbols.mutations.patientTrackerNotes, response.data.data)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'patientTrackerNotes', response: response})
     })
   },
 
-  [symbols.actions.futureAppointment] ({ rootState, commit, dispatch }) {
+  [symbols.actions.updateTrackerNotes] ({ rootState, dispatch }, { patientId, trackerNotes }) {
     http.token = rootState.main[symbols.state.mainToken]
-    const patientId = rootState.patients[symbols.state.patientId]
-    http.get(endpoints.appointmentSummaries.futureAppointment + '/' + patientId).then((response) => {
-      const data = response.data.data
-      if (data) {
-        commit(symbols.mutations.futureAppointment, data)
-      }
+    const data = {
+      patient_id: patientId,
+      tracker_notes: trackerNotes
+    }
+    http.put(endpoints.patientSummaries.updateTrackerNotes, data).then(() => {
+      dispatch(symbols.actions.patientTrackerNotes, patientId)
     }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, {title: 'futureAppointment', response: response})
+      dispatch(symbols.actions.handleErrors, {title: 'updateTrackerNotes', response: response})
+    })
+  },
+
+  [symbols.actions.futureAppointment] ({ rootState, commit, dispatch }, patientId) {
+    http.token = rootState.main[symbols.state.mainToken]
+    return new Promise((resolve, reject) => {
+      http.get(endpoints.appointmentSummaries.futureAppointment + '/' + patientId).then((response) => {
+        const data = response.data.data
+        if (data) {
+          commit(symbols.mutations.futureAppointment, data)
+        }
+        dispatch(symbols.actions.patientTrackerNotes, patientId).then(() => {
+          resolve()
+        })
+      }).catch((response) => {
+        dispatch(symbols.actions.handleErrors, {title: 'futureAppointment', response: response})
+        reject(response)
+      })
+    })
+  },
+
+  [symbols.actions.addFutureAppointment] ({rootState, dispatch}, {segmentId, patientId}) {
+    http.token = rootState.main[symbols.state.mainToken]
+    const newStep = {
+      step_id: segmentId,
+      patient_id: patientId,
+      appt_type: 0
+    }
+    http.post(endpoints.appointmentSummaries.store, newStep).then(() => {
+      dispatch(symbols.actions.futureAppointment, patientId)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'addFutureAppointment', response: response})
+    })
+  },
+
+  [symbols.actions.deleteFutureAppointment] ({rootState, commit, dispatch}, appointmentId) {
+    http.token = rootState.main[symbols.state.mainToken]
+    http.delete(endpoints.appointmentSummaries.destroy + '/' + appointmentId).then(() => {
+      commit(symbols.mutations.futureAppointment, INITIAL_FUTURE_APPOINTMENT)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'deleteFutureAppointment', response: response})
     })
   }
 }

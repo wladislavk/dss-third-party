@@ -23,6 +23,8 @@ class AppointmentSummaryRepository extends AbstractRepository
         return $this->model
             ->select('*')
             ->where('patientid', $patientId)
+            ->where('date_completed', '!=', '')
+            ->whereNotNull('date_completed')
             ->orderBy('date_completed', 'desc')
             ->orderBy('id', 'desc')
             ->get()
@@ -54,7 +56,6 @@ class AppointmentSummaryRepository extends AbstractRepository
         return $arrayResult;
     }
 
-
     /**
      * @param int $patientId
      * @return array|null
@@ -77,6 +78,7 @@ class AppointmentSummaryRepository extends AbstractRepository
         }
         return null;
     }
+
     /**
      * @param int $patientId
      * @return AppointmentSummary|null
@@ -91,6 +93,7 @@ class AppointmentSummaryRepository extends AbstractRepository
         ;
         return $result;
     }
+
     /**
      * @param int $patientId
      * @return AppointmentSummary|null
@@ -109,6 +112,7 @@ class AppointmentSummaryRepository extends AbstractRepository
         ;
         return $result;
     }
+
     /**
      * @param int $stepId
      * @param int $patientId

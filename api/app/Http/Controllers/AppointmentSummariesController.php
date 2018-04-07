@@ -127,6 +127,7 @@ class AppointmentSummariesController extends BaseRestController
     {
         $stepId = (int)$this->request->input('step_id');
         $patientId = (int)$this->request->input('patient_id');
+        $appointmentType = (int)$this->request->input('appt_type');
         $docId = $this->user->getDocIdOrZero();
         $userId = $this->user->getUserIdOrZero();
         $triggerData = new SummaryLetterTriggerData();
@@ -134,6 +135,7 @@ class AppointmentSummariesController extends BaseRestController
         $triggerData->stepId = $stepId;
         $triggerData->userId = $userId;
         $triggerData->docId = $docId;
+        $triggerData->appointmentType = $appointmentType;
         try {
             $summary = $this->appointmentSummaryCreator->createAppointmentSummary($triggerData);
         } catch (GeneralException | RepositoryException $e) {
@@ -143,6 +145,9 @@ class AppointmentSummariesController extends BaseRestController
     }
 
     /**
+     * @todo: currently this method works in the manner of HTTP PATCH rather than PUT. it should be rewritten to
+     * @todo: conform to W3C spec for PUT
+     *
      * @SWG\Put(
      *     path="/appt-summaries/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
@@ -173,6 +178,7 @@ class AppointmentSummariesController extends BaseRestController
         }
         $data->deviceId = $deviceId;
         $data->setCompletionDate($this->request->input('comp_date', ''));
+        $data->setScheduledDate($this->request->input('scheduled', ''));
         try {
             $this->appointmentSummaryUpdater->updateAppointmentSummary($data);
         } catch (GeneralException $e) {

@@ -40,6 +40,7 @@ class AppointmentSummariesApiTest extends ApiTestCase
         $requestData = [
             'step_id' => $stepId,
             'patient_id' => $patientId,
+            'appt_type' => 1,
         ];
         $this->post(self::ROUTE_PREFIX . '/appt-summaries', $requestData);
         $this->assertResponseOk();
@@ -135,7 +136,7 @@ class AppointmentSummariesApiTest extends ApiTestCase
         $this->get(self::ROUTE_PREFIX . '/appt-summaries/by-patient/' . $patientId);
         $this->assertResponseOk();
         $ids = array_column($this->getResponseData(), 'id');
-        $expected = [448, 233, 232, 231, 228, 164, 142, 450];
+        $expected = [448, 233, 232, 231, 228, 164, 142];
         $this->assertEquals($expected, $ids);
     }
 

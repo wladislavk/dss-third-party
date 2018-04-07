@@ -22,6 +22,9 @@ class SummaryLetterTriggerData
     /** @var int */
     public $letterId = 0;
 
+    /** @var int */
+    public $appointmentType = 0;
+
     /** @var bool */
     public $toPatient = false;
 

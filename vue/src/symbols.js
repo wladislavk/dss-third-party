@@ -69,7 +69,6 @@ export default {
     filteredContact: 'FILTERED_CONTACT',
     fullContactData: 'FULL_CONTACT_DATA',
     fullName: 'FULL_NAME',
-    hasScheduledAppointment: 'HAS_SCHEDULED_APPOINTMENT',
     isUserDoctor: 'IS_USER_DOCTOR',
     mainToken: 'MAIN_TOKEN',
     notificationsNumber: 'NOTIFICATIONS_NUMBER',
@@ -161,12 +160,14 @@ export default {
   },
   actions: {
     addAppointmentSummary: 'ADD_APPOINTMENT_SUMMARY',
+    addFutureAppointment: 'ADD_FUTURE_APPOINTMENT',
     addTask: 'ADD_TASK',
     appointmentSummariesByPatient: 'APPOINTMENT_SUMMARIES_BY_PATIENT',
     authenticateScreener: 'AUTHENTICATE_SCREENER',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     dataImportModal: 'DATA_IMPORT_MODAL',
     deleteAppointmentSummary: 'DELETE_APPOINTMENT_SUMMARY',
+    deleteFutureAppointment: 'DELETE_FUTURE_APPOINTMENT',
     deleteTask: 'DELETE_TASK',
     deviceSelectorModal: 'DEVICE_SELECTOR_MODAL',
     devicesByStatus: 'DEVICES_BY_STATUS',
@@ -207,6 +208,7 @@ export default {
     updateAppointmentSummary: 'UPDATE_APPOINTMENT_SUMMARY',
     updateFlowDevice: 'UPDATE_FLOW_DEVICE',
     updateTaskStatus: 'UPDATE_TASK_STATUS',
+    updateTrackerNotes: 'UPDATE_TRACKER_NOTES',
     userInfo: 'USER_INFO'
   },
   populators: {

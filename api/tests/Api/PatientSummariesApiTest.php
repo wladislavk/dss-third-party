@@ -53,7 +53,7 @@ class PatientSummariesApiTest extends ApiTestCase
             'patient_id' => 10,
             'tracker_notes' => 'foo',
         ];
-        $this->post(self::ROUTE_PREFIX . '/patient-summaries/update-tracker-notes', $requestData);
+        $this->put(self::ROUTE_PREFIX . '/patient-summaries/update-tracker-notes', $requestData);
         $this->assertResponseOk();
         $tableData = [
             'pid' => 10,

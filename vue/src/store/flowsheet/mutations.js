@@ -7,11 +7,12 @@ export default {
       segmentId: parseInt(element.segmentid),
       deviceId: parseInt(element.device_id),
       description: element.description,
-      type: '',
+      type: parseInt(element.appointment_type),
       studyType: '',
       delayReason: '',
       nonComplianceReason: '',
-      dateCompleted: new Date(element.date_completed)
+      dateCompleted: new Date(element.date_completed),
+      dateScheduled: new Date(element.date_scheduled)
     }
     if (element.study_type) {
       newSummary.type = 'study_type'
@@ -112,8 +113,10 @@ export default {
     const transformed = {
       id: parseInt(data.id),
       segmentId: parseInt(data.segmentid),
-      dateScheduled: new Date(data.date_scheduled),
-      dateUntil: new Date(data.date_until)
+      dateScheduled: null
+    }
+    if (data.date_scheduled) {
+      transformed.dateScheduled = new Date(data.date_scheduled)
     }
     state[symbols.state.futureAppointment] = transformed
   }

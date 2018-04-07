@@ -28,16 +28,26 @@ class AppointmentSummaryData
     /** @var string|null */
     public $description = null;
 
-    /** @var int */
-    public $deviceId = 0;
+    /** @var int|null */
+    public $deviceId = null;
 
     /** @var \DateTime|null */
     public $completionDate = null;
+
+    /** @var \DateTime|null */
+    public $scheduledDate = null;
 
     public function setCompletionDate(string $completionDate)
     {
         if ($completionDate) {
             $this->completionDate = new \DateTime($completionDate);
+        }
+    }
+
+    public function setScheduledDate(string $scheduledDate)
+    {
+        if ($scheduledDate) {
+            $this->scheduledDate = new \DateTime($scheduledDate);
         }
     }
 }

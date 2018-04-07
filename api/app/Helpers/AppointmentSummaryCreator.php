@@ -71,12 +71,17 @@ class AppointmentSummaryCreator
         $newAppointmentSummary = new AppointmentSummary();
         $newAppointmentSummary->patientid = $data->patientId;
         $newAppointmentSummary->segmentid = $data->stepId;
-        $newAppointmentSummary->appointment_type = 1;
-        $newAppointmentSummary->date_completed = new \DateTime();
+        $newAppointmentSummary->appointment_type = $data->appointmentType;
+        $newAppointmentSummary->date_completed = null;
+        if ($data->appointmentType == 1) {
+            $newAppointmentSummary->date_completed = new \DateTime();
+        }
         $this->dbChangeWrapper->save($newAppointmentSummary);
         $data->infoId = $newAppointmentSummary->id;
 
-        $this->deleteFutureAppointment($data->patientId);
+        if ($data->appointmentType == 1) {
+            $this->deleteFutureAppointment($data->patientId);
+        }
 
         $stepsWithLetters = array_keys(SummaryLetterTable::SUMMARY_LETTERS);
         if ($createLetters && in_array($data->stepId, $stepsWithLetters)) {

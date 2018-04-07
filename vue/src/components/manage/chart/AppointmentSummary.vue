@@ -14,7 +14,6 @@
                 v-bind:element-id="summary.id"
                 v-bind:segment-id="summary.segmentId"
                 v-bind:device-id="summary.deviceId"
-                v-bind:element-type="summary.type"
                 v-bind:date-completed="summary.dateCompleted"
                 v-bind:delay-reason="summary.delayReason"
                 v-bind:non-compliance-reason="summary.nonComplianceReason"

@@ -46,10 +46,12 @@ class AppointmentSummaryUpdater
         if ($summary->segmentid == TrackerSteps::DEVICE_DELIVERY_ID && $this->isLastSummaryForPatient($data)) {
             $this->updateClinicalExam($data);
         }
-        if (!$data->completionDate) {
-            $data->completionDate = new \DateTime();
+        if ($data->completionDate) {
+            $summary->date_completed = $data->completionDate;
         }
-        $summary->date_completed = $data->completionDate;
+        if ($data->scheduledDate) {
+            $summary->date_scheduled = $data->scheduledDate;
+        }
         if ($data->studyType !== null) {
             $summary->study_type = $data->studyType;
         }

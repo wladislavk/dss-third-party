@@ -8,7 +8,7 @@
         </div>
         <div id="step2" class="step2">
             <h3>2) What will you do next?*</h3>
-            <tracker-section-two></tracker-section-two>
+            <tracker-section-two v-bind:patient-id="patientId"></tracker-section-two>
             <span class="sub_text sub_text_right">*After Step 1, choose the next patient treatment and date</span>
             <h3 class="summary">Treatment Summary</h3>
             <appointment-summary v-bind:patient-id="patientId"></appointment-summary>

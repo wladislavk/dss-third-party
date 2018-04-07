@@ -108,3 +108,10 @@ export const BASELINE_TYPES = [
   'HST Baseline',
   'PSG Baseline'
 ]
+
+export const INITIAL_FUTURE_APPOINTMENT = {
+  id: 0,
+  segmentId: 0,
+  dateScheduled: null,
+  dateUntil: null
+}

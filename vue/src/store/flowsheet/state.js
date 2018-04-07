@@ -1,4 +1,5 @@
 import symbols from '../../symbols'
+import { INITIAL_FUTURE_APPOINTMENT } from '../../constants/chart'
 
 export default {
   [symbols.state.appointmentSummaries]: [],
@@ -10,12 +11,7 @@ export default {
     id: 0,
     segmentId: 0
   },
-  [symbols.state.futureAppointment]: {
-    id: 0,
-    segmentId: 0,
-    dateScheduled: null,
-    dateUntil: null
-  },
+  [symbols.state.futureAppointment]: INITIAL_FUTURE_APPOINTMENT,
   [symbols.state.finalTrackerRank]: 0,
   [symbols.state.lastTrackerSegment]: 0,
   [symbols.state.finalTrackerSegment]: 0,

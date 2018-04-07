@@ -256,7 +256,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::resource('patient-insurances', 'PatientInsurancesController', ['except' => ['create', 'edit']]);
 
     Route::get('patient-summaries/get-tracker-notes/{id}', 'PatientSummariesController@getTrackerNotes');
-    Route::post('patient-summaries/update-tracker-notes', 'PatientSummariesController@updateTrackerNotes');
+    Route::put('patient-summaries/update-tracker-notes', 'PatientSummariesController@updateTrackerNotes');
     Route::resource('patient-summaries', 'PatientSummariesController', ['except' => ['create', 'edit']]);
 
     Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');

@@ -18,6 +18,7 @@ use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 use Illuminate\Database\Eloquent\Model;
 use Mockery\MockInterface;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Tests\TestCases\UnitTestCase;
 
 class AppointmentSummaryCreatorTest extends UnitTestCase
@@ -79,6 +80,7 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $data = new SummaryLetterTriggerData();
         $data->stepId = self::STEP_ID;
         $data->patientId = self::PATIENT_ID;
+        $data->appointmentType = 1;
         $newSummary = $this->appointmentSummaryCreator->createAppointmentSummary($data);
         $this->assertEquals(1, sizeof($this->savedModels));
         /** @var AppointmentSummary $savedSummary */
@@ -92,6 +94,23 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $this->assertEquals(0, sizeof($this->deletedModels));
         $this->assertEquals(0, sizeof($this->triggeredLetters));
         $this->assertEquals(self::NEW_MODEL_ID, $data->infoId);
+    }
+
+    /**
+     * @throws GeneralException
+     * @throws RepositoryException
+     */
+    public function testCreateFutureSummary()
+    {
+        $this->futureAppointment = new AppointmentSummary();
+        $this->futureAppointment->id = 1;
+        $data = new SummaryLetterTriggerData();
+        $data->stepId = self::STEP_ID;
+        $data->patientId = self::PATIENT_ID;
+        $data->appointmentType = 0;
+        $newSummary = $this->appointmentSummaryCreator->createAppointmentSummary($data);
+        $this->assertNull($newSummary->date_completed);
+        $this->assertEquals(0, sizeof($this->deletedModels));
     }
 
     /**
@@ -166,6 +185,7 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $data = new SummaryLetterTriggerData();
         $data->stepId = self::STEP_ID;
         $data->patientId = self::PATIENT_ID;
+        $data->appointmentType = 1;
         $this->appointmentSummaryCreator->createAppointmentSummary($data);
         $this->assertEquals(1, sizeof($this->deletedModels));
         /** @var AppointmentSummary $deleted */
@@ -185,6 +205,7 @@ class AppointmentSummaryCreatorTest extends UnitTestCase
         $data = new SummaryLetterTriggerData();
         $data->stepId = self::STEP_ID;
         $data->patientId = self::PATIENT_ID;
+        $data->appointmentType = 1;
         $this->expectException(GeneralException::class);
         $this->expectExceptionMessage('Could not delete future appointment: foo');
         $this->appointmentSummaryCreator->createAppointmentSummary($data);

@@ -34,6 +34,8 @@ abstract class BaseContext extends RawMinkContext
         'admin' => 'cr3at1vItY',
     ];
 
+    const USER_POPUP_WINDOW = 'aj_pop';
+    const ADMIN_POPUP_WINDOW = 'modal-iframe';
     const CAPTCHA_PASSPHRASE = CAPTCHA_PASSPHRASE;
 
     /**
@@ -331,5 +333,27 @@ abstract class BaseContext extends RawMinkContext
         $driver = $this->getSession()->getDriver();
         $driverSession = $driver->getWebDriverSession();
         return $driverSession;
+    }
+
+    /**
+     * @param string $section
+     */
+    protected function focusPopupWindow($section)
+    {
+        $iframe = self::USER_POPUP_WINDOW;
+        if ($section === 'admin') {
+            $iframe = self::ADMIN_POPUP_WINDOW;
+        }
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame();
+            $this->getCommonClient()->switchToIFrame($iframe);
+        }
+    }
+
+    protected function focusMainWindow()
+    {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame();
+        }
     }
 }

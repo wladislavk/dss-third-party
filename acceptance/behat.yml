@@ -32,6 +32,7 @@ default:
                 - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance
+                - Contexts\Invoicing
                 - Contexts\Ledger
                 - Contexts\Letters
                 - Contexts\PatientChart

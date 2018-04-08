@@ -8,9 +8,9 @@ Feature: Manage Stripe Card
     Then I see "Doctor 1" text
     And I see "doc1f" text
     When I click button with text "Edit"
-    Then I see "Edit/Save Contact" text in popup window
-    When I click button with text "Delete Stripe data for this user" in popup window
-    Then I see marker "check" in button "Delete Stripe data for this user" in popup window
+    Then I see "Edit/Save Contact" text in admin popup window
+    When I click button with text "Delete Stripe data for this user" in admin popup window
+    Then I see marker "check" in button "Delete Stripe data for this user" in admin popup window
     When I click button with text "Close"
     And I run mouse over "NathanAdmin SuperStage" admin top menu point
     And I click "Log Out" link

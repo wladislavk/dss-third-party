@@ -19,5 +19,9 @@ export default {
       }
     }
     return secondSteps
+  },
+
+  [symbols.getters.shouldPreventFlowsheetModal] (state) {
+    return !!state[symbols.state.existingDeviceId]
   }
 }

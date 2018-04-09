@@ -1,15 +1,292 @@
+import sinon from 'sinon'
+import TestCase from '../../../cases/StoreTestCase'
+import http from '../../../../src/services/http'
+import symbols from '../../../../src/symbols'
+import FlowsheetModule from '../../../../src/store/flowsheet'
+import endpoints from '../../../../src/endpoints'
+import { CONSULT_ID } from '../../../../src/constants/chart'
+
 describe('Flowsheet module actions', () => {
+  beforeEach(function () {
+    this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
+  })
+
+  afterEach(function () {
+    this.sandbox.restore()
+  })
+
   describe('appointmentSummariesByPatient action', () => {
+    it('retrieves appointment summaries', function (done) {
+      const patientId = 42
+      const postData = []
+      const result = {
+        data: {
+          data: [
+            {
+              id: 1,
+              name: 'foo'
+            },
+            {
+              id: 2,
+              name: 'bar'
+            }
+          ]
+        }
+      }
+      this.sandbox.stub(http, 'get').callsFake((path) => {
+        postData.push({
+          path: path
+        })
+        return Promise.resolve(result)
+      })
+      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
+
+      const expectedMutations = [
+        {
+          type: symbols.mutations.clearAppointmentSummary,
+          payload: {}
+        },
+        {
+          type: symbols.mutations.getAppointmentSummary,
+          payload: {
+            id: 1,
+            name: 'foo'
+          }
+        },
+        {
+          type: symbols.mutations.getAppointmentSummary,
+          payload: {
+            id: 2,
+            name: 'bar'
+          }
+        }
+      ]
+      const expectedActions = [
+        {
+          type: symbols.actions.lettersByPatientAndInfo,
+          payload: patientId
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        const expectedHttp = [
+          { path: endpoints.appointmentSummaries.byPatient + '/' + patientId }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const patientId = 42
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'appointmentSummariesByPatient',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
   })
 
   describe('lettersByPatientAndInfo action', () => {
+    it('retrieves letters', function (done) {
+      const patientId = 42
+      this.testCase.setState({
+        [symbols.state.appointmentSummaries]: [
+          {
+            id: 10
+          },
+          {
+            id: 12
+          },
+          {
+            id: 12
+          },
+          {
+            id: 11
+          }
+        ]
+      })
+      const postData = []
+      const result = {
+        data: {
+          data: ['foo', 'bar']
+        }
+      }
+      this.sandbox.stub(http, 'get').callsFake((path) => {
+        postData.push({
+          path: path
+        })
+        return Promise.resolve(result)
+      })
+      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
+
+      const expectedMutations = [
+        {
+          type: symbols.mutations.appointmentSummaryLetters,
+          payload: ['foo', 'bar']
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedUrl = endpoints.letters.byPatientAndInfo + '?patient_id=42&info_ids%5B0%5D=10&info_ids%5B1%5D=12&info_ids%5B2%5D=11'
+        const expectedHttp = [
+          { path: expectedUrl }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const patientId = 42
+      this.testCase.setState({
+        [symbols.state.appointmentSummaries]: []
+      })
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'getLettersByPatientAndInfo',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
   })
 
   describe('addAppointmentSummary action', () => {
+    it('adds appointment summary', function (done) {
+      const initialData = {
+        patientId: 42,
+        segmentId: CONSULT_ID
+      }
+      const postData = []
+      const result = {
+        data: {
+          data: { id: 12 }
+        }
+      }
+      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
+        postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.resolve(result)
+      })
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.setExistingDevice,
+          payload: 0
+        }
+      ]
+      const expectedActions = [
+        {
+          type: symbols.actions.executeFlowsheetAction,
+          payload: {
+            segmentData: {
+              number: CONSULT_ID,
+              text: 'Consult',
+              modal: null,
+              action: null
+            },
+            flowId: 12,
+            patientId: 42
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        const expectedHttp = [
+          {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: CONSULT_ID,
+              patient_id: 42,
+              appt_type: 1
+            }
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('has non-existent segment', function (done) {
+      const initialData = {
+        patientId: 42,
+        segmentId: 99
+      }
+      const result = {
+        data: {
+          data: { id: 12 }
+        }
+      }
+      this.sandbox.stub(http, 'post').callsFake(() => {
+        return Promise.resolve(result)
+      })
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.setExistingDevice,
+          payload: 0
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual([])
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const initialData = {
+        patientId: 42,
+        segmentId: CONSULT_ID
+      }
+      this.sandbox.stub(http, 'post').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'addAppointmentSummary',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+  })
+
+  describe('executeFlowsheetAction action', () => {
   })
 
   describe('setExistingDevice action', () => {
-
   })
 
   describe('updateAppointmentSummary action', () => {

@@ -41,7 +41,7 @@ export default {
     })
   },
 
-  [symbols.actions.addAppointmentSummary] ({ rootState, state, commit, dispatch }, {segmentId, patientId}) {
+  [symbols.actions.addAppointmentSummary] ({ rootState, commit, dispatch }, {segmentId, patientId}) {
     http.token = rootState.main[symbols.state.mainToken]
     const newStep = {
       step_id: segmentId,
@@ -60,19 +60,38 @@ export default {
       if (!segmentData) {
         return
       }
-      if (segmentData.action) {
-        const actionData = {
-          flowId: data.id,
-          patientId: patientId
-        }
-        dispatch(segmentData.action, actionData)
+      const actionData = {
+        segmentData: segmentData,
+        flowId: data.id,
+        patientId: patientId
       }
-      if (segmentData.modal && !state[symbols.state.existingDeviceId]) {
+      dispatch(symbols.actions.executeFlowsheetAction, actionData)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'addAppointmentSummary', response: response})
+    })
+  },
+
+  [symbols.actions.executeFlowsheetAction] ({getters, commit, dispatch}, {segmentData, flowId, patientId}) {
+    const promise = new Promise((resolve) => {
+      if (!segmentData.action) {
+        resolve()
+        return
+      }
+      const actionData = {
+        flowId: flowId,
+        patientId: patientId
+      }
+      dispatch(segmentData.action, actionData).then(() => {
+        resolve()
+      })
+    })
+    promise.then(() => {
+      if (segmentData.modal && !getters[symbols.getters.shouldPreventFlowsheetModal]) {
         const modalData = {
           name: segmentData.modal,
           params: {
-            flowId: data.id,
-            segmentId: segmentId,
+            flowId: flowId,
+            segmentId: segmentData.number,
             patientId: patientId,
             white: true
           }
@@ -80,8 +99,6 @@ export default {
         commit(symbols.mutations.modal, modalData)
       }
       dispatch(symbols.actions.appointmentSummariesByPatient, patientId)
-    }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, {title: 'addAppointmentSummary', response: response})
     })
   },
 

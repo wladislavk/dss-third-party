@@ -3,6 +3,7 @@ import symbols from '../../symbols'
 import http from '../../services/http'
 import endpoints from '../../endpoints'
 import { INITIAL_FUTURE_APPOINTMENT } from '../../constants/chart'
+import { APPOINTMENT_SUMMARY_SEGMENTS } from 'src/constants/chart'
 
 export default {
   [symbols.actions.appointmentSummariesByPatient] ({ rootState, commit, dispatch }, patientId) {
@@ -47,49 +48,28 @@ export default {
       patient_id: patientId,
       appt_type: 1
     }
+    commit(symbols.mutations.setExistingDevice, 0)
     http.post(endpoints.appointmentSummaries.store, newStep).then((response) => {
       const data = response.data.data
-      let modalData = {}
-      let modalName = ''
-      switch (segmentId) {
-        case 9:
-          modalName = symbols.modals.flowsheetNonCompliance
-          break
-        case 5:
-          modalName = symbols.modals.flowsheetDelayTreatment
-          break
-        case 3:
-          // fall through
-        case 15:
-          modalName = symbols.modals.flowsheetStudyType
-          break
-        case 4:
-        // fall through
-        case 7:
-          let existingDeviceId = 0
-          for (let summary of state[symbols.state.appointmentSummaries]) {
-            if (summary.deviceId) {
-              existingDeviceId = summary.deviceId
-              const postData = {
-                id: data.id,
-                data: {
-                  device_id: existingDeviceId
-                },
-                patientId: patientId
-              }
-              dispatch(symbols.actions.updateAppointmentSummary, postData)
-              break
-            }
-          }
-          if (!existingDeviceId) {
-            modalName = symbols.modals.impressionDevice
-          }
-          break
-        // end switch cases
+      let segmentData = null
+      for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
+        if (segment.number === segmentId) {
+          segmentData = segment
+        }
       }
-      if (modalName) {
-        modalData = {
-          name: modalName,
+      if (!segmentData) {
+        return
+      }
+      if (segmentData.action) {
+        const actionData = {
+          flowId: data.id,
+          patientId: patientId
+        }
+        dispatch(segmentData.action, actionData)
+      }
+      if (segmentData.modal && !state[symbols.state.existingDeviceId]) {
+        const modalData = {
+          name: segmentData.modal,
           params: {
             flowId: data.id,
             segmentId: segmentId,
@@ -103,6 +83,23 @@ export default {
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'addAppointmentSummary', response: response})
     })
+  },
+
+  [symbols.actions.setExistingDevice] ({state, commit, dispatch}, {flowId, patientId}) {
+    for (let summary of state[symbols.state.appointmentSummaries]) {
+      if (summary.deviceId) {
+        commit(symbols.mutations.setExistingDevice, summary.deviceId)
+        const postData = {
+          id: flowId,
+          data: {
+            device_id: summary.deviceId
+          },
+          patientId: patientId
+        }
+        dispatch(symbols.actions.updateAppointmentSummary, postData)
+        return
+      }
+    }
   },
 
   [symbols.actions.updateAppointmentSummary] ({ rootState, dispatch }, { id, data, patientId }) {

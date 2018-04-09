@@ -1,59 +1,104 @@
+import symbols from 'src/symbols'
+
+export const INITIAL_CONTACT_ID = 1
+export const CONSULT_ID = 2
+export const TITRATION_STUDY_ID = 3
+export const IMPRESSIONS_ID = 4
+export const DELAYING_ID = 5
+export const REFUSED_ID = 6
+export const DEVICE_DELIVERY_ID = 7
+export const FOLLOW_UP_ID = 8
+export const NON_COMPLIANT_ID = 9
+export const TREATMENT_COMPLETE_ID = 11
+export const ANNUAL_RECALL_ID = 12
+export const TERMINATION_ID = 13
+export const NOT_CANDIDATE_ID = 14
+export const BASELINE_TEST_ID = 15
+
 export const APPOINTMENT_SUMMARY_SEGMENTS = [
   {
-    number: 1,
-    text: 'Initial Contact'
+    number: INITIAL_CONTACT_ID,
+    text: 'Initial Contact',
+    modal: null,
+    action: null
   },
   {
-    number: 2,
-    text: 'Consult'
+    number: CONSULT_ID,
+    text: 'Consult',
+    modal: null,
+    action: null
   },
   {
-    number: 3,
-    text: 'Titration Sleep Study'
+    number: TITRATION_STUDY_ID,
+    text: 'Titration Sleep Study',
+    modal: symbols.modals.flowsheetStudyType,
+    action: null
   },
   {
-    number: 4,
-    text: 'Impressions'
+    number: IMPRESSIONS_ID,
+    text: 'Impressions',
+    modal: symbols.modals.impressionDevice,
+    action: symbols.actions.setExistingDevice
   },
   {
-    number: 5,
-    text: 'Delaying Tx / Waiting'
+    number: DELAYING_ID,
+    text: 'Delaying Tx / Waiting',
+    modal: symbols.modals.flowsheetDelayTreatment,
+    action: null
   },
   {
-    number: 6,
-    text: 'Refused Treatment'
+    number: REFUSED_ID,
+    text: 'Refused Treatment',
+    modal: null,
+    action: null
   },
   {
-    number: 7,
-    text: 'Device Delivery'
+    number: DEVICE_DELIVERY_ID,
+    text: 'Device Delivery',
+    modal: symbols.modals.impressionDevice,
+    action: symbols.actions.setExistingDevice
   },
   {
-    number: 8,
-    text: 'Check / Follow Up'
+    number: FOLLOW_UP_ID,
+    text: 'Check / Follow Up',
+    modal: null,
+    action: null
   },
   {
-    number: 9,
-    text: 'Pt. Non-Compliant'
+    number: NON_COMPLIANT_ID,
+    text: 'Pt. Non-Compliant',
+    modal: symbols.modals.flowsheetNonCompliance,
+    action: null
   },
   {
-    number: 11,
-    text: 'Treatment Complete'
+    number: TREATMENT_COMPLETE_ID,
+    text: 'Treatment Complete',
+    modal: null,
+    action: null
   },
   {
-    number: 12,
-    text: 'Annual Recall'
+    number: ANNUAL_RECALL_ID,
+    text: 'Annual Recall',
+    modal: null,
+    action: null
   },
   {
-    number: 13,
-    text: 'Termination'
+    number: TERMINATION_ID,
+    text: 'Termination',
+    modal: null,
+    action: null
   },
   {
-    number: 14,
-    text: 'Not a Candidate'
+    number: NOT_CANDIDATE_ID,
+    text: 'Not a Candidate',
+    modal: null,
+    action: null
   },
   {
-    number: 15,
-    text: 'Baseline Sleep Test'
+    number: BASELINE_TEST_ID,
+    text: 'Baseline Sleep Test',
+    modal: symbols.modals.flowsheetStudyType,
+    action: null
   }
 ]
 

@@ -121,5 +121,9 @@ export default {
       transformed.dateScheduled = new Date(data.date_scheduled)
     }
     state[symbols.state.futureAppointment] = transformed
+  },
+
+  [symbols.mutations.setExistingDevice] (state, data) {
+    state[symbols.state.existingDeviceId] = data
   }
 }

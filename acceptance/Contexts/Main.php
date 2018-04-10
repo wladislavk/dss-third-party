@@ -8,7 +8,6 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
 use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Main extends BaseContext
@@ -82,21 +81,28 @@ class Main extends BaseContext
 
     /**
      * @When I confirm browser alert
-     * @When I confirm browser alert with :delay
+     * @When I confirm browser alert with text :alert
      * @When I confirm browser alert after :delay
+     * @When I confirm browser alert with text :alert after :delay
      *
-     * @param string $withDelay
+     * @param string $alert
+     * @param string $delay
      */
-    public function browserConfirm($withDelay='')
+    public function browserConfirm($alert='', $delay='')
     {
         if (BROWSER === 'chrome') {
             /** @var CoreDriver $driver */
             $driver = $this->getSession()->getDriver();
             if (!($driver instanceof Selenium2Driver)) {
+                $this->focusMainWindow();
                 return;
             }
-            if (strlen($withDelay) === 0) {
+            if (strlen($delay) === 0) {
+                if (strlen($alert)) {
+                    Assert::assertEquals($alert, $driver->getWebDriverSession()->getAlert_text());
+                }
                 $driver->getWebDriverSession()->accept_alert();
+                $this->focusMainWindow();
                 return;
             }
             // Alert will open while the script waits, raising an exception
@@ -105,7 +111,11 @@ class Main extends BaseContext
             } catch (UnexpectedAlertOpen $e) {
                 /* Fall through */
             }
+            if (strlen($alert)) {
+                Assert::assertEquals($alert, $driver->getWebDriverSession()->getAlert_text());
+            }
             $driver->getWebDriverSession()->accept_alert();
+            $this->focusMainWindow();
         }
     }
 
@@ -124,13 +134,17 @@ class Main extends BaseContext
      * @When I click button with text :button
      * @When I click button with text :button in :popup window
      * @When I click button with text :button in :section :popup window
+     * @When I click button with text :button triggering :alert
+     * @When I click button with text :button in :popup window triggering :alert
+     * @When I click button with text :button in :section :popup window triggering :alert
      *
      * @param string $button
      * @param string $popup
      * @param string $section
+     * @param string $alert
      * @throws BehatException
      */
-    public function clickButton($button, $popup='', $section='')
+    public function clickButton($button, $popup='', $section='', $alert='')
     {
         if ($popup) {
             $this->focusPopupWindow($section);
@@ -142,11 +156,24 @@ class Main extends BaseContext
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
         }
-        $buttonElement->click();
-        if ($popup) {
-            $this->wait(self::SHORT_WAIT_TIME);
-            $this->focusMainWindow();
+        if (is_null($buttonElement)) {
+            throw new BehatException("Button element '$button' not found");
         }
+        if (strlen($alert) === 0) {
+            $buttonElement->click();
+            if ($popup) {
+                $this->wait(self::SHORT_WAIT_TIME);
+                $this->focusMainWindow();
+            }
+            return;
+        }
+        try {
+            $buttonElement->click();
+            $this->wait(self::SHORT_WAIT_TIME);
+        } catch (UnexpectedAlertOpen $e) {
+            return;
+        }
+        throw new BehatException("Button element '$button' did not trigger a browser alert");
     }
 
     /**
@@ -170,7 +197,7 @@ class Main extends BaseContext
         }
         $buttonElement = $this->findCss("input[type='button'][value='$button'], input[type='submit'][value='$button']");
         if (is_null($buttonElement)) {
-            throw new BehatException("Button element '$button' not found");
+            throw new BehatException("Input button element '$button' not found");
         }
         if (strlen($alert) === 0) {
             $buttonElement->click();
@@ -181,13 +208,11 @@ class Main extends BaseContext
         }
         try {
             $buttonElement->click();
+            $this->wait(self::SHORT_WAIT_TIME);
         } catch (UnexpectedAlertOpen $e) {
-            if ($popup) {
-                $this->focusMainWindow();
-            }
             return;
         }
-        throw new BehatException("Button element '$button' did not trigger a browser alert");
+        throw new BehatException("Input button element '$button' did not trigger a browser alert");
     }
 
     /**
@@ -491,8 +516,9 @@ class Main extends BaseContext
      * @Then I see :text text
      * @Then I see :text text in :popup window
      * @Then I see :text text in :section :popup window
-     * @Then I see :text text with :delay
      * @Then I see :text text after :delay
+     * @Then I see :text text in :popup window after :delay
+     * @Then I see :text text in :section :popup window after :delay
      *
      * @param string $text
      * @param string $popup
@@ -541,7 +567,6 @@ class Main extends BaseContext
 
     /**
      * @Then I see browser alert with text :text
-     * @Then I see browser alert with text :text with :delay
      * @Then I see browser alert with text :text after :delay
      *
      * @param string $text

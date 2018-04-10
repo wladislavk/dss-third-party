@@ -72,4 +72,6 @@
 
 <script src="./AddTask.js"></script>
 
-<style src="../../../assets/css/manage/tasks/add-task.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/modal/add-task.scss";
+</style>

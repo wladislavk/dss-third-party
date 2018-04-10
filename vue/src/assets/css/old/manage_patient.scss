@@ -1,0 +1,17 @@
+#contentMain {
+  tr:hover {
+    background: #cccccc;
+  }
+
+  td:hover {
+    background: #999999;
+  }
+}
+
+.arrow_asc, .arrow_desc {
+  background-color: rgb(0, 39, 94);
+}
+
+.letters, .page_numbers {
+  margin-right: 4px;
+}

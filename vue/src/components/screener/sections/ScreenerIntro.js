@@ -1,31 +1,39 @@
 import symbols from '../../../symbols'
 import AwesomeMask from 'awesome-mask'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
 
 export default {
-  data: function () {
+  data () {
     return {
       nextDisabled: false,
       contactData: this.$store.state.screener[symbols.state.contactData],
-      storedContacts: {},
       errors: {}
     }
+  },
+  components: {
+    sectionHeader: SectionHeaderComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   directives: {
     mask: AwesomeMask
   },
   methods: {
     updateValue (event) {
-      this.storedContacts[event.target.id] = event.target.value
+      const payload = {
+        name: event.target.id,
+        value: event.target.value
+      }
+      this.$store.commit(symbols.mutations.addStoredContact, payload)
     },
     onSubmit () {
-      this.nextDisabled = true
-
       let hasError = false
 
+      const storedContactData = this.$store.state.screener[symbols.state.storedContactData]
       for (let nameField of this.contactData) {
         if (
           nameField.firstPage &&
-          (!this.storedContacts.hasOwnProperty(nameField.name) || this.storedContacts[nameField.name] === '')
+          (!storedContactData.hasOwnProperty(nameField.name) || storedContactData[nameField.name] === '')
         ) {
           this.errors[nameField.name] = true
           hasError = true
@@ -39,7 +47,7 @@ export default {
         return
       }
 
-      this.$store.commit(symbols.mutations.contactData, this.storedContacts)
+      this.$store.commit(symbols.mutations.contactData)
 
       this.$router.push({ name: 'screener-epworth' })
     }

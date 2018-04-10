@@ -1,35 +1,36 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
+import HstContactComponent from './HstContact.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieverFactory'
-import http from '../../../services/http'
 
 export default {
-  data: function () {
+  data () {
     return {
-      contactData: this.$store.state.screener[symbols.state.contactData],
-      currentCompanyId: 0,
-      storedContacts: {}
+      currentCompanyId: 0
     }
   },
   computed: {
-    companies: function () {
+    contactData () {
+      return this.$store.state.screener[symbols.state.contactData]
+    },
+    companies () {
       return this.$store.state.screener[symbols.state.companyData]
     }
   },
   components: {
-    'health-assessment': HealthAssessmentComponent
+    sectionHeader: SectionHeaderComponent,
+    hstContact: HstContactComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.getCompanyData)
+    const isScreener = true
+    this.$store.dispatch(symbols.actions.getCompanyData, isScreener)
   },
   methods: {
     updateCompany (event) {
       this.currentCompanyId = event.target.value
-    },
-    updateContact (event) {
-      const contactName = event.target.id.replace('hst_', '')
-      this.storedContacts[contactName] = event.target.value
     },
     getLogo (logoName) {
       const token = this.$store.state.screener[symbols.state.screenerToken]
@@ -37,7 +38,7 @@ export default {
       return factory.getFileRetriever().getMediaFile(logoName, token)
     },
     onSubmit () {
-      this.$store.commit(symbols.mutations.contactData, this.storedContacts)
+      this.$store.commit(symbols.mutations.contactData)
 
       let hasMissingField = false
       for (let nameField of this.contactData) {
@@ -46,8 +47,10 @@ export default {
         }
       }
 
+      let alertText
       if (hasMissingField || !this.currentCompanyId) {
-        alert('All fields are required.')
+        alertText = 'All fields are required.'
+        Alerter.alert(alertText)
         return
       }
 
@@ -56,7 +59,8 @@ export default {
         contactData: this.contactData
       }
       this.$store.dispatch(symbols.actions.submitHst, payload).then(() => {
-        alert('HST submitted for approval and is in your Pending HST queue.')
+        alertText = 'HST submitted for approval and is in your Pending HST queue.'
+        Alerter.alert(alertText)
         this.$store.commit(symbols.mutations.restoreInitialScreener)
         this.$router.push({ name: 'screener-intro' })
       }).catch(() => {

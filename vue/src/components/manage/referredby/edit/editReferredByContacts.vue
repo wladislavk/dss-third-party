@@ -400,6 +400,3 @@
 </template>
 
 <script src="./editReferredByContacts.js"></script>
-
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>

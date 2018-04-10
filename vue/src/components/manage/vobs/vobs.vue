@@ -48,10 +48,10 @@
                         v-for="(label, sort) in tableHeaders"
                         :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
-                        :width="sort == 'comments' ? '40%' : '15%'"
+                        :width="sort === 'comments' ? '40%' : '15%'"
                     >
                         <router-link
-                            v-if="sort != 'comments' && sort != 'action'"
+                            v-if="sort !== 'comments' && sort !== 'action'"
                             :to="{
                                 name: $route.name,
                                 query: {
@@ -83,6 +83,3 @@
 </template>
 
 <script src="./vobs.js"></script>
-
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/manage.css" scoped></style>

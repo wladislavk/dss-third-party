@@ -16,4 +16,6 @@
 
 <script src="./DashboardNavigation.js"></script>
 
-<style src="../../../assets/css/manage/dashboard/dashboard-navigation.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/dashboard/dashboard-navigation.scss";
+</style>

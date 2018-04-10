@@ -1,0 +1,32 @@
+@import "modal";
+
+td.cat_head {
+  background-color: #00457C;
+  color: #fff;
+  padding: 4px;
+  line-height: 20px;
+  text-align: left;
+  border-bottom: 1px #fff solid;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+td.frmhead {
+  background-color: #E2ECF8;
+  font-weight: bold;
+  color: #333333;
+  text-align: left;
+}
+
+span.red {
+  color: #FF0000;
+}
+
+input.wide-input {
+  width: 500px;
+  font: 400 13.3333px Arial;
+}
+
+a.delete-task {
+  float: right;
+}

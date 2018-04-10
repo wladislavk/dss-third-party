@@ -7,14 +7,12 @@
                 <a
                     v-show="!showAllWarnings"
                     href="#"
-                    class="button"
                     id="show_patient_warnings"
                     v-on:click.prevent="showWarnings()"
                 >Show Warnings</a>
                 <a
                     v-show="showAllWarnings"
                     href="#"
-                    class="button"
                     id="hide_patient_warnings"
                     v-on:click.prevent="hideWarnings()"
                 >Hide Warnings</a>
@@ -26,4 +24,8 @@
     </div>
 </template>
 
-<script src="./PatientRoot.js"></script>
+<script src="./PatientHeader.js"></script>
+
+<style lang="scss" scoped>
+  @import "../../../assets/css/manage/patients/patient-header.scss";
+</style>

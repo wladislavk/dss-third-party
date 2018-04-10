@@ -16,4 +16,6 @@
 
 <script src="./TaskData.js"></script>
 
-<style src="../../../assets/css/manage/tasks/task-data.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/tasks/task-data.scss";
+</style>

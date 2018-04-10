@@ -15,4 +15,6 @@
     </div>
 </template>
 
-<style src="../../assets/css/manage/tutorials.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/manage/tutorials.scss";
+</style>

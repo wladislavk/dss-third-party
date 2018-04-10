@@ -14,9 +14,12 @@ export default {
     survey: 0
   },
   [symbols.state.contactData]: INITIAL_CONTACT_DATA,
+  [symbols.state.storedContactData]: {},
   [symbols.state.epworthProps]: [],
   [symbols.state.epworthOptions]: EPWORTH_OPTIONS,
   [symbols.state.symptoms]: INITIAL_SYMPTOMS,
+  [symbols.state.storedSymptoms]: {},
+  [symbols.state.storedCpap]: 0,
   [symbols.state.coMorbidityData]: INITIAL_CO_MORBIDITY,
   [symbols.state.cpap]: {
     name: 'rx_cpap',

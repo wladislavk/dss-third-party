@@ -2,8 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\EdxCertificateRepository;
+use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
+
 class EdxCertificatesController extends BaseRestController
 {
+    /** @var EdxCertificateRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/edx-certificates",
@@ -119,6 +126,20 @@ class EdxCertificatesController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/edx-certificates/by-user",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getByUser(): JsonResponse
+    {
+        $certificates = $this->repository->getByUserId($this->user->userid);
+        return ApiResponse::responseOk('', $certificates);
     }
 
     public function getModelNamespace()

@@ -30,5 +30,3 @@
 </template>
 
 <script src="./PatientAccessCode.js"></script>
-
-<style src="../../../../assets/css/manage/admin.css" scoped></style>

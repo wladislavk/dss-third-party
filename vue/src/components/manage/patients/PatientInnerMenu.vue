@@ -1,6 +1,7 @@
 <template>
     <div
         id="patient_name_div"
+        class="patient_name_div"
         v-bind:style="{ 'font-size': longPatientFont }"
     >
         <div id="patient_name_inner">
@@ -28,4 +29,6 @@
 
 <script src="./PatientInnerMenu.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-inner-menu.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/patients/patient-inner-menu.scss";
+</style>

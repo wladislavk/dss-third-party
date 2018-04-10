@@ -20,14 +20,22 @@ exports.cssLoaders = function (options) {
     }
   }
 
+  const resolveLoader = {
+    loader: 'resolve-url-loader',
+    options: {
+      sourceMap: options.sourceMap,
+    }
+  }
+
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
-    const loaders = [cssLoader]
+    const loaders = [cssLoader, resolveLoader]
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
         options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
+          // sourceMap: options.sourceMap
+          sourceMap: true
         })
       })
     }

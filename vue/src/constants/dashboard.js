@@ -153,11 +153,11 @@ export const NAVIGATION_MENU = [
     children: [
       {
         name: 'Dental Sleep Solutions Procedures Manual',
-        link: 'manage/manual.php'
+        route: 'manual'
       },
       {
         name: 'Dental Sleep Medicine Manual',
-        link: 'manage/medicine_manual.php'
+        route: 'medicine-manual'
       },
       {
         name: 'DSS Franchise Operations Manual',
@@ -166,11 +166,11 @@ export const NAVIGATION_MENU = [
       },
       {
         name: 'Quick Facts Reference',
-        link: 'manage/quick_facts.php'
+        route: 'quick-facts'
       },
       {
         name: 'Watch Videos',
-        link: 'manage/videos.php'
+        route: 'videos'
       },
       {
         name: 'Get C.E.',
@@ -180,7 +180,7 @@ export const NAVIGATION_MENU = [
       },
       {
         name: 'Certificates',
-        link: 'manage/edx_certificate.php'
+        route: 'edx-certificate'
       }
     ]
   },

@@ -284,12 +284,226 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('executeFlowsheetAction action', () => {
+    it('works without action and modal', function (done) {
+      const payload = {
+        segmentData: {
+          number: 2,
+          modal: null,
+          action: null
+        },
+        patientId: 42,
+        flowId: 13
+      }
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      const expectedMutations = []
+      const expectedActions = [
+        {
+          type: symbols.actions.appointmentSummariesByPatient,
+          payload: 42
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('works with action', function (done) {
+      const payload = {
+        segmentData: {
+          number: 2,
+          modal: null,
+          action: symbols.actions.setExistingDevice
+        },
+        patientId: 42,
+        flowId: 13
+      }
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      const expectedMutations = []
+      const expectedActions = [
+        {
+          type: symbols.actions.setExistingDevice,
+          payload: {
+            flowId: 13,
+            patientId: 42
+          }
+        },
+        {
+          type: symbols.actions.appointmentSummariesByPatient,
+          payload: 42
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('works with modal', function (done) {
+      this.testCase.setGetters({
+        [symbols.getters.shouldPreventFlowsheetModal]: false
+      })
+      const payload = {
+        segmentData: {
+          number: 2,
+          modal: symbols.modals.impressionDevice,
+          action: null
+        },
+        patientId: 42,
+        flowId: 13
+      }
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.modal,
+          payload: {
+            name: symbols.modals.impressionDevice,
+            params: {
+              flowId: 13,
+              segmentId: 2,
+              patientId: 42,
+              white: true
+            }
+          }
+        }
+      ]
+      const expectedActions = [
+        {
+          type: symbols.actions.appointmentSummariesByPatient,
+          payload: 42
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('works with modal and existing device', function (done) {
+      this.testCase.setGetters({
+        [symbols.getters.shouldPreventFlowsheetModal]: true
+      })
+      const payload = {
+        segmentData: {
+          number: 2,
+          modal: symbols.modals.impressionDevice,
+          action: null
+        },
+        patientId: 42,
+        flowId: 13
+      }
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      const expectedMutations = []
+      const expectedActions = [
+        {
+          type: symbols.actions.appointmentSummariesByPatient,
+          payload: 42
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
   })
 
   describe('setExistingDevice action', () => {
+    it('sets device', function () {
+      this.testCase.setState({
+        [symbols.state.appointmentSummaries]: [
+          {
+            deviceId: 1
+          },
+          {
+            deviceId: 2
+          }
+        ]
+      })
+      const payload = {
+        flowId: 13,
+        patientId: 42
+      }
+      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.setExistingDevice,
+          payload: 1
+        }
+      ]
+      const expectedActions = [
+        {
+          type: symbols.actions.updateAppointmentSummary,
+          payload: {
+            id: 13,
+            data: {
+              device_id: 1
+            },
+            patientId: 42
+          }
+        }
+      ]
+      expect(this.testCase.mutations).toEqual(expectedMutations)
+      expect(this.testCase.actions).toEqual(expectedActions)
+    })
+    it('returns if device not found', function () {
+      this.testCase.setState({
+        [symbols.state.appointmentSummaries]: [
+          {
+            deviceId: 0
+          },
+          {
+            deviceId: 0
+          }
+        ]
+      })
+      const payload = {
+        flowId: 13,
+        patientId: 42
+      }
+      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
+      expect(this.testCase.mutations).toEqual([])
+      expect(this.testCase.actions).toEqual([])
+    })
   })
 
   describe('updateAppointmentSummary action', () => {
+    it('updates appointment summary', function (done) {
+      const postData = []
+      this.sandbox.stub(http, 'put').callsFake((path, payload) => {
+        postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.resolve()
+      })
+      const payload = {
+        id: 10,
+        patientId: 11,
+        data: { foo: 'bar' }
+      }
+      FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, payload)
+      const expectedActions = [
+        {
+          type: symbols.actions.appointmentSummariesByPatient,
+          payload: 11
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        const expectedHttp = [
+          {
+            path: endpoints.appointmentSummaries.update + '/10',
+            payload: { foo: 'bar' }
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('handles error', function () {
+
+    })
   })
 
   describe('deleteAppointmentSummary action', () => {

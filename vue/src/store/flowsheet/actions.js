@@ -102,7 +102,7 @@ export default {
     })
   },
 
-  [symbols.actions.setExistingDevice] ({state, commit, dispatch}, {flowId, patientId}) {
+  [symbols.actions.setExistingDevice] ({ state, commit, dispatch }, { flowId, patientId }) {
     for (let summary of state[symbols.state.appointmentSummaries]) {
       if (summary.deviceId) {
         commit(symbols.mutations.setExistingDevice, summary.deviceId)

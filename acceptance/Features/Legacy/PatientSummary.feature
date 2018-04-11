@@ -99,7 +99,6 @@ Feature: Patient Summary
     And I see "Sent Letters" letter table
     And "Sent Letters" letter table contains data:
       | User ID  | Correspondence       | Sent To           | Method | Generated On | Delivered On | Mailed |
-      | DOCTOR ! | SOAP to MD and Pt    | Mrs. Test, Suzie  | paper  | 04/06/2018   | 04/06/2018   |        |
       | DOCTOR ! | SOAP Cover Ltr to Pt | FAX, Dr. TEST     | fax    | 05/18/2016   | 05/18/2016   |        |
       | DOCTOR ! | SOAP Cover Ltr to Pt | FAIL-FAX, Test    | fax    | 05/18/2016   | 05/18/2016   |        |
       | DOCTOR ! | SOAP Cover Ltr to Pt | FAIL-FAX, Dr. Joe | fax    | 05/18/2016   | 05/18/2016   |        |

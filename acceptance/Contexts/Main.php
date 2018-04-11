@@ -8,7 +8,6 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
-use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Main extends BaseContext
 {
@@ -33,24 +32,6 @@ class Main extends BaseContext
     }
 
     /**
-     * @When I am logged in as admin :admin
-     *
-     * @param string $admin
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    public function loginAsAdmin($admin)
-    {
-        $password = '';
-
-        if (array_key_exists($admin, self::PASSWORDS)) {
-            $password = self::PASSWORDS[$admin];
-        }
-
-        $this->visitAdminStartPage();
-        $this->adminLogin($admin, $password, self::CAPTCHA_PASSPHRASE);
-    }
-
-    /**
      * @When I go to :page page
      *
      * @param string $page
@@ -68,55 +49,35 @@ class Main extends BaseContext
             $this->visitStartPage();
             return;
         }
-        if ($page == 'admin start') {
-            if (SUT_HOST == 'vue') {
-                return;
-            }
-            $this->visitAdminStartPage();
-            return;
-        }
         $url = Pages::getUrl($page);
         $this->getCommonClient()->visit($url);
     }
 
     /**
      * @When I confirm browser alert
-     * @When I confirm browser alert with text :alert
-     * @When I confirm browser alert after :delay
-     * @When I confirm browser alert with text :alert after :delay
-     *
-     * @param string $alert
-     * @param string $delay
      */
-    public function browserConfirm($alert='', $delay='')
+    public function browserConfirm()
     {
-        if (BROWSER === 'chrome') {
-            /** @var CoreDriver $driver */
-            $driver = $this->getSession()->getDriver();
-            if (!($driver instanceof Selenium2Driver)) {
-                $this->focusMainWindow();
-                return;
-            }
-            if (strlen($delay) === 0) {
-                if (strlen($alert)) {
-                    Assert::assertEquals($alert, $driver->getWebDriverSession()->getAlert_text());
+        switch (BROWSER) {
+            case 'phantomjs':
+                break;
+            case 'chrome':
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    $driver->getWebDriverSession()->accept_alert();
                 }
-                $driver->getWebDriverSession()->accept_alert();
-                $this->focusMainWindow();
-                return;
-            }
-            // Alert will open while the script waits, raising an exception
-            try {
-                $this->wait(self::SHORT_WAIT_TIME);
-            } catch (UnexpectedAlertOpen $e) {
-                /* Fall through */
-            }
-            if (strlen($alert)) {
-                Assert::assertEquals($alert, $driver->getWebDriverSession()->getAlert_text());
-            }
-            $driver->getWebDriverSession()->accept_alert();
-            $this->focusMainWindow();
+                break;
         }
+    }
+
+    /**
+     * @When I confirm browser alert with delay
+     */
+    public function browserConfirmWithDelay()
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->browserConfirm();
     }
 
     /**
@@ -132,111 +93,48 @@ class Main extends BaseContext
 
     /**
      * @When I click button with text :button
-     * @When I click button with text :button in :popup window
-     * @When I click button with text :button in :section :popup window
-     * @When I click button with text :button triggering :alert
-     * @When I click button with text :button in :popup window triggering :alert
-     * @When I click button with text :button in :section :popup window triggering :alert
      *
      * @param string $button
-     * @param string $popup
-     * @param string $section
-     * @param string $alert
      * @throws BehatException
      */
-    public function clickButton($button, $popup='', $section='', $alert='')
+    public function clickButton($button)
     {
-        if ($popup) {
-            $this->focusPopupWindow($section);
-        }
         $buttonElement = $this->findElementWithText('button', $button, null, true);
-        if (!$buttonElement) {
-            $buttonElement = $this->findElementWithText('a[contains(@class, "addButton")]', $button, null, true);
-        }
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
         }
-        if (is_null($buttonElement)) {
-            throw new BehatException("Button element '$button' not found");
-        }
-        if (strlen($alert) === 0) {
-            $buttonElement->click();
-            if ($popup) {
-                $this->wait(self::SHORT_WAIT_TIME);
-                $this->focusMainWindow();
-            }
-            return;
-        }
-        try {
-            $buttonElement->click();
-            $this->wait(self::SHORT_WAIT_TIME);
-        } catch (UnexpectedAlertOpen $e) {
-            return;
-        }
-        throw new BehatException("Button element '$button' did not trigger a browser alert");
+        $buttonElement->click();
     }
 
     /**
      * @When I click input button with text :button
-     * @When I click input button with text :button in :popup window
-     * @When I click input button with text :button in :section :popup window
-     * @When I click input button with text :button triggering :alert
-     * @When I click input button with text :button in :popup window triggering :alert
-     * @When I click input button with text :button in :section :popup window triggering :alert
      *
      * @param string $button
-     * @param string $popup
-     * @param string $section
-     * @param string $alert
      * @throws BehatException
      */
-    public function clickInputButton($button, $popup='', $section='', $alert='')
+    public function clickInputButton($button)
     {
-        if ($popup) {
-            $this->focusPopupWindow($section);
-        }
-        $buttonElement = $this->findCss("input[type='button'][value='$button'], input[type='submit'][value='$button']");
-        if (is_null($buttonElement)) {
-            throw new BehatException("Input button element '$button' not found");
-        }
-        if (strlen($alert) === 0) {
-            $buttonElement->click();
-            if ($popup) {
-                $this->focusMainWindow();
+        $buttonElements = $this->findAllCss('input[type="button"]');
+        foreach ($buttonElements as $buttonElement) {
+            if ($buttonElement->getValue() == $button) {
+                $buttonElement->click();
             }
-            return;
         }
-        try {
-            $buttonElement->click();
-            $this->wait(self::SHORT_WAIT_TIME);
-        } catch (UnexpectedAlertOpen $e) {
-            return;
-        }
-        throw new BehatException("Input button element '$button' did not trigger a browser alert");
+        throw new BehatException('Button element not found');
     }
 
     /**
      * @When I click add button with text :button
-     * @When I click add button with text :button in :popup window
-     * @When I click add button with text :button in :section :popup window
      *
      * @param string $button
-     * @param string $popup
-     * @param string $section
      * @throws BehatException
      */
-    public function clickAddButton($button, $popup='', $section='')
+    public function clickAddButton($button)
     {
-        if ($popup) {
-            $this->focusPopupWindow($section);
-        }
         $buttonElements = $this->findAllCss('button.addButton');
         foreach ($buttonElements as $buttonElement) {
             if ($button == trim($buttonElement->getText())) {
                 $buttonElement->click();
-                if ($popup) {
-                    $this->focusMainWindow();
-                }
                 return;
             }
         }
@@ -244,9 +142,6 @@ class Main extends BaseContext
         foreach ($inputButtonElements as $inputButtonElement) {
             if ($button == trim($inputButtonElement->getAttribute('value'))) {
                 $inputButtonElement->click();
-                if ($popup) {
-                    $this->focusMainWindow();
-                }
                 return;
             }
         }
@@ -254,14 +149,8 @@ class Main extends BaseContext
         foreach ($inputSubmitElements as $inputSubmitElement) {
             if ($button == trim($inputSubmitElement->getAttribute('value'))) {
                 $inputSubmitElement->click();
-                if ($popup) {
-                    $this->focusMainWindow();
-                }
                 return;
             }
-        }
-        if ($popup) {
-            $this->focusMainWindow();
         }
         throw new BehatException("Button with text $button not found");
     }
@@ -278,33 +167,6 @@ class Main extends BaseContext
     }
 
     /**
-     * @When I type :name into user search form
-     *
-     * @param string $name
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    public function fillUserSearchForm($name)
-    {
-        $this->page->fillField('search', $name);
-    }
-
-    /**
-     * @When I fill in :field with :value in popup window
-     * @When I fill in :field with :value in :section popup window
-     *
-     * @param string $field
-     * @param string $value
-     * @param string $section
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    public function fillFieldInIframe($field, $value, $section='')
-    {
-        $this->focusPopupWindow($section);
-        $this->page->fillField($field, $value);
-        $this->focusMainWindow();
-    }
-
-    /**
      * @When I close the iframe
      */
     public function closeIFrame()
@@ -317,29 +179,15 @@ class Main extends BaseContext
 
     /**
      * @When I run mouse over :menuPoint menu point
-     * @When I run mouse over :menuPoint :section menu point
-     * @When I run mouse over :menuPoint :section :position menu point
      *
      * @param string $menuPoint
-     * @param string $section
-     * @param string $position
      * @throws BehatException
      */
-    public function runMouseOverMenu($menuPoint, $section='', $position='')
+    public function runMouseOverMenu($menuPoint)
     {
-        $parentSelector = 'ul#homemenu';
-        $childSelector = 'a';
-        if ($section === 'admin') {
-            $parentSelector = 'ul.page-sidebar-menu';
-            
-            if ($position === 'top') {
-                $parentSelector = 'div.top-menu ul.nav';
-                $childSelector = 'a/span';
-            }
-        }
         $this->wait(self::SHORT_WAIT_TIME);
-        $menu = $this->findCss($parentSelector);
-        $parentNodeLink = $this->findElementWithText($childSelector, $menuPoint, $menu);
+        $menu = $this->findCss('ul#homemenu');
+        $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $parentNode = $parentNodeLink->getParent();
         $parentNode->mouseOver();
     }
@@ -454,41 +302,13 @@ class Main extends BaseContext
     }
 
     /**
-     * @Then I see marker :marker in button :button
-     * @Then I see marker :marker in button :button in :popup window
-     * @Then I see marker :marker in button :button in :section :popup window
-     *
-     * @param string $marker
-     * @param string $button
-     * @param string $popup
-     * @param string $section
-     * @throws BehatException
-     */
-    public function testSeeMarker($marker, $button, $popup='', $section='')
-    {
-        if ($popup) {
-            $this->focusPopupWindow($section);
-            $this->wait(self::MEDIUM_WAIT_TIME);
-        }
-        $this->wait(self::SHORT_WAIT_TIME);
-        $buttonElement = $this->findElementWithText('button | //a', $button, null, true);
-        Assert::assertNotNull($buttonElement);
-        $markerElement = $buttonElement->find('css', ".fa.fa-$marker");
-        Assert::assertNotNull($markerElement);
-        Assert::assertTrue($markerElement->isVisible());
-        if ($popup) {
-            $this->focusMainWindow();
-        }
-    }
-
-    /**
      * @Then I see :page page
      *
      * @param string $page
      */
     public function testSeePage($page)
     {
-        $title = $this->findCss('span.admin_head, .page-title');
+        $title = $this->findCss('span.admin_head');
         Assert::assertNotNull($title);
         Assert::assertEquals($page, trim($title->getText()));
     }
@@ -514,29 +334,12 @@ class Main extends BaseContext
 
     /**
      * @Then I see :text text
-     * @Then I see :text text in :popup window
-     * @Then I see :text text in :section :popup window
-     * @Then I see :text text after :delay
-     * @Then I see :text text in :popup window after :delay
-     * @Then I see :text text in :section :popup window after :delay
      *
      * @param string $text
-     * @param string $popup
-     * @param string $section
-     * @param string $delay
      */
-    public function testSeeText($text, $popup='', $section='', $delay='')
+    public function testSeeText($text)
     {
-        if ($delay) {
-            $this->wait(self::LONG_WAIT_TIME);
-        }
-        if ($popup) {
-            $this->focusPopupWindow($section);
-        }
         Assert::assertContains($text, $this->page->getText());
-        if ($popup) {
-            $this->focusMainWindow();
-        }
     }
 
     /**
@@ -567,27 +370,13 @@ class Main extends BaseContext
 
     /**
      * @Then I see browser alert with text :text
-     * @Then I see browser alert with text :text after :delay
      *
      * @param string $text
-     * @param string $delay
-     * @throws BehatException
      */
-    public function testBrowserAlert($text, $delay='')
+    public function testBrowserAlert($text)
     {
-        if (strlen($delay) === 0) {
-            $this->wait(self::SHORT_WAIT_TIME);
-            $this->testBrowserConfirm($text);
-            return;
-        }
-        try {
-            $this->wait(self::LONG_WAIT_TIME);
-        } catch (UnexpectedAlertOpen $e) {
-            $realText = $this->getDriverSession()->getAlert_text();
-            Assert::assertEquals($text, $realText);
-            return;
-        }
-        throw new BehatException('No alert open');
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->testBrowserConfirm($text);
     }
 
     /**

@@ -12,3 +12,7 @@
 </template>
 
 <script src="./SleepStudyRow.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/chart/summary-rows/sleep-study-row.scss";
+</style>

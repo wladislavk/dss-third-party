@@ -21,3 +21,7 @@
 </template>
 
 <script src="./ReasonRow.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/chart/summary-rows/reason-row.scss";
+</style>

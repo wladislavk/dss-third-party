@@ -11,3 +11,7 @@
 </template>
 
 <script src="./DeviceRow.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/chart/summary-rows/device-row.scss";
+</style>

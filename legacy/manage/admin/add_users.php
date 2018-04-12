@@ -1212,9 +1212,9 @@ $thesql = "SELECT
                         <a href="#" onclick="alert('<?php echo  $registration_link; ?>');return false;">Registration Link</a>
                 <?php } ?>
                     <?php if (getenv('DOCKER_USED') && $isSuperAdmin) { ?>
-                        <a class="btn btn-danger delete-stripe-customer"
+                        <a class="btn btn-danger delete-stripe-customer" alt="Delete Stripe data"
                            data-docid="<?= (int)$themyarray['userid'] ?>" href="#">
-                            Delete Stripe data for this user
+                            Delete Stripe data
                             <span class="fa fa-spinner hidden"></span>
                         </a>
                     <?php } ?>
@@ -1237,6 +1237,7 @@ $thesql = "SELECT
         function resetFontAwesomeIndicator ($indicator) {
             $indicator.removeClass('fa-exclamation-triangle fa-spinner fa-spin hidden')
                 .attr('title', '')
+                .text('')
             ;
         }
 
@@ -1248,7 +1249,9 @@ $thesql = "SELECT
 
             $this.addClass('disabled');
             resetFontAwesomeIndicator($indicator);
-            $indicator.addClass('fa-spinner fa-spin');
+            $indicator.addClass('fa-spinner fa-spin')
+                .text(' processing')
+            ;
 
             $.ajax({
                 url: '/manage/admin/delete-stripe-customer.php',
@@ -1257,7 +1260,9 @@ $thesql = "SELECT
                 dataType: 'json',
                 success: function (response) {
                     resetFontAwesomeIndicator($indicator);
-                    $indicator.addClass('fa-check');
+                    $indicator.addClass('fa-check')
+                        .text(' success')
+                    ;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     var response = errorThrown;
@@ -1269,6 +1274,7 @@ $thesql = "SELECT
                     resetFontAwesomeIndicator($indicator);
                     $indicator.addClass('fa-exclamation-triangle')
                         .attr('title', response)
+                        .text(' error')
                     ;
                 },
                 complete: function () {

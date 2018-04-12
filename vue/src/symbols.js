@@ -65,6 +65,8 @@ export default {
     userInfo: 'USER_INFO'
   },
   getters: {
+    appointmentLetterCount: 'APPOINTMENT_LETTER_COUNT',
+    appointmentLettersSent: 'APPOINTMENT_LETTERS_SENT',
     calculateRisk: 'CALCULATE_RISK',
     documentCategories: 'DOCUMENT_CATEGORIES',
     filteredContact: 'FILTERED_CONTACT',

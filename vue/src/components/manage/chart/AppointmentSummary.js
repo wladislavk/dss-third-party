@@ -29,29 +29,17 @@ export default {
     }
   },
   methods: {
-    deleteSegment (summaryId) {
-      this.$store.dispatch(symbols.actions.deleteAppointmentSummary, summaryId)
-    },
     letterCount (summaryId) {
-      let result = 0
-      for (let letter of this.letters) {
-        if (letter.infoId === summaryId) {
-          let toPatient = 0
-          if (letter.toPatient) {
-            toPatient = 1
-          }
-          const mdNumber = letter.mdList.length
-          const mdReferralNumber = letter.mdReferralList.length
-          result += toPatient + mdNumber + mdReferralNumber
-        }
+      const result = this.$store.getters[symbols.getters.appointmentLetterCount]
+      if (result.hasOwnProperty(summaryId)) {
+        return result[summaryId]
       }
-      return result
+      return 0
     },
     areLettersSent (summaryId) {
-      for (let letter of this.letters) {
-        if (letter.infoId === summaryId && letter.status === 1) {
-          return true
-        }
+      const result = this.$store.getters[symbols.getters.appointmentLettersSent]
+      if (result.hasOwnProperty(summaryId)) {
+        return result[summaryId]
       }
       return false
     }

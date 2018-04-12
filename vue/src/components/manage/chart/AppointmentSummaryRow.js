@@ -1,10 +1,11 @@
+import Datepicker from 'vuejs-datepicker'
 import moment from 'moment'
-import {
-  APPOINTMENT_SUMMARY_SEGMENTS, BASELINE_TYPES, DELAY_REASONS, NON_COMPLIANCE_REASONS, TITRATION_TYPES
-} from '../../../constants/chart'
+import { APPOINTMENT_SUMMARY_SEGMENTS } from '../../../constants/chart'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
-import Datepicker from 'vuejs-datepicker'
+import SleepStudyRowComponent from './summary-rows/SleepStudyRow.vue'
+import ReasonRowComponent from './summary-rows/ReasonRow.vue'
+import DeviceRowComponent from './summary-rows/DeviceRow.vue'
 
 export default {
   props: {
@@ -52,74 +53,41 @@ export default {
   },
   data () {
     return {
-      delayReasons: DELAY_REASONS,
-      nonComplianceReasons: NON_COMPLIANCE_REASONS,
-      titrationTypes: TITRATION_TYPES,
-      baselineTypes: BASELINE_TYPES,
-      previousDelayReason: this.delayReason,
-      previousNonComplianceReason: this.nonComplianceReason,
       currentDateCompleted: this.dateCompleted
     }
   },
   computed: {
-    devices () {
-      return this.$store.state.flowsheet[symbols.state.devices]
-    },
-    defaultDeviceId () {
-      for (let device of this.devices) {
-        if (device.hasOwnProperty('default') && device.default) {
-          return device.id
-        }
-      }
-      return this.deviceId
-    },
-    segmentName () {
+    segmentData () {
       for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
         if (segment.number === this.segmentId) {
-          return segment.text
+          return segment
         }
+      }
+      return null
+    },
+    segmentName () {
+      if (this.segmentData) {
+        return this.segmentData.text
       }
       return ''
     },
-    isDeviceSegment () {
-      if (this.segmentName === 'Impressions' || this.segmentName === 'Device Delivery') {
-        return true
-      }
-      return false
-    },
-    currentDelayReason () {
+    reason () {
       if (this.delayReason) {
         return this.delayReason
       }
-      if (this.delayReasons.length) {
-        return this.delayReasons[0].value
+      if (this.nonComplianceReason) {
+        return this.nonComplianceReason
       }
       return ''
     }
   },
-  watch: {
-    delayReason (newValue, oldValue) {
-      this.previousDelayReason = oldValue
-    },
-    nonComplianceReason (newValue, oldValue) {
-      this.previousNonComplianceReason = oldValue
-    }
-  },
   components: {
-    datepicker: Datepicker
+    datepicker: Datepicker,
+    sleepStudyRow: SleepStudyRowComponent,
+    reasonRow: ReasonRowComponent,
+    deviceRow: DeviceRowComponent
   },
   methods: {
-    openFlowsheetModal () {
-      const modalData = {
-        name: symbols.modals.flowsheetReason,
-        params: {
-          flowId: this.elementId,
-          segmentId: this.segmentId,
-          patientId: this.patientId
-        }
-      }
-      this.$store.commit(symbols.mutations.modal, modalData)
-    },
     deleteStep () {
       if (this.lettersSent) {
         const alertText = 'Letters have been sent. Unable to delete step.'
@@ -137,74 +105,6 @@ export default {
         id: this.elementId,
         data: {
           comp_date: momentDate.format('YYYY-MM-DD')
-        },
-        patientId: this.patientId
-      }
-      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
-    },
-    updateStudyType (event) {
-      const newValue = event.target.value
-      if (!newValue) {
-        return
-      }
-      const postData = {
-        id: this.elementId,
-        data: {
-          type: newValue
-        },
-        patientId: this.patientId
-      }
-      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
-    },
-    updateDelayReason (event) {
-      const newValue = event.target.value
-      if (!newValue) {
-        return
-      }
-      if (newValue !== 'other' && this.previousDelayReason === 'other') {
-        const confirmText = 'Are you sure you want to change the reason?'
-        if (!Alerter.isConfirmed(confirmText)) {
-          return
-        }
-      }
-      const postData = {
-        id: this.elementId,
-        data: {
-          delay_reason: newValue
-        },
-        patientId: this.patientId
-      }
-      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
-    },
-    updateNonComplianceReason (event) {
-      const newValue = event.target.value
-      if (!newValue) {
-        return
-      }
-      if (newValue !== 'other' && this.previousNonComplianceReason === 'other') {
-        const confirmText = 'Are you sure you want to change the reason?'
-        if (!Alerter.isConfirmed(confirmText)) {
-          return
-        }
-      }
-      const postData = {
-        id: this.elementId,
-        data: {
-          noncomp_reason: newValue
-        },
-        patientId: this.patientId
-      }
-      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
-    },
-    updateDeviceId (event) {
-      const newValue = event.target.value
-      if (!newValue) {
-        return
-      }
-      const postData = {
-        id: this.elementId,
-        data: {
-          device_id: newValue
         },
         patientId: this.patientId
       }

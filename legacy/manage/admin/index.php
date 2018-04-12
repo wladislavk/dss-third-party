@@ -42,24 +42,7 @@
         }
 	}
 
-	/** @todo Remove debug lines */
-	if (getenv('DOCKER_USED')) {
-        putenv('CAPTCHA_PASSPHRASE=EPbptoNJpcqcqACtIGKWOPrBgkj9Bk33n2hwutqX');
-    }
-
-	if (isset($_POST["loginsub"])) {
-		$sessionCaptcha = $_SESSION['security_code'];
-		$captchaBypass = getenv('CAPTCHA_PASSPHRASE');
-		$userCaptcha = $_POST['security_code'];
-
-		$isValidCaptcha = $userCaptcha === $sessionCaptcha;
-		$isCaptchaBypass = false;
-
-		if (getenv('DOCKER_USED') && strlen($captchaBypass)) {
-		    $isCaptchaBypass = $userCaptcha === $captchaBypass;
-        }
-
-	    if ($isValidCaptcha || $isCaptchaBypass) {
+	    if ($_POST['security_code'] == $_SESSION['security_code'] || getenv('DOCKER_USED')) {
 	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."' AND status=1";
 	        
 	        $salt_row = $db->getRow($salt_sql);

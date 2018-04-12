@@ -18,10 +18,10 @@ class ProfileStripe extends BaseContext
      * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function deleteStripeData($user)
+    public function deleteStripeData(string $user)
     {
         $this->visitAdminStartPage();
-        $this->adminLogin('admin', '', self::CAPTCHA_PASSPHRASE);
+        $this->adminLogin('admin');
         $this->wait(self::SHORT_WAIT_TIME);
         $this->page->fillField('search', $user);
         $this->page->pressButton('Search user');

@@ -36,7 +36,7 @@ abstract class BaseContext extends RawMinkContext
 
     const USER_POPUP_WINDOW = 'aj_pop';
     const ADMIN_POPUP_WINDOW = 'modal-iframe';
-    const CAPTCHA_PASSPHRASE = CAPTCHA_PASSPHRASE;
+    const CAPTCHA_PASSPHRASE = 'deadbeef';
 
     /**
      * @var DocumentElement
@@ -166,7 +166,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$parentElement) {
             $parentElement = $this->page;
         }
-        $element = $parentElement->find('xpath', '(//' . $selector . ')[normalize-space()="' . $text . '"]');
+        $element = $parentElement->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
         if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }
@@ -180,7 +180,7 @@ abstract class BaseContext extends RawMinkContext
      */
     protected function findAndClickText($selector, $text)
     {
-        $element = $this->page->find('xpath', '(//' . $selector . ')[normalize-space()="' . $text . '"]');
+        $element = $this->page->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
         if (!$element) {
             throw new BehatException("Element with text $text not found");
         }
@@ -220,17 +220,16 @@ abstract class BaseContext extends RawMinkContext
     /**
      * @param string $admin
      * @param string $password
-     * @param string $captcha
      * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
-    protected function adminLogin($admin, $password, $captcha)
+    protected function adminLogin(string $admin, string $password='')
     {
         if (!$password && array_key_exists($admin, self::PASSWORDS)) {
             $password = self::PASSWORDS[$admin];
         }
         $this->page->fillField('username', $admin);
         $this->page->fillField('password', $password);
-        $this->page->fillField('captcha', $captcha);
+        $this->page->fillField('captcha', self::CAPTCHA_PASSPHRASE);
         $loginButton = $this->findCss('button[type="submit"]');
         $loginButton->click();
     }
@@ -338,7 +337,7 @@ abstract class BaseContext extends RawMinkContext
     /**
      * @param string $section
      */
-    protected function focusPopupWindow($section)
+    protected function focusPopupWindow(string $section)
     {
         $iframe = self::USER_POPUP_WINDOW;
         if ($section === 'admin') {

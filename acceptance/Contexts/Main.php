@@ -41,7 +41,7 @@ class Main extends BaseContext
     public function loginAsAdmin(string $admin)
     {
         $this->visitAdminStartPage();
-        $this->adminLogin($admin, '', self::CAPTCHA_PASSPHRASE);
+        $this->adminLogin($admin);
     }
 
     /**

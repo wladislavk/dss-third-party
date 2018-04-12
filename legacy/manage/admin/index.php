@@ -42,6 +42,7 @@
         }
 	}
 
+	if (isset($_POST['loginsub'])) {
 	    if ($_POST['security_code'] == $_SESSION['security_code'] || getenv('DOCKER_USED')) {
 	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."' AND status=1";
 	        

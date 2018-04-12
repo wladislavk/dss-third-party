@@ -2,7 +2,7 @@
     <select
         class="dentaldevice form-control"
         v-bind:id="'dentaldevice_' + elementId"
-        v-model="defaultDeviceId"
+        v-model="currentDeviceId"
         v-on:change="updateDeviceId($event)"
     >
         <option value=""></option>

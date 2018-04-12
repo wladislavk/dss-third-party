@@ -23,7 +23,7 @@ export default {
     },
     deviceId: {
       type: Number,
-      required: true
+      default: 0
     },
     dateCompleted: {
       validator: function (value) {
@@ -70,6 +70,30 @@ export default {
         return this.segmentData.text
       }
       return ''
+    },
+    isSleepStudy () {
+      if (this.segmentData) {
+        return this.segmentData.isSleepStudy
+      }
+      return false
+    },
+    isReason () {
+      if (this.segmentData) {
+        return this.segmentData.isReason
+      }
+      return false
+    },
+    isDevice () {
+      if (this.segmentData) {
+        return this.segmentData.isDevice
+      }
+      return false
+    },
+    canBeDeleted () {
+      if (this.segmentData) {
+        return this.segmentData.canBeDeleted
+      }
+      return false
     },
     reason () {
       if (this.delayReason) {

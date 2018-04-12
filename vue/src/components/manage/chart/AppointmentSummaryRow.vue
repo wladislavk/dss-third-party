@@ -14,21 +14,21 @@
             <span class="title">{{ segmentName }}</span>
             <br />
             <sleep-study-row
-                v-if="segmentData.isSleepStudy"
+                v-if="isSleepStudy"
                 v-bind:patient-id="patientId"
                 v-bind:element-id="elementId"
                 v-bind:segment-id="segmentId"
                 v-bind:study-type="studyType"
             ></sleep-study-row>
             <reason-row
-                v-if="segmentData.isReason"
+                v-if="isReason"
                 v-bind:patient-id="patientId"
                 v-bind:element-id="elementId"
                 v-bind:segment-id="segmentId"
                 v-bind:reason="reason"
             ></reason-row>
             <device-row
-                v-if="segmentData.isDevice"
+                v-if="isDevice"
                 v-bind:patient-id="patientId"
                 v-bind:element-id="elementId"
                 v-bind:device-id="deviceId"
@@ -45,7 +45,7 @@
         <td>
             <a
                 href="#"
-                v-if="segmentData.canBeDeleted"
+                v-if="canBeDeleted"
                 v-on:click.prevent="deleteStep()"
                 class="addButton deleteButton btn btn-danger btn-sm button"
             >Delete</a>

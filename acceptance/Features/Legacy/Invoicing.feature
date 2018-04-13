@@ -1,6 +1,5 @@
 Feature: Invoicing
 
-  @active
   Scenario: Failed charge
     Given I delete Stripe data from user "doc1f"
     And I add "4000000000000341" credit card to user "doc1f"

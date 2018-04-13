@@ -67,6 +67,48 @@ Feature: Patient Summary
 #      | Patient: Mr. TEST PATIENT |
 #    And I see add button with text "Create Letter"
 
+  Scenario: View patient letters
+    Given I am logged in as "doc1f"
+    When I go to "start" page
+    And I type "suzie" into patient search form
+    And I click on "Test, Suzie T" in list of patients
+    When I click on "Summary Sheet" patient chart menu point
+    And I click on "LETTERS (64)" patient summary left menu point
+    Then I see summary left menu with these points:
+      | name         |
+      | SUMMARY      |
+      | PROG NOTES   |
+      | TREATMENT Hx |
+      | HEALTH Hx    |
+      | LETTERS      |
+      | SLEEP TESTS  |
+      | SUBJ TESTS   |
+    And I see "Pending Letters" letter table
+    And "Pending Letters" letter table contains data:
+      | Correspondence                  | Sent To     | Generated On |
+      | Intro Ltr to MD from Franchisee | No Contacts | 04/25/2011   |
+      | Intro Ltr To MD from DSSFLLC    | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
+      | To Pt Did Not Accept Treatment  | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
+      | Intro Ltr To MD from DSSFLLC    | No Contacts | 04/25/2011   |
+      | Intro Ltr to MD from Franchisee | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
+    And I see "Sent Letters" letter table
+    And "Sent Letters" letter table contains data:
+      | User ID  | Correspondence       | Sent To           | Method | Generated On | Delivered On | Mailed |
+      | DOCTOR ! | SOAP Cover Ltr to Pt | FAX, Dr. TEST     | fax    | 05/18/2016   | 05/18/2016   |        |
+      | DOCTOR ! | SOAP Cover Ltr to Pt | FAIL-FAX, Test    | fax    | 05/18/2016   | 05/18/2016   |        |
+      | DOCTOR ! | SOAP Cover Ltr to Pt | FAIL-FAX, Dr. Joe | fax    | 05/18/2016   | 05/18/2016   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/30/2015   | 09/30/2015   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/30/2015   | 09/30/2015   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/30/2015   | 09/30/2015   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/25/2015   | 09/25/2015   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/25/2015   | 09/25/2015   |        |
+      | DOCTOR ! | Nathan Custom 130701 | Mrs. Test, Suzie  | paper  | 09/25/2015   | 09/25/2015   |        |
+
   Scenario: View sleep tests
     Given I am logged in as "doc1f"
     When I go to "start" page

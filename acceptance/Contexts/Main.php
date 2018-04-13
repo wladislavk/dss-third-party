@@ -3,8 +3,6 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Driver\CoreDriver;
-use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
@@ -78,17 +76,7 @@ class Main extends BaseContext
      */
     public function browserConfirm()
     {
-        switch (BROWSER) {
-            case 'phantomjs':
-                break;
-            case 'chrome':
-                /** @var CoreDriver $driver */
-                $driver = $this->getSession()->getDriver();
-                if ($driver instanceof Selenium2Driver) {
-                    $driver->getWebDriverSession()->accept_alert();
-                }
-                break;
-        }
+        $this->confirmBrowserAlert();
     }
 
     /**
@@ -124,6 +112,7 @@ class Main extends BaseContext
             $buttonElement = $this->findElementWithText('a', $button);
         }
         $buttonElement->click();
+        $this->wait(self::SHORT_WAIT_TIME);
     }
 
     /**
@@ -378,7 +367,7 @@ class Main extends BaseContext
      */
     public function testSeePage($page)
     {
-        $title = $this->findCss('span.admin_head');
+        $title = $this->findCss('span.admin_head, h3.page-title');
         Assert::assertNotNull($title);
         Assert::assertEquals($page, trim($title->getText()));
     }

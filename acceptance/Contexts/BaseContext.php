@@ -4,12 +4,14 @@ namespace Contexts;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
+use WebDriver\Exception\UnexpectedAlertOpen;
 
 require_once __DIR__ . '/../config.php';
 
@@ -112,6 +114,18 @@ abstract class BaseContext extends RawMinkContext
     {
         $this->getSession()->wait($time);
         $this->page = $this->getCommonClient()->getPage();
+    }
+
+    /**
+     * @param int $time
+     */
+    protected function waitExpectingBrowserAlert($time)
+    {
+        try {
+            $this->wait($time);
+        } catch (UnexpectedAlertOpen $e) {
+            $this->confirmBrowserAlert();
+        }
     }
 
     /**
@@ -334,6 +348,21 @@ abstract class BaseContext extends RawMinkContext
         return $driverSession;
     }
 
+    protected function confirmBrowserAlert()
+    {
+        switch (BROWSER) {
+            case 'phantomjs':
+                break;
+            case 'chrome':
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    $driver->getWebDriverSession()->accept_alert();
+                }
+                break;
+        }
+    }
+
     /**
      * @param string $section
      */
@@ -354,5 +383,20 @@ abstract class BaseContext extends RawMinkContext
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame();
         }
+    }
+
+    /**
+     * @param string|null $filename
+     * @param string|null $filepath
+     */
+    public function saveScreenshot($filename=null, $filepath=null)
+    {
+        if (is_null($filename)) {
+            $filename = date('Y-m-d-Hi') . microtime(true) . '.png';
+        }
+        if (is_null($filepath)) {
+            $filepath = __DIR__ . '/..';
+        }
+        parent::saveScreenshot($filename, $filepath);
     }
 }

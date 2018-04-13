@@ -3,11 +3,8 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Driver\CoreDriver;
-use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\ElementNotFoundException;
 use PHPUnit\Framework\Assert;
-use WebDriver\Exception\UnexpectedAlertOpen;
 
 class ProfileStripe extends BaseContext
 {
@@ -44,17 +41,7 @@ class ProfileStripe extends BaseContext
         }
         $menu->mouseOver();
         $this->page->clickLink('Log Out');
-        try {
-            $this->wait(self::SHORT_WAIT_TIME);
-        } catch (UnexpectedAlertOpen $e) {
-            if (BROWSER === 'chrome') {
-                /** @var CoreDriver $driver */
-                $driver = $this->getSession()->getDriver();
-                if ($driver instanceof Selenium2Driver) {
-                    $driver->getWebDriverSession()->accept_alert();
-                }
-            }
-        }
+        $this->waitExpectingBrowserAlert(self::SHORT_WAIT_TIME);
         $this->wait(self::SHORT_WAIT_TIME);
         $loginTitle = $this->page->find('css', 'h3.form-title');
         if (!$loginTitle) {

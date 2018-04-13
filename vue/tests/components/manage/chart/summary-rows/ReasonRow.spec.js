@@ -1,18 +1,108 @@
+import Vue from 'vue'
 import moxios from 'moxios'
+import store from '../../../../../src/store'
+import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
+import { DELAYING_ID } from 'src/constants/chart'
+import symbols from 'src/symbols'
 
 describe('ReasonRow component', () => {
   beforeEach(function () {
     moxios.install()
+
+    const Component = Vue.extend(ReasonRowComponent)
+    this.mount = function (propsData) {
+      return new Component({
+        store: store,
+        propsData: propsData
+      }).$mount()
+    }
   })
 
-  it('shows reasons')
-  it('shows other reason')
-  it('shows without current reason')
-  it('shows without current reason and reason data')
+  it('shows reasons', function () {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'deciding'
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    expect(selector.id).toBe('delay_reason_1')
+    expect(selector.getAttribute('name')).toBe('data[1][delay_reason]')
+    expect(selector.className).toBe('form-control delay_reason')
+    const options = selector.querySelectorAll('option')
+    expect(options.length).toBe(5)
+    expect(options[1].getAttribute('value')).toBe('dental work')
+    expect(options[1].innerText).toBe('Dental Work')
+    expect(selector.value).toBe('deciding')
+    const link = vm.$el.querySelector('a')
+    expect(link.id).toBe('reason_btn_1')
+    expect(link.style.display).toBe('none')
+  })
+
+  it('shows other reason', function () {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'other'
+    }
+    const vm = this.mount(props)
+    const link = vm.$el.querySelector('a')
+    expect(link.style.display).toBe('')
+  })
+
+  it('shows without current reason', function () {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: ''
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    expect(selector.value).toBe('insurance')
+  })
+
+  it('shows without current reason and reason data', function () {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: 99,
+      reason: ''
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    expect(selector.value).toBe('')
+  })
+
   it('updates reason')
   it('updates reason and erases description')
   it('updates to empty data')
-  it('opens flowsheet modal')
+
+  it('opens flowsheet modal', function (done) {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'other'
+    }
+    const vm = this.mount(props)
+    const link = vm.$el.querySelector('a')
+    link.click()
+    vm.$nextTick(() => {
+      const expectedModal = {
+        name: symbols.modals.flowsheetReason,
+        params: {
+          flowId: 1,
+          segmentId: DELAYING_ID,
+          patientId: 42
+        }
+      }
+      expect(vm.$store.state.main[symbols.state.modal]).toEqual(expectedModal)
+      done()
+    })
+  })
 
   afterEach(function () {
     moxios.uninstall()

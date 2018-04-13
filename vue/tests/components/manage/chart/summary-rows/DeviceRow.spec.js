@@ -2,9 +2,9 @@ import moxios from 'moxios'
 import Vue from 'vue'
 import store from '../../../../../src/store'
 import DeviceRowComponent from '../../../../../src/components/manage/chart/summary-rows/DeviceRow.vue'
-import symbols from 'src/symbols'
-import http from 'src/services/http'
-import endpoints from 'src/endpoints'
+import symbols from '../../../../../src/symbols'
+import http from '../../../../../src/services/http'
+import endpoints from '../../../../../src/endpoints'
 
 describe('DeviceRow component', () => {
   beforeEach(function () {

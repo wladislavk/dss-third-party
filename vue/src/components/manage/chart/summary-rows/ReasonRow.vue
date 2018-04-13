@@ -2,18 +2,18 @@
     <span>
         <select
             class="form-control"
-            v-bind:class="reasonData.className"
-            v-bind:id="reasonData.className + '_' + elementId"
-            v-bind:name="'data[' + elementId + '][' + reasonData.className + ']'"
+            v-bind:class="className"
+            v-bind:id="className + '_' + elementId"
+            v-bind:name="'data[' + elementId + '][' + className + ']'"
             v-model="currentReason"
             v-on:change="updateReason($event)"
         >
-            <option v-for="reasonType in reasonData.types" v-bind:value="reasonType.value">{{ reasonType.text }}</option>
+            <option v-for="reasonType in reasonTypes" v-bind:value="reasonType.value">{{ reasonType.text }}</option>
         </select>
         <a
             href="#"
             v-show="reason === 'other'"
-            v-bind:id="'reason_btn' + elementId"
+            v-bind:id="'reason_btn_' + elementId"
             v-on:click.prevent="openFlowsheetModal()"
         >Show Reason</a>
     </span>

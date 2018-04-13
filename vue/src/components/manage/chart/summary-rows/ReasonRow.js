@@ -39,8 +39,20 @@ export default {
       if (this.reason) {
         return this.reason
       }
+      if (this.reasonTypes.length) {
+        return this.reasonTypes[0].value
+      }
+      return ''
+    },
+    reasonTypes () {
       if (this.reasonData) {
-        return this.reasonData.types[0].value
+        return this.reasonData.types
+      }
+      return []
+    },
+    className () {
+      if (this.reasonData) {
+        return this.reasonData.className
       }
       return ''
     }

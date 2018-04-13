@@ -5,7 +5,7 @@
             v-bind:class="className"
             v-bind:id="className + '_' + elementId"
             v-bind:name="'data[' + elementId + '][' + className + ']'"
-            v-model="currentReason"
+            v-model="nextReason"
             v-on:change="updateReason($event)"
         >
             <option v-for="reasonType in reasonTypes" v-bind:value="reasonType.value">{{ reasonType.text }}</option>

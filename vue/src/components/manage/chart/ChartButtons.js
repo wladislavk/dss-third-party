@@ -1,7 +1,6 @@
 import Alerter from '../../../services/Alerter'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
 import symbols from '../../../symbols'
-import { HST_STATUSES } from '../../../constants/main'
 
 export default {
   props: {
@@ -12,23 +11,13 @@ export default {
   },
   computed: {
     isHSTCompany () {
-      if (this.$store.state.main[symbols.state.companyData].length > 0) {
-        return true
-      }
-      return false
+      return this.$store.getters[symbols.getters.isHSTCompany]
     },
     incompleteHSTs () {
       return this.$store.state.patients[symbols.state.incompleteHomeSleepTests]
     },
     hstStatus () {
-      if (!this.incompleteHSTs.length) {
-        return ''
-      }
-      const lastHST = this.incompleteHSTs[this.incompleteHSTs.length - 1]
-      if (!HST_STATUSES.hasOwnProperty(lastHST)) {
-        return ''
-      }
-      return HST_STATUSES[lastHST]
+      return this.$store.getters[symbols.getters.hstStatus]
     }
   },
   created () {

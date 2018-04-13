@@ -1,5 +1,5 @@
 import symbols from '../../../../symbols'
-import { APPOINTMENT_SUMMARY_SEGMENTS } from 'src/constants/chart'
+import { APPOINTMENT_SUMMARY_SEGMENTS } from '../../../../../src/constants/chart'
 
 export default {
   props: {
@@ -20,6 +20,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      currentStudyType: this.studyType
+    }
+  },
   computed: {
     sleepStudyTypes () {
       for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
@@ -36,6 +41,7 @@ export default {
       if (!newValue) {
         return
       }
+      this.currentStudyType = newValue
       const postData = {
         id: this.elementId,
         data: {

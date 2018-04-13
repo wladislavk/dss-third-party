@@ -1,12 +1,17 @@
 import Vue from 'vue'
 import moxios from 'moxios'
+import sinon from 'sinon'
 import store from '../../../../../src/store'
 import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
-import { DELAYING_ID } from 'src/constants/chart'
-import symbols from 'src/symbols'
+import { DELAYING_ID } from '../../../../../src/constants/chart'
+import symbols from '../../../../../src/symbols'
+import endpoints from '../../../../../src/endpoints'
+import http from '../../../../../src/services/http'
+import Alerter from '../../../../../src/services/Alerter'
 
 describe('ReasonRow component', () => {
   beforeEach(function () {
+    this.sandbox = sinon.createSandbox()
     moxios.install()
 
     const Component = Vue.extend(ReasonRowComponent)
@@ -16,6 +21,11 @@ describe('ReasonRow component', () => {
         propsData: propsData
       }).$mount()
     }
+  })
+
+  afterEach(function () {
+    moxios.uninstall()
+    this.sandbox.restore()
   })
 
   it('shows reasons', function () {
@@ -76,9 +86,88 @@ describe('ReasonRow component', () => {
     expect(selector.value).toBe('')
   })
 
-  it('updates reason')
-  it('updates reason and erases description')
-  it('updates to empty data')
+  it('updates reason', function (done) {
+    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
+      status: 200,
+      responseText: {
+        data: []
+      }
+    })
+    let confirmation = false
+    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+      confirmation = true
+      return true
+    })
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'deciding'
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    selector.value = 'dental work'
+    selector.dispatchEvent(new Event('change'))
+    moxios.wait(() => {
+      expect(moxios.requests.count()).toBe(2)
+      const request = moxios.requests.at(0)
+      expect(request.config.data).not.toBeUndefined()
+      const expectedData = {
+        delay_reason: 'dental work'
+      }
+      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(confirmation).toBe(false)
+      done()
+    })
+  })
+
+  it('updates reason and erases description', function (done) {
+    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
+      status: 200,
+      responseText: {
+        data: []
+      }
+    })
+    let confirmation = false
+    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+      confirmation = true
+      return true
+    })
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'other'
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    selector.value = 'dental work'
+    selector.dispatchEvent(new Event('change'))
+    moxios.wait(() => {
+      expect(moxios.requests.count()).toBe(2)
+      const request = moxios.requests.at(0)
+      expect(request.config.data).not.toBeUndefined()
+      expect(confirmation).toBe(true)
+      done()
+    })
+  })
+
+  it('updates to empty data', function (done) {
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID,
+      reason: 'deciding'
+    }
+    const vm = this.mount(props)
+    const selector = vm.$el.querySelector('select')
+    selector.value = ''
+    selector.dispatchEvent(new Event('change'))
+    vm.$nextTick(() => {
+      expect(moxios.requests.count()).toBe(0)
+      done()
+    })
+  })
 
   it('opens flowsheet modal', function (done) {
     const props = {

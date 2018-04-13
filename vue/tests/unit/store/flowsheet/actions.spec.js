@@ -209,7 +209,13 @@ describe('Flowsheet module actions', () => {
               number: CONSULT_ID,
               text: 'Consult',
               modal: null,
-              action: null
+              action: null,
+              canBeDeleted: true,
+              types: [],
+              className: '',
+              isDevice: false,
+              isSleepStudy: false,
+              isReason: false
             },
             flowId: 12,
             patientId: 42

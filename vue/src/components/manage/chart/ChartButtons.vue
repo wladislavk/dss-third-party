@@ -17,6 +17,7 @@
         <a
             v-legacy-href="'manage/calendar_pat.php?pid=' + patientId"
             class="button"
+            id="calendar-appts-button"
         >View Calendar Appts</a>
     </div>
 </template>

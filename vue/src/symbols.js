@@ -72,6 +72,8 @@ export default {
     filteredContact: 'FILTERED_CONTACT',
     fullContactData: 'FULL_CONTACT_DATA',
     fullName: 'FULL_NAME',
+    hstStatus: 'HST_STATUS',
+    isHSTCompany: 'IS_HST_COMPANY',
     isUserDoctor: 'IS_USER_DOCTOR',
     mainToken: 'MAIN_TOKEN',
     notificationsNumber: 'NOTIFICATIONS_NUMBER',

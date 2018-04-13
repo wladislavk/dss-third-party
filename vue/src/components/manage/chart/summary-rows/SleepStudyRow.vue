@@ -3,7 +3,7 @@
         class="study_type form-control"
         v-bind:id="'study_type_' + elementId"
         v-bind:name="'data[' + elementId + '][study_type]'"
-        v-model="studyType"
+        v-model="currentStudyType"
         v-on:change="updateStudyType($event)"
     >
         <option value="">Select Type</option>

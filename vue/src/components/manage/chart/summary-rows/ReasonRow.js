@@ -23,7 +23,8 @@ export default {
   },
   data () {
     return {
-      previousReason: this.reason
+      previousReason: this.reason,
+      nextReason: this.reason
     }
   },
   computed: {
@@ -60,7 +61,11 @@ export default {
   watch: {
     reason (newValue, oldValue) {
       this.previousReason = oldValue
+      this.nextReason = this.currentReason
     }
+  },
+  created () {
+    this.nextReason = this.currentReason
   },
   methods: {
     updateReason (event) {
@@ -74,6 +79,7 @@ export default {
           return
         }
       }
+      this.nextReason = newValue
       const postData = {
         id: this.elementId,
         data: {

@@ -194,12 +194,12 @@ if (isset($patient_info) && $patient_info) {
     if (count($templateIds)) {
         $templateIdsString = $db->escapeList($templateIds);
         $template_sql = "SELECT id, name FROM dental_letter_templates WHERE id IN ($templateIdsString);";
-        $templates = $db->getResults($template_sql) || [];
+        $templates = $db->getResults($template_sql);
     }
     if (count($customTemplateIds)) {
         $templateIdsString = $db->escapeList($customTemplateIds);
         $template_sql = "SELECT id, name FROM dental_letter_templates_custom WHERE id IN ($templateIdsString);";
-        $customTemplates = $db->getResults($template_sql) || [];
+        $customTemplates = $db->getResults($template_sql);
     }
 
     if ($dental_letters) {

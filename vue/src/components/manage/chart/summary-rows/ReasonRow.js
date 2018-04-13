@@ -39,7 +39,7 @@ export default {
       if (this.reason) {
         return this.reason
       }
-      if (this.reasonData.types.length) {
+      if (this.reasonData) {
         return this.reasonData.types[0].value
       }
       return ''

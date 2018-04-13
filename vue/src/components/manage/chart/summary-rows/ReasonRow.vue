@@ -1,6 +1,5 @@
 <template>
     <span>
-        <!-- @todo: after the migration replace "currentDelayReason" with "delayReason" -->
         <select
             class="form-control"
             v-bind:class="reasonData.className"

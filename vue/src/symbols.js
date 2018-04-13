@@ -72,6 +72,7 @@ export default {
     filteredContact: 'FILTERED_CONTACT',
     fullContactData: 'FULL_CONTACT_DATA',
     fullName: 'FULL_NAME',
+    hasScheduledAppointment: 'HAS_SCHEDULED_APPOINTMENT',
     hstStatus: 'HST_STATUS',
     isHSTCompany: 'IS_HST_COMPANY',
     isUserDoctor: 'IS_USER_DOCTOR',

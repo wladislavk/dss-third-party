@@ -12,8 +12,8 @@ export default {
   data () {
     return {
       currentScheduledDate: '',
-      currentSelectedStep: 0,
-      currentTrackerNote: ''
+      currentTrackerNote: '',
+      currentSelectedStep: 0
     }
   },
   computed: {
@@ -38,25 +38,40 @@ export default {
         return dateObject.fromNow(true)
       }
       return ''
+    },
+    selectedStep () {
+      return this.futureAppointment.segmentId
+    },
+    trackerNote () {
+      return this.$store.state.flowsheet[symbols.state.patientTrackerNotes]
+    },
+    scheduledDate () {
+      if (!this.futureAppointment || !this.futureAppointment.dateScheduled) {
+        return ''
+      }
+      return moment(this.futureAppointment.dateScheduled).format('MM/DD/YYYY')
     }
   },
   components: {
     datepicker: Datepicker
   },
   created () {
-    this.$store.dispatch(symbols.actions.futureAppointment, this.patientId).then(() => {
-      this.currentSelectedStep = this.$store.state.flowsheet[symbols.state.futureAppointment].segmentId
-      this.currentScheduledDate = this.scheduledDate()
-      this.currentTrackerNote = this.$store.state.flowsheet[symbols.state.patientTrackerNotes]
-    })
+    this.currentScheduledDate = this.scheduledDate
+    this.currentTrackerNote = this.trackerNote
+    this.currentSelectedStep = this.selectedStep
+  },
+  watch: {
+    scheduledDate (newValue) {
+      this.currentScheduledDate = newValue
+    },
+    trackerNote (newValue) {
+      this.currentTrackerNote = newValue
+    },
+    selectedStep (newValue) {
+      this.currentSelectedStep = newValue
+    }
   },
   methods: {
-    scheduledDate () {
-      if (!this.futureAppointment || !this.futureAppointment.dateScheduled) {
-        return ''
-      }
-      return moment(this.futureAppointment.dateScheduled).format('MM/DD/YYYY')
-    },
     updateScheduledDate (newDate) {
       this.currentScheduledDate = moment(newDate).format('MM/DD/YYYY')
       const postData = {

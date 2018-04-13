@@ -3,8 +3,8 @@ import moxios from 'moxios'
 import Vue from 'vue'
 import store from '../../../../src/store'
 import AppointmentSummaryComponent from '../../../../src/components/manage/chart/AppointmentSummary.vue'
-import http from 'src/services/http'
-import endpoints from 'src/endpoints'
+import http from '../../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
 
 describe('AppointmentSummary component', () => {
   beforeEach(function () {

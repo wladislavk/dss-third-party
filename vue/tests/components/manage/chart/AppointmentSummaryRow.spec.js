@@ -9,10 +9,10 @@ import {
   IMPRESSIONS_ID,
   INITIAL_CONTACT_ID,
   NON_COMPLIANT_ID
-} from 'src/constants/chart'
-import Alerter from 'src/services/Alerter'
-import http from 'src/services/http'
-import endpoints from 'src/endpoints'
+} from '../../../../src/constants/chart'
+import Alerter from '../../../../src/services/Alerter'
+import http from '../../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
 
 describe('AppointmentSummaryRow component', () => {
   beforeEach(function () {

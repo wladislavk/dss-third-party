@@ -3,10 +3,10 @@ import moxios from 'moxios'
 import Vue from 'vue'
 import store from '../../../../src/store'
 import ChartButtonsComponent from '../../../../src/components/manage/chart/ChartButtons.vue'
-import symbols from 'src/symbols'
-import Alerter from 'src/services/Alerter'
-import { DSS_CONSTANTS, HST_STATUSES } from 'src/constants/main'
-import LocationWrapper from 'src/wrappers/LocationWrapper'
+import symbols from '../../../../src/symbols'
+import Alerter from '../../../../src/services/Alerter'
+import { DSS_CONSTANTS, HST_STATUSES } from '../../../../src/constants/main'
+import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 
 describe('ChartButtons component', () => {
   beforeEach(function () {

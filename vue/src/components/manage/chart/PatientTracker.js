@@ -19,6 +19,7 @@ export default {
   created () {
     this.$store.dispatch(symbols.actions.trackerSteps)
     this.$store.dispatch(symbols.actions.finalTrackerRank, this.patientId)
+    this.$store.dispatch(symbols.actions.futureAppointment, this.patientId)
   },
   watch: {
     patientId (newPatientId) {

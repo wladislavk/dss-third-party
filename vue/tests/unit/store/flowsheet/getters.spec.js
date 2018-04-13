@@ -1,5 +1,6 @@
 import symbols from '../../../../src/symbols'
 import FlowsheetModule from '../../../../src/store/flowsheet'
+import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
 
 describe('Flowsheet module getters', () => {
   describe('trackerStepsFirst getter', () => {
@@ -123,6 +124,40 @@ describe('Flowsheet module getters', () => {
         3: true
       }
       expect(result).toEqual(expected)
+    })
+  })
+
+  describe('hasScheduledAppointment getter', () => {
+    it('returns false with initial appointment', function () {
+      const state = {
+        [symbols.state.futureAppointment]: INITIAL_FUTURE_APPOINTMENT
+      }
+      const result = FlowsheetModule.getters[symbols.getters.hasScheduledAppointment](state)
+      expect(result).toBe(false)
+    })
+    it('returns false without scheduled date', function () {
+      const state = {
+        [symbols.state.futureAppointment]: {
+          id: 1,
+          segmentId: 1,
+          dateScheduled: null,
+          dateUntil: null
+        }
+      }
+      const result = FlowsheetModule.getters[symbols.getters.hasScheduledAppointment](state)
+      expect(result).toBe(false)
+    })
+    it('returns true', function () {
+      const state = {
+        [symbols.state.futureAppointment]: {
+          id: 1,
+          segmentId: 1,
+          dateScheduled: new Date('2016-01-01'),
+          dateUntil: null
+        }
+      }
+      const result = FlowsheetModule.getters[symbols.getters.hasScheduledAppointment](state)
+      expect(result).toBe(true)
     })
   })
 })

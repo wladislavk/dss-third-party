@@ -2,7 +2,7 @@ import symbols from '../../../symbols'
 
 export default {
   props: {
-    id: {
+    stepId: {
       type: Number,
       required: true
     },
@@ -28,9 +28,6 @@ export default {
     }
   },
   computed: {
-    hasScheduledAppointment () {
-      return this.$store.getters[symbols.getters.hasScheduledAppointment]
-    },
     showLast () {
       if (this.last && this.section === 1) {
         return true
@@ -41,7 +38,7 @@ export default {
   methods: {
     addAction () {
       const postData = {
-        segmentId: this.id,
+        segmentId: this.stepId,
         patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.addAppointmentSummary, postData)

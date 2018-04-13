@@ -1,10 +1,10 @@
 <template>
     <li v-bind:class="{'completed_step': completed, 'last': showLast}">
-        <span v-if="id === 1">{{ name }}</span>
+        <span v-if="stepId === 1">{{ name }}</span>
         <a
             v-else
             href="#"
-            v-bind:id="'completed_' + id"
+            v-bind:id="'completed_' + stepId"
             v-on:click.prevent="addAction()"
             class="completed_today"
         >{{ name }}</a>

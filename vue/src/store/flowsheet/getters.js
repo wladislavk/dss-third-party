@@ -55,5 +55,13 @@ export default {
       }
     }
     return results
+  },
+
+  [symbols.getters.hasScheduledAppointment] (state) {
+    const futureAppointment = state[symbols.state.futureAppointment]
+    if (futureAppointment.segmentId && futureAppointment.dateScheduled) {
+      return true
+    }
+    return false
   }
 }

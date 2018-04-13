@@ -33,7 +33,7 @@
                 id="tracker-notes"
                 class="tracker-notes"
                 type="text"
-                v-bind:value="currentTrackerNote"
+                v-model="currentTrackerNote"
                 v-on:change="updateTrackerNotes($event)"
             />
         </div>

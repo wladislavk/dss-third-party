@@ -3,8 +3,8 @@ import moxios from 'moxios'
 import store from '../../../../../src/store'
 import SleepStudyRowComponent from '../../../../../src/components/manage/chart/summary-rows/SleepStudyRow.vue'
 import { BASELINE_TEST_ID } from '../../../../../src/constants/chart'
-import endpoints from 'src/endpoints'
-import http from 'src/services/http'
+import endpoints from '../../../../../src/endpoints'
+import http from '../../../../../src/services/http'
 
 describe('SleepStudyRow component', () => {
   beforeEach(function () {

@@ -21,7 +21,6 @@ class AppointmentSummaryRepository extends AbstractRepository
     public function getByPatient($patientId)
     {
         return $this->model
-            ->select('*')
             ->where('patientid', $patientId)
             ->where('date_completed', '!=', '')
             ->whereNotNull('date_completed')

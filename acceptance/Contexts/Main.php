@@ -19,7 +19,7 @@ class Main extends BaseContext
     }
 
     /**
-     * @Given I am logged in as :user
+     * @When I am logged in as :user
      *
      * @param string $user
      * @throws \Behat\Mink\Exception\ElementNotFoundException
@@ -31,7 +31,7 @@ class Main extends BaseContext
     }
 
     /**
-     * @Given I am logged in as admin :admin
+     * @When I am logged in as admin :admin
      *
      * @param string $admin
      * @throws \Behat\Mink\Exception\ElementNotFoundException

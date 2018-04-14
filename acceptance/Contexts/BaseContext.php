@@ -384,19 +384,4 @@ abstract class BaseContext extends RawMinkContext
             $this->getCommonClient()->switchToIFrame();
         }
     }
-
-    /**
-     * @param string|null $filename
-     * @param string|null $filepath
-     */
-    public function saveScreenshot($filename=null, $filepath=null)
-    {
-        if (is_null($filename)) {
-            $filename = date('Y-m-d-Hi') . microtime(true) . '.png';
-        }
-        if (is_null($filepath)) {
-            $filepath = __DIR__ . '/..';
-        }
-        parent::saveScreenshot($filename, $filepath);
-    }
 }

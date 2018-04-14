@@ -5,10 +5,7 @@ Feature: Manage Stripe Card
     When I am logged in as "doc1f"
     And I go to "start" page
     And I run mouse over "Admin" menu point
-    Then I see "Profile" link
-    When I click "Profile" link
-    Then I see "Manage Profile" page
-    And I see "No card on record. Add" text in card details
+    And I click "Profile" link
 
   Scenario Outline: Update cards
     When I click "Add" link

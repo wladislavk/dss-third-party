@@ -28,28 +28,14 @@ class ProfileStripe extends BaseContext
         $this->focusPopupWindow('admin');
         $this->page->clickLink('Delete Stripe data');
         $this->wait(self::LONG_WAIT_TIME);
-        $success = $this->page->findLink('Delete Stripe data success');
-        if (!$success) {
-            throw new BehatException("Stripe data was not deleted for user $user");
-        }
         $this->focusMainWindow();
         $this->page->pressButton('Close');
         $this->wait(self::SHORT_WAIT_TIME);
         $menu = $this->page->find('css', 'div.top-menu ul.nav a:contains("NathanAdmin SuperStage")');
-        if (!$menu) {
-            throw new BehatException('Admin top menu item not found');
-        }
         $menu->mouseOver();
         $this->page->clickLink('Log Out');
         $this->waitExpectingBrowserAlert(self::SHORT_WAIT_TIME);
         $this->wait(self::SHORT_WAIT_TIME);
-        $loginTitle = $this->page->find('css', 'h3.form-title');
-        if (!$loginTitle) {
-            throw new BehatException('Login screen title not found');
-        }
-        if ($loginTitle->getText() !== 'Login to your DS3 account') {
-            throw new BehatException('Unable to logout from admin section');
-        }
     }
 
     /**
@@ -59,7 +45,7 @@ class ProfileStripe extends BaseContext
      * @param string $text
      * @param string $delay
      */
-    public function testSeeTextInCardDetails(string $text, string $delay='')
+    public function testSeeTextInCardDetails(string $text, string $delay = '')
     {
         if ($delay) {
             $this->wait(self::LONG_WAIT_TIME);

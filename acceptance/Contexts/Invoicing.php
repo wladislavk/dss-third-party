@@ -20,9 +20,6 @@ class Invoicing extends BaseContext
         $this->visitStartPage();
         $this->login($user);
         $menu = $this->page->find('css', '#homemenu a:contains("Admin")');
-        if (!$menu) {
-            throw new BehatException('Menu item not found');
-        }
         $menu->mouseOver();
         $this->page->clickLink('Profile');
         $this->wait(self::SHORT_WAIT_TIME);
@@ -36,20 +33,8 @@ class Invoicing extends BaseContext
         $this->page->clickLink('Save');
         $this->waitExpectingBrowserAlert(self::LONG_WAIT_TIME);
         $this->wait(self::SHORT_WAIT_TIME);
-        $success = $this->page->findLink('Update');
-        if (!$success) {
-            throw new BehatException("Card number $card was not added to user profile $user");
-        }
         $this->page->clickLink('Sign Out');
         $this->waitExpectingBrowserAlert(self::LONG_WAIT_TIME);
-        $this->wait(self::SHORT_WAIT_TIME);
-        $loginTitle = $this->page->find('css', 'td.t_head');
-        if (!$loginTitle) {
-            throw new BehatException('Login screen title not found');
-        }
-        if ($loginTitle->getText() !== 'Please Enter Your Login Information') {
-            throw new BehatException('Unable to logout from user section');
-        }
     }
 
     /**

@@ -420,7 +420,7 @@ class Main extends BaseContext
      * @param string $section
      * @param string $delay
      */
-    public function testSeeTextInPopup($text, $section, $delay='')
+    public function testSeeTextInPopup(string $text, string $section, string $delay = '')
     {
         if ($delay) {
             $this->wait(self::LONG_WAIT_TIME);

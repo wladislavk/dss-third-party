@@ -1,4 +1,5 @@
 import symbols from '../../../../symbols'
+import { APPOINTMENT_SUMMARY_SEGMENTS } from 'src/constants/chart'
 
 export default {
   data () {
@@ -25,11 +26,10 @@ export default {
       return this.$store.state.main[symbols.state.modal].params.patientId
     },
     segmentType () {
-      if (this.segmentId === 5) {
-        return 'Delaying Treatment'
-      }
-      if (this.segmentId === 9) {
-        return 'Patient Non-Compliant'
+      for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
+        if (this.segmentId === segment.number && segment.hasOwnProperty('reasonText')) {
+          return segment.reasonText
+        }
       }
       return ''
     },

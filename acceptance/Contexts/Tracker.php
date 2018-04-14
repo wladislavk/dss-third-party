@@ -481,12 +481,14 @@ class Tracker extends BaseContext
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=3;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->deliveryAdded) {
             $query = <<<SQL
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=7;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->impressionDeleted) {
             $query = <<<SQL
@@ -494,31 +496,44 @@ INSERT INTO dental_flow_pg2_info (patientid, segmentid, date_completed, appointm
 VALUES (170, 4, '2015-03-27', 1, 2);
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->treatmentCompleteAdded) {
             $query = <<<SQL
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=11;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->baselineTestAdded) {
             $query = <<<SQL
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=15;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->delayReasonAdded) {
             $query = <<<SQL
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=5;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
         if ($this->nonCompliancyReasonAdded) {
             $query = <<<SQL
 DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=9;
 SQL;
             $this->executeQuery($query);
+            $this->deleteLetters();
         }
+    }
+
+    private function deleteLetters()
+    {
+        $query = <<<SQL
+DELETE FROM dental_letters WHERE patientid=170 AND md_list='75,123';
+SQL;
+        $this->executeQuery($query);
     }
 
     /**

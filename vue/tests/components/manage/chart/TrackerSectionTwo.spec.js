@@ -65,11 +65,12 @@ describe('TrackerSectionTwo component', () => {
       patientId: 42
     }
     const vm = this.mount(props)
-    const inTenDays = moment().add(10, 'days')
+    const midnight = moment(moment().format('MM/DD/YYYY'), 'MM/DD/YYYY')
+    const inTenDays = midnight.add(10, 'days')
     store.state.flowsheet[symbols.state.futureAppointment] = {
       id: 1,
       segmentId: 1,
-      dateScheduled: inTenDays.toDate(),
+      dateScheduled: new Date(inTenDays.format('YYYY-MM-DD HH:mm')),
       dateUntil: null
     }
     vm.$nextTick(() => {
@@ -81,7 +82,7 @@ describe('TrackerSectionTwo component', () => {
       expect(datePicker.value).toBe(inTenDays.format('MM/DD/YYYY'))
       expect(datePicker.getAttribute('disabled')).toBeNull()
       const interval = rootDiv.querySelector('span#next_step_until')
-      expect(interval.textContent).toBe('9 days')
+      expect(interval.textContent).toBe('10 days')
       done()
     })
   })

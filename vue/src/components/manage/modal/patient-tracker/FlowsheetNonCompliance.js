@@ -1,8 +1,10 @@
 import symbols from '../../../../symbols'
+import { NON_COMPLIANT_ID, NON_COMPLIANCE_REASONS } from '../../../../constants/chart'
 
 export default {
   data () {
     return {
+      nonComplianceReasons: NON_COMPLIANCE_REASONS,
       selectedReason: ''
     }
   },
@@ -35,7 +37,7 @@ export default {
           name: symbols.modals.flowsheetReason,
           params: {
             flowId: this.flowId,
-            segmentId: 9,
+            segmentId: NON_COMPLIANT_ID,
             patientId: this.patientId
           }
         }

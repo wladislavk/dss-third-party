@@ -1,8 +1,10 @@
 import symbols from '../../../../symbols'
+import { DELAY_REASONS, DELAYING_ID } from '../../../../constants/chart'
 
 export default {
   data () {
     return {
+      delayReasons: DELAY_REASONS,
       selectedReason: ''
     }
   },
@@ -18,9 +20,6 @@ export default {
     }
   },
   methods: {
-    changeReason (event) {
-      this.selectedReason = event.target.value
-    },
     submitReason () {
       const queryData = {
         id: this.flowId,
@@ -38,7 +37,7 @@ export default {
           name: symbols.modals.flowsheetReason,
           params: {
             flowId: this.flowId,
-            segmentId: 5,
+            segmentId: DELAYING_ID,
             patientId: this.patientId
           }
         }

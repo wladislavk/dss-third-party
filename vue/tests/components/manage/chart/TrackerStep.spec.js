@@ -2,8 +2,8 @@ import moxios from 'moxios'
 import Vue from 'vue'
 import store from '../../../../src/store'
 import TrackerStepComponent from '../../../../src/components/manage/chart/TrackerStep.vue'
-import http from 'src/services/http'
-import endpoints from 'src/endpoints'
+import http from '../../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
 
 describe('TrackerStep component', () => {
   beforeEach(function () {

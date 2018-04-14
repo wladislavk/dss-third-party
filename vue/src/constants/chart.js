@@ -126,7 +126,8 @@ export const APPOINTMENT_SUMMARY_SEGMENTS = [
     className: 'delay_reason',
     isDevice: false,
     isSleepStudy: false,
-    isReason: true
+    isReason: true,
+    reasonText: 'Delaying Treatment'
   },
   {
     number: REFUSED_ID,
@@ -174,7 +175,8 @@ export const APPOINTMENT_SUMMARY_SEGMENTS = [
     className: 'noncomp_reason',
     isDevice: false,
     isSleepStudy: false,
-    isReason: true
+    isReason: true,
+    reasonText: 'Patient Non-Compliant'
   },
   {
     number: TREATMENT_COMPLETE_ID,

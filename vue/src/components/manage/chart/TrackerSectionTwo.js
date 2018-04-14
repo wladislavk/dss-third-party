@@ -34,8 +34,9 @@ export default {
         return ''
       }
       const dateObject = moment(this.currentScheduledDate, 'MM/DD/YYYY')
+      const midnight = moment(moment().format('MM/DD/YYYY'), 'MM/DD/YYYY')
       if (dateObject.diff(moment()) > 0) {
-        return dateObject.fromNow(true)
+        return dateObject.from(midnight, true)
       }
       return ''
     },

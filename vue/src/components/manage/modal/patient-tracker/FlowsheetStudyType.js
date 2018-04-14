@@ -1,9 +1,12 @@
 import symbols from '../../../../symbols'
+import { BASELINE_TEST_ID, TITRATION_STUDY_ID, BASELINE_TYPES, TITRATION_TYPES } from '../../../../constants/chart'
 
 export default {
   data () {
     return {
-      selectedType: ''
+      selectedType: '',
+      baselineTypes: BASELINE_TYPES,
+      titrationTypes: TITRATION_TYPES
     }
   },
   computed: {
@@ -20,13 +23,13 @@ export default {
       return this.$store.state.patients[symbols.state.patientName]
     },
     isTitration () {
-      if (this.segmentId === 3) {
+      if (this.segmentId === TITRATION_STUDY_ID) {
         return true
       }
       return false
     },
     isBaseline () {
-      if (this.segmentId === 15) {
+      if (this.segmentId === BASELINE_TEST_ID) {
         return true
       }
       return false

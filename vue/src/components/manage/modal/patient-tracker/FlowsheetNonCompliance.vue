@@ -3,10 +3,7 @@
         <h2>What is the reason {{ patientName }} is non-compliant?</h2>
         Reason
         <select name="noncomp_reason" v-model="selectedReason">
-            <option value="pain/discomfort">Pain/Discomfort</option>
-            <option value="lost device">Lost Device</option>
-            <option value="device not working">Device Not Working</option>
-            <option value="other">Other</option>
+            <option v-for="reason in nonComplianceReasons" v-bind:value="reason.value">{{ reason.text }}</option>
         </select>
         <input type="submit" name="submit" value="Submit" v-on:click.prevent="submitReason()" />
     </form>

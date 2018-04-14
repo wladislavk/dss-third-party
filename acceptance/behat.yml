@@ -19,6 +19,7 @@ default:
                 - Contexts\Auth
                 - Contexts\DeviceSelector
                 - Contexts\Education
+                - Contexts\PatientChart
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
                 - Contexts\Tracker

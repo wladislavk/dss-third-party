@@ -5,12 +5,10 @@
         <select name="study_type" v-model="selectedType">
             <option value=""></option>
             <template v-if="isTitration">
-                <option value="HST Titration">HST Titration</option>
-                <option value="PSG Titration">PSG Titration</option>
+                <option v-for="titrationType in titrationTypes" v-bind:value="titrationType">{{ titrationType }}</option>
             </template>
             <template v-if="isBaseline">
-                <option value="HST Baseline">HST Baseline</option>
-                <option value="PSG Baseline">PSG Baseline</option>
+                <option v-for="baselineType in baselineTypes" v-bind:value="baselineType">{{ baselineType }}</option>
             </template>
         </select>
         <input type="submit" name="submit" value="Submit" v-on:click.prevent="selectType()" />

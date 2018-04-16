@@ -41,7 +41,7 @@ class DeviceInfoGetterTest extends UnitTestCase
     public function testGetWithoutDeviceSettings()
     {
         $device = $this->getDevice();
-        $deviceSettings = new Collection([]);
+        $deviceSettings = [];
         $settings = $this->getDeviceSettingsStructData();
 
         $deviceInfo = $this->deviceInfoGetter->get($device, $deviceSettings, $settings);
@@ -122,20 +122,19 @@ class DeviceInfoGetterTest extends UnitTestCase
 
     private function getGuideSettingData()
     {
-        $guideSetting = new GuideSetting();
-        $guideSetting->id = 1;
-        $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
-        $guideSetting->value = 200;
+        $guideSettings = [
+            [
+                'id' => 1,
+                'setting_type' => DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE,
+                'value' => 200,
+            ],
+            [
+                'id' => 3,
+                'setting_type' => DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE,
+                'value' => 200,
+            ],
+        ];
 
-        $guideSettingsCollection = new Collection([$guideSetting]);
-
-        $guideSetting = new GuideSetting();
-        $guideSetting->id = 3;
-        $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
-        $guideSetting->value = 200;
-
-        $guideSettingsCollection->push($guideSetting);
-
-        return $guideSettingsCollection;
+        return $guideSettings;
     }
 }

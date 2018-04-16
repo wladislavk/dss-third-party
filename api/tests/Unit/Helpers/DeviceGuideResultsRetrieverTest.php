@@ -87,7 +87,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     {
         /** @var DeviceRepository|MockInterface $deviceRepository */
         $deviceRepository = \Mockery::mock(DeviceRepository::class);
-        $deviceRepository->shouldReceive('getWithFilter')
+        $deviceRepository->shouldReceive('get')
             ->andReturnUsing([$this, 'getDeviceFakeData']);
         return $deviceRepository;
     }
@@ -96,7 +96,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     {
         /** @var GuideSettingRepository|MockInterface $guideSettingRepository */
         $guideSettingRepository = \Mockery::mock(GuideSettingRepository::class);
-        $guideSettingRepository->shouldReceive('getSettingType')
+        $guideSettingRepository->shouldReceive('getSettingsByType')
             ->andReturnUsing([$this, 'getGuideSettingFakeData']);
         return $guideSettingRepository;
     }
@@ -134,21 +134,15 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
 
     public function getGuideSettingFakeData()
     {
-        $guideSetting = new GuideSetting();
-        $guideSetting->id = 1;
-        $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
-        $guideSetting->value = 200;
+        $guideSettings = [
+            [
+                'id' => 3,
+                'setting_type' => DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE,
+                'value' => 200,
+            ],
+        ];
 
-        $guideSettingsCollection = new Collection([$guideSetting]);
-
-        $guideSetting = new GuideSetting();
-        $guideSetting->id = 3;
-        $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
-        $guideSetting->value = 200;
-
-        $guideSettingsCollection->push($guideSetting);
-
-        return $guideSettingsCollection;
+        return $guideSettings;
     }
 
     public function getDeviceFakeData()

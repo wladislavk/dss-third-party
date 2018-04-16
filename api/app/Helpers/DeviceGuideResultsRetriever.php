@@ -2,15 +2,14 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
+use DentalSleepSolutions\Structs\DeviceInfo;
 use DentalSleepSolutions\Structs\DeviceSettings;
-use Illuminate\Database\Eloquent\Collection;
 
 class DeviceGuideResultsRetriever
 {
-    const FIELDS = ['deviceid', 'device', 'image_path'];
-
     /**
      * @var DeviceRepository
      */
@@ -41,23 +40,21 @@ class DeviceGuideResultsRetriever
      * @param string[] $checkedOptions
      * @return array[]
      */
-    public function get(array $impressions, array $checkedOptions)
+    public function get(array $impressions, array $checkedOptions): array
     {
-        $devices = $this->deviceRepository->getWithFilter(self::FIELDS);
-        if (sizeof($devices) === 0) {
-            return [];
-        }
-        $settings = $this->convertSettings($impressions, $checkedOptions);
-        $devicesCollection = new Collection();
+        /** @var Device[] $devices */
+        $devices = $this->deviceRepository->get();
+        $convertedSettings = $this->convertSettings($impressions, $checkedOptions);
+        $devicesCollection = [];
         foreach ($devices as $device) {
-            $guideSettings = $this->guideSettingRepository->getSettingType($device->deviceid);
-            $deviceInfo = $this->deviceInfoGetter->get($device, $guideSettings, $settings);
+            $guideSettings = $this->guideSettingRepository->getSettingsByType($device->deviceid);
+            $deviceInfo = $this->deviceInfoGetter->get($device, $guideSettings, $convertedSettings);
             if ($deviceInfo) {
-                $devicesCollection->push($deviceInfo->toArray());
+                $devicesCollection[] = $deviceInfo;
             }
         }
-        $sortedDevices = $devicesCollection->sortByDesc('value');
-        return $sortedDevices->values()->all();
+        $devicesCollection = $this->reverseSortByValue($devicesCollection);
+        return $devicesCollection;
     }
 
     /**
@@ -65,13 +62,13 @@ class DeviceGuideResultsRetriever
      * @param string[] $checkedOptions
      * @return DeviceSettings[]
      */
-    private function convertSettings(array $impressions, array $checkedOptions) {
+    private function convertSettings(array $impressions, array $checkedOptions): array
+    {
         $converted = [];
-        // combine all keys of both arrays into a single array, remove duplicates
-        $ids = array_unique(array_merge(array_keys($impressions), array_keys($checkedOptions)));
+        $ids = $this->combineUniqueKeys($impressions, $checkedOptions);
         foreach ($ids as $id) {
             $deviceSettings = new DeviceSettings();
-            $deviceSettings->id = (int)$id;
+            $deviceSettings->id = $id;
             if (array_key_exists($id, $impressions)) {
                 $deviceSettings->impression = (int)$impressions[$id];
             }
@@ -81,5 +78,30 @@ class DeviceGuideResultsRetriever
             $converted[] = $deviceSettings;
         }
         return $converted;
+    }
+
+    /**
+     * @param string[] $impressions
+     * @param string[] $checkedOptions
+     * @return int[]
+     */
+    private function combineUniqueKeys(array $impressions, array $checkedOptions): array
+    {
+        return array_unique(array_merge(array_keys($impressions), array_keys($checkedOptions)));
+    }
+
+    /**
+     * @param DeviceInfo[] $devices
+     * @return array[]
+     */
+    private function reverseSortByValue(array $devices): array
+    {
+        usort($devices, function (DeviceInfo $a, DeviceInfo $b) {
+            return $b->value <=> $a->value;
+        });
+        $devicesAsArray = array_map(function (DeviceInfo $element) {
+            return $element->toArray();
+        }, $devices);
+        return $devicesAsArray;
     }
 }

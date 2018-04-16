@@ -25,9 +25,9 @@ class GuideSettingRepository extends AbstractRepository
 
     /**
      * @param int $deviceId
-     * @return array|\Illuminate\Database\Eloquent\Collection
+     * @return array
      */
-    public function getSettingType($deviceId)
+    public function getSettingsByType(int $deviceId): array
     {
         return $this->model
             ->select('s.id', 's.setting_type', 'ds.value')
@@ -41,6 +41,7 @@ class GuideSettingRepository extends AbstractRepository
                 }
             )
             ->get()
+            ->toArray()
         ;
     }
 }

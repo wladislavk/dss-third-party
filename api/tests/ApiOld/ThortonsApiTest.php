@@ -1,6 +1,5 @@
 <?php
-
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Thorton;
 use Tests\TestCases\ApiTestCase;

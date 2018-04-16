@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Charge;

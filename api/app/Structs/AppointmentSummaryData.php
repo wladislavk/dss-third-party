@@ -37,14 +37,20 @@ class AppointmentSummaryData
     /** @var \DateTime|null */
     public $scheduledDate = null;
 
-    public function setCompletionDate(string $completionDate)
+    /**
+     * @param string $completionDate
+     */
+    public function setCompletionDate(string $completionDate): void
     {
         if ($completionDate) {
             $this->completionDate = new \DateTime($completionDate);
         }
     }
 
-    public function setScheduledDate(string $scheduledDate)
+    /**
+     * @param string $scheduledDate
+     */
+    public function setScheduledDate(string $scheduledDate): void
     {
         if ($scheduledDate) {
             $this->scheduledDate = new \DateTime($scheduledDate);

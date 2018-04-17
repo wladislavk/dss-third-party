@@ -100,7 +100,7 @@ Feature: Patient Tracker
       | 02/17/2014 | Impressions           | SUAD Hard            | 0       | yes  |
       | 02/06/2014 | Annual Recall         |                      | 1       | yes  |
       | 12/09/2013 | Impressions           | SUAD Hard            | 1       | yes  |
-      | 11/20/2013 | Treatment Complete	   |                      | 5       | yes  |
+      | 11/20/2013 | Treatment Complete    |                      | 5       | yes  |
       | 11/18/2013 | Impressions           | SUAD Hard            | 0       | yes  |
       | 10/23/2013 | Pt. Non-Compliant     | Pain/Discomfort      | 5       | yes  |
       | 10/20/2013 | Check / Follow Up     |                      |	5       | yes  |
@@ -123,12 +123,12 @@ Feature: Patient Tracker
     And I click on "Titration Sleep Study" in today tracker section
     Then the modal window is "open"
     And the header of modal window is "What type of sleep test will be performed on Pat Smith?"
-    And I see a modal list:
+    And I see a modal list with name "study_type":
       | name          |
       |               |
       | HST Titration |
       | PSG Titration |
-    When I choose "HST Titration" as modal type
+    When I choose "HST Titration" as modal type for name "study_type"
     And I click input button with text "Submit"
     Then the modal window is "closed"
     And treatment summary tracker section has the list of treatments:
@@ -214,7 +214,7 @@ Feature: Patient Tracker
     And I click on "Device Delivery" in today tracker section
     Then the modal window is "open"
     And the header of modal window is "What device will you make for Pat Smith?"
-    And I see a modal list:
+    And I see a modal list with name "dentaldevice":
       | name                 |
       |                      |
       | None                 |
@@ -236,7 +236,7 @@ Feature: Patient Tracker
       | TAP Elite Thermacryl |
       | TAP Elite Durasoft   |
       | TAP 3 Thermacryl     |
-    When I choose "Narval" as modal type
+    When I choose "Narval" as modal type for name "dentaldevice"
     And I click input button with text "Submit"
     Then the modal window is "closed"
     And treatment summary tracker section has the list of treatments:
@@ -254,12 +254,12 @@ Feature: Patient Tracker
     When I click on "Baseline Sleep Test" in today tracker section
     Then the modal window is "open"
     And the header of modal window is "What type of sleep test will be performed on Pat Smith?"
-    And I see a modal list:
+    And I see a modal list with name "study_type":
       | name         |
       |              |
       | HST Baseline |
       | PSG Baseline |
-    When I choose "PSG Baseline" as modal type
+    When I choose "PSG Baseline" as modal type for name "study_type"
     And I click input button with text "Submit"
     Then the modal window is "closed"
     And treatment summary tracker section has the list of treatments:
@@ -272,14 +272,14 @@ Feature: Patient Tracker
     When I click on "Delaying Tx/Waiting" in today tracker section
     Then the modal window is "open"
     And the header of modal window is "What is the reason for delaying treatment for Pat Smith?"
-    And I see a modal list:
+    And I see a modal list with name "delay_reason":
       | name        |
       | Insurance   |
       | Dental Work |
       | Deciding    |
       | Sleep Study |
       | Other       |
-    When I choose "Deciding" as modal type
+    When I choose "Deciding" as modal type for name "delay_reason"
     And I click input button with text "Submit"
     Then the modal window is "closed"
     And treatment summary tracker section has the list of treatments:
@@ -293,13 +293,13 @@ Feature: Patient Tracker
     When I click on "Pt. Non-compliant" in today tracker section
     Then the modal window is "open"
     And the header of modal window is "What is the reason Pat Smith is non-compliant?"
-    And I see a modal list:
+    And I see a modal list with name "noncomp_reason":
       | name               |
       | Pain/Discomfort    |
       | Lost Device        |
       | Device Not Working |
       | Other              |
-    When I choose "Other" as modal type
+    When I choose "Other" as modal type for name "noncomp_reason"
     And I click input button with text "Submit"
     Then the modal window is "open"
     And the header of modal window is "Reason for Patient Non-Compliant"

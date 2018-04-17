@@ -83,14 +83,15 @@ class Tracker extends BaseContext
     }
 
     /**
-     * @When I choose :type as modal type
+     * @When I choose :type as modal type for name :name
      *
      * @param string $type
+     * @param string $name
      * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
-    public function chooseModalType($type)
+    public function chooseModalType(string $type, string $name)
     {
-        $select = $this->findCss('select');
+        $select = $this->findCss("select[name=\"$name\"]");
         $select->selectOption($type);
     }
 
@@ -147,8 +148,9 @@ class Tracker extends BaseContext
             }
             $rowDate->click();
             if (SUT_HOST == 'vue') {
-                //$vueDateSelector = new VueDateSelector();
-                //$todayDiv = $vueDateSelector->getTodayElement($this);
+                // @todo: this class should be written to test the datepicker component
+                // $vueDateSelector = new VueDateSelector();
+                // $todayDiv = $vueDateSelector->getTodayElement($this);
             } else {
                 if ($date == 'today') {
                     $this->wait(self::SHORT_WAIT_TIME);
@@ -406,13 +408,14 @@ class Tracker extends BaseContext
     }
 
     /**
-     * @Then I see a modal list:
+     * @Then I see a modal list with name :name:
      *
+     * @param string $name
      * @param TableNode $table
      */
-    public function testModalList(TableNode $table)
+    public function testModalList(string $name, TableNode $table)
     {
-        $options = $this->findAllCss('form > select > option');
+        $options = $this->findAllCss("form > select[name=\"$name\"] > option");
         $expected = array_column($table->getHash(), 'name');
         Assert::assertEquals(sizeof($expected), sizeof($options));
         $optionTexts = [];

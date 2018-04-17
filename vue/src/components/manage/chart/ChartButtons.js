@@ -10,10 +10,10 @@ export default {
     }
   },
   computed: {
-    isHSTCompany () {
+    isHstCompany () {
       return this.$store.getters[symbols.getters.isHSTCompany]
     },
-    incompleteHSTs () {
+    incompleteHsts () {
       return this.$store.state.patients[symbols.state.incompleteHomeSleepTests]
     },
     hstStatus () {

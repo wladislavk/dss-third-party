@@ -6,22 +6,25 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class DeviceInfo implements Arrayable
 {
-    private const DEFAULT_CHECKED_RANGE_VALUE = 1;
-
     /**
      * @var int
      */
     public $id = 0;
 
     /**
-     * @var int
+     * @var bool
      */
-    public $impression = 0;
+    public $hasImpression = false;
 
     /**
-     * @var int
+     * @var bool
      */
-    public $checkedRangeValue = self::DEFAULT_CHECKED_RANGE_VALUE;
+    public $hasRangeValue = true;
+
+    /**
+     * @var bool
+     */
+    public $isHidden = false;
 
     /**
      * @var string

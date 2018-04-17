@@ -14,6 +14,7 @@ $(document).ready(function()
 			type: "post",
 			data: $('#device_form').serialize(),
 			success: function(data){
+				console.log(data)
 				$('#results li').remove();
 			  	var r = $.parseJSON(data);
 				$.each( r,  function(i, v){

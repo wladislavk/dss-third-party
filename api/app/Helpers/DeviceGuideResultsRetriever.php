@@ -6,102 +6,161 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\Structs\DeviceInfo;
-use DentalSleepSolutions\Structs\DeviceSettings;
+use DentalSleepSolutions\Structs\GuideSettingsByType;
 
 class DeviceGuideResultsRetriever
 {
-    /**
-     * @var DeviceRepository
-     */
+    private const IMPRESSION_COEFFICIENT = 1.75;
+
+    /** @var DeviceRepository */
     private $deviceRepository;
 
-    /**
-     * @var GuideSettingRepository
-     */
+    /** @var GuideSettingRepository */
     private $guideSettingRepository;
-
-    /**
-     * @var DeviceInfoGetter
-     */
-    private $deviceInfoGetter;
 
     public function __construct(
         DeviceRepository $deviceRepository,
-        GuideSettingRepository $guideSettingRepository,
-        DeviceInfoGetter $deviceInfoGetter
+        GuideSettingRepository $guideSettingRepository
     ) {
         $this->deviceRepository = $deviceRepository;
         $this->guideSettingRepository = $guideSettingRepository;
-        $this->deviceInfoGetter = $deviceInfoGetter;
     }
 
     /**
-     * @param string[] $impressions
-     * @param string[] $checkedOptions
+     * @param int[] $impressions
+     * @param int[] $checkedOptions
      * @return array[]
      */
-    public function get(array $impressions, array $checkedOptions): array
+    public function getDeviceGuides(array $impressions, array $checkedOptions): array
     {
         /** @var Device[] $devices */
         $devices = $this->deviceRepository->get();
-        $convertedSettings = $this->convertSettings($impressions, $checkedOptions);
-        $devicesCollection = [];
+        $deviceIds = [];
+        /** @var DeviceInfo[] $devicesInfo */
+        $devicesInfo = [];
         foreach ($devices as $device) {
-            $guideSettings = $this->guideSettingRepository->getSettingsByType($device->deviceid);
-            $deviceInfo = $this->deviceInfoGetter->get($device, $guideSettings, $convertedSettings);
-            if ($deviceInfo) {
-                $devicesCollection[] = $deviceInfo;
+            $deviceIds[] = $device->deviceid;
+            $devicesInfo[] = $this->setDeviceInfo($device, $impressions, $checkedOptions);
+        }
+        $settings = $this->guideSettingRepository->getSettingsByType($deviceIds);
+        foreach ($settings as $deviceSetting) {
+            $deviceInfoForSetting = $this->getDeviceInfoForSetting($devicesInfo, $deviceSetting->deviceId);
+            if ($deviceInfoForSetting) {
+                $this->alterDeviceInfo($deviceInfoForSetting, $deviceSetting);
             }
         }
-        $devicesCollection = $this->reverseSortByValue($devicesCollection);
-        return $devicesCollection;
+        $devicesInfo = array_filter($devicesInfo, function (DeviceInfo $element) {
+            return !$element->isHidden;
+        });
+        $devicesInfo = $this->reverseSortByValue($devicesInfo);
+        $devicesAsArray = array_map(function (DeviceInfo $element) {
+            return $element->toArray();
+        }, $devicesInfo);
+        return $devicesAsArray;
     }
 
     /**
-     * @param string[] $impressions
-     * @param string[] $checkedOptions
-     * @return DeviceSettings[]
+     * @param DeviceInfo $deviceInfo
+     * @param GuideSettingsByType $deviceSetting
      */
-    private function convertSettings(array $impressions, array $checkedOptions): array
+    private function alterDeviceInfo(DeviceInfo $deviceInfo, GuideSettingsByType $deviceSetting): void
     {
-        $converted = [];
-        $ids = $this->combineUniqueKeys($impressions, $checkedOptions);
-        foreach ($ids as $id) {
-            $deviceSettings = new DeviceSettings();
-            $deviceSettings->id = $id;
-            if (array_key_exists($id, $impressions)) {
-                $deviceSettings->impression = (int)$impressions[$id];
-            }
-            if (array_key_exists($id, $checkedOptions)) {
-                $deviceSettings->checkedRangeValue = (int)$checkedOptions[$id];
-            }
-            $converted[] = $deviceSettings;
+        if ($deviceSetting->settingType == 1) {
+            $this->hideInfo($deviceInfo, $deviceSetting);
+            return;
         }
-        return $converted;
+        $deviceInfo->value += $this->getValueForSetting($deviceInfo, $deviceSetting);
     }
 
     /**
-     * @param string[] $impressions
-     * @param string[] $checkedOptions
-     * @return int[]
+     * @param Device $device
+     * @param int[] $impressions
+     * @param int[] $checkedOptions
+     * @return DeviceInfo
      */
-    private function combineUniqueKeys(array $impressions, array $checkedOptions): array
+    private function setDeviceInfo(Device $device, array $impressions, array $checkedOptions): DeviceInfo
     {
-        return array_unique(array_merge(array_keys($impressions), array_keys($checkedOptions)));
+        $deviceInfo = new DeviceInfo();
+        $deviceInfo->id = $device->deviceid;
+        $deviceInfo->name = $device->device;
+        $deviceInfo->imagePath = $device->image_path;
+        $this->convertParamsToInfo($impressions, $checkedOptions, $device->deviceid, $deviceInfo);
+        return $deviceInfo;
+    }
+
+    /**
+     * @param DeviceInfo[] $devicesInfo
+     * @param int $deviceId
+     * @return DeviceInfo|null
+     */
+    private function getDeviceInfoForSetting(array $devicesInfo, int $deviceId): ?DeviceInfo
+    {
+        foreach ($devicesInfo as $deviceInfo) {
+            if ($deviceInfo->id == $deviceId) {
+                return $deviceInfo;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param DeviceInfo $deviceInfo
+     * @param GuideSettingsByType $setting
+     * @return float
+     */
+    private function getValueForSetting(DeviceInfo $deviceInfo, GuideSettingsByType $setting): float
+    {
+        if (!$deviceInfo->hasRangeValue) {
+            return 0;
+        }
+        $value = $setting->value;
+        if (!$deviceInfo->hasImpression) {
+            return $value;
+        }
+        return $value * self::IMPRESSION_COEFFICIENT;
+    }
+
+    /**
+     * @param DeviceInfo $deviceInfo
+     * @param GuideSettingsByType $deviceSetting
+     * @param bool $hasRangeValue
+     */
+    private function hideInfo(DeviceInfo $deviceInfo, GuideSettingsByType $deviceSetting): void
+    {
+        if (!$deviceInfo->hasRangeValue) {
+            return;
+        }
+        if ($deviceSetting->value == 1) {
+            return;
+        }
+        $deviceInfo->isHidden = true;
+    }
+
+    /**
+     * @param bool[] $impressions
+     * @param bool[] $checkedOptions
+     * @param int $deviceId
+     * @param DeviceInfo $deviceInfo
+     */
+    private function convertParamsToInfo(array $impressions, array $checkedOptions, int $deviceId, DeviceInfo $deviceInfo): void
+    {
+        if (array_key_exists($deviceId, $impressions)) {
+            $deviceInfo->hasImpression = $impressions[$deviceId];
+        }
+        if (array_key_exists($deviceId, $checkedOptions)) {
+            $deviceInfo->hasRangeValue = $checkedOptions[$deviceId];
+        }
     }
 
     /**
      * @param DeviceInfo[] $devices
-     * @return array[]
+     * @return DeviceInfo[]
      */
     private function reverseSortByValue(array $devices): array
     {
         usort($devices, function (DeviceInfo $a, DeviceInfo $b) {
             return $b->value <=> $a->value;
         });
-        $devicesAsArray = array_map(function (DeviceInfo $element) {
-            return $element->toArray();
-        }, $devices);
-        return $devicesAsArray;
+        return $devices;
     }
 }

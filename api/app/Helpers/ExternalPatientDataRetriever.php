@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Illuminate\Support\Arr;
 
+// @todo: this class must be completely rewritten, transformer is untested and therefore should be merged here
 class ExternalPatientDataRetriever
 {
     const EXTERNAL_PATIENT_EXCLUDED_INDEXES = [

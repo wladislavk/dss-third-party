@@ -14,16 +14,6 @@ class DeviceInfo implements Arrayable
     /**
      * @var bool
      */
-    public $hasImpression = false;
-
-    /**
-     * @var bool
-     */
-    public $hasRangeValue = true;
-
-    /**
-     * @var bool
-     */
     public $isHidden = false;
 
     /**

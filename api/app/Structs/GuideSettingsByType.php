@@ -15,4 +15,11 @@ class GuideSettingsByType
 
     /** @var int */
     public $value;
+
+    /** @var bool */
+    public $hasImpression = false;
+
+    /** @var bool */
+    public $hasRangeValue = true;
+
 }

@@ -233,12 +233,32 @@ class GuideDevicesApiTest extends ApiTestCase
         $queryString = substr($queryString, 0, strlen($queryString) - 1);
         $this->get(self::ROUTE_PREFIX . '/guide-devices/with-images?' . $queryString);
         $this->assertResponseOk();
-        $expectedFirst = [
-            'id' => 13,
-            'name' => 'SUAD Ultra Elite',
-            'value' => 41.5,
-            'image_path' => 'dental_device_13.gif',
+        $expectedFour = [
+            [
+                'id' => 13,
+                'name' => 'SUAD Ultra Elite',
+                'value' => 41.5,
+                'image_path' => 'dental_device_13.gif',
+            ],
+            [
+                'id' => 14,
+                'name' => 'SUAD Hard',
+                'value' => 39.75,
+                'image_path' => 'dental_device_14.gif',
+            ],
+            [
+                'id' => 15,
+                'name' => 'SUAD Thermo',
+                'value' => 39.75,
+                'image_path' => 'dental_device_15.gif',
+            ],
+            [
+                'id' => 7,
+                'name' => 'Narval',
+                'value' => 39,
+                'image_path' => 'dental_device_7.gif',
+            ],
         ];
-        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+        $this->assertEquals($expectedFour, array_slice($this->getResponseData(), 0, 4));
     }
 }

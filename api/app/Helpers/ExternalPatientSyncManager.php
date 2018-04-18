@@ -3,15 +3,13 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalPatient;
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
-use Illuminate\Support\Arr;
+use Prettus\Validator\Exceptions\ValidatorException;
 
+// @todo: this class must be completely rewritten, as it is unsafe (user input not filtered) and practically untestable
 class ExternalPatientSyncManager
 {
-    const EXTERNAL_COMPANY_KEY = 'software';
-    const EXTERNAL_PATIENT_KEY = 'external_id';
-    const MODEL_KEY = 'patient_id';
     const MODEL_DIRTY_KEY = 'dirty';
 
     const NON_NULLABLE_PATIENT_FIELDS = [
@@ -53,8 +51,7 @@ class ExternalPatientSyncManager
     public function __construct(
         ExternalPatientRepository $repository,
         ExternalPatientDataRetriever $dataRetriever
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->dataRetriever = $dataRetriever;
     }
@@ -63,15 +60,21 @@ class ExternalPatientSyncManager
      * @param array $requestData
      * @param array $createAttributes
      * @return ExternalPatient
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
     public function updateOnMissingCreate(array $requestData, array $createAttributes)
     {
         $externalPatientData = $this->dataRetriever->toExternalPatientData($requestData);
         $patientData = $this->dataRetriever->toPatientData($requestData);
 
-        $externalCompanyId = Arr::get($externalPatientData, self::EXTERNAL_COMPANY_KEY, '');
-        $externalPatientId = Arr::get($externalPatientData, self::EXTERNAL_PATIENT_KEY, '');
+        $externalCompanyId = '';
+        if (isset($externalPatientData['software'])) {
+            $externalCompanyId = $externalPatientData['software'];
+        }
+        $externalPatientId = '';
+        if (isset($externalPatientData['external_id'])) {
+            $externalPatientId = $externalPatientData['external_id'];
+        }
 
         $externalPatient = $this->findByExternalCompanyAndPatient(
             $externalCompanyId, $externalPatientId, $externalPatientData, $patientData
@@ -80,9 +83,9 @@ class ExternalPatientSyncManager
 
         if ($externalPatient->wasRecentlyCreated || $patient->wasRecentlyCreated) {
             $externalPatient->update([
-                self::EXTERNAL_COMPANY_KEY=> $externalCompanyId,
-                self::EXTERNAL_PATIENT_KEY=> $externalPatientId,
-                self::MODEL_KEY => $patient->getKey(),
+                'software' => $externalCompanyId,
+                'external_id' => $externalPatientId,
+                'patient_id' => $patient->getKey(),
             ]);
             $externalPatient->wasRecentlyCreated = true;
         }
@@ -93,21 +96,18 @@ class ExternalPatientSyncManager
     /**
      * @param string $externalCompanyId
      * @param string $externalPatientId
-     * @param array  $externalPatientData
-     * @param array  $patientData
+     * @param array $externalPatientData
+     * @param array $patientData
      * @return ExternalPatient
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
     private function findByExternalCompanyAndPatient(
-        $externalCompanyId,
-        $externalPatientId,
+        string $externalCompanyId,
+        string $externalPatientId,
         array $externalPatientData,
         array $patientData
-    )
-    {
-        $externalPatient = $this->repository
-            ->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId)
-        ;
+    ): ExternalPatient {
+        $externalPatient = $this->repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
 
         if ($externalPatient) {
             $externalPatient->update($externalPatientData);
@@ -118,28 +118,23 @@ class ExternalPatientSyncManager
             return $externalPatient;
         }
 
-        $externalPatient = $this->repository
-            ->create($externalPatientData)
-        ;
+        $externalPatient = $this->repository->create($externalPatientData);
         $externalPatient->update($patientData);
         return $externalPatient;
     }
 
     /**
      * @param ExternalPatient $externalPatient
-     * @param array           $patientData
-     * @param array           $createAttributes
-     * @return Model
+     * @param array $patientData
+     * @param array $createAttributes
+     * @return Patient
      */
     private function getLinkedPatient(
         ExternalPatient $externalPatient,
         array $patientData,
         array $createAttributes
-    )
-    {
-        $patient = $externalPatient->patient()
-            ->getResults()
-        ;
+    ): Patient {
+        $patient = $externalPatient->patient()->getResults();
 
         if ($patient) {
             return $patient;
@@ -149,15 +144,13 @@ class ExternalPatientSyncManager
             if (!array_key_exists($field, $patientData) || is_null($patientData[$field])) {
                 $patientData[$field] = '';
             }
-
             if (array_key_exists($field, $createAttributes) && is_null($createAttributes[$field])) {
                 $createAttributes[$field] = '';
             }
         }
 
-        $patient = $externalPatient->patient()
-            ->create($patientData)
-        ;
+        /** @var Patient $patient */
+        $patient = $externalPatient->patient()->create($patientData);
         $patient->update($createAttributes);
         return $patient;
     }

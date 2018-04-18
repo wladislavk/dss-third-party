@@ -3,7 +3,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
 use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Helpers\JwtHelper;
+use DentalSleepSolutions\Services\JwtHelper;
 use DentalSleepSolutions\Http\Requests\Request;
 
 class JwtRefreshTokenMiddleware extends AbstractJwtAuthMiddleware

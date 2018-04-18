@@ -3,10 +3,10 @@
 namespace DentalSleepSolutions\Factories;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Helpers\EmailHandlers\AbstractEmailHandler;
-use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
-use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
-use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Services\EmailHandlers\AbstractEmailHandler;
+use DentalSleepSolutions\Services\EmailHandlers\RegistrationEmailHandler;
+use DentalSleepSolutions\Services\EmailHandlers\RememberEmailHandler;
+use DentalSleepSolutions\Services\EmailHandlers\UpdateEmailHandler;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Support\Facades\App;
 

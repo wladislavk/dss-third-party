@@ -5,7 +5,7 @@ namespace Tests\Unit\Auth;
 use DentalSleepSolutions\Auth\LegacyAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
-use DentalSleepSolutions\Helpers\PasswordGenerator;
+use DentalSleepSolutions\Services\PasswordGenerator;
 use Illuminate\Contracts\Auth\Guard as GuardInterface;
 use Illuminate\Support\Arr;
 use Mockery\MockInterface;

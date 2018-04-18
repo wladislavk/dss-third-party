@@ -4,11 +4,11 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
-use DentalSleepSolutions\Helpers\LedgerReportDataRetriever;
-use DentalSleepSolutions\Helpers\LedgerReportTotalsRetriever;
-use DentalSleepSolutions\Helpers\LedgerRowsRetriever;
-use DentalSleepSolutions\Helpers\PatientSummaryUpdater;
-use DentalSleepSolutions\Helpers\QueryComposers\LedgersQueryComposer;
+use DentalSleepSolutions\Services\LedgerReportDataRetriever;
+use DentalSleepSolutions\Services\LedgerReportTotalsRetriever;
+use DentalSleepSolutions\Services\LedgerRowsRetriever;
+use DentalSleepSolutions\Services\PatientSummaryUpdater;
+use DentalSleepSolutions\Services\QueryComposers\LedgersQueryComposer;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\LedgerReportData;
 use Illuminate\Http\Request;

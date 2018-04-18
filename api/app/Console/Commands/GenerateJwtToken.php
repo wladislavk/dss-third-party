@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Console\Commands;
 use Carbon\Carbon;
 use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Console\Command;
-use DentalSleepSolutions\Helpers\JwtHelper;
+use DentalSleepSolutions\Services\JwtHelper;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Exceptions\JwtException;

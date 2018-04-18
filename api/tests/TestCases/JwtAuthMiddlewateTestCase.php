@@ -4,7 +4,7 @@ namespace Tests\TestCases;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Helpers\JwtHelper;
+use DentalSleepSolutions\Services\JwtHelper;
 use DentalSleepSolutions\Http\Middleware\AbstractJwtAuthMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
 

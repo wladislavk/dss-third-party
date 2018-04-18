@@ -3,11 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
-use DentalSleepSolutions\Helpers\ContactOrderRetriever;
-use DentalSleepSolutions\Helpers\ContactsAndCompaniesRetriever;
-use DentalSleepSolutions\Helpers\Paginator;
-use DentalSleepSolutions\Helpers\QueryComposers\ContactsQueryComposer;
-use DentalSleepSolutions\Helpers\ReferredContactParser;
+use DentalSleepSolutions\Services\ContactOrderRetriever;
+use DentalSleepSolutions\Services\ContactsAndCompaniesRetriever;
+use DentalSleepSolutions\Services\Paginator;
+use DentalSleepSolutions\Services\QueryComposers\ContactsQueryComposer;
+use DentalSleepSolutions\Services\ReferredContactParser;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 

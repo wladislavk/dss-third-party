@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
+use DentalSleepSolutions\Services\DeviceGuideResultsRetriever;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;

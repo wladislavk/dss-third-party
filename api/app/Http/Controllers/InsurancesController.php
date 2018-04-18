@@ -5,8 +5,8 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Helpers\PendingClaimRemover;
-use DentalSleepSolutions\Helpers\UnmailedClaimsRetriever;
+use DentalSleepSolutions\Services\PendingClaimRemover;
+use DentalSleepSolutions\Services\UnmailedClaimsRetriever;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 

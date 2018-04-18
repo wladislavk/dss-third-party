@@ -9,7 +9,7 @@ use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
-use DentalSleepSolutions\Helpers\JwtHelper;
+use DentalSleepSolutions\Services\JwtHelper;
 use DentalSleepSolutions\Providers\Auth\AdminGuard;
 use DentalSleepSolutions\Providers\Auth\UserGuard;
 use Illuminate\Contracts\Auth\Authenticatable;

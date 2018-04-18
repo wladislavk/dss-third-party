@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use DentalSleepSolutions\Services\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Prettus\Validator\Exceptions\ValidatorException;

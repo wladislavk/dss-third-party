@@ -24,6 +24,11 @@ class BindingNamingConvention
     /** @var Request */
     private $request;
 
+    /**
+     * BindingNamingConvention constructor.
+     * @param string $modelName
+     * @throws NamingConventionException
+     */
     public function __construct($modelName = '')
     {
         if ($modelName) {
@@ -71,6 +76,10 @@ class BindingNamingConvention
         }
     }
 
+    /**
+     * @param string $className
+     * @throws NamingConventionException
+     */
     public function setRequest($className)
     {
         $this->request = new $className();
@@ -101,6 +110,7 @@ class BindingNamingConvention
      * @param string $namespace
      * @return string
      * @throws NamingConventionException
+     * @throws \ReflectionException
      */
     public function getController($namespace = self::HTTP_NAMESPACE)
     {
@@ -134,6 +144,7 @@ class BindingNamingConvention
      * @param string $namespace
      * @return string
      * @throws NamingConventionException
+     * @throws \ReflectionException
      */
     public function getRequest($namespace = self::HTTP_NAMESPACE)
     {
@@ -156,6 +167,7 @@ class BindingNamingConvention
      * @param string $namespace
      * @return string
      * @throws NamingConventionException
+     * @throws \ReflectionException
      */
     public function getRequestTransformer($namespace = self::HTTP_NAMESPACE)
     {

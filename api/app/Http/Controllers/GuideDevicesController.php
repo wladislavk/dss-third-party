@@ -2,8 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
-use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Services\DeviceGuides\DeviceGuideResultsRetriever;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -153,8 +152,14 @@ class GuideDevicesController extends BaseRestController
         Request $request
     ) {
         $impressions = $request->input('impressions', []);
+        $impressions = array_map(function ($TElement) {
+            return (bool)$TElement;
+        }, $impressions);
         $checkedOptions = $request->input('options', []);
-        $devicesArray = $deviceGuideResultsRetriever->get($impressions, $checkedOptions);
+        $checkedOptions = array_map(function ($TElement) {
+            return (bool)$TElement;
+        }, $checkedOptions);
+        $devicesArray = $deviceGuideResultsRetriever->getDeviceGuides($impressions, $checkedOptions);
 
         return ApiResponse::responseOk('', $devicesArray);
     }

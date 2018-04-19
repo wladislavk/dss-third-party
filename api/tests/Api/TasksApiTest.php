@@ -5,7 +5,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Models\Dental\User as BaseUser;
-use DentalSleepSolutions\Helpers\TaskRetriever;
+use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
 class TasksApiTest extends ApiTestCase

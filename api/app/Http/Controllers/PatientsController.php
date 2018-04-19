@@ -13,15 +13,15 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
-use DentalSleepSolutions\Helpers\AccessCodeResetter;
-use DentalSleepSolutions\Helpers\EmailChecker;
-use DentalSleepSolutions\Helpers\FullNameComposer;
-use DentalSleepSolutions\Helpers\NameSetter;
-use DentalSleepSolutions\Helpers\PatientFinder;
-use DentalSleepSolutions\Helpers\PatientLocationRetriever;
-use DentalSleepSolutions\Helpers\PatientRuleRetriever;
-use DentalSleepSolutions\Helpers\PatientDataRetriever;
-use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
+use DentalSleepSolutions\Services\Patients\AccessCodeResetter;
+use DentalSleepSolutions\Services\Emails\EmailChecker;
+use DentalSleepSolutions\Services\Contacts\FullNameComposer;
+use DentalSleepSolutions\Services\Contacts\NameSetter;
+use DentalSleepSolutions\Services\Patients\PatientFinder;
+use DentalSleepSolutions\Services\Patients\PatientLocationRetriever;
+use DentalSleepSolutions\Services\Patients\PatientRuleRetriever;
+use DentalSleepSolutions\Services\Patients\PatientDataRetriever;
+use DentalSleepSolutions\Services\Users\TempPinDocumentCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
@@ -665,6 +665,7 @@ class PatientsController extends BaseRestController
      * @param NotificationRepository $notificationRepository
      * @param Request $request
      * @return JsonResponse
+     * @throws GeneralException
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function getDataForFillingPatientForm(
@@ -806,6 +807,7 @@ class PatientsController extends BaseRestController
      * @param TempPinDocumentCreator $tempPinDocumentCreator
      * @param int $patientId
      * @return JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      */
     public function createTempPinDocument(
         TempPinDocumentCreator $tempPinDocumentCreator,

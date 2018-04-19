@@ -17,6 +17,7 @@ class EligibleController extends Controller
      * )
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getPayers()
     {

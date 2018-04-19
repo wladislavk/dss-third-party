@@ -46,6 +46,11 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth = new DentrixAuth($dentrixCompanyGuard, $dentrixUserGuard, $userGuard);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixCompanyNoToken()
     {
         $this->expectException(EmptyTokenException::class);
@@ -53,6 +58,11 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_COMPANY, self::EMPTY_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixCompanyNoUser()
     {
         $this->expectException(AuthenticatableNotFoundException::class);
@@ -60,12 +70,22 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_COMPANY, self::INVALID_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixCompany()
     {
         $model = $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_COMPANY, self::TOKEN);
         $this->assertInstanceOf(DentrixCompany::class, $model);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixUserNoToken()
     {
         $this->expectException(EmptyTokenException::class);
@@ -73,6 +93,11 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_USER, self::EMPTY_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixUserNoUser()
     {
         $this->expectException(AuthenticatableNotFoundException::class);
@@ -80,12 +105,22 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_USER, self::INVALID_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleDentrixUser()
     {
         $model = $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_USER, self::TOKEN);
         $this->assertInstanceOf(DentrixUser::class, $model);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleUserNoUser()
     {
         $this->expectException(AuthenticatableNotFoundException::class);
@@ -93,6 +128,11 @@ class DentrixAuthTest extends UnitTestCase
         $this->auth->toRole(DentrixAuth::ROLE_USER, self::INVALID_TOKEN);
     }
 
+    /**
+     * @throws AuthenticatableNotFoundException
+     * @throws EmptyTokenException
+     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidTokenException
+     */
     public function testToRoleUser()
     {
         $model = $this->auth->toRole(DentrixAuth::ROLE_USER, self::TOKEN);

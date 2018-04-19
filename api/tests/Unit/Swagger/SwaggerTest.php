@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Swagger;
 
-use DentalSleepSolutions\Helpers\ClassRetriever;
+use DentalSleepSolutions\Services\Misc\ClassRetriever;
 use DentalSleepSolutions\Swagger\AnnotationModifier;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ControllerComposer;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ModelComposer;

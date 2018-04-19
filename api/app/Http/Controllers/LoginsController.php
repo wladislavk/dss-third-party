@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Facades\ApiResponse;
-
 class LoginsController extends BaseRestController
 {
     /**

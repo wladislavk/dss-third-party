@@ -2,6 +2,12 @@ import { PATIENT_MENU } from '../../../constants/main'
 import PatientMenuElementComponent from './PatientMenuElement.vue'
 
 export default {
+  props: {
+    patientId: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     menuElements () {
       const elements = []

@@ -1,4 +1,5 @@
 import symbols from '../../symbols'
+import { HST_STATUSES } from '../../constants/main'
 
 export default {
   [symbols.getters.patientId] (state) {
@@ -36,5 +37,17 @@ export default {
       return true
     }
     return false
+  },
+
+  [symbols.getters.hstStatus] (state) {
+    const incompleteHSTs = state[symbols.state.incompleteHomeSleepTests]
+    if (!incompleteHSTs.length) {
+      return ''
+    }
+    const lastHST = incompleteHSTs[incompleteHSTs.length - 1]
+    if (!HST_STATUSES.hasOwnProperty(lastHST)) {
+      return ''
+    }
+    return HST_STATUSES[lastHST]
   }
 }

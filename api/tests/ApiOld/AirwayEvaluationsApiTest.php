@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AirwayEvaluation;
 use Tests\TestCases\ApiTestCase;

@@ -31,10 +31,6 @@ export default {
     }
   },
 
-  [symbols.mutations.companyData] (state, companyData) {
-    state[symbols.state.companyData] = companyData
-  },
-
   [symbols.mutations.coMorbidityWeight] (state, weight) {
     state[symbols.state.screenerWeights].coMorbidity = weight
   },

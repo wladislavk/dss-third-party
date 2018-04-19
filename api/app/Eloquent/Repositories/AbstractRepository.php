@@ -141,8 +141,6 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
-     * @todo: check if this method is needed
-     *
      * @param string $field
      * @param string $value
      * @param array $relations

@@ -3,6 +3,10 @@ export default {
   appointmentSummaries: {
     byPatient: '/appt-summaries/by-patient',
     destroy: '/appt-summaries',
+    finalRank: '/appt-summaries/final-rank',
+    futureAppointment: '/appt-summaries/future-appointment',
+    show: '/appt-summaries',
+    store: '/appt-summaries',
     update: '/appt-summaries'
   },
   companies: {
@@ -48,6 +52,10 @@ export default {
   },
   faxes: {
     alerts: '/faxes/alerts'
+  },
+  flowsheetSteps: {
+    byNextStep: '/flowsheet-steps/by-next-step',
+    bySection: '/flowsheet-steps/by-section'
   },
   guideDevices: {
     withImages: '/guide-devices/with-images'
@@ -110,6 +118,7 @@ export default {
     withFilter: '/patients/with-filter'
   },
   patientSummaries: {
+    getTrackerNotes: '/patient-summaries/get-tracker-notes',
     updateTrackerNotes: '/patient-summaries/update-tracker-notes'
   },
   profileImages: {
@@ -154,13 +163,13 @@ export default {
     update: '/tasks'
   },
   tmjClinicalExams: {
+    storeForPatient: '/tmj-clinical-exams/store-for-patient',
     updateFlowDevice: '/tmj-clinical-exams/update-flow-device'
   },
   users: {
     check: '/users/check',
     checkLogout: '/users/check-logout',
     current: '/users/current',
-    letterInfo: '/users/letter-info',
     responsible: '/users/responsible',
     show: '/users'
   }

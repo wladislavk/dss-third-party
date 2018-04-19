@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use Illuminate\Support\Arr;
 use DentalSleepSolutions\Eloquent\Models\Payer;

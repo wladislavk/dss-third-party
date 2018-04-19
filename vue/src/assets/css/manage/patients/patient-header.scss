@@ -1,10 +1,10 @@
 @import "patients";
 
-a {
+a.button {
   float: left;
   margin-left: 10px;
   margin-top: 8px;
-  background: #666;
+  padding: 2px 4px;
 }
 
 div.body-image {

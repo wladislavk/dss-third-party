@@ -71,6 +71,8 @@ class PatientSummary extends AbstractModel
      */
     protected $primaryKey = 'pid';
 
+    public $incrementing = false;
+
     /**
      * Indicates if the model should be timestamped.
      *

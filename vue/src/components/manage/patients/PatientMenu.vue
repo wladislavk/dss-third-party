@@ -9,6 +9,7 @@
                 v-bind:element-active-like="menuElement.activeLike"
                 v-bind:element-legacy="menuElement.legacy"
                 v-bind:last-element="(loopIndex === menuElements.length - 1)"
+                v-bind:patient-id="patientId"
                 v-bind:key="loopIndex"
             ></patient-menu-element>
         </ul>
@@ -17,4 +18,6 @@
 
 <script src="./PatientMenu.js"></script>
 
-<style src="../../../assets/css/manage/patients/patient-menu.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/patients/patient-menu.scss";
+</style>

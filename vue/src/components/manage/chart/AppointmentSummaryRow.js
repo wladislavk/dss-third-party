@@ -1,9 +1,11 @@
-/*
-import {
-  APPOINTMENT_SUMMARY_SEGMENTS, BASELINE_TYPES, DELAY_REASONS, NON_COMPLIANCE_REASONS, TITRATION_TYPES
-} from '../../../constants/chart'
+import Datepicker from 'vuejs-datepicker'
+import moment from 'moment'
+import { APPOINTMENT_SUMMARY_SEGMENTS } from '../../../constants/chart'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
+import SleepStudyRowComponent from './summary-rows/SleepStudyRow.vue'
+import ReasonRowComponent from './summary-rows/ReasonRow.vue'
+import DeviceRowComponent from './summary-rows/DeviceRow.vue'
 
 export default {
   props: {
@@ -21,102 +23,116 @@ export default {
     },
     deviceId: {
       type: Number,
-      required: true
-    },
-    studyType: {
-      type: String,
-      required: true
-    },
-    delayReason: {
-      type: String,
-      required: true
-    },
-    nonComplianceReason: {
-      type: String,
-      required: true
+      default: 0
     },
     dateCompleted: {
-      type: Object,
       validator: function (value) {
         return value instanceof Date
       }
     },
-    devices: {
-      type: Array,
-      required: true
+    delayReason: {
+      type: String,
+      default: ''
     },
-    letters: {
-      type: Array,
-      required: true
+    nonComplianceReason: {
+      type: String,
+      default: ''
+    },
+    studyType: {
+      type: String,
+      default: ''
+    },
+    letterCount: {
+      type: Number,
+      default: 0
+    },
+    lettersSent: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      delayReasons: DELAY_REASONS,
-      nonComplianceReasons: NON_COMPLIANCE_REASONS,
-      titrationTypes: TITRATION_TYPES,
-      baselineTypes: BASELINE_TYPES
+      currentDateCompleted: this.dateCompleted
     }
   },
   computed: {
-    rowLetters () {
-      const rowLetters = []
-      for (let letter of this.letters) {
-        if (letter.infoId === this.elementId) {
-          rowLetters.push(letter)
-        }
-      }
-      return rowLetters
-    },
-    segmentName () {
+    segmentData () {
       for (let segment of APPOINTMENT_SUMMARY_SEGMENTS) {
         if (segment.number === this.segmentId) {
-          return segment.text
+          return segment
         }
+      }
+      return null
+    },
+    segmentName () {
+      if (this.segmentData) {
+        return this.segmentData.text
       }
       return ''
     },
-    letterCount () {
-      let result = 0
-      for (let letter of this.rowLetters) {
-        let toPatient = 0
-        if (letter.toPatient) {
-          toPatient = 1
-        }
-        let mdNumber = 0
-        if (letter.mdList.length) {
-          mdNumber = letter.mdList.split(',').length
-        }
-        let mdReferralNumber = 0
-        if (letter.mdReferralList.length) {
-          mdReferralNumber = letter.mdReferralList.split(',').length
-        }
-        result += toPatient + mdNumber + mdReferralNumber
+    isSleepStudy () {
+      if (this.segmentData) {
+        return this.segmentData.isSleepStudy
       }
-      return result
+      return false
+    },
+    isReason () {
+      if (this.segmentData) {
+        return this.segmentData.isReason
+      }
+      return false
+    },
+    isDevice () {
+      if (this.segmentData) {
+        return this.segmentData.isDevice
+      }
+      return false
+    },
+    canBeDeleted () {
+      if (this.segmentData) {
+        return this.segmentData.canBeDeleted
+      }
+      return false
+    },
+    reason () {
+      if (this.delayReason) {
+        return this.delayReason
+      }
+      if (this.nonComplianceReason) {
+        return this.nonComplianceReason
+      }
+      return ''
     }
   },
+  components: {
+    datepicker: Datepicker,
+    sleepStudyRow: SleepStudyRowComponent,
+    reasonRow: ReasonRowComponent,
+    deviceRow: DeviceRowComponent
+  },
   methods: {
-    openFlowsheetModal () {
-      const modalData = {
-        name: 'flowsheetReason',
-        params: {
-          flowId: this.elementId,
-          patientId: this.patientId
-        }
-      }
-      this.$store.commit(symbols.mutations.modal, modalData)
-    },
     deleteStep () {
-      for (let letter of this.rowLetters) {
-        if (letter.status === 1) {
-          const alertText = 'Letters have been sent. Unable to delete step.'
-          Alerter.alert(alertText)
-          return
-        }
+      if (this.lettersSent) {
+        const alertText = 'Letters have been sent. Unable to delete step.'
+        Alerter.alert(alertText)
+        return
       }
-      this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
+      const confirmText = 'Are you sure you want to delete this appointment?'
+      if (Alerter.isConfirmed(confirmText)) {
+        this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
+      }
+    },
+    updateCompletedDate (newDate) {
+      const momentDate = moment(newDate)
+      const postData = {
+        id: this.elementId,
+        data: {
+          comp_date: momentDate.format('YYYY-MM-DD')
+        },
+        patientId: this.patientId
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
     }
   }
 }
-*/

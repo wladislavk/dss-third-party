@@ -3,6 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 
 class PatientSummariesApiTest extends ApiTestCase
 {
@@ -19,10 +20,9 @@ class PatientSummariesApiTest extends ApiTestCase
     protected function getStoreData()
     {
         return [
-            "pid" => 100,
+            "pid" => 999,
             "fspage1_complete" => 1,
             "vob" => "8",
-            "ledger" => 56.84,
             "patient_info" => 1,
         ];
     }
@@ -35,32 +35,30 @@ class PatientSummariesApiTest extends ApiTestCase
         ];
     }
 
-    public function testShow()
+    public function testGetTrackerNotes()
     {
-        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
-    }
-
-    public function testStore()
-    {
-        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
-    }
-
-    public function testUpdate()
-    {
-        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
-    }
-
-    public function testDestroy()
-    {
-        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
+        $patientId = 10;
+        $this->get(self::ROUTE_PREFIX . '/patient-summaries/get-tracker-notes/' . $patientId);
+        $this->assertResponseOk();
+        $expected = 'Some note, yaya';
+        $this->assertEquals($expected, $this->getResponseData());
     }
 
     public function testUpdateTrackerNotes()
     {
-        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
-        return;
-
-        $this->post(self::ROUTE_PREFIX . '/patient-summaries/update-tracker-notes');
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $requestData = [
+            'patient_id' => 10,
+            'tracker_notes' => 'foo',
+        ];
+        $this->put(self::ROUTE_PREFIX . '/patient-summaries/update-tracker-notes', $requestData);
         $this->assertResponseOk();
+        $tableData = [
+            'pid' => 10,
+            'tracker_notes' => 'foo',
+        ];
+        $this->seeInDatabase('dental_patient_summary', $tableData);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Services\AppointmentSummaries\UniqueTmjCreator;
 use DentalSleepSolutions\Services\ClinicalExams\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -238,5 +239,26 @@ class TmjClinicalExamsController extends BaseRestController
         }
 
         return ApiResponse::responseOk('Flow device was successfully updated.');
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/tmj-clinical-exams/store-for-patient",
+     *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
+     *     @SWG\Parameter(name="dentaldevice", in="query", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Request $request
+     * @param UniqueTmjCreator $uniqueTmjCreator
+     * @return JsonResponse
+     */
+    public function storeForPatient(Request $request, UniqueTmjCreator $uniqueTmjCreator): JsonResponse
+    {
+        $patientId = (int)$request->input('patient_id');
+        $device = (int)$request->input('dentaldevice');
+        $resource = $uniqueTmjCreator->createUniqueTmj($this->user, $patientId, $device);
+        $resource->save();
+        return ApiResponse::responseOk('Resource created', $resource);
     }
 }

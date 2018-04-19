@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\CustomLetterTemplate;
 use Tests\TestCases\ApiTestCase;

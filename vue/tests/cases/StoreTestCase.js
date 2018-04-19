@@ -6,9 +6,11 @@ export default class {
     this.actions = []
     this.state = {}
     this.rootState = store.state
+    this.getters = {}
     this.mocks = {
       state: this.state,
       rootState: this.rootState,
+      getters: this.getters,
       commit: this._commit.bind(this),
       dispatch: this._dispatch.bind(this)
     }
@@ -20,6 +22,10 @@ export default class {
 
   setRootState (state) {
     this.mocks.rootState = state
+  }
+
+  setGetters (getters) {
+    this.mocks.getters = getters
   }
 
   _commit (type, payload) {
@@ -34,5 +40,8 @@ export default class {
       payload = {}
     }
     this.actions.push({ type: type, payload: payload })
+    return new Promise((resolve) => {
+      resolve()
+    })
   }
 }

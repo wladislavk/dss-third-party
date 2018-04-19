@@ -30,6 +30,7 @@ describe('PatientMenuElement component', () => {
 
   it('shows normal element', function () {
     const propsData = {
+      patientId: 42,
       elementLink: 'foo',
       elementName: 'bar'
     }
@@ -45,6 +46,7 @@ describe('PatientMenuElement component', () => {
     store.state.patients[symbols.state.patientId] = 1
 
     const propsData = {
+      patientId: 42,
       elementLink: 'foo%d',
       elementName: 'bar'
     }
@@ -55,6 +57,7 @@ describe('PatientMenuElement component', () => {
 
   it('shows active element', function (done) {
     const propsData = {
+      patientId: 42,
       elementLink: 'foo',
       elementName: 'bar',
       elementActive: 'route'
@@ -70,6 +73,7 @@ describe('PatientMenuElement component', () => {
 
   it('shows active element with pattern', function (done) {
     const propsData = {
+      patientId: 42,
       elementLink: 'foo',
       elementName: 'bar',
       elementActiveLike: ['som', 'rou']
@@ -85,6 +89,7 @@ describe('PatientMenuElement component', () => {
 
   it('shows last element', function () {
     const propsData = {
+      patientId: 42,
       elementLink: 'foo',
       elementName: 'bar',
       lastElement: true

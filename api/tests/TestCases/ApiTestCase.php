@@ -50,7 +50,6 @@ abstract class ApiTestCase extends BaseApiTestCase
     public function testShow()
     {
         $testRecord = factory($this->getModel())->create();
-
         $primaryKey = $this->model->getKeyName();
         $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
         $this->get($endpoint);
@@ -65,7 +64,7 @@ abstract class ApiTestCase extends BaseApiTestCase
         $this->assertResponseOk();
 
         // uncomment this line to debug the actual created record
-        //$this->verifyCreation(["foo" => "bar"]);
+        // $this->verifyCreation(["foo" => "bar"]);
 
         $this->seeInDatabase($this->model->getTable(), $this->getStoreData());
     }
@@ -94,12 +93,16 @@ abstract class ApiTestCase extends BaseApiTestCase
         $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->$primaryKey]);
     }
 
-    private function verifyCreation(array $where)
+    /**
+     * @param array $where
+     */
+    private function verifyCreation(array $where): void
     {
         $database = $this->app->make('db');
         $connection = $database->getDefaultConnection();
         $new = $database->connection($connection)->table($this->model->getTable())
             ->where($where)->first();
+        // this line is used for debugging and should be preserved in master
         var_dump($new);
     }
 }

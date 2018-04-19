@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class DevicesController extends BaseRestController
 {
@@ -131,9 +132,9 @@ class DevicesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getByStatus()
+    public function getByStatus(): JsonResponse
     {
         $data = $this->repository->getByStatus();
         return ApiResponse::responseOk('', $data);

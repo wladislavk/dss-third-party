@@ -13,7 +13,8 @@ import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieve
 export default {
   data () {
     return {
-      showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
+      showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings],
+      companyLogo: ''
     }
   },
   computed: {

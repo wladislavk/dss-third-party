@@ -2,8 +2,16 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FlowsheetStepRepository;
+use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Services\AppointmentSummaries\TrackerStepRetriever;
+use Illuminate\Http\JsonResponse;
+
 class FlowsheetStepsController extends BaseRestController
 {
+    /** @var FlowsheetStepRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/flowsheet-steps",
@@ -113,5 +121,36 @@ class FlowsheetStepsController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/flowsheet-steps/by-section",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param TrackerStepRetriever $trackerStepRetriever
+     * @return JsonResponse
+     */
+    public function getBySection(TrackerStepRetriever $trackerStepRetriever): JsonResponse
+    {
+        $steps = $trackerStepRetriever->getRanksBySection();
+        return ApiResponse::responseOk('', $steps);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/flowsheet-steps/by-next-step/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getByNextStep(int $id): JsonResponse
+    {
+        $steps = $this->repository->getStepsByNext($id);
+        return ApiResponse::responseOk('', $steps);
     }
 }

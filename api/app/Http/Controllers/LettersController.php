@@ -3,10 +3,12 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Services\Letters\LetterModelTransformer;
 use DentalSleepSolutions\Services\Letters\WelcomeLetterCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class LettersController extends BaseRestController
 {
@@ -240,12 +242,16 @@ class LettersController extends BaseRestController
         WelcomeLetterCreator $welcomeLetterCreator,
         Request $request
     ) {
-        $templateId = $request->input('template_id', 0);
-        $contactTypeId = $request->input('contact_type_id', 0);
+        $templateId = (int)$request->input('template_id', 0);
+        $contactTypeId = (int)$request->input('contact_type_id', 0);
 
-        $data = $welcomeLetterCreator->createWelcomeLetter(
-            $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
-        );
+        try {
+            $data = $welcomeLetterCreator->createWelcomeLetter(
+                $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
+            );
+        } catch (ValidatorException $e) {
+            return ApiResponse::responseError($e->getMessage());
+        }
 
         return ApiResponse::responseOk('', $data);
     }
@@ -271,21 +277,24 @@ class LettersController extends BaseRestController
     /**
      * @SWG\Get(
      *     path="/letters/by-patient-and-info",
+     *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
+     *     @SWG\Parameter(name="info_ids", in="query", type="string", required=true),
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
-
+     *
+     * @param LetterModelTransformer $letterModelTransformer
      * @param Request $request
      * @return JsonResponse
      */
-    public function getByPatientAndInfo(Request $request)
+    public function getByPatientAndInfo(LetterModelTransformer $letterModelTransformer, Request $request): JsonResponse
     {
-        $patientId = (int)$request->input('patient_id', 0);
-        $infoIds = $request->input('info_ids', '');
-        $infoIdsArray = explode(',', $infoIds);
-        array_walk($infoIdsArray, function ($element) {
+        $patientId = (int)$request->input('patient_id');
+        $infoIds = $request->input('info_ids', []);
+        array_walk($infoIds, function ($element) {
             return (int)$element;
         });
-        $data = $this->repository->getByPatientAndInfo($patientId, $infoIdsArray);
+        $data = $this->repository->getByPatientAndInfo($patientId, $infoIds);
+        $data = $letterModelTransformer->transformLetters($data);
         return ApiResponse::responseOk('', $data);
     }
 }

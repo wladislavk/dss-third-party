@@ -3,6 +3,10 @@ import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
+    patientId: {
+      type: Number,
+      required: true
+    },
     elementLegacy: {
       type: Boolean,
       default: true

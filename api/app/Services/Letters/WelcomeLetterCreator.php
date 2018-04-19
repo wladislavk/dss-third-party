@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Services\Letters;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
@@ -49,11 +50,12 @@ class WelcomeLetterCreator
      * @return array
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function createWelcomeLetter($docId, $templateId, $contactTypeId, $userType)
+    public function createWelcomeLetter(int $docId, int $templateId, int $contactTypeId, int $userType): array
     {
-        $letterInfo = $this->userRepository->getLetterInfo($docId);
+        /** @var User|null $doctor */
+        $doctor = $this->userRepository->find($docId);
 
-        if (!$letterInfo || !$letterInfo->use_letters || !$letterInfo->intro_letters) {
+        if (!$doctor || !$doctor->use_letters || !$doctor->intro_letters) {
             return [];
         }
         /** @var ContactType|null $contactType */

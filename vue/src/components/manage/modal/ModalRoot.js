@@ -2,13 +2,18 @@ import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import AddTaskComponent from './AddTask.vue'
 import DeviceSelectorComponent from './device-selector/DeviceSelector.vue'
-import ViewContactComponent from '../contacts/ViewContact.vue'
-import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
 import EditReferredByContactComponent from '../referredby/edit/editReferredByContacts.vue'
-import ViewSleeplabComponent from '../sleeplabs/view/viewSleeplab.vue'
 import EditSleeplabComponent from '../sleeplabs/edit/editSleeplab.vue'
+import FlowsheetDelayTreatmentComponent from './patient-tracker/FlowsheetDelayTreatment.vue'
+import FlowsheetNonComplianceComponent from './patient-tracker/FlowsheetNonCompliance.vue'
+import FlowsheetReasonComponent from './patient-tracker/FlowsheetReason.vue'
+import FlowsheetStudyTypeComponent from './patient-tracker/FlowsheetStudyType.vue'
+import ImpressionDeviceComponent from './ImpressionDevice.vue'
+import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
+import ViewContactComponent from '../contacts/ViewContact.vue'
 import ViewCorporateContactComponent from '../corporate-contacts/view/viewCorporateContact.vue'
+import ViewSleeplabComponent from '../sleeplabs/view/viewSleeplab.vue'
 
 export default {
   data () {
@@ -23,7 +28,6 @@ export default {
       if (this.hasComponent(componentName)) {
         return componentName
       }
-
       return ''
     },
     currentProperties () {
@@ -42,16 +46,20 @@ export default {
     this.$off('keyup')
   },
   components: {
-    addTask: AddTaskComponent,
-    deviceSelector: DeviceSelectorComponent,
-    // flowsheetReason: FlowsheetReasonComponent,
-    viewContact: ViewContactComponent,
-    patientAccessCode: PatientAccessCodeComponent,
-    editContact: EditContactComponent,
-    editReferredByContact: EditReferredByContactComponent,
-    viewSleeplab: ViewSleeplabComponent,
-    editSleeplab: EditSleeplabComponent,
-    viewCorporateContact: ViewCorporateContactComponent
+    [symbols.modals.addTask]: AddTaskComponent,
+    [symbols.modals.deviceSelector]: DeviceSelectorComponent,
+    [symbols.modals.editContact]: EditContactComponent,
+    [symbols.modals.editReferredByContact]: EditReferredByContactComponent,
+    [symbols.modals.editSleeplab]: EditSleeplabComponent,
+    [symbols.modals.flowsheetDelayTreatment]: FlowsheetDelayTreatmentComponent,
+    [symbols.modals.flowsheetNonCompliance]: FlowsheetNonComplianceComponent,
+    [symbols.modals.flowsheetReason]: FlowsheetReasonComponent,
+    [symbols.modals.flowsheetStudyType]: FlowsheetStudyTypeComponent,
+    [symbols.modals.impressionDevice]: ImpressionDeviceComponent,
+    [symbols.modals.patientAccessCode]: PatientAccessCodeComponent,
+    [symbols.modals.viewContact]: ViewContactComponent,
+    [symbols.modals.viewCorporateContact]: ViewCorporateContactComponent,
+    [symbols.modals.viewSleeplab]: ViewSleeplabComponent
   },
   methods: {
     centering () {

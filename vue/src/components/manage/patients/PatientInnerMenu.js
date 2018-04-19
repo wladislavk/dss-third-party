@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -8,40 +7,42 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      legacyUrl: ProcessWrapper.getLegacyRoot(),
-      medicare: this.$store.state.main[symbols.state.medicare],
-      alertText: this.$store.state.main[symbols.state.headerAlertText],
-      headerTitle: this.$store.state.main[symbols.state.headerTitle],
-      patientName: this.$store.state.main[symbols.state.patientName]
-    }
-  },
   computed: {
-    longPatientFont () {
-      const longFontSize = '14px'
+    longPatientName () {
       if (this.patientName.length > 20) {
-        return longFontSize
+        return true
       }
-      return ''
+      return false
     },
     displayNotes () {
-      const displayAlert = this.$store.state.main[symbols.state.displayAlert]
+      const displayAlert = this.$store.state.patients[symbols.state.displayAlert]
       if (displayAlert && this.alertText) {
         return true
       }
       return false
     },
     displayMed () {
-      const allergen = this.$store.state.main[symbols.state.allergen]
-      const premedCheck = this.$store.state.main[symbols.state.premedCheck]
+      const allergen = this.$store.state.patients[symbols.state.allergen]
+      const premedCheck = this.$store.state.patients[symbols.state.premedCheck]
       if (premedCheck === 1) {
         return true
       }
-      if (allergen === 1) {
+      if (allergen) {
         return true
       }
       return false
+    },
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
+    },
+    medicare () {
+      return this.$store.state.patients[symbols.state.medicare]
+    },
+    alertText () {
+      return this.$store.state.patients[symbols.state.headerAlertText]
+    },
+    headerTitle () {
+      return this.$store.state.patients[symbols.state.headerTitle]
     }
   }
 }

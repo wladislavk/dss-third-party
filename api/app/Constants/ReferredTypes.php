@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Constants;
 
-abstract class ReferredTypes
+interface ReferredTypes
 {
     const DSS_REFERRED_PATIENT = 1;
     const DSS_REFERRED_PHYSICIAN = 2;

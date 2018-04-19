@@ -1,5 +1,6 @@
 import symbols from '../../../../src/symbols'
 import PatientsModule from '../../../../src/store/patients'
+import { DSS_CONSTANTS, HST_STATUSES } from '../../../../src/constants/main'
 
 describe('Patients module getters', () => {
   describe('patientId getter', () => {
@@ -105,6 +106,37 @@ describe('Patients module getters', () => {
       }
       const result = PatientsModule.getters[symbols.getters.showWarningAboutPatientChanges](state)
       expect(result).toBe(false)
+    })
+  })
+
+  describe('hstStatus getter', function () {
+    it('shows last status', function () {
+      const state = {
+        [symbols.state.incompleteHomeSleepTests]: [
+          DSS_CONSTANTS.DSS_HST_CANCELED,
+          DSS_CONSTANTS.DSS_HST_REQUESTED
+        ]
+      }
+      const result = PatientsModule.getters[symbols.getters.hstStatus](state)
+      expect(result).toBe(HST_STATUSES[DSS_CONSTANTS.DSS_HST_REQUESTED])
+    })
+    it('does not show if no HSTs', function () {
+      const state = {
+        [symbols.state.incompleteHomeSleepTests]: []
+      }
+      const result = PatientsModule.getters[symbols.getters.hstStatus](state)
+      expect(result).toBe('')
+    })
+    it('does not show if no record for last status', function () {
+      const state = {
+        [symbols.state.incompleteHomeSleepTests]: [
+          DSS_CONSTANTS.DSS_HST_CANCELED,
+          DSS_CONSTANTS.DSS_HST_REQUESTED,
+          99
+        ]
+      }
+      const result = PatientsModule.getters[symbols.getters.hstStatus](state)
+      expect(result).toBe('')
     })
   })
 })

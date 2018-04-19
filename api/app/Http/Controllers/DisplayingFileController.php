@@ -16,6 +16,7 @@ class DisplayingFileController extends Controller
      *
      * @param string $filename
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getFile($filename)
     {

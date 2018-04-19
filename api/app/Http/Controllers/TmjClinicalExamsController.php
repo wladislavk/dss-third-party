@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use DentalSleepSolutions\Services\AppointmentSummaries\UniqueTmjCreator;
+use DentalSleepSolutions\Services\ClinicalExams\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\UniqueTmjCreator;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

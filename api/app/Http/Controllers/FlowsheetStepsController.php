@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FlowsheetStepRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\TrackerStepRetriever;
+use DentalSleepSolutions\Services\AppointmentSummaries\TrackerStepRetriever;
 use Illuminate\Http\JsonResponse;
 
 class FlowsheetStepsController extends BaseRestController

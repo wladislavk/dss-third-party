@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Helpers\TrackerNotesHandler;
+use DentalSleepSolutions\Services\AppointmentSummaries\TrackerNotesHandler;
 use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;

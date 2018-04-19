@@ -6,9 +6,9 @@ namespace DentalSleepSolutions\Temporary;
 // TODO: this array has to be destroyed and laravel-ized into a proper model, then this class will be destroyed
 use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Helpers\PatientFormDataChecker;
-use DentalSleepSolutions\Helpers\PatientPortalRetriever;
-use DentalSleepSolutions\Helpers\UniqueLoginGenerator;
+use DentalSleepSolutions\Services\PatientFormDataChecker;
+use DentalSleepSolutions\Services\PatientPortalRetriever;
+use DentalSleepSolutions\Services\UniqueLoginGenerator;
 use DentalSleepSolutions\Structs\MDContacts;
 use DentalSleepSolutions\Structs\PatientName;
 use DentalSleepSolutions\Structs\PatientReferrer;

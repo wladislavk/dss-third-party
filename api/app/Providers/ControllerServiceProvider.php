@@ -11,6 +11,9 @@ use Prettus\Repository\Eloquent\BaseRepository;
 // this class binds common RESTful request and model interfaces to controllers
 class ControllerServiceProvider extends ServiceProvider
 {
+    /**
+     * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
+     */
     public function register()
     {
         $bindings = BindingSetter::setBindings();

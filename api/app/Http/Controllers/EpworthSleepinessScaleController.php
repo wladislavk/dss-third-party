@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\EpworthFinder;
+use DentalSleepSolutions\Services\Epworth\EpworthFinder;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;

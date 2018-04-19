@@ -1,0 +1,126 @@
+<?php
+
+namespace Tests\Unit\Services\Misc;
+
+use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Services\Misc\Paginator;
+use Illuminate\Database\Eloquent\Collection;
+use Tests\TestCases\UnitTestCase;
+
+class PaginatorTest extends UnitTestCase
+{
+    /** @var Paginator */
+    private $paginator;
+
+    public function setUp()
+    {
+        $this->paginator = new Paginator();
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function testWithArray()
+    {
+        $array = [
+            'first',
+            'second',
+            'third',
+            'fourth',
+            'fifth',
+            'sixth',
+            'seventh',
+        ];
+        $page = 2;
+        $recordsPerPage = 3;
+        $result = $this->paginator->limitResultToPage($array, $page, $recordsPerPage);
+        $expected = [
+            'fourth',
+            'fifth',
+            'sixth',
+        ];
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function testWithArrayAndZeroethPage()
+    {
+        $array = [
+            'first',
+            'second',
+            'third',
+            'fourth',
+            'fifth',
+            'sixth',
+            'seventh',
+        ];
+        $page = 0;
+        $recordsPerPage = 3;
+        $result = $this->paginator->limitResultToPage($array, $page, $recordsPerPage);
+        $expected = [
+            'first',
+            'second',
+            'third',
+        ];
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function testWithCollection()
+    {
+        $collection = new Collection();
+        $collection->add('first');
+        $collection->add('second');
+        $collection->add('third');
+        $collection->add('fourth');
+        $collection->add('fifth');
+        $collection->add('sixth');
+        $collection->add('seventh');
+        $page = 2;
+        $recordsPerPage = 3;
+        $result = $this->paginator->limitResultToPage($collection, $page, $recordsPerPage);
+        $expected = [
+            3 => 'fourth',
+            4 => 'fifth',
+            5 => 'sixth',
+        ];
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function testWithoutRecordsPerPage()
+    {
+        $array = [
+            'first',
+            'second',
+            'third',
+            'fourth',
+            'fifth',
+            'sixth',
+            'seventh',
+        ];
+        $page = 2;
+        $recordsPerPage = 0;
+        $result = $this->paginator->limitResultToPage($array, $page, $recordsPerPage);
+        $this->assertEquals($array, $result);
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function testWithBadArgument()
+    {
+        $collection = 'foo';
+        $page = 2;
+        $recordsPerPage = 3;
+        $this->expectException(GeneralException::class);
+        $this->expectExceptionMessage('Collection must be either array or object of type ' . Collection::class);
+        $this->paginator->limitResultToPage($collection, $page, $recordsPerPage);
+    }
+}

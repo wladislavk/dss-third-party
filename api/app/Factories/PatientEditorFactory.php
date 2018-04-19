@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Factories;
 
-use DentalSleepSolutions\Helpers\PatientEditors\AbstractPatientEditor;
-use DentalSleepSolutions\Helpers\PatientEditors\PatientCreator;
-use DentalSleepSolutions\Helpers\PatientEditors\PatientUpdater;
+use DentalSleepSolutions\Services\Patients\PatientEditors\AbstractPatientEditor;
+use DentalSleepSolutions\Services\Patients\PatientEditors\PatientCreator;
+use DentalSleepSolutions\Services\Patients\PatientEditors\PatientUpdater;
 use Illuminate\Support\Facades\App;
 
 class PatientEditorFactory

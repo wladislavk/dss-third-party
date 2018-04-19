@@ -2,7 +2,7 @@
 namespace DentalSleepSolutions\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use DentalSleepSolutions\Services\CustomValidator;
+use DentalSleepSolutions\Validators\CustomValidator;
 
 class CustomValidationServiceProvider extends ServiceProvider
 {

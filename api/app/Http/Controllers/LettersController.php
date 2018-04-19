@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
-use DentalSleepSolutions\Services\WelcomeLetterCreator;
+use DentalSleepSolutions\Services\Letters\WelcomeLetterCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 

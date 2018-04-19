@@ -3,10 +3,10 @@
 namespace DentalSleepSolutions\Factories;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Services\EmailHandlers\AbstractEmailHandler;
-use DentalSleepSolutions\Services\EmailHandlers\RegistrationEmailHandler;
-use DentalSleepSolutions\Services\EmailHandlers\RememberEmailHandler;
-use DentalSleepSolutions\Services\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Services\Emails\EmailHandlers\AbstractEmailHandler;
+use DentalSleepSolutions\Services\Emails\EmailHandlers\RegistrationEmailHandler;
+use DentalSleepSolutions\Services\Emails\EmailHandlers\RememberEmailHandler;
+use DentalSleepSolutions\Services\Emails\EmailHandlers\UpdateEmailHandler;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Support\Facades\App;
 
@@ -45,6 +45,7 @@ class EmailHandlerFactory
      * @param string $newEmail
      * @param string $oldEmail
      * @return AbstractEmailHandler|null
+     * @throws GeneralException
      */
     public function getCorrectHandler(
         RequestedEmails $emailTypesForSending,

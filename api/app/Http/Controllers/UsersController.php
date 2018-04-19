@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Services\CurrentUserInfoRetriever;
+use DentalSleepSolutions\Services\Users\CurrentUserInfoRetriever;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;

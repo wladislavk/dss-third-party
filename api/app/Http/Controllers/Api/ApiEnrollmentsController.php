@@ -12,7 +12,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeReposi
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
 use DentalSleepSolutions\Eligible\Client;
-use DentalSleepSolutions\Services\InvoiceHelper;
+use DentalSleepSolutions\Services\ApiEnrollments\InvoiceHelper;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;

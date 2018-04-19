@@ -3,8 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingOptionRepository;
-use DentalSleepSolutions\Services\GuideSettingOptionsRetriever;
-use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Services\GuideSettingOptions\GuideSettingOptionsRetriever;
 use DentalSleepSolutions\Facades\ApiResponse;
 
 class GuideSettingOptionsController extends BaseRestController

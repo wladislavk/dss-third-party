@@ -5,10 +5,9 @@ namespace DentalSleepSolutions\Console\Commands;
 use Carbon\Carbon;
 use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Console\Command;
-use DentalSleepSolutions\Services\JwtHelper;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
-use DentalSleepSolutions\Exceptions\JwtException;
 
 /**
  * CLI to generate JWT tokens with v_users IDs

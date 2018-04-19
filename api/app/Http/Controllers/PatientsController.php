@@ -13,15 +13,15 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
-use DentalSleepSolutions\Services\AccessCodeResetter;
-use DentalSleepSolutions\Services\EmailChecker;
-use DentalSleepSolutions\Services\FullNameComposer;
-use DentalSleepSolutions\Services\NameSetter;
-use DentalSleepSolutions\Services\PatientFinder;
-use DentalSleepSolutions\Services\PatientLocationRetriever;
-use DentalSleepSolutions\Services\PatientRuleRetriever;
-use DentalSleepSolutions\Services\PatientDataRetriever;
-use DentalSleepSolutions\Services\TempPinDocumentCreator;
+use DentalSleepSolutions\Services\Patients\AccessCodeResetter;
+use DentalSleepSolutions\Services\Emails\EmailChecker;
+use DentalSleepSolutions\Services\Contacts\FullNameComposer;
+use DentalSleepSolutions\Services\Contacts\NameSetter;
+use DentalSleepSolutions\Services\Patients\PatientFinder;
+use DentalSleepSolutions\Services\Patients\PatientLocationRetriever;
+use DentalSleepSolutions\Services\Patients\PatientRuleRetriever;
+use DentalSleepSolutions\Services\Patients\PatientDataRetriever;
+use DentalSleepSolutions\Services\Users\TempPinDocumentCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
@@ -664,6 +664,8 @@ class PatientsController extends BaseRestController
      * @param NotificationRepository $notificationRepository
      * @param Request $request
      * @return JsonResponse
+     * @throws GeneralException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function getDataForFillingPatientForm(
         FullNameComposer $fullNameComposer,
@@ -694,7 +696,7 @@ class PatientsController extends BaseRestController
             'profile_photo' => $profileImageRepository->getProfilePhoto($patientId),
             'intro_letter' => $letterRepository->getGeneratedDateOfIntroLetter($patientId),
             'insurance_card_image' => $profileImageRepository->getInsuranceCardImage($patientId),
-            'uncompleted_home_sleep_test' => $homeSleepTestRepository->getUncompleted($patientId),
+            'uncompleted_home_sleep_test' => $homeSleepTestRepository->getIncomplete($patientId),
             'patient_notification' => $notificationRepository->getWithFilter(null, $patientNotificationData),
             'patient' => ApiResponse::transform($foundPatient),
             'formed_full_names' => $formedFullNames,
@@ -804,6 +806,7 @@ class PatientsController extends BaseRestController
      * @param TempPinDocumentCreator $tempPinDocumentCreator
      * @param int $patientId
      * @return JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      */
     public function createTempPinDocument(
         TempPinDocumentCreator $tempPinDocumentCreator,

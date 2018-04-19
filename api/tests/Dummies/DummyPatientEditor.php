@@ -4,7 +4,7 @@ namespace Tests\Dummies;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Services\PatientEditors\AbstractPatientEditor;
+use DentalSleepSolutions\Services\Patients\PatientEditors\AbstractPatientEditor;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;

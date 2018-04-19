@@ -3,11 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
-use DentalSleepSolutions\Services\ContactOrderRetriever;
-use DentalSleepSolutions\Services\ContactsAndCompaniesRetriever;
-use DentalSleepSolutions\Services\Paginator;
-use DentalSleepSolutions\Services\QueryComposers\ContactsQueryComposer;
-use DentalSleepSolutions\Services\ReferredContactParser;
+use DentalSleepSolutions\Services\Contacts\ContactOrderRetriever;
+use DentalSleepSolutions\Services\Contacts\ContactsAndCompaniesRetriever;
+use DentalSleepSolutions\Services\Misc\Paginator;
+use DentalSleepSolutions\Services\Contacts\ContactsQueryComposer;
+use DentalSleepSolutions\Services\Contacts\ReferredContactParser;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -201,6 +201,7 @@ class ContactsController extends BaseRestController
      * @param Paginator $paginator
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
      */
     public function find(
         ContactsQueryComposer $contactsQueryComposer,
@@ -306,6 +307,7 @@ class ContactsController extends BaseRestController
      * @param Paginator $paginator
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
      */
     public function getReferredByContacts(
         ContactOrderRetriever $contactOrderRetriever,

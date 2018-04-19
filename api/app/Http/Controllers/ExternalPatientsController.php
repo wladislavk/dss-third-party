@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Services\ExternalPatientSyncManager;
+use DentalSleepSolutions\Services\ExternalPatients\ExternalPatientSyncManager;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
 use DentalSleepSolutions\Facades\ApiResponse;
 

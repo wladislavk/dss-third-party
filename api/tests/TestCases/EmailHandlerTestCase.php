@@ -4,8 +4,8 @@ namespace Tests\TestCases;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Services\EmailSender;
-use DentalSleepSolutions\Services\MailerDataRetriever;
+use DentalSleepSolutions\Services\Emails\EmailSender;
+use DentalSleepSolutions\Services\Emails\MailerDataRetriever;
 use DentalSleepSolutions\Structs\MailerData;
 use Mockery\MockInterface;
 

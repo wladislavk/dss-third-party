@@ -3,7 +3,7 @@
 namespace Tests\TestCases;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
-use DentalSleepSolutions\Services\LetterCreator;
+use DentalSleepSolutions\Services\Letters\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;
 

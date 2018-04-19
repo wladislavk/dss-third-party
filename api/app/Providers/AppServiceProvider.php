@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Providers;
 
-use DentalSleepSolutions\Services\ApiResponseHelper;
-use DentalSleepSolutions\Services\ClassRetriever;
+use DentalSleepSolutions\Services\ApiResponse\ApiResponseHelper;
+use DentalSleepSolutions\Services\Misc\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
 use Illuminate\Database\Eloquent\Model;

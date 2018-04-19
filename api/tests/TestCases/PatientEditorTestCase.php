@@ -2,9 +2,9 @@
 
 namespace Tests\TestCases;
 
-use DentalSleepSolutions\Services\LetterTriggerLauncher;
-use DentalSleepSolutions\Services\PatientSummaryManager;
-use DentalSleepSolutions\Services\RegistrationEmailSender;
+use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
+use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
+use DentalSleepSolutions\Services\Emails\RegistrationEmailSender;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use Mockery\MockInterface;
 

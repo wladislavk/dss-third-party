@@ -3,11 +3,11 @@
 namespace DentalSleepSolutions\Factories;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Services\LetterUpdaters\LetterUpdaterInterface;
-use DentalSleepSolutions\Services\LetterUpdaters\MDReferralUpdater;
-use DentalSleepSolutions\Services\LetterUpdaters\MDUpdater;
-use DentalSleepSolutions\Services\LetterUpdaters\PatientReferralUpdater;
-use DentalSleepSolutions\Services\LetterUpdaters\PatientUpdater;
+use DentalSleepSolutions\Services\Letters\LetterUpdaters\LetterUpdaterInterface;
+use DentalSleepSolutions\Services\Letters\LetterUpdaters\MDReferralUpdater;
+use DentalSleepSolutions\Services\Letters\LetterUpdaters\MDUpdater;
+use DentalSleepSolutions\Services\Letters\LetterUpdaters\PatientReferralUpdater;
+use DentalSleepSolutions\Services\Letters\LetterUpdaters\PatientUpdater;
 use Illuminate\Support\Facades\App;
 
 class LetterUpdaterFactory

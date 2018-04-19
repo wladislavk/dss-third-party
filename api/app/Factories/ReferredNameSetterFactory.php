@@ -4,9 +4,9 @@ namespace DentalSleepSolutions\Factories;
 
 use DentalSleepSolutions\Constants\ReferredTypes;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Services\ReferredNameSetters\AbstractReferredNameSetter;
-use DentalSleepSolutions\Services\ReferredNameSetters\PatientReferredNameSetter;
-use DentalSleepSolutions\Services\ReferredNameSetters\PhysicianReferredNameSetter;
+use DentalSleepSolutions\Services\Contacts\ReferredNameSetters\AbstractReferredNameSetter;
+use DentalSleepSolutions\Services\Contacts\ReferredNameSetters\PatientReferredNameSetter;
+use DentalSleepSolutions\Services\Contacts\ReferredNameSetters\PhysicianReferredNameSetter;
 use Illuminate\Support\Facades\App;
 
 class ReferredNameSetterFactory

@@ -14,9 +14,9 @@ export default {
     })
   },
 
-  [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }) {
+  [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }, patientId) {
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.tasks.indexForPatient + '/' + rootState.patients[symbols.state.patientId]).then((response) => {
+    http.get(endpoints.tasks.indexForPatient + '/' + patientId).then((response) => {
       const data = response.data.data
       commit(symbols.mutations.setTasksForPatient, data)
     }).catch((response) => {
@@ -99,8 +99,8 @@ export default {
     return new Promise((resolve, reject) => {
       http.token = rootState.main[symbols.state.mainToken]
       http.put(endpoints.tasks.update + '/' + taskId, data).then(() => {
-        if (rootState.main[symbols.state.patientId]) {
-          dispatch(symbols.actions.retrieveTasksForPatient)
+        if (rootState.patients[symbols.state.patientId]) {
+          dispatch(symbols.actions.retrieveTasksForPatient, rootState.patients[symbols.state.patientId])
         }
         dispatch(symbols.actions.retrieveTasks)
         resolve()
@@ -115,8 +115,8 @@ export default {
     return new Promise((resolve, reject) => {
       http.token = rootState.main[symbols.state.mainToken]
       http.delete(endpoints.tasks.destroy + '/' + taskId).then(() => {
-        if (rootState.main[symbols.state.patientId]) {
-          dispatch(symbols.actions.retrieveTasksForPatient)
+        if (rootState.patients[symbols.state.patientId]) {
+          dispatch(symbols.actions.retrieveTasksForPatient, rootState.patients[symbols.state.patientId])
         }
         dispatch(symbols.actions.retrieveTasks)
         resolve()

@@ -42,7 +42,7 @@ export default {
   methods: {
     updatePatientData (patientId) {
       this.$store.dispatch(symbols.actions.patientData, patientId)
-      this.$store.dispatch(symbols.actions.retrieveTasksForPatient, this.patientId)
+      this.$store.dispatch(symbols.actions.retrieveTasksForPatient, patientId)
     },
     clearPatientData () {
       this.$store.dispatch(symbols.actions.clearPatientData)

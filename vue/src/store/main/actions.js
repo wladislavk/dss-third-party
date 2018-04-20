@@ -169,14 +169,24 @@ export default {
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
         let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
+        let route = {
+          name: ''
+        }
         if (parseInt(element.patient_info) === 1) {
-          link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
+          route = {
+            name: 'patient-tracker',
+            query: {
+              pid: element.patientid
+            }
+          }
+          link = ''
         }
         const patientElement = {
           id: element.patientid,
           name: fullName,
           patientType: 'json',
-          link: link
+          link: link,
+          route: route
         }
         newList.push(patientElement)
         // @todo: add transition

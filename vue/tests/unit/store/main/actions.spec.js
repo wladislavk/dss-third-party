@@ -523,13 +523,22 @@ describe('Main module actions', () => {
                 id: 1,
                 name: 'John Doe',
                 patientType: 'json',
-                link: 'manage/add_patient.php?pid=1&ed=1'
+                link: 'manage/add_patient.php?pid=1&ed=1',
+                route: {
+                  name: ''
+                }
               },
               {
                 id: 2,
                 name: 'John Little',
                 patientType: 'json',
-                link: 'manage/manage_flowsheet3.php?pid=2'
+                link: '',
+                route: {
+                  name: 'patient-tracker',
+                  query: {
+                    pid: 2
+                  }
+                }
               }
             ]
           }

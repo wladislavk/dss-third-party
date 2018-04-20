@@ -1,6 +1,6 @@
 <template>
     <li v-bind:class="{ 'last': lastElement }">
-        <a v-bind:class="{ 'nav_active': isActive }" v-bind:href="parsedLink" v-if="elementLegacy">{{ elementName }}</a>
+        <a v-bind:class="{ 'nav_active': isActive }" href="#" v-if="elementLegacy" v-on:click="goToLegacy()">{{ elementName }}</a>
         <router-link
             v-bind:class="{ 'nav_active': isActive }"
             v-bind:to="{ name: elementLink, query: { pid: patientId } }"

@@ -1,4 +1,6 @@
 import symbols from '../../../symbols'
+import ProcessWrapper from 'src/wrappers/ProcessWrapper'
+import LocationWrapper from 'src/wrappers/LocationWrapper'
 
 export default {
   data () {
@@ -92,13 +94,14 @@ export default {
       if (listElement.patientType === 'no') {
         return
       }
-      if (listElement.link) {
+      if (listElement.route.name) {
         this.inputValue = ''
         this.$store.commit(symbols.mutations.patientId, listElement.id)
-        const query = {
-          pid: listElement.id
-        }
-        this.$router.push({ name: 'patient-tracker', query: query })
+        this.$router.push(listElement.route)
+        return
+      }
+      if (listElement.link) {
+        LocationWrapper.goToPage(ProcessWrapper.getLegacyRoot() + listElement.link, this.$store.state.main[symbols.state.mainToken])
         return
       }
       this.inputValue = listElement.name

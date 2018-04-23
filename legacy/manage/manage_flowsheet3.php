@@ -1,4 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy;
+
+include_once __DIR__ . '/includes/dual_app.php';
+$patientId = !empty($_GET['pid']) ? $_GET['pid'] : '';
+dualAppRedirect('main/patients/tracker?pid=' . $patientId);
+
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 include_once 'includes/dental_patient_summary.php';

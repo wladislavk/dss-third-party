@@ -337,3 +337,11 @@ Feature: Patient Tracker
       | 02/17/2015 | Consult               |               | 0       | yes  |
       | 02/04/2015 | Initial Contact       |               | 0       | no   |
     And I do not see links below "Pt. Non-Compliant" row in treatment summary tracker section
+
+    Scenario: Redirect to patient form if patient info is not set
+      Given I am logged in as "doc1f"
+      When I go to "start" page
+      Then I see patient search form
+      When I type "smi" into patient search form
+      And I click on "Smith, Johnny" in list of patients
+      Then I see add patient form

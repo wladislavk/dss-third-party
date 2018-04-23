@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
 import ProcessWrapper from '../../../wrappers/ProcessWrapper'
+import LocationWrapper from 'src/wrappers/LocationWrapper'
 
 export default {
   props: {
@@ -50,11 +51,6 @@ export default {
         return this.checkPattern()
       }
       return false
-    },
-    parsedLink () {
-      const wildcardData = this.$store.getters[this.wildcard]
-      const link = this.elementLink.replace('%d', wildcardData)
-      return ProcessWrapper.getLegacyRoot() + link
     }
   },
   methods: {
@@ -65,6 +61,11 @@ export default {
         }
       }
       return false
+    },
+    goToLegacy () {
+      const wildcardData = this.$store.getters[this.wildcard]
+      const link = this.elementLink.replace(/%d/g, wildcardData)
+      LocationWrapper.goToLegacyPage(link, this.$store.state.main[symbols.state.mainToken])
     }
   }
 }

@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import sinon from 'sinon'
 import store from '../../../../src/store'
 import PatientMenuElementComponent from '../../../../src/components/manage/patients/PatientMenuElement.vue'
-import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../../src/symbols'
+import LocationWrapper from 'src/wrappers/LocationWrapper'
 
 describe('PatientMenuElement component', () => {
   beforeEach(function () {
+    this.sandbox = sinon.createSandbox()
     store.state.patients[symbols.state.patientId] = 0
 
     const Component = Vue.extend(PatientMenuElementComponent)
@@ -28,7 +30,15 @@ describe('PatientMenuElement component', () => {
     }
   })
 
-  it('shows normal element', function () {
+  afterEach(function () {
+    this.sandbox.restore()
+  })
+
+  it('shows normal element', function (done) {
+    let destination = ''
+    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+      destination = url
+    })
     const propsData = {
       patientId: 42,
       elementLink: 'foo',
@@ -39,10 +49,18 @@ describe('PatientMenuElement component', () => {
     const link = vm.$el.querySelector('a')
     expect(link.textContent).toBe('bar')
     expect(link.className).toBe('')
-    expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
+    link.click()
+    vm.$nextTick(() => {
+      expect(destination).toBe('foo')
+      done()
+    })
   })
 
-  it('shows element with parsed link', function () {
+  it('shows element with parsed link', function (done) {
+    let destination = ''
+    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+      destination = url
+    })
     store.state.patients[symbols.state.patientId] = 1
 
     const propsData = {
@@ -52,7 +70,11 @@ describe('PatientMenuElement component', () => {
     }
     const vm = this.mount(propsData)
     const link = vm.$el.querySelector('a')
-    expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo1')
+    link.click()
+    vm.$nextTick(() => {
+      expect(destination).toBe('foo1')
+      done()
+    })
   })
 
   it('shows active element', function (done) {

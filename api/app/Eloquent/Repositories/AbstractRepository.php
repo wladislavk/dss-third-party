@@ -141,8 +141,6 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
-     * @todo: check if this method is needed
-     *
      * @param string $field
      * @param string $value
      * @param array $relations
@@ -210,9 +208,22 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
-     * @param  array  $data
-     * @param  array  $where
-     * @return boolean|int
+     * @param array $criteria
+     * @param array $data
+     */
+    public function updateBy(array $criteria, array $data)
+    {
+        /** @var Model[] $records */
+        $records = $this->findWhere($criteria);
+        foreach ($records as $record) {
+            $record->update($data);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param array $where
+     * @return bool|int
      */
     public function updateWhere(array $data, array $where)
     {

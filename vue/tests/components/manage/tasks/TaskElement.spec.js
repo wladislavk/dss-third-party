@@ -85,22 +85,9 @@ describe('TaskElement component', () => {
     }
     const vm = this.mount(propsData)
     const nameSpan = vm.$el.querySelector('span.task_name')
-    expect(nameSpan.textContent).toBe('(John Doe)')
+    expect(nameSpan.textContent.trim()).toBe('(John Doe)')
     const nameLink = nameSpan.querySelector('a.task_name_link')
     expect(nameLink.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php?ed=2&addtopat=1&pid=2')
-  })
-
-  it('should display HTML for patient with first name and last name', function () {
-    this.task.firstname = 'John'
-    this.task.lastname = 'Doe'
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
-    const nameSpan = vm.$el.querySelector('span.task_name')
-    expect(nameSpan.textContent).toBe('John Doe')
   })
 
   it('should fire onMouseEnter and onMouseLeave', function (done) {

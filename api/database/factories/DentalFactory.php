@@ -1866,7 +1866,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance::c
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary::class, function (\Faker\Generator $faker) {
     return [
-        'pid'              => $faker->randomDigit,
+        // cannot use random because of PK
+        'pid'              => 998,
         'fspage1_complete' => $faker->boolean,
         'next_visit'       => $faker->dateTime,
         'last_visit'       => $faker->dateTime,

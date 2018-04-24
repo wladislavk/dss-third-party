@@ -27,5 +27,9 @@ export default {
 
   [symbols.getters.isUserDoctor] (state) {
     return (state[symbols.state.userInfo].docId === state[symbols.state.userInfo].userId)
+  },
+
+  [symbols.getters.isHSTCompany] (state) {
+    return !!(state[symbols.state.companyData].length)
   }
 }

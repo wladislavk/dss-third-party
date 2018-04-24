@@ -12,7 +12,6 @@ class EdxCertificateRepository extends AbstractRepository
         return EdxCertificate::class;
     }
 
-
     /**
      * @param int $userId
      * @return EdxCertificate[]|Collection

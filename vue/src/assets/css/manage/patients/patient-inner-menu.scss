@@ -7,7 +7,6 @@ div.patient_name_div {
   min-width: 317px;
   float: left;
   color: #000;
-  font-size: 22px;
   background: #fed68d;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
@@ -16,7 +15,11 @@ div.patient_name_div {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 
-  .medicare_name {
+  div {
+    font-size: 22px;
+  }
+
+  span.medicare_name {
     min-width: 238px;
     padding: 0 3px;
     vertical-align: top;
@@ -25,9 +28,19 @@ div.patient_name_div {
     float: right;
   }
 
-  .name {
+  span.name {
     width: 100%;
     text-align: center;
     display: block;
   }
+}
+
+div.long-patient {
+  font-size: 14px;
+}
+
+span.patient_name a {
+  font-weight: bold;
+  font-size: 18px;
+  color: #FF0000;
 }

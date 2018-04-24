@@ -13,6 +13,7 @@ class Tasks extends BaseContext
 {
     const TASK_MENUS = [
         'top menu' => 0,
+        'patient menu' => 1,
         'dashboard' => -2,
     ];
 
@@ -342,11 +343,12 @@ class Tasks extends BaseContext
         }
         Assert::assertArrayHasKey($listKey, $lists);
         Assert::assertNotNull($lists[$listKey]);
-        $taskList = $this->findAllCss('li > div:last-child', $lists[$listKey]);
+        $taskList = $this->findAllCss('li', $lists[$listKey]);
         $taskNames = array_column($table->getHash(), 'task');
         $taskTexts = [];
         foreach ($taskList as $task) {
-            $trimmedText = trim($task->getText());
+            $name = preg_replace('/.*?\<input.+?\>(.*)/s', '$1', $task->getHtml());
+            $trimmedText = $this->sanitizeText(preg_replace('/\<.+?\>/', '', $name));
             if ($trimmedText) {
                 $taskTexts[] = $trimmedText;
             }

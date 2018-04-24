@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
-import LocationWrapper from '../../../wrappers/LocationWrapper'
+import ProcessWrapper from 'src/wrappers/ProcessWrapper'
+import LocationWrapper from 'src/wrappers/LocationWrapper'
 
 export default {
   data () {
@@ -93,9 +94,14 @@ export default {
       if (listElement.patientType === 'no') {
         return
       }
-      const token = this.$store.state.main[symbols.state.mainToken]
+      if (listElement.route.name) {
+        this.inputValue = ''
+        this.$store.commit(symbols.mutations.patientId, listElement.id)
+        this.$router.push(listElement.route)
+        return
+      }
       if (listElement.link) {
-        LocationWrapper.goToLegacyPage(listElement.link, token)
+        LocationWrapper.goToPage(ProcessWrapper.getLegacyRoot() + listElement.link, this.$store.state.main[symbols.state.mainToken])
         return
       }
       this.inputValue = listElement.name

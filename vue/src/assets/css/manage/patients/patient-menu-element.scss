@@ -1,0 +1,32 @@
+@import "patients";
+
+li {
+  float: left;
+  display: block;
+  margin: 0;
+  height: 30px;
+  padding: 0;
+}
+
+li.last a {
+  border-right: none;
+}
+
+li a {
+  color: #000;
+  font-size: 14px;
+  padding: 7px;
+  border-right: solid 1px #000;
+  height: 30px;
+  line-height: 30px;
+  text-decoration: none;
+
+  &:visited, &:hover {
+    color: #000;
+  }
+}
+
+li a:hover, li a.nav_active {
+  background: #fff;
+  text-decoration: none;
+}

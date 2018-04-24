@@ -303,11 +303,4 @@ class UsersApiTest extends ApiTestCase
         ];
         $this->assertEquals($expected, $this->getResponseData());
     }
-
-    public function testGetLetterInfo()
-    {
-        $this->post(self::ROUTE_PREFIX . '/users/letter-info');
-        $this->assertResponseOk();
-        $this->assertNull($this->getResponseData());
-    }
 }

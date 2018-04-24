@@ -35,13 +35,13 @@
         </div>
         <div class="dp50" id="hst_column_right">
             <hst-contact
-              v-for="contact in contactData"
-              v-if="contact.hstColumn === 'right'"
-              v-bind:name="contact.name"
-              v-bind:value="contact.value"
-              v-bind:label="contact.label"
-              v-bind:class-name="contact.class"
-              v-bind:key="contact.name"
+                v-for="contact in contactData"
+                v-if="contact.hstColumn === 'right'"
+                v-bind:name="contact.name"
+                v-bind:value="contact.value"
+                v-bind:label="contact.label"
+                v-bind:class-name="contact.class"
+                v-bind:key="contact.name"
             ></hst-contact>
         </div>
         <screener-navigation

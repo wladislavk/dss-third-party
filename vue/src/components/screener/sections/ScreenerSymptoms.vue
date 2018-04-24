@@ -8,10 +8,10 @@
             </div>
         </div>
         <div
-          v-for="symptom in symptoms"
-          class="sepH_b clear"
-          v-bind:class="{'error': symptom.error}"
-          v-bind:id="symptom.name + '_div'"
+            v-for="symptom in symptoms"
+            class="sepH_b clear"
+            v-bind:class="{'error': symptom.error}"
+            v-bind:id="symptom.name + '_div'"
         >
             <symptom-buttons
                 v-bind:name="symptom.name"

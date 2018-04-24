@@ -13,9 +13,13 @@ import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieve
 export default {
   data () {
     return {
-      patientId: this.$store.state.patients[symbols.state.patientId],
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings],
       companyLogo: ''
+    }
+  },
+  computed: {
+    patientId () {
+      return this.$store.state.patients[symbols.state.patientId]
     }
   },
   components: {

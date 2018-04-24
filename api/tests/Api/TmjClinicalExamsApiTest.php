@@ -141,4 +141,24 @@ class TmjClinicalExamsApiTest extends ApiTestCase
         ];
         $this->seeInDatabase('dental_ex_page5', $expectedData);
     }
+
+    public function testStoreForPatient()
+    {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $data = [
+            'patient_id' => 666,
+            'dentaldevice' => 'foo',
+        ];
+        $this->post(self::ROUTE_PREFIX . '/tmj-clinical-exams/store-for-patient', $data);
+        $this->assertResponseOk();
+        $expectedData = [
+            'patientid' => 666,
+            'dentaldevice' => 'foo',
+            'userid' => 1,
+            'docid' => 1,
+        ];
+        $this->seeInDatabase('dental_ex_page5', $expectedData);
+    }
 }

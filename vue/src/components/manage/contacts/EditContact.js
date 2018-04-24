@@ -355,7 +355,7 @@ export default {
       return http.post(endpoints.contacts.store, contact)
     },
     getLetterInfoByDocId () {
-      return http.post(endpoints.users.letterInfo)
+      return http.get(endpoints.users.show + '/' + this.$store.state.main[symbols.state.userInfo].docId)
     },
     getContactType (contactTypeId) {
       return http.get(endpoints.contactTypes.show + '/' + contactTypeId)

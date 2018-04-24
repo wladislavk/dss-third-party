@@ -118,6 +118,14 @@ class Main extends BaseContext
         foreach ($buttonElements as $buttonElement) {
             if ($buttonElement->getValue() == $button) {
                 $buttonElement->click();
+                return;
+            }
+        }
+        $submitElements = $this->findAllCss('input[type="submit"]');
+        foreach ($submitElements as $buttonElement) {
+            if ($buttonElement->getValue() == $button) {
+                $buttonElement->click();
+                return;
             }
         }
         throw new BehatException('Button element not found');
@@ -429,5 +437,24 @@ class Main extends BaseContext
         $welcomeDiv = $this->findCss('div.suckertreemenu');
         Assert::assertNotNull($welcomeDiv);
         Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());
+    }
+
+    /**
+     * @Then the header of modal window is :heading
+     *
+     * @param string $heading
+     */
+    public function testModalHeader($heading)
+    {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
+        $modalHeading = $this->findCss('h2');
+        if ($modalHeading) {
+            Assert::assertEquals($heading, $modalHeading->getText());
+            return;
+        }
+        $tableHeading = $this->findCss('td.cat_head');
+        Assert::assertEquals($heading, trim($tableHeading->getText()));
     }
 }

@@ -14,14 +14,6 @@ export default {
     })
   },
 
-  [symbols.actions.getCompanyData] ({ state, commit }) {
-    http.token = state[symbols.state.screenerToken]
-    http.post(endpoints.companies.homeSleepTest).then((response) => {
-      const data = response.data.data
-      commit(symbols.mutations.companyData, data)
-    })
-  },
-
   [symbols.actions.submitScreener] ({ state }) {
     const contactData = state[symbols.state.contactData]
     const symptoms = state[symbols.state.symptoms]

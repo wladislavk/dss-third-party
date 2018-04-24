@@ -7,6 +7,7 @@ import EducationModule from './education'
 import PatientsModule from './patients'
 import ScreenerModule from './screener'
 import TasksModule from './tasks'
+import FlowsheetModule from './flowsheet'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ const modules = {
   contacts: ContactModule,
   education: EducationModule,
   dashboard: DashboardModule,
+  flowsheet: FlowsheetModule,
   patients: PatientsModule,
   screener: ScreenerModule,
   tasks: TasksModule

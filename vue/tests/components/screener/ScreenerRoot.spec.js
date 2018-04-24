@@ -1,17 +1,12 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import symbols from '../../../src/symbols'
-import TestCase from '../../cases/ComponentTestCase'
 import ScreenerRootComponent from '../../../src/components/screener/ScreenerRoot.vue'
+import store from '../../../src/store'
 
 describe('ScreenerRoot', () => {
   beforeEach(function () {
-    this.vueOptions = {
-      template: '<div><screener-root></screener-root></div>',
-      components: {
-        screenerRoot: ScreenerRootComponent
-      }
-    }
-
-    this.routes = [
+    const routes = [
       {
         name: 'screener-main',
         path: '/main'
@@ -21,32 +16,35 @@ describe('ScreenerRoot', () => {
         path: '/login'
       }
     ]
+
+    const Component = Vue.extend(ScreenerRootComponent)
+    this.mount = function () {
+      return new Component({
+        store: store,
+        router: new VueRouter({routes})
+      }).$mount()
+    }
   })
 
   afterEach(function () {
-    this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
+    store.commit(symbols.mutations.restoreInitialScreener)
   })
 
   it('should go to login if no token present', function (done) {
-    this.vue = TestCase.getVue(this.vueOptions, this.routes)
-    this.vm = this.vue.$mount()
-
+    const vm = this.mount()
     expect(document.title).toBe('Dental Sleep Solutions :: Screener')
-    this.vm.$nextTick(() => {
-      expect(this.vue.$router.currentRoute.name).toBe('screener-login')
+    vm.$nextTick(() => {
+      expect(vm.$router.currentRoute.name).toBe('screener-login')
       done()
     })
   })
 
   it('should go to main if token is present', function (done) {
-    this.vueOptions.created = function () {
-      this.$store.commit(symbols.mutations.screenerToken, 'token')
-    }
-    this.vue = TestCase.getVue(this.vueOptions, this.routes)
-    this.vm = this.vue.$mount()
+    store.commit(symbols.mutations.screenerToken, 'token')
+    const vm = this.mount()
 
-    this.vm.$nextTick(() => {
-      expect(this.vue.$router.currentRoute.name).toBe('screener-main')
+    vm.$nextTick(() => {
+      expect(vm.$router.currentRoute.name).toBe('screener-main')
       done()
     })
   })

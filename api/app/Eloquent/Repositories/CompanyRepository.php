@@ -16,15 +16,17 @@ class CompanyRepository extends AbstractRepository
      * @param int $userId
      * @return Company|null
      */
-    public function getCompanyByUser($userId)
+    public function getCompanyByUser(int $userId): ?Company
     {
-        return $this->model
+        /** @var Company|null $result */
+        $result = $this->model
             ->from(\DB::raw('companies c'))
             ->select(\DB::raw('c.*'))
             ->join(\DB::raw('dental_user_company uc'), 'uc.companyid', '=', 'c.id')
             ->where('uc.userid', $userId)
             ->first()
         ;
+        return $result;
     }
 
     /**
@@ -36,7 +38,7 @@ class CompanyRepository extends AbstractRepository
         return $this->model
             ->select('h.*', \DB::raw('uhc.id as uhc_id'))
             ->from(\DB::raw('companies h'))
-            ->join(\DB::raw('dental_user_hst_company uhc'), function(JoinClause $query) use ($docId) {
+            ->join(\DB::raw('dental_user_hst_company uhc'), function (JoinClause $query) use ($docId) {
                 $query
                     ->on('uhc.companyid', '=', 'h.id')
                     ->where('uhc.userid', '=', $docId)

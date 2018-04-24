@@ -35,6 +35,11 @@ class PatientDataRetriever
     /** @var PatientInsuranceRepository */
     private $patientInsuranceRepository;
 
+    /**
+     * PatientDataRetriever constructor.
+     * @param RepositoryFactory $repositoryFactory
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     */
     public function __construct(RepositoryFactory $repositoryFactory)
     {
         $this->healthHistoryRepository = $repositoryFactory->getRepository(HealthHistoryRepository::class);
@@ -80,7 +85,7 @@ class PatientDataRetriever
         $patientData->incompleteHomeSleepTests = $incompleteHSTs;
         if (sizeof($incompleteHSTs)) {
             $lastHst = $incompleteHSTs[sizeof($incompleteHSTs) - 1];
-            $patientData->homeSleepTestStatus = intval($lastHst->status);
+            $patientData->homeSleepTestStatus = (int)$lastHst->status;
         }
         return $patientData;
     }

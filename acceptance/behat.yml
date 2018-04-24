@@ -14,12 +14,15 @@ default:
             contexts:
                 - Contexts\Main
                 - Contexts\CommonElements
+                - Contexts\CommonPatientElements
                 - Contexts\Dashboard
                 - Contexts\Auth
                 - Contexts\DeviceSelector
                 - Contexts\Education
+                - Contexts\PatientChart
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
+                - Contexts\Tracker
         legacy:
             paths:
                 - "%paths.base%/Features/Legacy"
@@ -41,7 +44,6 @@ default:
                 - Contexts\ProgressNotes
                 - Contexts\Staff
                 - Contexts\Support
-                - Contexts\Tracker
 chrome:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~

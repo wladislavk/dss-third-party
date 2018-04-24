@@ -9,6 +9,7 @@ import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
 import LegacyHref from './directives/LegacyHref'
+import UnescapeFilter from './filters/Unescape'
 
 window.$ = $
 window.jQuery = $
@@ -25,6 +26,7 @@ Vue.prototype.$http = axios
 Vue.use(VueMoment)
 Vue.use(VueVisible)
 Vue.directive('legacy-href', LegacyHref)
+Vue.filter('unescape', UnescapeFilter)
 
 /* eslint-disable no-new */
 new Vue({

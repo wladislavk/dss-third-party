@@ -30,7 +30,7 @@ class StringTransformer extends AbstractRuleTransformer
         $regexp = '/\|max\:(?P<symbols>\d+)/';
         preg_match($regexp, $rule, $matches);
         if (isset($matches['symbols'])) {
-            return intval($matches['symbols']);
+            return (int)$matches['symbols'];
         }
         return 0;
     }

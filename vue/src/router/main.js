@@ -18,6 +18,7 @@ import QuickFactsReferenceComponent from '../components/manage/education/QuickFa
 import EducationVideosComponent from '../components/manage/education/EducationVideos.vue'
 import EdxCertificateComponent from '../components/manage/education/EdxCertificate.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
+import PatientTrackerComponent from '../components/manage/chart/PatientTracker.vue'
 
 export default [
   {
@@ -41,6 +42,12 @@ export default [
         name: 'patients',
         component: PatientRootComponent,
         children: [
+          {
+            path: 'tracker',
+            name: 'patient-tracker',
+            component: PatientTrackerComponent,
+            meta: STANDARD_META
+          },
           {
             path: 'manage',
             name: 'manage-patients',

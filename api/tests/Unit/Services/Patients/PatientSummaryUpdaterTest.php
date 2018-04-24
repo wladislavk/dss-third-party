@@ -2,19 +2,27 @@
 
 namespace Tests\Unit\Services\Patients;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\Services\Patients\PatientSummaryUpdater;
+use DentalSleepSolutions\Wrappers\DBChangeWrapper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
 class PatientSummaryUpdaterTest extends UnitTestCase
 {
-    /** @var array */
-    private $createdData = [];
+    private const DOC_ID = 1;
+    private const PATIENT_ID = 2;
+    private const EXISTING_PATIENT_ID = 22;
+    private const AMOUNT = 3;
+    private const PAID_AMOUNT = 10;
 
-    /** @var array */
-    private $updatedData = [];
+    /** @var PatientSummary|null */
+    private $savedSummary;
+
+    /** @var PatientSummary|null */
+    private $existingSummary;
 
     /** @var PatientSummaryUpdater */
     private $patientSummaryUpdater;
@@ -23,7 +31,10 @@ class PatientSummaryUpdaterTest extends UnitTestCase
     {
         $ledgerRepository = $this->mockLedgerRepository();
         $patientSummaryRepository = $this->mockPatientSummaryRepository();
-        $this->patientSummaryUpdater = new PatientSummaryUpdater($ledgerRepository, $patientSummaryRepository);
+        $dbChangeWrapper = $this->mockDbChangeWrapper();
+        $this->patientSummaryUpdater = new PatientSummaryUpdater(
+            $ledgerRepository, $patientSummaryRepository, $dbChangeWrapper
+        );
     }
 
     /**
@@ -31,15 +42,10 @@ class PatientSummaryUpdaterTest extends UnitTestCase
      */
     public function testCreate()
     {
-        $docId = 1;
-        $patientId = 2;
-        $result = $this->patientSummaryUpdater->updatePatientSummary($docId, $patientId);
+        $result = $this->patientSummaryUpdater->updatePatientSummary(self::DOC_ID, self::PATIENT_ID);
         $this->assertEquals(PatientSummaryUpdater::CREATED, $result);
-        $expected = [
-            'pid' => 2,
-            'ledger' => 0,
-        ];
-        $this->assertEquals($expected, $this->createdData);
+        $this->assertEquals(self::PATIENT_ID, $this->savedSummary->pid);
+        $this->assertEquals(0, $this->savedSummary->ledger);
     }
 
     /**
@@ -47,14 +53,13 @@ class PatientSummaryUpdaterTest extends UnitTestCase
      */
     public function testUpdate()
     {
-        $docId = 1;
-        $patientId = 1;
-        $result = $this->patientSummaryUpdater->updatePatientSummary($docId, $patientId);
+        $this->existingSummary = new PatientSummary();
+        $this->existingSummary->pid = self::EXISTING_PATIENT_ID;
+
+        $result = $this->patientSummaryUpdater->updatePatientSummary(self::DOC_ID, self::PATIENT_ID);
         $this->assertEquals(PatientSummaryUpdater::UPDATED, $result);
-        $expected = [
-            'ledger' => 7,
-        ];
-        $this->assertEquals($expected, $this->updatedData);
+        $this->assertEquals(self::EXISTING_PATIENT_ID, $this->savedSummary->pid);
+        $this->assertEquals(7, $this->savedSummary->ledger);
     }
 
     private function mockLedgerRepository()
@@ -64,8 +69,8 @@ class PatientSummaryUpdaterTest extends UnitTestCase
         $ledgerRepository->shouldReceive('getRowsForCountingLedgerBalance')
             ->andReturnUsing(function () {
                 $firstRow = new \stdClass();
-                $firstRow->amount = 3;
-                $firstRow->paid_amount = 10;
+                $firstRow->amount = self::AMOUNT;
+                $firstRow->paid_amount = self::PAID_AMOUNT;
                 $secondRow = new \stdClass();
                 return [$firstRow, $secondRow];
             });
@@ -76,21 +81,19 @@ class PatientSummaryUpdaterTest extends UnitTestCase
     {
         /** @var PatientSummaryRepository|MockInterface $patientSummaryRepository */
         $patientSummaryRepository = \Mockery::mock(PatientSummaryRepository::class);
-        $patientSummaryRepository->shouldReceive('getPatientInfo')
-            ->andReturnUsing(function ($patientId) {
-                if ($patientId == 1) {
-                    return true;
-                }
-                return false;
-            });
-        $patientSummaryRepository->shouldReceive('create')
-            ->andReturnUsing(function (array $data) {
-                $this->createdData = $data;
-            });
-        $patientSummaryRepository->shouldReceive('updatePatientSummary')
-            ->andReturnUsing(function ($patientId, array $data) {
-                $this->updatedData = $data;
-            });
+        $patientSummaryRepository->shouldReceive('getOneBy')->andReturnUsing(function () {
+            return $this->existingSummary;
+        });
         return $patientSummaryRepository;
+    }
+
+    private function mockDbChangeWrapper()
+    {
+        /** @var DBChangeWrapper|MockInterface $dbChangeWrapper */
+        $dbChangeWrapper = \Mockery::mock(DBChangeWrapper::class);
+        $dbChangeWrapper->shouldReceive('save')->andReturnUsing(function (PatientSummary $summary) {
+            $this->savedSummary = $summary;
+        });
+        return $dbChangeWrapper;
     }
 }

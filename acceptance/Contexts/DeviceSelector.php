@@ -52,7 +52,7 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceSelectionSliders(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $headings = $this->findAllCss('form#device_form > div.setting > strong');
         $labels = $this->findAllCss('form#device_form > div.setting > div.label');
         $expected = $table->getHash();
@@ -71,7 +71,7 @@ class DeviceSelector extends BaseContext
      */
     public function testSeeInstructionsList(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $instructionDiv = $this->findCss('div#instructions');
         Assert::assertTrue($instructionDiv->isVisible());
         $instructionsList = $this->findAllCss('ol > li', $instructionDiv);
@@ -86,7 +86,7 @@ class DeviceSelector extends BaseContext
      */
     public function testNotSeeInstructionsList()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $instructionDiv = $this->findCss('div#instructions');
         Assert::assertFalse($instructionDiv->isVisible());
     }
@@ -98,7 +98,7 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceList(TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
 
         $deviceResults = $this->findAllCss('ul#results > li');
         $expectedDeviceResults = $table->getHash();

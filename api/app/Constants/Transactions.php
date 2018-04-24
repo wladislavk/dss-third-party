@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Constants;
 
-abstract class Transactions
+interface Transactions
 {
     // Transaction types (ledger)
     const TRANSACTION_TYPE_MED = 1;

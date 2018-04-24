@@ -182,7 +182,7 @@ class PatientUpdater extends AbstractPatientEditor
           $dateCompleted = date('Y-m-d');
         }
 
-        $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
+        $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".(int)$_POST['ed']."' AND stepid='1';";
         $db->query($s1);
         */
     }

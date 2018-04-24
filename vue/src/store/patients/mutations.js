@@ -14,7 +14,7 @@ export default {
     }
     const premedCheck = parseInt(data.preMedCheck)
     const allergen = !!parseInt(data.hasAllergen)
-    let title = state[symbols.state.headerTitle]
+    let title = ''
     if (premedCheck) {
       title += 'Pre-medication: ' + data.preMed + '\n'
     }
@@ -42,9 +42,33 @@ export default {
     state[symbols.state.totalPatientContacts] = parseInt(data.patientContactsNumber)
     state[symbols.state.totalPatientInsurances] = parseInt(data.patientInsurancesNumber)
     state[symbols.state.totalSubPatients] = parseInt(data.subPatientsNumber)
-    state[symbols.state.rejectedClaimsForCurrentPatient] = data.rejectedClaims
+    const parsedClaims = []
+    for (let rejectedClaim of data.rejectedClaims) {
+      const newClaim = {
+        insuranceId: parseInt(rejectedClaim.insuranceid),
+        addDate: new Date(rejectedClaim.adddate)
+      }
+      parsedClaims.push(newClaim)
+    }
+    state[symbols.state.rejectedClaimsForCurrentPatient] = parsedClaims
     state[symbols.state.patientHomeSleepTestStatus] = hstStatus
-    state[symbols.state.incompleteHomeSleepTests] = data.incompleteHomeSleepTests
+    const parsedHsts = []
+    for (let incompleteHst of data.incompleteHomeSleepTests) {
+      const newHst = {
+        id: parseInt(incompleteHst.id),
+        status: parseInt(incompleteHst.status),
+        patientId: parseInt(incompleteHst.patient_id),
+        addDate: new Date(incompleteHst.adddate),
+        officeNotes: incompleteHst.office_notes,
+        rejectedReason: incompleteHst.rejected_reason,
+        rejectedDate: null
+      }
+      if (incompleteHst.rejecteddate) {
+        newHst.rejectedDate = new Date(incompleteHst.rejecteddate)
+      }
+      parsedHsts.push(newHst)
+    }
+    state[symbols.state.incompleteHomeSleepTests] = parsedHsts
   },
 
   [symbols.mutations.clearPatientData] (state) {
@@ -67,5 +91,13 @@ export default {
     state[symbols.state.rejectedClaimsForCurrentPatient] = []
     state[symbols.state.patientHomeSleepTestStatus] = ''
     state[symbols.state.incompleteHomeSleepTests] = []
+  },
+
+  [symbols.mutations.showAllWarnings] (state) {
+    state[symbols.state.showAllWarnings] = true
+  },
+
+  [symbols.mutations.hideAllWarnings] (state) {
+    state[symbols.state.showAllWarnings] = false
   }
 }

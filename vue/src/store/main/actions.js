@@ -140,6 +140,7 @@ export default {
       const data = response.data.data
       if (data.length === 0) {
         const noMatchesElement = {
+          id: 0,
           name: 'No Matches',
           patientType: 'no',
           link: ''
@@ -148,6 +149,7 @@ export default {
         // this.templateListNew().fadeIn(noMatchesElement)
 
         const newElement = {
+          id: 0,
           name: 'Add patient with this name\u2026',
           patientType: 'new',
           link: 'add_patient.php?search=' + searchTerm
@@ -167,13 +169,24 @@ export default {
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
         let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
+        let route = {
+          name: ''
+        }
         if (parseInt(element.patient_info) === 1) {
-          link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
+          route = {
+            name: 'patient-tracker',
+            query: {
+              pid: element.patientid
+            }
+          }
+          link = ''
         }
         const patientElement = {
+          id: element.patientid,
           name: fullName,
           patientType: 'json',
-          link: link
+          link: link,
+          route: route
         }
         newList.push(patientElement)
         // @todo: add transition
@@ -183,6 +196,20 @@ export default {
     }).catch(() => {
       const alertText = 'Could not select patient from database'
       Alerter.alert(alertText)
+    })
+  },
+
+  [symbols.actions.getCompanyData] ({ rootState, state, commit, dispatch }, isScreener) {
+    let token = state[symbols.state.mainToken]
+    if (isScreener) {
+      token = rootState.screener[symbols.state.screenerToken]
+    }
+    http.token = token
+    http.post(endpoints.companies.homeSleepTest).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.companyData, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getCompanyData', response: response})
     })
   }
 }

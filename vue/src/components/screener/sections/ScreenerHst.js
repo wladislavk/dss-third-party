@@ -16,7 +16,7 @@ export default {
       return this.$store.state.screener[symbols.state.contactData]
     },
     companies () {
-      return this.$store.state.screener[symbols.state.companyData]
+      return this.$store.state.main[symbols.state.companyData]
     }
   },
   components: {

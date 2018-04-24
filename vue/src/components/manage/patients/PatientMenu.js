@@ -2,6 +2,12 @@ import { PATIENT_MENU } from '../../../constants/main'
 import PatientMenuElementComponent from './PatientMenuElement.vue'
 
 export default {
+  props: {
+    patientId: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     menuElements () {
       const elements = []
@@ -12,6 +18,9 @@ export default {
         }
         if (!menuElement.hasOwnProperty('activeLike')) {
           newElement.activeLike = []
+        }
+        if (!menuElement.hasOwnProperty('legacy')) {
+          newElement.legacy = true
         }
         elements.push(newElement)
       }

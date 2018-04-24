@@ -190,10 +190,9 @@ class WelcomeLetterCreatorTest extends UnitTestCase
     {
         /** @var UserRepository|MockInterface $userRepository */
         $userRepository = \Mockery::mock(UserRepository::class);
-        $userRepository->shouldReceive('getLetterInfo')
-            ->andReturnUsing(function () {
-                return $this->letterInfo;
-            });
+        $userRepository->shouldReceive('find')->andReturnUsing(function () {
+            return $this->letterInfo;
+        });
         return $userRepository;
     }
 

@@ -39,18 +39,6 @@ class PatientChart extends BaseContext
     }
 
     /**
-     * @Then I see patient chart for :name
-     *
-     * @param string $name
-     */
-    public function testPatientChart($name)
-    {
-        $span = $this->findCss('div#patient_name_inner span.name');
-        Assert::assertNotNull($span);
-        Assert::assertContains($name, $span->getText());
-    }
-
-    /**
      * @Then I see questionnaire subpoints:
      *
      * @param TableNode $table
@@ -130,6 +118,26 @@ class PatientChart extends BaseContext
             Assert::assertContains($row['field'], $column->getText());
             Assert::assertTrue($this->checkRequiredFormElement($column, $row['required']));
             Assert::assertTrue($this->checkFormElement($column, $row['type']));
+        }
+    }
+
+    /**
+     * @Then the patient chart has menu with the following points:
+     *
+     * @param TableNode $table
+     */
+    public function testPatientChartMenu(TableNode $table)
+    {
+        $menuPoints = $this->findAllCss('div#patient_nav > ul > li');
+        $expectedPoints = $table->getHash();
+        foreach ($expectedPoints as $key => $expectedPoint) {
+            $link = $this->findCss('a', $menuPoints[$key]);
+            Assert::assertEquals($expectedPoint['name'], $link->getText());
+            if ($expectedPoint['active'] == 'Yes') {
+                Assert::assertTrue($link->hasClass('nav_active'));
+            } else {
+                Assert::assertFalse($link->hasClass('nav_active'));
+            }
         }
     }
 }

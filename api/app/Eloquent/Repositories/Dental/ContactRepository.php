@@ -2,13 +2,14 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
+use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Http\Controllers\ContactsController;
-use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Collection;
 
 class ContactRepository extends AbstractRepository
 {
@@ -296,7 +297,7 @@ class ContactRepository extends AbstractRepository
                             ->orWhere('dp_pat.parent_patientid', '=', '');
                     })
                     ->where(function (JoinClause $join) {
-                        $docFields = PatientFormDataUpdater::DOC_FIELDS;
+                        $docFields = PatientContactFields::DOC_FIELDS;
                         $firstId = array_shift($docFields);
                         $join = $join->on('dp_pat.' . $firstId, '=', 'dc.contactid');
                         foreach ($docFields as $docField) {
@@ -370,13 +371,15 @@ class ContactRepository extends AbstractRepository
      */
     public function getDocShortInfo($contactId)
     {
-        return $this->model
+        /** @var Contact|null $result */
+        $result = $this->model
             ->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
             ->from(\DB::raw('dental_contact dc'))
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
             ->where('contactid', $contactId)
             ->first()
         ;
+        return $result;
     }
 
     /**
@@ -405,7 +408,6 @@ class ContactRepository extends AbstractRepository
                 'dental_contacttype.contacttype',
                 'dental_contact.contacttypeid',
                 'dental_contact.status',
-                // @todo: integer cannot be aliased
                 \DB::raw($letterId . ' AS letterid')
             )
             ->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
@@ -420,10 +422,30 @@ class ContactRepository extends AbstractRepository
      */
     public function getActiveContact($contactId)
     {
-        return $this->model
+        /** @var Contact|null $result */
+        $result = $this->model
             ->where('contactid', $contactId)
             ->where('status', 1)
             ->first()
         ;
+        return $result;
+    }
+
+    /**
+     * @param int $patientId
+     * @return Collection|Contact[]
+     */
+    public function getReferralIds(int $patientId): iterable
+    {
+        $query = $this->model
+            ->from('dental_contact')
+            ->join('dental_patients', 'dental_contact.contactid', '=', 'dental_patients.referred_by')
+            ->join('dental_contacttype', 'dental_contacttype.contacttypeid', '=', 'dental_contact.contacttypeid')
+            ->where('dental_patients.patientid', $patientId)
+            ->where('dental_patients.referred_source', '2')
+            ->where('dental_contacttype.physician', 1)
+            ->orderBy('dental_contact.contactid')
+        ;
+        return $query->get();
     }
 }

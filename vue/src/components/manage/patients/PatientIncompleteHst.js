@@ -1,5 +1,4 @@
-import { DSS_CONSTANTS, PREAUTH_STATUS_LABELS } from '../../../constants/main'
-import ProcessWrapper from '../../../wrappers/ProcessWrapper'
+import { DSS_CONSTANTS, HST_STATUSES } from '../../../constants/main'
 
 export default {
   props: {
@@ -16,12 +15,17 @@ export default {
       required: true
     },
     dateAdded: {
-      type: String,
-      required: true
+      validator: function (value) {
+        return value instanceof Date
+      }
     },
     dateRejected: {
-      type: String,
-      required: true
+      validator: function (value) {
+        if (!value) {
+          return true
+        }
+        return value instanceof Date
+      }
     },
     officeNotes: {
       type: String,
@@ -34,16 +38,14 @@ export default {
   },
   data () {
     return {
-      legacyUrl: ProcessWrapper.getLegacyRoot(),
       scheduledHst: DSS_CONSTANTS.DSS_HST_SCHEDULED,
-      rejectedHst: DSS_CONSTANTS.DSS_HST_REJECTED,
-      preauthLabels: PREAUTH_STATUS_LABELS
+      rejectedHst: DSS_CONSTANTS.DSS_HST_REJECTED
     }
   },
   computed: {
-    preAuthStatusLabel () {
-      if (PREAUTH_STATUS_LABELS.hasOwnProperty(this.status)) {
-        return PREAUTH_STATUS_LABELS[this.status]
+    hstStatusLabel () {
+      if (HST_STATUSES.hasOwnProperty(this.status)) {
+        return HST_STATUSES[this.status]
       }
       return ''
     },

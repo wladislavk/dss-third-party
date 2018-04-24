@@ -15,9 +15,6 @@ export default {
     }
   },
   computed: {
-    patientId () {
-      return this.$store.getters[symbols.getters.patientId]
-    },
     tasksNumber () {
       return this.$store.getters[symbols.getters.tasksPatientNumber]
     },
@@ -36,8 +33,5 @@ export default {
   },
   components: {
     taskData: TaskDataComponent
-  },
-  created () {
-    this.$store.dispatch(symbols.actions.retrieveTasksForPatient, this.patientId)
   }
 }

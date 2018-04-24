@@ -62,7 +62,7 @@ class PatientData implements Arrayable
 
     public function populatePlainFields(Patient $patient)
     {
-        $this->insuranceType = intval($patient->p_m_ins_type);
+        $this->insuranceType = (int)$patient->p_m_ins_type;
         $this->preMed = $patient->premed;
         $this->preMedCheck = $patient->premedcheck;
         $this->alertText = '' . $patient->alert_text;
@@ -86,13 +86,13 @@ class PatientData implements Arrayable
             'premed' => $this->preMed,
             'premedcheck' => $this->preMedCheck,
             'alert_text' => $this->alertText,
-            'display_alert' => intval($this->displayAlert),
+            'display_alert' => (int)$this->displayAlert,
             'firstname' => $this->firstName,
             'lastname' => $this->lastName,
             'patient_contacts_number' => $this->patientContactsNumber,
             'patient_insurances_number' => $this->patientInsurancesNumber,
             'sub_patients_number' => $this->subPatientsNumber,
-            'is_email_bounced' => intval($this->isEmailBounced),
+            'is_email_bounced' => (int)$this->isEmailBounced,
             'rejected_claims' => $rejectedClaims,
             'questionnaire_data' => [
                 'symptoms_status' => $this->questionnaireData->symptomsStatus,
@@ -100,7 +100,7 @@ class PatientData implements Arrayable
                 'history_status' => $this->questionnaireData->historyStatus,
             ],
             'other_allergens' => $this->otherAllergens,
-            'has_allergen' => intval($this->hasAllergen),
+            'has_allergen' => (int)$this->hasAllergen,
             'hst_status' => $this->homeSleepTestStatus,
             'incomplete_hsts' => $incompleteHsts,
         ];

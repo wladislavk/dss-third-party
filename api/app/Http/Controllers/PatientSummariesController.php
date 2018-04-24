@@ -3,8 +3,12 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Services\AppointmentSummaries\TrackerNotesHandler;
 use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class PatientSummariesController extends BaseRestController
 {
@@ -91,8 +95,11 @@ class PatientSummariesController extends BaseRestController
      *     @SWG\Response(response="422", ref="#/responses/422_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @return JsonResponse
+     * @throws ValidatorException
      */
-    public function store()
+    public function store(): JsonResponse
     {
         $this->hasIp = false;
         return parent::store();
@@ -131,29 +138,59 @@ class PatientSummariesController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         return parent::destroy($id);
     }
 
     /**
-     * @SWG\Post(
-     *     path="/patient-summaries/update-tracker-notes",
+     * @SWG\Get(
+     *     path="/patient-summaries/get-tracker-notes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PatientSummaryRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id
+     * @param TrackerNotesHandler $trackerNotesHandler
+     * @return JsonResponse
      */
-    public function updateTrackerNotes(PatientSummaryRequest $request)
+    public function getTrackerNotes(int $id, TrackerNotesHandler $trackerNotesHandler): JsonResponse
+    {
+        $notes = $trackerNotesHandler->retrieve($id);
+        return ApiResponse::responseOk('', $notes);
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/patient-summaries/update-tracker-notes",
+     *     @SWG\Parameter(name="patient_id", in="query", type="integer", required=true),
+     *     @SWG\Parameter(name="tracker_notes", in="query", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     *
+     * @param PatientSummaryRequest $request
+     * @param TrackerNotesHandler $trackerNotesHandler
+     * @return JsonResponse
+     */
+    public function updateTrackerNotes(PatientSummaryRequest $request, TrackerNotesHandler $trackerNotesHandler): JsonResponse
     {
         $this->validate($request, $request->updateRules());
 
-        $notes = $request->input('tracker_notes', '');
-        $patientId = $request->input('patient_id', 0);
-        $this->repository->updateTrackerNotes($patientId, $this->user->docid, $notes);
+        $notes = $request->input('tracker_notes');
+        $patientId = $request->input('patient_id');
 
+        try {
+            $trackerNotesHandler->update($patientId, $this->user->docid, $notes);
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError($e->getMessage());
+        }
         return ApiResponse::responseOk('Resource updated');
     }
 }

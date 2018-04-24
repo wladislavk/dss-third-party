@@ -7,6 +7,7 @@ use PHPUnit\Framework\Assert;
 
 class Education extends BaseContext
 {
+
     /**
      * @Then I see dental sleep procedures manual
      */
@@ -17,6 +18,7 @@ class Education extends BaseContext
         Assert::assertNotNull($heading);
         Assert::assertEquals('DENTAL SLEEP PROCEDURES MANUAL', $this->sanitizeText($heading->getText()));
     }
+
     /**
      * @Then I see dental sleep medicine manual
      */
@@ -27,6 +29,7 @@ class Education extends BaseContext
         Assert::assertNotNull($heading);
         Assert::assertEquals('DENTAL SLEEP MEDICINE', $this->sanitizeText($heading->getText()));
     }
+
     /**
      * @Then I see quick facts reference
      */
@@ -37,6 +40,7 @@ class Education extends BaseContext
         Assert::assertNotNull($heading);
         Assert::assertEquals('QUICK FACTS & REFERENCE', $this->sanitizeText($heading->getText()));
     }
+
     /**
      * @Then I see videos education page
      */
@@ -47,6 +51,7 @@ class Education extends BaseContext
         Assert::assertGreaterThan(0, sizeof($headings));
         Assert::assertEquals('Fundamentals of Dental Sleep Medicine', $headings[0]->getText());
     }
+
     /**
      * @Then I see certificates education page
      */
@@ -57,6 +62,7 @@ class Education extends BaseContext
         Assert::assertNotNull($heading);
         Assert::assertContains('EdX Certificates', $this->sanitizeText($heading->getText()));
     }
+
     /**
      * @Then I see the list of certificates:
      *

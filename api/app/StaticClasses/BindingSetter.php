@@ -17,6 +17,7 @@ class BindingSetter
         Eloquent\Models\Admin::class,
         Eloquent\Models\Dental\AirwayEvaluation::class,
         Eloquent\Models\Dental\Allergen::class,
+        Eloquent\Models\Dental\AppointmentSummary::class,
         Eloquent\Models\Dental\AppointmentType::class,
         Eloquent\Models\Dental\Calendar::class,
         Eloquent\Models\Dental\Chair::class,

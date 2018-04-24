@@ -38,7 +38,7 @@ abstract class AbstractEmailHandler
         if (!$this->shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)) {
             return;
         }
-        $patientId = intval($patientId);
+        $patientId = (int)$patientId;
         $contactData = $this->mailerDataRetriever->retrieveMailerData($patientId);
 
         $patientData = $contactData->patientData->toArray();

@@ -1,7 +1,6 @@
 import symbols from '../../../symbols'
 import { NOT_ACCEPTED_UPDATE } from '../../../constants/main'
 import PatientIncompleteHstComponent from './PatientIncompleteHst.vue'
-import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -12,13 +11,14 @@ export default {
   },
   data () {
     return {
-      legacyUrl: ProcessWrapper.getLegacyRoot(),
-      incompleteHomeSleepTests: this.$store.state.main[symbols.state.incompleteHomeSleepTests],
       profileUpdateText: this.getUpdateText('profile'),
       questionnaireUpdateText: this.getUpdateText('questionnaire')
     }
   },
   computed: {
+    incompleteHomeSleepTests () {
+      return this.$store.state.patients[symbols.state.incompleteHomeSleepTests]
+    },
     showWarningAboutPatientChanges () {
       return this.$store.getters[symbols.getters.showWarningAboutPatientChanges]
     },
@@ -29,7 +29,7 @@ export default {
       return this.$store.getters[symbols.getters.showWarningAboutBouncedEmails]
     },
     rejectedClaimsForCurrentPatient () {
-      return this.$store.state.main[symbols.state.rejectedClaimsForCurrentPatient]
+      return this.$store.state.patients[symbols.state.rejectedClaimsForCurrentPatient]
     }
   },
   components: {

@@ -85,5 +85,9 @@ export default {
 
   [symbols.mutations.hideSearchHints] (state) {
     state[symbols.state.showSearchHints] = false
+  },
+
+  [symbols.mutations.companyData] (state, companyData) {
+    state[symbols.state.companyData] = companyData
   }
 }

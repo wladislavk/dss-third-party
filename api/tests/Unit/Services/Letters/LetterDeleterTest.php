@@ -42,10 +42,11 @@ class LetterDeleterTest extends UnitTestCase
     /** @var LetterDeleter */
     private $letterDeleter;
 
+    /**
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     */
     public function setUp()
     {
-        date_default_timezone_set('UTC');
-
         $this->letter = new Letter();
         $this->letter->letterid = 1;
         $this->letter->patientid = 5;
@@ -53,6 +54,8 @@ class LetterDeleterTest extends UnitTestCase
         $this->letter->templateid = 7;
         $this->letter->send_method = 'get';
         $this->letter->topatient = false;
+        $this->letter->md_list = '';
+        $this->letter->md_referral_list = '';
         $this->contactData = new ContactData();
         $this->contactData->setPatients([new Patient(), new Patient()]);
 
@@ -79,6 +82,8 @@ class LetterDeleterTest extends UnitTestCase
         $this->contactData->setPatients([new Patient()]);
         $letter = new Letter();
         $letter->letterid = 1;
+        $letter->md_list = '';
+        $letter->md_referral_list = '';
         $type = 'foo';
         $recipientId = 2;
         $docId = 3;
@@ -191,8 +196,10 @@ class LetterDeleterTest extends UnitTestCase
     {
         /** @var GeneralHelper|MockInterface $generalHelper */
         $generalHelper = \Mockery::mock(GeneralHelper::class);
-        $generalHelper->shouldReceive('getContactInfo')
-            ->andReturnUsing([$this, 'getContactInfoCallback']);
+        $generalHelper->shouldReceive('getContactInfo')->andReturnUsing(function ($patientId) {
+            $this->patientId = $patientId;
+            return $this->contactData;
+        });
         return $generalHelper;
     }
 
@@ -251,12 +258,6 @@ class LetterDeleterTest extends UnitTestCase
             return $this->letter;
         }
         return null;
-    }
-
-    public function getContactInfoCallback($patientId)
-    {
-        $this->patientId = $patientId;
-        return $this->contactData;
     }
 
     public function updateLetterByCallback(array $where, array $updateArray)

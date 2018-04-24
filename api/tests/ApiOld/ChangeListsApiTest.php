@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Api;
+namespace Tests\ApiOld;
 
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Models\Dental\ChangeList;

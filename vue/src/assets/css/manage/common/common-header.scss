@@ -37,6 +37,18 @@ div.company-logo {
   margin: 13px 15px 0 0;
 }
 
+span.warning-buttons a {
+  float: left;
+  margin-left: 10px;
+  margin-top: 8px;
+}
+
+.bottom-image {
+  height: 89px;
+  width: 100%;
+  background: url(../../../images/dss_01.png) #0b5c82 no-repeat top left;
+}
+
 div.body-image {
   background: url(../../../images/dss_03.jpg) #0b5c82 repeat-y top left;
   width: 100%;
@@ -46,4 +58,18 @@ div.patient-menus {
   width: 98.6%;
   background: #00457c;
   margin: 0 auto;
+}
+
+a.logo-link {
+  width: 96px;
+  height: 77px;
+  background: url(../../../images/logo.png) no-repeat 0 0;
+  display: block;
+  float: left;
+  padding-left: 100px;
+  color: #fff;
+}
+
+div.patient-data-wrapper {
+  background: url(../../../images/dss_03.jpg) repeat-y top left #FFFFFF;
 }

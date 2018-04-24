@@ -8,7 +8,6 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\NotificationRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
@@ -23,6 +22,8 @@ use DentalSleepSolutions\Services\Patients\PatientRuleRetriever;
 use DentalSleepSolutions\Services\Patients\PatientDataRetriever;
 use DentalSleepSolutions\Services\Users\TempPinDocumentCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Services\AppointmentSummaries\TrackerNotesHandler;
+use DentalSleepSolutions\Http\Requests\PatientSummary;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\PatientFinderData;
@@ -459,6 +460,7 @@ class PatientsController extends BaseRestController
      *
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
@@ -580,7 +582,7 @@ class PatientsController extends BaseRestController
      * @param PatientEditorFactory $patientEditorFactory
      * @param PatientRuleRetriever $patientRuleRetriever
      * @param PatientFormDataUpdater $patientFormDataUpdater
-     * @param PatientSummaryRepository $patientSummaryRepository
+     * @param TrackerNotesHandler $trackerNotesHandler
      * @param Request $request
      * @param int $patientId
      * @return JsonResponse
@@ -589,15 +591,19 @@ class PatientsController extends BaseRestController
         PatientEditorFactory $patientEditorFactory,
         PatientRuleRetriever $patientRuleRetriever,
         PatientFormDataUpdater $patientFormDataUpdater,
-        PatientSummaryRepository $patientSummaryRepository,
+        TrackerNotesHandler $trackerNotesHandler,
         Request $request,
         $patientId = 0
     ) {
         // TODO: this block should be decoupled into a different controller action
         if ($request->has('tracker_notes')) {
             $trackerNotes = $request->input('tracker_notes');
-            $this->validate($request, (new \DentalSleepSolutions\Http\Requests\PatientSummary())->updateRules());
-            $patientSummaryRepository->updateTrackerNotes($patientId, $this->user->docid, $trackerNotes);
+            $this->validate($request, (new PatientSummary())->updateRules());
+            try {
+                $trackerNotesHandler->update($patientId, $this->user->docid, $trackerNotes);
+            } catch (GeneralException $e) {
+                return ApiResponse::responseError($e->getMessage());
+            }
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 

@@ -51,7 +51,7 @@ class CommonElements extends BaseContext
         $currentTry = 1;
         $input = null;
         while (!$input && $currentTry <= $tries) {
-            $this->wait(self::SHORT_WAIT_TIME);
+            $this->wait(SHORT_WAIT_TIME);
             $input = $this->findCss('input#patient_search');
             $currentTry++;
         }
@@ -65,7 +65,7 @@ class CommonElements extends BaseContext
      */
     public function testPatientSearchList(TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $list = $this->findCss('ul#patient_list');
         Assert::assertNotNull($list);
         $patients = $this->findAllCss('li.json_patient', $list);

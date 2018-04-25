@@ -49,13 +49,6 @@ RUN set -xe \
     && curl -sSLo pdftk-2.02-1.el6.x86_64.rpm https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm \
     && alien pdftk-2.02-1.el6.x86_64.rpm \
     && dpkg -i pdftk_2.02-2_amd64.deb \
-    # NewRelic
-    && curl -sSLo newrelic-agent.tar.gz https://download.newrelic.com/php_agent/release/newrelic-php5-7.7.0.203-linux.tar.gz \
-    && tar -xvzf newrelic-agent.tar.gz \
-    && cd newrelic-php5-7.7.0.203-linux \
-    && chmod u+x newrelic-install \
-    && export NR_INSTALL_SILENT=1 \
-    && ./newrelic-install install \
     # Composer
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer

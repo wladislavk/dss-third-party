@@ -13,7 +13,7 @@ class Education extends BaseContext
      */
     public function testProceduresManual()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $heading = $this->findCss('h2');
         Assert::assertNotNull($heading);
         Assert::assertEquals('DENTAL SLEEP PROCEDURES MANUAL', $this->sanitizeText($heading->getText()));
@@ -24,7 +24,7 @@ class Education extends BaseContext
      */
     public function testMedicineManual()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $heading = $this->findCss('.WordSection1 b');
         Assert::assertNotNull($heading);
         Assert::assertEquals('DENTAL SLEEP MEDICINE', $this->sanitizeText($heading->getText()));
@@ -35,7 +35,7 @@ class Education extends BaseContext
      */
     public function testQuickFactsReference()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $heading = $this->findCss('.MsoNormal');
         Assert::assertNotNull($heading);
         Assert::assertEquals('QUICK FACTS & REFERENCE', $this->sanitizeText($heading->getText()));
@@ -46,7 +46,7 @@ class Education extends BaseContext
      */
     public function testVideos()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $headings = $this->findAllCss('h2');
         Assert::assertGreaterThan(0, sizeof($headings));
         Assert::assertEquals('Fundamentals of Dental Sleep Medicine', $headings[0]->getText());
@@ -57,7 +57,7 @@ class Education extends BaseContext
      */
     public function testCertificates()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $heading = $this->findCss('#contentMain');
         Assert::assertNotNull($heading);
         Assert::assertContains('EdX Certificates', $this->sanitizeText($heading->getText()));

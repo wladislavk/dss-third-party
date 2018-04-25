@@ -2,7 +2,6 @@
 
 namespace Contexts;
 
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert;
@@ -64,7 +63,7 @@ class ScreenerApp extends BaseContext
      */
     public function clickScreenerButton($text)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $currentSection = $this->getCurrentSection();
         $buttons = $this->findAllCss('a.btn', $currentSection);
         foreach ($buttons as $button) {
@@ -120,7 +119,7 @@ class ScreenerApp extends BaseContext
      */
     public function fillEpworthForm(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $data = $table->getHash();
         $labels = $this->findAllCss('div.dp66 > div.sepH_b > label');
         foreach ($data as $key => $select) {
@@ -243,7 +242,7 @@ class ScreenerApp extends BaseContext
      */
     public function closeModalWindow()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $closeButton = $this->findCss('a#fancybox-close');
         if (!$closeButton) {
             if (SUT_HOST == 'loader') {
@@ -309,7 +308,7 @@ class ScreenerApp extends BaseContext
      */
     public function testScreenerLeftHeader($text)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $currentSection = $this->getCurrentSection();
         $header = $this->findCss('h3', $currentSection);
         Assert::assertEquals($text, $header->getText());
@@ -335,7 +334,7 @@ class ScreenerApp extends BaseContext
      */
     public function testContactInformationForm(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $expected = array_column($table->getHash(), 'name');
         $form = $this->findCss('form');
         $elements = $this->findAllCss('div.sepH_b', $form);
@@ -436,7 +435,7 @@ class ScreenerApp extends BaseContext
      */
     public function testScreenerResultRisk($level)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $string = strtolower($level) . ' risk';
         $risks = $this->findAllCss('div.risk_desc');
         foreach ($risks as $risk) {
@@ -531,7 +530,7 @@ class ScreenerApp extends BaseContext
      */
     public function testHSTCompanyList(TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
         $companyDiv = $elementDivs[0];
         $companyDivContent = str_replace('<label class="lbl_a">HST Company</label>', '', $companyDiv->getHtml());
@@ -548,7 +547,7 @@ class ScreenerApp extends BaseContext
      */
     public function testHSTForm(TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $expected = $table->getHash();
         $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
         array_shift($elementDivs);
@@ -563,10 +562,8 @@ class ScreenerApp extends BaseContext
 
     /**
      * @AfterScenario
-     *
-     * @param AfterScenarioScope $scope
      */
-    public function afterScenario(AfterScenarioScope $scope)
+    public function afterScenario()
     {
         if ($this->formsFilled) {
             $query = <<<SQL

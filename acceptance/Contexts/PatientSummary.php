@@ -139,7 +139,7 @@ class PatientSummary extends BaseContext
      */
     public function testContactsCheckboxList(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $labels = array_column($table->getHash(), 'name');
         $checkboxes = $this->findAllCss('td#contacts input[type="checkbox"]');
         foreach ($checkboxes as $key => $checkbox) {

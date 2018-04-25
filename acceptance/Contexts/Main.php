@@ -40,7 +40,7 @@ class Main extends BaseContext
     public function goToCustomPage($page)
     {
         if (SUT_HOST == 'vue') {
-            $this->wait(self::SHORT_WAIT_TIME);
+            $this->wait(SHORT_WAIT_TIME);
         }
         if ($page == 'start') {
             if (SUT_HOST == 'vue') {
@@ -76,7 +76,7 @@ class Main extends BaseContext
      */
     public function browserConfirmWithDelay()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $this->browserConfirm();
     }
 
@@ -182,7 +182,7 @@ class Main extends BaseContext
         $this->getCommonClient()->switchToIFrame();
         $closeButton = $this->findCss('a#popupContactClose');
         $closeButton->click();
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
     }
 
     /**
@@ -193,7 +193,7 @@ class Main extends BaseContext
      */
     public function runMouseOverMenu($menuPoint)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $menu = $this->findCss('ul#homemenu');
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $parentNode = $parentNodeLink->getParent();
@@ -208,7 +208,7 @@ class Main extends BaseContext
      */
     public function clickPatientInList($name)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $patients = $this->findAllCss('ul#patient_list li.json_patient');
         foreach ($patients as $patient) {
             if ($this->sanitizeText($patient->getText()) == $name) {
@@ -237,7 +237,7 @@ class Main extends BaseContext
      */
     public function testSeeLink($link)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('a', $link));
     }
 
@@ -249,7 +249,7 @@ class Main extends BaseContext
      */
     public function testSeeButton($button)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $exists = false;
         $buttonElement = $this->findElementWithText('button', $button, null, true);
         if ($buttonElement) {
@@ -383,7 +383,7 @@ class Main extends BaseContext
      */
     public function testBrowserAlert($text)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $this->testBrowserConfirm($text);
     }
 
@@ -405,7 +405,7 @@ class Main extends BaseContext
      */
     public function testModalWindow($status)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame();
         }
@@ -432,7 +432,7 @@ class Main extends BaseContext
             $this->reloadStartPage();
         }
 
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
 
         $welcomeDiv = $this->findCss('div.suckertreemenu');
         Assert::assertNotNull($welcomeDiv);

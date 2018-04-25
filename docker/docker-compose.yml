@@ -105,6 +105,11 @@ services:
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
+      MEDIUM_WAIT_TIME: "${MEDIUM_WAIT_TIME:-2000}"
+      SHORT_WAIT_TIME: "${SHORT_WAIT_TIME:-500}"
+      VERY_SHORT_WAIT_TIME: "${VERY_SHORT_WAIT_TIME:-200}"
+      START_URL: "http://loader/manage"
+      API_URL: "https://api.docker.localhost/api/v1"
     command: tail -f /dev/null
     volumes:
       - "${ROOT_PATH:-..}/acceptance:/opt/app/acceptance"

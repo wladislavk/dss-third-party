@@ -167,7 +167,7 @@ $numf = $db->getNumberRows($fuquery_sql);
 $bodywidth = ($numf * 160) + 320;
 ?>
 <div style="width:<?php echo $bodywidth; ?>px;">
-    <form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
+    <form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']."?pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
         <link rel="stylesheet" href="css/dss_followups.css" type="text/css" media="screen" />
         <table id="sleepstudyscrolltable" style="margin-top:-3px;">
             <tr style="background: #444;height: 30px;">

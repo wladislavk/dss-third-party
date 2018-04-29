@@ -114,15 +114,8 @@ class Main extends BaseContext
      */
     public function clickInputButton($button)
     {
-        $buttonElements = $this->findAllCss('input[type="button"]');
+        $buttonElements = $this->findAllCss('input[type="button"], input[type="submit"]');
         foreach ($buttonElements as $buttonElement) {
-            if ($buttonElement->getValue() == $button) {
-                $buttonElement->click();
-                return;
-            }
-        }
-        $submitElements = $this->findAllCss('input[type="submit"]');
-        foreach ($submitElements as $buttonElement) {
             if ($buttonElement->getValue() == $button) {
                 $buttonElement->click();
                 return;

@@ -7,6 +7,9 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class LedgerHistoriesController extends BaseRestController
 {
     /** @var LedgerHistoryRepository */

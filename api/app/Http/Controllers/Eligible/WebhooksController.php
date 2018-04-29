@@ -11,6 +11,9 @@ use DentalSleepSolutions\Eligible\Webhooks\PaymentsHandler;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
 use DentalSleepSolutions\Http\Controllers\Api\ApiBaseController;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class WebhooksController extends ApiBaseController
 {
     /**

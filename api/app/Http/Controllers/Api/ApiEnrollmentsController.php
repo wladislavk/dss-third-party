@@ -21,6 +21,9 @@ use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class ApiEnrollmentsController extends ApiBaseController
 {
     /** @var EnrollmentRepository */

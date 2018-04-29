@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class PayersController extends BaseRestController
 {
     /**

@@ -4,6 +4,9 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientInsuranceRepository;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class PatientInsurancesController extends BaseRestController
 {
     /** @var PatientInsuranceRepository */

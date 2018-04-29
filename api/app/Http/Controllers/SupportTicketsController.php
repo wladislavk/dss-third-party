@@ -6,6 +6,9 @@ use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\SupportTicketRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class SupportTicketsController extends BaseRestController
 {
     /** @var SupportTicketRepository */

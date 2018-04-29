@@ -114,10 +114,11 @@ class Main extends BaseContext
      */
     public function clickInputButton($button)
     {
-        $buttonElements = $this->findAllCss('input[type="button"]');
+        $buttonElements = $this->findAllCss('input[type="button"], input[type="submit"]');
         foreach ($buttonElements as $buttonElement) {
             if ($buttonElement->getValue() == $button) {
                 $buttonElement->click();
+                return;
             }
         }
         throw new BehatException('Button element not found');

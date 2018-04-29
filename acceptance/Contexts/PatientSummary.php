@@ -162,15 +162,41 @@ class PatientSummary extends BaseContext
      */
     public function testSeeSleepTests(TableNode $table)
     {
+        $this->compareTestsTables($table, '#sleepstudies table.sleeplabstable:not(.new_table)');
+    }
+
+    /**
+     * @Then I see the following subjective tests:
+     *
+     * @param \Behat\Gherkin\Node\TableNode $table
+     */
+    public function testSeeSubjectiveTests(TableNode $table)
+    {
+        $this->compareTestsTables(
+            $table,
+            '#sect_subj form.sleepstudyupdate table, #sect_subj form.sleepstudybaseline table'
+        );
+    }
+
+    /**
+     * @param \Behat\Gherkin\Node\TableNode $table
+     * @param string $selector
+     */
+    private function compareTestsTables(TableNode $table, string $selector)
+    {
         $expectedStudies = $table->getHash();
         /** @var NodeElement[] $actualStudies */
-        $actualStudies = $this->findAllCss('#sleepstudies table.sleeplabstable:not(.new_table)');
+        $actualStudies = $this->findAllCss($selector);
         Assert::assertEquals(sizeof($expectedStudies), sizeof($actualStudies));
 
         foreach ($expectedStudies as $row => $expectedStudy) {
             $studyTable = $actualStudies[$row];
             /** @var NodeElement[] $actualStudy */
             $actualStudy = $studyTable->findAll('css', 'td');
+            $actualStudy = array_filter($actualStudy, function (NodeElement $element) {
+                return $element->getParent()->isVisible();
+            });
+            $actualStudy = array_values($actualStudy);
             Assert::assertEquals(sizeof($expectedStudy), sizeof($actualStudy) - 1);
 
             $comparisonStudy = [];

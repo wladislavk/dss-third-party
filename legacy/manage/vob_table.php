@@ -16,6 +16,11 @@ if (count($my) > 0) { ?>
 
 <div style="margin:auto; width:95%">
   <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" >
+    <colgroup>
+      <col width="50%" />
+      <col width="25%" />
+      <col width="25%" />
+    </colgroup>
     <tr class="tr_bg_h">
       <th colspan="3" valign="top" class="col_head">
         Patient Verification of Benefits Information
@@ -134,10 +139,10 @@ if (count($my) > 0) { ?>
           <td class=<?php echo  $in_table_class?>>$<?php echo  (!empty($preauth['in_expected_patient_payment']) ? $preauth['in_expected_patient_payment'] : '') ?></td>
         </tr>
 	<tr>
-	  <td style="font-size:10px;">Final benefits are based on the insurance plan allowable amount, NOT your fee. The patient contribution is specified by the insurance plan, but out-of-network providers CANNOT know final insurance reimbursement until a claim has been submitted. THE 'MAXIMUM POSSIBLE INSURANCE PAYMENT' IS NOT A GUARANTEE OF *ANY* INSURANCE PAYMENT. DO NOT RELY ON THIS ESTIMATE WHEN CALCULATING INSURANCE REIMBURSEMENT.</td>
+	  <td colspan="3" style="font-size:10px;">Final benefits are based on the insurance plan allowable amount, NOT your fee. The patient contribution is specified by the insurance plan, but out-of-network providers CANNOT know final insurance reimbursement until a claim has been submitted. THE 'MAXIMUM POSSIBLE INSURANCE PAYMENT' IS NOT A GUARANTEE OF *ANY* INSURANCE PAYMENT. DO NOT RELY ON THIS ESTIMATE WHEN CALCULATING INSURANCE REIMBURSEMENT.</td>
 	</tr>
 	<tr>
-	  <td>
+	  <td colspan="3">
 	    <a class="vob_request new" data-ut="<?php echo  (!empty($_SESSION['user_type']) ? $_SESSION['user_type'] : ''); ?>" data-pid="<?php echo  $_GET['pid']; ?>"></a>
 	  </td>
 	</tr>

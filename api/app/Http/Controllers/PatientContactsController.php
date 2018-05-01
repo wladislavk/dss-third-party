@@ -6,6 +6,9 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientContactRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class PatientContactsController extends BaseRestController
 {
     /** @var PatientContactRepository */

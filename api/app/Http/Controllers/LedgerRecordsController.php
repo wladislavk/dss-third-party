@@ -5,6 +5,9 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Carbon\Carbon;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class LedgerRecordsController extends BaseRestController
 {
     /**

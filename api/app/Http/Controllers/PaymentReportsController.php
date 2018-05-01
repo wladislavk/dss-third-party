@@ -5,6 +5,9 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PaymentReportRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class PaymentReportsController extends BaseRestController
 {
     /** @var PaymentReportRepository */

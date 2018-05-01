@@ -1,5 +1,6 @@
 <?php
-namespace Tests\ApiOld;
+
+namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;

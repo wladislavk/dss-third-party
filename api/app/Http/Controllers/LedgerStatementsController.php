@@ -6,6 +6,9 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerStatementRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class LedgerStatementsController extends BaseRestController
 {
     /** @var LedgerStatementRepository */

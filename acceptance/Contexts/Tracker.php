@@ -36,7 +36,7 @@ class Tracker extends BaseContext
      */
     public function clickOnFirstSection($point)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $parent = $this->findCss('div#treatment_list');
         Assert::assertNotNull($parent);
         $firstList = $this->findAllCss('ul.sect1 > li', $parent);
@@ -153,7 +153,7 @@ class Tracker extends BaseContext
                 // $todayDiv = $vueDateSelector->getTodayElement($this);
             } else {
                 if ($date == 'today') {
-                    $this->wait(self::SHORT_WAIT_TIME);
+                    $this->wait(SHORT_WAIT_TIME);
                     $todayDiv = $this->findCss('div.DynarchCalendar-bottomBar-today');
                     $todayDiv->click();
                 }
@@ -171,7 +171,7 @@ class Tracker extends BaseContext
      */
     public function deleteSummaryStep($type)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $rows = $this->findAllCss('div#appt_summ table tr');
         foreach ($rows as $row) {
             $rowName = $this->findCss('td:nth-child(2) > span.title', $row);
@@ -241,7 +241,7 @@ class Tracker extends BaseContext
      */
     public function testTopRightButtons(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $calendarLink = $this->findElementWithText('a', 'View Calendar Appts');
         $buttonDiv = $calendarLink->getParent();
         $buttons = array_column($table->getHash(), 'name');
@@ -320,7 +320,7 @@ class Tracker extends BaseContext
     public function testTreatmentSummarySection(TableNode $table)
     {
         $this->getCommonClient()->switchToIFrame();
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $rows = $this->findAllCss('div#appt_summ tr');
         /** @var NodeElement[] $visibleRows */
         $visibleRows = [];

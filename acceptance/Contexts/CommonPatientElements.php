@@ -45,7 +45,7 @@ class CommonPatientElements extends BaseContext
      */
     public function testPatientChart($name)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $span = $this->findCss('div#patient_name_inner > span');
         Assert::assertNotNull($span);
         Assert::assertContains($name, $span->getText());
@@ -56,7 +56,7 @@ class CommonPatientElements extends BaseContext
      */
     public function testNoPatientChart()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $span = $this->findCss('div#patient_name_inner > span');
         Assert::assertNull($span);
     }
@@ -93,7 +93,7 @@ class CommonPatientElements extends BaseContext
      */
     public function testMedicareIcon()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $icon = $this->findCss('div#patient_name_inner > img');
         Assert::assertNotNull($icon);
     }
@@ -114,7 +114,7 @@ class CommonPatientElements extends BaseContext
      */
     public function testPatientWarnings(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $warnings = $this->findAllCss('div#patient_warnings span.warning');
         $expected = array_column($table->getHash(), 'text');
         Assert::assertEquals(sizeof($expected), sizeof($warnings));

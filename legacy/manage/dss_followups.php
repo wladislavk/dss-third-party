@@ -181,7 +181,7 @@ $bodywidth = ($numf * 160) + 320;
             <tr>
                 <td>
                     <?php
-                    $sqlex = "select * from dental_ex_page5 where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                    $sqlex = "select * from dental_ex_page5_view where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                     $myarrayex = $db->getRow($sqlex);
                     $dentaldevice = st($myarrayex['dentaldevice']);
                     ?>

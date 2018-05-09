@@ -1,0 +1,36 @@
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/general_functions.php';
+
+$apiToken = apiToken();
+
+if (isset($_SESSION['pid']) && isset($_SESSION['patient_docid'])) {
+    $apiToken = patientApiToken();
+}
+
+?>
+<input type="hidden" id="dom-api-token" value="<?= $apiToken ?>" />
+<script>
+    var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
+</script>
+<script type="text/javascript" src="/assets/vendor/json2-2015.05.03.min.js"></script>
+<script type="text/javascript" src="/assets/vendor/promis-1.1.3.min.js"></script>
+<script type="text/javascript" src="/assets/vendor/dot-object-1.5.3.min.js"></script>
+<script type="text/javascript" src="/manage/js/device/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/assets/vendor/jquery.serialize-json-2.7.2.js"></script>
+<script type="text/javascript" src="/assets/app/utils/events.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/utils/modal.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/utils/utils.js?v=20180502"></script>
+<script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js"></script>
+<script type="text/javascript" src="/assets/vendor/vue/vue-1.0.26.min.js"></script>
+<script type="text/javascript" src="/assets/vendor/vue/vue-resource-0.9.3.min.js"></script>
+<script type="text/javascript" src="/assets/app/utils/refresh-token-interceptor.js"></script>
+<script type="text/javascript" src="/assets/app/mixins/patient-form.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/mixins/updatable.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/mixins/custom-text.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/mixins/endpoint-permissions-form.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/vue-setup.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/components/errors-display.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/patient/soap-notes.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/endpoint-permissions-menu.js?v=20180502"></script>

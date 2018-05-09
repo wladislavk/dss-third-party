@@ -2,10 +2,9 @@
 include_once 'admin/includes/main_include.php';
 include_once 'includes/sescheck.php';
 
+$db = new Db();
 if (isset($_POST['submitaddfu'])) {
-    if (isset($db) && $db instanceof Db) {
-        $patientid = $db->escape($_POST['patientid']);
-    }
+    $patientid = $db->escape($_POST['patientid']);
     $ep_dateadd = $db->escape(date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd'])));
     $devadd = $db->escape($_POST['devadd']);
     $dsetadd = $db->escape($_POST['dsetadd']);
@@ -85,9 +84,7 @@ if (isset($_POST['submitaddfu'])) {
         }
     }
 } elseif (isset($_POST['submitupdatefu'])) {
-    if (isset($db) && $db instanceof Db) {
-        $id = $db->escape($_POST['id']);
-    }
+    $id = $db->escape($_POST['id']);
     $patientid = $db->escape($_POST['patientid']);
     $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
     $devadd = $db->escape($_POST['devadd']);
@@ -156,9 +153,7 @@ if (isset($_POST['submitaddfu'])) {
     }
 } elseif (isset($_POST['submitdeletefu'])) {
     $id = $_POST['id'];
-    if (isset($db) && $db instanceof Db) {
-        $delsql = "DELETE FROM dentalsummfu WHERE followupid='".$db->escape($id)."'";
-    }
+    $delsql = "DELETE FROM dentalsummfu WHERE followupid='".$db->escape($id)."'";
     $db->query($delsql);
 }
 
@@ -481,13 +476,13 @@ $bodywidth = ($numf * 160) + 320;
         }
     }
 
-    $q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $q_sql = "SELECT * FROM dental_q_page1_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $q_row = $db->getRow($q_sql);
 
-    $t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $t_sql = "SELECT tot_score FROM dental_thorton_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $t_row = $db->getRow($t_sql);
 
-    $s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $s_sql = "SELECT analysis FROM dental_q_sleep_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $s_row = $db->getRow($s_sql);
     $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     ?>
@@ -499,7 +494,7 @@ $bodywidth = ($numf * 160) + 320;
                 <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
             </tr>
             <?php
-            $s = "SELECT initial_device_titration_1 FROM dental_summary WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+            $s = "SELECT initial_device_titration_1 FROM dental_summary_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
             $r = $db->getRow($s); ?>
             <tr>
                 <td style="background: #F9FFDF;">

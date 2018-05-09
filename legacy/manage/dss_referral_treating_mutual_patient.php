@@ -69,7 +69,7 @@
 	}
 	$patient_info['age'] = floor((time() - strtotime((!empty($patient_info['dob']) ? $patient_info['dob'] : '')))/31556926);
 	// Get Medical Information
-	$q3_sql = "SELECT history, medications from dental_q_page3 WHERE patientid = '".(!empty($patientid) ? $patientid : '')."';";
+	$q3_sql = "SELECT history, medications from dental_q_page3_view WHERE patientid = '".(!empty($patientid) ? $patientid : '')."';";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = $q3_myarray['history'];

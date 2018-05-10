@@ -414,10 +414,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary where patientid='$patientId'";
+            $ds_sql = "SELECT * FROM dental_summary_view where patientid='$patientId'";
             $ds_q = $db->getRow($ds_sql);
             if ($ds_q) {
-                $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
+                $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
             } else {
                 $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
             }

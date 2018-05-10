@@ -28,8 +28,6 @@ if (isset($_REQUEST['sid'])) {
 ?>
 <link rel="stylesheet" href="css/summ.css" />
 
-<script src="js/dss_summ.js" type="text/javascript"></script>
-
 <!-- PUT TOP SECTION HERE -->
 <?php
 $notes_sql = "
@@ -109,7 +107,7 @@ if (!isset($patientId)) {
         <div id="sect_subj" style="display: none">
             <?php include 'summ_subj.php'; ?>
         </div>
-        <div id="sect_soap_notes">
+        <div id="sect_soap_notes" style="display: none">
             <?php include 'summ-soap-notes.php'; ?>
         </div>
     </div>

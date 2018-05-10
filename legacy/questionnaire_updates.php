@@ -318,7 +318,7 @@ $ttotal += $myarray['snore_2'];
 $ttotal += $myarray['snore_3'];
 $ttotal += $myarray['snore_4'];
 $ttotal += $myarray['snore_5'];
-  $tsql = "UPDATE dental_q_page1 SET tss='".$ttotal."' WHERE patientid='".$myarray['patientid']."'";
+  $tsql = "UPDATE dental_q_page1_view SET tss='".$ttotal."' WHERE patientid='".$myarray['patientid']."'";
   echo $tsql."<br />";
   if($run_updates){
     mysqli_query($con, $tsql);
@@ -339,7 +339,7 @@ if($run_updates){
 
 
 //Move bmi to dental_patients
-$sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1";
+$sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1_view";
 $q = mysqli_query($con, $sql);
 while($r = mysqli_fetch_assoc($q)){
   $upsql = "UPDATE dental_patients set feet='".$r['feet']."', inches='".$r['inches']."', weight='".$r['weight']."', bmi='".$r['bmi']."' WHERE patientid='".$r['patientid']."'";

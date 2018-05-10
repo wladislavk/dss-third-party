@@ -1,13 +1,31 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 	include_once('includes/patient_info.php');
+
+$db = new Db();
+$baseTable = 'dental_ex_page3_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
 	if ($patient_info) {
 ?>
-	<link rel="stylesheet" href="css/ex_page3.css" type="text/css" />
+	<link rel="stylesheet" href="css/ex_page3.css?v=20171219" type="text/css" />
 	<script type="text/javascript" src="js/ex_page3.js"></script>
 
 <?php
-		if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
+		if(!$isHistoricView && !empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
 			$maxilla = $_POST['maxilla'];
 			$other_maxilla = $_POST['other_maxilla'];
 			$mandible = $_POST['mandible'];
@@ -126,7 +144,7 @@
 				}
 				trigger_error("Die called", E_USER_ERROR);
 			} else {
-				$ed_sql = " update dental_ex_page3 set 
+				$ed_sql = " update dental_ex_page3_view set 
 				maxilla = '".s_for($maxilla_arr)."',
 				other_maxilla = '".s_for($other_maxilla)."',
 				mandible = '".s_for($mandible_arr)."',
@@ -175,7 +193,11 @@
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
-		$sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";
+		$sql = "select *
+            from $sourceTable
+            where patientid = '$patientId'
+                $andHistoryIdConditional
+                $andNullConditional";
 
 		$myarray = $db->getRow($sql);
 		$ex_page3id = st($myarray['ex_page3id']);
@@ -208,16 +230,21 @@
 		<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
-	<form id="ex_page3frm" class="ex_form" name="ex_page3frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+	<form id="ex_page3frm" class="ex_form" name="ex_page3frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
 		<input type="hidden" name="ex_page3sub" value="1" />
-		<input type="hidden" name="ed" value="<?php echo $ex_page3id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
 		<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-		<div style="float:left; margin-left:10px;">
-        	<input type="reset" value="Undo Changes" />
-		</div>
+
 		<div style="float:right;">
-	        <input type="submit" name="ex_pagebtn" value="Save" />
-	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+        	<input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+	        <button class="do-backup hidden" title="Save a copy of the last saved values">
+            <span class="done">Archive page</span>
+            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 		<table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -265,7 +292,7 @@
 		                            (Enter Each on Different Line)
 		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_maxilla'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_maxilla" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_maxilla;?></textarea>
+		                            <textarea name="other_maxilla" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_maxilla;?></textarea>
 		                        </span>
 		                    </div>
                     		<br />
@@ -304,7 +331,7 @@
 		                            (Enter Each on Different Line)
 		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_mandible'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_mandible" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_mandible;?></textarea>
+		                            <textarea name="other_mandible" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_mandible;?></textarea>
 		                        </span>
 		                    </div>
 		                    <br />
@@ -343,7 +370,7 @@
 		                            (Enter Each on Different Line)
 		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_soft_palate'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_soft_palate;?></textarea>
+		                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_soft_palate;?></textarea>
 		                        </span>
 		                    </div>
 		                    <br />
@@ -382,7 +409,7 @@
 		                            (Enter Each on Different Line)
 			                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_uvula'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_uvula" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_uvula;?></textarea>
+		                            <textarea name="other_uvula" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_uvula;?></textarea>
 		                        </span>
 		                    </div>
                     		<br />
@@ -421,7 +448,7 @@
 		                            (Enter Each on Different Line)
 		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_gag_reflex'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_gag_reflex;?></textarea>
+		                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_gag_reflex;?></textarea>
                         		</span>
 		                    </div>
 		                    <br />
@@ -460,7 +487,7 @@
 		                            (Enter Each on Different Line)
 		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_nasal_passages'); return false;">Use Custom Text</button>
 		                            <br />
-		                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_nasal_passages;?></textarea>
+		                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:600px; height:100px;"><?php echo $other_nasal_passages;?></textarea>
 		                        </span>
 		                    </div>
 		                    <br />
@@ -470,12 +497,16 @@
 		    </tr>
     	</table>
 
-		<div style="float:left; margin-left:10px;">
-	        <input type="reset" value="Undo Changes" />
-		</div>
+
 		<div style="float:right;">
-	        <input type="submit" name="ex_pagebtn" value="Save" />
-	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+	        <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+	        <button class="do-backup hidden" title="Save a copy of the last saved values">
+            <span class="done">Archive page</span>
+            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 	</form>
@@ -505,5 +536,6 @@
 		print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 	}
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php  include "includes/bottom.htm";?>

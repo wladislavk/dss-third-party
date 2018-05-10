@@ -1,14 +1,45 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
     include "includes/top.htm";
     require_once('includes/patient_info.php');
+
+$db = new Db();
+$baseTable = 'dental_ex_page1_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$onBackupSuccess = function ($patientId) {
+    $db = new Db();
+    $patientId = (int)$patientId;
+    $sql = "UPDATE dental_patients
+        SET feet = '',
+            inches = '',
+            weight = '',
+            bmi = ''
+        WHERE patientid = '$patientId'";
+    $db->query($sql);
+};
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
     if ($patient_info) {
 ?>
 <script type="text/javascript" src="js/ex_page1.js"></script>
 <?php
-    if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
+    if(!$isHistoricView && !empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
     	$blood_pressure = $_POST['blood_pressure'];
     	$pulse = $_POST['pulse'];
     	$neck_measurement = $_POST['neck_measurement'];
+    	$respirations = $_POST['respirations'];
     	$feet = $_POST['feet'];
     	$inches = $_POST['inches'];
     	$weight = $_POST['weight'];
@@ -34,8 +65,13 @@
     		blood_pressure = '".s_for($blood_pressure)."',
     		pulse = '".s_for($pulse)."',
     		neck_measurement = '".s_for($neck_measurement)."',
+    		respirations = '".s_for($respirations)."',
     		additional_paragraph = '".s_for($additional_paragraph)."',
     		tongue = '".s_for($tongue_arr)."',
+    		feet = '".s_for($feet)."',
+            inches = '".s_for($inches)."',
+            weight = '".s_for($weight)."',
+            bmi = '".s_for($bmi)."',
     		userid = '".s_for($_SESSION['userid'])."',
     		docid = '".s_for($_SESSION['docid'])."',
     		adddate = now(),
@@ -67,10 +103,15 @@
 		    }
 		  trigger_error("Die called", E_USER_ERROR);
 	    } else {
-    		$ed_sql = " update dental_ex_page1 set 
+    		$ed_sql = " update dental_ex_page1_view set 
     		blood_pressure = '".s_for($blood_pressure)."',
     		pulse = '".s_for($pulse)."',
     		neck_measurement = '".s_for($neck_measurement)."',
+    		respirations = '".s_for($respirations)."',
+    		feet = '".s_for($feet)."',
+            inches = '".s_for($inches)."',
+            weight = '".s_for($weight)."',
+            bmi = '".s_for($bmi)."',
     		additional_paragraph = '".s_for($additional_paragraph)."',
     		tongue = '".s_for($tongue_arr)."'
     		where ex_page1id = '".s_for($_POST['ed'])."'";
@@ -124,15 +165,27 @@
     $inches = st($bmi_myarray['inches']);
     $weight = st($bmi_myarray['weight']);
 
-    $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
+    $sql = "select *
+        from $sourceTable
+        where patientid = '$patientId'
+            $andHistoryIdConditional
+            $andNullConditional";
 
     $myarray = $db->getRow($sql);
     $ex_page1id = st($myarray['ex_page1id']);
     $blood_pressure = st($myarray['blood_pressure']);
     $pulse = st($myarray['pulse']);
     $neck_measurement = st($myarray['neck_measurement']);
+    $respirations = st($myarray['respirations']);
     $additional_paragraph = st($myarray['additional_paragraph']);
     $tongue = st($myarray['tongue']);
+
+    if ($isHistoricView) {
+        $bmi = st($myarray['bmi']);
+        $feet = st($myarray['feet']);
+        $inches = st($myarray['inches']);
+        $weight = st($myarray['weight']);
+    }
 ?>
 
     <link rel="stylesheet" href="css/form.css" type="text/css" />
@@ -147,16 +200,21 @@
     	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
-    <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+    <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
         <input type="hidden" name="ex_page1sub" value="1" />
-        <input type="hidden" name="ed" value="<?php echo $ex_page1id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" cellpadding="5" cellspacing="1" style="clear:both;" bgcolor="#FFFFFF" align="center">
@@ -168,40 +226,43 @@
                             VITAL DATA
                         </label>
                         <div>
-                        	<span>
+                        	<span style="float:none;display:inline-block;width:10em;">
                             	Blood Pressure
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;
-                                <input id="blood_pressure" name="blood_pressure" type="text" class="field text addr tbox" value="<?php echo $blood_pressure;?>" tabindex="1" maxlength="255" style="width:75px;" />
                             </span>
+                            <input id="blood_pressure" name="blood_pressure" type="text" class="field text addr tbox" value="<?php echo $blood_pressure;?>" tabindex="1" maxlength="255" style="width:75px;" />
                        	</div>
                         <br />
                         <div>    
-                            <span>
+                            <span style="float:none;display:inline-block;width:10em;">
                             	Pulse
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;
-                                <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
-                                	<?php for($i = 50; $i <= 150; $i++){ ?>
-    									<option value="<?php echo $i?>" <?php if($pulse == $i) echo " selected";?>><?php echo $i; ?></option>
-    								<?php } ?>
-                                </select>
                             </span>
+                            <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
+                                <option></option>
+                                <?php for($i = 50; $i <= 150; $i++){ ?>
+                                    <option value="<?php echo $i?>" <?php if($pulse == $i) echo " selected";?>><?php echo $i; ?></option>
+                                <?php } ?>
+                            </select>
                     	</div>
                         <br />
                         <div>    
-                            <span>
+                            <span style="float:none;display:inline-block;width:10em;">
                             	Neck Measurement
-                                &nbsp;&nbsp;&nbsp;
-                                <select name="neck_measurement" id="neck_measurement" class="field text addr tbox" style="width:50px;" tabindex="3">
-                                	<?php for($i = 5; $i<=29 ; $i += .5){ ?>
-    									<option value="<?php echo $i?>" <?php if($neck_measurement == $i) echo " selected";?>><?php echo $i; ?></option>
-    								<?php } ?>
-                                </select>
-                                inches
                             </span>
+                            <select name="neck_measurement" id="neck_measurement" class="field text addr tbox" style="width:50px;" tabindex="3">
+                                <option></option>
+                                <?php for($i = 5; $i<=29 ; $i += .5){ ?>
+                                    <option value="<?php echo $i?>" <?php if($neck_measurement == $i) echo " selected";?>><?php echo $i; ?></option>
+                                <?php } ?>
+                            </select>
+                            inches
+                    	</div>
+                        <br />
+                        <div>
+                            <span style="float:none;display:inline-block;width:10em;">
+                            	Respirations
+                            </span>
+                            <input id="respirations" name="respirations" type="text" class="field text addr tbox" value="<?= $respirations ?>" tabindex="1" maxlength="255" style="width:75px;" />
+                            bpm
                     	</div>
                         <br />
                     </li>
@@ -212,7 +273,7 @@
                 <ul style="width:50%; float:left;">
             		<li>
                         <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
-                            <option value="0">Feet</option>
+                            <option value="0"></option>
                             <?php for($i = 1; $i < 9; $i++){ ?>
                                 <option value="<?php echo $i?>" <?php if($feet == $i) echo " selected";?>><?php echo $i?></option>
                             <?php } ?>
@@ -224,7 +285,7 @@
                     </li>
                     <li>
                         <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-                            <option value="-1">Inches</option>
+                            <option value="-1"></option>
                             <?php for($i = 0; $i < 12; $i++){ ?>
                                 <option value="<?php echo $i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?php echo $i?></option>
                             <?php } ?>
@@ -233,7 +294,7 @@
                     </li>
                     <li>
                         <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
-                            <option value="0">Weight</option>
+                            <option value="0"></option>
                             <?php for($i = 80; $i <= 500; $i++){ ?>
                                 <option value="<?php echo $i?>" <?php if($weight == $i) echo " selected";?>><?php echo $i?></option>
                             <?php } ?>
@@ -245,15 +306,21 @@
                         <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?php echo $bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
                         <li>
                             <label for="inches">
-                                &lt; 18.5 is Underweight
+                                <span style="float:none;display:inline-block;width:1em;">
+                                    &lt;
+                                </span>
+                                18.5 is Underweight
                                 <br />
-                                &nbsp;&nbsp;&nbsp;
+                                <span style="float:none;display:inline-block;width:1em;"></span>
                                 18.5 - 24.9 is Normal
                                 <br />
-                                &nbsp;&nbsp;&nbsp;
+                                <span style="float:none;display:inline-block;width:1em;"></span>
                                 25 - 29.9 is Overweight
                                 <br />
-                                &gt; 30 is Obese
+                                <span style="float:none;display:inline-block;width:1em;">
+                                    &gt;
+                                </span>
+                                30 is Obese
                             </label>
                         </li>
                     </li>
@@ -278,7 +345,7 @@
                                     $tongue_my = $db->getResults($tongue_sql);
         							if ($tongue_my) foreach ($tongue_my as $tongue_myarray) {
     							?>
-        								<input type="checkbox" id="tongue<?php echo st($tongue_myarray['tongueid'])?>" name="tongue[]" value="<?php echo st($tongue_myarray['tongueid'])?>" tabindex="9" <?php if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
+        								<input type="checkbox" id="tongue" name="tongue[]" value="<?php echo st($tongue_myarray['tongueid'])?>" tabindex="9" <?php if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
                                         &nbsp;&nbsp;
                                         <?php echo st($tongue_myarray['tongue']);?><br />
 							    <?php
@@ -303,12 +370,16 @@
             </td>
         </tr>
         </table>
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
     </form>
@@ -338,5 +409,6 @@
     	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

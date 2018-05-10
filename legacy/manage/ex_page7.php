@@ -1,5 +1,23 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
+
+$db = new Db();
+$baseTable = 'dental_ex_page7_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
 ?>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -58,7 +76,7 @@ function trigger_letter7($pid) {
   }
 }
 
-if($_POST['ex_page7sub'] == 1)
+if(!$isHistoricView && $_POST['ex_page7sub'] == 1)
 {
 	$sleep_study_on = $_POST['sleep_study_on'];
 	$sleep_study_by = $_POST['sleep_study_by'];
@@ -180,7 +198,7 @@ if($_POST['ex_page7sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_ex_page7 set 
+		$ed_sql = " update dental_ex_page7_view set 
 		sleep_study_on = '".s_for($sleep_study_on)."',
 		sleep_study_by = '".s_for($sleep_study_by)."',
 		assessment_chkyes = '".s_for($assessment_chkyes)."',
@@ -212,7 +230,7 @@ if($_POST['ex_page7sub'] == 1)
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='$patientId'";
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
 
@@ -228,7 +246,12 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_ex_page7 where patientid='".$_GET['pid']."'";
+$sql = "select *
+    from $sourceTable
+    where patientid = '$patientId'
+        $andHistoryIdConditional
+        $andNullConditional";
+
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -245,12 +268,14 @@ $evaluation_est = st($myarray['evaluation_est']);
 $additional_paragraph_candidate = st($myarray['additional_paragraph_candidate']);
 $additional_paragraph_suffers = st($myarray['additional_paragraph_suffers']);
 
-$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
-$q2_my = mysqli_query($con, $q2_sql);
-$q2_myarray = mysqli_fetch_array($q2_my);
+if (!$isHistoricView) {
+    $q2_sql = "SELECT * FROM dental_q_page2_view WHERE patientid='$patientId'";
+    $q2_my = mysqli_query($con, $q2_sql);
+    $q2_myarray = mysqli_fetch_array($q2_my);
 
-$sleep_study_on = st($q2_myarray['sleep_study_on']);
-$sleep_study_by = st($q2_myarray['sleep_study_by']);
+    $sleep_study_on = st($q2_myarray['sleep_study_on']);
+    $sleep_study_by = st($q2_myarray['sleep_study_by']);
+}
 
 ?>
 
@@ -327,14 +352,16 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 	}
 </script>
 
-<form id="ex_page7frm" name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" onsubmit="return ex_page7abc(this)">
+<form id="ex_page7frm" class="ex_form" name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post" onsubmit="return ex_page7abc(this)">
 <input type="hidden" name="ex_page7sub" value="1" />
-<input type="hidden" name="ed" value="<?=$ex_page7id;?>" />
+    <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+    <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="ex_pagebtn" value="Save" />
+    <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	<input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -610,8 +637,14 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+    <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+    <button class="do-backup hidden" title="Save a copy of the last saved values">
+        <span class="done">Archive page</span>
+        <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+    </button>
+    <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>
@@ -631,5 +664,7 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <? include "includes/bottom.htm";?>

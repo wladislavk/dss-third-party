@@ -811,6 +811,4 @@ $joints = $db->getResults("SELECT *
 <script type="text/javascript" src="/assets/app/components/muscle-palpation-selector.js?v=20180502"></script>
 <script type="text/javascript" src="/assets/app/patient/exams/tmj-rom.js?v=20180406"></script>
 <script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
-<?php
-
 <?php include "includes/bottom.htm";?>

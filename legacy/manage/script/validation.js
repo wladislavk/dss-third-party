@@ -1286,12 +1286,34 @@ $("form input[type=submit]").click(function() {
 });
 function notesabc(fa)
 {
-	if(trim(fa.notes.value) == '')
-	{
+	if ($('[name=is_soap]:not([disabled])').length) {
+		var empty = true;
+
+		$('#soap-container')
+			.find('textarea')
+			.each(function(){
+				var $this = $(this);
+
+				if ($this.val().trim() !== '') {
+					empty = false;
+					return false;
+				}
+
+				return true;
+			})
+		;
+
+		if (empty) {
+			alert('At least one field of the SOAP Note is required');
+			$('#subjective').focus();
+			return false;
+		}
+	} else if (trim(fa.notes.value) == '') {
 		alert("Progress Notes is Required");
 		fa.notes.focus();
 		return false;
-	}
+    }
+
 	if(trim(fa.procedure_date.value) == '')
         {
                 alert("Procedure Date is Required");

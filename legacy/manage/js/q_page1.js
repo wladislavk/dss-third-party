@@ -9,6 +9,12 @@ $(document).ready(function()
 	});
 	update_c_chb();
 	showOtherBox();
+
+	$('form.q_form').bind('reset', function(){
+		setTimeout(function() {
+      $('#complaint_0').change();
+    }, 0);
+	});
 });
 
 function confirmExit()

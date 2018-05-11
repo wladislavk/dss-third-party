@@ -13,7 +13,7 @@ function checkIncisal(){
     $('#ir_range').val(range);
     pos = Number($('#i_pos').val());
     dist = Math.abs(pos-min); 
-    perc = (dist/range)
+    perc = range ? dist/range : 0;
     $('#initial_device_titration_equal_h').val(Math.round(dist));
     $('#i_perc').val(Math.round(perc*100));
     if(min != '' && max != ''){
@@ -43,7 +43,7 @@ function calcIncisal(){
     $('#ir_range').val(range);
     pos = Number($('#i_pos').val());
     dist = Math.abs(pos-min); 
-    perc = (dist/range)
+    perc = range ? dist/range : 0;
     $('#initial_device_titration_equal_h').val(Math.round(dist));
     $('#i_perc').val(Math.round(perc*100));
 }

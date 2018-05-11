@@ -26,5 +26,11 @@ class FormRequestServiceProvider extends BaseServiceProvider
             $form->setAdminResolver($current->getAdminResolver());
         }
 
+        if (
+            method_exists($form, 'setPatientResolver')
+            && method_exists($current, 'getPatientResolver')
+        ) {
+            $form->setPatientResolver($current->getPatientResolver());
+        }
     }
 }

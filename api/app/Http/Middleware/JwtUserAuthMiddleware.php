@@ -15,10 +15,19 @@ use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
-class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
+class JwtUserAuthMiddleware extends AbstractJwtAuthMiddleware
 {
-    const SUDO_FIELD = 'sudo_id';
-    const SUDO_REFERENCE = 'userid';
+    /** @var string */
+    protected $role = JwtAuth::ROLE_USER;
+
+    /** @var string */
+    protected $sudoField = self::USER_SUDO_ID;
+
+    /** @var string */
+    protected $sudoReference = self::USER_MODEL_ID;
+
+    /** @var bool */
+    protected $fallsThrough = false;
 
     /**
      * @param Request $request
@@ -67,14 +76,14 @@ class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
      * @param Request $request
      * @return Request
      */
-    private function handleSudo(Request $request)
+    protected function handleSudo(Request $request)
     {
-        $sudoId = $request->input(self::SUDO_FIELD, '');
+        $sudoId = $request->input($this->sudoField, '');
 
         $user = $this->auth
             ->guard(JwtAuth::ROLE_USER)
             ->once([
-                self::SUDO_REFERENCE => $sudoId
+                $this->sudoReference => $sudoId
             ])
         ;
 

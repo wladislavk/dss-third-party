@@ -11,6 +11,24 @@ use Illuminate\Http\Request;
 
 class TmjClinicalExamsController extends BaseRestController
 {
+    /** @var string */
+    protected $ipAddressKey = 'ip_address';
+
+    /** @var string */
+    protected $patientKey = 'patientid';
+
+    /** @var string */
+    protected $doctorKey = 'docid';
+
+    /** @var string */
+    protected $userKey = 'userid';
+
+    /** @var string */
+    protected $filterByDoctorKey = 'docid';
+
+    /** @var string */
+    protected $filterByPatientKey = 'patientid';
+
     /**
      * @SWG\Get(
      *     path="/tmj-clinical-exams",
@@ -73,6 +91,7 @@ class TmjClinicalExamsController extends BaseRestController
      *     @SWG\Parameter(name="additional_paragraph_pal", in="formData", type="string"),
      *     @SWG\Parameter(name="joint_exam", in="formData", type="string"),
      *     @SWG\Parameter(name="jointid", in="formData", type="string"),
+     *     @SWG\Parameter(name="jointid_stages", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_from", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_to", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_equal", in="formData", type="string"),
@@ -104,6 +123,11 @@ class TmjClinicalExamsController extends BaseRestController
      *     @SWG\Parameter(name="deflection_r_l", in="formData", type="string"),
      *     @SWG\Parameter(name="dentaldevice", in="formData", type="integer"),
      *     @SWG\Parameter(name="dentaldevice_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="initial_device_titration_1", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="initial_device_titration_equal_v", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="initial_device_titration_equal_h", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="optimum_echovision_ver", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="optimum_echovision_hor", in="formData", type="string", format="integer"),
      *     @SWG\Response(
      *         response="200",
      *         description="Resource created",
@@ -136,6 +160,7 @@ class TmjClinicalExamsController extends BaseRestController
      *     @SWG\Parameter(name="additional_paragraph_pal", in="formData", type="string"),
      *     @SWG\Parameter(name="joint_exam", in="formData", type="string"),
      *     @SWG\Parameter(name="jointid", in="formData", type="string"),
+     *     @SWG\Parameter(name="jointid_stages", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_from", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_to", in="formData", type="string"),
      *     @SWG\Parameter(name="i_opening_equal", in="formData", type="string"),
@@ -167,6 +192,11 @@ class TmjClinicalExamsController extends BaseRestController
      *     @SWG\Parameter(name="deflection_r_l", in="formData", type="string"),
      *     @SWG\Parameter(name="dentaldevice", in="formData", type="integer"),
      *     @SWG\Parameter(name="dentaldevice_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="initial_device_titration_1", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="initial_device_titration_equal_h", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="initial_device_titration_equal_v", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="optimum_echovision_ver", in="formData", type="string", format="integer"),
+     *     @SWG\Parameter(name="optimum_echovision_hor", in="formData", type="string", format="integer"),
      *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="422", ref="#/responses/422_response"),

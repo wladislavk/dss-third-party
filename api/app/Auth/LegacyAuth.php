@@ -3,8 +3,9 @@
 namespace DentalSleepSolutions\Auth;
 
 use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Services\Auth\PasswordGenerator;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
 use Tymon\JWTAuth\Providers\Auth\Illuminate as IlluminateAuthAdapter;
 use Illuminate\Contracts\Auth\Guard as GuardContract;

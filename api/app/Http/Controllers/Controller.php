@@ -15,6 +15,7 @@ abstract class Controller extends BaseController
         'id' => '',
         'adminid' => 0,
         'userid' => 0,
+        'patientid' => 0,
         'docid' => 0,
         'user_type' => 0,
         'status' => 0,
@@ -30,6 +31,9 @@ abstract class Controller extends BaseController
     protected $request;
 
     /** @var User */
+    protected $patient;
+
+    /** @var User */
     protected $user;
 
     /** @var User */
@@ -42,14 +46,19 @@ abstract class Controller extends BaseController
         $this->config = $config;
         $this->request = $request;
 
+        $this->patient = new User();
         $this->user = new User();
         $this->admin = new User();
 
+        $this->patient->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
         $this->user->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
         $this->admin->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
 
-        $requestedUser = $request->user();
-        if ($requestedUser) {
+        if ($request->patient()) {
+            $this->patient = $request->patient();
+        }
+
+        if ($request->user()) {
             $this->user = $request->user();
         }
 

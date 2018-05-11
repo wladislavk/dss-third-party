@@ -7,7 +7,10 @@
 Route::get('health-check', 'Api\HealthCheckController@index');
 Route::post('auth', 'Auth\AuthController@auth');
 
-Route::group(['middleware' => ['jwt.auth.admin', 'jwt.auth.user']], function () {
+Route::group(
+    ['middleware' => ['jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    function () {
+    Route::get('auth-health', 'Auth\AuthController@authHealth');
     Route::post('refresh-token', 'Auth\AuthController@refreshToken');
 });
 
@@ -32,9 +35,37 @@ Route::group(['prefix' => 'webhooks'], function () {
 |--------------------------------------------------------------------------
 */
 
-Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth.user']], function () {
+Route::group(
+    ['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    function () {
+    /**
+     * Routes are searched by method and name in order of appearance.
+     * Most common endpoints coming first will speed up response time.
+     */
+    Route::resource('advanced-pain-tmd-exams', 'AdvancedPainTmdExamsController', ['except' => ['create', 'edit']]);
 
-    // routes are sorted by controller names with RESTful routes always coming first
+    Route::resource('assessment-plan-exams', 'AssessmentPlanExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('doctor-palpations', 'DoctorPalpationsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('evaluation-management-exams', 'EvaluationManagementExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('pain-tmd-exams', 'PainTmdExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('thortons', 'ThortonsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
+
+    Route::get('tongue-clinical-exams/latest', 'TongueClinicalExamsController@latest');
+    Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('transaction-codes', 'TransactionCodesController', ['except' => ['create', 'edit']]);
+
+    // Route::resource('api-permission/permissions', 'ApiPermissionsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('api-permission/resources', 'ApiPermissionResourcesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('api-permission/resource-groups', 'ApiPermissionResourceGroupsController', ['except' => ['create', 'edit']]);
 
     Route::resource('access-codes', 'AccessCodesController', ['except' => ['create', 'edit']]);
 
@@ -150,6 +181,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::get('guide-setting-options/setting-ids', 'GuideSettingOptionsController@getOptionsForSettingIds');
     Route::resource('guide-setting-options', 'GuideSettingOptionsController', ['except' => ['create', 'edit']]);
 
+    Route::get('health-histories/latest', 'HealthHistoriesController@latest');
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);
 
     Route::resource('home-sleep-tests', 'HomeSleepTestsController', ['except' => ['create', 'edit']]);
@@ -308,6 +340,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('soft-palates', 'SoftPalatesController', ['except' => ['create', 'edit']]);
 
+    Route::get('summaries/latest', 'SummariesController@latest');
     Route::resource('summaries', 'SummariesController', ['except' => ['create', 'edit']]);
 
     Route::resource('summary-sleeplabs', 'SummarySleeplabsController', ['except' => ['create', 'edit']]);
@@ -320,6 +353,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('support-tickets', 'SupportTicketsController', ['except' => ['create', 'edit']]);
 
+    Route::get('symptoms/latest', 'SymptomsController@latest');
     Route::resource('symptoms', 'SymptomsController', ['except' => ['create', 'edit']]);
 
     Route::get('tasks-for-patient/{id}', 'TasksController@indexForPatient');
@@ -424,6 +458,15 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     });
 
 });
+
+Route::group(
+    ['prefix' => 'api/v1', 'middleware' => ['api.log', 'jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    function () {
+        Route::resource('api-permission/permissions', 'ApiPermissionsController', ['except' => ['create', 'edit']]);
+        Route::get('api-permission/all', 'ApiPermissionsController@all');
+        Route::post('api-permission/all', 'ApiPermissionsController@bulkUpdate');
+        Route::get('api-permission/groups', 'ApiPermissionResourceGroupsController@all');
+    });
 
 Route::group(['middleware' => ['api.log', 'dentrix.auth']], function () {
     Route::post('external-patient', 'ExternalPatientsController@store');

@@ -7,7 +7,7 @@ class TongueClinicalExam extends Request
     protected $rules = [
         'formid'               => 'required|integer',
         'patientid'            => 'required|integer',
-        'blood_pressure'       => ['regex:/^[1-2][0-9]{2}\/([5-9][0-9]|1[0-9]{2})$/'],
+        'blood_pressure'       => ['regex:/^\d+(\/\d+)?$/'],
         'pulse'                => 'string',
         'neck_measurement'     => 'regex:/^([0-9]*[.])?[0-9]+$/',
         'bmi'                  => 'regex:/^[0-9]+\.[0-9]+$/',

@@ -10,6 +10,12 @@ use DentalSleepSolutions\Exceptions\JwtException;
 
 class JwtAdminAuthMiddleware extends AbstractJwtAuthMiddleware
 {
+    /** @var string */
+    protected $role = JwtAuth::ROLE_ADMIN;
+
+    /** @var bool */
+    protected $fallsThrough = false;
+
     /**
      * @param Request $request
      * @param Closure $next

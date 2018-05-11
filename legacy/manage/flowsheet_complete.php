@@ -106,7 +106,7 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
     }
   }
 
-  /*$sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
+  /*$sql = "SELECT * FROM dental_patients p JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
   $my = mysqli_query($con, $sql);
   $num = mysqli_num_rows($my);
   if( $num <= 0 ){

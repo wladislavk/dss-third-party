@@ -51,7 +51,7 @@ function insert_preauth_row($patient_id) {
         JOIN dental_contact i ON p.p_m_ins_co = i.contactid 
         JOIN dental_users d ON p.docid = d.userid 
         JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' 
-        JOIN dental_q_page2 q2 ON p.patientid = q2.patientid
+        JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid
     WHERE p.patientid = '$patient_id'";
   
   $my_array = $db->getRow($sql);

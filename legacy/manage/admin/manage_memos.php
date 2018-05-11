@@ -115,5 +115,5 @@ include_once "../includes/constants.inc";
 <script src="/assets/vendor/moment.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-<script src="/assets/app/memos.js?v=20160405" type="text/javascript"></script>
+<script src="/assets/app/memos.js?v=20180502"text/javascript"></script>
 <?php include "includes/bottom.htm";?>

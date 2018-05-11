@@ -152,7 +152,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
     $db->query("UPDATE dental_hst SET $hstUpdateData, authorizeddate = NOW(), updatedate = NOW()
         WHERE id = '$hstId'");
 
-    $epWorthIds = $db->getColumn("SELECT epworthid FROM dental_q_sleep WHERE patientid = '$patientId'", 'epworthid');
+    $epWorthIds = $db->getColumn("SELECT epworthid FROM dental_q_sleep_view WHERE patientid = '$patientId'", 'epworthid');
 
     $epid = [];
     $epseq = [];

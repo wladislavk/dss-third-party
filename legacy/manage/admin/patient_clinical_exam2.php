@@ -101,7 +101,7 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_ex_page1 set 
+		$ed_sql = " update dental_ex_page1_view set 
 		blood_pressure = '".s_for($blood_pressure)."',
 		pulse = '".s_for($pulse)."',
 		neck_measurement = '".s_for($neck_measurement)."',
@@ -164,7 +164,7 @@ $feet = st($bmi_myarray['feet']);
 $inches = st($bmi_myarray['inches']);
 $weight = st($bmi_myarray['weight']);
 
-$sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page1_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 

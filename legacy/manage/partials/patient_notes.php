@@ -2,6 +2,11 @@
 <?php
 if (isset($my)) {
     ?>
+<style>
+    #sect_notes dd {
+        word-break: break-all;
+    }
+</style>
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
         <?php
         if (count($my) == 0) { ?>
@@ -46,6 +51,12 @@ if (isset($my)) {
                     if ($user['userid'] == $dentalNote['userid']) {
                         $theUser = $user;
                     }
+                $tr_class = "tr_active";
+
+                try {
+                    $soapNote = json_decode($myarray['notes'], true);
+                } catch (\Exception $e) {
+                    $soapNote = null;
                 }
                 ?>
                 <tr id="note_<?= $dentalNote['notesid']; ?>" class="<?= $tr_class; ?>" <?php if ($bg_color != '') { ?> style="background-color:<?php echo $bg_color?>" <?php } ?>>
@@ -99,9 +110,24 @@ if (isset($my)) {
                             <tr>
                                 <td valign="top" colspan="3">
                                     <hr size="1" />
-                                    <span style="font-weight:normal;"><?= nl2br(st($dentalNote["notes"])); ?></span>
-                                </td>
-                            </tr>
+                                    <span style="font-weight:normal;">
+                                                    <?php if ($soapNote) { ?>
+                                                        <dl>
+                                                            <dt><strong>Subjective</strong></dt>
+                                                            <dd><?= nl2br(e($soapNote['subjective'])) ?></dd>
+                                                            <dt><strong>Objective</strong></dt>
+                                                            <dd><?= nl2br(e($soapNote['objective'])) ?></dd>
+                                                            <dt><strong>Assessment</strong></dt>
+                                                            <dd><?= nl2br(e($soapNote['assessment'])) ?></dd>
+                                                            <dt><strong>Plan</strong></dt>
+                                                            <dd><?= nl2br(e($soapNote['plan'])) ?></dd>
+                                                        </dl>
+                                                    <?php } else { ?>
+                                                        <?= nl2br(st($dentalNote["notes"]));?>
+                                                    <?php } ?>
+                                                </span>
+                                        </td>
+                                </tr>
                         </table>
                     </td>
                 </tr>

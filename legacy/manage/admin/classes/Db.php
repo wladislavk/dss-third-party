@@ -7,6 +7,16 @@ class Db
 	public $SHOW_TOTAL_TIME = false;
 	private $totalTime;
 	public $con;
+
+    /**
+     * @var array List of allowed separators for escapeAssignmentList()
+     */
+    protected $allowedSeparators = [
+        ',',
+        'AND',
+        'OR',
+    ];
+
 	// Perfom query
 	public function __construct()
 	{
@@ -132,14 +142,15 @@ class Db
         return join(', ', $values);
     }
 
-    public function escapeAssignmentList (Array $values) {
+    public function escapeAssignmentList (Array $values, $separator=',') {
         $db = $this;
+        $separator = in_array($separator, $this->allowedSeparators) ? " $separator " : ',';
 
         array_walk($values, function (&$each, $key) use ($db) {
             $each = '`' . $db->escape($key) . "` = '" . $db->escape($each) . "'";
         });
 
-        return join(', ', $values);
+        return join($separator, $values);
     }
 
     /**
@@ -172,5 +183,16 @@ class Db
         $backupColumns = $this->escapeList($backupColumns, true);
 
         return $backupColumns;
+    }
+
+    /**
+     * Determine primary key by querying the DB
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function primaryKey ($tableName) {
+        $tableName = $this->escape($tableName);
+        return $this->getColumn("SHOW KEYS FROM $tableName WHERE Key_name = 'PRIMARY'", 'Column_name');
     }
 }

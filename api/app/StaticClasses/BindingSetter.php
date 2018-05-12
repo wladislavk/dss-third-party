@@ -22,6 +22,7 @@ class BindingSetter
         'Dental\ApiPermission',
         'Dental\ApiPermissionResource',
         'Dental\ApiPermissionResourceGroup',
+        'Dental\AppointmentSummary',
         'Dental\AppointmentType',
         'Dental\AssessmentPlanExam',
         'Dental\Calendar',

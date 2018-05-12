@@ -1,52 +1,79 @@
 <?php
 
-namespace DentalSleepSolutions\Providers;
+namespace DentalSleepSolutions\Listeners;
 
 use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Doctrine\Common\Inflector\Inflector;
-use Illuminate\Routing\Route;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Foundation\Application;
 use Prettus\Repository\Eloquent\BaseRepository;
+use Illuminate\Routing\Events\RouteMatched;
 
-// this class binds common RESTful request and model interfaces to controllers
-class ControllerServiceProvider extends ServiceProvider
+class RouteMatchedEventListener
 {
     const NAME_PATTERN = '/^.+?\\\\([a-z0-9]+?)Controller@.+$/i';
     const PATTERN_MATCH = '$1';
 
-    public function register()
-    {
-        $inflectorRules = $this->app['config']->get('inflector');
-        Inflector::rules('plural', $inflectorRules);
+    /** @var Application */
+    private $app;
 
-        $this->app['events']->listen('router.matched', function (Route $route, Request $request) {
-            $modelName = $this->modelNameFromActionName($route->getActionName());
-            if ($modelName) {
-                $this->setBindings($modelName);
-            }
-        });
+    /** @var Config */
+    private $config;
+
+    /** @var Inflector */
+    private $inflector;
+
+    /**
+     * @param Application $app
+     * @param Config $config
+     * @param Inflector $inflector
+     */
+    public function __construct(Application $app, Config $config, Inflector $inflector)
+    {
+        $this->app = $app;
+        $this->config = $config;
+        $this->inflector = $inflector;
+    }
+
+    /**
+     * @param RouteMatched $event
+     * @throws NamingConventionException
+     */
+    public function handle(RouteMatched $event): void
+    {
+        $inflectorRules = $this->config->get('inflector');
+        $this->inflector->rules('plural', $inflectorRules);
+
+        $modelName = $this->modelNameFromActionName($event->route->getActionName());
+        if ($modelName) {
+            $this->setBindings($modelName);
+        }
     }
 
     /**
      * @param string $actionName
      * @return string|null
      */
-    protected function modelNameFromActionName($actionName)
+    protected function modelNameFromActionName(string $actionName):? string
     {
         if (!preg_match(self::NAME_PATTERN, $actionName)) {
+            \Log::info("Action name $actionName not compatible with route matching");
             return null;
         }
         $pluralModel = preg_replace(self::NAME_PATTERN, self::PATTERN_MATCH, $actionName);
         $singularModel = $this->singularModel($pluralModel);
+        \Log::info("Action name $actionName matched with model $singularModel");
         return $singularModel;
     }
 
     /**
+     * @param string $modelName
      * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
      */
-    protected function setBindings($modelName = null)
+    protected function setBindings(string $modelName): void
     {
         $bindings = BindingSetter::setBindings($modelName);
         foreach ($bindings as $binding) {
@@ -79,7 +106,11 @@ class ControllerServiceProvider extends ServiceProvider
         }
     }
 
-    private function singularModel($pluralModel)
+    /**
+     * @param string $pluralModel
+     * @return string
+     */
+    private function singularModel(string $pluralModel): string
     {
         $snakeCaseModel = snake_case($pluralModel);
         $singularModel = str_singular($snakeCaseModel);

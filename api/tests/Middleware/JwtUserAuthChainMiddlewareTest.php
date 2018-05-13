@@ -3,26 +3,26 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
+use DentalSleepSolutions\Http\Middleware\JwtUserAuthChainMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
 use Illuminate\Http\Response;
 use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
-class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
+class JwtUserAuthChainMiddlewareTest extends JwtAuthMiddlewareTestCase
 {
     protected $testMiddleware = [
-        JwtUserAuthMiddleware::class
+        JwtUserAuthChainMiddleware::class
     ];
 
     public function testNoToken()
     {
         $this->get(self::TEST_ROUTE);
 
-        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseOk();
         $this->seeJson([
-            'message' => JwtMiddlewareErrors::TOKEN_MISSING
+            'data' => null,
         ]);
     }
 
@@ -68,9 +68,9 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
         $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid, 'invalidPayload');
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertResponseOk();
         $this->seeJson([
-            'message' => JwtMiddlewareErrors::TOKEN_INVALID
+            'data' => null,
         ]);
     }
 

@@ -9,9 +9,9 @@ use DentalSleepSolutions\Http\Middleware\AbstractJwtAuthMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtRefreshTokenMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
-use Tests\TestCases\JwtAuthMiddlewateTestCase;
+use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
-class JwtRefreshTokenMiddlewareTest extends JwtAuthMiddlewateTestCase
+class JwtRefreshTokenMiddlewareTest extends JwtAuthMiddlewareTestCase
 {
     protected $testMiddleware = [
         JwtAdminAuthMiddleware::class,
@@ -61,7 +61,7 @@ class JwtRefreshTokenMiddlewareTest extends JwtAuthMiddlewateTestCase
     {
         $user = factory(User::class)->create();
         $admin = factory(Admin::class)->create();
-        $sudoQuery = $this->generateSudoQuery($user->{JwtUserAuthMiddleware::SUDO_REFERENCE});
+        $sudoQuery = $this->generateSudoUserQuery($user);
         $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid);
 
         $this->get(self::TEST_ROUTE . '?' . $sudoQuery, $authHeader);

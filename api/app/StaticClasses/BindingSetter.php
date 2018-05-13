@@ -157,6 +157,7 @@ class BindingSetter
      * @param string|null $modelName
      * @return Bindings[]
      * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
+     * @throws \ReflectionException
      */
     public static function setBindings($modelName = null)
     {

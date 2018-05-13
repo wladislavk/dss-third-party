@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup;
-use DentalSleepSolutions\Helpers\ApiPermissionsLookup;
+use DentalSleepSolutions\Services\ApiPermissions\ApiPermissionsLookup;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Response;

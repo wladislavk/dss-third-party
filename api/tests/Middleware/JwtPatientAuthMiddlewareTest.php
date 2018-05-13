@@ -2,18 +2,18 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Http\Middleware\JwtPatientAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
 use Illuminate\Http\Response;
 use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
-class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
+class JwtPatientAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 {
     protected $testMiddleware = [
-        JwtUserAuthMiddleware::class
+        JwtPatientAuthMiddleware::class
     ];
 
     public function testNoToken()
@@ -28,8 +28,8 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testInvalidToken()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid, 'invalidToken');
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid, 'invalidToken');
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
@@ -40,8 +40,8 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testInactiveToken()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid, 'inactive');
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid, 'inactive');
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -52,8 +52,8 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testExpiredToken()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid, 'expired');
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid, 'expired');
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -64,8 +64,8 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testInvalidPayload()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid, 'invalidPayload');
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid, 'invalidPayload');
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -76,9 +76,9 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testUserNotFound()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid);
-        $user->delete();
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid);
+        $patient->delete();
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -89,18 +89,18 @@ class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
     public function testLoggedIn()
     {
-        $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid);
+        $patient = factory(Patient::class)->create();
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_PATIENT, $patient->patientid);
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseOk();
         $this->seeJson([
-            'username' => $user->username
+            'email' => $patient->email
         ]);
     }
 
     protected function requestHandler(Request $request)
     {
-        return ApiResponse::responseOk('', $request->user());
+        return ApiResponse::responseOk('', $request->patient());
     }
 }

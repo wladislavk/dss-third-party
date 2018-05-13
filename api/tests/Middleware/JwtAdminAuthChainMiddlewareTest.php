@@ -3,15 +3,17 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Admin;
-use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
+use DentalSleepSolutions\Http\Middleware\JwtAdminAuthChainMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
+use Illuminate\Http\Response;
 use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
-class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
+class JwtAdminAuthChainMiddlewareTest extends JwtAuthMiddlewareTestCase
 {
     protected $testMiddleware = [
-        JwtAdminAuthMiddleware::class
+        JwtAdminAuthChainMiddleware::class
     ];
 
     public function testNoToken()
@@ -20,45 +22,51 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
         $this->assertResponseOk();
         $this->seeJson([
-            'data' => null
+            'data' => null,
         ]);
     }
 
     public function testInactiveToken()
     {
-        $admin = factory(Admin::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid, 'inactive');
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, 0, 'inactive');
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::TOKEN_INACTIVE,
         ]);
     }
 
     public function testExpiredToken()
     {
-        $admin = factory(Admin::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid, 'expired');
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, 0, 'expired');
+        $this->get(self::TEST_ROUTE, $authHeader);
+
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->seeJson([
+            'errorMessage' => JwtMiddlewareErrors::TOKEN_EXPIRED,
+        ]);
+    }
+
+    public function testInvalidPayload()
+    {
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, 0);
         $this->get(self::TEST_ROUTE, $authHeader);
 
         $this->assertResponseOk();
         $this->seeJson([
-            'data' => null
+            'data' => null,
         ]);
     }
 
     public function testUserNotFound()
     {
-        $admin = factory(Admin::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid);
-        $admin->delete();
-
+        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, 0);
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::USER_NOT_FOUND,
         ]);
     }
 
@@ -70,7 +78,7 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
         $this->assertResponseOk();
         $this->seeJson([
-            'username' => $admin->username
+            'username' => $admin->username,
         ]);
     }
 

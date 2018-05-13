@@ -152,12 +152,10 @@ class LedgersApiTest extends ApiTestCase
 
     public function testUpdatePatientSummaryWithCreate()
     {
-        $this->markTestSkipped('Column not found: 1054 Unknown column \'pid\' in \'where clause\' (SQL: select count(*) as aggregate from `dental_ledger` where (`pid` = 0 and `ledger` = 0))');
-        return;
         $this->post(self::ROUTE_PREFIX . '/ledgers/update-patient-summary');
         $this->assertResponseOk();
         $content = json_decode($this->response->getContent(), true);
         $this->assertEquals('Patient Summary was successfully inserted.', $content['message']);
-        $this->seeInDatabase($this->model->getTable(), ['pid' => 0, 'ledger' => 0]);
+        $this->seeInDatabase('dental_patient_summary', ['pid' => 0, 'ledger' => 0]);
     }
 }

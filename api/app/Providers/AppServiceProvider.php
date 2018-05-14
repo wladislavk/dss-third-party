@@ -9,6 +9,9 @@ use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\MockCaller;
 use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\ThirdPartyCallerInterface;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
+use DentalSleepSolutions\Wrappers\PDF\DomPDFWrapper;
+use DentalSleepSolutions\Wrappers\PDF\MockPDFWrapper;
+use DentalSleepSolutions\Wrappers\PDF\PDFWrapperInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Monolog\Handler\RotatingFileHandler;
@@ -53,8 +56,10 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment('testing')) {
             $this->app->singleton(ThirdPartyCallerInterface::class, MockCaller::class);
+            $this->app->bind(PDFWrapperInterface::class, MockPDFWrapper::class);
         } else {
             $this->app->bind(ThirdPartyCallerInterface::class, GuzzleCaller::class);
+            $this->app->bind(PDFWrapperInterface::class, DomPDFWrapper::class);
         }
     }
 }

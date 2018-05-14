@@ -40,7 +40,7 @@ class TempPinDocumentCreator
      * @return string
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      */
-    public function createDocument($patientId, $docId)
+    public function createDocument(int $patientId, int $docId): string
     {
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId, $docId);
         $mailerDataArray = array_merge(

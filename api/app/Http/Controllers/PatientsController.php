@@ -9,6 +9,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\NotificationRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
+use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
@@ -586,6 +587,8 @@ class PatientsController extends BaseRestController
      * @param Request $request
      * @param int $patientId
      * @return JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function editingPatient(
         PatientEditorFactory $patientEditorFactory,
@@ -812,17 +815,16 @@ class PatientsController extends BaseRestController
      * @param TempPinDocumentCreator $tempPinDocumentCreator
      * @param int $patientId
      * @return JsonResponse
-     * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      */
     public function createTempPinDocument(
         TempPinDocumentCreator $tempPinDocumentCreator,
         $patientId
     ) {
-        $url = '';
-        if ($patientId) {
+        try {
             $url = $tempPinDocumentCreator->createDocument($patientId, $this->user->docid);
+        } catch (EmailHandlerException $e) {
+            return ApiResponse::responseError($e->getMessage(), 404);
         }
-
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
     }
 

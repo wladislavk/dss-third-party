@@ -4,6 +4,9 @@ namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Services\ApiResponse\ApiResponseHelper;
 use DentalSleepSolutions\Services\Misc\ClassRetriever;
+use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\GuzzleCaller;
+use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\MockCaller;
+use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\ThirdPartyCallerInterface;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -47,5 +50,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
 
         $this->app->bind('apiresponse', ApiResponseHelper::class);
+
+        if ($this->app->environment('testing')) {
+            $this->app->singleton(ThirdPartyCallerInterface::class, MockCaller::class);
+        } else {
+            $this->app->bind(ThirdPartyCallerInterface::class, GuzzleCaller::class);
+        }
     }
 }

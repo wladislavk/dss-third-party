@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Services\Letters\LetterManager;
 use DentalSleepSolutions\Services\Patients\PatientEditors\PatientUpdater;
@@ -40,10 +41,12 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $patientUpdateMailer = $this->mockPatientUpdateMailer();
         $letterManager = $this->mockLetterManager();
         $pendingVOBRemover = $this->mockPendingVOBRemover();
+        $userRepository = $this->mockUserRepository();
         $this->patientUpdater = new PatientUpdater(
             $registrationEmailSender,
             $letterTriggerLauncher,
             $patientSummaryManager,
+            $userRepository,
             $patientUpdateMailer,
             $letterManager,
             $pendingVOBRemover
@@ -53,13 +56,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testEditPatient()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();
@@ -77,8 +81,11 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $patient->p_m_partyfname = 'Harry';
         $patient->p_m_partylname = 'Jones';
         $responseData = $this->patientUpdater->editPatient($formData, $user, $requestData, $patient);
+        $expectedUser = new User();
+        $expectedUser->userid = 1;
+        $expectedUser->docid = 2;
         $vobData = [
-            'user' => $user,
+            'user' => $expectedUser,
             'patientId' => 3,
             'userId' => 1,
         ];
@@ -98,13 +105,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithReferredByChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();
@@ -132,13 +140,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithReferredSourceChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();
@@ -166,13 +175,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithPinCode()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();
@@ -201,13 +211,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithHST()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();
@@ -237,13 +248,14 @@ class PatientUpdaterTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithoutInsuranceInfoChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new User();
+        $user = new BaseUser();
         $user->userid = 1;
-        $user->docid = 2;
+        $this->docId = 2;
         $requestData = new EditPatientRequestData();
         $requestData->patientLocation = 8;
         $referrer = new PatientReferrer();

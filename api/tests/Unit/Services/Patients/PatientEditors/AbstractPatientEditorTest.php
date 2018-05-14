@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use Tests\Dummies\DummyPatientEditor;
@@ -19,14 +19,16 @@ class AbstractPatientEditorTest extends PatientEditorTestCase
         $registrationEmailSender = $this->mockRegistrationEmailSender();
         $letterTriggerLauncher = $this->mockLetterTriggerLauncher();
         $patientSummaryManager = $this->mockPatientSummaryManager();
+        $userRepository = $this->mockUserRepository();
         $this->patientEditor = new DummyPatientEditor(
-            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
+            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager, $userRepository
         );
     }
 
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithPatient()
     {
@@ -69,6 +71,7 @@ class AbstractPatientEditorTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithoutPatient()
     {

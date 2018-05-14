@@ -47,6 +47,7 @@ abstract class AbstractPatientEditor
      * @return EditPatientResponseData
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function editPatient(
         array $formData,
@@ -73,6 +74,7 @@ abstract class AbstractPatientEditor
      * @param EditPatientRequestData $requestData
      * @param Patient|null $unchangedPatient
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     private function updateDB(
         array $formData,

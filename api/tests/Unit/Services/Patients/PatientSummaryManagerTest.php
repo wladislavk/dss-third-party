@@ -117,6 +117,7 @@ class PatientSummaryManagerTest extends UnitTestCase
 
     /**
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testUpdatePatientSummaryWithResults()
     {
@@ -133,6 +134,7 @@ class PatientSummaryManagerTest extends UnitTestCase
 
     /**
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testUpdatePatientSummaryWithoutResults()
     {
@@ -149,6 +151,7 @@ class PatientSummaryManagerTest extends UnitTestCase
 
     /**
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testUpdatePatientSummaryWithoutId()
     {
@@ -176,7 +179,7 @@ class PatientSummaryManagerTest extends UnitTestCase
     {
         /** @var PatientSummaryRepository|MockInterface $patientSummaryRepository */
         $patientSummaryRepository = \Mockery::mock(PatientSummaryRepository::class);
-        $patientSummaryRepository->shouldReceive('find')
+        $patientSummaryRepository->shouldReceive('findOrNull')
             ->andReturnUsing([$this, 'findPatientSummaryCallback']);
         $patientSummaryRepository->shouldReceive('create')
             ->andReturnUsing([$this, 'createPatientSummaryCallback']);

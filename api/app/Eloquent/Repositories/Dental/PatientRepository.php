@@ -566,16 +566,16 @@ class PatientRepository extends AbstractRepository
      */
     public function getPatientReferralIdsForReferredSourceOfTwo($patientId)
     {
-        return $this->model
+        $query = $this->model
             ->select(\DB::raw('GROUP_CONCAT(distinct dental_contact.contactid) as ids'))
-            ->join('dental_patients', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
+            ->join('dental_contact', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
             ->join(\DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dental_contact.contacttypeid')
             ->where('dental_patients.patientid', $patientId)
             ->where('ct.physician', '!=', 1)
             ->groupBy('dental_patients.referred_by')
             ->orderBy('dental_contact.contactid')
-            ->get()
         ;
+        return $query->get();
     }
 
     /**

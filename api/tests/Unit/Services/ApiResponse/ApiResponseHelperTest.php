@@ -5,7 +5,6 @@ namespace Tests\Unit\Services\ApiResponse;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Services\ApiResponse\ApiResponseHelper;
 use DentalSleepSolutions\Services\ApiResponse\FractalDataRetriever;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -161,12 +160,21 @@ class ApiResponseHelperTest extends UnitTestCase
      */
     public function testGetPaginateStructure()
     {
-        $this->markTestSkipped('Services MUST NOT be initialized through the new keyword in unit tests');
-        return;
         $items = ['foo', 'bar'];
-        $total = 30;
-        $perPage = 10;
-        $result = new LengthAwarePaginator($items, $total, $perPage);
+        $result = json_encode([
+            'current_page' => 1,
+            'data' => $items,
+            'first_page_url' => '/?page=1',
+            'from' => 1,
+            'last_page' => 3,
+            'last_page_url' => '/?page=3',
+            'next_page_url' => '/?page=2',
+            'path' => '/',
+            'per_page' => 10,
+            'prev_page_url' => null,
+            'to' => 2,
+            'total' => 30,
+        ]);
         $result = $this->apiResponseHelper->getPaginateStructure($result);
         $expected = [
             'total' => 30,
@@ -177,7 +185,7 @@ class ApiResponseHelperTest extends UnitTestCase
             'prev_page_url' => null,
             'from' => 1,
             'to' => 2,
-            'items' => ['foo', 'bar'],
+            'items' => $items,
             'first_page_url' => '/?page=1',
             'last_page_url' => '/?page=3',
             'path' => '/',

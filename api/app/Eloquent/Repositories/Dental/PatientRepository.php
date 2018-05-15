@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
+use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -481,7 +481,7 @@ class PatientRepository extends AbstractRepository
                 ;
             })
             ->where(function (Builder $query) use ($contactId) {
-                foreach (PatientFormDataUpdater::DOC_FIELDS as $key => $field) {
+                foreach (PatientContactFields::DOC_FIELDS as $key => $field) {
                     $query = $this->addDocFieldToQuery($query, $field, $key, $contactId);
                 }
             })
@@ -734,7 +734,6 @@ class PatientRepository extends AbstractRepository
                 \DB::raw("'' AS fax"),
                 'p.preferredcontact',
                 \DB::raw("'' AS contacttypeid"),
-                // @todo: int cannot be aliased
                 \DB::raw($letterId . ' AS letterid'),
                 'p.status'
             )

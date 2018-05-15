@@ -265,7 +265,7 @@ class UsersApiTest extends ApiTestCase
                 'updated_at' => '2016-01-12 15:15:29',
                 'signature_file' => null,
                 'signature_json' => null,
-                'edx_id' => 354,
+                'edx_id' => 3,
                 'help_id' => 5,
                 'use_service_npi' => 0,
                 'service_name' => 'MedicareName',
@@ -302,12 +302,5 @@ class UsersApiTest extends ApiTestCase
             'logout' => true,
         ];
         $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetLetterInfo()
-    {
-        $this->post(self::ROUTE_PREFIX . '/users/letter-info');
-        $this->assertResponseOk();
-        $this->assertNull($this->getResponseData());
     }
 }

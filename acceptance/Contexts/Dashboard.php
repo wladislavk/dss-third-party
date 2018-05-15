@@ -24,7 +24,7 @@ class Dashboard extends BaseContext
     {
         // @todo: check for reasons of volatility
         if (SUT_HOST === 'vue') {
-            $this->wait(self::MEDIUM_WAIT_TIME);
+            $this->wait(MEDIUM_WAIT_TIME);
         }
 
         $menu = $this->findCss('ul#homemenu');
@@ -40,7 +40,7 @@ class Dashboard extends BaseContext
      */
     public function clickNotifications($menuPoint)
     {
-        $this->wait(self::VERY_SHORT_WAIT_TIME);
+        $this->wait(VERY_SHORT_WAIT_TIME);
         $spans = $this->findAllCss('a.notification > span.label');
         foreach ($spans as $span) {
             if ($span->getText() == $menuPoint) {
@@ -114,7 +114,7 @@ class Dashboard extends BaseContext
      */
     public function testDashboardSection($section)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('h3', $section));
     }
 

@@ -8,7 +8,7 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  * @SWG\Definition(
  *     definition="AppointmentSummary",
  *     type="object",
- *     required={"id, patientid, stepid, segmentid, date_scheduled, date_completed, appointment_type"},
+ *     required={"id, appointment_type"},
  *     @SWG\Property(property="id", type="integer"),
  *     @SWG\Property(property="patientid", type="integer"),
  *     @SWG\Property(property="stepid", type="integer"),
@@ -28,10 +28,11 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  * DentalSleepSolutions\Eloquent\Dental\AppointmentSummary
  *
  * @property int $id
- * @property int $patientid
- * @property int $segmentid
- * @property string $date_scheduled
- * @property string $date_completed
+ * @property int|null $patientid
+ * @property int|null $stepid
+ * @property int|null $segmentid
+ * @property \DateTime|null $date_scheduled
+ * @property \DateTime|null $date_completed
  * @property string|null $delay_reason
  * @property string|null $study_type
  * @property string|null $letterid

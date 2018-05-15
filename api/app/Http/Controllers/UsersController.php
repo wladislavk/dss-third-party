@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\CurrentUserInfoRetriever;
+use DentalSleepSolutions\Services\Users\CurrentUserInfoRetriever;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -402,22 +402,6 @@ class UsersController extends BaseRestController
 
         $resetTime = ($logoutTime - ($now - $lastAccessedDate)) * 1000;
         return ApiResponse::responseOk('', ['resetTime' => $resetTime]);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/users/letter-info",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getLetterInfo(Request $request)
-    {
-        $data = $this->repository->getLetterInfo($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
     }
 
     /**

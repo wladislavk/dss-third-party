@@ -1,0 +1,14 @@
+@import "common";
+
+div {
+  height: 27px;
+  z-index: 5000;
+}
+
+span.welcome-text {
+  line-height: 38px;
+  margin-right: 10px;
+  font-size: 20px;
+  color: #fff;
+  float: right;
+}

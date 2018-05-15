@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractModel extends Model implements SingularAndPluralInterface
 {
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * @return string
      * @throws \ReflectionException

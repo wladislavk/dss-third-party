@@ -3,6 +3,7 @@ import { NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.state.mainToken]: '',
+  [symbols.state.companyData]: [],
   [symbols.state.modal]: {
     name: '',
     params: {}

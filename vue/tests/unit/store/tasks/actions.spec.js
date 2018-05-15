@@ -91,14 +91,6 @@ describe('Tasks module actions', () => {
   })
 
   describe('retrieveTasksForPatient action', () => {
-    beforeEach(function () {
-      this.testCase.setRootState({
-        main: {
-          [symbols.state.patientId]: 2
-        }
-      })
-    })
-
     it('should retrieve patient tasks successfully', function (done) {
       const postData = []
       const tasks = {
@@ -115,7 +107,8 @@ describe('Tasks module actions', () => {
         return Promise.resolve(tasks)
       })
 
-      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks)
+      const patientId = 2
+      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
 
       const expectedData = [
         {
@@ -150,7 +143,8 @@ describe('Tasks module actions', () => {
         return Promise.reject(error)
       })
 
-      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks)
+      const patientId = 2
+      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
       const expectedActions = [
         {
           type: symbols.actions.handleErrors,
@@ -522,6 +516,7 @@ describe('Tasks module actions', () => {
   describe('updateTaskStatus action', () => {
     it('updates status without patient', function (done) {
       const taskId = 1
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
       const postData = []
       this.sandbox.stub(http, 'put').callsFake((path, payload) => {
         postData.push({
@@ -555,11 +550,7 @@ describe('Tasks module actions', () => {
     })
     it('updates status with patient', function (done) {
       const taskId = 1
-      this.testCase.setRootState({
-        main: {
-          [symbols.state.patientId]: 2
-        }
-      })
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
       const postData = []
       this.sandbox.stub(http, 'put').callsFake((path, payload) => {
         postData.push({
@@ -573,7 +564,7 @@ describe('Tasks module actions', () => {
       const expectedActions = [
         {
           type: symbols.actions.retrieveTasksForPatient,
-          payload: {}
+          payload: 2
         },
         {
           type: symbols.actions.retrieveTasks,
@@ -613,6 +604,7 @@ describe('Tasks module actions', () => {
   describe('deleteTask action', () => {
     it('deletes task', function (done) {
       const taskId = 1
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
       const postData = []
       this.sandbox.stub(http, 'delete').callsFake((path) => {
         postData.push({
@@ -642,11 +634,7 @@ describe('Tasks module actions', () => {
     })
     it('deletes task for patient', function (done) {
       const taskId = 1
-      this.testCase.setRootState({
-        main: {
-          [symbols.state.patientId]: 2
-        }
-      })
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
       const postData = []
       this.sandbox.stub(http, 'delete').callsFake((path) => {
         postData.push({
@@ -659,7 +647,7 @@ describe('Tasks module actions', () => {
       const expectedActions = [
         {
           type: symbols.actions.retrieveTasksForPatient,
-          payload: {}
+          payload: 2
         },
         {
           type: symbols.actions.retrieveTasks,

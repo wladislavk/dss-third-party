@@ -3,8 +3,8 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Admin;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Helpers\JwtHelper;
-use DentalSleepSolutions\Helpers\PasswordGenerator;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
+use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use DentalSleepSolutions\Structs\Password;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;

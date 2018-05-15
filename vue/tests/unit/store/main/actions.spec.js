@@ -460,11 +460,13 @@ describe('Main module actions', () => {
             type: symbols.mutations.patientSearchList,
             payload: [
               {
+                id: 0,
                 name: 'No Matches',
                 patientType: 'no',
                 link: ''
               },
               {
+                id: 0,
                 name: 'Add patient with this name\u2026',
                 patientType: 'new',
                 link: 'add_patient.php?search=John'
@@ -518,14 +520,25 @@ describe('Main module actions', () => {
             type: symbols.mutations.patientSearchList,
             payload: [
               {
+                id: 1,
                 name: 'John Doe',
                 patientType: 'json',
-                link: 'manage/add_patient.php?pid=1&ed=1'
+                link: 'manage/add_patient.php?pid=1&ed=1',
+                route: {
+                  name: ''
+                }
               },
               {
+                id: 2,
                 name: 'John Little',
                 patientType: 'json',
-                link: 'manage/manage_flowsheet3.php?pid=2'
+                link: '',
+                route: {
+                  name: 'patient-tracker',
+                  query: {
+                    pid: 2
+                  }
+                }
               }
             ]
           }

@@ -5,7 +5,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Models\Dental\User as BaseUser;
-use DentalSleepSolutions\Helpers\TaskRetriever;
+use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
 class TasksApiTest extends ApiTestCase
@@ -69,6 +69,17 @@ class TasksApiTest extends ApiTestCase
         $this->assertEquals(94, $this->getResponseData()[0]['id']);
         $this->assertEquals(95, $this->getResponseData()[1]['id']);
         $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
+    }
+
+    public function testIndexForPatientWithoutTasks()
+    {
+        /** @var User $user */
+        $user = User::find('u_1');
+        $this->be($user);
+        $patientId = 170;
+        $this->get(self::ROUTE_PREFIX . '/tasks-for-patient/' . $patientId);
+        $this->assertResponseOk();
+        $this->assertEquals(0, count($this->getResponseData()));
     }
 
     public function testShow()

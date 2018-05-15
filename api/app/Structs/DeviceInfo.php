@@ -9,22 +9,27 @@ class DeviceInfo implements Arrayable
     /**
      * @var int
      */
-    public $id;
+    public $id = 0;
+
+    /**
+     * @var bool
+     */
+    public $isHidden = false;
 
     /**
      * @var string
      */
-    public $name;
+    public $name = '';
 
     /**
      * @var float
      */
-    public $value;
+    public $value = 0.0;
 
     /**
      * @var string
      */
-    public $imagePath;
+    public $imagePath = '';
 
     public function toArray()
     {

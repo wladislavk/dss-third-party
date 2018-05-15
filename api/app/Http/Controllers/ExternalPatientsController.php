@@ -3,25 +3,26 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Helpers\ExternalPatientSyncManager;
+use DentalSleepSolutions\Services\ExternalPatients\ExternalPatientSyncManager;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
 use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class ExternalPatientsController extends Controller
 {
     const DSS_PATIENT_STATUS_PENDING_ACTIVE = 3;
 
     /**
-     * @param ExternalPatientStore         $request
-     * @param ExternalPatientSyncManager   $syncManager
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @param ExternalPatientStore $request
+     * @param ExternalPatientSyncManager $syncManager
+     * @return JsonResponse
+     * @throws ValidatorException
      */
     public function store(
         ExternalPatientStore $request,
         ExternalPatientSyncManager $syncManager
-    )
-    {
+    ): JsonResponse {
         $requestData = $request->all();
         $createAttributes = [
             'docid' => $this->user->docid,
@@ -40,9 +41,7 @@ class ExternalPatientsController extends Controller
                 'id' => $externalPatient->external_id,
             ])
         ]);
-
         $httpStatus = 200;
-
         if ($externalPatient->wasRecentlyCreated) {
             $httpStatus = 201;
         }

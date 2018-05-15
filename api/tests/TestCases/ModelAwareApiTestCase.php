@@ -43,12 +43,12 @@ abstract class ModelAwareApiTestCase extends ApiTestCase
      * @param int $count
      * @return Model|Collection
      */
-    protected function modelFactory($count = 1)
+    protected function modelFactory(int $count = 1)
     {
         return factory($this->getModel(), $count)->create();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $modelClass = $this->getModel();

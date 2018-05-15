@@ -13,13 +13,7 @@ export default {
       commit(symbols.mutations.doctorName, data.first_name)
     })
   },
-  [symbols.actions.getCompanyData] ({ state, commit }) {
-    http.token = state[symbols.state.screenerToken]
-    http.post(endpoints.companies.homeSleepTest).then((response) => {
-      const data = response.data.data
-      commit(symbols.mutations.companyData, data)
-    })
-  },
+
   [symbols.actions.submitScreener] ({ state }) {
     const contactData = state[symbols.state.contactData]
     const symptoms = state[symbols.state.symptoms]
@@ -101,19 +95,19 @@ export default {
     }
     commit(symbols.mutations.surveyWeight, surveyWeight)
   },
+
   [symbols.actions.setEpworthProps] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    http.get(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby').then(
-      (response) => {
-        const data = response.data.data
-        for (let element of data) {
-          element.selected = ''
-          element.error = false
-        }
-        commit(symbols.mutations.setEpworthProps, data)
+    http.get(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby').then((response) => {
+      const data = response.data.data
+      for (let element of data) {
+        element.selected = ''
+        element.error = false
       }
-    )
+      commit(symbols.mutations.setEpworthProps, data)
+    })
   },
+
   [symbols.actions.submitHst] ({ state }, { companyId, contactData }) {
     http.token = state[symbols.state.screenerToken]
     const sessionData = state[symbols.state.sessionData]
@@ -142,6 +136,7 @@ export default {
 
     return http.request('post', endpoints.homeSleepTests.store, ajaxData)
   },
+
   [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       axios.post(ProcessWrapper.getApiRoot() + 'auth', payload).then((response) => {
@@ -161,6 +156,7 @@ export default {
       })
     })
   },
+
   [symbols.actions.setSessionData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
     return http.request('get', endpoints.users.current).then((response) => {

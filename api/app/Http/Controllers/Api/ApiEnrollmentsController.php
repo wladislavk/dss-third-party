@@ -12,7 +12,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeReposi
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
 use DentalSleepSolutions\Eligible\Client;
-use DentalSleepSolutions\Helpers\InvoiceHelper;
+use DentalSleepSolutions\Services\ApiEnrollments\InvoiceHelper;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
@@ -21,6 +21,9 @@ use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class ApiEnrollmentsController extends ApiBaseController
 {
     /** @var EnrollmentRepository */

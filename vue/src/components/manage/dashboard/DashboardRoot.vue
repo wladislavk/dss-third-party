@@ -28,4 +28,6 @@
 
 <script src="./DashboardRoot.js"></script>
 
-<style src="../../../assets/css/manage/dashboard/dashboard-root.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/dashboard/dashboard-root.scss";
+</style>

@@ -139,7 +139,7 @@ class PatientSummary extends BaseContext
      */
     public function testContactsCheckboxList(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $labels = array_column($table->getHash(), 'name');
         $checkboxes = $this->findAllCss('td#contacts input[type="checkbox"]');
         foreach ($checkboxes as $key => $checkbox) {
@@ -152,6 +152,90 @@ class PatientSummary extends BaseContext
         foreach ($labels as $key => $label) {
             $div = $checkboxes[$key]->getParent();
             Assert::assertEquals($label, $this->sanitizeText($div->getText()));
+        }
+    }
+
+    /**
+     * @Then I see the following sleep tests:
+     *
+     * @param \Behat\Gherkin\Node\TableNode $table
+     */
+    public function testSeeSleepTests(TableNode $table)
+    {
+        $this->compareTestsTables($table, '#sleepstudies table.sleeplabstable:not(.new_table)');
+    }
+
+    /**
+     * @Then I see the following subjective tests:
+     *
+     * @param \Behat\Gherkin\Node\TableNode $table
+     */
+    public function testSeeSubjectiveTests(TableNode $table)
+    {
+        $this->compareTestsTables(
+            $table,
+            '#sect_subj form.sleepstudyupdate table, #sect_subj form.sleepstudybaseline table'
+        );
+    }
+
+    /**
+     * @param \Behat\Gherkin\Node\TableNode $table
+     * @param string $selector
+     */
+    private function compareTestsTables(TableNode $table, string $selector)
+    {
+        $expectedStudies = $table->getHash();
+        /** @var NodeElement[] $actualStudies */
+        $actualStudies = $this->findAllCss($selector);
+        Assert::assertEquals(sizeof($expectedStudies), sizeof($actualStudies));
+
+        foreach ($expectedStudies as $row => $expectedStudy) {
+            $studyTable = $actualStudies[$row];
+            /** @var NodeElement[] $actualStudy */
+            $actualStudy = $studyTable->findAll('css', 'td');
+            $actualStudy = array_filter($actualStudy, function (NodeElement $element) {
+                return $element->getParent()->isVisible();
+            });
+            $actualStudy = array_values($actualStudy);
+            Assert::assertEquals(sizeof($expectedStudy), sizeof($actualStudy) - 1);
+
+            $comparisonStudy = [];
+            $column = -1;
+            foreach ($expectedStudy as $fieldName => $expectedColumn) {
+                $column++;
+                $actualColumn = $actualStudy[$column];
+                $element = $actualColumn->find('css', 'input[type=file], input[type=button], input[type=text], select');
+                $value = '';
+
+                if (!$element) {
+                    $value = trim($actualColumn->getText());
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                if ($element->getTagName() === 'select') {
+                    $element = $element->find('css', 'option[selected]');
+                    if ($element) {
+                        $value = trim($element->getText());
+                    }
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                $nodeType = $element->getAttribute('type');
+                if ($nodeType === 'file' || $nodeType === 'button') {
+                    if ($element->getValue() === 'Edit') {
+                        $value = 'x';
+                    }
+                    $comparisonStudy[$fieldName] = $value;
+                    continue;
+                }
+
+                $value = trim($element->getValue());
+                $comparisonStudy[$fieldName] = $value;
+            }
+
+            Assert::assertEquals($expectedStudy, $comparisonStudy);
         }
     }
 }

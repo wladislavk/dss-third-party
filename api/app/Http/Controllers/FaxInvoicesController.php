@@ -2,6 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+/**
+ * @todo: restore API tests if needed or delete the controller
+ */
 class FaxInvoicesController extends BaseRestController
 {
     /**

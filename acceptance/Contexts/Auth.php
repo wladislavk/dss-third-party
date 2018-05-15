@@ -48,7 +48,7 @@ class Auth extends BaseContext
      */
     public function testSeeAuthForm()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findCss('form#loginForm'));
     }
 
@@ -57,7 +57,7 @@ class Auth extends BaseContext
      */
     public function testSeeAuthError()
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $span = $this->findCss('span.red');
         Assert::assertNotNull($span);
         Assert::assertEquals('Username or password not found. This account may be inactive.', $span->getText());

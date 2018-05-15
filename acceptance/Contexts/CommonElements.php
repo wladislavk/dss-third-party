@@ -51,7 +51,7 @@ class CommonElements extends BaseContext
         $currentTry = 1;
         $input = null;
         while (!$input && $currentTry <= $tries) {
-            $this->wait(self::SHORT_WAIT_TIME);
+            $this->wait(SHORT_WAIT_TIME);
             $input = $this->findCss('input#patient_search');
             $currentTry++;
         }
@@ -65,7 +65,7 @@ class CommonElements extends BaseContext
      */
     public function testPatientSearchList(TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $list = $this->findCss('ul#patient_list');
         Assert::assertNotNull($list);
         $patients = $this->findAllCss('li.json_patient', $list);
@@ -74,26 +74,6 @@ class CommonElements extends BaseContext
         foreach ($expectedPatients as $key => $expectedPatient) {
             $patient = $this->sanitizeText($patients[$key]->getText());
             Assert::assertEquals($expectedPatient, $patient);
-        }
-    }
-
-    /**
-     * @Then patient chart has menu with following points:
-     *
-     * @param TableNode $table
-     */
-    public function testPatientChartMenu(TableNode $table)
-    {
-        $menuPoints = $this->findAllCss('div#patient_nav > ul > li');
-        $expectedPoints = $table->getHash();
-        foreach ($expectedPoints as $key => $expectedPoint) {
-            $link = $this->findCss('a', $menuPoints[$key]);
-            Assert::assertEquals($expectedPoint['name'], $link->getText());
-            if ($expectedPoint['active'] == 'Yes') {
-                Assert::assertTrue($link->hasClass('nav_active'));
-            } else {
-                Assert::assertFalse($link->hasClass('nav_active'));
-            }
         }
     }
 

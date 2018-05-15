@@ -20,10 +20,14 @@
                 >Hide Warnings</a>
             </span>
             <welcome-text></welcome-text>
-            <patient-menu></patient-menu>
+            <patient-menu v-bind:patient-id="patientId"></patient-menu>
         </div>
         <div class="clear"></div>
     </div>
 </template>
 
-<script src="./PatientRoot.js"></script>
+<script src="./PatientHeader.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/patients/patient-header.scss";
+</style>

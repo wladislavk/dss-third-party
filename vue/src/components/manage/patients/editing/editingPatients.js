@@ -723,7 +723,7 @@ export default {
         patient_id: patientId || 0,
         tracker_notes: notes
       }
-      return http.post(endpoints.patientSummaries.updateTrackerNotes, data)
+      return http.put(endpoints.patientSummaries.updateTrackerNotes, data)
     },
     cleanPatientData: function () {
       const patient = {}

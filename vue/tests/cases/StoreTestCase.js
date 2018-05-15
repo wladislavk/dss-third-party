@@ -1,18 +1,16 @@
-import symbols from '../../src/symbols'
+import store from '../../src/store'
 
 export default class {
   constructor () {
     this.mutations = []
     this.actions = []
     this.state = {}
-    this.rootState = {
-      main: {
-        [symbols.state.mainToken]: ''
-      }
-    }
+    this.rootState = store.state
+    this.getters = {}
     this.mocks = {
       state: this.state,
       rootState: this.rootState,
+      getters: this.getters,
       commit: this._commit.bind(this),
       dispatch: this._dispatch.bind(this)
     }
@@ -24,15 +22,10 @@ export default class {
 
   setRootState (state) {
     this.mocks.rootState = state
+  }
 
-    if (this.mocks.rootState.hasOwnProperty('main')) {
-      this.mocks.rootState.main[symbols.state.mainToken] = ''
-      return
-    }
-
-    this.mocks.rootState['main'] = {
-      [symbols.state.mainToken]: ''
-    }
+  setGetters (getters) {
+    this.mocks.getters = getters
   }
 
   _commit (type, payload) {
@@ -47,5 +40,8 @@ export default class {
       payload = {}
     }
     this.actions.push({ type: type, payload: payload })
+    return new Promise((resolve) => {
+      resolve()
+    })
   }
 }

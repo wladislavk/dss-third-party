@@ -7,11 +7,8 @@ use DentalSleepSolutions\Console\Commands\Api\Model;
 use DentalSleepSolutions\Console\Commands\Api\Route;
 use DentalSleepSolutions\Console\Commands\Api\Requests;
 use DentalSleepSolutions\Console\Commands\Api\Resource;
-use DentalSleepSolutions\Console\Commands\Api\Contracts;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
-use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemInterface;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -99,7 +96,7 @@ class CommandServiceProvider extends ServiceProvider
      */
     protected function registerResourceGenerator()
     {
-        $this->app->singleton('command.api.resource', function ($app) {
+        $this->app->singleton('command.api.resource', function () {
             return new Resource;
         });
     }

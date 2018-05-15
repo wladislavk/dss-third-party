@@ -11,6 +11,11 @@ function dualAppRedirect($path)
     }
     session_start();
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: {$vueUrl}{$path}?token=" . (isset($_SESSION['token']) ? $_SESSION['token'] : ''));
+    $separator = '?';
+    if (strstr($path, '?')) {
+        $separator = '&';
+    }
+    $token = (isset($_SESSION['token']) ? $_SESSION['token'] : '');
+    header("Location: {$vueUrl}{$path}{$separator}token={$token}");
     exit;
 }

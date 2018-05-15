@@ -1,6 +1,7 @@
 import symbols from '../../symbols'
 
 export default {
+  [symbols.state.showAllWarnings]: true,
   [symbols.state.patientId]: 0,
   [symbols.state.allergen]: false,
   [symbols.state.medicare]: false,

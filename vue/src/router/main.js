@@ -12,7 +12,13 @@ import PrintReferredByContact from '../components/manage/referredby/print/printR
 import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
+import ProceduresManualComponent from '../components/manage/education/ProceduresManual.vue'
+import MedicineManualComponent from '../components/manage/education/MedicineManual.vue'
+import QuickFactsReferenceComponent from '../components/manage/education/QuickFacts.vue'
+import EducationVideosComponent from '../components/manage/education/EducationVideos.vue'
+import EdxCertificateComponent from '../components/manage/education/EdxCertificate.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
+import PatientTrackerComponent from '../components/manage/chart/PatientTracker.vue'
 
 export default [
   {
@@ -36,6 +42,12 @@ export default [
         name: 'patients',
         component: PatientRootComponent,
         children: [
+          {
+            path: 'tracker',
+            name: 'patient-tracker',
+            component: PatientTrackerComponent,
+            meta: STANDARD_META
+          },
           {
             path: 'manage',
             name: 'manage-patients',
@@ -93,6 +105,36 @@ export default [
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        path: 'manual',
+        name: 'manual',
+        component: ProceduresManualComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'medicine-manual',
+        name: 'medicine-manual',
+        component: MedicineManualComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'quick-facts',
+        name: 'quick-facts',
+        component: QuickFactsReferenceComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'videos',
+        name: 'videos',
+        component: EducationVideosComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'edx-certificate',
+        name: 'edx-certificate',
+        component: EdxCertificateComponent,
+        meta: STANDARD_META
       },
       {
         path: 'sw-tutorials',

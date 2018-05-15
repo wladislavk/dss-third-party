@@ -12,4 +12,6 @@
 
 <script src="./NotificationLink.js"></script>
 
-<style src="../../../assets/css/manage/dashboard/notification-link.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/dashboard/notification-link.scss";
+</style>

@@ -4,26 +4,17 @@ namespace DentalSleepSolutions\Temporary;
 
 // TODO: this class was created as temporary means to handle this ugly array
 // TODO: this array has to be destroyed and laravel-ized into a proper model, then this class will be destroyed
+use DentalSleepSolutions\Constants\PatientContactFields;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Helpers\PatientFormDataChecker;
-use DentalSleepSolutions\Helpers\PatientPortalRetriever;
-use DentalSleepSolutions\Helpers\UniqueLoginGenerator;
+use DentalSleepSolutions\Services\PatientFormDataChecker;
+use DentalSleepSolutions\Services\PatientPortalRetriever;
+use DentalSleepSolutions\Services\UniqueLoginGenerator;
 use DentalSleepSolutions\Structs\MDContacts;
 use DentalSleepSolutions\Structs\PatientName;
 use DentalSleepSolutions\Structs\PatientReferrer;
 
 class PatientFormDataUpdater
 {
-    const DOC_FIELDS = [
-        'docpcp',
-        'docent',
-        'docsleep',
-        'docdentist',
-        'docmdother',
-        'docmdother2',
-        'docmdother3',
-    ];
-
     const INSURANCE_INFO_FIELDS = [
         'p_m_relation',
         'p_m_partyfname',
@@ -149,7 +140,7 @@ class PatientFormDataUpdater
     public function setMDContacts()
     {
         $contacts = new MDContacts();
-        foreach (self::DOC_FIELDS as $docField) {
+        foreach (PatientContactFields::DOC_FIELDS as $docField) {
             if (isset($this->patientFormData[$docField]) && property_exists($contacts, $docField)) {
                 $contacts->$docField = $this->patientFormData[$docField];
             }

@@ -59,7 +59,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(label, sort) in tableHeaders"
-                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
+                        :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         width="10%"
                     >
@@ -252,7 +252,7 @@
                                     <span>No</span>
                                 </template>
                                 <template v-else>
-                                    <span v-if="patient.vob == 1">Yes</span>
+                                    <span v-if="patient.vob === 1">Yes</span>
                                     <span v-else>{{ preauthLabels[patient.vob] }}</span>
                                 </template>
                             </router-link>
@@ -295,6 +295,3 @@
 </template>
 
 <script src="./patients.js"></script>
-
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/manage_patient.css" scoped></style>

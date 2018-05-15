@@ -20,13 +20,6 @@ abstract class BaseContext extends RawMinkContext
     const START_URL = 'http://' . SUT_HOST . '/manage';
     const ADMIN_START_URL = self::START_URL . '/admin/home.php';
 
-    const REALLY_LONG_WAIT_TIME = 30000;
-    const RATHER_LONG_WAIT_TIME = 10000;
-    const LONG_WAIT_TIME = 5000;
-    const MEDIUM_WAIT_TIME = 2000;
-    const SHORT_WAIT_TIME = 500;
-    const VERY_SHORT_WAIT_TIME = 200;
-
     const NUMBER_OF_TRIES = 3;
 
     const REQUIRED_HTML = '<span class="red">*</span>';
@@ -254,7 +247,7 @@ abstract class BaseContext extends RawMinkContext
     protected function reloadStartPage()
     {
         $this->visitStartPage();
-        $this->getCommonClient()->wait(self::SHORT_WAIT_TIME);
+        $this->getCommonClient()->wait(SHORT_WAIT_TIME);
         $this->page = $this->getCommonClient()->getPage();
     }
 

@@ -751,7 +751,7 @@ if ($sleepLabResult) {
                             <option value="">SELECT</option>
                             <?php
                             foreach ($device_my as $each) { ?>
-                                <option <?= selected($device, $each['device']) ?>
+                                <option <?= selected($s_lab['dentaldevice'], $each['deviceid']) ?>
                                     value="<?= $each['deviceid'] ?>">
                                     <?= htmlspecialchars($each['device']) ?>
                                 </option>

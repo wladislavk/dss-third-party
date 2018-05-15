@@ -1,0 +1,61 @@
+@import "tasks";
+
+.due_date {
+  .expired & {
+    font-weight: bold;
+    color: #900;
+  }
+
+  .today & {
+    font-weight: bold;
+    color: #393;
+  }
+
+  .tomorrow & {
+    font-weight: bold;
+    color: #00457C;
+  }
+}
+
+div.task_menu_general {
+  margin-top: 8px;
+  float: right;
+}
+
+div.task_menu_patient {
+  float: left;
+  margin: 10px 0 0 10px;
+}
+
+span.task_header_patient {
+  font-size: 14px;
+  font-weight: normal;
+  color: #fff;
+}
+
+div.task_list_general {
+  border: solid 1px #000;
+  position: absolute;
+  z-index: 20;
+  background: #fff;
+  padding: 10px;
+}
+
+.task_list {
+  border: solid 1px #000;
+  position: absolute;
+  z-index: 20;
+  background: #fff;
+  padding: 10px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.index_task {
+  width: 200px;
+  padding: 0 5px 10px 5px;
+  border: solid 1px #999;
+  margin: 20px auto 0 auto;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}

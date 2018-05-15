@@ -1,0 +1,55 @@
+@import "chart";
+
+div.tracker-div {
+  width: 100%;
+
+  > a {
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+h3 {
+  text-align: left;
+  margin-top: 1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.17em;
+  font-weight: bold;
+  color: #000;
+}
+
+h3.summary {
+  width: 500px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+option.empty-option {
+  text-transform: uppercase;
+}
+
+div.treatment_div {
+  margin-left: 50px;
+  width: 220px;
+  float: left;
+  margin-right: 100px;
+}
+
+div.step2 {
+  width: 500px;
+  float: left;
+}
+
+span.sub_text {
+  float: right;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+span.sub_text_left {
+  width: 160px;
+}
+
+span.sub_text_right {
+  width: 280px;
+}

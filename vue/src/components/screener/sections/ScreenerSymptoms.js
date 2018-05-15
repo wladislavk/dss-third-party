@@ -1,6 +1,8 @@
 import symbols from '../../../symbols'
 import helpers from '../../../services/helpers'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
+import SymptomButtonsComponent from './SymptomButtons.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 
 export default {
   data: function () {
@@ -8,32 +10,27 @@ export default {
       nextDisabled: false,
       hasError: false,
       symptoms: this.$store.state.screener[symbols.state.symptoms],
-      storedSymptoms: {},
       errors: []
     }
   },
-  mounted () {
-    window.$(function () {
-      window.$('.buttonset').buttonset()
-    })
-  },
   components: {
-    'health-assessment': HealthAssessmentComponent
+    sectionHeader: SectionHeaderComponent,
+    symptomButtons: SymptomButtonsComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   methods: {
-    updateValue (event) {
-      this.storedSymptoms[event.target.name] = event.target.value
-    },
     onSubmit () {
       this.hasError = false
-      this.nextDisabled = true
 
+      const storedSymptoms = this.$store.state.screener[symbols.state.storedSymptoms]
       for (let symptom of this.symptoms) {
-        if (this.storedSymptoms.hasOwnProperty(symptom.name)) {
-          this.errors = helpers.arrayRemove(this.errors, symptom.label)
+        if (storedSymptoms.hasOwnProperty(symptom.name)) {
+          this.errors = helpers.arrayRemove(this.errors, symptom.short)
+          symptom.error = false
         } else {
-          this.errors = helpers.arrayAddUnique(this.errors, symptom.label)
+          this.errors = helpers.arrayAddUnique(this.errors, symptom.short)
           this.hasError = true
+          symptom.error = true
         }
       }
 
@@ -42,8 +39,7 @@ export default {
         return
       }
 
-      this.$store.commit(symbols.mutations.symptoms, this.storedSymptoms)
-
+      this.$store.commit(symbols.mutations.symptoms)
       this.$router.push({ name: 'screener-diagnoses' })
     }
   }

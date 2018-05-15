@@ -6,7 +6,7 @@
                 id="patient_search"
                 class="patient_search"
                 placeholder="Patient Search"
-                v-bind:model="inputValue"
+                v-model="inputValue"
                 name="q"
                 autocomplete="off"
                 v-on:keypress="patientNameKeyPress($event)"
@@ -41,4 +41,6 @@
 
 <script src="./PatientSearch.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-search.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/patient-search.scss";
+</style>

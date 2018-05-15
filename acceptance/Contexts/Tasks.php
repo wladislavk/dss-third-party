@@ -13,6 +13,7 @@ class Tasks extends BaseContext
 {
     const TASK_MENUS = [
         'top menu' => 0,
+        'patient menu' => 1,
         'dashboard' => -2,
     ];
 
@@ -80,7 +81,7 @@ class Tasks extends BaseContext
                 }
                 $button->click();
                 if (SUT_HOST == 'loader' && $type == 'edit') {
-                    $this->wait(self::SHORT_WAIT_TIME);
+                    $this->wait(SHORT_WAIT_TIME);
                     $this->runMouseOverTask($task, $area);
                     $button = $this->findCss("a:nth-child($typeIndex)", $extra);
                     $button->click();
@@ -152,7 +153,7 @@ class Tasks extends BaseContext
                 case 'date':
                     $input = $this->findCss('input', $cells[$key]);
                     $input->click();
-                    $this->wait(self::SHORT_WAIT_TIME);
+                    $this->wait(SHORT_WAIT_TIME);
                     $todayDiv = null;
                     if (SUT_HOST == 'vue') {
                         $vueDateSelector = new VueDateSelector();
@@ -208,7 +209,7 @@ class Tasks extends BaseContext
      */
     public function testAddTaskForm($header)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
@@ -224,7 +225,7 @@ class Tasks extends BaseContext
      */
     public function testAddTaskFormFields(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $form = $this->findCss('form[name="notesfrm"]');
         $expectedRows = $table->getHash();
         $tableRows = $this->findAllCss('td.frmhead', $form);
@@ -254,7 +255,7 @@ class Tasks extends BaseContext
      */
     public function testAddTaskFormFieldData($field, $value)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $cells = $this->findAllCss('td.frmhead');
 
         $realValue = '';
@@ -278,7 +279,7 @@ class Tasks extends BaseContext
      */
     public function testSubsections($area, TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $taskMenus = $this->findAllCss('div.task_menu');
         $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $subsectionHeaders = $this->findAllCss('h4', $taskMenu);
@@ -321,7 +322,7 @@ class Tasks extends BaseContext
      */
     public function testTasks($section, $area, TableNode $table)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         $taskMenus = $this->findAllCss('div.task_menu');
         $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $headers = $this->findAllCss('h4', $taskMenu);
@@ -342,11 +343,12 @@ class Tasks extends BaseContext
         }
         Assert::assertArrayHasKey($listKey, $lists);
         Assert::assertNotNull($lists[$listKey]);
-        $taskList = $this->findAllCss('li > div:last-child', $lists[$listKey]);
+        $taskList = $this->findAllCss('li', $lists[$listKey]);
         $taskNames = array_column($table->getHash(), 'task');
         $taskTexts = [];
         foreach ($taskList as $task) {
-            $trimmedText = trim($task->getText());
+            $name = preg_replace('/.*?\<input.+?\>(.*)/s', '$1', $task->getHtml());
+            $trimmedText = $this->sanitizeText(preg_replace('/\<.+?\>/', '', $name));
             if ($trimmedText) {
                 $taskTexts[] = $trimmedText;
             }
@@ -391,7 +393,7 @@ class Tasks extends BaseContext
      */
     public function testTopMenuBullet($bullet)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $header = $this->findCss('span#task_header');
         Assert::assertEquals($bullet, trim($header->getText()));
     }

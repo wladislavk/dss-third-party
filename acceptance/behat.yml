@@ -23,12 +23,6 @@ default:
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
                 - Contexts\Tracker
-        backoffice:
-            paths:
-                - "%paths.base%/Features/Backoffice"
-            contexts:
-                - Contexts\Main
-                - Contexts\Invoicing
         legacy:
             paths:
                 - "%paths.base%/Features/Legacy"

@@ -4,21 +4,20 @@ namespace Contexts;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
-use WebDriver\Exception\UnexpectedAlertOpen;
 
 require_once __DIR__ . '/../config.php';
 
 abstract class BaseContext extends RawMinkContext
 {
     const START_URL = 'http://' . SUT_HOST . '/manage';
-    const ADMIN_START_URL = self::START_URL . '/admin/home.php';
 
     const NUMBER_OF_TRIES = 3;
 
@@ -26,12 +25,7 @@ abstract class BaseContext extends RawMinkContext
 
     const PASSWORDS = [
         'doc1f' => 'cr3at1vItY',
-        'admin' => 'cr3at1vItY',
     ];
-
-    const USER_POPUP_WINDOW = 'aj_pop';
-    const ADMIN_POPUP_WINDOW = 'modal-iframe';
-    const CAPTCHA_PASSPHRASE = 'deadbeef';
 
     /**
      * @var DocumentElement
@@ -110,18 +104,6 @@ abstract class BaseContext extends RawMinkContext
     }
 
     /**
-     * @param int $time
-     */
-    protected function waitExpectingBrowserAlert(int $time)
-    {
-        try {
-            $this->wait($time);
-        } catch (UnexpectedAlertOpen $e) {
-            $this->confirmBrowserAlert();
-        }
-    }
-
-    /**
      * @param string $css
      * @throws BehatException
      */
@@ -173,7 +155,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$parentElement) {
             $parentElement = $this->page;
         }
-        $element = $parentElement->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
+        $element = $parentElement->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
         if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }
@@ -187,7 +169,7 @@ abstract class BaseContext extends RawMinkContext
      */
     protected function findAndClickText($selector, $text)
     {
-        $element = $this->page->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
+        $element = $this->page->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
         if (!$element) {
             throw new BehatException("Element with text $text not found");
         }
@@ -203,11 +185,6 @@ abstract class BaseContext extends RawMinkContext
         $this->getCommonClient()->visit($url);
     }
 
-    protected function visitAdminStartPage()
-    {
-        $this->getCommonClient()->visit(self::ADMIN_START_URL);
-    }
-
     /**
      * @param string $user
      * @param string $password
@@ -221,23 +198,6 @@ abstract class BaseContext extends RawMinkContext
         $this->page->fillField('username', $user);
         $this->page->fillField('password', $password);
         $loginButton = $this->findCss('input[value=" Login "]');
-        $loginButton->click();
-    }
-
-    /**
-     * @param string $admin
-     * @param string $password
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    protected function adminLogin(string $admin, string $password = '')
-    {
-        if (!$password && array_key_exists($admin, self::PASSWORDS)) {
-            $password = self::PASSWORDS[$admin];
-        }
-        $this->page->fillField('username', $admin);
-        $this->page->fillField('password', $password);
-        $this->page->fillField('captcha', self::CAPTCHA_PASSPHRASE);
-        $loginButton = $this->findCss('button[type="submit"]');
         $loginButton->click();
     }
 
@@ -339,42 +299,5 @@ abstract class BaseContext extends RawMinkContext
         $driver = $this->getSession()->getDriver();
         $driverSession = $driver->getWebDriverSession();
         return $driverSession;
-    }
-
-    protected function confirmBrowserAlert()
-    {
-        switch (BROWSER) {
-            case 'phantomjs':
-                break;
-            case 'chrome':
-                /** @var CoreDriver $driver */
-                $driver = $this->getSession()->getDriver();
-                if ($driver instanceof Selenium2Driver) {
-                    $driver->getWebDriverSession()->accept_alert();
-                }
-                break;
-        }
-    }
-
-    /**
-     * @param string $section
-     */
-    protected function focusPopupWindow(string $section)
-    {
-        $iframe = self::USER_POPUP_WINDOW;
-        if ($section === 'admin') {
-            $iframe = self::ADMIN_POPUP_WINDOW;
-        }
-        if (SUT_HOST == 'loader') {
-            $this->getCommonClient()->switchToIFrame();
-            $this->getCommonClient()->switchToIFrame($iframe);
-        }
-    }
-
-    protected function focusMainWindow()
-    {
-        if (SUT_HOST == 'loader') {
-            $this->getCommonClient()->switchToIFrame();
-        }
     }
 }

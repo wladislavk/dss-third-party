@@ -3,11 +3,11 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Driver\CoreDriver;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
-use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Main extends BaseContext
 {
@@ -20,7 +20,7 @@ class Main extends BaseContext
     }
 
     /**
-     * @When I am logged in as :user
+     * @Given I am logged in as :user
      *
      * @param string $user
      * @throws \Behat\Mink\Exception\ElementNotFoundException
@@ -29,18 +29,6 @@ class Main extends BaseContext
     {
         $this->visitStartPage();
         $this->login($user);
-    }
-
-    /**
-     * @When I am logged in as admin :admin
-     *
-     * @param string $admin
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    public function loginAsAdmin(string $admin)
-    {
-        $this->visitAdminStartPage();
-        $this->adminLogin($admin);
     }
 
     /**
@@ -61,13 +49,6 @@ class Main extends BaseContext
             $this->visitStartPage();
             return;
         }
-        if ($page == 'admin start') {
-            if (SUT_HOST == 'vue') {
-                return;
-            }
-            $this->visitAdminStartPage();
-            return;
-        }
         $url = Pages::getUrl($page);
         $this->getCommonClient()->visit($url);
     }
@@ -77,7 +58,17 @@ class Main extends BaseContext
      */
     public function browserConfirm()
     {
-        $this->confirmBrowserAlert();
+        switch (BROWSER) {
+            case 'phantomjs':
+                break;
+            case 'chrome':
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    $driver->getWebDriverSession()->accept_alert();
+                }
+                break;
+        }
     }
 
     /**
@@ -113,25 +104,6 @@ class Main extends BaseContext
             $buttonElement = $this->findElementWithText('a', $button);
         }
         $buttonElement->click();
-        $this->wait(SHORT_WAIT_TIME);
-    }
-
-    /**
-     * @When I click button with text :button in :section popup window
-     *
-     * @param string $button
-     * @param string $section
-     * @throws BehatException
-     */
-    public function clickButtonInPopup(string $button, string $section)
-    {
-        $this->focusPopupWindow($section);
-        $buttonElement = $this->findElementWithText('button', $button, null, true);
-        if (!$buttonElement) {
-            $buttonElement = $this->findElementWithText('a', $button);
-        }
-        $buttonElement->click();
-        $this->focusMainWindow();
     }
 
     /**
@@ -196,18 +168,6 @@ class Main extends BaseContext
     }
 
     /**
-     * @When I type :name into user search form
-     *
-     * @param string $name
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     */
-    public function fillUserSearchForm(string $name)
-    {
-        $this->wait(SHORT_WAIT_TIME);
-        $this->page->fillField('search', $name);
-    }
-
-    /**
      * @When I close the iframe
      */
     public function closeIFrame()
@@ -229,26 +189,6 @@ class Main extends BaseContext
         $this->wait(SHORT_WAIT_TIME);
         $menu = $this->findCss('ul#homemenu');
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
-        $parentNode = $parentNodeLink->getParent();
-        $parentNode->mouseOver();
-    }
-
-    /**
-     * @When I run mouse over :element admin :position menu point
-     *
-     * @param string $element
-     * @param string $position
-     * @throws BehatException
-     */
-    public function runMouseOverAdminMenu(string $element, string $position)
-    {
-        $this->wait(SHORT_WAIT_TIME);
-        $menuSelector = 'ul.page-sidebar-menu';
-        if ($position === 'top') {
-            $menuSelector = 'div.top-menu ul.nav';
-        }
-        $menu = $this->findCss($menuSelector);
-        $parentNodeLink = $this->findElementWithText('a', $element, $menu);
         $parentNode = $parentNodeLink->getParent();
         $parentNode->mouseOver();
     }
@@ -369,7 +309,7 @@ class Main extends BaseContext
      */
     public function testSeePage($page)
     {
-        $title = $this->findCss('span.admin_head, h3.page-title');
+        $title = $this->findCss('span.admin_head');
         Assert::assertNotNull($title);
         Assert::assertEquals($page, trim($title->getText()));
     }
@@ -401,35 +341,6 @@ class Main extends BaseContext
     public function testSeeText($text)
     {
         Assert::assertContains($text, $this->page->getText());
-    }
-
-    /**
-     * @Then I see :text text after delay
-     *
-     * @param string $text
-     */
-    public function testSeeTextAfterDelay(string $text)
-    {
-        $this->wait(MEDIUM_WAIT_TIME);
-        Assert::assertContains($text, $this->page->getText());
-    }
-
-    /**
-     * @Then I see :text text in :section popup window
-     * @Then I see :text text in :section popup window after :delay
-     *
-     * @param string $text
-     * @param string $section
-     * @param string $delay
-     */
-    public function testSeeTextInPopup(string $text, string $section, string $delay = '')
-    {
-        if ($delay) {
-            $this->wait(MEDIUM_WAIT_TIME);
-        }
-        $this->focusPopupWindow($section);
-        Assert::assertContains($text, $this->page->getText());
-        $this->focusMainWindow();
     }
 
     /**
@@ -467,22 +378,6 @@ class Main extends BaseContext
     {
         $this->wait(SHORT_WAIT_TIME);
         $this->testBrowserConfirm($text);
-    }
-
-    /**
-     * @Then I see browser alert with text :text after delay
-     *
-     * @param string $text
-     */
-    public function testBrowserAlertAfterDelay(string $text)
-    {
-        try {
-            $this->wait(MEDIUM_WAIT_TIME);
-        } catch (UnexpectedAlertOpen $e) {
-            /* Fall through */
-        }
-        $realText = $this->getDriverSession()->getAlert_text();
-        Assert::assertEquals($text, $realText);
     }
 
     /**

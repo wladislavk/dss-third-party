@@ -112,7 +112,7 @@ class Main extends BaseContext
             $buttonElement = $this->findElementWithText('a', $button);
         }
         $buttonElement->click();
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
     }
 
     /**
@@ -202,7 +202,7 @@ class Main extends BaseContext
      */
     public function fillUserSearchForm(string $name)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $this->page->fillField('search', $name);
     }
 
@@ -241,7 +241,7 @@ class Main extends BaseContext
      */
     public function runMouseOverAdminMenu(string $element, string $position)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $menuSelector = 'ul.page-sidebar-menu';
         if ($position === 'top') {
             $menuSelector = 'div.top-menu ul.nav';
@@ -409,7 +409,7 @@ class Main extends BaseContext
      */
     public function testSeeTextAfterDelay(string $text)
     {
-        $this->wait(self::MEDIUM_WAIT_TIME);
+        $this->wait(MEDIUM_WAIT_TIME);
         Assert::assertContains($text, $this->page->getText());
     }
 
@@ -424,7 +424,7 @@ class Main extends BaseContext
     public function testSeeTextInPopup(string $text, string $section, string $delay = '')
     {
         if ($delay) {
-            $this->wait(self::LONG_WAIT_TIME);
+            $this->wait(MEDIUM_WAIT_TIME);
         }
         $this->focusPopupWindow($section);
         Assert::assertContains($text, $this->page->getText());
@@ -476,7 +476,7 @@ class Main extends BaseContext
     public function testBrowserAlertAfterDelay(string $text)
     {
         try {
-            $this->wait(self::LONG_WAIT_TIME);
+            $this->wait(MEDIUM_WAIT_TIME);
         } catch (UnexpectedAlertOpen $e) {
             /* Fall through */
         }

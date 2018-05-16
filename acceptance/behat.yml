@@ -23,6 +23,12 @@ default:
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
                 - Contexts\Tracker
+        backoffice:
+            paths:
+                - "%paths.base%/Features/Backoffice"
+            contexts:
+                - Contexts\Main
+                - Contexts\Invoicing
         legacy:
             paths:
                 - "%paths.base%/Features/Legacy"
@@ -35,7 +41,6 @@ default:
                 - Contexts\Contacts
                 - Contexts\Forms
                 - Contexts\Insurance
-                - Contexts\Invoicing
                 - Contexts\Ledger
                 - Contexts\Letters
                 - Contexts\PatientChart

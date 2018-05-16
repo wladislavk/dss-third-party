@@ -22,7 +22,7 @@ class Invoicing extends BaseContext
         $menu = $this->page->find('css', '#homemenu a:contains("Admin")');
         $menu->mouseOver();
         $this->page->clickLink('Profile');
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $this->page->clickLink('Add');
         $this->fillField('card-number', $card);
         $this->fillField('card-cvc', '123');
@@ -31,10 +31,10 @@ class Invoicing extends BaseContext
         $this->fillField('card-name', 'Acceptance Test');
         $this->fillField('card-zip', '12345');
         $this->page->clickLink('Save');
-        $this->waitExpectingBrowserAlert(self::LONG_WAIT_TIME);
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->waitExpectingBrowserAlert(MEDIUM_WAIT_TIME);
+        $this->wait(SHORT_WAIT_TIME);
         $this->page->clickLink('Sign Out');
-        $this->waitExpectingBrowserAlert(self::LONG_WAIT_TIME);
+        $this->waitExpectingBrowserAlert(MEDIUM_WAIT_TIME);
     }
 
     /**
@@ -52,7 +52,7 @@ class Invoicing extends BaseContext
         }
         try {
             $buttonElement->click();
-            $this->wait(self::SHORT_WAIT_TIME);
+            $this->wait(SHORT_WAIT_TIME);
         } catch (UnexpectedAlertOpen $e) {
             /* Fall through */
         }

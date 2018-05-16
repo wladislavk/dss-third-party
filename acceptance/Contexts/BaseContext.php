@@ -112,7 +112,7 @@ abstract class BaseContext extends RawMinkContext
     /**
      * @param int $time
      */
-    protected function waitExpectingBrowserAlert($time)
+    protected function waitExpectingBrowserAlert(int $time)
     {
         try {
             $this->wait($time);
@@ -229,7 +229,7 @@ abstract class BaseContext extends RawMinkContext
      * @param string $password
      * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
-    protected function adminLogin(string $admin, string $password='')
+    protected function adminLogin(string $admin, string $password = '')
     {
         if (!$password && array_key_exists($admin, self::PASSWORDS)) {
             $password = self::PASSWORDS[$admin];

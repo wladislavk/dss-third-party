@@ -3,6 +3,7 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;

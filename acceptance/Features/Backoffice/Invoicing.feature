@@ -1,8 +1,7 @@
 Feature: Invoicing
 
   Scenario: Failed charge
-    Given I delete Stripe data from user "doc1f"
-    And I add "4000000000000341" credit card to user "doc1f"
+    Given user "doc1f" has credit card token ending in "0341"
     When I am logged in as admin "admin"
     And I type "doc1f" into user search form
     And I click button with text "Search user"
@@ -23,8 +22,7 @@ Feature: Invoicing
     Then I see "Your card was declined.. Please contact your Credit Card billing administrator to resolve this issue." text in admin popup window after delay
 
   Scenario: Successful charge
-    Given I delete Stripe data from user "doc1f"
-    And I add "4242424242424242" credit card to user "doc1f"
+    Given user "doc1f" has credit card token ending in "4242"
     When I am logged in as admin "admin"
     And I type "doc1f" into user search form
     And I click button with text "Search user"
@@ -42,8 +40,7 @@ Feature: Invoicing
     Then I see "Doctor 1 billed 3.00." text in admin popup window after delay
 
   Scenario: Refund charge
-    Given I delete Stripe data from user "doc1f"
-    And I add "4242424242424242" credit card to user "doc1f"
+    Given user "doc1f" has credit card token ending in "4242"
     When I am logged in as admin "admin"
     And I type "doc1f" into user search form
     And I click button with text "Search user"

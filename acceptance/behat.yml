@@ -41,7 +41,6 @@ default:
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
                 - Contexts\Profile
-                - Contexts\ProfileStripe
                 - Contexts\ProgressNotes
                 - Contexts\Staff
                 - Contexts\Support

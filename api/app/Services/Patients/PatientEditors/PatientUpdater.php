@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Services\Letters\LetterManager;
 use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
 use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
@@ -33,12 +34,13 @@ class PatientUpdater extends AbstractPatientEditor
         RegistrationEmailSender $registrationEmailSender,
         LetterTriggerLauncher $letterTriggerLauncher,
         PatientSummaryManager $patientSummaryManager,
+        UserRepository $userRepository,
         PatientUpdateMailer $patientUpdateMailer,
         LetterManager $letterManager,
         PendingVOBRemover $pendingVOBRemover
     ) {
         parent::__construct(
-            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
+            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager, $userRepository
         );
         $this->patientUpdateMailer = $patientUpdateMailer;
         $this->letterManager = $letterManager;

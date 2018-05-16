@@ -2,6 +2,8 @@
 
 namespace Tests\TestCases;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
 use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
 use DentalSleepSolutions\Services\Emails\RegistrationEmailSender;
@@ -18,6 +20,9 @@ class PatientEditorTestCase extends UnitTestCase
 
     /** @var bool */
     protected $emailSent = false;
+
+    /** @var int */
+    protected $docId = 0;
 
     protected function mockRegistrationEmailSender()
     {
@@ -44,6 +49,19 @@ class PatientEditorTestCase extends UnitTestCase
         $patientSummaryManager->shouldReceive('updatePatientSummary')
             ->andReturnUsing([$this, 'updatePatientSummaryCallback']);
         return $patientSummaryManager;
+    }
+
+    protected function mockUserRepository()
+    {
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('find')->andReturnUsing(function ($userId) {
+            $user = new User();
+            $user->userid = $userId;
+            $user->docid = $this->docId;
+            return $user;
+        });
+        return $userRepository;
     }
 
     public function updatePatientSummaryCallback($patientId, $isInfoComplete)

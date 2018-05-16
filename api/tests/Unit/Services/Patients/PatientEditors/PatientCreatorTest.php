@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use DentalSleepSolutions\Services\Patients\PatientEditors\PatientCreator;
@@ -37,10 +37,12 @@ class PatientCreatorTest extends PatientEditorTestCase
         $similarHelper = $this->mockSimilarHelper();
         $passwordGenerator = $this->mockPasswordGenerator();
         $patientRepository = $this->mockPatientRepository();
+        $userRepository = $this->mockUserRepository();
         $this->patientCreator = new PatientCreator(
             $registrationEmailSender,
             $letterTriggerLauncher,
             $patientSummaryManager,
+            $userRepository,
             $similarHelper,
             $passwordGenerator,
             $patientRepository
@@ -50,6 +52,7 @@ class PatientCreatorTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testCreatePatient()
     {
@@ -85,6 +88,7 @@ class PatientCreatorTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithoutSSN()
     {
@@ -110,6 +114,7 @@ class PatientCreatorTest extends PatientEditorTestCase
     /**
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function testWithSimilarPatients()
     {

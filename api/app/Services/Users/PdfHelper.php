@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Services\Users;
 
-use Barryvdh\DomPDF\PDF;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
@@ -10,13 +9,14 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Structs\PdfData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
+use DentalSleepSolutions\Wrappers\PDF\PDFWrapperInterface;
 use Illuminate\Routing\UrlGenerator;
 
 class PdfHelper
 {
     const LETTER_PDF_FOLDER = 'letter_pdfs/';
 
-    /** @var PDF */
+    /** @var PDFWrapperInterface */
     private $domPdfWrapper;
 
     /** @var UrlGenerator */
@@ -32,7 +32,7 @@ class PdfHelper
     private $letterRepository;
 
     public function __construct(
-        PDF $domPdfWrapper,
+        PDFWrapperInterface $domPdfWrapper,
         UrlGenerator $urlGenerator,
         FileWrapper $fileWrapper,
         UserRepository $userRepository,
@@ -46,8 +46,6 @@ class PdfHelper
     }
 
     /**
-     * TODO: the last argument is never used
-     *
      * @param string $template
      * @param array $content
      * @param string $filename
@@ -56,8 +54,14 @@ class PdfHelper
      * @param int $letterId
      * @return string
      */
-    public function create($template, array $content, $filename, PdfHeaderData $headerInfo = null, $docId = 0, $letterId = 0)
-    {
+    public function create(
+        $template,
+        array $content,
+        $filename,
+        PdfHeaderData $headerInfo = null,
+        $docId = 0,
+        $letterId = 0
+    ) {
         $pdfData = new PdfData();
         $pdfData->content = $content;
         if ($headerInfo) {
@@ -76,6 +80,11 @@ class PdfHelper
         return $this->urlGenerator->to(self::LETTER_PDF_FOLDER . $filename);
     }
 
+    /**
+     * @param int $docId
+     * @param int $letterId
+     * @param PdfData $pdfData
+     */
     private function addDoctorData($docId, $letterId, PdfData $pdfData)
     {
         /** @var User|null $doctor */

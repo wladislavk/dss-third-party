@@ -62,6 +62,7 @@ class PatientSummaryManager
      * @param int $patientId
      * @param bool $isInfoComplete
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function updatePatientSummary($patientId, $isInfoComplete)
     {
@@ -72,7 +73,7 @@ class PatientSummaryManager
             'patient_info' => $isInfoComplete,
         ];
         /** @var PatientSummary|null $patientSummary */
-        $patientSummary = $this->patientSummaryRepository->find($patientId);
+        $patientSummary = $this->patientSummaryRepository->findOrNull($patientId);
         if ($patientSummary) {
             $this->patientSummaryRepository->update($patientSummaryData, $patientSummary->pid);
             return;

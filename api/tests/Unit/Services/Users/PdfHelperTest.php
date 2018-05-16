@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\Users;
 
-use Barryvdh\DomPDF\PDF;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
@@ -12,6 +11,7 @@ use DentalSleepSolutions\Structs\PdfFontData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Structs\PdfMarginData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
+use DentalSleepSolutions\Wrappers\PDF\PDFWrapperInterface;
 use Illuminate\Routing\UrlGenerator;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -260,8 +260,8 @@ class PdfHelperTest extends UnitTestCase
 
     private function mockDomPdfWrapper()
     {
-        /** @var PDF|MockInterface $domPdfWrapper */
-        $domPdfWrapper = \Mockery::mock(PDF::class);
+        /** @var PDFWrapperInterface|MockInterface $domPdfWrapper */
+        $domPdfWrapper = \Mockery::mock(PDFWrapperInterface::class);
         $domPdfWrapper->shouldReceive('loadView')->andReturnUsing([$this, 'loadViewCallback']);
         $domPdfWrapper->shouldReceive('save')->andReturnUsing([$this, 'savePdfCallback']);
         return $domPdfWrapper;

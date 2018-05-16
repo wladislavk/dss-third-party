@@ -60,12 +60,12 @@ class MailerDataRetriever
             throw new EmailHandlerException("Patient with ID $patientId not found");
         }
         $summaryInfo = $this->summaryRepository->getWithFilter(['location'], ['patientid' => $patientId]);
-        $location = 0;
+        $locationId = 0;
         if (isset($summaryInfo[0])) {
-            $location = $summaryInfo[0]->location;
+            $locationId = $summaryInfo[0]->location;
         }
 
-        $mailingData = $this->userRepository->getMailingData($docId, $patientId, $location);
+        $mailingData = $this->userRepository->getMailingData($docId, $patientId, $locationId);
         if (!$mailingData) {
             throw new EmailHandlerException("Mailing data for patient with ID $patientId not found");
         }

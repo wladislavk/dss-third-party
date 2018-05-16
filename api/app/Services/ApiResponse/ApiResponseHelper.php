@@ -4,21 +4,16 @@ namespace DentalSleepSolutions\Services\ApiResponse;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Response helper class providing consistent structure of the json content
- * that is sent by the application. It tries to transform the resources
- * using dedicated transformer if there is one in default namespace.
- */
 class ApiResponseHelper
 {
     /** @var FractalDataRetriever */
     private $fractalDataRetriever;
 
-    public function __construct(FractalDataRetriever $fractalDataRetriever)
-    {
+    public function __construct(
+        FractalDataRetriever $fractalDataRetriever
+    ) {
         $this->fractalDataRetriever = $fractalDataRetriever;
     }
 
@@ -133,13 +128,13 @@ class ApiResponseHelper
      *
      * Convert paginate data do response data
      *
-     * @param LengthAwarePaginator $result
+     * @param string $result
      * @return array
      * @throws GeneralException
      */
-    public function getPaginateStructure(LengthAwarePaginator $result)
+    public function getPaginateStructure(string $result)
     {
-        $result = json_decode($result->toJson(), true);
+        $result = json_decode($result, true);
         if (!isset($result['data'])) {
             throw new GeneralException('Result must contain \'data\' key');
         }

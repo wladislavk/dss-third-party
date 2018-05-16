@@ -77,7 +77,7 @@ class ApiEnrollmentsController extends ApiBaseController
         );
 
         if ($result instanceof LengthAwarePaginator) {
-            $result = ApiResponse::getPaginateStructure($result);
+            $result = ApiResponse::getPaginateStructure($result->toJson());
         }
 
         return ApiResponse::responseOk('List of Enrollments', $result);

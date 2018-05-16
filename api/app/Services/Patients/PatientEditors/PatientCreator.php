@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Services\Patients\PatientEditors;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
 use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
@@ -32,12 +33,13 @@ class PatientCreator extends AbstractPatientEditor
         RegistrationEmailSender $registrationEmailSender,
         LetterTriggerLauncher $letterTriggerLauncher,
         PatientSummaryManager $patientSummaryManager,
+        UserRepository $userRepository,
         SimilarHelper $similarHelper,
         PasswordGenerator $passwordGenerator,
         PatientRepository $patientRepository
     ) {
         parent::__construct(
-            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
+            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager, $userRepository
         );
         $this->similarHelper = $similarHelper;
         $this->passwordGenerator = $passwordGenerator;

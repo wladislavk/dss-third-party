@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
 use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
 use DentalSleepSolutions\Services\Emails\RegistrationEmailSender;
@@ -19,17 +21,22 @@ abstract class AbstractPatientEditor
     /** @var LetterTriggerLauncher */
     private $letterTriggerLauncher;
 
+    /** @var UserRepository */
+    private $userRepository;
+
     /** @var PatientSummaryManager */
     protected $patientSummaryManager;
 
     public function __construct(
         RegistrationEmailSender $registrationEmailSender,
         LetterTriggerLauncher $letterTriggerLauncher,
-        PatientSummaryManager $patientSummaryManager
+        PatientSummaryManager $patientSummaryManager,
+        UserRepository $userRepository
     ) {
         $this->registrationEmailSender = $registrationEmailSender;
         $this->letterTriggerLauncher = $letterTriggerLauncher;
         $this->patientSummaryManager = $patientSummaryManager;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -40,20 +47,23 @@ abstract class AbstractPatientEditor
      * @return EditPatientResponseData
      * @throws \DentalSleepSolutions\Exceptions\EmailHandlerException
      * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function editPatient(
         array $formData,
-        User $currentUser,
+        BaseUser $currentUser,
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
+        /** @var User $user */
+        $user = $this->userRepository->find($currentUser->userid);
         $responseData = new EditPatientResponseData();
         if ($unchangedPatient) {
             $responseData->currentPatientId = $unchangedPatient->patientid;
         }
-        $this->updateDB($formData, $currentUser, $responseData, $requestData, $unchangedPatient);
-        $this->doActionsAfterDBUpdate($currentUser, $requestData, $responseData->currentPatientId);
-        $this->getResponseData($currentUser, $responseData, $requestData, $unchangedPatient);
+        $this->updateDB($formData, $user, $responseData, $requestData, $unchangedPatient);
+        $this->doActionsAfterDBUpdate($user, $requestData, $responseData->currentPatientId);
+        $this->getResponseData($user, $responseData, $requestData, $unchangedPatient);
         return $responseData;
     }
 
@@ -63,6 +73,8 @@ abstract class AbstractPatientEditor
      * @param EditPatientResponseData $responseData
      * @param EditPatientRequestData $requestData
      * @param Patient|null $unchangedPatient
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     private function updateDB(
         array $formData,

@@ -1,9 +1,8 @@
 Feature: Manage Stripe Card
 
   Background:
-    Given I delete Stripe data from user "doc1f"
-    When I am logged in as "doc1f"
-    And I go to "start" page
+    Given I am logged in as "doc1f"
+    When I go to "start" page
     And I run mouse over "Admin" menu point
     And I click "Profile" link
 

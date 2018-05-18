@@ -140,4 +140,5 @@ if (isset($my)) {
         ?>
     </table>
     <?php
+    }
 } ?>

@@ -3,11 +3,12 @@ var EndpointPermissionsFormMixin = {
   data: function () {
     return {
       namespace: 'mixin',
+      version: '20180518',
       listenerOnly: false,
       forceFirstLoad: false,
       groupsApiPath: apiRoot + 'api/v1/api-permission/groups',
       permissionsApiPath: apiRoot + 'api/v1/api-permission/all',
-      timeout: 5 * 60,
+      timeout: 60,
       requests: 0,
       groups: {},
       userPermissions: {},
@@ -100,7 +101,7 @@ var EndpointPermissionsFormMixin = {
         var object = JSON.parse(item)
         var elapsedTime = ((new Date()).getTime() / 1000 - object.timestamp) / 60
 
-        if (elapsedTime < this.timeout && object.id === id) {
+        if (object.version === this.version && elapsedTime < this.timeout && object.id === id) {
           return object.data
         }
       } catch (e) {
@@ -112,6 +113,7 @@ var EndpointPermissionsFormMixin = {
     setInStorage: function (key, data, id) {
       try {
         var item = {
+          version: this.version,
           timestamp: (new Date()).getTime() / 1000,
           id: id || 0,
           data: data

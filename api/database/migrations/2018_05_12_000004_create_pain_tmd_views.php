@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class CreatePainTmdViews extends Migration
 {
-    const BASE_GROUP_BY = 'patientid';
-    const REFERENCED_GROUP_BY = 'reference_id';
     const BASE_TABLES = [
         'dental_ex_page1' => 'ex_page1id',
         'dental_ex_page2' => 'ex_page2id',
@@ -29,37 +27,22 @@ class CreatePainTmdViews extends Migration
         'dental_thorton' => 'thortonid',
         'dental_missing' => 'missingid',
     ];
+    const NON_SINGLETON_TABLES = [
+        'dental_q_page2_surgery',
+    ];
 
-    // CREATE VIEW dental_q_page2_surgery_pivot AS SELECT inner_table.* FROM dental_q_page2_surgery inner_table WHERE inner_table.reference_id = 0;
-    /*
-    create trigger insert_ex_page1 before insert on `dental_ex_page1` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page1 before update on `dental_ex_page1` for each row set new.updated_at = now();
-    create trigger insert_ex_page2 before insert on `dental_ex_page2` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page2 before update on `dental_ex_page2` for each row set new.updated_at = now();
-    create trigger insert_ex_page3 before insert on `dental_ex_page3` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page3 before update on `dental_ex_page3` for each row set new.updated_at = now();
-    create trigger insert_ex_page4 before insert on `dental_ex_page4` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page4 before update on `dental_ex_page4` for each row set new.updated_at = now();
-    create trigger insert_ex_page5 before insert on `dental_ex_page5` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page5 before update on `dental_ex_page5` for each row set new.updated_at = now();
-    create trigger insert_ex_page6 before insert on `dental_ex_page6` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page6 before update on `dental_ex_page6` for each row set new.updated_at = now();
-    create trigger insert_ex_page7 before insert on `dental_ex_page7` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page7 before update on `dental_ex_page7` for each row set new.updated_at = now();
-    create trigger insert_ex_page8 before insert on `dental_ex_page8` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_ex_page8 before update on `dental_ex_page8` for each row set new.updated_at = now();
-    create trigger insert_missing before insert on `dental_missing` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_missing before update on `dental_missing` for each row set new.updated_at = now();
-    create trigger insert_q_page1 before insert on `dental_q_page1` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_q_page1 before update on `dental_q_page1` for each row set new.updated_at = now();
-    create trigger insert_q_page2 before insert on `dental_q_page2` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_q_page2 before update on `dental_q_page2` for each row set new.updated_at = now();
-    create trigger insert_q_page3 before insert on `dental_q_page3` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_q_page3 before update on `dental_q_page3` for each row set new.updated_at = now();
-    create trigger insert_q_page4 before insert on `dental_q_page4` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_q_page4 before update on `dental_q_page4` for each row set new.updated_at = now();
-    create trigger insert_q_sleep before insert on `dental_q_sleep` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_q_sleep before update on `dental_q_sleep` for each row set new.updated_at = now();
-    create trigger insert_summary before insert on `dental_summary` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_summary before update on `dental_summary` for each row set new.updated_at = now();
-    create trigger insert_thorton before insert on `dental_thorton` for each row set new.adddate = now(), new.updated_at = now(); create trigger update_thorton before update on `dental_thorton` for each row set new.updated_at = now();
-     */
-
-    public function up () {
+    public function up()
+    {
         foreach (self::BASE_TABLES as $table => $primaryKey) {
-            $this->setUpViews($table, $primaryKey, self::BASE_GROUP_BY);
+            $this->setUpViews($table, $primaryKey);
         }
         foreach (self::REFERENCED_TABLES as $table => $primaryKey) {
-            $this->setUpViews($table, $primaryKey, self::REFERENCED_GROUP_BY, true);
+            $this->setUpViews($table, $primaryKey, true);
         }
     }
 
-    public function down () {
+    public function down()
+    {
         foreach (self::BASE_TABLES as $table => $primaryKey) {
             $this->tearDownViews($table);
         }
@@ -71,10 +54,9 @@ class CreatePainTmdViews extends Migration
     /**
      * @param string $table
      * @param string $primaryKey
-     * @param string $groupBy
      * @param bool   $addReferenceId
      */
-    private function setUpViews($table, $primaryKey, $groupBy, $addReferenceId = false)
+    private function setUpViews(string $table, string $primaryKey, bool $addReferenceId = false)
     {
         if (Schema::hasColumn($table, 'adddate') && !Schema::hasColumn($table, 'updated_at')) {
             Schema::table($table, function (Blueprint $table) {
@@ -84,7 +66,6 @@ class CreatePainTmdViews extends Migration
             });
             DB::update("UPDATE $table SET updated_at = adddate");
         }
-
         if ($addReferenceId && !Schema::hasColumn($table, 'reference_id')) {
             Schema::table($table, function (Blueprint $table) {
                 $table->integer('reference_id')
@@ -93,13 +74,30 @@ class CreatePainTmdViews extends Migration
                 $table->index('reference_id');
             });
         }
+        $this->setUpPivotView($table, $primaryKey, $addReferenceId);
+        $this->setUpFinalView($table);
+    }
 
+    /**
+     * @param string $table
+     * @param string $primaryKey
+     * @param bool $addReferenceId
+     */
+    private function setUpPivotView(string $table, string $primaryKey, bool $addReferenceId = false)
+    {
+        DB::unprepared("DROP VIEW IF EXISTS {$table}_pivot");
+        if (in_array($table, self::NON_SINGLETON_TABLES)) {
+            DB::unprepared("CREATE VIEW {$table}_pivot AS
+                SELECT inner_table.*
+                FROM {$table} inner_table
+                WHERE inner_table.reference_id = 0
+            ");
+            return;
+        }
         $andReferenceIdConditional = '';
         if ($addReferenceId) {
             $andReferenceIdConditional = 'AND inner_table.reference_id = 0';
         }
-
-        DB::unprepared("DROP VIEW IF EXISTS {$table}_pivot");
         DB::unprepared("CREATE VIEW {$table}_pivot AS
             SELECT inner_table.*
             FROM $table inner_table
@@ -109,7 +107,14 @@ class CreatePainTmdViews extends Migration
             WHERE outer_table.patientid IS NULL
                 $andReferenceIdConditional
         ");
+        $this->setUpTrigger($table);
+    }
 
+    /**
+     * @param string $table
+     */
+    private function setUpFinalView(string $table)
+    {
         DB::unprepared("DROP VIEW IF EXISTS {$table}_view");
         DB::unprepared("CREATE VIEW {$table}_view AS
             SELECT * FROM {$table}_pivot
@@ -119,21 +124,36 @@ class CreatePainTmdViews extends Migration
     /**
      * @param string $table
      */
-    private function tearDownViews($table)
+    private function setUpTrigger(string $table)
+    {
+        DB::unprepared("DROP TRIGGER IF EXISTS insert_{$table}");
+        DB::unprepared("CREATE TRIGGER insert_{$table}
+            BEFORE INSERT ON $table FOR EACH ROW SET new.adddate = NOW(), new.updated_at = NOW()
+        ");
+        DB::unprepared("DROP TRIGGER IF EXISTS update_{$table}");
+        DB::unprepared("CREATE TRIGGER update_{$table}
+            BEFORE UPDATE ON $table FOR EACH ROW SET new.updated_at = NOW()
+        ");
+    }
+
+    /**
+     * @param string $table
+     */
+    private function tearDownViews(string $table)
     {
         if (Schema::hasColumn($table, 'updated_at')) {
             Schema::table($table, function (Blueprint $table) {
                 $table->dropColumn('updated_at');
             });
         }
-
         if (Schema::hasColumn($table, 'reference_id')) {
             Schema::table($table, function (Blueprint $table) {
                 $table->dropColumn('reference_id');
             });
         }
-
         DB::unprepared("DROP VIEW IF EXISTS {$table}_view");
         DB::unprepared("DROP VIEW IF EXISTS {$table}_pivot");
+        DB::unprepared("DROP TRIGGER IF EXISTS insert_{$table}");
+        DB::unprepared("DROP TRIGGER IF EXISTS update_{$table}");
     }
 }

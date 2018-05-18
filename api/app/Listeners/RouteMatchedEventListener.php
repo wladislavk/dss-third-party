@@ -60,12 +60,10 @@ class RouteMatchedEventListener
     protected function modelNameFromActionName(string $actionName):? string
     {
         if (!preg_match(self::NAME_PATTERN, $actionName)) {
-            \Log::info("Action name $actionName not compatible with route matching");
             return null;
         }
         $pluralModel = preg_replace(self::NAME_PATTERN, self::PATTERN_MATCH, $actionName);
         $singularModel = $this->singularModel($pluralModel);
-        \Log::info("Action name $actionName matched with model $singularModel");
         return $singularModel;
     }
 

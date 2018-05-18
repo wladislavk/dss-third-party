@@ -295,23 +295,23 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         }
 
         if ($this->doctorKey) {
-            $attributes[$this->doctorKey] = $this->user->docid;
+            $attributes[$this->doctorKey] = $this->user()->docid;
         }
 
         if ($this->userKey) {
-            $attributes[$this->userKey] = $this->user->userid;
+            $attributes[$this->userKey] = $this->user()->userid;
         }
 
         if ($this->patientKey) {
-            $attributes[$this->patientKey] = $this->patient->patientid;
+            $attributes[$this->patientKey] = $this->patient()->patientid;
         }
 
         if ($this->createdByUserKey) {
-            $attributes[$this->createdByUserKey] = $this->user->userid;
+            $attributes[$this->createdByUserKey] = $this->user()->userid;
         }
 
         if ($this->createdByAdminKey) {
-            $attributes[$this->createdByAdminKey] = $this->admin->adminid;
+            $attributes[$this->createdByAdminKey] = $this->admin()->adminid;
         }
 
         return $attributes;
@@ -325,11 +325,11 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         $attributes = [];
 
         if ($this->updatedByUserKey) {
-            $attributes[$this->updatedByUserKey] = $this->user->userid;
+            $attributes[$this->updatedByUserKey] = $this->user()->userid;
         }
 
         if ($this->updatedByAdminKey) {
-            $attributes[$this->updatedByAdminKey] = $this->admin->adminid;
+            $attributes[$this->updatedByAdminKey] = $this->admin()->adminid;
         }
 
         return $attributes;
@@ -343,20 +343,20 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         $attributes = [];
 
         if ($this->filterByAdminKey) {
-            $attributes[$this->filterByAdminKey] = $this->admin->adminid;
+            $attributes[$this->filterByAdminKey] = $this->admin()->adminid;
         }
 
         if ($this->filterByDoctorKey) {
-            $attributes[$this->filterByDoctorKey] = $this->user->docid;
+            $attributes[$this->filterByDoctorKey] = $this->user()->docid;
         }
 
         if ($this->filterByUserKey) {
-            $attributes[$this->filterByUserKey] = $this->user->userid;
+            $attributes[$this->filterByUserKey] = $this->user()->userid;
         }
 
         // Patient ID can be zero, in which case it is not taken into account
-        if ($this->filterByPatientKey && $this->patient->patientid) {
-            $attributes[$this->filterByPatientKey] = $this->patient->patientid;
+        if ($this->filterByPatientKey && $this->patient()->patientid) {
+            $attributes[$this->filterByPatientKey] = $this->patient()->patientid;
         }
 
         return $attributes;

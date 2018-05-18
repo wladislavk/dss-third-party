@@ -66,4 +66,40 @@ abstract class Controller extends BaseController
             $this->admin = $request->admin();
         }
     }
+
+    /**
+     * @return User
+     */
+    protected function admin()
+    {
+        $model = $this->request->admin();
+        if ($model) {
+            return $model;
+        }
+        return $this->admin;
+    }
+
+    /**
+     * @return User
+     */
+    protected function user()
+    {
+        $model = $this->request->user();
+        if ($model) {
+            return $model;
+        }
+        return $this->user;
+    }
+
+    /**
+     * @return User
+     */
+    protected function patient()
+    {
+        $model = $this->request->patient();
+        if ($model) {
+            return $model;
+        }
+        return $this->patient;
+    }
 }

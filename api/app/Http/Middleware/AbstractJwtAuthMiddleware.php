@@ -57,10 +57,6 @@ abstract class AbstractJwtAuthMiddleware
         try {
             $token = $this->getAuthToken($request);
         } catch (HttpMalformedHeaderException $e) {
-            if ($this->fallsThrough) {
-                return $next($request);
-            }
-
             return $this->responseError(MiddlewareErrors::TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         }
 
@@ -81,7 +77,7 @@ abstract class AbstractJwtAuthMiddleware
             if ($this->fallsThrough) {
                 return $next($request);
             }
-            if (!is_object($request->admin()) && !is_object($request->admin()) && !is_object($request->admin())) {
+            if (!is_object($request->admin()) && !is_object($request->user()) && !is_object($request->patient())) {
                 return $this->responseError(MiddlewareErrors::TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch (AuthenticatableNotFoundException $e) {
@@ -145,6 +141,7 @@ abstract class AbstractJwtAuthMiddleware
     /**
      * @param string $errorMessage
      * @param int    $httpStatus
+     * @return JsonResponse
      */
     protected function responseError($errorMessage, $httpStatus)
     {

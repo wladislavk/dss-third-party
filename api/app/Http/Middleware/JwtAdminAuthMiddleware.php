@@ -23,28 +23,20 @@ class JwtAdminAuthMiddleware extends AbstractJwtAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        try {
-            $token = $this->getAuthToken($request);
-        } catch (HttpMalformedHeaderException $e) {
-            return $next($request);
-        }
+        return parent::handle($request, $next);
+    }
 
-        try {
-            $this->auth->toRole(JwtAuth::ROLE_ADMIN, $token);
-        } catch (JwtException $e) {
-            // Fall through
-        } catch (AuthException $e) {
-            // Fall through
-        }
-
+    /**
+     * @param Request $request
+     */
+    protected function setResolver(Request $request)
+    {
         $request->setAdminResolver(function () {
             $user = $this->auth
-                ->guard(JwtAuth::ROLE_ADMIN)
+                ->guard($this->role)
                 ->user()
             ;
             return $user;
         });
-
-        return $next($request);
     }
 }

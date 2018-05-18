@@ -26,10 +26,10 @@ else
 if(isset($_POST["loginsub"]))
 {
     $username = $db->escape($_POST['username']);
-    $password = $_POST['password'];
+    $rawPassword = $_POST['password'];
 
     $salt = $db->getColumn("SELECT salt FROM dental_users WHERE username = '$username'", 'salt');
-    $password = $db->escape(gen_password($password, $salt));
+    $password = $db->escape(gen_password($rawPassword, $salt));
 
     $check_sql = "SELECT
             u.userid,
@@ -76,10 +76,7 @@ if(isset($_POST["loginsub"]))
 			$_SESSION['name']=$check_myarray['first_name']." ".$check_myarray['last_name'];
 			$_SESSION['user_access']=$check_myarray['user_access'];
 			$_SESSION['companyid']=$check_myarray['companyid'];
-
-			// Get token for current user by calling API artisan command
-			// empty token set as fallback for consistency in javascript.
-			$_SESSION['api_token'] = generateApiToken('u_'.$check_myarray['userid']);
+			$_SESSION['api_token'] = generateUserApiToken($username, $rawPassword);
 
 
 			if($check_myarray['docid'] != 0)

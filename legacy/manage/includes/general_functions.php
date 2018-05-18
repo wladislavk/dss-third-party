@@ -30,19 +30,47 @@ function logoutBO () {
     $_SESSION['admin_api_token'] = '';
 }
 
-function generateApiToken($idOrEmail) {
-    $apiPath = env('API_PATH');
-    $phpPath = env('PHP_PATH');
+function generateUserApiToken($username, $password)
+{
+    return generateApiToken($username, $password);
+}
 
-    if ($apiPath && $phpPath) {
-        $idOrEmail = escapeshellarg($idOrEmail);
-        $token = exec("$phpPath {$apiPath}/artisan jwt:token {$idOrEmail}");
-        $token = trim($token);
+function generateAdminApiToken($username, $password)
+{
+    return generateApiToken($username, $password, ['admin' => 1]);
+}
 
-        return $token;
+function generatePatientApiToken($username, $password)
+{
+    return generateApiToken($username, $password, ['patient' => 1]);
+}
+
+function generateApiToken($username, $password, array $options=[])
+{
+    $postFields = $options;
+    $postFields['username'] = $username;
+    $postFields['password'] = $password;
+    $curl = curl_init(config('app.lanApiUrl') . 'auth');
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query($postFields),
+    ]);
+    $response = curl_exec($curl);
+    $error = curl_error($curl);
+    try {
+        $json = json_decode($response, true);
+        if (
+            !empty($json['status'])
+            && $json['status'] === 'Authenticated'
+            && !empty($json['token'])
+        ) {
+            return $json['token'];
+        }
+    } catch (\Exception $e) {
+        return 'exception: ' . $e->getMessage();
     }
-
-    return '';
+    return 'no-token: ' . $error;
 }
 
 function apiToken() {

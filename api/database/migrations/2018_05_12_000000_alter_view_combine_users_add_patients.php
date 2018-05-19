@@ -12,7 +12,8 @@ class AlterViewCombineUsersAddPatients extends Migration
      */
     public function up()
     {
-        DB::unprepared("ALTER VIEW v_users AS
+        DB::unprepared("DROP VIEW v_users;");
+        DB::unprepared("CREATE VIEW v_users AS
                 SELECT
                     CONCAT('u_', u.userid) COLLATE utf8_unicode_ci AS id,
                     u.userid,
@@ -100,7 +101,8 @@ class AlterViewCombineUsersAddPatients extends Migration
 
     public function down()
     {
-        DB::unprepared("ALTER VIEW v_users AS
+        DB::unprepared("DROP VIEW v_users;");
+        DB::unprepared("CREATE VIEW v_users AS
                 SELECT
                     CONCAT('u_', u.userid) COLLATE utf8_unicode_ci AS id,
                     u.userid,

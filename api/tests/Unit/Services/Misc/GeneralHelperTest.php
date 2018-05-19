@@ -66,6 +66,9 @@ class GeneralHelperTest extends UnitTestCase
         $this->assertEquals('(123) 456-7890', $formatted);
     }
 
+    /**
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     */
     public function testGetContactInfo()
     {
         $patient = 5;
@@ -86,6 +89,9 @@ class GeneralHelperTest extends UnitTestCase
         $this->assertEquals(4, $contactInfo->getMdReferrals()[1]['contactid']);
     }
 
+    /**
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     */
     public function testGetContactInfoWithoutData()
     {
         $patient = 0;

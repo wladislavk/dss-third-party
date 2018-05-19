@@ -50,6 +50,8 @@ class Generator
     /**
      * @param string $httpDir
      * @param string $modelDir
+     * @throws SwaggerGeneratorException
+     * @throws \ReflectionException
      */
     public function generateSwagger($httpDir = self::HTTP_DIR, $modelDir = self::MODEL_DIR)
     {
@@ -78,6 +80,7 @@ class Generator
     /**
      * @param string $httpDir
      * @return string[]
+     * @throws SwaggerGeneratorException
      */
     private function getRestControllers($httpDir)
     {
@@ -96,6 +99,8 @@ class Generator
     /**
      * @param string $modelDir
      * @return array
+     * @throws SwaggerGeneratorException
+     * @throws \ReflectionException
      */
     private function getModels($modelDir)
     {

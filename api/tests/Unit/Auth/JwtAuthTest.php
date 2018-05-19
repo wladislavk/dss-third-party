@@ -9,6 +9,7 @@ use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
+use DentalSleepSolutions\Providers\Auth\PatientGuard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Providers\Auth\AdminGuard;
 use DentalSleepSolutions\Providers\Auth\UserGuard;
@@ -53,10 +54,11 @@ class JwtAuthTest extends UnitTestCase
         $this->userGuardState = '';
         $this->adminGuardState = '';
 
+        $patientGuard = $this->mockPatientGuard();
         $userGuard = $this->mockUserGuard();
         $adminGuard = $this->mockAdminGuard();
         $jwtHelper = $this->mockJwtHelper();
-        $this->auth = new JwtAuth($userGuard, $adminGuard, $jwtHelper);
+        $this->auth = new JwtAuth($patientGuard, $userGuard, $adminGuard, $jwtHelper);
     }
 
     /**
@@ -182,6 +184,13 @@ class JwtAuthTest extends UnitTestCase
             })
         ;
 
+        return $mock;
+    }
+
+    private function mockPatientGuard()
+    {
+        /** @var PatientGuard|MockInterface $mock */
+        $mock = \Mockery::mock(PatientGuard::class);
         return $mock;
     }
 

@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Services\ApiResponse\ApiResponseHelper;
-use DentalSleepSolutions\Services\Misc\ClassRetriever;
+use DentalSleepSolutions\Temporary\ClassRetriever;
 use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\GuzzleCaller;
 use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\MockCaller;
 use DentalSleepSolutions\Services\Misc\ThirdPartyCallers\ThirdPartyCallerInterface;

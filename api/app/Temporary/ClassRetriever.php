@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Services\Misc;
+namespace DentalSleepSolutions\Temporary;
 
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;

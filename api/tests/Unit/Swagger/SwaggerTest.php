@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Swagger;
 
-use DentalSleepSolutions\Services\Misc\ClassRetriever;
+use DentalSleepSolutions\Temporary\ClassRetriever;
 use DentalSleepSolutions\Swagger\AnnotationModifier;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ControllerComposer;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ModelComposer;
@@ -111,6 +111,10 @@ class SwaggerTest extends UnitTestCase
         );
     }
 
+    /**
+     * @throws \DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException
+     * @throws \ReflectionException
+     */
     public function testGenerateAnnotations()
     {
         $this->generator->generateSwagger(self::HTTP_DIR, self::MODEL_DIR);

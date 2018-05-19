@@ -63,6 +63,11 @@ class ControllerComposer extends AbstractAnnotationComposer
         return $annotations;
     }
 
+    /**
+     * @param AnnotationData $annotationData
+     * @return string
+     * @throws SwaggerGeneratorException
+     */
     protected function createAnnotation(AnnotationData $annotationData)
     {
         $annotator = $this->annotatorFactory->findAnnotator($annotationData->action);

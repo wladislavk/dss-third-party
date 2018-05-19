@@ -66,6 +66,9 @@ class BindingNamingConvention
         $request->shouldReceive('user')
             ->once()
         ;
+        $request->shouldReceive('patient')
+            ->once()
+        ;
         $request->shouldReceive('admin')
             ->once()
         ;

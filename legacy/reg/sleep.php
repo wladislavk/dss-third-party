@@ -53,7 +53,7 @@ if($_POST['q_sleepsub'] == 1)
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
                 mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
-        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if(mysqli_num_rows($exist_q) == 0)
         {
@@ -63,7 +63,7 @@ if($_POST['q_sleepsub'] == 1)
                         patientid='".$_SESSION['pid']."'";
                 mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         }else{
-                $ed_sql = "update dental_q_page1 set
+                $ed_sql = "update dental_q_page1_view set
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."'
                         WHERE patientid='".$_SESSION['pid']."'";
@@ -83,13 +83,13 @@ if($_POST['q_sleepsub'] == 1)
         else
         {
 	
-		$ed_sql = " update dental_q_sleep set 
+		$ed_sql = " update dental_q_sleep_view set 
 		epworthid = '".s_for($epworth_arr)."',
 		analysis = '".s_for($analysis)."'
 		where q_sleepid = '".s_for($_POST['ed'])."'";
 		
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		$ed_sql = " update dental_thorton set 
+		$ed_sql = " update dental_thorton_view set 
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
                 snore_3 = '".s_for($snore_3)."',
@@ -99,7 +99,7 @@ if($_POST['q_sleepsub'] == 1)
                 where thortonid = '".s_for($_POST['ted'])."'";
 
                 mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if(mysqli_num_rows($exist_q) == 0)
         {
@@ -110,7 +110,7 @@ if($_POST['q_sleepsub'] == 1)
                 mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         }else{
 
-		$ed_sql = "update dental_q_page1 set
+		$ed_sql = "update dental_q_page1_view set
 			ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
 			tss='".s_for($tot_score)."'
 			WHERE patientid='".$_SESSION['pid']."'";
@@ -130,13 +130,13 @@ if($_POST['q_sleepsub'] == 1)
 	}
 }
 
-
+require_once __DIR__ . '/includes/questionnaire_header.php';
 $comp = questionnaireCompletedSections($_SESSION['pid']);
 
         if($comp['epworth'] == 0)
         {
 
-$sql = "select * from dental_thorton where patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_thorton_view where patientid='".$_SESSION['pid']."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -164,7 +164,7 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_q_sleep where patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_sleep_view where patientid='".$_SESSION['pid']."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -186,10 +186,6 @@ if($epworthid <> '')
 }
 
 ?>
-
-<a name="top"></a>
-<?php include 'includes/questionnaire_header.php'; ?>
-
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
@@ -389,5 +385,7 @@ cal_analaysis(0);
 <?php }else{
 show_section_completed($_SESSION['pid']);
 } ?>
+<?php require_once __DIR__ . '/../manage/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <? include "includes/footer.php";?>
 

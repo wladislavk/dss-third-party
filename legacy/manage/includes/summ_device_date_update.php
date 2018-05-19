@@ -9,7 +9,7 @@
     $d = date('Y-m-d');
   }
 
-  $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+  $sql = "SELECT * FROM dental_ex_page5_view where patientid='".$pid."'";
 
   if($db->getNumberRows($sql)==0){
     $s = "INSERT INTO dental_ex_page5 set 
@@ -20,7 +20,7 @@
           adddate = now(),
           ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
   } else {
-    $s = "UPDATE dental_ex_page5 set dentaldevice_date='".mysqli_real_escape_string($con,$d)."' where patientid='".$pid."'";
+    $s = "UPDATE dental_ex_page5_view set dentaldevice_date='".mysqli_real_escape_string($con,$d)."' where patientid='".$pid."'";
   }
   
   $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysqli_real_escape_string($con,$pid)." ORDER BY date_completed DESC";

@@ -22,9 +22,21 @@ class FormRequestServiceProvider extends BaseServiceProvider
         if (
             method_exists($form, 'setAdminResolver')
             && method_exists($current, 'getAdminResolver')
+            && method_exists($current, 'admin')
         ) {
-            $form->setAdminResolver($current->getAdminResolver());
+            $form->setAdminResolver(function () use ($current) {
+                return $current->admin();
+            });
         }
 
+        if (
+            method_exists($form, 'setPatientResolver')
+            && method_exists($current, 'getPatientResolver')
+            && method_exists($current, 'patient')
+        ) {
+            $form->setPatientResolver(function () use ($current) {
+                return $current->patient();
+            });
+        }
     }
 }

@@ -37,10 +37,9 @@
     $segments[13] = "Termination";
     $segments[1] = "Initial Contact";
 
+    $db = new Db();
     $flow_pg2_info_query = "SELECT * FROM dental_flow_pg2_info WHERE patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
-    if (isset($db) && $db instanceof Db) {
-        $flow_pg2_info_res = $db->getResults($flow_pg2_info_query);
-    }
+    $flow_pg2_info_res = $db->getResults($flow_pg2_info_query);
 
     foreach ($flow_pg2_info_res as $row) {
         $datesched = (!empty($row['date_scheduled'])) ? date('m/d/Y', strtotime($row['date_scheduled'])) : '';

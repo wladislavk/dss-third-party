@@ -6,7 +6,7 @@
 ?>
   <script type="text/javascript" src="../admin/script/jquery-1.6.2.min.js"></script>
 <?php if(isset($_REQUEST['submit'])) {
-        $sql = "SELECT * FROM dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+        $sql = "SELECT * FROM dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         
         if($db->getNumberRows($sql) == 0){
           $sqlex = "INSERT INTO dental_ex_page5 set 
@@ -17,7 +17,7 @@
                     adddate = now(),
                     ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         } else {
-          $sqlex = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+          $sqlex = "update dental_ex_page5_view set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         }
 
         $qex = $db->query($sqlex);
@@ -53,7 +53,7 @@
     <h2 style="margin-top:20px;">What device will you make for <?php echo  $r['firstname']." ".$r['lastname']; ?>?</h2>
     <a href="device_guide.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=<?php echo  (!empty($_GET['id']) ? $_GET['id'] : ''); ?>">Help me decide</a>
     <?php
-      $sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+      $sqlex = "select * from dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
       $myarrayex = $db->getRow($sqlex);
       $dentaldevice = st($myarrayex['dentaldevice']);

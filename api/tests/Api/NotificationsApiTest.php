@@ -39,7 +39,7 @@ class NotificationsApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/notifications/with-filter');
         $this->assertResponseOk();
-        $this->assertEquals(147, count($this->getResponseData()));
-        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
+        $this->assertEquals(8, count($this->getResponseData()));
+        $this->assertEquals(4, $this->getResponseData()[0]['patientid']);
     }
 }

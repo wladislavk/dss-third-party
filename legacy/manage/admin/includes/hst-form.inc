@@ -180,7 +180,7 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
         $updateData = $db->escapeAssignmentList($updateData);
         $db->query("UPDATE dental_hst SET $updateData WHERE id = '$hstId'");
     } else {
-        $thorton_sql = "SELECT * FROM dental_thorton WHERE patientid = '$patientId'";
+        $thorton_sql = "SELECT * FROM dental_thorton_view WHERE patientid = '$patientId'";
         $thorton = $db->getRow($thorton_sql);
 
         $insertData = $updateData + [

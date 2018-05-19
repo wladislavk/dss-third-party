@@ -6,7 +6,6 @@ class Summary extends Request
 {
     protected $rules = [
         'formid'                           => 'integer',
-        'patientid'                        => 'required|integer',
         'patient_name'                     => 'string',
         'patient_dob'                      => 'string',
         'docpcp'                           => 'regex:/^[0-9]+$/',
@@ -144,8 +143,6 @@ class Summary extends Request
         'year_check_3'                     => 'string',
         'year_check_4'                     => 'string',
         'additional_notes'                 => 'string',
-        'userid'                           => 'required|integer',
-        'docid'                            => 'required|integer',
         'status'                           => 'integer',
         'office'                           => 'string',
         'sleep_same_room'                  => 'string',

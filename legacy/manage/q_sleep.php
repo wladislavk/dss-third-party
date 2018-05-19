@@ -2,13 +2,37 @@
     include "includes/top.htm";
     include_once('includes/patient_info.php');
 
+$db = new Db();
+$baseTable = 'dental_q_page1_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$secondaryTables = [
+    'dental_q_sleep_view' => ['patientid' => '$patientId'],
+    'dental_thorton_view' => ['patientid' => '$patientId'],
+];
+
+$canBackup = false;
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
     if ($patient_info) {
 ?>
 
-    <script type="text/javascript" src="/manage/js/q_sleep.js"></script>
+    <script type="text/javascript" src="/manage/js/q_sleep.js?v=20171219"></script>
 
 <?php
-    if(isset($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
+    if(!$isHistoricView && isset($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
         $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
         
         $epworth_my = $db->getResults($epworth_sql);
@@ -29,11 +53,11 @@
     
         if($_POST['ed'] == '') {
             $ins_sql = " insert into dental_q_sleep set 
-                patientid = '".s_for($_GET['pid'])."',
+                patientid = '$patientId',
                 epworthid = '".s_for($epworth_arr)."',
                 analysis = '".s_for($analysis)."',
-                userid = '".s_for($_SESSION['userid'])."',
-                docid = '".s_for($_SESSION['docid'])."',
+                userid = '$userId',
+                docid = '$docId',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         
@@ -46,8 +70,8 @@
                 snore_4 = '".s_for($snore_4)."',
                 snore_5 = '".s_for($snore_5)."',
                 tot_score = '".s_for($tot_score)."',
-                userid = '".s_for($_SESSION['userid'])."',
-                docid = '".s_for($_SESSION['docid'])."',
+                userid = '$userId',
+                docid = '$docId',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
@@ -62,18 +86,19 @@
             $ess_score += $_POST['epworth_7'];
             $ess_score += $_POST['epworth_8'];
 
-            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            $page1_sql = "SELECT * FROM dental_q_page1_view WHERE patientid = '$patientId'";
 
             if($db->getNumberRows($page1_sql) == 0){
                 $ed_sql = " INSERT INTO dental_q_page1 set 
                     ess = '".s_for($ess_score)."',
                     tss = '".s_for($tot_score)."',
-                    patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                    patientid = '$patientId',
+                    docid = '$docId'";
             }else{
-                $ed_sql = " update dental_q_page1 set 
+                $ed_sql = " update dental_q_page1_view set 
                     ess = '".s_for($ess_score)."',
                     tss = '".s_for($tot_score)."'
-                    WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                    WHERE patientid = '$patientId'";
             }
             $db->query($ed_sql);
 ?>
@@ -83,14 +108,14 @@
 <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $ed_sql = " update dental_q_sleep set 
+            $ed_sql = " update dental_q_sleep_view set 
                 epworthid = '".s_for($epworth_arr)."',
                 analysis = '".s_for($analysis)."'
                 where q_sleepid = '".s_for($_POST['ed'])."'";
         
             $db->query($ed_sql);
 
-            $ed_sql = " update dental_thorton set 
+            $ed_sql = " update dental_thorton_view set 
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
                 snore_3 = '".s_for($snore_3)."',
@@ -111,18 +136,19 @@
             $ess_score += $_POST['epworth_7'];
             $ess_score += $_POST['epworth_8'];
 
-            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            $page1_sql = "SELECT * FROM dental_q_page1_view WHERE patientid = '$patientId'";
 
             if($db->getNumberRows($page1_sql) == 0){
                 $ed_sql = " INSERT INTO dental_q_page1 set 
                 ess = '".s_for($ess_score)."',
                 tss = '".s_for($tot_score)."',
-                patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                patientid = '$patientId',
+                docid = '$docId'";
             }else{
-                $ed_sql = " update dental_q_page1 set 
+                $ed_sql = " update dental_q_page1_view set 
                 ess = '".s_for($ess_score)."',
                 tss = '".s_for($tot_score)."'
-                WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                WHERE patientid = '$patientId'";
             }
 
             $db->query($ed_sql);
@@ -136,7 +162,11 @@
         }
     }
 
-    $sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+    $sql = "select *
+        from {$secondarySourceTables['dental_thorton_view']}
+        where patientid = '$patientId'
+            $andReferenceIdConditional
+            $andNullConditional";
 
     $myarray = $db->getRow($sql);
     $thortonid = st($myarray['thortonid']);
@@ -146,7 +176,7 @@
     $snore_4 = st($myarray['snore_4']);
     $snore_5 = st($myarray['snore_5']);
 
-    $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    $pat_sql = "select * from dental_patients where patientid = '$patientId'";
    
     $pat_myarray = $db->getRow($pat_sql);
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
@@ -159,7 +189,11 @@
        trigger_error("Die called", E_USER_ERROR);
     }
 
-    $sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+    $sql = "select *
+        from {$secondarySourceTables['dental_q_sleep_view']}
+        where patientid = '$patientId'
+            $andReferenceIdConditional
+            $andNullConditional";
 
     $myarray = $db->getRow($sql);
     $q_sleepid = st($myarray['q_sleepid']);
@@ -191,13 +225,14 @@
         <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
     </div>
 
-    <form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+    <form id="q_sleepfrm" class="q_form" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
         <input type="hidden" name="q_sleepsub" value="1" />
         <input type="hidden" name="ed" value="<?php echo $q_sleepid;?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
         <div align="right">
-            <input type="submit" name="q_sleepbtn" value="Save" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="q_sleepbtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -205,7 +240,8 @@
                 <td valign="top" class="frmhead">
                     <tr>
                         <td valign="top" class="frmhead" style="text-align:center;">
-                            <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
+                            <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1"
+                                   align="center" id="epworth-sleep-questionnaire">
                                 <tr bgcolor="#FFFFFF">
                                     <td>
                                         <br />
@@ -267,7 +303,8 @@
                             </table>
                             <tr>
                                 <td valign="top" class="frmhead" style="text-align:center;">
-                                    <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
+                                    <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1"
+                                           align="center" id="thornton-snoring-scale">
                                         <tr bgcolor="#FFFFFF">
                                             <td>
                                                 <br />
@@ -380,7 +417,8 @@
         </table>
 
         <div align="right">
-            <input type="submit" name="q_pagebtn" value="Save" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
     </form>

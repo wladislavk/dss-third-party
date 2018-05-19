@@ -1,0 +1,83 @@
+.muscle-palpation-selector .muscle-palpation-list {
+    display: flex;
+    width: 100%;
+}
+
+.muscle-palpation-selector .muscle-palpation-list > div {
+    width: 33%;
+}
+
+.muscle-palpation-selector .muscle-palpation-list > div > div {
+    clear: both;
+    margin-bottom: 5px;
+}
+
+.muscle-palpation-selector .muscle-palpation-list > div > div > span {
+    display: block;
+    float: left;
+    width: 20%;
+}
+
+.muscle-palpation-selector .muscle-palpation-list > div > div > span:nth-child(2) {
+    width: 50%;
+}
+
+.muscle-palpation-selector select {
+    width: 50px;
+}
+
+.muscle-palpation-selector .selector-legend {
+    text-align: right;
+    float: right;
+}
+
+.muscle-palpation-selector .level {
+    font-weight: bold;
+}
+
+.muscle-palpation-selector .level-0 {
+    color: #000;
+}
+
+.muscle-palpation-selector .level-1 {
+    color: #090;
+}
+
+.muscle-palpation-selector .level-2 {
+    color: #ed872c;
+}
+
+.muscle-palpation-selector .level-3 {
+    color: #f00;
+}
+
+.muscle-palpation-selector .level-4 {
+    color: #f00;
+}
+
+.muscle-palpation-selector .level-5 {
+    color: #f00;
+}
+
+.muscle-palpation-selector .text-center {
+    text-align: center;
+}
+
+.muscle-palpation-list .update-list {
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.muscle-palpation-list .update-list div {
+    padding: 2px;
+}
+
+.muscle-palpation-list .update-list input {
+    width: 3em;
+    text-align: center;
+}
+
+.muscle-palpation-list.update-order .update-list {
+    display: block;
+}

@@ -12,8 +12,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'DentalSleepSolutions\Events\SomeEvent' => [
-            'DentalSleepSolutions\Listeners\EventListener',
+        'Illuminate\Routing\Events\RouteMatched' => [
+            'DentalSleepSolutions\Listeners\RouteMatchedEventListener',
         ],
     ];
 

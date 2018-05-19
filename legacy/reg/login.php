@@ -14,12 +14,14 @@ if (isset($_POST['loginbut'])) {
     $salt_row = mysqli_fetch_assoc($salt_q);
     $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
+    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, dp.docid, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
     $check_my = mysqli_query($con, $check_sql);
 
     if (mysqli_num_rows($check_my) > 0) {
         $p = mysqli_fetch_assoc($check_my);
-        $_SESSION['pid']=$p['patientid'];
+        $_SESSION['patient_docid'] = $p['docid'];
+        $_SESSION['pid'] = $p['patientid'];
+        $_SESSION['patientToken'] = generateApiToken('p_' . $p['patientid']);
 
         if ($p['registered'] == 1) { ?>
             <script type="text/javascript">

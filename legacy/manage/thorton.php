@@ -63,7 +63,7 @@ if($_POST['thortonsub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_thorton set 
+		$ed_sql = " update dental_thorton_view set 
 		snore_1 = '".s_for($snore_1)."',
 		snore_2 = '".s_for($snore_2)."',
 		snore_3 = '".s_for($snore_3)."',
@@ -85,7 +85,7 @@ if($_POST['thortonsub'] == 1)
 	}
 }
 
-$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_thorton_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 

@@ -336,7 +336,7 @@ if($_POST['summarysub'] == 1) {
 <?php
 		trigger_error("Die called", E_USER_ERROR);
 	} else {
-		$ed_sql = " update dental_summary set 
+		$ed_sql = " update dental_summary_view set 
 			patient_name = '".s_for($patient_name)."',
 			patient_dob = '".s_for($patient_dob)."',
 			referral_source = '".s_for($referral_source)."',
@@ -522,7 +522,7 @@ if($pat_myarray['patientid'] == '') {
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$q1_sql = "select * from dental_q_page1_view where patientid='".$_GET['pid']."'";
 
 $q1_myarray = $db->getRow($q1_sql);
 $main_reason = st($q1_myarray['main_reason']);
@@ -532,14 +532,14 @@ $sleep_same_room1 = st($q1_myarray['sleep_same_room']);
 $other_complaint = st($q1_myarray['other_complaint']);
 $additional_paragraph = st($q1_myarray['additional_paragraph']);
 
-$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 
 $q2_myarray = $db->getRow($q2_sql);
 $cpap = st($q2_myarray['cpap']);
 $nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 $percent_night_cpap = st($q2_myarray['percent_night_cpap']);
 
-$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 
 $myarray = $db->getRow($sql);
 $summaryid = st($myarray['summaryid']);
@@ -779,14 +779,14 @@ if($additional_paragraph <> '') {
 
 	$rec_myarray = $db->getRow($rec_sql);
 	$patient_photo = st($rec_myarray['q_file7']);
-	$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+	$q1_sql = "select * from dental_q_page1_view where patientid='".$_GET['pid']."'";
 	
 	$q1_myarray = $db->getRow($q1_sql);
 	$ep_s_1 = st($q1_myarray['snoring_sound']);
 	$ep_w_1 = st($q1_myarray['wake_night']);
 	$ep_el_1 = st($q1_myarray['energy_level']);
 	$ep_h_1 = st($q1_myarray['morning_headaches']);
-	$qs_sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+	$qs_sql = "select * from dental_q_sleep_view where patientid='".$_GET['pid']."'";
 	
 	$qs_myarray = $db->getRow($qs_sql);
 	$epworthid = st($qs_myarray['epworthid']);
@@ -802,11 +802,11 @@ if($additional_paragraph <> '') {
 
 	$ep_e_1 = $ep_total;
 
-	$ts_sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+	$ts_sql = "select * from dental_thorton_view where patientid='".$_GET['pid']."'";
 	
 	$ts_myarray = $db->getRow($ts_sql);
 	$ep_ts_1 = st($ts_myarray['snore_1']) + st($ts_myarray['snore_2']) + st($ts_myarray['snore_3']) + st($ts_myarray['snore_4']) + st($ts_myarray['snore_5']);
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 
 	$q2_myarray = $db->getRow($q2_sql);
 	$sleep_sql = "select * from dental_sleeplab where sleeplabid='".$q2_myarray['sleep_center_name']."'";

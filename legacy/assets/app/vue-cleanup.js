@@ -1,0 +1,2 @@
+/* globaL $ */
+$.noConflict(true)

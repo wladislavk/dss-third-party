@@ -1,17 +1,47 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) { ?>
-		<script type="text/javascript">
-			parent.document[<?= json_encode($_GET['fr']) ?>][<?= json_encode($_GET['tx']) ?>].value =
-                <?= json_encode($_POST['description']) ?>;
-			parent.disablePopupRefClean();
-		</script>
-        <?php
-		trigger_error("Die called", E_USER_ERROR);
-	}
+require_once __DIR__ . '/admin/includes/main_include.php';
 
-$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+$db = new Db();
+$docId = (int)$_SESSION['docid'];
+
+if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) { ?>
+    <script type="text/javascript">
+        function setField(form, field, text, fromVue)
+        {
+            if (fromVue) {
+                parent.Events.trigger('customText', {
+                    namespace: form,
+                    field: field,
+                    text: text
+                });
+                return;
+            }
+
+            parent.document[form][field].value = text;
+        }
+
+        var fromVue = <?= json_encode(!empty($_GET['vue'])) ?>,
+            form = <?= json_encode($_GET['fr']) ?>,
+            field = <?= json_encode($_GET['tx']) ?>,
+            text = <?= json_encode($_POST['description']) ?>;
+
+        setField(form, field, text, fromVue);
+
+        if (typeof parent.disablePopupRefClean !== 'undefined') {
+            parent.disablePopupRefClean();
+        }
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+$sql = "SELECT *
+    FROM dental_custom
+    WHERE docid = '$docId'
+        AND description NOT LIKE '%\"is_soap\":\"1\",%'
+    ORDER BY title";
 $my = $db->getResults($sql);
 
 $customNotes = [];
@@ -60,6 +90,7 @@ if ($my) {
 					</span>
 					<br />&nbsp;
                     <form name="selfrm" action="?">
+                        <input type="hidden" name="vue" value="<?= htmlspecialchars($_GET['vue']) ?>" />
                         <input type="hidden" name="fr" value="<?= htmlspecialchars($_GET['fr']) ?>" />
                         <input type="hidden" name="tx" value="<?= htmlspecialchars($_GET['tx']) ?>" />
                         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -82,7 +113,7 @@ if ($my) {
                             </tr>
                         </table>
                     </form>
-                    <form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?fr=<?php echo (!empty($_GET['fr']) ? $_GET['fr'] : '');?>&tx=<?php echo (!empty($_GET['tx']) ? $_GET['tx'] : '');?>" method="post" onSubmit="return selabc(this)">
+                    <form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?vue=<?= empty($_GET['vue']) ? 0 : 1 ?>&fr=<?php echo (!empty($_GET['fr']) ? $_GET['fr'] : '');?>&tx=<?php echo (!empty($_GET['tx']) ? $_GET['tx'] : '');?>" method="post" onSubmit="return selabc(this)">
                         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 						    <tr class="tr_bg_h">
 								<td valign="top" class="col_data" >

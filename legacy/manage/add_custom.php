@@ -1,34 +1,91 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-
-    if(!empty($_POST["customsub"]) && $_POST["customsub"] == 1) {
-    	if($_POST["ed"] != "") {
-    		$ed_sql = "update dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."' where customid='".$_POST["ed"]."'";
-    		
-            $db->query($ed_sql);
-    		$msg = "Edited Successfully";
-?>
-    		<script type="text/javascript">
-    			parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
-    		</script>
-    		<?
-    		trigger_error("Die called", E_USER_ERROR);
-    	} else {
-    		$ins_sql = "insert into dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-    		
-            $db->query($ins_sql);
-    		$msg = "Added Successfully";
-?>
-    		<script type="text/javascript">
-    			parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
-    		</script>
 <?php
-    		trigger_error("Die called", E_USER_ERROR);
-    	}
-    }
-?>
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+
+$db = new Db();
+
+$docId = (int)$_SESSION['docid'];
+$customId = (int)$_GET['ed'];
+
+$isSoapAuthorized = $db->getNumberRows("SELECT doc_id
+    FROM dental_api_permissions permission
+        LEFT JOIN dental_api_permission_resource_groups api_group ON api_group.id = permission.group_id
+    WHERE permission.doc_id = '$docId'
+");
+
+$isSoapAuthorized = $isSoapAuthorized && !empty($_GET['soap']);
+
+if (!empty($_POST["customsub"]) && $_POST["customsub"] == 1) {
+    $description = $_POST['description'];
+
+    if (!is_string($description)) {
+        $description = json_encode($description);
+    }
+
+    $customId = (int)$_POST['ed'];
+    $data = [
+        'title' => $_POST['title'],
+        'description' => $description,
+        'status' => $_POST['status'],
+    ];
+
+    if ($customId) {
+        $data = $db->escapeAssignmentList($data);
+        $db->query("UPDATE dental_custom
+            SET $data
+            WHERE customid = '$customId'
+        ");
+        $msg = "Edited Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }
+
+    $data['docid'] = $docId;
+    $data['ip_address'] = $_SERVER['REMOTE_ADDR'];
+    $data = $db->escapeAssignmentList($data);
+
+    $db->query("INSERT INTO dental_custom
+            SET $data, adddate = NOW()
+        ");
+    $msg = "Added Successfully";
+    ?>
+    <script type="text/javascript">
+        parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+$customNote = $db->getRow("SELECT *
+    FROM dental_custom
+    WHERE customid = '$customId'
+");
+
+$title = $customNote['title'];
+$description = $customNote['description'];
+$status = $customNote['status'];
+
+$isSoapAuthorized = $isSoapAuthorized || is_array($description);
+
+try {
+    $jsonDescription = json_decode($description, true);
+
+    if (is_array($jsonDescription)) {
+        $description = $jsonDescription;
+    }
+
+    unset($jsonDescription);
+} catch (\Exception $e) {
+    /* Fall through */
+}
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -40,29 +97,7 @@
         <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="script/validation.js"></script>
     </head>
-
     <body>
-    <?php
-        $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-    	
-    	$themyarray = $db->getRow($thesql);
-    	
-    	if(!empty($msg)) {
-    		$title = $_POST['title'];
-    		$description = $_POST['description'];
-    	} else {
-    		$title = st($themyarray['title']);
-    		$description = st($themyarray['description']);
-    		$status = st($themyarray['status']);
-    		$but_text = "Add ";
-    	}
-    	
-    	if($themyarray["customid"] != '') {
-    		$but_text = "Edit ";
-    	} else {
-    		$but_text = "Add ";
-    	}
-	?>
 	<br /><br />
 	<?php if(!empty($msg)) {?>
         <div align="center" class="red">
@@ -73,9 +108,9 @@
         <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr>
                 <td colspan="2" class="cat_head">
-                   <?php echo $but_text?> Custom Text
-                   <?php if($title <> "") {?>
-                   		&quot;<?php echo $title;?>&quot;
+                   <?= $customId ? 'Edit' : 'Add' ?> Custom <?= $isSoapAuthorized ? 'SOAP' : '' ?> Text
+                   <?php if ($title <> "") {?>
+                   		&quot;<?= e($title) ?>&quot;
                    <?php }?>
                 </td>
             </tr>
@@ -89,7 +124,7 @@
                            	</label>
                            	<div>
                                 <span class="full">
-                                	 <input id="title" name="title" type="text" class="field text addr tbox" value="<?php echo $title;?>" tabindex="5" style="width:600px;" maxlength="255"/>
+                                	 <input id="title" name="title" type="text" class="field text addr tbox" value="<?= e($title) ?>" tabindex="5" style="width:600px;" maxlength="255"/>
                                 </span>
                                 <label>&nbsp;</label>
     						</div>
@@ -97,24 +132,64 @@
     				</ul>
                 </td>
             </tr>
-    		<tr> 
-            	<td valign="top" colspan="2" class="frmhead">
-                	<ul>
-                		<li id="foli8" class="complex">	
-                        	 <label class="desc" id="title0" for="Field0">
-                                Description:
-                                <span id="req_0" class="req">*</span>
-                            </label>
-                            <div>
-                                <span class="full">
-                                	<textarea name="description" id="description" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $description;?></textarea>
-                                </span>
-                                <label>&nbsp;</label>
-                            </div>
-                        </li>
-    				</ul>
-                </td>
-            </tr>
+            <?php if ($isSoapAuthorized) { ?>
+                <tr>
+                    <td valign="top" class="frmhead">
+                        Subjective
+                    </td>
+                    <td valign="top" class="frmdata">
+                        <input type="hidden" name="description[is_soap]" value="1" />
+                        <textarea id="subjective" name="description[subjective]" class="tbox"
+                                  style="width:98%; height:60px;"><?= e($description['subjective']) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="frmhead">
+                        Objective
+                    </td>
+                    <td valign="top" class="frmdata">
+                        <textarea id="objective" name="description[objective]" class="tbox"
+                                  style="width:98%; height:60px;"><?= e($description['objective']) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="frmhead">
+                        Assessment
+                    </td>
+                    <td valign="top" class="frmdata">
+                        <textarea id="assessment" name="description[assessment]" class="tbox"
+                                  style="width:98%; height:60px;"><?= e($description['assessment']) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="frmhead">
+                        Plan
+                    </td>
+                    <td valign="top" class="frmdata">
+                        <textarea id="plan" name="description[plan]" class="tbox"
+                                  style="width:98%; height:60px;"><?= e($description['plan']) ?></textarea>
+                    </td>
+                </tr>
+            <?php } else { ?>
+                <tr>
+                    <td valign="top" colspan="2" class="frmhead">
+                        <ul>
+                            <li id="foli8" class="complex">
+                                 <label class="desc" id="title0" for="Field0">
+                                    Description:
+                                    <span id="req_0" class="req">*</span>
+                                </label>
+                                <div>
+                                    <span class="full">
+                                        <textarea name="description" id="description" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?= e($description) ?></textarea>
+                                    </span>
+                                    <label>&nbsp;</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            <?php } ?>
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead">
                     Status
@@ -133,10 +208,12 @@
                         * Required Fields					
                     </span><br />
                     <input type="hidden" name="customsub" value="1" />
-                    <input type="hidden" name="ed" value="<?php echo $themyarray["customid"]?>" />
-                    <input type="submit" value=" <?php echo $but_text?> Custom Text" class="button" />
-    		        <?php if($themyarray['customid']!=''){ ?>
-                        <a style="float:right;" href="manage_custom.php?delid=<?php echo $themyarray["customid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+                    <input type="hidden" name="ed" value="<?= $customId ?>" />
+                    <input type="submit" value=" <?= $customId ? 'Edit' : 'Add' ?> Custom <?= $isSoapAuthorized ? 'SOAP Note' : 'Text' ?>" class="button" />
+    		        <?php if ($customId) { ?>
+                        <a style="float:right;" href="manage_custom.php?delid=<?= $customId ?>"
+                           onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink"
+                           title="DELETE" target="_parent">
                             Delete 
                         </a>
     		        <?php } ?>

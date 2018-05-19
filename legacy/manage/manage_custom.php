@@ -1,6 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 
+$db = new Db();
+
 if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_custom where customid='".$_REQUEST["delid"]."'";
@@ -16,6 +18,19 @@ if(!empty($_REQUEST["delid"]))
 	trigger_error("Die called", E_USER_ERROR);
 }
 
+$docId = (int)$_SESSION['docid'];
+$isSoapAuthorized = $db->getNumberRows("SELECT doc_id
+    FROM dental_api_permissions permission
+        LEFT JOIN dental_api_permission_resource_groups api_group ON api_group.id = permission.group_id
+    WHERE permission.doc_id = '$docId'
+");
+
+$conditionalNot = 'NOT';
+
+if (!empty($_GET['soap']) && $isSoapAuthorized) {
+    $conditionalNot = '';
+}
+
 $rec_disp = 20;
 
 if(!empty($_REQUEST["page"]))
@@ -24,7 +39,12 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by title";
+$sql = "SELECT *
+    FROM dental_custom
+    WHERE docid = '$docId'
+        AND description $conditionalNot LIKE '%\"is_soap\":\"1\",%'
+    ORDER BY title
+";
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
@@ -38,15 +58,15 @@ $num_custom = count($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Custom Text
+	Manage Custom <?= $isSoapAuthorized ? 'SOAP Note' : 'Text' ?>
 </span>
 <br />
 <br />
 &nbsp;
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_custom.php');" class="addButton">
-		Add New Custom Text
+	<button onclick="Javascript: loadPopup('add_custom.php?soap=<?= $isSoapAuthorized ?>');" class="addButton">
+		Add New Custom <?= $isSoapAuthorized ? 'SOAP Note' : 'Text' ?>
 	</button>
 	&nbsp;&nbsp;
 </div>
@@ -106,7 +126,7 @@ $num_custom = count($my);
 					<?php echo st($myarray["title"]);?>
 				</td>
 				<td valign="top" width="20%">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_custom.php?ed=<?php echo $myarray["customid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_custom.php?ed=<?php echo $myarray["customid"];?>&soap=<?= $isSoapAuthorized ?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
                     

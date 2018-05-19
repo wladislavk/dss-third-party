@@ -1,7 +1,30 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once "admin/includes/main_include.php";
 
-if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
+$db = new Db();
+$baseTable = 'dental_ex_page4_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$secondaryTables = [
+    'dental_missing_view' => ['patientid' => '$patientId'],
+];
+
+$canBackup = false;
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
+if(!$isHistoricView && !empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
 {
 	$rec = '~';
 	$rec1 = '~';
@@ -61,7 +84,7 @@ if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
 		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}else{
-		$ed_sql = " update dental_missing set 
+		$ed_sql = " update dental_missing_view set 
 						rec = '".s_for($rec)."',
 						pck = '".s_for($pck)."',
 						mob = '".s_for($mob)."',
@@ -96,8 +119,13 @@ $pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
+$sql = "select * from dental_missing_view where patientid='".$_GET['pid']."'";
+$sql = "select *
+    from {$secondarySourceTables['dental_missing_view']}
+    where patientid = '$patientId'
+        $andReferenceIdConditional
+        $andNullConditional";
 
-$sql = "select * from dental_missing where patientid='".$_GET['pid']."'";
 $myarray = $db->getRow($sql);
 
 $missingid = st($myarray['missingid']);
@@ -161,7 +189,7 @@ $mob_arr = explode('~',$mob);
 			<div align="center" class="red">
 				<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 			</div>
-			<form name="missingfrm" id="missingfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>" method="post" >
+			<form name="missingfrm" id="missingfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post" >
 				<input type="hidden" name="missingsub" value="1" />
 				<input type="hidden" name="ed" value="<?php echo $missingid;?>" />
 				<table cellpadding="5" cellspacing="1" align="center" >
@@ -589,7 +617,7 @@ $mob_arr = explode('~',$mob);
 							</td>
 							<td valign="top" width="33%" align="left">
 								&nbsp;&nbsp;&nbsp;
-								<input type="submit" name="q_pagebtn" value="Save" />
+								<input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
 							</td>
 							<td valign="top" width="33%" align="right">
 								&nbsp;&nbsp;&nbsp;

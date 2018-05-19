@@ -29,10 +29,10 @@
 		$age = 'N/A';
 	}
 
-	$q1_sql = "select * from dental_q_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$q1_sql = "select * from dental_q_page1_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$q1_myarray = $db->getRow($q1_sql);
-	$q3_sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$q3_sql = "select * from dental_q_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
@@ -65,7 +65,7 @@
 		}
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$q2_sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);

@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ScreenerEpworthRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Request;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
 
 class HomeSleepTestsController extends BaseRestController
@@ -19,7 +19,7 @@ class HomeSleepTestsController extends BaseRestController
 
     public function __construct(
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         ScreenerEpworthRepository $screenerEpworthRepository
     ) {

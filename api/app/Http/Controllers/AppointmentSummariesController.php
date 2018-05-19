@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
@@ -14,7 +15,6 @@ use DentalSleepSolutions\Structs\AppointmentSummaryData;
 use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class AppointmentSummariesController extends BaseRestController
@@ -33,7 +33,7 @@ class AppointmentSummariesController extends BaseRestController
 
     public function __construct(
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         LetterRepository $letterRepository,
         AppointmentSummaryCreator $appointmentSummaryCreator,

@@ -7,7 +7,7 @@ use DentalSleepSolutions\Services\Epworth\EpworthFinder;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
 class EpworthSleepinessScaleController extends BaseRestController
 {
@@ -16,7 +16,7 @@ class EpworthSleepinessScaleController extends BaseRestController
 
     public function __construct(
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         EpworthFinder $epworthFinder
     ) {

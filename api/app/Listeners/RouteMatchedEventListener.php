@@ -3,13 +3,13 @@
 namespace DentalSleepSolutions\Listeners;
 
 use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Doctrine\Common\Inflector\Inflector;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Routing\Events\RouteMatched;
 
 class RouteMatchedEventListener
@@ -41,6 +41,7 @@ class RouteMatchedEventListener
     /**
      * @param RouteMatched $event
      * @throws NamingConventionException
+     * @throws \ReflectionException
      */
     public function handle(RouteMatched $event): void
     {
@@ -70,6 +71,7 @@ class RouteMatchedEventListener
     /**
      * @param string $modelName
      * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
+     * @throws \ReflectionException
      */
     protected function setBindings(string $modelName): void
     {
@@ -77,7 +79,7 @@ class RouteMatchedEventListener
         foreach ($bindings as $binding) {
             $this->app
                 ->when($binding->getController())
-                ->needs(BaseRepository::class)
+                ->needs(AbstractRepository::class)
                 ->give($binding->getRepository())
             ;
             $this->app
@@ -98,7 +100,7 @@ class RouteMatchedEventListener
         foreach ($externalBindings as $externalBinding) {
             $this->app
                 ->when($externalBinding->getController())
-                ->needs(BaseRepository::class)
+                ->needs(AbstractRepository::class)
                 ->give($externalBinding->getRepository())
             ;
         }

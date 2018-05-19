@@ -7,7 +7,7 @@ use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Contracts\TransformerInterface;
 
 class BindingNamingConvention
@@ -57,7 +57,7 @@ class BindingNamingConvention
     public function setController($className)
     {
         $config = \Mockery::mock(Config::class);
-        $repository = \Mockery::mock(BaseRepository::class);
+        $repository = \Mockery::mock(AbstractRepository::class);
         $request = \Mockery::mock(Request::class);
 
         $config->shouldReceive('get')
@@ -94,6 +94,7 @@ class BindingNamingConvention
     /**
      * @return string
      * @throws NamingConventionException
+     * @throws \ReflectionException
      */
     public function getModel()
     {
@@ -137,8 +138,8 @@ class BindingNamingConvention
         $modelClassName = get_class($this->model);
         $repoClassName = $modelClassName . 'Repository';
         $repoClassName = str_replace('Models', 'Repositories', $repoClassName);
-        if (!class_exists($repoClassName) || !is_subclass_of($repoClassName, BaseRepository::class)) {
-            throw new NamingConventionException("$repoClassName must exist and extend " . BaseRepository::class);
+        if (!class_exists($repoClassName) || !is_subclass_of($repoClassName, AbstractRepository::class)) {
+            throw new NamingConventionException("$repoClassName must exist and extend " . AbstractRepository::class);
         }
         return $repoClassName;
     }

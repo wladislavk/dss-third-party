@@ -26,9 +26,6 @@ class PainTmdExamsController extends BaseRestController
     protected $updatedByAdminKey = 'updated_by_admin';
 
     /** @var string */
-    protected $filterByDoctorKey = 'doc_id';
-
-    /** @var string */
     protected $filterByPatientKey = 'patient_id';
 
     /**

@@ -20,9 +20,6 @@ class SummariesController extends BaseRestController
     protected $userKey = 'userid';
 
     /** @var string */
-    protected $filterByDoctorKey = 'docid';
-
-    /** @var string */
     protected $filterByPatientKey = 'patientid';
 
     /**

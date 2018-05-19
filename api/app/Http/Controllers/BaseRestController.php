@@ -9,7 +9,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Config\Repository as Config;
 
 /**
@@ -97,7 +97,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var bool */
     protected $hasIp = true;
 
-    /** @var BaseRepository */
+    /** @var AbstractRepository */
     protected $repository;
 
     /** @var string */
@@ -138,7 +138,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     public function __construct(
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request
     ) {
         parent::__construct($config, $request);
@@ -155,10 +155,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         $filter = $this->getIndexConditionals();
         $fields = $this->request->query('fields', '*');
         $fields = explode(',', $fields);
-        $data = $this->repository
-            ->getWithFilter($fields, $filter)
-        ;
-
+        $data = $this->repository->getWithFilter($fields, $filter);
         return ApiResponse::responseOk('', $data);
     }
 
@@ -257,6 +254,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getSingular()
     {
@@ -267,6 +265,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getPlural()
     {

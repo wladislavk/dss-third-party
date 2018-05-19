@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 
@@ -20,7 +20,7 @@ class TasksController extends BaseRestController
 
     public function __construct(
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         TaskRetriever $taskRetriever
     ) {

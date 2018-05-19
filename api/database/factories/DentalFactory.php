@@ -128,8 +128,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AdvancedPainTmdExam
     ];
 
     return [
-        'patient_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
         'created_by_user' => $faker->randomDigit,
         'created_by_admin' => $faker->randomDigit,
         'updated_by_user' => $faker->randomDigit,
@@ -190,8 +188,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AssessmentPlanExam:
     $treatmentCodes = [];
 
     return [
-        'patient_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
         'created_by_user' => $faker->randomDigit,
         'created_by_admin' => $faker->randomDigit,
         'updated_by_user' => $faker->randomDigit,
@@ -208,7 +204,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AssessmentPlanExam:
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\DoctorPalpation::class, function ($faker) {
     return [
-        'doc_id' => $faker->randomDigit,
         'updated_by_user' => $faker->randomDigit,
         'updated_by_admin' => $faker->randomDigit,
         'ip_address' => $faker->ipv4,
@@ -310,8 +305,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EvaluationManagemen
     ];
 
     return [
-        'patient_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
         'created_by_user' => $faker->randomDigit,
         'created_by_admin' => $faker->randomDigit,
         'updated_by_user' => $faker->randomDigit,
@@ -1448,15 +1441,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SleepTest::class, f
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TongueClinicalExam::class, function (\Faker\Generator $faker) {
     return [
         'formid'               => $faker->randomDigit,
-        'patientid'            => $faker->randomDigit,
         'blood_pressure'       => $faker->regexify('[1-2][0-9]{2}\/([5-9][0-9]|1[0-9]{2})'),
         'pulse'                => $faker->randomDigit,
         'neck_measurement'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 60),
         'bmi'                  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 40),
         'additional_paragraph' => $faker->sentence($nbWords = 3),
         'tongue'               => $faker->regexify('~([0-9]~)+'),
-        'userid'               => $faker->randomDigit,
-        'docid'                => $faker->randomDigit,
         'status'               => $faker->randomDigit,
         'adddate'              => $faker->dateTime,
         'ip_address'           => $faker->ipv4,
@@ -1577,7 +1567,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::cl
 
     return [
         'formid'                   => $faker->randomDigit,
-        'patientid'                => $faker->randomDigit,
         'palpationid'              => $faker->randomElement($palpation),
         'palpationRid'             => $faker->randomElement($palpation),
         'additional_paragraph_pal' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
@@ -1607,8 +1596,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::cl
         'additional_paragraph_rm'  => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         'screening_aware'          => $faker->numerify('#'),
         'screening_normal'         => $faker->numerify('#'),
-        'userid'                   => $faker->randomDigit,
-        'docid'                    => $faker->randomDigit,
         'status'                   => $faker->randomDigit,
         'adddate'                  => $faker->dateTime,
         'ip_address'               => $faker->ipv4,
@@ -3515,8 +3502,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket::clas
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Notification::class, function (\Faker\Generator $faker) {
     return [
-        'patientid'         => $faker->randomDigit,
-        'docid'             => $faker->randomDigit,
         'notification'      => $faker->sentence($nbWords = 4),
         'notification_type' => $faker->word,
         'status'            => $faker->randomDigit,

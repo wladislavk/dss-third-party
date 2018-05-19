@@ -20,15 +20,12 @@ class TongueClinicalExamsApiTest extends ApiTestCase
     {
         return [
             'formid'               => 5,
-            'patientid'            => 5,
             'blood_pressure'       => '130/85',
             'pulse'                => '5',
             'neck_measurement'     => 50.5,
             'bmi'                  => 12.5,
             'additional_paragraph' => 'paragraph',
             'tongue'               => '~1~2~3~',
-            'userid'               => 5,
-            'docid'                => 5,
             'status'               => 5,
         ];
     }

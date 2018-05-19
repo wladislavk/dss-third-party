@@ -20,7 +20,6 @@ class SummariesApiTest extends ApiTestCase
     {
         return [
             "formid" => 100,
-            "patientid" => 2,
             "patient_name" => "Isabel Ortiz",
             "patient_dob" => "02/16/1976",
             "docpcp" => "38",
@@ -158,8 +157,6 @@ class SummariesApiTest extends ApiTestCase
             "year_check_3" => "facere",
             "year_check_4" => "laboriosam",
             "additional_notes" => "Aut hic quasi ullam asperiores autem.",
-            "userid" => 7,
-            "docid" => 8,
             "status" => 3,
             "office" => "labore",
             "sleep_same_room" => "voluptatibus",

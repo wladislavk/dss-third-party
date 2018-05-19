@@ -20,17 +20,13 @@ class HealthHistoriesApiTest extends ApiTestCase
     {
         return [
             "formid" => 8,
-            "patientid" => 100,
             "allergens" => "~50~",
             "other_allergens" => "Quisquam et rerum velit rerum ut.",
             "medications" => "~69~49~00~69~",
             "other_medications" => "Ut perspiciatis tempora aut consequatur.",
             "history" => "~5~1~",
             "other_history" => "Voluptatum aut qui porro ipsum autem.",
-            "userid" => 6,
-            "docid" => 2,
             "status" => 4,
-            "adddate" => "1975-03-30 11:53:50",
             "dental_health" => "Poor",
             "removable" => "Yes",
             "year_completed" => "1971",

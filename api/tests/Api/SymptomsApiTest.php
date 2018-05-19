@@ -20,7 +20,6 @@ class SymptomsApiTest extends ApiTestCase
     {
         return [
             "formid" => 5,
-            "patientid" => 100,
             "member_no" => "similique",
             "group_no" => "fuga",
             "plan_no" => "sint",
@@ -39,8 +38,6 @@ class SymptomsApiTest extends ApiTestCase
             "breathing_night" => "Rem omnis explicabo natus quod.",
             "morning_headaches" => "Nemo doloremque tenetur mollitia molestias.",
             "hours_sleep" => "46",
-            "userid" => 2,
-            "docid" => 1,
             "status" => 0,
             "quit_breathing" => "Quo quasi est ut consequatur quo officia.",
             "bed_time_partner" => "Yes",

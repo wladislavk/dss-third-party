@@ -20,9 +20,9 @@ class JwtUserAuthChainMiddlewareTest extends JwtAuthMiddlewareTestCase
     {
         $this->get(self::TEST_ROUTE);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
-            'data' => null,
+            'message' => JwtMiddlewareErrors::TOKEN_MISSING
         ]);
     }
 

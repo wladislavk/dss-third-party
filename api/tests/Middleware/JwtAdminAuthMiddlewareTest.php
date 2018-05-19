@@ -6,6 +6,8 @@ use DentalSleepSolutions\Eloquent\Models\Admin;
 use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
+use Illuminate\Http\Response;
 use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
 class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
@@ -18,9 +20,9 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
     {
         $this->get(self::TEST_ROUTE);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::TOKEN_MISSING,
         ]);
     }
 
@@ -30,9 +32,9 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
         $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid, 'inactive');
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::TOKEN_INACTIVE,
         ]);
     }
 
@@ -42,9 +44,9 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
         $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid, 'expired');
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::TOKEN_EXPIRED,
         ]);
     }
 
@@ -56,9 +58,9 @@ class JwtAdminAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 
         $this->get(self::TEST_ROUTE, $authHeader);
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-            'data' => null
+            'errorMessage' => JwtMiddlewareErrors::USER_NOT_FOUND,
         ]);
     }
 

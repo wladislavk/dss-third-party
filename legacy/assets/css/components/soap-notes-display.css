@@ -1,0 +1,69 @@
+table.section-banner {
+    width: 100%;
+}
+
+table.section-banner td {
+    background: #333;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+}
+
+.soap-notes-wrapper {
+    display: flex;
+}
+
+.soap-notes-wrapper > table {
+    width: 12%;
+}
+
+.soap-notes-wrapper > table td {
+    text-align: right;
+}
+
+.soap-notes-wrapper > table th,
+.soap-notes-wrapper > div.soap-notes-scroller table th {
+    background-color: #444;
+    color: #fff;
+}
+
+.soap-notes-wrapper > table td,
+.soap-notes-wrapper > div.soap-notes-scroller table td {
+    height: 10em;
+    padding: 4px;
+    display: block;
+    background-color: #f9ffdf;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+}
+
+.soap-notes-wrapper > table tr:nth-child(odd) td,
+.soap-notes-wrapper > div.soap-notes-scroller table tr:nth-child(odd) td {
+    background-color: #e4ffcf;
+}
+
+.soap-notes-wrapper > table tr:last-child td,
+.soap-notes-wrapper > div.soap-notes-scroller table tr:last-child td {
+    height: auto;
+}
+
+.soap-notes-wrapper > div.soap-notes-scroller {
+    width: 87%;
+    overflow-x: scroll;
+}
+
+.soap-notes-wrapper > div.soap-notes-scroller > div {
+    /* div*count + 2, default count: 3 */
+    width: 62em;
+}
+
+.soap-notes-wrapper > div.soap-notes-scroller > div > table {
+    float: left;
+    width: 20em;
+}
+
+.soap-notes-wrapper > div.soap-notes-scroller > div > table td {
+    width: 20em;
+}

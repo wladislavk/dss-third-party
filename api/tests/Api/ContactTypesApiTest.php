@@ -101,15 +101,15 @@ class ContactTypesApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertEquals(11, count($this->getResponseData()));
         $expectedFirst = [
-            'contacttypeid' => 11,
-            'contacttype' => 'Insurance',
-            'description' => null,
-            'sortby' => 10,
+            'contacttypeid' => 25,
+            'contacttype' => 'test corporate type',
+            'description' => 'testing corp description',
+            'sortby' => 999,
             'status' => 1,
-            'adddate' => '2011-05-14 20:47:43',
-            'ip_address' => '127.0.0.1',
-            'physician' => null,
-            'corporate' => 0,
+            'adddate' => '2014-03-18 23:07:41',
+            'ip_address' => '68.253.133.237',
+            'physician' => 0,
+            'corporate' => 1,
         ];
         $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
     }

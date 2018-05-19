@@ -18,6 +18,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  *     @SWG\Property(property="additional_paragraph_pal", type="string"),
  *     @SWG\Property(property="joint_exam", type="string"),
  *     @SWG\Property(property="jointid", type="string"),
+ *     @SWG\Property(property="jointid_stages", type="string"),
  *     @SWG\Property(property="i_opening_from", type="string"),
  *     @SWG\Property(property="i_opening_to", type="string"),
  *     @SWG\Property(property="i_opening_equal", type="string"),
@@ -50,7 +51,12 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  *     @SWG\Property(property="deviation_r_l", type="string"),
  *     @SWG\Property(property="deflection_r_l", type="string"),
  *     @SWG\Property(property="dentaldevice", type="integer"),
- *     @SWG\Property(property="dentaldevice_date", type="string")
+ *     @SWG\Property(property="dentaldevice_date", type="string"),
+ *     @SWG\Property(property="initial_device_titration_1", type="string"),
+ *     @SWG\Property(property="initial_device_titration_equal_h", type="string"),
+ *     @SWG\Property(property="initial_device_titration_equal_v", type="string"),
+ *     @SWG\Property(property="optimum_echovision_ver", type="string"),
+ *     @SWG\Property(property="optimum_echovision_hor", type="string")
  * )
  *
  * DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam
@@ -63,6 +69,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property string|null $additional_paragraph_pal
  * @property string|null $joint_exam
  * @property string|null $jointid
+ * @property string|null $jointid_stages
  * @property string|null $i_opening_from
  * @property string|null $i_opening_to
  * @property string|null $i_opening_equal
@@ -95,7 +102,12 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property string|null $deviation_r_l
  * @property string|null $deflection_r_l
  * @property int|null $dentaldevice
- * @property \DateTime|null $dentaldevice_date
+ * @property string|null $dentaldevice_date
+ * @property string|null $initial_device_titration_1
+ * @property string|null $initial_device_titration_equal_h
+ * @property string|null $initial_device_titration_equal_v
+ * @property string|null $optimum_echovision_ver
+ * @property string|null $optimum_echovision_hor
  * @mixin \Eloquent
  */
 class TmjClinicalExam extends AbstractModel
@@ -116,6 +128,7 @@ class TmjClinicalExam extends AbstractModel
         'additional_paragraph_pal',
         'joint_exam',
         'jointid',
+        'jointid_stages',
         'i_opening_from',
         'i_opening_to',
         'i_opening_equal',
@@ -149,6 +162,11 @@ class TmjClinicalExam extends AbstractModel
         'deflection_r_l',
         'dentaldevice',
         'dentaldevice_date',
+        'initial_device_titration_1',
+        'initial_device_titration_equal_h',
+        'initial_device_titration_equal_v',
+        'optimum_echovision_ver',
+        'optimum_echovision_hor',
     ];
 
     /**

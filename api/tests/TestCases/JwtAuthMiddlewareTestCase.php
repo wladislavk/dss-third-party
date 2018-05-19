@@ -4,16 +4,18 @@ namespace Tests\TestCases;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Services\Auth\JwtHelper;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Middleware\AbstractJwtAuthMiddleware;
-use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 
-abstract class JwtAuthMiddlewateTestCase extends MiddlewareTestCase
+abstract class JwtAuthMiddlewareTestCase extends MiddlewareTestCase
 {
-    const MINIMAL_TTl = 1;
+    const MINIMAL_TTL = 1;
     const TTL = 60;
     const ADMIN_PREFIX = 'a_';
     const USER_PREFIX = 'u_';
+    const PATIENT_PREFIX = 'p_';
 
     const BASE_64_REGEXP = '[a-zA-Z\d\+\/\_\-]+';
     const TOKEN_REGEXP = self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP;
@@ -29,14 +31,36 @@ abstract class JwtAuthMiddlewateTestCase extends MiddlewareTestCase
         ;
     }
 
-    protected function generateSudoQuery($sudoId)
+    /**
+     * @param User $user
+     * @return string
+     */
+    protected function generateSudoUserQuery(User $user)
     {
         $query = http_build_query([
-            JwtUserAuthMiddleware::SUDO_FIELD => $sudoId
+            AbstractJwtAuthMiddleware::USER_SUDO_ID => $user->{AbstractJwtAuthMiddleware::USER_MODEL_ID}
         ]);
         return $query;
     }
 
+    /**
+     * @param Patient $patient
+     * @return string
+     */
+    protected function generateSudoPatientQuery(Patient $patient)
+    {
+        $query = http_build_query([
+            AbstractJwtAuthMiddleware::PATIENT_SUDO_ID => $patient->{AbstractJwtAuthMiddleware::PATIENT_MODEL_ID}
+        ]);
+        return $query;
+    }
+
+    /**
+     * @param string $role
+     * @param string $index
+     * @param string $state
+     * @return array
+     */
     protected function generateAuthHeader($role, $index, $state = '')
     {
         $token = $this->generateToken($role, $index, $state);
@@ -46,12 +70,23 @@ abstract class JwtAuthMiddlewateTestCase extends MiddlewareTestCase
         return $header;
     }
 
+    /**
+     * @param string $role
+     * @param string $index
+     * @param string $state
+     * @return string
+     * @throws \DentalSleepSolutions\Exceptions\JwtException
+     */
     protected function generateToken($role, $index, $state = '')
     {
         $prefix = self::USER_PREFIX;
 
         if ($role === JwtAuth::ROLE_ADMIN) {
             $prefix = self::ADMIN_PREFIX;
+        }
+
+        if ($role === JwtAuth::ROLE_PATIENT) {
+            $prefix = self::PATIENT_PREFIX;
         }
 
         $claims = [
@@ -63,7 +98,7 @@ abstract class JwtAuthMiddlewateTestCase extends MiddlewareTestCase
 
         if ($state === 'expired') {
             $expiresAt = Carbon::now()
-                ->addSeconds(self::MINIMAL_TTl)
+                ->addSeconds(self::MINIMAL_TTL)
             ;
         }
 
@@ -89,7 +124,7 @@ abstract class JwtAuthMiddlewateTestCase extends MiddlewareTestCase
         ;
 
         if ($state === 'expired') {
-            sleep(self::MINIMAL_TTl + 1);
+            sleep(self::MINIMAL_TTL + 1);
         }
 
         return $token;

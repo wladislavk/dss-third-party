@@ -15,20 +15,20 @@
 		trigger_error("Die called", E_USER_ERROR);
 	}
 
-	$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+	$q1_sql = "select * from dental_q_page1_view where patientid='".$_GET['pid']."'";
 	
 	$q1_myarray = $db->getRow($q1_sql);
 	$main_reason = st($q1_myarray['main_reason']);
 	$complaintid = st($q1_myarray['complaintid']);
 	$bed_time_partner1 = st($q1_myarray['bed_time_partner']);
 	$sleep_same_room1 = st($q1_myarray['sleep_same_room']);
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$cpap = st($q2_myarray['cpap']);
 	$nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 	$percent_night_cpap = st($q2_myarray['percent_night_cpap']);
-	$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+	$sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 
 	$myarray = $db->getRow($sql);
 	$summaryid = st($myarray['summaryid']);

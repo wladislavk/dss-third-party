@@ -8,9 +8,9 @@ use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors;
 use Illuminate\Http\Response;
-use Tests\TestCases\JwtAuthMiddlewateTestCase;
+use Tests\TestCases\JwtAuthMiddlewareTestCase;
 
-class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewateTestCase
+class JwtUserAuthMiddlewareTest extends JwtAuthMiddlewareTestCase
 {
     protected $testMiddleware = [
         JwtUserAuthMiddleware::class

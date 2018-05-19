@@ -7,7 +7,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class AdminGuard extends AbstractGuard
 {
-    protected $enforceCredentials = ['admin' => 1];
+    protected $enforceCredentials = [
+        'admin' => 1,
+        'patient' => 0,
+    ];
 
     public function __construct(UserRepository $repository)
     {

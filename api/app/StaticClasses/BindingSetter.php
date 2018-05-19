@@ -11,147 +11,161 @@ class BindingSetter
     const EXTERNAL_MODEL_KEY = 0;
     const EXTERNAL_RESOURCE_KEY = 1;
     const EXTERNAL_REPOSITORY_KEY = 2;
+    const MODEL_NAMESPACE = 'DentalSleepSolutions\Eloquent\Models\\';
 
     const MODELS = [
-        Eloquent\Models\Dental\AccessCode::class,
-        Eloquent\Models\Admin::class,
-        Eloquent\Models\Dental\AirwayEvaluation::class,
-        Eloquent\Models\Dental\Allergen::class,
-        Eloquent\Models\Dental\AppointmentSummary::class,
-        Eloquent\Models\Dental\AppointmentType::class,
-        Eloquent\Models\Dental\Calendar::class,
-        Eloquent\Models\Dental\Chair::class,
-        Eloquent\Models\Dental\ChangeList::class,
-        Eloquent\Models\Dental\Charge::class,
-        Eloquent\Models\Dental\ClaimElectronic::class,
-        Eloquent\Models\Dental\ClaimNote::class,
-        Eloquent\Models\Dental\ClaimNoteAttachment::class,
-        Eloquent\Models\Dental\ClaimText::class,
-        Eloquent\Models\Company::class,
-        Eloquent\Models\Dental\Complaint::class,
-        Eloquent\Models\Dental\Contact::class,
-        Eloquent\Models\Dental\ContactType::class,
-        Eloquent\Models\Dental\CorporateContact::class,
-        Eloquent\Models\Dental\CustomLetterTemplate::class,
-        Eloquent\Models\Dental\CustomText::class,
-        Eloquent\Models\Dental\DentalClinicalExam::class,
-        Eloquent\Models\Dental\Device::class,
-        Eloquent\Models\Dental\Diagnostic::class,
-        Eloquent\Models\Dental\Document::class,
-        Eloquent\Models\Dental\DocumentCategory::class,
-        Eloquent\Models\EdxCertificate::class,
-        Eloquent\Models\Dental\EpworthHomeSleepTest::class,
-        Eloquent\Models\Dental\EpworthSleepinessScale::class,
-        Eloquent\Models\Dental\ExternalCompany::class,
-        Eloquent\Models\Dental\ExternalUser::class,
-        Eloquent\Models\Dental\ExtraPercaseInvoice::class,
-        Eloquent\Models\Dental\Fax::class,
-        Eloquent\Models\Dental\FaxInvoice::class,
-        Eloquent\Models\Filemanager::class,
-        Eloquent\Models\FlowsheetSegment::class,
-        Eloquent\Models\Dental\Flowsheet::class,
-        Eloquent\Models\Dental\FlowsheetStep::class,
-        Eloquent\Models\Dental\FlowsheetNextStep::class,
-        Eloquent\Models\Dental\Form::class,
-        Eloquent\Models\Dental\GagReflex::class,
-        Eloquent\Models\Dental\GuideDevice::class,
-        Eloquent\Models\Dental\GuideSetting::class,
-        Eloquent\Models\Dental\GuideSettingOption::class,
-        Eloquent\Models\Dental\HealthHistory::class,
-        Eloquent\Models\Dental\HomeSleepTest::class,
-        Eloquent\Models\Dental\ImageType::class,
-        Eloquent\Models\Dental\Insurance::class,
-        Eloquent\Models\Dental\InsuranceDiagnosis::class,
-        Eloquent\Models\Dental\InsuranceDocument::class,
-        Eloquent\Models\Dental\InsuranceFile::class,
-        Eloquent\Models\Dental\InsuranceHistory::class,
-        Eloquent\Models\Dental\InsurancePreauth::class,
-        Eloquent\Models\Dental\InsuranceType::class,
-        Eloquent\Models\Dental\Intolerance::class,
-        Eloquent\Models\Dental\Joint::class,
-        Eloquent\Models\Dental\JointExam::class,
-        Eloquent\Models\Dental\LedgerHistory::class,
-        Eloquent\Models\Dental\LedgerNote::class,
-        Eloquent\Models\Dental\LedgerPayment::class,
-        Eloquent\Models\Dental\LedgerRecord::class,
-        Eloquent\Models\Dental\LedgerStatement::class,
-        Eloquent\Models\Dental\Ledger::class,
-        Eloquent\Models\Dental\LetterTemplate::class,
-        Eloquent\Models\Dental\Letter::class,
-        Eloquent\Models\Dental\Location::class,
-        Eloquent\Models\Dental\LoginDetail::class,
-        Eloquent\Models\Dental\Login::class,
-        Eloquent\Models\Dental\Mandible::class,
-        Eloquent\Models\Dental\Maxilla::class,
-        Eloquent\Models\Dental\MedicalHistory::class,
-        Eloquent\Models\Dental\Medicament::class,
-        Eloquent\Models\Dental\MissingTooth::class,
-        Eloquent\Models\Dental\ModifierCode::class,
-        Eloquent\Models\Dental\NasalPassage::class,
-        Eloquent\Models\Dental\NewFlowsheet::class,
-        Eloquent\Models\Dental\Note::class,
-        Eloquent\Models\Dental\Notification::class,
-        Eloquent\Models\Dental\Palpation::class,
-        Eloquent\Models\Dental\PatientContact::class,
-        Eloquent\Models\Dental\PatientInsurance::class,
-        Eloquent\Models\Dental\PatientSummary::class,
-        Eloquent\Models\Dental\Patient::class,
-        Eloquent\Models\Payer::class,
-        Eloquent\Models\Dental\PaymentReport::class,
-        Eloquent\Models\Dental\PercaseInvoice::class,
-        Eloquent\Models\Dental\PlaceService::class,
-        Eloquent\Models\Dental\Plan::class,
-        Eloquent\Models\Dental\PlanText::class,
-        Eloquent\Models\Dental\PreviousTreatment::class,
-        Eloquent\Models\Dental\ProfileImage::class,
-        Eloquent\Models\Dental\Qualifier::class,
-        Eloquent\Models\Dental\QPage2Surgery::class,
-        Eloquent\Models\Dental\Recipient::class,
-        Eloquent\Models\Dental\ReferredByContact::class,
-        Eloquent\Models\Dental\Refund::class,
-        Eloquent\Models\Dental\ScreenerEpworth::class,
-        Eloquent\Models\Dental\Screener::class,
-        Eloquent\Models\Dental\Sleeplab::class,
-        Eloquent\Models\Dental\SleepStudy::class,
-        Eloquent\Models\Dental\SleepTest::class,
-        Eloquent\Models\Dental\SocialHistory::class,
-        Eloquent\Models\Dental\SupportAttachment::class,
-        Eloquent\Models\Dental\SoftPalate::class,
-        Eloquent\Models\Dental\Summary::class,
-        Eloquent\Models\Dental\SummarySleeplab::class,
-        Eloquent\Models\Dental\SupportCategory::class,
-        Eloquent\Models\Dental\SupportResponse::class,
-        Eloquent\Models\Dental\SupportTicket::class,
-        Eloquent\Models\Dental\Symptom::class,
-        Eloquent\Models\Dental\Task::class,
-        Eloquent\Models\Dental\TeethExam::class,
-        Eloquent\Models\Dental\Thorton::class,
-        Eloquent\Models\Dental\TmjClinicalExam::class,
-        Eloquent\Models\Dental\Tongue::class,
-        Eloquent\Models\Dental\TongueClinicalExam::class,
-        Eloquent\Models\Dental\TonsilsClinicalExam::class,
-        Eloquent\Models\Dental\TransactionCode::class,
-        Eloquent\Models\Dental\TypeService::class,
-        Eloquent\Models\Dental\User::class,
-        Eloquent\Models\Dental\UserCompany::class,
-        Eloquent\Models\Dental\UserHstCompany::class,
-        Eloquent\Models\Dental\UserSignature::class,
-        Eloquent\Models\Dental\Uvula::class,
+        'Dental\AccessCode',
+        'Admin',
+        'Dental\AdvancedPainTmdExam',
+        'Dental\AirwayEvaluation',
+        'Dental\Allergen',
+        'Dental\ApiPermission',
+        'Dental\ApiPermissionResource',
+        'Dental\ApiPermissionResourceGroup',
+        'Dental\AppointmentSummary',
+        'Dental\AppointmentType',
+        'Dental\AssessmentPlanExam',
+        'Dental\Calendar',
+        'Dental\Chair',
+        'Dental\ChangeList',
+        'Dental\Charge',
+        'Dental\ClaimElectronic',
+        'Dental\ClaimNote',
+        'Dental\ClaimNoteAttachment',
+        'Dental\ClaimText',
+        'Company',
+        'Dental\Complaint',
+        'Dental\Contact',
+        'Dental\ContactType',
+        'Dental\CorporateContact',
+        'Dental\CustomLetterTemplate',
+        'Dental\CustomText',
+        'Dental\DentalClinicalExam',
+        'Dental\Device',
+        'Dental\Diagnostic',
+        'Dental\DoctorPalpation',
+        'Dental\Document',
+        'Dental\DocumentCategory',
+        'EdxCertificate',
+        'Dental\EpworthHomeSleepTest',
+        'Dental\EpworthSleepinessScale',
+        'Dental\EvaluationManagementExam',
+        'Dental\ExternalCompany',
+        'Dental\ExternalUser',
+        'Dental\ExtraPercaseInvoice',
+        'Dental\Fax',
+        'Dental\FaxInvoice',
+        'Filemanager',
+        'FlowsheetSegment',
+        'Dental\Flowsheet',
+        'Dental\FlowsheetStep',
+        'Dental\FlowsheetNextStep',
+        'Dental\Form',
+        'Dental\GagReflex',
+        'Dental\GuideDevice',
+        'Dental\GuideSetting',
+        'Dental\GuideSettingOption',
+        'Dental\HealthHistory',
+        'Dental\HomeSleepTest',
+        'Dental\ImageType',
+        'Dental\Insurance',
+        'Dental\InsuranceDiagnosis',
+        'Dental\InsuranceDocument',
+        'Dental\InsuranceFile',
+        'Dental\InsuranceHistory',
+        'Dental\InsurancePreauth',
+        'Dental\InsuranceType',
+        'Dental\Intolerance',
+        'Dental\Joint',
+        'Dental\JointExam',
+        'Dental\LedgerHistory',
+        'Dental\LedgerNote',
+        'Dental\LedgerPayment',
+        'Dental\LedgerRecord',
+        'Dental\LedgerStatement',
+        'Dental\Ledger',
+        'Dental\LetterTemplate',
+        'Dental\Letter',
+        'Dental\Location',
+        'Dental\LoginDetail',
+        'Dental\Login',
+        'Dental\Mandible',
+        'Dental\Maxilla',
+        'Dental\MedicalHistory',
+        'Dental\Medicament',
+        'Dental\MissingTooth',
+        'Dental\ModifierCode',
+        'Dental\NasalPassage',
+        'Dental\NewFlowsheet',
+        'Dental\Note',
+        'Dental\Notification',
+        'Dental\PainTmdExam',
+        'Dental\Palpation',
+        'Dental\PatientContact',
+        'Dental\PatientInsurance',
+        'Dental\PatientSummary',
+        'Dental\Patient',
+        'Payer',
+        'Dental\PaymentReport',
+        'Dental\PercaseInvoice',
+        'Dental\PlaceService',
+        'Dental\Plan',
+        'Dental\PlanText',
+        'Dental\PreviousTreatment',
+        'Dental\ProfileImage',
+        'Dental\Qualifier',
+        'Dental\QPage2Surgery',
+        'Dental\Recipient',
+        'Dental\ReferredByContact',
+        'Dental\Refund',
+        'Dental\ScreenerEpworth',
+        'Dental\Screener',
+        'Dental\Sleeplab',
+        'Dental\SleepStudy',
+        'Dental\SleepTest',
+        'Dental\SocialHistory',
+        'Dental\SupportAttachment',
+        'Dental\SoftPalate',
+        'Dental\Summary',
+        'Dental\SummarySleeplab',
+        'Dental\SupportCategory',
+        'Dental\SupportResponse',
+        'Dental\SupportTicket',
+        'Dental\Symptom',
+        'Dental\Task',
+        'Dental\TeethExam',
+        'Dental\Thorton',
+        'Dental\TmjClinicalExam',
+        'Dental\Tongue',
+        'Dental\TongueClinicalExam',
+        'Dental\TonsilsClinicalExam',
+        'Dental\TransactionCode',
+        'Dental\TypeService',
+        'Dental\User',
+        'Dental\UserCompany',
+        'Dental\UserHstCompany',
+        'Dental\UserSignature',
+        'Dental\Uvula',
     ];
 
     const EXTERNAL_BINDINGS = [
-        Eloquent\Models\Dental\ExternalCompanyUser::class,
-        Eloquent\Models\Dental\ExternalPatient::class,
+        'Dental\ExternalCompanyUser',
+        'Dental\ExternalPatient',
     ];
 
     /**
+     * @param string|null $modelName
      * @return Bindings[]
      * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
+     * @throws \ReflectionException
      */
-    public static function setBindings()
+    public static function setBindings($modelName = null)
     {
         $bindingObjects = [];
-        foreach (self::MODELS as $model) {
+        $models = self::selectModels($modelName);
+
+        foreach ($models as $modelWithoutNamespace) {
+            $model = self::MODEL_NAMESPACE . $modelWithoutNamespace;
             $namingConvention = new BindingNamingConvention($model);
             $bindingObject = new Bindings();
             $bindingObject
@@ -177,7 +191,8 @@ class BindingSetter
     public static function setExternalBindings()
     {
         $bindingObjects = [];
-        foreach (self::EXTERNAL_BINDINGS as $binding) {
+        foreach (self::EXTERNAL_BINDINGS as $bindingWithoutNamespace) {
+            $binding = self::MODEL_NAMESPACE . $bindingWithoutNamespace;
             $namingConvention = new BindingNamingConvention($binding);
             $bindingObject = new Bindings();
             $bindingObject
@@ -187,5 +202,24 @@ class BindingSetter
             $bindingObjects[] = $bindingObject;
         }
         return $bindingObjects;
+    }
+
+    /**
+     * @param string|null $modelName
+     * @return array
+     */
+    protected static function selectModels($modelName = null)
+    {
+        if (is_null($modelName)) {
+            return self::MODELS;
+        }
+        if (in_array($modelName, self::MODELS)) {
+            return [$modelName];
+        }
+        $namespace = 'Dental\\';
+        if (in_array($namespace . $modelName, self::MODELS)) {
+            return [$namespace . $modelName];
+        }
+        return [];
     }
 }

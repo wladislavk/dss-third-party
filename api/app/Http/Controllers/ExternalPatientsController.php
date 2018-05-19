@@ -13,6 +13,8 @@ class ExternalPatientsController extends Controller
 {
     const DSS_PATIENT_STATUS_PENDING_ACTIVE = 3;
 
+    protected $hasIp = false;
+
     /**
      * @param ExternalPatientStore $request
      * @param ExternalPatientSyncManager $syncManager

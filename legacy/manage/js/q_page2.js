@@ -8,6 +8,16 @@ $(document).ready(function() {
 	$('#q_page2frm').submit(function() {
 		window.onbeforeunload = null;
 	});
+	$('#q_page2frm').bind('reset', function() {
+    var $form = $(this);
+    setTimeout(function(){
+      $form.find(':radio:checked').change();
+      $('.surgery-row.new-row').remove()
+      $('.surgery-row.original-row').show()
+        .find('.surgery-deleted')
+        .val(0)
+    }, 0)
+  })
 });
 
 function confirmExit()
@@ -109,17 +119,48 @@ function q_page2abc(fa)
 	return (errorMsg == '');
 }
 
-function add_surgery()
-{
-	n = $('#num_surgery').attr('value');
-	$('#surgery_table').append('<tr id="surgery_row_'+n+'"><td><input type="hidden" id="surgery_id_'+n+'" name="surgery_id_'+n+'" value="0" /><input type="text" id="surgery_date_'+n+'" name="surgery_date_'+n+'" /></td><td><input type="text" id="surgeon_'+n+'" name="surgeon_'+n+'" /></td><td><input type="text" id="surgery_'+n+'" name="surgery_'+n+'" /></td><td><input type="button" name="delete_'+n+'" value="Delete" onclick="delete_surgery(\''+n+'\'); return false;" /></td></tr>');				
-	$('#num_surgery').attr('value', (parseInt(n,10)+1));
+function addSurgery () {
+  var $newRows = $('tr.surgery-row.new-row')
+  var $lastRow = $('tr.surgery-row:last')
+  var $date = $lastRow.find('input.surgery-date')
+  var $surgeon = $lastRow.find('input.surgery-surgeon')
+  var $surgery = $lastRow.find('input.surgery-surgery')
+  var rows = $newRows.length
+  var template =
+    '<tr class="surgery-row new-row" id="new-surgery-{id}">' +
+      '<td>' +
+        '<input type="text" class="surgery-date"  name="new_surgeries[{id}][date]" />' +
+      '</td>' +
+      '<td>' +
+        '<input type="text" class="surgery-surgeon" name="new_surgeries[{id}][surgeon]" />' +
+      '</td>' +
+      '<td>' +
+        '<input type="text" class="surgery-surgery" name="new_surgeries[{id}][surgery]" />' +
+      '</td>' +
+      '<td>' +
+        '<input type="button" value="Delete" onclick="deleteSurgery(\'new-surgery-{id}\'); return false;" />' +
+      '</td>' +
+    '</tr>'
+  var $newRow = $(template.replace(/\{id\}/g, rows))
+
+  $newRow.find('.surgery-date').val($date.val())
+  $newRow.find('.surgery-surgeon').val($surgeon.val())
+  $newRow.find('.surgery-surgery').val($surgery.val())
+
+  $date.val('')
+  $surgeon.val('')
+  $surgery.val('')
+
+  $newRow.insertBefore($lastRow)
 }
 
-function delete_surgery(n)
-{
-	$('#surgery_date_'+n).val('');
-	$('#surgeon_'+n).val('');
-	$('#surgery_'+n).val('');
-	$('#surgery_row_'+n).hide();
+function deleteSurgery (id) {
+  var $row = $('#' + id)
+  if ($row.is('.original-row')) {
+    $row.find('.surgery-deleted')
+      .val(1)
+    $row.hide()
+    return
+  }
+  $row.remove()
 }

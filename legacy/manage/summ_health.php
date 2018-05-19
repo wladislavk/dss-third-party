@@ -1,5 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-$sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_page3id = st($myarray['q_page3id']);
@@ -345,7 +345,8 @@ if ($other_history != '') { ?>
     } ?>
 </div>
 <?php
-$sql = "select * from dental_ex_page4 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+
+$sql = "select * from dental_ex_page4_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page4id = st($myarray['ex_page4id']);
@@ -543,7 +544,7 @@ if ($deistema != '') { ?>
     <?php
 }
 
-$sql = "select * from dental_ex_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page1_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page1id = st($myarray['ex_page1id']);
@@ -669,7 +670,7 @@ if ($tongue != "" || $additional_paragraph != "") { ?>
     }
 }
 
-$sql = "select * from dental_ex_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page2id = st($myarray['ex_page2id']);
@@ -816,7 +817,7 @@ $tonsils_grade = st($myarray['tonsils_grade']);
     } ?>
 </div>
 <?php
-$sql = "select * from dental_ex_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page3id = st($myarray['ex_page3id']);
@@ -978,7 +979,7 @@ if ($nasal_passages != '' || $other_nasal_passages != '') { ?>
     }
 }
 
-$sql = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page5id = st($myarray['ex_page5id']);

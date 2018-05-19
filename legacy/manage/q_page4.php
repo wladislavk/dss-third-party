@@ -2,14 +2,31 @@
     include "includes/top.htm";
     include_once('includes/patient_info.php');
 
+$db = new Db();
+$baseTable = 'dental_q_page4_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
     if ($patient_info) {
 ?>
 
     <script type="text/javascript" src="/manage/js/q_page4.js"></script>
-    <script type="text/javascript" src="/manage/js/form_top.js"></script>
+    <script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
 
 <?php
-    if(isset($_POST['q_page4sub']) && $_POST['q_page4sub'] == 1) {
+    if(!$isHistoricView && isset($_POST['q_page4sub']) && $_POST['q_page4sub'] == 1) {
         $family_had = $_POST['family_had'];
         $family_diagnosed = $_POST['family_diagnosed'];
         $additional_paragraph = $_POST['additional_paragraph'];
@@ -54,7 +71,7 @@
 <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $ed_sql = " update dental_q_page4 set 
+            $ed_sql = " update dental_q_page4_view set 
                 family_had = '".s_for($family_had_arr)."',
                 family_diagnosed = '".s_for($family_diagnosed)."',
                 additional_paragraph = '".s_for($additional_paragraph)."',
@@ -90,7 +107,11 @@
         trigger_error("Die called", E_USER_ERROR);
     }
 
-    $sql = "select * from dental_q_page4 where patientid='".$_GET['pid']."'";
+    $sql = "select *
+        from $sourceTable
+        where patientid = '$patientId'
+            $andHistoryIdConditional
+            $andNullConditional";
 
     $myarray = $db->getRow($sql);
     $q_page4id = st($myarray['q_page4id']);
@@ -119,14 +140,20 @@
         <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
     </div>
 
-    <form id="q_page4frm" name="q_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >
+    <form id="q_page4frm" class="q_form" name="q_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post" >
         <input type="hidden" name="q_page4sub" value="1" />
-        <input type="hidden" name="ed" value="<?php echo $q_page4id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
         <div align="right">
-            <input type="reset" value="Reset" />
-            <input type="submit" name="q_pagebtn" value="Save" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -327,8 +354,13 @@
         </table>
 
         <div align="right">
-            <input type="reset" value="Reset" />
-            <input type="submit" name="q_pagebtn" value="Save" tabindex="12" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="q_pagebtn" value="Save" tabindex="12" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
     </form>
@@ -360,5 +392,6 @@
         print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

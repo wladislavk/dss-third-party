@@ -70,7 +70,7 @@ if($_POST['q_page2sub'] == 1)
 		$polysomnographic = 0;
 	
 	
-        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page2_view WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if(mysqli_num_rows($exist_q) == 0)
 	{
@@ -117,9 +117,9 @@ if($_POST['q_page2sub'] == 1)
                                 else{ $s=''; }
                         }else{
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                        $s = "UPDATE dental_q_page2_surgery_view SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
                                 }else{
-                                        $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                        $s = "DELETE FROM dental_q_page2_surgery_view WHERE id='".$_POST['surgery_id_'.$i]."'";
                                 }
                         }
                         mysqli_query($con, $s);
@@ -137,7 +137,7 @@ if($_POST['q_page2sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_q_page2 set 
+		$ed_sql = " update dental_q_page2_view set 
 		polysomnographic = '".s_for($polysomnographic)."',
 		sleep_center_name_text = '".s_for($sleep_center_name_text)."',
 		sleep_study_on = '".s_for($sleep_study_on)."',
@@ -177,9 +177,9 @@ if($_POST['q_page2sub'] == 1)
 				else{ $s=''; }
                         }else{
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                        $s = "UPDATE dental_q_page2_surgery_view SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
                                 }else{
-                                        $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                        $s = "DELETE FROM dental_q_page2_surgery_view WHERE id='".$_POST['surgery_id_'.$i]."'";
                                 }
                         }
                         mysqli_query($con, $s);
@@ -197,7 +197,7 @@ if($_POST['q_page2sub'] == 1)
 	}
 }
 
-
+require_once __DIR__ . '/includes/questionnaire_header.php';
 $comp = questionnaireCompletedSections($_SESSION['pid']);
 
         if($comp['treatments'] == 0)
@@ -210,7 +210,7 @@ $pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' ";
+$sql = "select * from dental_q_page2_view where patientid='".$_SESSION['pid']."' ";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -248,8 +248,6 @@ if($cpap == '')
 	$cpap = 'No';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
-<a name="top"></a>
-<?php include 'includes/questionnaire_header.php'; ?>
 
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -534,7 +532,7 @@ if($cpap == '')
 	<table id="surgery_table">
 	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>	
 		<?php
-		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+		  $s_sql = "SELECT * FROM dental_q_page2_surgery_view WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
 		  $s_q = mysqli_query($con, $s_sql);
 		  $s_count = 0;
 		  while($s_row = mysqli_fetch_assoc($s_q)){
@@ -594,6 +592,7 @@ if($cpap == '')
 <?php }else{
 show_section_completed($_SESSION['pid']);
 } ?>
-
+<?php require_once __DIR__ . '/../manage/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <? include "includes/footer.php";?>
 

@@ -238,10 +238,10 @@ $ed_sql .="
 	  $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'");	
 	
 		if(isset($_POST['location'])){
-			$ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
+			$ds_sql = "SELECT * FROM dental_summary_view where patientid='".$_GET['pid']."';";
 
 			if($db->getNumberRows($ds_sql) > 0){
-			  $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+			  $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
 			}else{
         $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
 			}
@@ -922,7 +922,7 @@ $doc_username = $docr['username'];
 		$referred_notes = st($themyarray["referred_notes"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-		$loc_sql = "SELECT location from dental_summary WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+		$loc_sql = "SELECT location from dental_summary_view WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 
 		$loc_r = $db->getRow($loc_sql);
 		$location = $loc_r['location'];

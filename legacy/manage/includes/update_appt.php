@@ -13,7 +13,7 @@
 		
 		$last_r = $db->getRow($last_sql);
 		if(!empty($last_r['id']) && $id == $last_r['id']){
-			$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+			$sql = "SELECT * FROM dental_ex_page5_view where patientid='".$pid."'";
 			
 			if($db->getNumberRows($sql) == 0){
 				$s = "INSERT INTO dental_ex_page5 set 
@@ -24,7 +24,7 @@
         			  adddate = now(),
         			  ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			} else {
-				$db->query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysqli_real_escape_string($con,$comp_date)))."' where patientid='".$pid."'");
+				$db->query("UPDATE dental_ex_page5_view SET dentaldevice_date='".date('Y-m-d', strtotime(mysqli_real_escape_string($con,$comp_date)))."' where patientid='".$pid."'");
 			}
 		}
 	}

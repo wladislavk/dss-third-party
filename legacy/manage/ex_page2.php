@@ -1,11 +1,29 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
     include "includes/top.htm";
     include_once('includes/patient_info.php');
+
+$db = new Db();
+$baseTable = 'dental_ex_page2_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
     if ($patient_info) {
 ?>
     <script type="text/javascript" src="js/ex_page2.js"></script>
 <?php
-        if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1){
+        if(!$isHistoricView && !empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1){
         	$mallampati = (!empty($_POST['mallampati']) ? $_POST['mallampati'] : '');
         	$tonsils = (!empty($_POST['tonsils']) ? $_POST['tonsils'] : '');
         	$tonsils_grade = (!empty($_POST['tonsils_grade']) ? $_POST['tonsils_grade'] : '');
@@ -51,7 +69,7 @@
                 }
                 trigger_error("Die called", E_USER_ERROR);
 	        } else {
-        		$ed_sql = " update dental_ex_page2 set 
+        		$ed_sql = " update dental_ex_page2_view set 
         		mallampati = '".s_for($mallampati)."',
                         additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
         		tonsils = '".s_for($tonsils_arr)."',
@@ -91,7 +109,11 @@
         	trigger_error("Die called", E_USER_ERROR);
         }
 
-        $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
+        $sql = "select *
+            from $sourceTable
+            where patientid = '$patientId'
+                $andHistoryIdConditional
+                $andNullConditional";
 
         $myarray = $db->getRow($sql);
         $ex_page2id = st($myarray['ex_page2id']);
@@ -115,16 +137,21 @@
     <div align="center" class="red">
     	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
-    <form id="ex_page2frm" class="ex_form" name="ex_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+    <form id="ex_page2frm" class="ex_form" name="ex_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
         <input type="hidden" name="ex_page2sub" value="1" />
-        <input type="hidden" name="ed" value="<?php echo $ex_page2id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" style="clear:both;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -150,7 +177,7 @@
                                         	<td valign="top" width="25%" align="center">
                                             	<img src="images/class2.jpg" height="201" width="131" border="0" />
                                                 <br />
-                                                <input type="radio" id="mallampati_class2" name="mallampati" name="mallampati" value="Class II" <?php if($mallampati == 'Class II') echo " checked";?> /> Class II
+                                                <input type="radio" name="mallampati" value="Class II" <?php if($mallampati == 'Class II') echo " checked";?> /> Class II
                                             </td>
                                         	<td valign="top" width="25%" align="center">
                                             	<img src="images/class3.jpg" height="201" width="131" border="0" />
@@ -169,7 +196,7 @@
                     				Additional Notes
                                     <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page2frm&tx=additional_notes'); return false;">Use Custom Text</button>
                                     <br />
-                    				<textarea name="additional_notes" style="width:350px; height:187px"><?php echo  $additional_notes; ?></textarea>
+                    				<textarea name="additional_notes" style="width:255px; height:187px"><?php echo  $additional_notes; ?></textarea>
                                 </span>
                             </div>
                             <br />
@@ -247,12 +274,16 @@
             </tr>
         </table>
 
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
     </form>
@@ -281,5 +312,6 @@
     	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

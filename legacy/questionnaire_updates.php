@@ -7,7 +7,7 @@ if(true){ //to prevent output if set to false
 *****************************/
 echo "<b>UPDATE Complaints Questionnaire Page 1</b><br /><br />";
 $deleted = array(15, 16, 17);
-$sql = "SELECT patientid, complaintid, other_complaint FROM dental_q_page1";
+$sql = "SELECT patientid, complaintid, other_complaint FROM dental_q_page1_view";
 $q = mysqli_query($con, $sql);
 while($r = mysqli_fetch_assoc($q)){
 $pid = $r['patientid'];
@@ -38,10 +38,10 @@ if(in_array($d, $compid)){
 }
 if(trim($othercomp)!=''){
   if($run_updates){
-    mysqli_query($con, "UPDATE dental_q_page1 SET complaintid=CONCAT(complaintid,'0|1~') WHERE patientid='".$pid."'");
+    mysqli_query($con, "UPDATE dental_q_page1_view SET complaintid=CONCAT(complaintid,'0|1~') WHERE patientid='".$pid."'");
   }
 }
-$upsql = "UPDATE dental_q_page1 SET other_complaint='".$othercomp."' WHERE patientid='".$pid."'";
+$upsql = "UPDATE dental_q_page1_view SET other_complaint='".$othercomp."' WHERE patientid='".$pid."'";
 if($run_updates){
   mysqli_query($con, $upsql);
 }
@@ -57,7 +57,7 @@ echo "--------------------------------------------<br />
 ** OTHER ATTMPTED SURGERIES
 *******************************************/
 echo "<b>UPDATE Other attempted surgeries</b><br /><br  />";
-$ssql = "SELECT other, other_therapy, patientid from dental_q_page2";
+$ssql = "SELECT other, other_therapy, patientid from dental_q_page2_view";
 $sq = mysqli_query($con, $ssql);
 while($sr = mysqli_fetch_assoc($sq)){
 
@@ -65,14 +65,14 @@ $o = $sr['other'];
 $ot = $sr['other_therapy'];
 $ot .= (trim($ot)!=''&&trim($o)!='')?', ':'';
 $ot .= str_replace('~',', ',substr($o, 1, strlen($o)-2));
-$upssql = "UPDATE dental_q_page2 SET other_therapy='".$ot."' WHERE patientid='".$sr['patientid']."'";
+$upssql = "UPDATE dental_q_page2_view SET other_therapy='".$ot."' WHERE patientid='".$sr['patientid']."'";
 if($run_updates){
   mysqli_query($con, $upssql);
 }
 echo $sr['patientid']." - ".$upssql."<br />";
 }
 
-$isql = "SELECT intolerance, other_intolerance, q_page2id FROM dental_q_page2";
+$isql = "SELECT intolerance, other_intolerance, q_page2id FROM dental_q_page2_view";
 $iq = mysqli_query($con, $isql);
 while($ir = mysqli_fetch_assoc($iq)){
   if($ir['other_intolerance']!=''){
@@ -83,13 +83,13 @@ while($ir = mysqli_fetch_assoc($iq)){
           $int .= "0~";
 	}
   }
-  $upisql = "UPDATE dental_q_page2 SET intolerance='".$int."' WHERE q_page2id='".$ir['q_page2id']."'";
+  $upisql = "UPDATE dental_q_page2_view SET intolerance='".$int."' WHERE q_page2id='".$ir['q_page2id']."'";
   if($run_updates){
     mysqli_query($con, $upisql);
   }
 }
 
-$cpapsql = "UPDATE dental_q_page2 SET cur_cpap='Yes', cpap='Yes' WHERE percent_night_cpap!='' OR  nights_wear_cpap!=''";
+$cpapsql = "UPDATE dental_q_page2_view SET cur_cpap='Yes', cpap='Yes' WHERE percent_night_cpap!='' OR  nights_wear_cpap!=''";
 if($run_updates){
   mysqli_query($con, $cpapsql);
 }
@@ -97,11 +97,11 @@ if($run_updates){
 /*****************************************
 ** Gum Problems
 ******************************************/
-$gp_sql = "SELECT gum_problems, q_page3id from dental_q_page3";
+$gp_sql = "SELECT gum_problems, q_page3id from dental_q_page3_view";
 $gp_q = mysqli_query($con, $gp_sql);
 while($gp_r = mysqli_fetch_assoc($gp_q)){
   if($run_updates && trim($gp_r['gum_problems']) != ''){
-	mysqli_query($con, "UPDATE dental_q_page3 set gum_prob='Yes', gum_prob_text=gum_problems WHERE q_page3id='".$gp_r['q_page3id']."'");
+	mysqli_query($con, "UPDATE dental_q_page3_view set gum_prob='Yes', gum_prob_text=gum_problems WHERE q_page3id='".$gp_r['q_page3id']."'");
   }
 }
 
@@ -114,7 +114,7 @@ while($gp_r = mysqli_fetch_assoc($gp_q)){
 //Medical History
 
 echo "<b>UPDATE medical history</b><br /><br  />";
-$mhsql = "SELECT allergens, other_allergens, medications, other_medications, history, other_history, patientid from dental_q_page3";
+$mhsql = "SELECT allergens, other_allergens, medications, other_medications, history, other_history, patientid from dental_q_page3_view";
 $mhq = mysqli_query($con, $mhsql);
 while($mhr = mysqli_fetch_assoc($mhq)){
 
@@ -155,7 +155,7 @@ while($hr = mysqli_fetch_assoc($hq)){
   }
 } 
 
-$upmhsql = "UPDATE dental_q_page3 set allergenscheck=".$allc.", medicationscheck=".$medc.", historycheck=".$hisc.", other_allergens='".$oa."', other_medications='".$om."', other_history='".$oh."' where patientid='".$mhr['patientid']."'";
+$upmhsql = "UPDATE dental_q_page3_view set allergenscheck=".$allc.", medicationscheck=".$medc.", historycheck=".$hisc.", other_allergens='".$oa."', other_medications='".$om."', other_history='".$oh."' where patientid='".$mhr['patientid']."'";
 if($run_updates){
   mysqli_query($con, $upmhsql);
 }
@@ -163,7 +163,7 @@ echo $mhr['patientid']." - ".$upmhsql."<br />";
 
 }
 
-$tmjsql = "UPDATE dental_q_page3 set 
+$tmjsql = "UPDATE dental_q_page3_view set 
 	tmj_cp = CASE tmj WHEN 'Popping or clicking' THEN 'Yes' ELSE 'No' END,
         tmj_pain = CASE tmj WHEN 'Pain in joint or muscles' THEN 'Yes' ELSE 'No' END
  ";
@@ -171,7 +171,7 @@ if($run_updates){
   mysqli_query($con, $tmjsql);
 }
 
-$injurysql = "UPDATE dental_q_page3 SET
+$injurysql = "UPDATE dental_q_page3_view SET
 	injury = 'Yes'
 	WHERE injurytohead = 'Yes' OR	
 	injurytoneck = 'Yes' OR
@@ -182,7 +182,7 @@ if($run_updates){
   mysqli_query($con, $injurysql);
 }
 
-$gumsql = "UPDATE dental_q_page3 SET
+$gumsql = "UPDATE dental_q_page3_view SET
 	gum_prob = 'Yes',
 	gum_prob_text = gum_problems
 	WHERE gum_problems != '' AND gum_problems IS NOT NULL";
@@ -190,11 +190,11 @@ if($run_updates){
   mysqli_query($con, $gum_sql);
 }
 
-$q4sql = "SELECT * from dental_q_page4";
+$q4sql = "SELECT * from dental_q_page4_view";
 $q4q = mysqli_query($con, $q4sql);
 while($q4r = mysqli_fetch_assoc($q4q)){
   $pid = $q4r['patientid'];
-  $upsql = "UPDATE dental_q_page3 SET ";
+  $upsql = "UPDATE dental_q_page3_view SET ";
   
 
   $family_had = $q4r['family_had'];
@@ -280,7 +280,7 @@ while($q4r = mysqli_fetch_assoc($q4q)){
 
 
 
-$sql = "select * from dental_q_sleep";
+$sql = "select * from dental_q_sleep_view";
 $my = mysqli_query($con, $sql);
 while($myarray = mysqli_fetch_array($my)){
 
@@ -301,7 +301,7 @@ if($epworthid <> '')
         }
 }
 
-  $epsql = "UPDATE dental_q_page1 SET ess='".$eptotal."' WHERE patientid='".$myarray['patientid']."'";
+  $epsql = "UPDATE dental_q_page1_view SET ess='".$eptotal."' WHERE patientid='".$myarray['patientid']."'";
   echo $epsql."<br />";
   if($run_updates){
     mysqli_query($con, $epsql);
@@ -309,7 +309,7 @@ if($epworthid <> '')
 }
 
 
-$sql = "select * from dental_thorton";
+$sql = "select * from dental_thorton_view";
 $my = mysqli_query($con, $sql);
 while($myarray = mysqli_fetch_array($my)){
 $ttotal = 0;
@@ -318,7 +318,7 @@ $ttotal += $myarray['snore_2'];
 $ttotal += $myarray['snore_3'];
 $ttotal += $myarray['snore_4'];
 $ttotal += $myarray['snore_5'];
-  $tsql = "UPDATE dental_q_page1 SET tss='".$ttotal."' WHERE patientid='".$myarray['patientid']."'";
+  $tsql = "UPDATE dental_q_page1_view SET tss='".$ttotal."' WHERE patientid='".$myarray['patientid']."'";
   echo $tsql."<br />";
   if($run_updates){
     mysqli_query($con, $tsql);
@@ -339,7 +339,7 @@ if($run_updates){
 
 
 //Move bmi to dental_patients
-$sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1";
+$sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1_view";
 $q = mysqli_query($con, $sql);
 while($r = mysqli_fetch_assoc($q)){
   $upsql = "UPDATE dental_patients set feet='".$r['feet']."', inches='".$r['inches']."', weight='".$r['weight']."', bmi='".$r['bmi']."' WHERE patientid='".$r['patientid']."'";

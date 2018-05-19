@@ -75,7 +75,7 @@
 	$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
 
 	// Get Medical Information
-	$q3_sql = "SELECT history, medications from dental_q_page3 WHERE patientid = '".$patientid."';";
+	$q3_sql = "SELECT history, medications from dental_q_page3_view WHERE patientid = '".$patientid."';";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = $q3_myarray['history'];
@@ -189,19 +189,19 @@
 	}
 
 	// Select BMI
-	$bmi_query = "SELECT bmi FROM dental_q_page1 WHERE patientid = '".$patientid."';";
+	$bmi_query = "SELECT bmi FROM dental_q_page1_view WHERE patientid = '".$patientid."';";
 	
 	$bmi_result = $db->getRow($bmi_query);
 	$bmi = $bmi_result['bmi'];
 
 	// Reason seeking treatment
-	$reason_query = "SELECT reason_seeking_tx FROM dental_summary WHERE patientid = '".$patientid."';";
+	$reason_query = "SELECT reason_seeking_tx FROM dental_summary_view WHERE patientid = '".$patientid."';";
 	
 	$reason_result = $db->getRow($reason_query);
 	$reason_seeking_tx = $reason_result['reason_seeking_tx'];
 
 	// Symptoms 
-	$sql = "SELECT complaintid FROM dental_q_page1 WHERE patientid = '".$patientid."' LIMIT 1;";
+	$sql = "SELECT complaintid FROM dental_q_page1_view WHERE patientid = '".$patientid."' LIMIT 1;";
 	
 	$result = $db->getResults($sql);
 	if ($result) foreach ($result as $row) {

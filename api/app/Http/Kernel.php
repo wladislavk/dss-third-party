@@ -24,7 +24,12 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'jwt.auth.admin' => \DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware::class,
         'jwt.auth.user' => \DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware::class,
+        'jwt.auth.patient' => \DentalSleepSolutions\Http\Middleware\JwtPatientAuthMiddleware::class,
+        'jwt.auth.admin.chainedWith' => \DentalSleepSolutions\Http\Middleware\JwtAdminAuthChainMiddleware::class,
+        'jwt.auth.user.chainedWith' => \DentalSleepSolutions\Http\Middleware\JwtUserAuthChainMiddleware::class,
+        'jwt.auth.patient.chainedWith' => \DentalSleepSolutions\Http\Middleware\JwtPatientAuthChainMiddleware::class,
         'dentrix.auth' => \DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware::class,
         'api.log' => \DentalSleepSolutions\Http\Middleware\ApiLogMiddleware::class,
+        'api.permissions' => \DentalSleepSolutions\Http\Middleware\ApiPermissionsLookupMiddleware::class,
     ];
 }

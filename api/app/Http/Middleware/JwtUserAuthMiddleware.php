@@ -15,10 +15,19 @@ use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
-class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
+class JwtUserAuthMiddleware extends AbstractJwtAuthMiddleware
 {
-    const SUDO_FIELD = 'sudo_id';
-    const SUDO_REFERENCE = 'userid';
+    /** @var string */
+    protected $role = JwtAuth::ROLE_USER;
+
+    /** @var string */
+    protected $sudoField = self::USER_SUDO_ID;
+
+    /** @var string */
+    protected $sudoReference = self::USER_MODEL_ID;
+
+    /** @var bool */
+    protected $fallsThrough = false;
 
     /**
      * @param Request $request
@@ -27,69 +36,20 @@ class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        try {
-            $token = $this->getAuthToken($request);
-        } catch (HttpMalformedHeaderException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
-        }
-
-        if ($request->admin()) {
-            $request = $this->handleSudo($request);
-            return $next($request);
-        }
-
-        try {
-            $this->auth->toRole(JwtAuth::ROLE_USER, $token);
-        } catch (InvalidTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, Response::HTTP_BAD_REQUEST);
-        } catch (InactiveTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INACTIVE, Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (ExpiredTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_EXPIRED, Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (InvalidPayloadException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (AuthenticatableNotFoundException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $request->setUserResolver(function () use ($request) {
-            $user = $this->auth
-                ->guard(JwtAuth::ROLE_USER)
-                ->user()
-            ;
-            return $user;
-        });
-
-        return $next($request);
+        return parent::handle($request, $next);
     }
 
     /**
      * @param Request $request
-     * @return Request
      */
-    private function handleSudo(Request $request)
+    protected function setResolver(Request $request)
     {
-        $sudoId = $request->input(self::SUDO_FIELD, '');
-
-        $user = $this->auth
-            ->guard(JwtAuth::ROLE_USER)
-            ->once([
-                self::SUDO_REFERENCE => $sudoId
-            ])
-        ;
-
-        if (!$user) {
-            return $request;
-        }
-
         $request->setUserResolver(function () {
             $user = $this->auth
-                ->guard(JwtAuth::ROLE_USER)
+                ->guard($this->role)
                 ->user()
             ;
             return $user;
         });
-
-        return $request;
     }
 }

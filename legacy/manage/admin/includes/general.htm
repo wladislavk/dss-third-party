@@ -176,6 +176,24 @@ function get_ptreferralids ($pid, $includePhysicians=false) {
     return $contactid_list;
 }
 
+/**
+ * @param string $string
+ * @return string
+ */
+function explodeAndEscapeList($string)
+{
+    if (!is_null($string) || !strlen($string)) {
+        return "'-1'";
+    }
+    $array = preg_split('/ *, */', $string);
+    $array = array_filter($array, function ($each) {
+        return strlen($each) > 0;
+    });
+    $array = array_unique($array);
+    $db = new Db();
+    $array = $db->escapeList($array);
+    return $array;
+}
 
 // Retrieve Names Salutation and more from Database
 // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
@@ -184,13 +202,13 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_
   $db = new Db();
   $contact_info = array();
 
-  $patient = clear_id_list($patient);
-  $md_list = clear_id_list($md_list);
-  $md_referral_list = clear_id_list($md_referral_list);
-  $pat_referral_list = clear_id_list($pat_referral_list);
+  $patient = explodeAndEscapeList($patient);
+  $md_list = explodeAndEscapeList($md_list);
+  $md_referral_list = explodeAndEscapeList($md_referral_list);
+  $pat_referral_list = explodeAndEscapeList($pat_referral_list);
 
   if (isset($patient)) {
-    $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN('".$patient."');";
+    $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN(".$patient.");";
     $result = $db->getResults($sql);
     if ($result) {
       foreach ($result as $row) {
@@ -746,7 +764,7 @@ function create_letter_pdf($letterid){
   $doc_phone = $loc_r['phone'];
   $doc_fax = $loc_r['fax'];
 
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
+  $loc_sql = "SELECT location FROM dental_summary_view where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
   $loc_r = $db->getRow($loc_sql);
   if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
     $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($GLOBALS['con'],$loc_r['location'])."' AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";

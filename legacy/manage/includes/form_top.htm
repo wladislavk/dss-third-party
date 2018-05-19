@@ -1,72 +1,204 @@
-<?php namespace Ds3\Libraries\Legacy; ?>    <a name="form"></a>
 <?php
-    $lastdot = strrpos($_SERVER['PHP_SELF'],".");
-    $page_path = substr($_SERVER['PHP_SELF'],0,$lastdot);
+namespace Ds3\Libraries\Legacy;
 
-    $lastslash = strrpos($page_path,"/")+1;
-    $cur_page = substr($page_path,$lastslash);
+$fromLegacy = isset($baseTable);
+
+/**
+ * Missing variable in most forms
+ */
+$cur_page = str_replace('.php', '', $_SERVER['SCRIPT_NAME']);
+$slugName = preg_replace('/.+?\/(.+)$/', '$1', $cur_page);
+
+$snapshotDate['parsed_date'] = $snapshotDate['updated_at'] ?: $snapshotDate['adddate'];
+$snapshotDate['parsed_date'] = strtotime($snapshotDate['parsed_date']) ?
+    date('m/d/Y H:i', strtotime($snapshotDate['parsed_date'])) : $snapshotDate['parsed_date'];
+
+$initiatedTimestamp = strtotime($initiatedTimestamp) ?
+    date('m/d/Y H:i' , strtotime($initiatedTimestamp)) : $initiatedTimestamp;
+$lastModifiedTimestamp = strtotime($lastModifiedTimestamp) ?
+    date('m/d/Y H:i' , strtotime($lastModifiedTimestamp)) : $lastModifiedTimestamp;
+
+$sectionName = questionnairesExamsSectionName($slugName);
+
 ?>
+<script>
+    var isHistoricView = <?= json_encode(!empty($isHistoricView)) ?>;
+    var historyId = <?= json_encode(isset($historyId) ? $historyId : 0) ?>;
+    var snapshotDate = <?= json_encode(isset($snapshotDate) ? $snapshotDate : '') ?>;
+    var isCreateNew = <?= json_encode(isset($isCreateNew) ? $isCreateNew : '') ?>;
+    var sectionName = <?= json_encode($sectionName['section']) ?>;
+</script>
+<style>
+    .hidden { display: none; }
+    .hidden.unhide { display: block; }
 
-<br />
+    form.ex_form.sidetabs, form.q_form.sidetabs {
+        float: left;
+        /* width: 94%; */
+        width: 89%;
+        border-right: 4px solid #ccc;
+    }
 
-<script type="text/javascript" src="/manage/js/form_top.js"></script>
+    .history-selector {
+        float: left;
+        /* width: 5%; */
+        width: 10%;
+        margin-left: -4px;
+        background: #ccc;
+    }
 
-<?php if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] != 1) { ?>
-        <table width="98%" bgcolor="#abcdef" cellpadding="5" cellspacing="1" border="0" align="center">
-            <tr>
-                <td width="33%" valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'q_page1.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-					   <a href="Javascript:;" onclick="Javascript: change_page('q_page1', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    Symptoms</a>
-                </td>
-                <td width="33%" valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'q_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-                        <a href="Javascript:;" onclick="Javascript: change_page('q_page2', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    Previous Treatments</a>
-                </td>
-                <td width="33%" valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'q_page3.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-                        <a href="Javascript:;" onclick="Javascript: change_page('q_page3', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    Health Hx.</a>
-                </td>
-            </tr>
+    .history-selector ul {
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        list-style: none;
+        list-style-position: unset;
+        background: #fff;
+    }
+
+    .history-selector ul li {
+        font-weight: bold;
+        /* padding: 15px 8px 15px 5px; */
+        padding: 10px 3px 10px 10px;
+        border: 1px solid #ccc;
+        border-left-width: 4px;
+        background: #eee;
+        border-radius: 0 10px 0 0;
+        margin-top: -1px;
+        /* writing-mode: tb-rl; */
+    }
+
+    .history-selector ul li:nth-child(1) {
+        border-left-width: 1px;
+        background: #fff;
+    }
+
+    .history-selector ul li:nth-child(2) {
+        border-left-width: 1px;
+        background: #fff;
+    }
+
+    .history-selector ul li:nth-child(3) {
+        border-left-width: 2px;
+        background: #fcfcfc;
+    }
+
+    .history-selector ul li:nth-child(4) {
+        border-left-width: 3px;
+        background: #f6f6f6;
+    }
+
+    .history-selector ul li:last-child {
+        border-bottom-width: 1px;
+    }
+
+    .history-selector ul li.current {
+        background: #fed68d;
+        border-left-width: 0;
+    }
+
+    #history-timestamps {
+        float: left;
+        margin-left: 10px;
+    }
+
+    #history-timestamps table {
+        display: inline-block;
+        background-color: #fed68d;
+        text-align: right;
+        padding: 3px;
+    }
+
+    #history-timestamps table tbody {
+        display: table;
+        width: 100%;
+    }
+
+    #history-timestamps select {
+        vertical-align: super;
+    }
+
+    tr.hidden.unhide {
+        display: table-row;
+    }
+</style>
+<p>
+    <a name="form"></a>
+</p>
+<script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
+<div style="text-align: center">
+    (Note: Sections left blank were not evaluated)
+</div>
+<?= questionnairesExamsMenu($_SERVER['PHP_SELF'], 'menu-top') ?>
+<?php if ($fromLegacy) { ?>
+    <div id="history-selector" class="history-selector">
+        <ul>
+            <li class="<?= !$historyId ? 'current' : '' ?>">
+                <a href="?pid=<?= $patientId ?>"> Latest </a>
+            </li>
+            <?php foreach ((isset($historyList) ? $historyList : []) as $n => $each) {
+                if (!$n) {
+                    continue;
+                }
+                $each['selected_date'] = $each['updated_at'] ?: $each['history_created_at'];
+                $unixTime = strtotime($each['selected_date']);
+                $each['parsed_date'] = date('m/d/y', $unixTime);
+                $each['parsed_time'] = date('H:i', $unixTime);
+
+                if ($unixTime === false) {
+                    $each['parsed_date'] = $each['selected_date'];
+                    $each['parsed_time'] = '';
+
+                    if (preg_match('/^(?P<date>.+?) (?P<time>\d+:\d+)$/', $each['selected_date'], $matches)) {
+                        $each['parsed_date'] = $matches['date'];
+                        $each['parsed_time'] = $matches['time'];
+                    }
+                }
+
+                ?>
+                <li class="<?= $each['id'] == $historyId ? 'current' : '' ?>">
+                    <a href="?pid=<?= $patientId ?>&amp;history_id=<?= (int)$each['id'] ?>">
+                        <?= e($each['parsed_date']) ?>
+                        <small><?= e($each['parsed_time']) ?></small>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+<?php } ?>
+<form method="post" class="hidden" id="archive-page-form">
+    <input type="hidden" name="backup_table" value="1" />
+</form>
+<?php if ($fromLegacy) { ?>
+    <div id="history-timestamps">
+        <table>
+            <colgroup>
+                <col width="60%" />
+                <col width="40%" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>Initiated:</td>
+                    <td class="tz-timestamp initiated-timestamp"><?= $initiatedTimestamp ?></td>
+                </tr>
+                <tr>
+                    <td>Last Modified:</td>
+                    <td class="tz-timestamp"><?= $lastModifiedTimestamp ?></td>
+                </tr>
+            </tbody>
         </table>
-<?php } else { ?>
-	    <table width="98%" bgcolor="#abcdef" cellpadding="5" cellspacing="1" border="0" align="center">
-            <tr>
-    			<td valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'ex_page4.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-                        <a href="Javascript:;" onclick="Javascript: change_page('ex_page4', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    Dental Exam</a>
-                </td>
-                <td valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'ex_page1.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-					   <a href="Javascript:;" onclick="Javascript: change_page('ex_page1', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php }?>
-                    Vital Data/Tongue </a>
-                </td>
-                <td valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'ex_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-    					<a href="Javascript:;" onclick="Javascript: change_page('ex_page2', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    Mallampati/Tonsils </a>
-                </td>
-                <td valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'ex_page3.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-    					<a href="Javascript:;" onclick="Javascript: change_page('ex_page3', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php }?>
-                    Airway Evaluation </a>
-                </td>
-                <td valign="top" class="<?php if(strpos($_SERVER['PHP_SELF'],'ex_page5.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                    <?php if($cur_f == 0) {?>
-    					<a href="Javascript:;" onclick="Javascript: change_page('ex_page5', document.<?php echo $cur_page; ?>frm, <?php echo $_GET['pid']; ?>);">
-                    <?php } ?>
-                    TMJ/ROM </a>
-                </td>
-            </tr>
-        </table>
+        <?php if (!empty($canBackup)) { ?>
+            <select>
+                <option>
+                    Create New and Archive &darr;
+                </option>
+                <option class="new-backup" data-section-name="<?= e($sectionName['name']) ?>">
+                    Create New and Archive <?= e($sectionName['name']) ?>
+                </option>
+                <option class="backup-all-forms" data-section-name="<?= e(ucwords($sectionName['section'])) ?>">
+                    Create New and Archive all pages of <?= e(ucwords($sectionName['section'])) ?>
+                </option>
+            </select>
+        <?php } ?>
+    </div>
 <?php } ?>

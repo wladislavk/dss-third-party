@@ -10,6 +10,7 @@ use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Providers\Auth\AbstractGuard;
 use DentalSleepSolutions\Providers\Auth\AdminGuard;
+use DentalSleepSolutions\Providers\Auth\PatientGuard;
 use DentalSleepSolutions\Providers\Auth\UserGuard;
 use DentalSleepSolutions\Structs\JwtAuthErrors;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -21,6 +22,10 @@ class JwtAuth
     const MODEL_KEY = 'id';
     const ROLE_ADMIN = 'Admin';
     const ROLE_USER = 'User';
+    const ROLE_PATIENT = 'Patient';
+
+    /** @var PatientGuard */
+    private $patientGuard;
 
     /** @var UserGuard */
     private $userGuard;
@@ -32,15 +37,19 @@ class JwtAuth
     private $jwtHelper;
 
     /**
-     * @param UserGuard  $userGuard
-     * @param AdminGuard $adminGuard
-     * @param JwtHelper  $jwtHelper
+     * @param PatientGuard $patientGuard
+     * @param UserGuard    $userGuard
+     * @param AdminGuard   $adminGuard
+     * @param JwtHelper    $jwtHelper
      */
     public function __construct(
+        PatientGuard $patientGuard,
         UserGuard $userGuard,
         AdminGuard $adminGuard,
         JwtHelper $jwtHelper
-    ) {
+    )
+    {
+        $this->patientGuard = $patientGuard;
         $this->userGuard = $userGuard;
         $this->adminGuard = $adminGuard;
         $this->jwtHelper = $jwtHelper;
@@ -50,6 +59,10 @@ class JwtAuth
      * @param string $role
      * @return string
      * @throws AuthenticatableNotFoundException
+     * @throws ExpiredTokenException
+     * @throws InactiveTokenException
+     * @throws InvalidPayloadException
+     * @throws InvalidTokenException
      */
     public function toToken($role = '')
     {
@@ -96,6 +109,11 @@ class JwtAuth
         if ($role === self::ROLE_ADMIN) {
             return $this->adminGuard;
         }
+
+        if ($role === self::ROLE_PATIENT) {
+            return $this->patientGuard;
+        }
+
         return $this->userGuard;
     }
 }

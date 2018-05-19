@@ -66,7 +66,7 @@ if($_POST['q_page1sub'] == 1)
 	if($main_reason_arr != '')
 		$main_reason_arr = '~'.$main_reason_arr;
 	
- 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";	
+ 	$exist_sql = "SELECT patientid FROM dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
 	$exist_q = mysqli_query($con, $exist_sql);
 	if(mysqli_num_rows($exist_q) == 0)
 	{
@@ -108,7 +108,7 @@ if($_POST['q_page1sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_q_page1 set 
+		$ed_sql = " update dental_q_page1_view set 
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		complaintid = '".s_for($comp_arr)."',
 		sleep_qual = '".s_for($sleep_qual)."',
@@ -153,6 +153,7 @@ if($_POST['q_page1sub'] == 1)
   }
 }
 
+require_once __DIR__ . '/includes/questionnaire_header.php';
 $comp = questionnaireCompletedSections($_SESSION['pid']);
 
         if($comp['symptoms'] == 0)
@@ -173,7 +174,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	//trigger_error("Die called", E_USER_ERROR);
 }
-$sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' ";
+$sql = "select * from dental_q_page1_view where patientid='".$_SESSION['pid']."' ";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -211,10 +212,6 @@ if($complaintid <> '')
 }
 
 ?>
-<a name="top"></a>
-<?php include 'includes/questionnaire_header.php'; ?>
-
-
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
@@ -598,7 +595,8 @@ $('document').ready( function(){
 <?php }else{ 
 show_section_completed($_SESSION['pid']);
 } ?>
-
+<?php require_once __DIR__ . '/../manage/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <? include "includes/footer.php";?>
 
 

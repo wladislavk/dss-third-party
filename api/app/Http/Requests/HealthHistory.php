@@ -6,15 +6,12 @@ class HealthHistory extends Request
 {
     protected $rules = [
         'formid'                 => 'integer',
-        'patientid'              => 'required|integer',
         'allergens'              => 'string',
         'other_allergens'        => 'string',
         'medications'            => 'string',
         'other_medications'      => 'string',
         'history'                => 'string',
         'other_history'          => 'string',
-        'userid'                 => 'required|integer',
-        'docid'                  => 'required|integer',
         'status'                 => 'integer',
         'dental_health'          => ['regex:/^(?:Good|Excellent|Fair|Poor)$/'],
         'removable'              => ['regex:/^(?:Yes|No)$/'],

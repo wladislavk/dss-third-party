@@ -114,7 +114,7 @@ if($_POST['q_page1sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_q_page1 set 
+		$ed_sql = " update dental_q_page1_view set 
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -165,7 +165,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	trigger_error("Die called", E_USER_ERROR);
 }
-$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page1_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 

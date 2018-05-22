@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Services\ApiPermissions;
 
-use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ApiPermissionResourceGroupRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ApiPermissionResourceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ApiPermissionRepository;
 use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermission;
 use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResource;
 use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 
 class ApiPermissionsLookup
 {
@@ -44,10 +44,9 @@ class ApiPermissionsLookup
     public function resourceByRoute($route)
     {
         $resource = $this->permissionResources
-            ->where([
+            ->findWhere([
                 'route' => $route,
             ])
-            ->get()
             ->first()
         ;
         return $resource;
@@ -76,21 +75,20 @@ class ApiPermissionsLookup
         $doctorId = 0;
         $patientId = 0;
 
-        if ($role === JwtAuth::ROLE_USER) {
+        if ($role === JwtHelper::ROLE_USER) {
             $doctorId = $modelId;
         }
 
-        if ($role === JwtAuth::ROLE_PATIENT) {
+        if ($role === JwtHelper::ROLE_PATIENT) {
             $patientId = $modelId;
         }
 
         $permissions = $this->apiPermissions
-            ->where([
+            ->findWhere([
                 'group_id' => $groupId,
                 'doc_id' => $doctorId,
                 'patient_id' => $patientId,
             ])
-            ->get()
             ->first()
         ;
         return $permissions;

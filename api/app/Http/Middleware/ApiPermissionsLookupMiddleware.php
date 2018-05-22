@@ -2,22 +2,29 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup;
 use DentalSleepSolutions\Services\ApiPermissions\ApiPermissionsLookup;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class ApiPermissionsLookupMiddleware
 {
-    const ERROR_MESSAGE = 'This section is not available for this patient. Please check the settings in the Patient Info tab.';
+    public const ERROR_MESSAGE = 'This section is not available for this patient. Please check the settings in the Patient Info tab.';
+
+    /** @var Auth */
+    private $auth;
 
     /** @var ApiPermissionsLookup */
-    protected $apiPermissionsLookup;
+    private $apiPermissionsLookup;
 
-    public function __construct (ApiPermissionsLookup $apiPermissionsLookup)
+    public function __construct (Auth $auth, ApiPermissionsLookup $apiPermissionsLookup)
     {
+        $this->auth = $auth;
         $this->apiPermissionsLookup = $apiPermissionsLookup;
     }
 
@@ -43,10 +50,7 @@ class ApiPermissionsLookupMiddleware
      */
     private function isRequestAuthorized(Request $request)
     {
-        $route = $request
-            ->route()
-            ->getUri()
-        ;
+        $route = $request->route()->uri();
 
         $resource = $this->apiPermissionsLookup
             ->resourceByRoute($route)
@@ -60,13 +64,14 @@ class ApiPermissionsLookupMiddleware
             ->resourcePermissions($resource->group_id)
         ;
 
-        if (!$request->user()) {
+        $user = $this->authRole(JwtHelper::ROLE_USER);
+        if (!$user) {
             return false;
         }
 
-        $userId = $request->user()->userid;
+        $userId = $user->getAuthIdentifier();
 
-        $authorized = $this->isModelAuthorized($group, $userId, JwtAuth::ROLE_USER);
+        $authorized = $this->isModelAuthorized($group, $userId, JwtHelper::ROLE_USER);
         if (!$authorized) {
             return false;
         }
@@ -80,17 +85,20 @@ class ApiPermissionsLookupMiddleware
         $patientAuthorized = false;
         $parentPatientAuthorized = false;
 
-        if ($request->patient()) {
-            $patientId = $request->patient()->patientid;
-            $parentPatientId = $request->patient()->parent_patientid;
+        $patient = $this->authRole(JwtHelper::ROLE_PATIENT);
+        if ($patient) {
+            $patientId = $patient->getAuthIdentifier();
+            if (isset($patient->parent_patientid)) {
+                $parentPatientId = $patient->parent_patientid;
+            }
         }
 
         if ($patientId) {
-            $patientAuthorized = $this->isModelAuthorized($group, $patientId, JwtAuth::ROLE_PATIENT);
+            $patientAuthorized = $this->isModelAuthorized($group, $patientId, JwtHelper::ROLE_PATIENT);
         }
 
         if ($parentPatientId) {
-            $parentPatientAuthorized = $this->isModelAuthorized($group, $parentPatientId, JwtAuth::ROLE_PATIENT);
+            $parentPatientAuthorized = $this->isModelAuthorized($group, $parentPatientId, JwtHelper::ROLE_PATIENT);
         }
 
         if ($patientAuthorized || $parentPatientAuthorized) {
@@ -102,15 +110,15 @@ class ApiPermissionsLookupMiddleware
 
     /**
      * @param ApiPermissionResourceGroup $group
-     * @param int                        $modelId
-     * @param string                     $role
+     * @param int $modelId
+     * @param string $role
      * @return bool
      */
-    private function isModelAuthorized(ApiPermissionResourceGroup $group, $modelId, $role)
+    private function isModelAuthorized(ApiPermissionResourceGroup $group, int $modelId, string $role): bool
     {
         $needsAuthorization = $group->authorize_per_user;
 
-        if ($role === JwtAuth::ROLE_PATIENT) {
+        if ($role === JwtHelper::ROLE_PATIENT) {
             $needsAuthorization = $group->authorize_per_patient;
         }
 
@@ -127,5 +135,21 @@ class ApiPermissionsLookupMiddleware
         }
 
         return false;
+    }
+
+    /**
+     * @param string $role
+     * @return Authenticatable|null
+     */
+    private function authRole(string $role):? Authenticatable
+    {
+        /** @var Guard $guard */
+        $guard = $this->auth->guard($role);
+        if (!$guard) {
+            return null;
+        }
+        /** @var Authenticatable $authenticatable */
+        $authenticatable = $guard->user();
+        return $authenticatable;
     }
 }

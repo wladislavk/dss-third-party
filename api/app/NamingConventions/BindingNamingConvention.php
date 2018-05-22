@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
 use DentalSleepSolutions\Contracts\TransformerInterface;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class BindingNamingConvention
 {
@@ -56,21 +57,19 @@ class BindingNamingConvention
      */
     public function setController($className)
     {
+        $auth = \Mockery::mock(Auth::class);
         $config = \Mockery::mock(Config::class);
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 
+        $auth->shouldReceive('guard')
+            ->andReturnNull()
+        ;
         $config->shouldReceive('get')
             ->andReturnNull()
         ;
-        $request->shouldReceive('user')
-            ->once()
-        ;
-        $request->shouldReceive('admin')
-            ->once()
-        ;
 
-        $this->controller = new $className($config, $repository, $request);
+        $this->controller = new $className($auth, $config, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }

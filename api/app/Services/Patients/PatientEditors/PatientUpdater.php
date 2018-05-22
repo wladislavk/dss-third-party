@@ -73,7 +73,7 @@ class PatientUpdater extends AbstractPatientEditor
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
-        $docId = $currentUser->getDocIdOrZero();
+        $docId = $currentUser->normalizedDocId();
         $userId = $currentUser->getUserIdOrZero();
 
         if ($this->wasInsuranceInfoChanged($requestData, $unchangedPatient)) {

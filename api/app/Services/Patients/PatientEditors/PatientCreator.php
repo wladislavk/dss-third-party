@@ -59,7 +59,7 @@ class PatientCreator extends AbstractPatientEditor
             $this->passwordGenerator->generateLegacyPassword($basePassword, $newPatientFormData);
         }
         $newPatientFormData->userId = $currentUser->getUserIdOrZero();
-        $newPatientFormData->docId = $currentUser->getDocIdOrZero();
+        $newPatientFormData->docId = $currentUser->normalizedDocId();
         $newPatientFormData->ipAddress = $requestData->ip;
         $newPatientFormData->patientName = $requestData->patientName;
         return $newPatientFormData;
@@ -101,7 +101,7 @@ class PatientCreator extends AbstractPatientEditor
         $this->patientSummaryManager->createSummary($responseData->currentPatientId, $requestData->patientLocation);
 
         $similarPatients = $this->similarHelper
-            ->getSimilarPatients($responseData->currentPatientId, $currentUser->getDocIdOrZero());
+            ->getSimilarPatients($responseData->currentPatientId, $currentUser->normalizedDocId());
 
         if (count($similarPatients)) {
             $responseData->redirectTo = self::DUPLICATE_URL . $responseData->currentPatientId;

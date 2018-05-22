@@ -2,27 +2,26 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Admin;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 abstract class Controller extends BaseController
 {
-    const EMPTY_MODEL_ATTRIBUTES = [
-        'id' => '',
-        'adminid' => 0,
-        'userid' => 0,
-        'patientid' => 0,
-        'docid' => 0,
-        'user_type' => 0,
-        'status' => 0,
-    ];
-
     // TODO: this class should include common REST methods for all its children
     use DispatchesJobs, ValidatesRequests;
+
+    /** @var Auth */
+    protected $auth;
 
     /** @var Config */
     protected $config;
@@ -30,51 +29,59 @@ abstract class Controller extends BaseController
     /** @var Request */
     protected $request;
 
-    /** @var User */
+    /** @var Patient */
     protected $patient;
 
     /** @var User */
     protected $user;
 
-    /** @var User */
+    /** @var Admin */
     protected $admin;
 
     public function __construct(
+        Auth $auth,
         Config $config,
         Request $request
     ) {
+        $this->auth = $auth;
         $this->config = $config;
         $this->request = $request;
-
-        $this->patient = new User();
+        $this->patient = new Patient();
         $this->user = new User();
-        $this->admin = new User();
+        $this->admin = new Admin();
 
-        $this->patient->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
-        $this->user->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
-        $this->admin->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
+        $this->admin->adminid = 0;
+        $this->user->userid = 0;
+        $this->user->docid = 0;
+        $this->user->user_type = 0;
+        $this->user->status = 0;
+        $this->patient->patientid = 0;
 
-        if ($request->patient()) {
-            $this->patient = $request->patient();
+        $guard = $auth->guard(JwtHelper::ROLE_ADMIN);
+        if ($guard && $guard->user()) {
+            $this->admin = $guard->user();
         }
 
-        if ($request->user()) {
-            $this->user = $request->user();
+        $guard = $auth->guard(JwtHelper::ROLE_USER);
+        if ($guard && $guard->user()) {
+            $this->user = $guard->user();
         }
 
-        if ($request->admin()) {
-            $this->admin = $request->admin();
+        $guard = $auth->guard(JwtHelper::ROLE_PATIENT);
+        if ($guard && $guard->user()) {
+            $this->patient = $guard->user();
         }
     }
 
     /**
-     * @return User
+     * @return Admin
      */
-    protected function admin()
+    protected function admin(): Admin
     {
-        $model = $this->request->admin();
-        if ($model) {
-            return $model;
+        /** @var Guard $guard */
+        $guard = $this->auth->guard(JwtHelper::ROLE_ADMIN);
+        if ($guard && $guard->user()) {
+            return $guard->user();
         }
         return $this->admin;
     }
@@ -82,23 +89,25 @@ abstract class Controller extends BaseController
     /**
      * @return User
      */
-    protected function user()
+    protected function user(): User
     {
-        $model = $this->request->user();
-        if ($model) {
-            return $model;
+        /** @var Guard $guard */
+        $guard = $this->auth->guard(JwtHelper::ROLE_USER);
+        if ($guard && $guard->user()) {
+            return $guard->user();
         }
         return $this->user;
     }
 
     /**
-     * @return User
+     * @return Patient
      */
-    protected function patient()
+    protected function patient(): Patient
     {
-        $model = $this->request->patient();
-        if ($model) {
-            return $model;
+        /** @var Guard $guard */
+        $guard = $this->auth->guard(JwtHelper::ROLE_PATIENT);
+        if ($guard && $guard->user()) {
+            return $guard->user();
         }
         return $this->patient;
     }

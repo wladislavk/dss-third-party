@@ -8,7 +8,7 @@ Route::get('health-check', 'Api\HealthCheckController@index');
 Route::post('auth', 'Auth\AuthController@auth');
 
 Route::group(
-    ['middleware' => ['jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    ['middleware' => ['jwt.authentication', 'sudo.authentication', 'authorization:admin|user|patient']],
     function () {
     Route::get('auth-health', 'Auth\AuthController@authHealth');
     Route::post('refresh-token', 'Auth\AuthController@refreshToken');
@@ -36,7 +36,10 @@ Route::group(['prefix' => 'webhooks'], function () {
 */
 
 Route::group(
-    ['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    [
+        'prefix' => 'api/v1',
+        'middleware' => ['jwt.authentication', 'sudo.authentication', 'authorization:admin|user|patient']
+    ],
     function () {
     /**
      * Routes are searched by method and name in order of appearance.
@@ -460,7 +463,10 @@ Route::group(
 });
 
 Route::group(
-    ['prefix' => 'api/v1', 'middleware' => ['api.log', 'jwt.auth.admin.chainedWith', 'jwt.auth.user.chainedWith', 'jwt.auth.patient']],
+    [
+        'prefix' => 'api/v1',
+        'middleware' => ['api.log', 'jwt.authentication', 'sudo.authentication', 'authorization:admin|user|patient']
+    ],
     function () {
         Route::resource('api-permission/permissions', 'ApiPermissionsController', ['except' => ['create', 'edit']]);
         Route::get('api-permission/all', 'ApiPermissionsController@all');

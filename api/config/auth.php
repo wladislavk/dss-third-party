@@ -13,7 +13,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'user',
         'passwords' => 'users',
     ],
 
@@ -36,15 +36,25 @@ return [
     */
 
     'guards' => [
-        /*
-        'web' => [
-            'driver' => 'session',
+        'user' => [
+            'driver' => 'dental',
             'provider' => 'users',
         ],
-        */
-        'api' => [
-            'driver' => 'jwt',
-            'provider' => 'users',
+        'admin' => [
+            'driver' => 'dental',
+            'provider' => 'admins',
+        ],
+        'patient' => [
+            'driver' => 'dental',
+            'provider' => 'patients',
+        ],
+        'dentrixCompany' => [
+            'driver' => 'dental',
+            'provider' => 'externalCompanies',
+        ],
+        'dentrixUser' => [
+            'driver' => 'dental',
+            'provider' => 'externalUsers',
         ],
     ],
 
@@ -69,12 +79,24 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \DentalSleepSolutions\Eloquent\Models\User::class,
+            'model' => \DentalSleepSolutions\Eloquent\Models\Dental\User::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => \DentalSleepSolutions\Eloquent\Models\Admin::class,
+        ],
+        'patients' => [
+            'driver' => 'eloquent',
+            'model' => \DentalSleepSolutions\Eloquent\Models\Dental\Patient::class,
+        ],
+        'externalCompanies' => [
+            'driver' => 'eloquent',
+            'model' => \DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class,
+        ],
+        'externalUsers' => [
+            'driver' => 'eloquent',
+            'model' => \DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser::class,
+        ],
     ],
 
     /*

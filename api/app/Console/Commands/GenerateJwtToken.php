@@ -3,12 +3,11 @@
 namespace DentalSleepSolutions\Console\Commands;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Auth\JwtAuth;
+use DentalSleepSolutions\Services\Auth\Guard;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Console\Command;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
-use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
-use DentalSleepSolutions\Exceptions\JwtException;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 /**
  * CLI to generate JWT tokens with v_users IDs
@@ -17,13 +16,12 @@ use DentalSleepSolutions\Exceptions\JwtException;
  */
 class GenerateJwtToken extends Command
 {
-    const ADMIN_PREFIX = 'a_';
-    const PATIENT_PREFIX = 'p_';
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
     /** @var string */
     protected $signature = 'jwt:token
-        {id : User identifier - v_users id (a_X for admins, u_X for dental_users, p_X for dental_patients).}
+        {role : One of the following: admin, user, patient}
+        {id : Role identifier}
         {--nbf|not-before= : DateTime before which the token is invalid}
         {--exp|expire= : DateTime from which the token is expired}
     ';
@@ -31,36 +29,28 @@ class GenerateJwtToken extends Command
     /** @var string */
     protected $description = 'Generate JWT token for a user.';
 
-    /** @var UserRepository */
-    private $userRepository;
+    /** @var Auth */
+    private $auth;
 
     /** @var JwtHelper */
     private $jwtHelper;
 
-    public function __construct(
-        UserRepository $userRepository,
-        JwtHelper $jwtHelper
-    )
+    public function __construct(Auth $auth, JwtHelper $jwtHelper)
     {
         parent::__construct();
-        $this->userRepository = $userRepository;
+        $this->auth = $auth;
         $this->jwtHelper = $jwtHelper;
     }
 
     public function handle()
     {
+        $role = $this->argument('role');
         $id = $this->argument('id');
         $notBefore = $this->option('not-before');
         $expire = $this->option('expire');
 
-        $role = JwtAuth::ROLE_USER;
-
-        if (substr($id, 0, strlen(self::ADMIN_PREFIX)) === self::ADMIN_PREFIX) {
-            $role = JwtAuth::ROLE_ADMIN;
-        }
-
-        if (substr($id, 0, strlen(self::PATIENT_PREFIX)) === self::PATIENT_PREFIX) {
-            $role = JwtAuth::ROLE_PATIENT;
+        if (!in_array($role, JwtHelper::ROLES)) {
+            return;
         }
 
         if (!is_null($notBefore)) {
@@ -71,19 +61,18 @@ class GenerateJwtToken extends Command
             $expire = Carbon::createFromFormat(self::DATE_FORMAT, $expire);
         }
 
-        /** @var User */
-        $user = $this->userRepository
-            ->findById($id)
-        ;
-
-        if (!$user) {
+        /** @var Guard $guard */
+        $guard = $this->auth->guard($role);
+        /** @var Authenticatable $authenticatable */
+        $authenticatable = $guard->loginUsingId($id);
+        if (!$authenticatable) {
             return;
         }
 
         $token = $this->jwtHelper
             ->createToken([
-                JwtAuth::CLAIM_ROLE_INDEX => $role,
-                JwtAuth::CLAIM_ID_INDEX => $id
+                JwtHelper::CLAIM_ROLE_INDEX => $role,
+                JwtHelper::CLAIM_ID_INDEX => $id
             ], $expire, $notBefore)
         ;
 

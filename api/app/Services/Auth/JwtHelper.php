@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Services\Auth;
 
 use DateTime;
 use Carbon\Carbon;
-use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Structs\JwtPayload;
 use Tymon\JWTAuth\Contracts\Providers\JWT as JWTInterface;
@@ -12,9 +11,21 @@ use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class JwtHelper
 {
+    const CLAIM_ID_INDEX = 'id';
+    const CLAIM_ROLE_INDEX = 'role';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
+    const ROLE_PATIENT = 'patient';
+    const ROLES = [
+        self::ROLE_ADMIN,
+        self::ROLE_USER,
+        self::ROLE_PATIENT,
+    ];
+
     /** @var Config */
     private $config;
 
@@ -58,8 +69,8 @@ class JwtHelper
         $payload->notBefore = $notBefore->getTimestamp();
         $payload->expiresAt = $expireDate->getTimestamp();
         $payload->jwtUniqueId = md5($payload->issuer . '-' . $payload->issuedAt);
-        if (isset($customClaims[JwtAuth::CLAIM_ID_INDEX])) {
-            $payload->subject = $customClaims[JwtAuth::CLAIM_ID_INDEX];
+        if (isset($customClaims[self::CLAIM_ID_INDEX])) {
+            $payload->subject = $customClaims[self::CLAIM_ID_INDEX];
         }
 
         $baseClaims = $payload->toArray();
@@ -73,6 +84,7 @@ class JwtHelper
     /**
      * @param string $token
      * @return array
+     * @throws TokenInvalidException
      */
     public function parseToken($token)
     {
@@ -111,7 +123,7 @@ class JwtHelper
         if ($audience !== $payload->audience) {
             throw new InvalidTokenException("Invalid Audience (aud): expected '{$payload->audience}', got '$audience'");
         }
-        
+
         if (isset($claims['nbf']) && $this->carbon->setTimestamp($claims['nbf'])->isFuture()) {
             throw new InactiveTokenException('Not Before (nbf) timestamp cannot be in the future');
         }

@@ -3,9 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Contracts\UserInterface;
-use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractAuthenticatableModel;
 use DentalSleepSolutions\Eloquent\Traits\UserTrait;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * @SWG\Definition(
@@ -224,7 +223,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompanyUser $externalCompanyPivot
  * @mixin \Eloquent
  */
-class User extends AbstractModel implements UserInterface
+class User extends AbstractAuthenticatableModel implements UserInterface
 {
     use UserTrait;
 

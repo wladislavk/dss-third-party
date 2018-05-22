@@ -263,7 +263,7 @@ class TmjClinicalExamsController extends BaseRestController
         $patientId = $request->input('patient_id');
 
         try {
-            $flowDeviceUpdater->update($this->user, $patientId, $deviceId);
+            $flowDeviceUpdater->update($this->user(), $patientId, $deviceId);
         } catch (ValidatorException $e) {
             return ApiResponse::responseError($e->getMessage(), 422);
         }
@@ -287,7 +287,7 @@ class TmjClinicalExamsController extends BaseRestController
     {
         $patientId = (int)$request->input('patient_id');
         $device = (int)$request->input('dentaldevice');
-        $resource = $uniqueTmjCreator->createUniqueTmj($this->user, $patientId, $device);
+        $resource = $uniqueTmjCreator->createUniqueTmj($this->user(), $patientId, $device);
         $resource->save();
         return ApiResponse::responseOk('Resource created', $resource);
     }

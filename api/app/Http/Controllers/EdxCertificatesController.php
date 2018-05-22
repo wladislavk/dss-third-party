@@ -138,7 +138,7 @@ class EdxCertificatesController extends BaseRestController
      */
     public function getByUser(): JsonResponse
     {
-        $certificates = $this->repository->getByUserId($this->user->userid);
+        $certificates = $this->repository->getByUserId($this->user()->userid);
         return ApiResponse::responseOk('', $certificates);
     }
 

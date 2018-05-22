@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,12 +10,6 @@ class Request extends FormRequest
 {
     /** @var \Symfony\Component\HttpFoundation\ParameterBag */
     public $request;
-
-    /** @var Closure */
-    protected $adminResolver;
-
-    /** @var Closure */
-    protected $patientResolver;
 
     /** @var array */
     protected $rules = [];
@@ -46,10 +39,7 @@ class Request extends FormRequest
      */
     public function payload()
     {
-        if ($this->request->all()) {
-            return $this->request->all();
-        }
-        return [];
+        return $this->getInputSource()->all();
     }
 
     /**
@@ -68,84 +58,6 @@ class Request extends FormRequest
             ];
         }
         return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $transformed]);
-    }
-
-    /**
-     * Get the admin making the request.
-     *
-     * @return mixed
-     */
-    public function admin()
-    {
-        return call_user_func($this->getAdminResolver());
-    }
-
-    /**
-     * Get the admin resolver callback.
-     *
-     * @return Closure
-     */
-    public function getAdminResolver()
-    {
-        if ($this->adminResolver) {
-            return $this->adminResolver;
-        }
-
-        return function()
-        {
-            // noop
-        };
-    }
-
-    /**
-     * Set the admin resolver callback.
-     *
-     * @param Closure $callback
-     * @return $this
-     */
-    public function setAdminResolver(Closure $callback)
-    {
-        $this->adminResolver = $callback;
-        return $this;
-    }
-
-    /**
-     * Get the patient associated to the request.
-     *
-     * @return mixed
-     */
-    public function patient()
-    {
-        return call_user_func($this->getPatientResolver());
-    }
-
-    /**
-     * Get the patient resolver callback.
-     *
-     * @return Closure
-     */
-    public function getPatientResolver()
-    {
-        if ($this->patientResolver) {
-            return $this->patientResolver;
-        }
-
-        return function()
-        {
-            // noop
-        };
-    }
-
-    /**
-     * Set the patient resolver callback.
-     *
-     * @param Closure $callback
-     * @return $this
-     */
-    public function setPatientResolver(Closure $callback)
-    {
-        $this->patientResolver = $callback;
-        return $this;
     }
 
     /**

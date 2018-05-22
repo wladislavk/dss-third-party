@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Tests\TestCases\ApiTestCase;
 
 class LettersApiTest extends ApiTestCase
@@ -80,8 +80,8 @@ class LettersApiTest extends ApiTestCase
 
     public function testCreateWelcomeLetter()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $requestData = [
             'template_id' => '1',

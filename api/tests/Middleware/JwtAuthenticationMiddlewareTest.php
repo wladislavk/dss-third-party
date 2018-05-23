@@ -115,6 +115,7 @@ class JwtAuthenticationMiddlewareTest extends JwtAuthenticationMiddlewareTestCas
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
     protected function requestHandler(Request $request): JsonResponse
     {

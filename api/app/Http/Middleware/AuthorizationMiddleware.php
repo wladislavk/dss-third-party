@@ -28,6 +28,7 @@ class AuthorizationMiddleware
      * @param Closure $next
      * @param string  $concatenatedRoles
      * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function handle(Request $request, Closure $next, string $concatenatedRoles): JsonResponse
     {
@@ -45,14 +46,12 @@ class AuthorizationMiddleware
     /**
      * @param string $role
      * @return bool
+     * @throws \InvalidArgumentException
      */
     private function roleAuthenticated(string $role): bool
     {
         /** @var Guard $guard */
         $guard = $this->auth->guard($role);
-        if (!$guard) {
-            return false;
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->user();
         if ($authenticatable) {

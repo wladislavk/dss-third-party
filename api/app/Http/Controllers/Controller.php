@@ -38,6 +38,12 @@ abstract class Controller extends BaseController
     /** @var Admin */
     protected $admin;
 
+    /**
+     * @param Auth $auth
+     * @param Config $config
+     * @param Request $request
+     * @throws \InvalidArgumentException
+     */
     public function __construct(
         Auth $auth,
         Config $config,
@@ -58,30 +64,34 @@ abstract class Controller extends BaseController
         $this->patient->patientid = 0;
         $this->patient->docid = 0;
 
+        /** @var Guard $guard */
         $guard = $auth->guard(JwtHelper::ROLE_ADMIN);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             $this->admin = $guard->user();
         }
 
+        /** @var Guard $guard */
         $guard = $auth->guard(JwtHelper::ROLE_USER);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             $this->user = $guard->user();
         }
 
+        /** @var Guard $guard */
         $guard = $auth->guard(JwtHelper::ROLE_PATIENT);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             $this->patient = $guard->user();
         }
     }
 
     /**
      * @return Admin
+     * @throws \InvalidArgumentException
      */
     protected function admin(): Admin
     {
         /** @var Guard $guard */
         $guard = $this->auth->guard(JwtHelper::ROLE_ADMIN);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             return $guard->user();
         }
         return $this->admin;
@@ -89,12 +99,13 @@ abstract class Controller extends BaseController
 
     /**
      * @return User
+     * @throws \InvalidArgumentException
      */
     protected function user(): User
     {
         /** @var Guard $guard */
         $guard = $this->auth->guard(JwtHelper::ROLE_USER);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             return $guard->user();
         }
         return $this->user;
@@ -102,12 +113,13 @@ abstract class Controller extends BaseController
 
     /**
      * @return Patient
+     * @throws \InvalidArgumentException
      */
     protected function patient(): Patient
     {
         /** @var Guard $guard */
         $guard = $this->auth->guard(JwtHelper::ROLE_PATIENT);
-        if ($guard && $guard->user()) {
+        if ($guard->user()) {
             return $guard->user();
         }
         return $this->patient;

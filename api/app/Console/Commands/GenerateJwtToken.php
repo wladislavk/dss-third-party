@@ -42,6 +42,9 @@ class GenerateJwtToken extends Command
         $this->jwtHelper = $jwtHelper;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function handle()
     {
         $role = $this->argument('role');

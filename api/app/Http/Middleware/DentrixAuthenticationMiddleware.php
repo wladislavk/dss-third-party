@@ -33,6 +33,7 @@ class DentrixAuthenticationMiddleware
      * @param Request $request
      * @param Closure $next
      * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function handle(Request $request, Closure $next): JsonResponse
     {
@@ -42,9 +43,6 @@ class DentrixAuthenticationMiddleware
         }
         /** @var Guard $guard */
         $guard = $this->auth->guard(self::ROLE_DENTRIX_COMPANY);
-        if (!$guard) {
-            return ApiResponse::responseError(MiddlewareErrors::COMPANY_TOKEN_INVALID, Response::HTTP_BAD_REQUEST);
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->validate([self::DENTRIX_MODEL_KEY => $companyToken]);
         if (!$authenticatable) {
@@ -58,9 +56,6 @@ class DentrixAuthenticationMiddleware
         }
         /** @var Guard $guard */
         $guard = $this->auth->guard(self::ROLE_DENTRIX_USER);
-        if (!$guard) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_INVALID, Response::HTTP_BAD_REQUEST);
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->validate([self::DENTRIX_MODEL_KEY => $userToken]);
         if (!$authenticatable) {
@@ -74,9 +69,6 @@ class DentrixAuthenticationMiddleware
         }
         /** @var Guard $guard */
         $guard = $this->auth->guard(JwtHelper::ROLE_USER);
-        if (!$guard) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_INVALID, Response::HTTP_BAD_REQUEST);
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->loginUsingId($userId);
         if (!$authenticatable) {

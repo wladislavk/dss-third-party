@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
+use DentalSleepSolutions\Services\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -30,6 +31,7 @@ class JwtRefreshTokenMiddleware
      * @param Request $request
      * @param Closure $next
      * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function handle(Request $request, Closure $next): JsonResponse
     {
@@ -64,13 +66,12 @@ class JwtRefreshTokenMiddleware
     /**
      * @param string $role
      * @return Authenticatable|null
+     * @throws \InvalidArgumentException
      */
     private function userGuard(string $role):? Authenticatable
     {
+        /** @var Guard $guard */
         $guard = $this->auth->guard($role);
-        if (!$guard) {
-            return null;
-        }
         return $guard->user();
     }
 }

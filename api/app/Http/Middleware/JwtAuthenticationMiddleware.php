@@ -44,6 +44,7 @@ class JwtAuthenticationMiddleware
      * @param Request $request
      * @param Closure $next
      * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function handle(Request $request, Closure $next): JsonResponse
     {
@@ -73,9 +74,6 @@ class JwtAuthenticationMiddleware
         $guardId = (int)$claims[JwtHelper::CLAIM_ID_INDEX];
         /** @var Guard $guard */
         $guard = $this->auth->guard($guardRole);
-        if (!$guard) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->loginUsingId($guardId);
         if (!$authenticatable) {

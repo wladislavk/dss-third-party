@@ -9,6 +9,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Services\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
@@ -28,6 +29,12 @@ class ApiPermissionsLookupMiddleware
         $this->apiPermissionsLookup = $apiPermissionsLookup;
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return JsonResponse
+     * @throws \InvalidArgumentException
+     */
     public function handle(Request $request, Closure $next)
     {
         $authorized = $this->isRequestAuthorized($request);
@@ -47,6 +54,7 @@ class ApiPermissionsLookupMiddleware
     /**
      * @param Request $request
      * @return bool
+     * @throws \InvalidArgumentException
      */
     private function isRequestAuthorized(Request $request)
     {
@@ -140,14 +148,12 @@ class ApiPermissionsLookupMiddleware
     /**
      * @param string $role
      * @return Authenticatable|null
+     * @throws \InvalidArgumentException
      */
     private function authRole(string $role):? Authenticatable
     {
         /** @var Guard $guard */
         $guard = $this->auth->guard($role);
-        if (!$guard) {
-            return null;
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->user();
         return $authenticatable;

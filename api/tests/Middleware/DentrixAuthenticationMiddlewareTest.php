@@ -10,6 +10,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Services\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Tests\TestCases\MiddlewareTestCase;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -115,6 +116,11 @@ class DentrixAuthenticationMiddlewareTest extends MiddlewareTestCase
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \InvalidArgumentException
+     */
     protected function requestHandler(Request $request)
     {
         /** @var Auth $auth */

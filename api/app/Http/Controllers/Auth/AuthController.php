@@ -46,6 +46,7 @@ class AuthController extends Controller
      * If authentication is successful, then a token will be returned
      *
      * @return array|JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function auth()
     {
@@ -66,9 +67,6 @@ class AuthController extends Controller
         }
         /** @var Guard $guard */
         $guard = $this->auth->guard($role);
-        if (!$guard) {
-            return ApiResponse::responseError('Invalid credentials', Response::HTTP_FORBIDDEN);
-        }
         /** @var Authenticatable $authenticatable */
         $authenticatable = $guard->validate($credentials);
         if (!$authenticatable) {

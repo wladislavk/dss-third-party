@@ -218,8 +218,15 @@ class SummariesApiTest extends ApiTestCase
     protected function getUpdateData()
     {
         return [
-            'patientid'    => 123,
             'patient_name' => 'John Doe',
         ];
+    }
+
+    public function testIndex()
+    {
+        factory($this->getModel())->create(['docid' => 0]);
+        $this->get(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
+        $this->assertResponseOk();
+        $this->assertGreaterThan(0, count($this->getResponseData()));
     }
 }

@@ -709,12 +709,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PainTmdExam::class,
     ];
 
     return [
-        'patient_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
-        'created_by_user' => $faker->randomDigit,
-        'created_by_admin' => $faker->randomDigit,
-        'updated_by_user' => $faker->randomDigit,
-        'updated_by_admin' => $faker->randomDigit,
         'ip_address' => $faker->ipv4,
         'description' => $description,
         'pain' => $pain,
@@ -3512,7 +3506,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Notification::class
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, function (\Faker\Generator $faker) {
     return [
         'formid'                           => $faker->randomDigit,
-        'patientid'                        => $faker->randomDigit,
         'patient_name'                     => $faker->name,
         'patient_dob'                      => $faker->dateTime->format('m/d/Y'),
         'docpcp'                           => $faker->numerify('##'),
@@ -3650,8 +3643,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, fun
         'year_check_3'                     => $faker->word,
         'year_check_4'                     => $faker->word,
         'additional_notes'                 => $faker->sentence($nbWords = 5),
-        'userid'                           => $faker->randomDigit,
-        'docid'                            => $faker->randomDigit,
         'status'                           => $faker->randomDigit,
         'adddate'                          => $faker->dateTime,
         'ip_address'                       => $faker->ipv4,

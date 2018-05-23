@@ -7,6 +7,24 @@ namespace DentalSleepSolutions\Http\Controllers;
  */
 class SummariesController extends BaseRestController
 {
+    /** @var string */
+    protected $ipAddressKey = 'ip_address';
+
+    /** @var string */
+    protected $patientKey = 'patientid';
+
+    /** @var string */
+    protected $doctorKey = 'docid';
+
+    /** @var string */
+    protected $userKey = 'userid';
+
+    /** @var string */
+    protected $filterByDoctorKey = 'docid';
+
+    /** @var string */
+    protected $filterByPatientKey = 'patientid';
+
     /**
      * @SWG\Get(
      *     path="/summaries",
@@ -502,5 +520,29 @@ class SummariesController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/summaries/latest",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Summary")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function latest()
+    {
+        return parent::latest();
     }
 }

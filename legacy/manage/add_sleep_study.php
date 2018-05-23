@@ -57,6 +57,7 @@ if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024 * 
 }
 
 // Determine Type of Appliance
+$db = new Db();
 $sql = "
     SELECT dentaldevice
     FROM dental_summ_sleeplab
@@ -64,9 +65,7 @@ $sql = "
     ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC
     LIMIT 1;
 ";
-if (isset($db) && $db instanceof Db) {
-    $result = $db->getResults($sql);
-}
+$result = $db->getResults($sql);
 
 if ($result) {
     $deviceid = 0;
@@ -513,7 +512,7 @@ if ($msg && $msg != $errorMessage) { ?>
         <tr>
             <td valign="top" class="even" style="height:25px;">
                 <?php
-                $sqlex = "select * from dental_ex_page5 where patientid='$patientId'";
+                $sqlex = "select * from dental_ex_page5_view where patientid='$patientId'";
                 $myarrayex = $db->getRow($sqlex);
                 $dentaldevice = $myarrayex['dentaldevice'];
                 ?>

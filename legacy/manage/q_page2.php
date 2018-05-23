@@ -4,11 +4,31 @@ namespace Ds3\Libraries\Legacy;
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/includes/patient_info.php';
 
-$patientId = intval($_GET['pid']);
-$docId = intval($_SESSION['docid']);
+$db = new Db();
+$baseTable = 'dental_q_page2_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$secondaryTables = [
+    'dental_q_page2_surgery_view' => [
+        'patientid' => '$patientId'
+    ],
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
 
 	if ($patient_info) {
-		if($_GET['own']==1){
+		if(!$isHistoricView && $_GET['own']==1){
 			$c_sql = "SELECT patientid
 				FROM dental_patients
 				WHERE (
@@ -28,14 +48,14 @@ $docId = intval($_SESSION['docid']);
 			$db->query($own_sql);
 			if($_GET['own_completed']==1){
 				$q1_sql = "SELECT q_page1id
-					FROM dental_q_page1
+					FROM dental_q_page1_view
 					WHERE patientid = '$patientId'";
 
 				if($db->getNumberRows($q1_sql) == 0){
 					$ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='$patientId'";
 					$db->query($ed_sql);
 				}else{
-					$ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='$patientId'";
+					$ed_sql = "UPDATE dental_q_page1_view SET exam_date=now() WHERE patientid='$patientId'";
 					$db->query($ed_sql);
 				}
 			}
@@ -51,10 +71,11 @@ $docId = intval($_SESSION['docid']);
 		}
 ?>
 
-<script type="text/javascript" src="js/q_page2.js"></script>
-<script type="text/javascript" src="/manage/js/form_top.js"></script>
+<script type="text/javascript" src="js/q_page2.js?v=20180304"></script>
+<script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
+<script type="text/javascript" src="/manage/js/calendar.js?v=20171219"></script>
 <?php
-	if($_POST['q_page2sub'] == 1) {
+	if(!$isHistoricView && $_POST['q_page2sub'] == 1) {
 		$polysomnographic = $_POST['polysomnographic'];
 		$sleep_center_name_text = $_POST['sleep_center_name_text'];
 		$sleep_study_on = $_POST['sleep_study_on'];
@@ -143,6 +164,7 @@ $docId = intval($_SESSION['docid']);
 			ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 			
 			$db->query($ins_sql);
+            processPreviousSurgeries($_POST, $patientId);
 			$msg = "Added Successfully";
             if(isset($_POST['q_pagebtn_proceed'])){
 ?>
@@ -159,7 +181,7 @@ $docId = intval($_SESSION['docid']);
 			}
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$ed_sql = " update dental_q_page2 set 
+			$ed_sql = " update dental_q_page2_view set 
 			polysomnographic = '".$db->escape($polysomnographic)."',
 			sleep_center_name_text = '".$db->escape($sleep_center_name_text)."',
 			sleep_study_on = '".$db->escape($sleep_study_on)."',
@@ -190,21 +212,8 @@ $docId = intval($_SESSION['docid']);
 			where q_page2id = '".$db->escape($_POST['ed'])."'";
 		
 			$db->query($ed_sql);
+            processPreviousSurgeries($_POST, $patientId);
 
-			for ($i=0; $i<$num_surgery; $i++) {
-				if($_POST['surgery_id_'.$i]==0) {
-					if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-						$s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$db->escape($_REQUEST['pid'])."', '".$db->escape($_POST['surgery_date_'.$i])."','".$db->escape($_POST['surgery_'.$i])."','".$db->escape($_POST['surgeon_'.$i])."')";
-					}
-				} else {
-					if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-						$s = "UPDATE dental_q_page2_surgery SET surgery_date='".$db->escape($_POST['surgery_date_'.$i])."', surgery='".$db->escape($_POST['surgery_'.$i])."', surgeon='".$db->escape($_POST['surgeon_'.$i])."' WHERE id='".$db->escape($_POST['surgery_id_'.$i])."'";
-					} else {
-						$s = "DELETE FROM dental_q_page2_surgery WHERE id='".$db->escape($_POST['surgery_id_'.$i])."'";
-					}
-				}	
-				$db->query($s);
-			}	
 			$msg = "Edited Successfully";
             if(isset($_POST['q_pagebtn_proceed'])){
 ?>
@@ -259,8 +268,12 @@ $docId = intval($_SESSION['docid']);
             </div>
 <?php
 		}
-		$sql = "select * from dental_q_page2 where patientid='$patientId'";
-		
+		$sql = "SELECT *
+            FROM $sourceTable
+            WHERE patientid = '$patientId'
+                $andHistoryIdConditional
+                $andNullConditional";
+
 		$myarray = $db->getRow($sql);
 		$q_page2id = st($myarray['q_page2id']);
 		$polysomnographic = st($myarray['polysomnographic']);
@@ -299,7 +312,17 @@ $docId = intval($_SESSION['docid']);
 
 	<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
-	<script type="text/javascript" src="script/questionnaire.js" />
+    <style>
+        label.inline { display: inline; }
+        fieldset {
+            border: none;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+        .non-visible { visibility: hidden; }
+    </style>
+	<script type="text/javascript" src="script/questionnaire.js"></script>
 
 	<a name="top"></a>
 	&nbsp;&nbsp;
@@ -312,22 +335,31 @@ $docId = intval($_SESSION['docid']);
 		<b><?php echo $_GET['msg'];?></b>
 	</div>
 
-	<form id="q_page2frm" class="q_form" name="q_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?= $patientId ?>" method="post" onsubmit="return q_page2abc(this)">
+	<form id="q_page2frm" class="q_form" name="q_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?= $patientId ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post" onsubmit="return q_page2abc(this)">
 		<input type="hidden" name="q_page2sub" value="1" />
-		<input type="hidden" name="ed" value="<?php echo $q_page2id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
 		<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-		<div style="float:left; margin-left:10px;">
-		        <input type="reset" value="Undo Changes" />
-		</div>
+
 		<div style="float:right;">
-		        <input type="submit" name="q_pagebtn" value="Save" />
-		        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
+		        <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+		        <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+		        <button class="do-backup hidden" title="Save a copy of the last saved values">
+            <span class="done">Archive page</span>
+            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+		        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 		<div style="clear:both;"></div>
 
 		<?php
-	        $patient_sql = "SELECT * FROM dental_q_page2 WHERE parent_patientid='$patientId'";
+        $patient_sql = "SELECT *
+            FROM $sourceTable
+            WHERE parent_patientid = '$patientId'
+                $andHistoryIdConditional
+                $andNullConditional";
 	        
 	        $pat_row = $db->getRow($patient_sql);
 	        if($db->getNumberRows($patient_sql) == 0){
@@ -348,31 +380,31 @@ $docId = intval($_SESSION['docid']);
 		        	<ul>
 		                <li id="foli8" class="complex">	
 							<label class="desc" id="title0" for="Field0">Sleep Studies</label>
-		                    <div>
+		                    <fieldset>
 		                        <span>
-									Have you had a sleep study
-									<input type="radio" class="polysomnographic_radio" id="polysomnographic_yes" name="polysomnographic" value="1" <?php if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
-		                            	Yes
-		                            <input type="radio" class="polysomnographic_radio" name="polysomnographic" value="0" <?php if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
-		                            	No
-								    <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-		                    </div>
+                                    <legend>Have you had a sleep study</legend>
+                                </span>
+                                <input type="radio" class="polysomnographic_radio" id="polysomnographic_yes" name="polysomnographic" value="1" <?php if($polysomnographic == '1') echo " checked";?> onchange="chk_poly()" />
+                                <label class="inline" for="polysomnographic_yes">Yes</label>
+                                <input type="radio" class="polysomnographic_radio" id="polysomnographic_no" name="polysomnographic" value="0" <?php if($polysomnographic == '0') echo " checked";?> onchange="chk_poly()"  />
+                                <label class="inline" for="polysomnographic_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
+                                ?>
+		                    </fieldset>
                     		<br />
 		                    <div class="poly_options">
 		                    	<span>
 		                        	If yes where 
 									<input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="field text addr tbox" value="<?php echo $sleep_center_name_text;?>"  maxlength="255" style="width:225px;" /> 
 		                            <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
 		                            ?>
 									Date
 		                            &nbsp;&nbsp;
-		                            <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox" value="<?php echo $sleep_study_on;?>"  maxlength="10" style="width:75px;" /> 
+		                            <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox calendar" value="<?php echo $sleep_study_on;?>"  maxlength="10" style="width:75px;" />
 		                            <?php   
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
 		                            ?>
 								</span>
 		                    </div>
@@ -389,36 +421,36 @@ $docId = intval($_SESSION['docid']);
 		                    <label class="desc" id="title0" for="Field0">
 		                        CPAP Intolerance
 		                    </label>
-		                    <div>
+		                    <fieldset>
 		                        <span>
-		                        	Have you tried CPAP?
-		                            <input type="radio" class="cpap_radio" id="cpap" name="cpap" value="Yes" <?php if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
-		                            Yes
-		                            <input type="radio" class="cpap_radio" name="cpap" value="No" <?php if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
-		                            No
-								    <?php
-									showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
-								    ?>
-								</span>
-                   			</div>
-		                    <div class="cpap_options">
+                                    <legend>Have you tried CPAP?</legend>
+                                </span>
+                                <input type="radio" class="cpap_radio" id="cpap_yes" name="cpap" value="Yes" <?php if($cpap == 'Yes') echo " checked";?> onchange="chk_cpap()"  />
+                                <label class="inline" for="cpap_yes">Yes</label>
+                                <input type="radio" class="cpap_radio" id="cpap_no" name="cpap" value="No" <?php if($cpap == 'No') echo " checked";?> onchange="chk_cpap()"  />
+                                <label class="inline" for="cpap_no">No</label>
+                                <?php
+                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
+                                ?>
+                   			</fieldset>
+		                    <fieldset class="cpap_options">
 		                        <span>
-		                            Are you currently using CPAP?
-		                            <input type="radio" class="cur_cpap_radio" id="cur_cpap" name="cur_cpap" value="Yes" <?php if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
-		                            	Yes
-									<input type="radio" class="cur_cpap_radio" name="cur_cpap" value="No" <?php if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
-		                            	No
-		                            <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-		                    </div>
+                                    <legend>Are you currently using CPAP?</legend>
+                                </span>
+                                <input type="radio" class="cur_cpap_radio" id="cur_cpap_yes" name="cur_cpap" value="Yes" <?php if($cur_cpap == 'Yes') echo " checked";?> onchange="chk_cpap()"  />
+                                <label class="inline" for="cur_cpap_yes">Yes</label>
+                                <input type="radio" class="cur_cpap_radio" id="cur_cpap_no" name="cur_cpap" value="No" <?php if($cur_cpap == 'No') echo " checked";?> onchange="chk_cpap()"  />
+                                <label class="inline" for="cur_cpap_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
+                                ?>
+		                    </fieldset>
 							<div class="cpap_options2">
 							    <span>
                                     If currently using CPAP, how many nights / week do you wear it?
                                     <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?php echo $nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
 		                            <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
 		                            ?>
 									<br />&nbsp;
                                 </span>
@@ -428,7 +460,7 @@ $docId = intval($_SESSION['docid']);
                                     How many hours each night do you wear it?
                                     <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?php echo $percent_night_cpap;?>" maxlength="255" style="width:225px;" />
 				                    <?php
-                                		showPatientValue('dental_q_page2', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
+                                		showPatientValue('dental_q_page2_view', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
                             		?>
 									<br />&nbsp;
                                 </span>
@@ -437,26 +469,43 @@ $docId = intval($_SESSION['docid']);
                         		<span>
 									What are your chief complaints about CPAP?
 		                            <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
 		                            ?>
 									<br />
                             		<?php
 										$intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
 										$intolerance_my = $db->getResults($intolerance_sql);
 										foreach ($intolerance_my as $intolerance_myarray) {
-									?>
-											<input type="checkbox" id="intolerance<?php echo st($intolerance_myarray['intoleranceid'])?>" name="intolerance[]" value="<?php echo st($intolerance_myarray['intoleranceid'])?>" <?php if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
+                                            $intoleranceId = (int)$intolerance_myarray['intoleranceid'];
+                                            $elementId = "intolerance_$intoleranceId";
+                                            $checked = '';
+
+                                            if (preg_match("/(~|^)$intoleranceId(~|^)/", $intolerance)) {
+                                                $checked = 'checked';
+                                            }
+
+                                            ?>
+											<input type="checkbox" id="<?= $elementId ?>" name="intolerance[]"
+                                            <?= $checked ?> value="<?= $intoleranceId ?>" />
 											<?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
-		  										<input type="checkbox" disabled="disabled" <?php if(strpos($pat_row['intolerance'],'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
+		  										<input type="checkbox" disabled="disabled" <?= $checked ?> />
 											<?php } ?>
 		                                	&nbsp;&nbsp;
-		                                	<?php echo st($intolerance_myarray['intolerance']);?><br />
+		                                	<label class="inline" for="<?= $elementId ?>">
+		                                	<?= e($intolerance_myarray['intolerance']) ?>
+                                        </label>
+                                        <br />
 									<?php } ?>
-										<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <?php if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> 
+									<input type="checkbox" id="cpap_other" name="intolerance[]" value="0"
+                                        <?= preg_match("/(~|^)0(~|^)/", $intolerance) ? 'checked' : '' ?>
+                                           onchange="chk_cpap_other()" />
                                 		<?php if($intolerance != $pat_row['intolerance'] && $showEdits) { ?>
-                                            <input type="checkbox" disabled="disabled" <?php if(strpos($pat_row['intolerance'],'~'.st('0~')) === false) {} else { echo " checked";}?> />
+                                        <input type="checkbox" disabled="disabled"
+                                            <?= preg_match("/(~|^)0(~|^)/", $intolerance) ? 'checked' : '' ?> />
                                 		<?php } ?>
-										&nbsp;&nbsp; Other<br />
+										&nbsp;&nbsp;
+                                    <label class="inline" for="cpap_other">Other</label>
+                                    <br />
                        			</span>
 							</div>
 		                    <br />
@@ -485,59 +534,59 @@ $docId = intval($_SESSION['docid']);
 		                    <label class="desc" id="title0" for="Field0">
 		                      	Dental Devices 
 		                    </label>
-		                    <div>
+		                    <fieldset>
 								<span>
-									Are you currently wearing a dental device specifically designed to treat sleep apnea?
-		                            <input type="radio" class="dd_wearing_radio" id="dd_wearing" name="dd_wearing" value="Yes" <?php if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
-		                            	Yes
-									<input type="radio" class="dd_wearing_radio" name="dd_wearing" value="No" <?php if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
-		                            	No
-		                            <?php
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-			    			</div>
-			    			<div> 
+                                    <legend>Are you currently wearing a dental device specifically designed to treat sleep apnea?</legend>
+                                </span>
+                                <input type="radio" class="dd_wearing_radio" id="dd_wearing_yes" name="dd_wearing" value="Yes" <?php if($dd_wearing == 'Yes') echo " checked";?> onchange="chk_dd()"  />
+                                <label class="inline" for="dd_wearing_yes">Yes</label>
+                                <input type="radio" class="dd_wearing_radio" id="dd_wearing_no" name="dd_wearing" value="No" <?php if($dd_wearing == 'No') echo " checked";?> onchange="chk_dd()"  />
+                                <label class="inline" for="dd_wearing_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
+                                ?>
+			    			</fieldset>
+			    			<fieldset>
 								<span>
-					 			 	Have you previously tried a dental device for sleep apnea treatment?		
-		                            <input type="radio" class="dd_prev_radio" id="dd_prev" name="dd_prev" value="Yes" <?php if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
-		                            	Yes
-									<input type="radio" class="dd_prev_radio" name="dd_prev" value="No" <?php if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
-		                            	No
-		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-			    			</div>
-						    <div class="dd_options">
+                                    <legend>Have you previously tried a dental device for sleep apnea treatment?</legend>
+                                </span>
+                                <input type="radio" class="dd_prev_radio" id="dd_prev_yes" name="dd_prev" value="Yes" <?php if($dd_prev == 'Yes') echo " checked";?> onchange="chk_dd()"  />
+                                <label class="inline" for="dd_prev_yes">Yes</label>
+                                <input type="radio" class="dd_prev_radio" id="dd_prev_no" name="dd_prev" value="No" <?php if($dd_prev == 'No') echo " checked";?> onchange="chk_dd()"  />
+                                <label class="inline" for="dd_prev_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
+                                ?>
+			    			</fieldset>
+						    <fieldset class="dd_options">
 								<span>
-									Was it over-the-counter (OTC)? 	
-		                            <input type="radio" class="dd_otc_radio" id="dd_otc" name="dd_otc" value="Yes" <?php if($dd_otc == 'Yes') echo " checked";?> />
-		                            	Yes
-									<input type="radio" class="dd_otc_radio" name="dd_otc" value="No" <?php if($dd_otc == 'No') echo " checked";?> />
-		                            	No
-		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-						    </div>
-						    <div class="dd_options">
+                                    <legend>Was it over-the-counter (OTC)?</legend>
+                                </span>
+                                <input type="radio" class="dd_otc_radio" id="dd_otc_yes" name="dd_otc" value="Yes" <?php if($dd_otc == 'Yes') echo " checked";?> />
+                                <label class="inline" for="dd_otc_yes">Yes</label>
+                                <input type="radio" class="dd_otc_radio" id="dd_otc_no" name="dd_otc" value="No" <?php if($dd_otc == 'No') echo " checked";?> />
+                                <label class="inline" for="dd_otc_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
+                                ?>
+						    </fieldset>
+						    <fieldset class="dd_options">
 								<span>
-									Was it fabricated by a dentist?
-		                            <input type="radio" class="dd_fab_radio" id="dd_fab" name="dd_fab" value="Yes" <?php if($dd_fab == 'Yes') echo " checked";?> />
-		                            	Yes
-									<input type="radio" class="dd_fab_radio" name="dd_fab" value="No" <?php if($dd_fab == 'No') echo " checked";?> />
-		                            	No
-		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
-		                            ?>
-								<span>
-						    </div>
+                                    <legend>Was it fabricated by a dentist?</legend>
+                                </span>
+                                <input type="radio" class="dd_fab_radio" id="dd_fab_yes" name="dd_fab" value="Yes" <?php if($dd_fab == 'Yes') echo " checked";?> />
+                                <label class="inline" for="dd_fab_yes">Yes</label>
+                                <input type="radio" class="dd_fab_radio" id="dd_fab_no" name="dd_fab" value="No" <?php if($dd_fab == 'No') echo " checked";?> />
+                                <label class="inline" for="dd_fab_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
+                                ?>
+						    </fieldset>
 						    <div class="dd_options">
 								<span>
 									Who <input type="text" id="dd_who" name="dd_who" value="<?php echo  $dd_who; ?>" />
 		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
 		                            ?>
 								</span>
 					 	    </div>
@@ -546,12 +595,13 @@ $docId = intval($_SESSION['docid']);
 									Describe your experience<br />
 									<textarea id="dd_experience" class="field text addr tbox" style="width:650px; height:100px;" name="dd_experience"><?php echo  $dd_experience; ?></textarea>
 		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
 		                            ?>
 								</span>
 						    </div>
-							
 							<script type="text/javascript">chk_dd();</script>
+                        </li>
+                    </ul>
 				</td>
         	</tr>
         	<tr>
@@ -559,76 +609,86 @@ $docId = intval($_SESSION['docid']);
 		            <ul>
 		                <li id="foli8" class="complex">
 		                    <label class="desc" id="title0" for="Field0">Surgery</label>
-		                    <div>
+		                    <fieldset>
 		                        <span>
-									Have you had surgery for snoring or sleep apnea?
-		                            <input type="radio" class="surgery_radio" id="surgery" name="surgery" value="Yes" <?php if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
-		                            	Yes
-									<input type="radio" class="surgery_radio" name="surgery" value="No" <?php if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
-		                            	No
-		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
-		                            ?>
-								</span>
-		    				</div>
+                                    <legend>Have you had surgery for snoring or sleep apnea?</legend>
+                                </span>
+                                <input type="radio" class="surgery_radio" id="surgery_yes" name="surgery" value="Yes" <?php if($surgery == 'Yes') echo " checked";?> onchange="chk_s()" />
+                                <label class="inline" for="surgery_yes">Yes</label>
+                                <input type="radio" class="surgery_radio" id="surgery_no" name="surgery" value="No" <?php if($surgery == 'No') echo " checked";?> onchange="chk_s()" />
+                                <label class="inline" for="surgery_no">No</label>
+                                <?php
+                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
+                                ?>
+		    				</fieldset>
 		    				<div class="s_options">
-                        		<span>
-									Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
-									<table id="surgery_table">
-										<tr>
-											<th>Date</th>
-											<th>Surgeon</th>
-											<th>Surgery</th>
-											<th></th>
-										</tr>
+                                Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
+                                <table id="surgery_table">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Surgeon</th>
+                                        <th>Surgery</th>
+                                        <th></th>
+                                    </tr>
 
-										<?php
-											$s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".intval($_REQUEST['pid'])."'";
-											  
+                                    <?php
+
+                                    $s_sql = "SELECT *
+                                        FROM {$secondarySourceTables['dental_q_page2_surgery_view']}
+                                        WHERE patientid = '$patientId'
+                                            $andReferenceIdConditional
+                                            $andNullConditional";
+
 											$s_q = $db->getResults($s_sql);
-											$s_count = 0;
 											if ($s_q) foreach ($s_q as $s_row) {
 										?>
-												<tr id="surgery_row_<?php echo  $s_count; ?>">
+												<tr class="surgery-row original-row"
+													id="original-surgery-<?= $s_row['id'] ?>">
 													<td>
-														<input type="hidden" name="surgery_id_<?php echo  $s_count; ?>" value="<?php echo  $s_row['id']; ?>" />
-														<input type="text" id="surgery_date_<?php echo  $s_count; ?>" name="surgery_date_<?php echo  $s_count; ?>" value="<?php echo  $s_row['surgery_date']; ?>" />
+														<input type="hidden" name="surgeries[<?= $s_row['id'] ?>][id]"
+                                                               value="<?= $s_row['id'] ?>" />
+                                                        <input type="hidden" class="surgery-deleted" value="0"
+                                                               name="surgeries[<?= $s_row['id'] ?>][deleted]" />
+														<input type="text" class="surgery-date"
+                                                               name="surgeries[<?= $s_row['id'] ?>][date]"
+                                                               value="<?= e($s_row['surgery_date']) ?>" />
 													</td>
 													<td>
-														<input type="text" id="surgeon_<?php echo  $s_count; ?>" name="surgeon_<?php echo  $s_count; ?>" value="<?php echo  $s_row['surgeon']; ?>" />
+														<input type="text" class="surgery-surgeon"
+                                                               name="surgeries[<?= $s_row['id'] ?>][surgeon]"
+                                                               value="<?= e($s_row['surgeon']) ?>" />
 													</td>
 													<td>
-														<input type="text" id="surgery_<?php echo  $s_count; ?>" name="surgery_<?php echo  $s_count; ?>" value="<?php echo  $s_row['surgery']; ?>" />
+														<input type="text" class="surgery-surgery"
+                                                               name="surgeries[<?= $s_row['id'] ?>][surgery]"
+                                                               value="<?= e($s_row['surgery']) ?>" />
 													</td>
 													<td>
-														<input type="button" name="delete_<?php echo  $s_count; ?>" value="Delete" onclick="delete_surgery('<?php echo  $s_count; ?>'); return false;" />
+														<input type="button" value="Delete"
+                                                               onclick="deleteSurgery('original-surgery-<?= $s_row['id'] ?>'); return false;" />
 													</td>
 												</tr>
-										<?php
-												$s_count++;
-											}
-										?>
-									        <tr id="surgery_row_<?php echo  $s_count; ?>">
+										<?php } ?>
+									        <tr class="surgery-row">
 								                <td>
-								                	<input type="hidden" name="surgery_id_<?php echo  $s_count; ?>" value="0" />
-								                	<input type="text" id="surgery_date_<?php echo  $s_count; ?>" name="surgery_date_<?php echo  $s_count; ?>" />
+								                	<input type="text" class="surgery-date non-visible" />
 								                </td>
 								                <td>
-								                	<input type="text" id="surgeon_<?php echo  $s_count; ?>" name="surgeon_<?php echo  $s_count; ?>" />
+								                	<input type="text" class="surgery-surgeon non-visible" />
 								                </td>
 								                <td>
-								                	<input type="text" id="surgery_<?php echo  $s_count; ?>" name="surgery_<?php echo  $s_count; ?>" />
+								                	<input type="text" class="surgery-surgery non-visible" />
 								                </td>
 												<td>
-													<input type="button" name="delete_<?php echo  $s_count; ?>" value="Delete" onclick="delete_surgery('<?php echo  $s_count; ?>'); return false;" />
+													<input type="button" onclick="addSurgery(); return false;"
+                                                           value="Add Surgery" />
 												</td>
 									        </tr>
 									</table>
-									<input type="hidden" id="num_surgery" name="num_surgery" value="<?php echo  $s_count+1; ?>" />
-									<input type="button" onclick="add_surgery(); return false;" value="Add Surgery" />
-								</span>
 		    				</div>
 					    	<script type="text/javascript">chk_s();</script>
+                        </li>
+                    </ul>
 				</td>
 			</tr> 
         	<tr>
@@ -642,7 +702,7 @@ $docId = intval($_SESSION['docid']);
                             		<br />
 		                            <textarea name="other_therapy" class="field text addr tbox" style="width:650px; height:100px;" ><?php echo $other_therapy;?></textarea>
 		                            <?php                                
-		                                showPatientValue('dental_q_page2', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
+		                                showPatientValue('dental_q_page2_view', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
 		                            ?>
 								</span>
                         	</div>
@@ -653,12 +713,16 @@ $docId = intval($_SESSION['docid']);
         	</tr>
 		</table>
 
-		<div style="float:left; margin-left:10px;">
-		    <input type="reset" value="Undo Changes" />
-		</div>
+
 		<div style="float:right;">
-		    <input type="submit" name="q_pagebtn" value="Save" />
-		    <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
+		    <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+		    <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+		    <button class="do-backup hidden" title="Save a copy of the last saved values">
+        <span class="done">Archive page</span>
+        <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+    </button>
+    <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+		    <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 		<div style="clear:both;"></div>
@@ -692,5 +756,88 @@ $docId = intval($_SESSION['docid']);
 	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
 ?>
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
+<?php
 
-<?php include "includes/bottom.htm";?>
+require_once __DIR__ . '/includes/bottom.htm';
+
+/**
+ * @param array $postData
+ * @param int   $patientId
+ */
+function processPreviousSurgeries(array $postData, $patientId)
+{
+    $db = new Db();
+    $patientId = (int)$patientId;
+
+    $newSurgeries = array_get($postData, 'new_surgeries', []);
+    if (sizeof($newSurgeries)) {
+        addPreviousSurgeries($newSurgeries, $patientId);
+    }
+
+    $surgeries = array_get($postData, 'surgeries', []);
+    if (!sizeof($surgeries)) {
+        return;
+    }
+
+    $deletedSurgeries = array_filter($surgeries, function(array $surgery){
+        return $surgery['id'] && $surgery['deleted'];
+    });
+    if (sizeof($deletedSurgeries)) {
+        $deleteIds = array_pluck($deletedSurgeries, 'id');
+        $deleteIds = $db->escapeList($deleteIds);
+        $query = "DELETE FROM dental_q_page2_surgery_view
+            WHERE patientid = '$patientId'
+                AND id IN ($deleteIds)
+        ";
+        $db->query($query);
+    }
+
+    $updatedSurgeries = array_filter($surgeries, function(array $surgery){
+        return $surgery['id'] && !$surgery['deleted'];
+    });
+    if (!sizeof($updatedSurgeries)) {
+        return;
+    }
+    foreach ($updatedSurgeries as $surgery) {
+        $surgeryId = (int)$surgery['id'];
+        $surgery = [
+            'surgery_date' => $surgery['date'],
+            'surgeon' => $surgery['surgeon'],
+            'surgery' => $surgery['surgery'],
+        ];
+        $surgery = $db->escapeAssignmentList($surgery);
+        $query = "UPDATE dental_q_page2_surgery_view
+            SET $surgery
+            WHERE patientid = '$patientId'
+                AND id = '$surgeryId'
+        ";
+        $db->query($query);
+    }
+}
+
+/**
+ * @param array $surgeries
+ * @param int   $patientId
+ */
+function addPreviousSurgeries(array $surgeries, $patientId)
+{
+    $db = new Db();
+    $surgeries = array_map(function(array $surgery)use($db, $patientId){
+        $surgery = [
+            'patientid' => $patientId,
+            'surgery_date' => $surgery['date'],
+            'surgeon' => $surgery['surgeon'],
+            'surgery' => $surgery['surgery'],
+        ];
+        $surgery = $db->escapeList($surgery);
+        return "($surgery)";
+    }, $surgeries);
+    $surgeries = join(', ', $surgeries);
+    $query = "INSERT INTO dental_q_page2_surgery
+        (patientid, surgery_date, surgeon, surgery)
+        VALUES $surgeries
+    ";
+    $db->query($query);
+}

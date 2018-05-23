@@ -134,7 +134,7 @@ if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
 	echo "deflection_r_l - ".$deflection_r_l."<br>";*/
 
 
-$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 $q = mysqli_query($con,$sql);
 $row = mysqli_fetch_assoc($q);
 $num = mysqli_num_rows($q);
@@ -154,7 +154,7 @@ $num = mysqli_num_rows($q);
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
                 mysqli_query($con,$ins_sql);
         }else{
-                $ed_sql = "update dental_summary set 
+                $ed_sql = "update dental_summary_view set 
                 initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
                 initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
                 initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
@@ -229,7 +229,7 @@ $num = mysqli_num_rows($q);
 	}
 	else
 	{
-		$ed_sql = " update dental_ex_page5 set 
+		$ed_sql = " update dental_ex_page5_view set 
 		palpationid = '".s_for($pal_arr)."',
 		palpationRid = '".s_for($palR_arr)."',
 		additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
@@ -284,7 +284,7 @@ $num = mysqli_num_rows($q);
 	}
 }
 
-$sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$sqls = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 $mys = mysqli_query($con,$sqls);
 $myarrays = mysqli_fetch_array($mys);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
@@ -309,7 +309,7 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page5_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 

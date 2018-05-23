@@ -28,8 +28,6 @@ if (isset($_REQUEST['sid'])) {
 ?>
 <link rel="stylesheet" href="css/summ.css" />
 
-<script src="js/dss_summ.js" type="text/javascript"></script>
-
 <!-- PUT TOP SECTION HERE -->
 <?php
 $notes_sql = "
@@ -66,11 +64,16 @@ $dental_letters_query = "
 ";
 
 $pending_letters = $db->getNumberRows($dental_letters_query);
+$docId = (int)$_SESSION['docid'];
+
+if (!isset($patientId)) {
+    $patientId = (int)$_GET['pid'];
+}
+
 ?>
 
-<script src="js/dss_summ.js" type="text/javascript"></script>
 <div id="content">
-<ul id="summ_nav">
+<ul id="summ_nav" class="soap-permissions" v-bind:doc-id="<?= $docId ?>" v-bind:patient-id="<?= $patientId ?>">
     <li><a href="#" onclick="event.preventDefault(); show_sect('summ')" id="link_summ">SUMMARY</a></li>
     <li><a href="#" onclick="event.preventDefault(); show_sect('notes')" id="link_notes">PROG NOTES <?= ($num_unsigned_notes > 0) ? "(".$num_unsigned_notes.")" : ''; ?></a></li>
     <li><a href="#" onclick="event.preventDefault(); show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
@@ -78,6 +81,9 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
     <li><a href="#" onclick="event.preventDefault(); show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters > 0) ? "(".$pending_letters.")" : ''; ?></a></li>
     <li><a href="#" onclick="event.preventDefault(); show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
     <li><a href="#" onclick="event.preventDefault(); show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
+    <li v-cloak v-if="isSoapAuthorized">
+        <a href="#" onclick="show_sect('soap_notes')" id="link_soap_notes">SOAP NOTES</a>
+    </li>
 </ul>
     <div id="sections">
         <div id="sect_summ">
@@ -101,6 +107,9 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
         <div id="sect_subj" style="display: none">
             <?php include 'summ_subj.php'; ?>
         </div>
+        <div id="sect_soap_notes" style="display: none">
+            <?php include 'summ-soap-notes.php'; ?>
+        </div>
     </div>
     <div class="clear"></div>
     <div>
@@ -115,4 +124,6 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
         </div>
         <div id="backgroundPopupRef"></div>
 
+<script src="js/dss_summ.js" type="text/javascript"></script>
+<script src="/assets/app/soap-permissions.js?v=20180502"text/javascript"></script>
 <?php include 'includes/bottom.htm';?>

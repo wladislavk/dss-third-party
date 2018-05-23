@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
+use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Collection;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Model;
@@ -17,10 +18,16 @@ abstract class AbstractRepository extends BaseRepository
     protected $model;
 
     /** @var string */
-    private $orderBy = 'name';
+    private $orderBy = 'id';
 
     /** @var string */
-    private $orderDirection = 'asc';
+    private $orderDirection = 'desc';
+
+    public function __construct(Application $app)
+    {
+        parent::__construct($app);
+        $this->orderBy = $this->model->getKeyName();
+    }
 
     /**
      * @param array $fields
@@ -39,7 +46,7 @@ abstract class AbstractRepository extends BaseRepository
             $object = $object->where($key, $value);
         }
 
-        return $object->get();
+        return $object->orderBy($this->getOrderBy(), $this->getOrderDirection())->get();
     }
 
     /**
@@ -141,6 +148,8 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
+     * @todo: check if this method is needed
+     *
      * @param string $field
      * @param string $value
      * @param array $relations

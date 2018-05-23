@@ -13,7 +13,137 @@ use Carbon\Carbon;
 |
 */
 
-$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, function (\Faker\Generator $faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AdvancedPainTmdExam::class, function ($faker) {
+    $cervical = [
+        'extension' => [
+            'rom' => $faker->word,
+            'pain' => $faker->randomDigit,
+        ],
+        'flexion' => [
+            'rom' => $faker->word,
+            'pain' => $faker->randomDigit,
+        ],
+        'rotation' => [
+            'right' => [
+                'rom' => $faker->word,
+                'pain' => $faker->randomDigit,
+            ],
+            'left' => [
+                'rom' => $faker->word,
+                'pain' => $faker->randomDigit,
+            ],
+            'symmetry' => $faker->sentence(),
+        ],
+        'side_bend' => [
+            'right' => [
+                'rom' => $faker->word,
+                'pain' => $faker->randomDigit,
+            ],
+            'left' => [
+                'rom' => $faker->word,
+                'pain' => $faker->randomDigit,
+            ],
+            'symmetry' => $faker->word,
+        ]
+    ];
+    $morphology = [
+        'midline' => [
+            'general' => [
+                'position' => $faker->word,
+            ],
+            'facial' => [
+                'position' => $faker->word,
+            ],
+            'teeth' => [
+                'maxilla' => [
+                    'position' => $faker->word,
+                ],
+                'mandible' => [
+                    'position' => $faker->word,
+                ]
+            ],
+            'eyes' => [
+                'right' => [
+                    'position' => $faker->word,
+                ],
+                'left' => [
+                    'position' => $faker->word,
+                ]
+            ]
+        ],
+        'posture' => [
+            'head' => [
+                'position' => $faker->word,
+            ],
+            'standing' => [
+                'position' => $faker->word,
+            ],
+            'sitting' => [
+                'position' => $faker->word,
+            ]
+        ],
+        'shoulders' => [
+            'position' => $faker->word,
+        ],
+        'hips' => [
+            'position' => $faker->word,
+        ],
+        'spine' => [
+            'position' => $faker->word,
+        ],
+        'pupillary_plane' => [
+            'position' => $faker->word,
+        ]
+    ];
+    $cranialNerve = [
+        'olfactory' => $faker->boolean,
+        'optic' => $faker->boolean,
+        'occulomotor' => $faker->boolean,
+        'trochlear' => $faker->boolean,
+        'trigeminal' => $faker->boolean,
+        'abducens' => $faker->boolean,
+        'facial' => $faker->boolean,
+        'acoustic' => $faker->boolean,
+        'glossopharyngeal' => $faker->boolean,
+        'vagus' => $faker->boolean,
+        'accessory' => $faker->boolean,
+        'hypoglossal' => $faker->boolean,
+    ];
+    $occlusal = [
+        'contacts' => [
+            'working' => [
+                'right' => [],
+                'left' => [],
+            ],
+            'non_working' => [
+                'right' => [],
+                'left' => [],
+            ]
+        ],
+        'crossover_interferences' => []
+    ];
+    $other = [
+        'guidance' => $faker->sentence(),
+        'notes' => $faker->sentence(),
+    ];
+
+    return [
+        'created_by_user' => $faker->randomDigit,
+        'created_by_admin' => $faker->randomDigit,
+        'updated_by_user' => $faker->randomDigit,
+        'updated_by_admin' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'cervical' => $cervical,
+        'morphology' => $morphology,
+        'cranial_nerve' => $cranialNerve,
+        'occlusal' => $occlusal,
+        'other' => $other,
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, function ($faker) {
     return [
         'method' => $faker->randomElement(['GET', 'PUT', 'POST', 'DELETE']),
         'route' => $faker->slug,
@@ -24,7 +154,172 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SummarySleeplab::class, function (\Faker\Generator $faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermission::class, function ($faker) {
+    return [
+        'group_id' => $faker->randomDigit,
+        'doc_id' => $faker->randomDigit,
+        'patient_id' => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResource::class, function ($faker) {
+    return [
+        'group_id' => $faker->randomDigit,
+        'slug' => $faker->slug,
+        'route' => $faker->slug,
+        'created_by' => $faker->randomDigit,
+        'updated_by' => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class, function ($faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->company,
+        'authorize_per_user' => $faker->randomElement([0, 1]),
+        'authorize_per_patient' => $faker->randomElement([0, 1]),
+        'created_by' => $faker->randomDigit,
+        'updated_by' => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AssessmentPlanExam::class, function ($faker) {
+    $assessmentCodes = [];
+    $treatmentCodes = [];
+
+    return [
+        'created_by_user' => $faker->randomDigit,
+        'created_by_admin' => $faker->randomDigit,
+        'updated_by_user' => $faker->randomDigit,
+        'updated_by_admin' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'assessment_codes' => $assessmentCodes,
+        'assessment_description' => $faker->sentence(),
+        'treatment_codes' => $treatmentCodes,
+        'treatment_description' => $faker->sentence(),
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\DoctorPalpation::class, function ($faker) {
+    return [
+        'updated_by_user' => $faker->randomDigit,
+        'updated_by_admin' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'palpationid' => $faker->randomDigit,
+        'sortby' => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EvaluationManagementExam::class, function ($faker) {
+    $history = [
+        'chief_complaint' => [
+            'value' => $faker->sentence(),
+            'default' => $faker->sentence(),
+        ],
+        'present' => [
+            'location' => $faker->sentence(),
+            'quality' => $faker->sentence(),
+            'severity' => $faker->sentence(),
+            'duration' => $faker->sentence(),
+            'timing' => $faker->sentence(),
+            'context' => $faker->sentence(),
+            'modifying_factor' => $faker->sentence(),
+            'symptoms' => $faker->sentence(),
+        ],
+        'past' => [
+            'family' => [
+                'value' => $faker->sentence(),
+                'default' => $faker->sentence(),
+            ],
+            'medical' => [
+                'allergens' => [
+                    'value' => $faker->sentence(),
+                    'default' => $faker->sentence(),
+                ],
+                'medication' => [
+                    'value' => $faker->sentence(),
+                    'default' => $faker->sentence(),
+                ],
+                'general' => [
+                    'value' => $faker->sentence(),
+                    'default' => $faker->sentence(),
+                ],
+                'dental' => [
+                    'value' => $faker->sentence(),
+                    'default' => $faker->sentence(),
+                ],
+            ],
+            'social' => [
+                'value' => $faker->sentence(),
+                'default' => $faker->sentence(),
+            ],
+        ],
+    ];
+    $systems = [
+        'constitutional' => $faker->sentence(),
+        'eyes' => $faker->sentence(),
+        'ears_nose_mouth_throat' => $faker->sentence(),
+        'cardiovascular' => $faker->sentence(),
+        'respiratory' => $faker->sentence(),
+        'gastrointestinal' => $faker->sentence(),
+        'genitourinary' => $faker->sentence(),
+        'musculoskeletal' => $faker->sentence(),
+        'integumentary' => $faker->sentence(),
+        'neurologic' => $faker->sentence(),
+        'psychiatric' => $faker->sentence(),
+        'endocrine' => $faker->sentence(),
+        'hematologic_lymphatic' => $faker->sentence(),
+        'allergic_immunologic' => $faker->sentence(),
+    ];
+    $vitalSigns = [
+        'height' => [
+            'feet' => $faker->randomNumber,
+            'inches' => $faker->numberBetween(0, 11),
+        ],
+        'weight' => $faker->randomFloat,
+        'bmi' => $faker->randomFloat,
+        'blood_pressure' => $faker->randomNumber,
+        'pulse' => $faker->randomNumber,
+        'neck_measurement' => $faker->randomNumber,
+        'respirations' => $faker->randomNumber,
+        'appearance' => $faker->word,
+        'orientation' => $faker->word,
+        'mood_affect' => $faker->word,
+        'gait_station' => $faker->word,
+        'coordination_balance' => $faker->word,
+        'sensation' => $faker->word,
+    ];
+    $bodyArea = [
+        'first_description' => $faker->sentence(),
+        'palpation' => $faker->sentence(),
+        'rom' => $faker->word,
+        'stability' => $faker->sentence(),
+        'strength' => $faker->sentence(),
+        'skin' => $faker->sentence(),
+        'second_description' => $faker->sentence(),
+        'lips_teeth_gums' => $faker->sentence(),
+        'oropharynx' => $faker->sentence(),
+        'nasal_septum_turbinates' => $faker->sentence(),
+    ];
+
+    return [
+        'created_by_user' => $faker->randomDigit,
+        'created_by_admin' => $faker->randomDigit,
+        'updated_by_user' => $faker->randomDigit,
+        'updated_by_admin' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'history' => $history,
+        'systems' => $systems,
+        'vital_signs' => $vitalSigns,
+        'body_area' => $bodyArea,
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SummarySleeplab::class, function ($faker) {
     return [
         'date'             => $faker->dateTime->format('m/d/Y'),
         'sleeptesttype'    => $faker->word,
@@ -175,7 +470,263 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Patient::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::class, function (\Faker\Generator $faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PainTmdExam::class, function ($faker) {
+    $description = [
+        'chief_complaint' => $faker->sentence(),
+        'extra_info' => $faker->sentence(),
+        'pain' => [
+            'ease' => $faker->sentence(),
+            'worse' => $faker->sentence(),
+        ],
+        'treatment_goals' => $faker->sentence(),
+    ];
+    $pain = [
+        'back' => [
+            'general' => [
+                'level' => $faker->randomDigit,
+            ],
+            'upper' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'middle' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'lower' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'jaw' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'joint' => [
+                'general' => [
+                    'level' => $faker->randomDigit,
+                ],
+                'opening' => [
+                    'position' => $faker->word,
+                    'level' => $faker->randomDigit,
+                ],
+                'chewing' => [
+                    'position' => $faker->word,
+                    'level' => $faker->randomDigit,
+                ],
+                'at_rest' => [
+                    'position' => $faker->word,
+                    'level' => $faker->randomDigit,
+                ],
+            ],
+        ],
+        'eyes' => [
+            'behind' => [
+                'checked' => $faker->boolean,
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'watery' => [
+                'checked' => $faker->boolean,
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'visual_disturbance' => [
+                'checked' => $faker->boolean,
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'ears' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'behind' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'front' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+            'ringing' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'throat' => [
+            'general' => [
+                'level' => $faker->randomDigit,
+            ],
+            'swallowing' => [
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'face' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'neck' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'shoulder' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+        'teeth' => [
+            'general' => [
+                'position' => $faker->word,
+                'level' => $faker->randomDigit,
+            ],
+        ],
+    ];
+    $symptomReview = [
+        'onset_of_event' => $faker->sentence(),
+        'provocation' => $faker->sentence(),
+        'quality_of_pain' => $faker->sentence(),
+        'region_and_radiation' => $faker->sentence(),
+        'severity' => $faker->sentence(),
+        'time' => $faker->sentence(),
+    ];
+    $symptoms = [
+        'jaw' => [
+            'locks' => [
+                'open' => $faker->boolean,
+                'closed' => $faker->boolean,
+            ],
+            'opening' => [
+                'clicks_pops' => $faker->boolean,
+                'position' => $faker->word,
+            ],
+            'closing' => [
+                'clicks_pops' => $faker->boolean,
+                'position' => $faker->word,
+            ],
+        ],
+        'clenching' => [
+            'daytime' => $faker->boolean,
+            'nighttime' => $faker->boolean,
+        ],
+        'mouth' => [
+            'limited_opening' => $faker->boolean,
+        ],
+        'grinding' => [
+            'daytime' => $faker->boolean,
+            'nighttime' => $faker->boolean,
+        ],
+        'muscle_twitching' => $faker->boolean,
+        'numbness' => [
+            'lip' => $faker->boolean,
+            'jawbone' => $faker->boolean,
+        ],
+        'other' => [
+            'dry_mouth' => $faker->boolean,
+            'cheek_biting' => $faker->boolean,
+            'burning_tongue' => $faker->boolean,
+            'dizziness' => $faker->boolean,
+            'buzzing' => $faker->boolean,
+            'swallowing' => $faker->boolean,
+            'neck_stiffness' => $faker->boolean,
+            'vision_changes' => $faker->boolean,
+            'sciatica' => $faker->boolean,
+            'ear_infections' => $faker->boolean,
+            'foreign_feeling' => $faker->boolean,
+            'shoulder_stiffness' => $faker->boolean,
+            'blurred_vision' => $faker->sentence(),
+            'fingers_tingling' => $faker->boolean,
+            'ear_congestion' => $faker->boolean,
+            'neck_swelling' => $faker->boolean,
+            'scoliosis' => $faker->boolean,
+            'visual_disturbances' => $faker->boolean,
+            'finger_hand_numbness' => $faker->boolean,
+            'hearing_loss' => $faker->boolean,
+            'gland_swelling' => $faker->boolean,
+            'chronic_sinusitis' => $faker->boolean,
+            'thyroid_swelling' => $faker->boolean,
+            'difficult_breathing' => $faker->boolean,
+            'description' => $faker->sentence(),
+        ],
+    ];
+    $headaches = [
+        'checked' => $faker->boolean,
+        'front' => [
+            'frequency' => $faker->word,
+            'duration' => $faker->word,
+            'level' => $faker->randomDigit,
+        ],
+        'top' => [
+            'frequency' => $faker->word,
+            'duration' => $faker->word,
+            'level' => $faker->randomDigit,
+        ],
+        'back' => [
+            'frequency' => $faker->word,
+            'duration' => $faker->word,
+            'level' => $faker->randomDigit,
+        ],
+        'temple' => [
+            'frequency' => $faker->word,
+            'duration' => $faker->word,
+            'level' => $faker->randomDigit,
+        ],
+        'eyes' => [
+            'frequency' => $faker->word,
+            'duration' => $faker->word,
+            'level' => $faker->randomDigit,
+        ],
+        'symptoms' => [
+            'dizziness' => $faker->boolean,
+            'noise_sensitivity' => $faker->boolean,
+            'throbbling' => $faker->boolean,
+            'double_vision' => $faker->boolean,
+            'light_sensitivity' => $faker->boolean,
+            'vomiting' => $faker->boolean,
+            'fatigue' => $faker->boolean,
+            'nausea' => $faker->boolean,
+            'eye_nose_running' => $faker->boolean,
+            'sinus_congestion' => $faker->boolean,
+            'burning' => $faker->boolean,
+            'other' => [
+                'checked' => $faker->boolean,
+                'details' => $faker->sentence(),
+            ],
+            'dull_aching' => $faker->boolean,
+        ],
+        'migraines' => [
+            'checked' => $faker->boolean,
+            'specialist' => $faker->name,
+            'occurrence' => $faker->word,
+        ],
+    ];
+
+    return [
+        'patient_id' => $faker->randomDigit,
+        'doc_id' => $faker->randomDigit,
+        'created_by_user' => $faker->randomDigit,
+        'created_by_admin' => $faker->randomDigit,
+        'updated_by_user' => $faker->randomDigit,
+        'updated_by_admin' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'description' => $description,
+        'pain' => $pain,
+        'symptom_review' => $symptomReview,
+        'symptoms' => $symptoms,
+        'headaches' => $headaches,
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::class, function ($faker) {
     return [
         'type' => $faker->word,
         'ip_address' => $faker->ipv4,
@@ -890,15 +1441,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SleepTest::class, f
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TongueClinicalExam::class, function (\Faker\Generator $faker) {
     return [
         'formid'               => $faker->randomDigit,
-        'patientid'            => $faker->randomDigit,
         'blood_pressure'       => $faker->regexify('[1-2][0-9]{2}\/([5-9][0-9]|1[0-9]{2})'),
         'pulse'                => $faker->randomDigit,
         'neck_measurement'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 60),
         'bmi'                  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 40),
         'additional_paragraph' => $faker->sentence($nbWords = 3),
         'tongue'               => $faker->regexify('~([0-9]~)+'),
-        'userid'               => $faker->randomDigit,
-        'docid'                => $faker->randomDigit,
         'status'               => $faker->randomDigit,
         'adddate'              => $faker->dateTime,
         'ip_address'           => $faker->ipv4,
@@ -1019,7 +1567,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::cl
 
     return [
         'formid'                   => $faker->randomDigit,
-        'patientid'                => $faker->randomDigit,
         'palpationid'              => $faker->randomElement($palpation),
         'palpationRid'             => $faker->randomElement($palpation),
         'additional_paragraph_pal' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
@@ -1049,8 +1596,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::cl
         'additional_paragraph_rm'  => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         'screening_aware'          => $faker->numerify('#'),
         'screening_normal'         => $faker->numerify('#'),
-        'userid'                   => $faker->randomDigit,
-        'docid'                    => $faker->randomDigit,
         'status'                   => $faker->randomDigit,
         'adddate'                  => $faker->dateTime,
         'ip_address'               => $faker->ipv4,
@@ -1058,6 +1603,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::cl
         'deflection_r_l'           => $faker->randomElement(['Right', 'Left']),
         'dentaldevice'             => $faker->randomDigit,
         'dentaldevice_date'        => $faker->dateTime,
+        'initial_device_titration_1'       => $faker->randomDigit,
+        'initial_device_titration_equal_h' => $faker->randomDigit,
+        'initial_device_titration_equal_v' => $faker->randomDigit,
+        'optimum_echovision_ver'           => $faker->randomDigit,
+        'optimum_echovision_hor'           => $faker->randomDigit,
     ];
 });
 
@@ -2952,8 +3502,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket::clas
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Notification::class, function (\Faker\Generator $faker) {
     return [
-        'patientid'         => $faker->randomDigit,
-        'docid'             => $faker->randomDigit,
         'notification'      => $faker->sentence($nbWords = 4),
         'notification_type' => $faker->word,
         'status'            => $faker->randomDigit,

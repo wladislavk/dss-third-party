@@ -376,7 +376,7 @@ Does the patient have Secondary Insurance? <?php echo  $pat['has_s_m_ins']; ?>
 
 
 <?php
-$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_sleep_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -458,7 +458,7 @@ Epworth Sleep Questionnaire
 
 
 <?php
-$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_thorton_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -566,7 +566,7 @@ $tot_score = $snore_1+$snore_2+$snore_3+$snore_4+$snore_5;
 </table>
 
 <?php
-$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page1_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -582,7 +582,7 @@ $other_complaint = st($myarray['other_complaint']);
 <div class="box">
 <strong>Reason for seeking tx:</strong>
 <?php
-$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$c_sql = "SELECT chief_complaint_text from dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 $c_q = mysqli_query($con,$c_sql);
 $c_r = mysqli_fetch_assoc($c_q);
 echo $c_r['chief_complaint_text'];
@@ -648,7 +648,7 @@ if($complaintid <> '')
 <div class="box">
 
         <?php
-          $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+          $pat_sql = "select cpap from dental_q_page2_view where patientid='".s_for($_GET['pid'])."'";
           $pat_my = mysqli_query($con,$pat_sql);
           $pat_myarray = mysqli_fetch_array($pat_my);
           if($pat_myarray['cpap']=="No"){
@@ -667,7 +667,7 @@ if($complaintid <> '')
      <?php } ?>
 
 <?php
-$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -799,7 +799,7 @@ if($cpap == '')
 
 <?php
 
-$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -887,7 +887,7 @@ if($dd_wearing == '' &&
                         </span>                    </div>
                                 <? } ?>
                                 <?php
-                  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+                  $s_sql = "SELECT * FROM dental_q_page2_surgery_view WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
                   $s_q = mysqli_query($con,$s_sql);
                   $s_num = mysqli_num_rows($s_q);
                                 if($s_num != 0){ ?>
@@ -931,7 +931,7 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 
 <?php
 
-$sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page3_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 

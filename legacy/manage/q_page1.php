@@ -1,20 +1,43 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 	require_once('includes/patient_info.php');
+
+	$db = new Db();
+$baseTable = 'dental_q_page1_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$secondaryTables = [
+    'dental_q_sleep_view' => ['patientid' => '$patientId'],
+    'dental_thorton_view' => ['patientid' => '$patientId'],
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
 	if ($patient_info) {
-		if(!empty($_GET['own']) && $_GET['own']==1){
+		if(!$isHistoricView && !empty($_GET['own']) && $_GET['own']==1){
 			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";  $c_q = mysqli_query($con, $c_sql);  $changed = mysqli_num_rows($c_q);
 			$own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 			$db->query($own_sql);
 
 			if($_GET['own_completed']==1){
-				$q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+				$q1_sql = "SELECT q_page1id from dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
 				if($db->getNumberRows($q1_sql) == 0){
 					$ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
 					$db->query($ed_sql);
 				}else{
-					$ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
+					$ed_sql = "UPDATE dental_q_page1_view SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
 					$db->query($ed_sql);
 				}
 			}
@@ -33,11 +56,11 @@
 		<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
 		<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 
-		<script type="text/javascript" src="js/q_page1.js"></script>
-		<script type="text/javascript" src="/manage/js/form_top.js"></script>
+		<script type="text/javascript" src="js/q_page1.js?v=20171219"></script>
+		<script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
 <?php
 	$todaysdate=date("m/d/Y");
-	if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
+	if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     	$exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
 		$ess = $_POST['ess'];
 		$tss = $_POST['tss'];
@@ -133,7 +156,7 @@
 			}
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$ed_sql = " update dental_q_page1 set 
+			$ed_sql = " update dental_q_page1_view set 
 	                exam_date = '".s_for($exam_date)."',
 	                ess = '".s_for($ess)."',
 	                tss = '".s_for($tss)."',
@@ -213,9 +236,21 @@
 <?php
 		}	  
 
-		$sql = "select p1.*, s.analysis from dental_q_page1 p1 
-				LEFT JOIN dental_q_sleep s ON s.patientid=p1.patientid
-				where p1.patientid='".$_GET['pid']."'";
+        $andJoinConditional = '';
+        $andAliasedConditional = '';
+
+		if ($isHistoricView) {
+		    $andJoinConditional = "AND s.reference_id = '$historyId'";
+		    $andAliasedConditional = "AND p1.$primaryKey = '$historyId'";
+        }
+
+		$sql = "select p1.*, s.analysis
+			from $sourceTable p1
+				LEFT JOIN {$secondarySourceTables['dental_q_sleep_view']} s ON s.patientid=p1.patientid
+				    $andJoinConditional
+			where p1.patientid='".$_GET['pid']."'
+			    $andAliasedConditional
+				$andNullConditional";
 
 		$myarray = $db->getRow($sql);
 
@@ -257,7 +292,7 @@
 
 	<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
-	<script type="text/javascript" src="script/questionnaire.js" />
+	<script type="text/javascript" src="script/questionnaire.js"></script>
 
 	<a name="top"></a>
 	&nbsp;&nbsp;
@@ -298,23 +333,35 @@
 		}
 	</script>
 
-	<form id="q_page1frm"  class="q_form" name="q_page1frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+	<form id="q_page1frm"  class="q_form" name="q_page1frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
 		<input type="hidden" name="q_page1sub" value="1" />
-		<input type="hidden" name="ed" value="<?php echo $q_page1id;?>" />
+		<input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+		<input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
 		<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
-		<div style="float:left; margin-left:10px;">
-	        <input type="reset" value="Undo Changes" />
-		</div>
 		<div style="float:right;">
-	        <input type="submit" name="q_pagebtn" value="Save" />
-	        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
+	        <input type="reset" onclick="chk_other_comp()" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+	        <button class="do-backup hidden" title="Save a copy of the last saved values"
+                    onclick="return confirm('Warning! Archiving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')" >
+            <span class="done">Archive page</span>
+            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?>
+            onclick="return confirm('Warning! Saving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')" />
+	        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?>
+                   onclick="return confirm('Warning! Saving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')" />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 		<div style="clear:both;"></div>
 
 		<?php
-		    $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";    
+
+		$patient_sql = "SELECT *
+            FROM $sourceTable
+            WHERE parent_patientid = '$patientId'
+                $andHistoryIdConditional
+                $andNullConditional";
 
 			$pat_row = $db->getRow($patient_sql);
 		    if($db->getNumberRows($patient_sql) == 0){
@@ -322,12 +369,19 @@
 			} else {
 				$showEdits = true;
 			}
+
+			$parsedDate = strtotime($exam_date);
+		    if ($parsedDate === false || $exam_date === '0000-00-00') {
+		        $parsedDate = strtotime('now');
+            }
 		?>
 
 		<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 		    <tr>
 		        <td colspan="2">
-		           Exam date: <input type="text" id="exam_date" name="exam_date" class="calendar" value="<?php echo  ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
+		           Exam date:
+                   <input type="text" id="exam_date" name="exam_date" class="calendar"
+                          value="<?= date('m/d/Y H:i', $parsedDate) ?>" />
 		           <script type="text/javascript">
 		             var cal_exam = new calendar2(document.getElementById('exam_date'));
 		           </script>
@@ -340,29 +394,42 @@
 		    </tr>
 		    <tr>
 				<td valign="top" class="frmhead">
-			  		Baseline Epworth Sleepiness Score: <input type="text" id="ess" style="width:30px;" name="ess" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo  $ess; ?>" />
+			  		Baseline Epworth Sleepiness Score:
+                    <input type="text" id="ess" style="width:30px;" name="ess" class="form-backup-enable"
+                           <?= $isCreateNew ? 'disabled title="This value cannot be updated while preparing a snapshot"' : '' ?>
+                           onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>';"
+                           readonly="readonly" value="<?php echo  $ess; ?>" />
                     <?php
 						if($pat_row['ess']!='') {
-                            showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
+                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
 						}
                     ?>
 					<?php echo  $analysis; ?>
 	  				<br /><br />
-	  				Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" style="width:30px;" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo  $tss; ?>" />
+	  				Baseline Thornton Snoring Scale:
+                    <input type="text" id="tss" name="tss" class="form-backup-enable" style="width:30px;"
+                           <?= $isCreateNew ? 'disabled title="This value cannot be updated while preparing a snapshot"' : '' ?>
+                           onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>';"
+                           readonly="readonly" value="<?php echo  $tss; ?>" />
                    
                     <?php
 						if($pat_row['tss']!='') {
-                            showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
+                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
 						}
                     ?>
 					> 5 indicates snoring is significantly affecting quality of life.
 					
 					<?php
-						$sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                    $sleep_sql = "SELECT s.*
+                        FROM {$secondarySourceTables['dental_q_sleep_view']} s
+                        WHERE s.patientid = '$patientId'
+                            $andJoinConditional
+                            $andNullConditional";
+
 						if($db->getNumberRows($sleep_sql) == 0){
 					?>
 							<br />
-							<a href="q_sleep.php?pid=<?php echo  $_GET['pid']; ?>">Complete sleep section</a>
+							<a href="q_sleep.php?pid=<?php echo  $_GET['pid']; ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>">Complete sleep section</a>
 					<?php } else { ?>
 		 					<br />
                 			<a href="#" onclick="$('#sleep_results').toggle(); return false;">View results</a>
@@ -371,7 +438,11 @@
                         			<h3>Epworth</h3>
 
 								    <?php
-										$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+                                    $sql = "select s.*
+                                        from {$secondarySourceTables['dental_q_sleep_view']} s
+                                        where s.patientid = '$patientId'
+                                            $andJoinConditional
+                                            $andNullConditional";
 
 										$myarray = $db->getRow($sql);
 										$q_sleepid = st($myarray['q_sleepid']);
@@ -399,7 +470,7 @@
                                                 $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
                                             }
 									?>
-											<?php echo  $chk; ?>
+											<?php echo  (int)$chk; ?>
 											-	
 											<?php echo st($epworth_myarray['epworth']);?>
 											<br />
@@ -409,7 +480,11 @@
 								<div style="width:48%; float:left;">
 									<h3>Thornton</h3>
 									<?php
-										$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+										$sql = "select s.*
+                                            from {$secondarySourceTables['dental_thorton_view']} s
+                                            where s.patientid = '$patientId'
+                                                $andJoinConditional
+                                                $andNullConditional";
 										
 										$myarray = $db->getRow($sql);
 										$thortonid = st($myarray['thortonid']);
@@ -419,11 +494,11 @@
 										$snore_4 = st($myarray['snore_4']);
 										$snore_5 = st($myarray['snore_5']);
 									?>
-									<?php echo  $snore_1; ?> - My snoring affects my relationship with my partner<br />
-									<?php echo  $snore_2; ?> - My snoring causes my partner to be irritable or tired<br />
-									<?php echo  $snore_3; ?> - My snoring requires us to sleep in separate rooms<br />
-									<?php echo  $snore_4; ?> - My snoring is loud<br />
-									<?php echo  $snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
+									<?php echo  (int)$snore_1; ?> - My snoring affects my relationship with my partner<br />
+									<?php echo  (int)$snore_2; ?> - My snoring causes my partner to be irritable or tired<br />
+									<?php echo  (int)$snore_3; ?> - My snoring requires us to sleep in separate rooms<br />
+									<?php echo  (int)$snore_4; ?> - My snoring is loud<br />
+									<?php echo  (int)$snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
 									<?php echo $tss; ?> - Total
 								</div>
 							</div>
@@ -435,11 +510,11 @@
 			        <label style="display:block;">What is the main reason you are seeking treatment?</label>
 			        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?php echo  $chief_complaint_text; ?></textarea>
                     <?php
-                        showPatientValue('dental_q_page1', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
+                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
                     ?>
 				</td>
     		</tr>
-    		<tr>
+    		<tr id="subjective-complaints">
 		        <td valign="top" class="frmhead">
 		        	<ul>
 		                <li id="foli8" class="complex">	
@@ -448,7 +523,7 @@
 		                    <label class="desc" id="title0" for="Field0">
 	                        	Other Complaints
 	                            <?php
-	                                showPatientValue('dental_q_page1', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
+	                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
 	                            ?>
                     		</label>
 		                    <?php 
@@ -506,7 +581,7 @@
                                                 $chk = (!empty($compseq[@array_search(0,$compid)]) ? $compseq[@array_search(0,$compid)] : '');
                                             }
 										?>
-			                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />
+			                            <input type="checkbox" id="complaint_0" onchange="chk_other_comp()" name="complaint_0" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />
 			                            &nbsp;&nbsp;
 			                            Other<br />&nbsp;
                         			</span>
@@ -519,7 +594,7 @@
 			                            (Enter Each Complaint on Different Line)<br />
 			                            <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_complaint;?></textarea>
 			                            <?php
-			                                showPatientValue('dental_q_page1', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
+			                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
 			                            ?>
 			                        </span>
 			                    </div>
@@ -529,7 +604,7 @@
 					<script type="text/javascript">chk_other_comp();</script>
 				</td>
 			</tr>
-		    <tr>
+		    <tr id="subjective-symptoms">
 		        <td valign="top" class="frmhead">
 		        	<ul>
 		                <li id="foli8" class="complex">	
@@ -549,7 +624,7 @@
                                             		<?php } ?>
                                         		</select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
 					                            ?>
                                     		</td>
                                 		</tr>
@@ -565,7 +640,7 @@
 		                                            <?php } ?>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
 					                            ?>
                                     		</td>
                                 		</tr>
@@ -590,7 +665,7 @@
 		                                            </option>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
 					                            ?>
                                     		</td>
                                 		</tr>
@@ -607,7 +682,7 @@
 		                                            <option value="Don't know">Don't know</option>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
 					                            ?>
 		                                    </td>
 		                                </tr>
@@ -623,7 +698,7 @@
 		                                            <?php } ?>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
 					                            ?>
 		                                    </td>
 		                                </tr>
@@ -639,7 +714,7 @@
 		                                            <?php }?>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
 					                            ?>
 		                                    </td>
                                 		</tr>
@@ -667,7 +742,7 @@
 		                                            </option>
                                         		</select>          
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
 					                            ?>
 		                                    </td>
 		                                </tr>
@@ -689,7 +764,7 @@
 		                                            </option>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
 					                            ?>
                                     		</td>
                                 		</tr>
@@ -711,7 +786,7 @@
 		                                            </option>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
 					                            ?>
 		                                    </td>
 		                                </tr>
@@ -742,7 +817,7 @@
 		                                            </option>
 		                                        </select>
 					                            <?php
-					                                showPatientValue('dental_q_page1', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
+					                                showPatientValue('dental_q_page1_view', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
 					                            ?>
 		                                    </td>
 		                                </tr>
@@ -756,12 +831,19 @@
 			</tr>  	   
 		</table>
 
-		<div style="float:left; margin-left:10px;">
-		    <input type="reset" value="Undo Changes" />
-		</div>
+
 		<div style="float:right;">
-	        <input type="submit" name="q_pagebtn" value="Save" />
-	        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
+		    <input type="reset" onclick="chk_other_comp()" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	        <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+	        <button class="do-backup hidden" title="Save a copy of the last saved values"
+                    onclick="return confirm('Warning! Archiving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')">
+            <span class="done">Archive page</span>
+            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <input type="submit" name="q_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?>
+               onclick="return confirm('Warning! Saving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')" />
+	        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?>
+                   onclick="return confirm('Warning! Saving this page will change the patient\'s baseline sleep symptoms. If you desire to update the patient\'s symptoms then do so in the Summary Tab under Subjective Tab. Do you wish to alter the patient\'s baseline symptoms?')" />
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 		<div style="clear:both;"></div>
@@ -785,5 +867,6 @@
 	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

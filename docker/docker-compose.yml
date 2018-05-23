@@ -38,6 +38,7 @@ services:
     environment:
       APP_URL: "https://loader.docker.localhost/"
       API_URL: "https://api.docker.localhost/"
+      LAN_API_URL: "http://api/"
       VUE_URL: "https://vue.docker.localhost/"
       DOCKER_USED: 1
       API_CONTAINER: "api"

@@ -24,7 +24,6 @@ class TmjClinicalExamsApiTest extends ApiTestCase
     {
         return [
             "formid" => 100,
-            "patientid" => 5,
             "palpationid" => "1|0~2|0~3|0~4|0~5|0~6|0~7|0~",
             "palpationRid" => "1|1~3|4~5|0~",
             "additional_paragraph_pal" => "Dolor rerum aut provident quod aspernatur atque ducimus. Et autem modi ipsum aut praesentium quis nulla. Laudantium facere ullam quasi mollitia. Ullam itaque harum fugit sint.",
@@ -54,8 +53,6 @@ class TmjClinicalExamsApiTest extends ApiTestCase
             "additional_paragraph_rm" => "Similique recusandae dolor voluptatibus repudiandae. Non rerum amet fuga et itaque sit. Ea odio sed accusantium repellendus. Facilis voluptatem id culpa adipisci qui assumenda commodi.",
             "screening_aware" => "1",
             "screening_normal" => "3",
-            "userid" => 4,
-            "docid" => 1,
             "status" => 6,
             "deviation_r_l" => "Left",
             "deflection_r_l" => "Right",

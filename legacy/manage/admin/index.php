@@ -42,13 +42,16 @@
         }
 	}
 
-	if (isset($_POST['loginsub'])) {
-	    if ($_POST['security_code'] == $_SESSION['security_code'] || getenv('DOCKER_USED')) {
-	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."' AND status=1";
-	        
+	if (isset($_POST["loginsub"])) {
+		
+	    if ($_POST['security_code'] == $_SESSION['security_code']) {
+	        $username = $_POST['username'];
+	        $rawPassword = $_POST['password'];
+	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$username)."' AND status=1";
+
 	        $salt_row = $db->getRow($salt_sql);
 
-	        $pass = gen_password($_POST['password'], $salt_row['salt']);
+	        $pass = gen_password($rawPassword, $salt_row['salt']);
 
 	        $check_sql = "SELECT a.*, ac.companyid  FROM admin a
 	            		  LEFT JOIN admin_company ac ON a.adminid = ac.adminid
@@ -62,8 +65,7 @@
 	            $_SESSION['adminuserid'] = $check_myarray['adminid'];
 	            $_SESSION['admin_access'] = $check_myarray['admin_access'];
             	$_SESSION['admincompanyid'] = $check_myarray['companyid'];
-
-                $_SESSION['admin_api_token'] = generateApiToken('a_' . $check_myarray['adminid']);
+                $_SESSION['admin_api_token'] = generateAdminApiToken($username, $rawPassword);
             
 ?>
 		        <script type="text/javascript">

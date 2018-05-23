@@ -7,7 +7,7 @@ include("../includes/sescheck.php");
 include_once('../includes/general_functions.php');
 
 if (isset($_REQUEST['submit'])) {
-      $sql = "SELECT * FROM dental_ex_page5 where patientid='".$_GET['pid']."'";
+      $sql = "SELECT * FROM dental_ex_page5_view where patientid='".$_GET['pid']."'";
       
       if($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 
@@ -18,7 +18,7 @@ if (isset($_REQUEST['submit'])) {
                   adddate = now(),
                   ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
       }else{
-        $sqlex = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+        $sqlex = "update dental_ex_page5_view set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
       }
 
       $qex = $db->query($sqlex);

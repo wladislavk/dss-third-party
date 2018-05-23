@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Exceptions\JwtException;
 
 /**
  * CLI to generate JWT tokens with v_users IDs
@@ -17,11 +18,12 @@ use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 class GenerateJwtToken extends Command
 {
     const ADMIN_PREFIX = 'a_';
+    const PATIENT_PREFIX = 'p_';
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
     /** @var string */
     protected $signature = 'jwt:token
-        {id : User identifier - v_users id (a_X for admins, u_X for dental_users).}
+        {id : User identifier - v_users id (a_X for admins, u_X for dental_users, p_X for dental_patients).}
         {--nbf|not-before= : DateTime before which the token is invalid}
         {--exp|expire= : DateTime from which the token is expired}
     ';
@@ -55,6 +57,10 @@ class GenerateJwtToken extends Command
 
         if (substr($id, 0, strlen(self::ADMIN_PREFIX)) === self::ADMIN_PREFIX) {
             $role = JwtAuth::ROLE_ADMIN;
+        }
+
+        if (substr($id, 0, strlen(self::PATIENT_PREFIX)) === self::PATIENT_PREFIX) {
+            $role = JwtAuth::ROLE_PATIENT;
         }
 
         if (!is_null($notBefore)) {

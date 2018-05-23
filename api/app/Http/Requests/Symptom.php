@@ -6,7 +6,6 @@ class Symptom extends Request
 {
     protected $rules = [
         'formid'                 => 'integer',
-        'patientid'              => 'required|integer',
         'member_no'              => 'string',
         'group_no'               => 'string',
         'plan_no'                => 'string',
@@ -25,8 +24,6 @@ class Symptom extends Request
         'breathing_night'        => 'string',
         'morning_headaches'      => 'string',
         'hours_sleep'            => 'regex:/^[0-9]+$/',
-        'userid'                 => 'required|integer',
-        'docid'                  => 'required|integer',
         'status'                 => 'integer',
         'quit_breathing'         => 'string',
         'bed_time_partner'       => ['regex:/^(:?Yes|Sometimes|No)$/'],

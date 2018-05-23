@@ -28,7 +28,7 @@
 
 <?php
     foreach ($unsigned_res as $unsigned_r) {
-        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1 q on q.patientid=p.patientid where p.patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid']);
+        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1_view q on q.patientid=p.patientid where p.patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid']);
         $p_r = $db->getRow($p_sql);
 
         $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
@@ -77,6 +77,12 @@
 
                 $user_sql = "SELECT * FROM dental_users where userid='".st($myarray["userid"])."'";
                 $user_myarray = $db->getRow($user_sql);
+
+                try {
+                    $soapNote = json_decode($myarray['notes'], true);
+                } catch (\Exception $e) {
+                    $soapNote = null;
+                }
         ?>
                 <tr id="note_<?php echo  $myarray['notesid'];?>" class="<?php echo $tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
                     <td valign="top" style="border: solid 1px #000;">
@@ -124,8 +130,21 @@
                             <tr>
                                 <td valign="top" colspan="3">
                                     <hr size="1" />
-                                    <span style="font-weight:normal;">
-                                        <?php echo nl2br(st($myarray["notes"]));?>
+                                    <span style="font-weight:normal;"
+                                        <?php if ($soapNote) { ?>
+                                            <dl>
+                                                <dt><strong>Subjective</strong></dt>
+                                                <dd><?= nl2br(e($soapNote['subjective'])) ?></dd>
+                                                <dt><strong>Objective</strong></dt>
+                                                <dd><?= nl2br(e($soapNote['objective'])) ?></dd>
+                                                <dt><strong>Assessment</strong></dt>
+                                                <dd><?= nl2br(e($soapNote['assessment'])) ?></dd>
+                                                <dt><strong>Plan</strong></dt>
+                                                <dd><?= nl2br(e($soapNote['plan'])) ?></dd>
+                                            </dl>
+                                        <?php } else { ?>
+                                            <?php echo nl2br(st($myarray["notes"]));?>
+                                        <?php } ?>
                                     </span>
                                 </td>
                             </tr>

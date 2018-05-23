@@ -32,10 +32,10 @@ function cal_analaysis(fa)
 	});
 
 	if(an_tot < 8) {
-		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
+		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates a normal amount of sleepiness.';
 	}
 	if (an_tot >= 8 && an_tot < 10) {
-		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a average amount of sleepiness.';
+		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates a average amount of sleepiness.';
 	}
 	if (an_tot >= 10 && an_tot < 16) {
 		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which may indicate excessive sleepiness depending on the situation. The patient may want to seek medical attention.';

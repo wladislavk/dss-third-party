@@ -87,7 +87,7 @@ class AuthController extends Controller
     public function authHealth()
     {
         if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
-            //return ApiResponse::responseError('Unauthorized', Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::responseError('Unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
         return [

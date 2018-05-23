@@ -56,6 +56,7 @@ abstract class Controller extends BaseController
         $this->user->user_type = 0;
         $this->user->status = 0;
         $this->patient->patientid = 0;
+        $this->patient->docid = 0;
 
         $guard = $auth->guard(JwtHelper::ROLE_ADMIN);
         if ($guard && $guard->user()) {

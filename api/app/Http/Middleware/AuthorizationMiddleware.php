@@ -18,7 +18,8 @@ class AuthorizationMiddleware
     /**
      * @param Auth $auth
      */
-    public function __construct(Auth $auth) {
+    public function __construct(Auth $auth)
+    {
         $this->auth = $auth;
     }
 
@@ -47,7 +48,7 @@ class AuthorizationMiddleware
      */
     private function roleAuthenticated(string $role): bool
     {
-        /** @var Guard $adminGuard */
+        /** @var Guard $guard */
         $guard = $this->auth->guard($role);
         if (!$guard) {
             return false;

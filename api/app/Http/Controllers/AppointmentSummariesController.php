@@ -170,15 +170,12 @@ class AppointmentSummariesController extends BaseRestController
         $data = new AppointmentSummaryData();
         $data->summaryId = $id;
         $data->patientId = (int)$this->request->input('patient_id');
-        $data->docId = $this->user()->docid;
+        $data->docId = $this->user()->normalizedDocId();
         $data->userId = $this->user()->userid;
         $data->studyType = $this->request->input('type', null);
         $data->delayReason = $this->request->input('delay_reason', null);
         $data->nonComplianceReason = $this->request->input('noncomp_reason', null);
         $data->description = $this->request->input('reason', null);
-        if (!$data->docId) {
-            $data->docId = $data->userId;
-        }
         $deviceId = $this->request->input('device_id', null);
         if ($deviceId !== null) {
             $deviceId = (int)$deviceId;

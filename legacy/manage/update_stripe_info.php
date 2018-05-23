@@ -24,4 +24,3 @@ require_once __DIR__ . '/includes/top.htm';
     <?php
 require_once __DIR__ . '/signature_test.php';
 require_once __DIR__ . '/includes/bottom.htm';
-?>

@@ -245,10 +245,6 @@
 			}
 		}
 
-		$total_rec = $db->getNumberRows($sql);
-		$no_pages = $total_rec/$rec_disp;
-
-		//$sql .= " limit ".$i_val.",".$rec_disp;
 		$my = $db->getResults($sql);
 		$num_users = count($my);
 ?>

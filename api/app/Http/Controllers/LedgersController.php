@@ -223,7 +223,7 @@ class LedgersController extends BaseRestController
     ) {
         $ledgerReportData = new LedgerReportData();
 
-        $ledgerReportData->docId = $this->user->docid;
+        $ledgerReportData->docId = $this->user()->docid;
         $ledgerReportData->page = $request->input('page', 0);
         $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
         $ledgerReportData->sort = $request->input('sort');
@@ -251,7 +251,7 @@ class LedgersController extends BaseRestController
         $patientId = $request->input('patient_id', 0);
         $reportType = $request->input('report_type', self::REPORT_TYPE_TODAY);
 
-        $totals = $ledgerReportTotalsRetriever->getReportTotals($this->user->docid, $patientId, $reportType);
+        $totals = $ledgerReportTotalsRetriever->getReportTotals($this->user()->docid, $patientId, $reportType);
 
         return ApiResponse::responseOk('', $totals->toArray());
     }
@@ -272,7 +272,7 @@ class LedgersController extends BaseRestController
     ) {
         $patientId = $request->input('patient_id', 0);
 
-        $response = $patientSummaryUpdater->updatePatientSummary($this->user->docid, $patientId);
+        $response = $patientSummaryUpdater->updatePatientSummary($this->user()->docid, $patientId);
 
         return ApiResponse::responseOk($response);
     }
@@ -293,7 +293,7 @@ class LedgersController extends BaseRestController
     ) {
         $ledgerReportData = new LedgerReportData();
 
-        $ledgerReportData->docId = $this->user->docid;
+        $ledgerReportData->docId = $this->user()->docid;
         $ledgerReportData->patientId = $request->input('patient_id', 0);
         $ledgerReportData->page = $request->input('page', 0);
         $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
@@ -321,7 +321,7 @@ class LedgersController extends BaseRestController
     {
         $patientId = $request->input('patient_id', 0);
 
-        $number = $ledgersQueryComposer->getReportRowsNumber($this->user->docid, $patientId);
+        $number = $ledgersQueryComposer->getReportRowsNumber($this->user()->docid, $patientId);
 
         return ApiResponse::responseOk('', ['number' => $number]);
     }

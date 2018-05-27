@@ -354,7 +354,7 @@ class InsurancePreauthController extends BaseRestController
         $offset = $vobsPerPage * $pageNumber;
 
         $listVOBQueryData = new ListVOBQueryData();
-        $listVOBQueryData->docId = $this->user->docid;
+        $listVOBQueryData->docId = $this->user()->docid;
         $listVOBQueryData->sortColumn = $request->input('sortColumn', 'status');
         $listVOBQueryData->sortDir = $request->input('sortDir', 'desc');
         $listVOBQueryData->vobsPerPage = $request->input('vobsPerPage', 20);

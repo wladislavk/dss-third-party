@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Services\ClinicalExams;
 
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use Prettus\Validator\Exceptions\ValidatorException;

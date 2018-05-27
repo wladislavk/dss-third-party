@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include '../includes/calendarinc.php';
 include 'includes/invoice_functions.php';
@@ -1079,17 +1080,8 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     </script>
     <?php
   }else{
-    $key_sql = "SELECT stripe_secret_key FROM companies c
-        JOIN dental_user_company uc
-        ON c.id = uc.companyid
-        WHERE uc.userid='".mysqli_real_escape_string($con,$userid)."'";
-    
-    $key_q = mysqli_query($con,$key_sql);
-    $key_r= mysqli_fetch_assoc($key_q);
-
-    $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-    \Stripe\ApiRequestor::setHttpClient($curl);
-    \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
+    $key_r = getStripeRelatedUserData($userid);
+    setupStripeConnection($key_r['stripe_secret_key']);
     $status = 1;
     
     try{
@@ -1131,7 +1123,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con,$invoice_sql);
         $status = 2;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
@@ -1142,7 +1134,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
 
     $stripe_charge = $charge->id;
     $stripe_customer = $charge->customer;
-    $stripe_card_fingerprint = $charge->card->fingerprint;
+    $stripe_card_fingerprint = $charge->source->fingerprint;
     $charge_sql = "INSERT INTO dental_charge SET
         amount='".mysqli_real_escape_string($con,str_replace(',','',$amount))."',
         userid='".mysqli_real_escape_string($con,$userid)."',

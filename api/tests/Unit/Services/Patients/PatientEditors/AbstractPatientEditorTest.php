@@ -49,7 +49,7 @@ class AbstractPatientEditorTest extends PatientEditorTestCase
         $this->assertEquals($summary, $this->updatedSummary);
         $letters = [
             'patientId' => 1,
-            'docId' => 0,
+            'docId' => 2,
             'userId' => 2,
             'userType' => 0,
         ];

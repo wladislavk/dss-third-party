@@ -149,8 +149,7 @@ class CompaniesController extends BaseRestController
      */
     public function getUserCompanies()
     {
-        $userId = $this->user->getUserIdOrZero();
-        $data = $this->repository->getCompanyByUser($userId);
+        $data = $this->repository->getCompanyByUser($this->user()->userid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -165,7 +164,7 @@ class CompaniesController extends BaseRestController
      */
     public function getHomeSleepTestCompanies()
     {
-        $data = $this->repository->getHomeSleepTestCompanies($this->user->docid);
+        $data = $this->repository->getHomeSleepTestCompanies($this->user()->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -180,7 +179,7 @@ class CompaniesController extends BaseRestController
      */
     public function getBillingExclusiveCompany()
     {
-        $data = $this->repository->getBillingExclusiveCompany($this->user->docid);
+        $data = $this->repository->getBillingExclusiveCompany($this->user()->docid);
 
         return ApiResponse::responseOk('', $data);
     }

@@ -11,7 +11,10 @@
          syntaxCheck="false">
     <testsuites>
         <testsuite name="all">
-            <directory>./tests/</directory>
+            <directory>./tests/Api/</directory>
+            <directory>./tests/Command/</directory>
+            <directory>./tests/Middleware/</directory>
+            <directory>./tests/Unit/</directory>
         </testsuite>
         <testsuite name="api">
             <directory>./tests/Api/</directory>
@@ -19,8 +22,8 @@
         <testsuite name="command">
             <directory>./tests/Command/</directory>
         </testsuite>
-        <testsuite name="functional">
-            <directory>./tests/Functional/</directory>
+        <testsuite name="middleware">
+            <directory>./tests/Middleware/</directory>
         </testsuite>
         <testsuite name="unit">
             <directory>./tests/Unit/</directory>

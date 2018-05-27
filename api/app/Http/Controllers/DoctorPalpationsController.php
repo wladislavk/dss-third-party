@@ -105,7 +105,7 @@ class DoctorPalpationsController extends BaseRestController
         $dataArray = $this->request->payload();
 
         $this->repository
-            ->deleteWhere([$this->filterByDoctorKey => $this->user->docid])
+            ->deleteWhere([$this->filterByDoctorKey => $this->user()->docid])
         ;
 
         foreach ($dataArray['palpation'] as $each) {

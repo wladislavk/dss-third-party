@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE 
@@ -21,23 +22,14 @@ $doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string(
 $doc_q = mysqli_query($con,$doc_sql);
 $doc = mysqli_fetch_assoc($doc_q);
 
+$key_r = getStripeRelatedUserData($_GET['docid']);
+setupStripeConnection($key_r['stripe_secret_key']);
+$customer = getStripeCustomer($key_r['cc_id']);
+$card = getActiveStripeCard($customer);
 
-
-
-    $key_sql = "SELECT stripe_secret_key FROM companies c
-        JOIN dental_user_company uc
-        ON c.id = uc.companyid
-        WHERE uc.userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
-
-    $key_q = mysqli_query($con,$key_sql);
-    $key_r= mysqli_fetch_assoc($key_q);
-
-$curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-\Stripe\ApiRequestor::setHttpClient($curl);
-\Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
-if($doc['cc_id']!=''){
-$cards = \Stripe\Customer::retrieve($doc['cc_id'])->cards->all();
-$last4 = $cards['data'][0]['last4'];
+$last4 = '';
+if ($card) {
+    $last4 = $card->last4;
 }
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -294,28 +286,16 @@ $case_q = mysqli_query($con,$case_sql);
 				<td valign="top">
 	                                <?php
 if($charge_r['stripe_charge']!=''){
-$key_sql = "SELECT stripe_secret_key FROM companies c 
-                JOIN dental_user_company uc
-                        ON c.id = uc.companyid
-                 WHERE uc.userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
-$key_q = mysqli_query($con,$key_sql);
-$key_r= mysqli_fetch_assoc($key_q);
-
-$curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-\Stripe\ApiRequestor::setHttpClient($curl);
-\Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
-
 try{
   $charge = \Stripe\Charge::retrieve($charge_r["stripe_charge"]);
-} catch (Exception $e) {
+} catch (\Exception $e) {
   // Something else happened, completely unrelated to Stripe
-  $body = $e->getJsonBody();
-  $err  = $body['error'];       
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  $body = $e->getMessage();
+  echo e($body) . ". Please contact your Credit Card billing administrator to resolve this issue.";
   //trigger_error("Die called", E_USER_ERROR);
 
 }
-echo $charge->card->last4;
+echo $charge->source->last4;
 }
 ?>
 				</td>

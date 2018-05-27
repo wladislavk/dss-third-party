@@ -1,12 +1,18 @@
+function delayedAlert (text) {
+    setTimeout(function () {
+        alert(text)
+    }, 500)
+}
+
 function add_cc()
 {
-    if (manage_staff_value) { 
-        alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+    if (manage_staff_value) {
+        delayedAlert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
         return false;
     }
 
     if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
-        alert('Please enter valid information for all fields');
+        delayedAlert('Please enter valid information for all fields');
         return false;
     }
 
@@ -40,6 +46,7 @@ function add_cc()
                 $('.card-cvc').val('');
                 $('.card-expiry-month').val('');
                 $('.card-expiry-year').val('');
+                alert('Card saved');
                 window.location = 'manage_profile.php';
             }
         },
@@ -54,12 +61,12 @@ function add_cc()
 function update_cc()
 {
     if (manage_staff_value) {
-        alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+        delayedAlert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
         return false;
     }
 
     if($('.card-number').val() == '' || $('.card-cvc').val() == '' || $('.card-expiry-month').val().length != 2 || $('.card-expiry-year').val().length != 4 || $('.card-name').val() == '' || $('.card-zip').val().length != 5) {
-        alert('Please enter valid information for all fields');
+        delayedAlert('Please enter valid information for all fields');
         return false;
     }
 
@@ -93,6 +100,7 @@ function update_cc()
                 $('.card-cvc').val('');
                 $('.card-expiry-month').val('');
                 $('.card-expiry-year').val('');
+                alert('Card updated');
                 window.location = 'manage_profile.php';
             }
         },

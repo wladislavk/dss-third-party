@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/admin/includes/stripe-functions.php';
 include "includes/top.htm";
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
@@ -135,25 +136,17 @@ include "includes/top.htm";
                     <td valign="top" style="font-weight:bold;">
 				        <?php
                             if($charge_r["stripe_charge"]!='') {
-                                $key_sql = "SELECT stripe_secret_key FROM companies c 
-                                            JOIN dental_user_company uc
-                                            ON c.id = uc.companyid
-                                            WHERE uc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-                                
-                                $key_r= $db->getRow($key_sql);
-
-                                $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-                                \Stripe\ApiRequestor::setHttpClient($curl);
-                                \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
+                                $key_r = getStripeRelatedUserData($_SESSION['docid']);
+                                setupStripeConnection($key_r['stripe_secret_key']);
 
                                 try{
                                     $charge = \Stripe\Charge::retrieve($charge_r["stripe_charge"]);
-                                } catch (Exception $e) {
+                                } catch (\Exception $e) {
                                     // Something else happened, completely unrelated to Stripe
                                     echo $e->getMessage().". Please contact your Credit Card billing administrator to resolve this issue.";
                                 } 
 
-                                echo $charge->card->last4;
+                                echo $charge->source->last4;
                             }
                         ?>
                     </td>

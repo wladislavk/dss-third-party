@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Services\Tasks;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -59,7 +59,7 @@ class TaskRetriever
     private function getTasks(User $user, $patientId)
     {
         if ($patientId) {
-            return $this->taskRepository->getAllForPatient($user->getDocIdOrZero(), $patientId);
+            return $this->taskRepository->getAllForPatient($user->normalizedDocId(), $patientId);
         }
         return $this->taskRepository->getAll($user->userid);
     }

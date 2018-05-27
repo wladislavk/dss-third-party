@@ -27,7 +27,7 @@ class ExternalPatientsController extends Controller
     ): JsonResponse {
         $requestData = $request->all();
         $createAttributes = [
-            'docid' => $this->user->docid,
+            'docid' => $this->user()->docid,
             'status' => self::DSS_PATIENT_STATUS_PENDING_ACTIVE,
             'ip_address' => $request->ip(),
             'adddate' => Carbon::now(),

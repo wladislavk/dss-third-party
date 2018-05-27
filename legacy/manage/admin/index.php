@@ -48,7 +48,7 @@
 	        $username = $_POST['username'];
 	        $rawPassword = $_POST['password'];
 	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$username)."' AND status=1";
-	        
+
 	        $salt_row = $db->getRow($salt_sql);
 
 	        $pass = gen_password($rawPassword, $salt_row['salt']);

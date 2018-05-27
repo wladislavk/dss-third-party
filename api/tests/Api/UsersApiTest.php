@@ -2,7 +2,6 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use Tests\TestCases\ApiTestCase;
 
 class UsersApiTest extends ApiTestCase
@@ -140,30 +139,22 @@ class UsersApiTest extends ApiTestCase
 
     public function testGetCurrentUserInfo()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $this->get(self::ROUTE_PREFIX . '/users/current');
         $this->assertResponseOk();
         $expected = [
-            'id' => 'u_1',
-            'adminid' => 0,
             'userid' => 1,
-            'docid' => 1,
-            'patientid' => 0,
-            'parent_patientid' => 0,
+            'docid' => 0,
             'user_type' => 2,
             'status' => 1,
-            'admin' => 0,
-            'patient' => 0,
             'email' => 'email1@email.com',
             'name' => 'DOCTOR !',
             'first_name' => 'Doctor',
             'last_name' => '1',
             'username' => 'doc1f',
             'ip_address' => '192.168.1.55',
-            'access' => 2,
-            'companyid' => 3,
             'adddate' => '2010-03-05 18:53:39',
             'use_course' => 1,
             'numbers' => [
@@ -291,8 +282,97 @@ class UsersApiTest extends ApiTestCase
                 'use_payment_reports' => 1,
                 'is_billing_exclusive' => 0,
             ],
+            'user_access' => 2,
+            'npi' => '1234567890',
+            'address' => '125 Sleepy Hollow Lane1',
+            'city' => 'St Pete',
+            'state' => 'CA',
+            'zip' => '33333',
+            'phone' => '5554443333',
+            'medicare_npi' => '1234567890',
+            'tax_id_or_ssn' => '8888',
+            'producer' => null,
+            'practice' => 'Test Practice2',
+            'email_header' => 'dss_email_header_250711_1609.jpg',
+            'email_footer' => 'dss_email_footer_250711_1609.jpg',
+            'fax_header' => 'dss_print_header_250711_1609.jpg',
+            'fax_footer' => 'dss_print_footer_250711_1609.jpg',
+            'recover_hash' => 'd67d76236b805f4d3b830374d313667f62eede287ace7b17b65dfbffe5a8be0c',
+            'recover_time' => '2011-08-31 13:00:05',
+            'ssn' => 0,
+            'ein' => 1,
+            'use_patient_portal' => 1,
+            'mailing_practice' => 'Test Practice',
+            'mailing_name' => 'Dental Sleep Solutions',
+            'mailing_address' => '123 Test St, Ste 205',
+            'mailing_city' => 'St. Petersburg',
+            'mailing_state' => 'FL',
+            'mailing_zip' => '33704',
+            'mailing_phone' => '5555555555',
+            'use_digital_fax' => 1,
+            'fax' => '',
+            'use_letters' => 1,
+            'sign_notes' => 0,
+            'use_eligible_api' => 1,
+            'access_code' => null,
+            'text_date' => null,
+            'text_num' => 0,
+            'access_code_date' => null,
+            'registration_email_date' => null,
+            'producer_files' => 0,
+            'medicare_ptan' => '123321',
+            'use_course_staff' => 1,
+            'manage_staff' => 0,
+            'cc_id' => 'cus_2sh7VzTQufIsgX',
+            'letter_margin_header' => 48,
+            'letter_margin_footer' => 26,
+            'letter_margin_top' => 14,
+            'letter_margin_bottom' => 40,
+            'letter_margin_left' => 18,
+            'letter_margin_right' => 18,
+            'claim_margin_top' => 10,
+            'claim_margin_left' => 10,
+            'homepage' => 1,
+            'logo' => 'user_logo_1.jpg',
+            'use_letter_header' => 0,
+            'access_code_id' => 1,
+            'indent_address' => 0,
+            'registration_date' => null,
+            'header_space' => 0,
+            'billing_company_id' => 4,
+            'tracker_letters' => 1,
+            'intro_letters' => 1,
+            'plan_id' => 1,
+            'suspended_reason' => null,
+            'suspended_date' => null,
+            'updated_at' => '2016-01-12 15:15:29',
+            'signature_file' => null,
+            'signature_json' => null,
+            'edx_id' => 3,
+            'help_id' => 5,
+            'use_service_npi' => 0,
+            'service_name' => 'MedicareName',
+            'service_address' => 'MedicareAddr',
+            'service_city' => 'MedCity',
+            'service_state' => 'MedState',
+            'service_zip' => '99999',
+            'service_phone' => '',
+            'service_fax' => '',
+            'service_npi' => '99999999',
+            'service_medicare_npi' => '99999999',
+            'service_medicare_ptan' => '88888999',
+            'service_tax_id_or_ssn' => '99999999',
+            'service_ssn' => 0,
+            'service_ein' => 0,
+            'eligible_test' => 1,
+            'billing_plan_id' => 0,
+            'post_ledger_adjustments' => 0,
+            'edit_ledger_entries' => 0,
+            'use_payment_reports' => 1,
+            'is_billing_exclusive' => 0,
         ];
         $response = $this->getResponseData();
+        unset($response['last_accessed_date']);
         unset($response['doc_info']['last_accessed_date']);
         $this->assertEquals($expected, $response);
     }

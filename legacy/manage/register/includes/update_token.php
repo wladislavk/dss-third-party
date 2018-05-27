@@ -1,5 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-include_once '../../admin/includes/main_include.php';
+  require_once __DIR__ . '/../../admin/includes/stripe-functions.php';
+  include_once '../../admin/includes/main_include.php';
   include_once '../../includes/constants.inc';
 
   $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
@@ -22,14 +23,11 @@ linkRequestData('dental_users', $id);
 
   $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".$db->escape($companyid)."'";
   $key_r= $db->getRow($key_sql);
-
-  $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-  \Stripe\ApiRequestor::setHttpClient($curl);
-  \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
+  setupStripeConnection($key_r['stripe_secret_key']);
 
   try {
     // create a Customer
-    $customer = \Stripe\Customer::create(array(
+    $customer = createStripeCustomerWithCard(array(
                   "card" => array(
                 	"number" => $number,
                 	"exp_month" => $exp_month,
@@ -56,13 +54,20 @@ linkRequestData('dental_users', $id);
   } catch (\Stripe\Error\Authentication $e) {
       // Authentication with Stripe's API failed
       // (maybe you changed API keys recently)
-      return $e;
+      $body = $e->getJsonBody();
+      $err  = $body['error'];
+      echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+      trigger_error("Die called", E_USER_ERROR);
   } catch (\Stripe\Error\ApiConnection $e) {
       // Network communication with Stripe failed
-      return $e;
-  } catch (Exception $e) {
+      $body = $e->getJsonBody();
+      $err  = $body['error'];
+      echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+      trigger_error("Die called", E_USER_ERROR);
+  } catch (\Exception $e) {
       // Something else happened, completely unrelated to Stripe
-      return $e;
+      echo '{"error": {"code":"'.$e->getCode().'","message":"'.$e->getMessage().'"}}';
+      trigger_error("Die called", E_USER_ERROR);
   }
 
   // charge the Customer instead of the card

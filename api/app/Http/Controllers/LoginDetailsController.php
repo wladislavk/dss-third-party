@@ -61,7 +61,6 @@ class LoginDetailsController extends BaseRestController
     /**
      * @SWG\Post(
      *     path="/login-details",
-     *     @SWG\Parameter(name="loginid", in="formData", type="integer"),
      *     @SWG\Parameter(name="userid", in="formData", type="integer"),
      *     @SWG\Parameter(name="cur_page", in="formData", type="string", required=true),
      *     @SWG\Response(
@@ -83,8 +82,7 @@ class LoginDetailsController extends BaseRestController
     public function store()
     {
         $data = array_merge($this->request->all(), [
-            'loginid'    => $this->user->id,
-            'userid'     => $this->user->userid,
+            'userid'     => $this->user()->userid,
             'ip_address' => $this->request->ip(),
         ]);
 
@@ -97,7 +95,6 @@ class LoginDetailsController extends BaseRestController
      * @SWG\Put(
      *     path="/login-details/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Parameter(name="loginid", in="formData", type="integer"),
      *     @SWG\Parameter(name="userid", in="formData", type="integer"),
      *     @SWG\Parameter(name="cur_page", in="formData", type="string"),
      *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),

@@ -2,9 +2,8 @@
 
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
-use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractAuthenticatableModel;
 use DentalSleepSolutions\Eloquent\Traits\DentrixAuthenticatableTrait;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 /**
  * @SWG\Definition(
@@ -29,7 +28,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\User[] $users
  * @mixin \Eloquent
  */
-class ExternalCompany extends AbstractModel implements AuthenticatableContract
+class ExternalCompany extends AbstractAuthenticatableModel
 {
     use DentrixAuthenticatableTrait;
 

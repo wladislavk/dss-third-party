@@ -4,7 +4,7 @@ namespace Tests\Unit\Services\Tasks;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Illuminate\Database\Eloquent\Collection;

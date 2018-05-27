@@ -185,9 +185,10 @@ class PatientSummariesController extends BaseRestController
 
         $notes = $request->input('tracker_notes');
         $patientId = $request->input('patient_id');
+        $docId = $this->user()->normalizedDocId();
 
         try {
-            $trackerNotesHandler->update($patientId, $this->user->docid, $notes);
+            $trackerNotesHandler->update($patientId, $docId, $notes);
         } catch (GeneralException $e) {
             return ApiResponse::responseError($e->getMessage());
         }

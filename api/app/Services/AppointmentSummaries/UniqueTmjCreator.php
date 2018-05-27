@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Services\AppointmentSummaries;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 
 class UniqueTmjCreator
@@ -34,7 +34,7 @@ class UniqueTmjCreator
         $resource->patientid = $patientId;
         $resource->dentaldevice = $deviceId;
         $resource->userid = $user->userid;
-        $resource->docid = $user->docid;
+        $resource->docid = $user->normalizedDocId();
         return $resource;
     }
 }

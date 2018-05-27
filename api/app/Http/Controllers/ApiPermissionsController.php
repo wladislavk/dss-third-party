@@ -51,8 +51,8 @@ class ApiPermissionsController extends BaseRestController
     public function bulkUpdate()
     {
         $groups = $this->request->input('permissions');
-        $docId = $this->user->docid;
-        $patientId = $this->patient->patientid;
+        $docId = $this->user()->normalizedDocId();
+        $patientId = $this->patient()->patientid;
         $this->updateGroups($groups, $docId, $patientId);
         $data = $this->findAllModels();
         return ApiResponse::responseOk('', $data);
@@ -65,8 +65,8 @@ class ApiPermissionsController extends BaseRestController
     {
         return $this->repository
             ->getWithFilter([], [
-                'doc_id' => $this->user->docid,
-                'patient_id' => $this->patient->patientid,
+                'doc_id' => $this->user()->normalizedDocId(),
+                'patient_id' => $this->patient()->patientid,
             ])
             ->all()
         ;

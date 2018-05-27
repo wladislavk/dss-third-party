@@ -349,8 +349,8 @@ class UsersController extends BaseRestController
             'type' => '',
         ];
 
-        if (in_array($this->user->status, $accountStatuses)) {
-            $data['type'] = self::STATUS_LABELS[$this->user->status];
+        if (in_array($this->user()->status, $accountStatuses)) {
+            $data['type'] = self::STATUS_LABELS[$this->user()->status];
         }
 
         return ApiResponse::responseOk('', $data);
@@ -370,7 +370,7 @@ class UsersController extends BaseRestController
     public function getCurrentUserInfo(CurrentUserInfoRetriever $currentUserInfoRetriever)
     {
         try {
-            $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user);
+            $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user());
         } catch (RepositoryException $e) {
             return ApiResponse::responseError($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
@@ -388,7 +388,7 @@ class UsersController extends BaseRestController
     public function checkLogout()
     {
         $logoutTime = 60 * 60;
-        $data = $this->repository->getLastAccessedDate($this->user->userid);
+        $data = $this->repository->getLastAccessedDate($this->user()->userid);
         if (!$data) {
             return ApiResponse::responseOk('', ['logout' => true]);
         }
@@ -414,7 +414,7 @@ class UsersController extends BaseRestController
      */
     public function getResponsible()
     {
-        $docId = $this->user->getDocIdOrZero();
+        $docId = $this->user()->docid;
         $data = $this->repository->getResponsible($docId);
         return ApiResponse::responseOk('', $data);
     }

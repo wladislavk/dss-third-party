@@ -1,23 +1,24 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Auth\DentrixAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany;
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware;
+use DentalSleepSolutions\Http\Middleware\DentrixAuthenticationMiddleware;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Tests\TestCases\MiddlewareTestCase;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
-class DentrixAuthMiddlewareTest extends MiddlewareTestCase
+class DentrixAuthenticationMiddlewareTest extends MiddlewareTestCase
 {
-    const DATA_KEY = 'key';
-
     protected $testMiddleware = [
-        DentrixAuthMiddleware::class
+        DentrixAuthenticationMiddleware::class
     ];
 
     /** @var ExternalCompany */
@@ -36,7 +37,7 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
         $this->user = factory(User::class)->create();
         $this->dentrixCompany = factory(ExternalCompany::class)->create();
         $this->dentrixUser = factory(ExternalUser::class)->make();
-        $this->dentrixUser->user_id = $this->user->userid;
+        $this->dentrixUser->{DentrixAuthenticationMiddleware::USER_MODEL_KEY} = $this->user->getAuthIdentifier();
         $this->dentrixUser->save();
     }
 
@@ -53,7 +54,7 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
     public function testInvalidCompanyToken()
     {
         $this->post(self::TEST_ROUTE, [
-            DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => '.'
+            DentrixAuthenticationMiddleware::COMPANY_TOKEN_INDEX => '.'
         ]);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -65,7 +66,7 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
     public function testNoUserToken()
     {
         $this->post(self::TEST_ROUTE, [
-            DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->api_key,
+            DentrixAuthenticationMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->getAuthPassword(),
         ]);
 
         $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
@@ -77,8 +78,8 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
     public function testInvalidUserToken()
     {
         $this->post(self::TEST_ROUTE, [
-            DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->api_key,
-            DentrixAuthMiddleware::USER_TOKEN_INDEX => '.',
+            DentrixAuthenticationMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->getAuthPassword(),
+            DentrixAuthenticationMiddleware::USER_TOKEN_INDEX => '.',
         ]);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -92,8 +93,8 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
         $this->user->delete();
 
         $this->post(self::TEST_ROUTE, [
-            DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->api_key,
-            DentrixAuthMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->api_key,
+            DentrixAuthenticationMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->getAuthPassword(),
+            DentrixAuthenticationMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->getAuthPassword(),
         ]);
 
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -105,18 +106,27 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
     public function testLoggedIn()
     {
         $this->post(self::TEST_ROUTE, [
-            DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->api_key,
-            DentrixAuthMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->api_key,
+            DentrixAuthenticationMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->getAuthPassword(),
+            DentrixAuthenticationMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->getAuthPassword(),
         ]);
 
         $this->assertResponseOk();
         $this->seeJson([
-            DentrixAuth::USER_MODEL_KEY => $this->user->{DentrixAuth::USER_MODEL_KEY}
+            $this->user->getAuthIdentifierName() => $this->user->getAuthIdentifier(),
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \InvalidArgumentException
+     */
     protected function requestHandler(Request $request)
     {
-        return ApiResponse::responseOk('', $request->user());
+        /** @var Auth $auth */
+        $auth = $this->app['auth'];
+        /** @var Guard $guard */
+        $guard = $auth->guard(JwtHelper::ROLE_USER);
+        return ApiResponse::responseOk('', $guard->user());
     }
 }

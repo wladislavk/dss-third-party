@@ -92,7 +92,7 @@ abstract class AbstractPatientEditor
         EditPatientRequestData $requestData,
         $patientId
     ) {
-        $docId = $currentUser->getDocIdOrZero();
+        $docId = $currentUser->normalizedDocId();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
         $this->letterTriggerLauncher->triggerLetters(

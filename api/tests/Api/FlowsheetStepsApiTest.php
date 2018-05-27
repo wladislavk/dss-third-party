@@ -2,7 +2,7 @@
 
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\Dental\FlowsheetStep;
 use Tests\TestCases\ApiTestCase;
 

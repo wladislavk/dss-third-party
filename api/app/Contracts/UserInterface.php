@@ -7,7 +7,7 @@ interface UserInterface
     /**
      * @return int
      */
-    public function getDocIdOrZero();
+    public function normalizedDocId();
 
     /**
      * @return int

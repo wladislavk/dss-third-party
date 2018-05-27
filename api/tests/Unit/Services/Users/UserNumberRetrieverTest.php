@@ -5,7 +5,7 @@ namespace Tests\Unit\Services\Users;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PaymentReportRepository;

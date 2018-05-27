@@ -9,6 +9,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
 
@@ -94,6 +95,9 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent\\Models';
     const DEFAULT_MODEL_NAMESPACE = self::BASE_MODEL_NAMESPACE . '\\Dental';
 
+    /** @var Auth */
+    protected $auth;
+
     /** @var bool */
     protected $hasIp = true;
 
@@ -136,12 +140,19 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var string */
     protected $filterByPatientKey;
 
+    /**
+     * @param Auth $auth
+     * @param Config $config
+     * @param BaseRepository $repository
+     * @param Request $request
+     */
     public function __construct(
+        Auth $auth,
         Config $config,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($config, $request);
+        parent::__construct($auth, $config, $request);
         $this->repository = $repository;
     }
 
@@ -295,7 +306,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         }
 
         if ($this->doctorKey) {
-            $attributes[$this->doctorKey] = $this->user()->docid;
+            $attributes[$this->doctorKey] = $this->user()->normalizedDocId();
         }
 
         if ($this->userKey) {
@@ -347,7 +358,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         }
 
         if ($this->filterByDoctorKey) {
-            $attributes[$this->filterByDoctorKey] = $this->user()->docid;
+            $attributes[$this->filterByDoctorKey] = $this->user()->normalizedDocId();
         }
 
         if ($this->filterByUserKey) {

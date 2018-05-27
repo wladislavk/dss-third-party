@@ -3,8 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
-use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\Eloquent\Models\Dental\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
@@ -45,7 +44,7 @@ class TasksApiTest extends ApiTestCase
     public function testIndex()
     {
         /** @var User $user */
-        $user = User::find('u_1');
+        $user = User::find(1);
         $this->be($user);
         $this->get(self::ROUTE_PREFIX . $this->getRoute());
         $this->assertResponseOk();
@@ -60,7 +59,7 @@ class TasksApiTest extends ApiTestCase
     public function testIndexForPatient()
     {
         /** @var User $user */
-        $user = User::find('u_1');
+        $user = User::find(1);
         $this->be($user);
         $patientId = 112;
         $this->get(self::ROUTE_PREFIX . '/tasks-for-patient/' . $patientId);
@@ -74,7 +73,7 @@ class TasksApiTest extends ApiTestCase
     public function testIndexForPatientWithoutTasks()
     {
         /** @var User $user */
-        $user = User::find('u_1');
+        $user = User::find(1);
         $this->be($user);
         $patientId = 170;
         $this->get(self::ROUTE_PREFIX . '/tasks-for-patient/' . $patientId);
@@ -84,8 +83,8 @@ class TasksApiTest extends ApiTestCase
 
     public function testShow()
     {
-        /** @var BaseUser $userRecord */
-        $userRecord = factory(BaseUser::class)->create();
+        /** @var User $userRecord */
+        $userRecord = factory(User::class)->create();
         /** @var Task $testRecord */
         $testRecord = factory($this->getModel())->create();
         $testRecord->status = Task::STATUS_INACTIVE;

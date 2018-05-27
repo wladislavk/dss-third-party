@@ -2,94 +2,84 @@
 
 namespace Tests\Api;
 
-use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Eloquent\Models\Admin;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Http\Middleware\AbstractJwtAuthMiddleware;
-use DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware;
+use DentalSleepSolutions\Http\Middleware\JwtAuthenticationMiddleware;
 use DentalSleepSolutions\Http\Middleware\JwtRefreshTokenMiddleware;
-use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
-use Tests\TestCases\JwtAuthMiddlewareTestCase;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
+use Tests\TestCases\JwtAuthenticationMiddlewareTestCase;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
-class JwtRefreshTokenMiddlewareTest extends JwtAuthMiddlewareTestCase
+class JwtRefreshTokenMiddlewareTest extends JwtAuthenticationMiddlewareTestCase
 {
     protected $testMiddleware = [
-        JwtAdminAuthMiddleware::class,
-        JwtUserAuthMiddleware::class,
         JwtRefreshTokenMiddleware::class,
     ];
 
     public function testRefreshAdmin()
     {
         $admin = factory(Admin::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid);
-
-        $this->get(self::TEST_ROUTE, $authHeader);
+        $this->be($admin, JwtHelper::ROLE_ADMIN);
+        $this->get(self::TEST_ROUTE);
         $claims = $this->getResponseClaims();
 
         $this->assertResponseOk();
-        $this->seeHeader(AbstractJwtAuthMiddleware::AUTH_HEADER);
+        $this->seeHeader(JwtAuthenticationMiddleware::AUTH_HEADER);
         $this->assertRegExp(
             '/^Bearer ' . self::TOKEN_REGEXP. '$/',
-            $this->response->headers->get(AbstractJwtAuthMiddleware::AUTH_HEADER)
+            $this->response->headers->get(JwtAuthenticationMiddleware::AUTH_HEADER)
         );
-
-        $this->assertEquals(JwtAuth::ROLE_ADMIN, $claims[JwtAuth::CLAIM_ROLE_INDEX]);
-        $this->assertEquals(self::ADMIN_PREFIX . $admin->adminid, $claims[JwtAuth::CLAIM_ID_INDEX]);
+        $this->assertEquals(JwtHelper::ROLE_ADMIN, $claims[JwtHelper::CLAIM_ROLE_INDEX]);
+        $this->assertEquals($admin->adminid, $claims[JwtHelper::CLAIM_ID_INDEX]);
     }
 
     public function testRefreshUser()
     {
         $user = factory(User::class)->create();
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_USER, $user->userid);
-
-        $this->get(self::TEST_ROUTE, $authHeader);
+        $this->be($user, JwtHelper::ROLE_USER);
+        $this->get(self::TEST_ROUTE);
         $claims = $this->getResponseClaims();
 
         $this->assertResponseOk();
-        $this->seeHeader(AbstractJwtAuthMiddleware::AUTH_HEADER);
+        $this->seeHeader(JwtAuthenticationMiddleware::AUTH_HEADER);
         $this->assertRegExp(
             '/^Bearer ' . self::TOKEN_REGEXP. '$/',
-            $this->response->headers->get(AbstractJwtAuthMiddleware::AUTH_HEADER)
+            $this->response->headers->get(JwtAuthenticationMiddleware::AUTH_HEADER)
         );
-
-        $this->assertEquals(JwtAuth::ROLE_USER, $claims[JwtAuth::CLAIM_ROLE_INDEX]);
-        $this->assertEquals(self::USER_PREFIX . $user->userid, $claims[JwtAuth::CLAIM_ID_INDEX]);
+        $this->assertEquals(JwtHelper::ROLE_USER, $claims[JwtHelper::CLAIM_ROLE_INDEX]);
+        $this->assertEquals($user->userid, $claims[JwtHelper::CLAIM_ID_INDEX]);
     }
 
-    public function testRefreshSudo()
+    public function testRefreshPatient()
     {
-        $user = factory(User::class)->create();
-        $admin = factory(Admin::class)->create();
-        $sudoQuery = $this->generateSudoUserQuery($user);
-        $authHeader = $this->generateAuthHeader(JwtAuth::ROLE_ADMIN, $admin->adminid);
-
-        $this->get(self::TEST_ROUTE . '?' . $sudoQuery, $authHeader);
+        $patient = factory(Patient::class)->create();
+        $this->be($patient, JwtHelper::ROLE_PATIENT);
+        $this->get(self::TEST_ROUTE);
         $claims = $this->getResponseClaims();
 
         $this->assertResponseOk();
-        $this->seeHeader(AbstractJwtAuthMiddleware::AUTH_HEADER);
+        $this->seeHeader(JwtAuthenticationMiddleware::AUTH_HEADER);
         $this->assertRegExp(
             '/^Bearer ' . self::TOKEN_REGEXP. '$/',
-            $this->response->headers->get(AbstractJwtAuthMiddleware::AUTH_HEADER)
+            $this->response->headers->get(JwtAuthenticationMiddleware::AUTH_HEADER)
         );
-        $this->assertEquals(JwtAuth::ROLE_ADMIN, $claims[JwtAuth::CLAIM_ROLE_INDEX]);
-        $this->assertEquals(self::ADMIN_PREFIX . $admin->adminid, $claims[JwtAuth::CLAIM_ID_INDEX]);
+        $this->assertEquals(JwtHelper::ROLE_PATIENT, $claims[JwtHelper::CLAIM_ROLE_INDEX]);
+        $this->assertEquals($patient->patientid, $claims[JwtHelper::CLAIM_ID_INDEX]);
     }
 
-    private function getResponseClaims()
+    /**
+     * @return array
+     */
+    private function getResponseClaims(): array
     {
-        $token = $this->getResponseToken();
-        $claims = $this->jwtHelper
-            ->parseToken($token)
-        ;
+        $header = $this->response->headers->get(JwtAuthenticationMiddleware::AUTH_HEADER);
+        $token = str_replace(JwtAuthenticationMiddleware::AUTH_HEADER_START, '', $header);
+        try {
+            $claims = $this->jwtHelper->parseToken($token);
+        } catch (TokenInvalidException $e) {
+            return [];
+        }
         return $claims;
-    }
-
-    private function getResponseToken()
-    {
-        $header = $this->response->headers->get(AbstractJwtAuthMiddleware::AUTH_HEADER);
-        $token = str_replace(AbstractJwtAuthMiddleware::AUTH_HEADER_START, '', $header);
-        return $token;
     }
 }

@@ -2,8 +2,7 @@
 
 namespace DentalSleepSolutions\Services\Users;
 
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
-use DentalSleepSolutions\Eloquent\Models\Dental\User as DentalUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 
@@ -22,24 +21,22 @@ class CurrentUserInfoRetriever
     }
 
     /**
-     * @param BaseUser $user
+     * @param User $user
      * @return array
      * @throws RepositoryException
      * @throws \DentalSleepSolutions\Exceptions\GeneralException
      */
-    public function getCurrentUserInfo(BaseUser $user): array
+    public function getCurrentUserInfo(User $user): array
     {
         $userData = $this->userNumberRetriever->addUserNumbers($user);
-        /** @var DentalUser|null $dentalUser */
-        $dentalUser = $this->userRepository->findOrNull($user->userid);
-        $useCourse = 0;
-        if ($dentalUser) {
-            $useCourse = $dentalUser->use_course;
-        }
-        $userData['use_course'] = $useCourse;
-        /** @var DentalUser|null $doctor */
-        $doctor = $this->userRepository->findOrNull($user->getDocIdOrZero());
+        $userData['use_course'] = $user->use_course;
         $userData['doc_info'] = [];
+        if (!$user->docid) {
+            $userData['doc_info'] = $user->toArray();
+            return $userData;
+        }
+        /** @var User|null $doctor */
+        $doctor = $this->userRepository->findOrNull($user->docid);
         if ($doctor) {
             $userData['doc_info'] = $doctor->toArray();
         }

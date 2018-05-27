@@ -8,6 +8,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Request;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class HomeSleepTestsController extends BaseRestController
 {
@@ -18,12 +19,13 @@ class HomeSleepTestsController extends BaseRestController
     private $screenerEpworthRepository;
 
     public function __construct(
+        Auth $auth,
         Config $config,
         BaseRepository $repository,
         Request $request,
         ScreenerEpworthRepository $screenerEpworthRepository
     ) {
-        parent::__construct($config, $repository, $request);
+        parent::__construct($auth, $config, $repository, $request);
         $this->screenerEpworthRepository = $screenerEpworthRepository;
     }
 

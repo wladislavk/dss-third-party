@@ -202,10 +202,10 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_
   $db = new Db();
   $contact_info = array();
 
-  $patient = explodeAndEscapeList($patient);
-  $md_list = explodeAndEscapeList($md_list);
-  $md_referral_list = explodeAndEscapeList($md_referral_list);
-  $pat_referral_list = explodeAndEscapeList($pat_referral_list);
+  $patient = clear_id_list($patient);
+  $md_list = clear_id_list($md_list);
+  $md_referral_list = clear_id_list($md_referral_list);
+  $pat_referral_list = clear_id_list($pat_referral_list);
 
   if (isset($patient)) {
     $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN(".$patient.");";

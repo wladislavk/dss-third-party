@@ -74,6 +74,7 @@ class UserNumberRetriever
             $numbers['unmailed_claims'] = $numbers['unmailed_claims_software'];
         }
         $userData = $user->toArray();
+        $userData['docid'] = $docId;
         $userData['numbers'] = $numbers;
         return $userData;
     }

@@ -63,21 +63,21 @@ abstract class Controller extends BaseController
         $this->patient->patientid = 0;
         $this->patient->docid = 0;
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_ADMIN);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->admin = $guard->user();
         }
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_USER);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->user = $guard->user();
         }
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_PATIENT);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->patient = $guard->user();
         }
     }

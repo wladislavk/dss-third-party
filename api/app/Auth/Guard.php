@@ -50,7 +50,11 @@ class Guard implements StatefulGuard
         if (!$this->user) {
             return null;
         }
-        if ($this->passwordGenerator->verify($password, $this->user->password, $this->user->salt)) {
+        $userPassword = '';
+        if ($this->user->password) {
+            $userPassword = $this->user->password;
+        }
+        if ($this->passwordGenerator->verify($password, $userPassword, $this->user->salt)) {
             return $this->user();
         }
         return $this->user();
@@ -92,14 +96,18 @@ class Guard implements StatefulGuard
     public function validate(array $credentials = []): ?Authenticatable
     {
         $this->user = $this->provider->retrieveByCredentials($credentials);
-        $password = '';
-        if (isset($credentials['password'])) {
-            $password = $credentials['password'];
-        }
         if (!$this->user) {
             return null;
         }
-        if ($this->passwordGenerator->verify($password, $this->user->password, $this->user->salt)) {
+        if (!isset($credentials['password'])) {
+            return $this->user();
+        }
+        $password = $credentials['password'];
+        $salt = '';
+        if (!empty($this->user->salt)) {
+            $salt = $this->user->salt;
+        }
+        if ($this->passwordGenerator->verify($password, $this->user->getAuthPassword(), $salt)) {
             return $this->user();
         }
         return null;

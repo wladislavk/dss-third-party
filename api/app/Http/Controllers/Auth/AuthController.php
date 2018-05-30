@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers\Auth;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Auth\Authenticatable;

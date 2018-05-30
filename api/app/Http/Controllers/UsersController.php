@@ -366,6 +366,7 @@ class UsersController extends BaseRestController
      *
      * @param CurrentUserInfoRetriever $currentUserInfoRetriever
      * @return \Illuminate\Http\JsonResponse
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
      */
     public function getCurrentUserInfo(CurrentUserInfoRetriever $currentUserInfoRetriever)
     {

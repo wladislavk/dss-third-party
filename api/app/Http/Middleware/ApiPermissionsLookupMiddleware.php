@@ -6,7 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup;
 use DentalSleepSolutions\Services\ApiPermissions\ApiPermissionsLookup;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;

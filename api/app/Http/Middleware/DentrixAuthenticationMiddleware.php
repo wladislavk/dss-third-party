@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Contracts\Auth\Authenticatable;

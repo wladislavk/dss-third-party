@@ -35,7 +35,7 @@ class CompanyRepository extends AbstractRepository
      */
     public function getHomeSleepTestCompanies($docId)
     {
-        return $this->model
+        $query = $this->model
             ->select('h.*', \DB::raw('uhc.id as uhc_id'))
             ->from(\DB::raw('companies h'))
             ->join(\DB::raw('dental_user_hst_company uhc'), function (JoinClause $query) use ($docId) {
@@ -46,8 +46,8 @@ class CompanyRepository extends AbstractRepository
             })
             ->where('h.company_type', Company::DSS_COMPANY_TYPE_HST)
             ->orderBy('name')
-            ->get()
         ;
+        return $query->get();
     }
 
     /**

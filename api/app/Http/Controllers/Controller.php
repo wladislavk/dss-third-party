@@ -6,9 +6,8 @@ use DentalSleepSolutions\Eloquent\Models\Admin;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Config\Repository as Config;
@@ -64,21 +63,21 @@ abstract class Controller extends BaseController
         $this->patient->patientid = 0;
         $this->patient->docid = 0;
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_ADMIN);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->admin = $guard->user();
         }
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_USER);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->user = $guard->user();
         }
 
-        /** @var Guard $guard */
+        /** @var Guard|null $guard */
         $guard = $auth->guard(JwtHelper::ROLE_PATIENT);
-        if ($guard->user()) {
+        if ($guard && $guard->user()) {
             $this->patient = $guard->user();
         }
     }

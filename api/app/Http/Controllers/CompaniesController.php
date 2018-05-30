@@ -164,7 +164,8 @@ class CompaniesController extends BaseRestController
      */
     public function getHomeSleepTestCompanies()
     {
-        $data = $this->repository->getHomeSleepTestCompanies($this->user()->docid);
+        $docId = $this->user()->normalizedDocId();
+        $data = $this->repository->getHomeSleepTestCompanies($docId);
 
         return ApiResponse::responseOk('', $data);
     }

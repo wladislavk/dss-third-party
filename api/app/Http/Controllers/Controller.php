@@ -8,7 +8,6 @@ use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Services\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Config\Repository as Config;

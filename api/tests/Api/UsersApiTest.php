@@ -146,7 +146,7 @@ class UsersApiTest extends ApiTestCase
         $this->assertResponseOk();
         $expected = [
             'userid' => 1,
-            'docid' => 0,
+            'docid' => 1,
             'user_type' => 2,
             'status' => 1,
             'email' => 'email1@email.com',

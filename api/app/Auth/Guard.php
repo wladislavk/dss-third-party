@@ -1,7 +1,9 @@
 <?php
 
-namespace DentalSleepSolutions\Services\Auth;
+namespace DentalSleepSolutions\Auth;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -11,15 +13,25 @@ class Guard implements StatefulGuard
 {
     use GuardHelpers;
 
-    public function __construct(UserProvider $provider)
+    /** @var User */
+    protected $user;
+
+    /** @var UserProvider */
+    protected $provider;
+
+    /** @var PasswordGenerator */
+    private $passwordGenerator;
+
+    public function __construct(UserProvider $provider, PasswordGenerator $passwordGenerator)
     {
         $this->provider = $provider;
+        $this->passwordGenerator = $passwordGenerator;
     }
 
     /**
      * @return Authenticatable|null
      */
-    public function user():? Authenticatable
+    public function user(): ?Authenticatable
     {
         return $this->user;
     }
@@ -28,9 +40,19 @@ class Guard implements StatefulGuard
      * @param array $credentials
      * @return Authenticatable|null
      */
-    public function once(array $credentials = []):? Authenticatable
+    public function once(array $credentials = []): ?Authenticatable
     {
         $this->user = $this->provider->retrieveByCredentials($credentials);
+        $password = '';
+        if (isset($credentials['password'])) {
+            $password = $credentials['password'];
+        }
+        if (!$this->user) {
+            return null;
+        }
+        if ($this->passwordGenerator->verify($password, $this->user->password, $this->user->salt)) {
+            return $this->user();
+        }
         return $this->user();
     }
 
@@ -40,7 +62,7 @@ class Guard implements StatefulGuard
      * @param bool $login
      * @return Authenticatable|null
      */
-    public function attempt(array $credentials = [], $remember = false, $login = true):? Authenticatable
+    public function attempt(array $credentials = [], $remember = false, $login = true): ?Authenticatable
     {
         return $this->once($credentials);
     }
@@ -49,7 +71,7 @@ class Guard implements StatefulGuard
      * @param string $field
      * @return Authenticatable|null
      */
-    public function basic($field = 'email'):? Authenticatable
+    public function basic($field = 'email'): ?Authenticatable
     {
         return null;
     }
@@ -58,7 +80,7 @@ class Guard implements StatefulGuard
      * @param string $field
      * @return Authenticatable|null
      */
-    public function onceBasic($field = 'email'):? Authenticatable
+    public function onceBasic($field = 'email'): ?Authenticatable
     {
         return null;
     }
@@ -67,10 +89,20 @@ class Guard implements StatefulGuard
      * @param array $credentials
      * @return Authenticatable|null
      */
-    public function validate(array $credentials = []):? Authenticatable
+    public function validate(array $credentials = []): ?Authenticatable
     {
         $this->user = $this->provider->retrieveByCredentials($credentials);
-        return $this->user();
+        $password = '';
+        if (isset($credentials['password'])) {
+            $password = $credentials['password'];
+        }
+        if (!$this->user) {
+            return null;
+        }
+        if ($this->passwordGenerator->verify($password, $this->user->password, $this->user->salt)) {
+            return $this->user();
+        }
+        return null;
     }
 
     /**
@@ -78,7 +110,7 @@ class Guard implements StatefulGuard
      * @param bool $remember
      * @return void
      */
-    public function login(Authenticatable $user, $remember = false)
+    public function login(Authenticatable $user, $remember = false): void
     {
         $this->user = $user;
     }
@@ -88,7 +120,7 @@ class Guard implements StatefulGuard
      * @param bool $remember
      * @return Authenticatable|null
      */
-    public function loginUsingId($id, $remember = false):? Authenticatable
+    public function loginUsingId($id, $remember = false): ?Authenticatable
     {
         $this->user = $this->provider->retrieveById($id);
         return $this->user();
@@ -99,7 +131,7 @@ class Guard implements StatefulGuard
      * @param bool $remember
      * @return Authenticatable|null
      */
-    public function onceUsingId($id, $remember = false):? Authenticatable
+    public function onceUsingId($id, $remember = false): ?Authenticatable
     {
         $this->user = $this->provider->retrieveById($id);
         return $this->user();
@@ -116,8 +148,8 @@ class Guard implements StatefulGuard
     /**
      * @return void
      */
-    public function logout()
+    public function logout(): void
     {
-
+        // do nothing
     }
 }

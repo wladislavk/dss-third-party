@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Console\Commands;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Console\Command;
 use DentalSleepSolutions\Services\Auth\JwtHelper;

@@ -2,7 +2,8 @@
 
 namespace DentalSleepSolutions\Providers;
 
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
+use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,7 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         $this->app['auth']->extend('dental', function ($app, $name, array $config) {
-            return new Guard($app->auth->createUserProvider($config['provider']));
+            /** @var PasswordGenerator $passwordGenerator */
+            $passwordGenerator = $app->make(PasswordGenerator::class);
+            return new Guard($app->auth->createUserProvider($config['provider']), $passwordGenerator);
         });
     }
 }

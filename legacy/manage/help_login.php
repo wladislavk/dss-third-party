@@ -12,6 +12,10 @@
 	$login_sql = "insert into help_wp.dss_wp_signon (user_name, user_temp_key) values ('".$username."', '".$key."');";
 	$db->query($login_sql);
 
+    $username = urlencode($username);
+    $key = urlencode($key);
+    $pass = urlencode($pass);
+
 	if($_SERVER['HTTP_HOST']=='www.dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
 ?>
 		<script type="text/javascript">

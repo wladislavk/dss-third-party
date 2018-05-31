@@ -20,7 +20,6 @@ export default {
     if (userId === docId) {
       return true
     }
-    console.log(rootState.main[symbols.state.docInfo])
     const manageStaff = rootState.main[symbols.state.docInfo].manageStaff
     if (manageStaff) {
       return true

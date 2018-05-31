@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use Tests\Dummies\DummyPatientEditor;

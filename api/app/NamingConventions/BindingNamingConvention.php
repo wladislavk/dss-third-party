@@ -65,11 +65,9 @@ class BindingNamingConvention
         $auth->shouldReceive('guard')
             ->andReturnNull()
         ;
-        $request->shouldReceive('user')->once();
-        $request->shouldReceive('patient')
-            ->once()
-        ;
-        $request->shouldReceive('admin')->once()->andReturnNull();
+        $request->shouldReceive('user');
+        $request->shouldReceive('patient');
+        $request->shouldReceive('admin')->andReturnNull();
         $config->shouldReceive('get')->andReturnNull();
 
         $this->controller = new $className($auth, $config, $repository, $request);

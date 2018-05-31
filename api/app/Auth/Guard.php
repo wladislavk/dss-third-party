@@ -43,12 +43,12 @@ class Guard implements StatefulGuard
     public function once(array $credentials = []): ?Authenticatable
     {
         $this->user = $this->provider->retrieveByCredentials($credentials);
+        if (!$this->user) {
+            return null;
+        }
         $password = '';
         if (isset($credentials['password'])) {
             $password = $credentials['password'];
-        }
-        if (!$this->user) {
-            return null;
         }
         $userPassword = '';
         if ($this->user->password) {

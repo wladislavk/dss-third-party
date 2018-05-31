@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Services\Letters\LetterManager;
 use DentalSleepSolutions\Services\Patients\PatientEditors\PatientUpdater;
@@ -61,7 +60,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testEditPatient()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();
@@ -110,7 +109,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testWithReferredByChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();
@@ -145,7 +144,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testWithReferredSourceChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();
@@ -180,7 +179,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testWithPinCode()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();
@@ -216,7 +215,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testWithHST()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();
@@ -253,7 +252,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
     public function testWithoutInsuranceInfoChange()
     {
         $formData = ['foo' => 'bar'];
-        $user = new BaseUser();
+        $user = new User();
         $user->userid = 1;
         $this->docId = 2;
         $requestData = new EditPatientRequestData();

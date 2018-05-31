@@ -14,6 +14,7 @@ class ApiLogMiddlewareTest extends MiddlewareTestCase
 
     public function testHandle()
     {
+        /** @var ApiLog $record */
         $record = factory(ApiLog::class)->make([
             'route' => self::TEST_ROUTE
         ]);

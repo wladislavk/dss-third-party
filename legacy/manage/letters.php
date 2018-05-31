@@ -232,7 +232,15 @@ if (!empty($dental_letters)){
       $source = '';
     }
 
-    $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], (!empty($letter['pat_referral_list']) ? $letter['pat_referral_list'] : ''));
+    $letterPatientId = '';
+    if ($letter['topatient'] == "1") {
+        $letterPatientId = $letter['patientid'];
+    }
+    $letterPatReferralList = '';
+    if (!empty($letter['pat_referral_list'])) {
+        $letterPatReferralList = $letter['pat_referral_list'];
+    }
+    $contacts = get_contact_info($letterPatientId, $letter['md_list'], $letter['md_referral_list'], $letterPatReferralList);
 
     $total_contacts = 0;
     $total_contacts += (isset($contacts['patient'])) ? count($contacts['patient']) : 0;

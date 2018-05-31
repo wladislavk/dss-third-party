@@ -2,7 +2,7 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Services\Auth\Guard;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Contracts\Auth\Authenticatable;

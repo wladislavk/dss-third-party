@@ -21,8 +21,7 @@ class PasswordGenerator
     public function __construct(
         BcryptHasher $bcryptHasher,
         LegacyHasher $legacyHasher
-    )
-    {
+    ) {
         /**
          * @todo Ensure Hasher service loads Bcrypt hasher
          */

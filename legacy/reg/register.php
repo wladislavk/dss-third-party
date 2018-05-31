@@ -185,6 +185,7 @@ $c_r = $db->getRow($c_sql);
                                 <option <?= ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                 <option <?= ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                 <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                                <option <?= ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
                         </select>
 
                 </div>
@@ -756,6 +757,7 @@ $c_r = $db->getRow($c_sql);
                                 <option <?= ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                 <option <?= ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                 <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                                <option <?= ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
 			</select>
 
 

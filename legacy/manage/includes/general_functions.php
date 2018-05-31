@@ -950,7 +950,8 @@ function stateList () {
         'WA' =>  'Washington',
         'WV' =>  'West Virginia',
         'WI' =>  'Wisconsin',
-        'WY' =>  'Wyoming'
+        'WY' =>  'Wyoming',
+        'PR' =>  'Puerto Rico',
     ];
 
     return $stateList;

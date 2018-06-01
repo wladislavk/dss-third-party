@@ -512,7 +512,7 @@ if ($msg && $msg != $errorMessage) { ?>
         <tr>
             <td valign="top" class="even" style="height:25px;">
                 <?php
-                $sqlex = "select * from dental_ex_page5_view where patientid='$patientId'";
+                $sqlex = "select * from dental_ex_page5_pivot where patientid='$patientId'";
                 $myarrayex = $db->getRow($sqlex);
                 $dentaldevice = $myarrayex['dentaldevice'];
                 ?>

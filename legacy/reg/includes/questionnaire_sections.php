@@ -17,25 +17,25 @@ if (!function_exists('questionnaireCompletedSections')) {
         $qp = $r['last_reg_sect'] >= 5 ? 1 : 0;
 
         $s = "SELECT *
-            FROM dental_q_page1_view
+            FROM dental_q_page1_pivot
             WHERE patientid = '$patientId'
                 OR parent_patientid = '$patientId'";
         $q1 = $db->getNumberRows($s) > 0 ? 1 : 0;
 
         $s = "SELECT *
-            FROM dental_q_sleep_view
+            FROM dental_q_sleep_pivot
             WHERE patientid = '$patientId'
               OR parent_patientid = '$patientId'";
         $qs = $db->getNumberRows($s) > 0 ? 1 : 0;
 
         $s = "SELECT *
-            FROM dental_q_page2_view
+            FROM dental_q_page2_pivot
             WHERE patientid = '$patientId'
                 OR parent_patientid = '$patientId'";
         $q2 = $db->getNumberRows($s) > 0 ? 1 : 0;
 
         $s = "SELECT *
-            FROM dental_q_page3_view
+            FROM dental_q_page3_pivot
             WHERE patientid = '$patientId'
                 OR parent_patientid = '$patientId'";
         $q3 = $db->getNumberRows($s) > 0 ? 1 : 0;

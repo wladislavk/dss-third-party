@@ -7,7 +7,7 @@ include("../includes/sescheck.php");
 include_once('../includes/general_functions.php');
 
 if (isset($_REQUEST['submit'])) {
-      $sql = "SELECT * FROM dental_ex_page5_view where patientid='".$_GET['pid']."'";
+      $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$_GET['pid']."'";
       
       if($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 

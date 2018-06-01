@@ -31,7 +31,7 @@ $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
   }
 
   if($id == "7"){
-    $sql = "SELECT * FROM dental_ex_page5_view where patientid='$pid'";
+    $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='$pid'";
     if($db->getNumberRows($sql)==0){
       $sqlex = "INSERT INTO dental_ex_page5 set 
                   dentaldevice_date=CURDATE(), 

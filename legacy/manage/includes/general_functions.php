@@ -395,7 +395,7 @@ function retrieveMailerData ($patientId) {
         WHERE patientid = '$patientId'");
 
     $locationId = $db->getColumn("SELECT location
-        FROM dental_summary_view
+        FROM dental_summary_pivot
         WHERE patientid = '$patientId'", 'location');
 
     if ($locationId) {

@@ -414,7 +414,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary_view where patientid='$patientId'";
+            $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='$patientId'";
             $ds_q = $db->getRow($ds_sql);
             if ($ds_q) {
                 $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
@@ -1144,7 +1144,7 @@ if (isset($msg) && $msg != '') {
     $referred_notes = st($themyarray["referred_notes"]);
     $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-  $loc_sql = "SELECT location from dental_summary_view WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+  $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
   $loc_r = $db->getRow($loc_sql);
   $location = $loc_r['location'];
 

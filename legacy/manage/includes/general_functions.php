@@ -20,7 +20,7 @@ function logoutFO () {
     $_SESSION['name'] = '';
     $_SESSION['user_access'] = '';
     $_SESSION['companyid'] = '';
-    $_SESSION['api_token'] = '';
+    $_SESSION['token'] = '';
 }
 
 function logoutBO () {
@@ -73,8 +73,25 @@ function generateApiToken($username, $password, array $options=[])
     return 'no-token: ' . $error;
 }
 
+function refreshApiToken($token)
+{
+    $curl = curl_init(config('app.lanApiUrl') . 'refresh-token');
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HEADER => true,
+        CURLOPT_HTTPHEADER => ["Authorization: Bearer $token"],
+    ]);
+    $response = curl_exec($curl);
+    $error = curl_error($curl);
+    if (preg_match('/Authorization: Bearer (?P<token>.+)/', $response, $match)) {
+        return $match['token'];
+    }
+    return 'no-token: ' . $error;
+}
+
 function apiToken() {
-    return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
+    return isset($_SESSION['token']) ? $_SESSION['token'] : '';
 }
 
 function adminApiToken () {

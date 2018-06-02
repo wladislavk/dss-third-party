@@ -5,7 +5,7 @@ require_once __DIR__ . '/admin/includes/main_include.php';
 
 header('Content-Type: text/json');
 
-$_SESSION['api_token'] = generateApiToken('u_' . $_SESSION['userid']);
+$_SESSION['token'] = refreshApiToken($_SESSION['token']);
 $token = apiToken();
 
 echo json_encode(['token' => $token]);

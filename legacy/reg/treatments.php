@@ -49,7 +49,7 @@ if ($_POST['q_page2sub'] == 1) {
     $other_arr = '';
     if (is_array($other)) {
         foreach ($other as $val) {
-            if (trim($val) <> '') {
+            if (trim($val) != '') {
                 $other_arr .= trim($val) . '~';
             }
         }
@@ -114,9 +114,9 @@ if ($_POST['q_page2sub'] == 1) {
                 }
             } else {
                 if (trim($_POST['surgery_date_'.$i]) != '' || trim($_POST['surgery_'.$i]) != '' || trim($_POST['surgeon_'.$i]) != '') {
-                    $s = "UPDATE dental_q_page2_surgery_view SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                    $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
                 } else {
-                    $s = "DELETE FROM dental_q_page2_surgery_view WHERE id='".$_POST['surgery_id_'.$i]."'";
+                    $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
                 }
             }
             mysqli_query($con, $s);
@@ -131,37 +131,43 @@ if ($_POST['q_page2sub'] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = "update dental_q_page2_view set 
-            polysomnographic = '".s_for($polysomnographic)."',
-            sleep_center_name_text = '".s_for($sleep_center_name_text)."',
-            sleep_study_on = '".s_for($sleep_study_on)."',
-            confirmed_diagnosis = '".s_for($confirmed_diagnosis)."',
-            rdi = '".s_for($rdi)."',
-            ahi = '".s_for($ahi)."',
-            cpap = '".s_for($cpap)."',
-            cur_cpap = '".s_for($cur_cpap)."',
-            intolerance = '".s_for($int_arr)."',
-            other_intolerance = '".s_for($other_intolerance)."',
-            other_therapy = '".s_for($other_therapy)."',
-            other = '".s_for($other_arr)."',
-            affidavit = '".s_for($affidavit)."',
-            type_study = '".s_for($type_study)."',
-            nights_wear_cpap = '".s_for($nights_wear_cpap)."',
-            percent_night_cpap = '".s_for($percent_night_cpap)."',
-            custom_diagnosis = '".s_for($custom_diagnosis)."',
-            sleep_study_by = '".s_for($sleep_study_by)."',
-            triedquittried = '".s_for($triedquittried)."',
-            timesovertime = '".s_for($timesovertime)."',
-            dd_wearing = '".s_for($dd_wearing)."',
-            dd_prev = '".s_for($dd_prev)."',
-            dd_otc = '".s_for($dd_otc)."',
-            dd_fab = '".s_for($dd_fab)."',
-            dd_who = '".s_for($dd_who)."',
-            dd_experience = '".s_for($dd_experience)."',
-            surgery = '".s_for($surgery)."'
-            where patientid = '".s_for($_SESSION['pid'])."'";
+        $maxIdsSql = "SELECT q_page2id FROM `dental_q_page2_pivot`";
+        $maxIdsResult = mysqli_fetch_all(mysqli_query($con, $maxIdsSql));
+        if (sizeof($maxIdsResult)) {
+            $maxIds = join(',', array_column($maxIdsResult, 0));
+            $ed_sql = "update dental_q_page2 set 
+                polysomnographic = '" . s_for($polysomnographic) . "',
+                sleep_center_name_text = '" . s_for($sleep_center_name_text) . "',
+                sleep_study_on = '" . s_for($sleep_study_on) . "',
+                confirmed_diagnosis = '" . s_for($confirmed_diagnosis) . "',
+                rdi = '" . s_for($rdi) . "',
+                ahi = '" . s_for($ahi) . "',
+                cpap = '" . s_for($cpap) . "',
+                cur_cpap = '" . s_for($cur_cpap) . "',
+                intolerance = '" . s_for($int_arr) . "',
+                other_intolerance = '" . s_for($other_intolerance) . "',
+                other_therapy = '" . s_for($other_therapy) . "',
+                other = '" . s_for($other_arr) . "',
+                affidavit = '" . s_for($affidavit) . "',
+                type_study = '" . s_for($type_study) . "',
+                nights_wear_cpap = '" . s_for($nights_wear_cpap) . "',
+                percent_night_cpap = '" . s_for($percent_night_cpap) . "',
+                custom_diagnosis = '" . s_for($custom_diagnosis) . "',
+                sleep_study_by = '" . s_for($sleep_study_by) . "',
+                triedquittried = '" . s_for($triedquittried) . "',
+                timesovertime = '" . s_for($timesovertime) . "',
+                dd_wearing = '" . s_for($dd_wearing) . "',
+                dd_prev = '" . s_for($dd_prev) . "',
+                dd_otc = '" . s_for($dd_otc) . "',
+                dd_fab = '" . s_for($dd_fab) . "',
+                dd_who = '" . s_for($dd_who) . "',
+                dd_experience = '" . s_for($dd_experience) . "',
+                surgery = '" . s_for($surgery) . "'
+                where patientid = " . s_for($_SESSION['pid']) . "
+                AND q_page2id IN ($maxIds)";
 
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+            mysqli_query($con, $ed_sql) or trigger_error($ed_sql . " | " . mysqli_error($con), E_USER_ERROR);
+        }
 
         for ($i = 0; $i < $num_surgery; $i++) {
             if ($_POST['surgery_id_'.$i] == 0) {
@@ -172,9 +178,9 @@ if ($_POST['q_page2sub'] == 1) {
                 }
             } else {
                 if (trim($_POST['surgery_date_'.$i]) != '' || trim($_POST['surgery_'.$i]) != '' || trim($_POST['surgeon_'.$i]) != '') {
-                    $s = "UPDATE dental_q_page2_surgery_view SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                    $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
                 } else {
-                    $s = "DELETE FROM dental_q_page2_surgery_view WHERE id='".$_POST['surgery_id_'.$i]."'";
+                    $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
                 }
             }
             mysqli_query($con, $s);

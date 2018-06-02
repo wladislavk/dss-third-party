@@ -71,13 +71,13 @@ if ($_POST['q_sleepsub'] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = "update dental_q_sleep_view set 
+        $ed_sql = "update dental_q_sleep set 
             epworthid = '".s_for($epworth_arr)."',
             analysis = '".s_for($analysis)."'
             where q_sleepid = '".s_for($_POST['ed'])."'";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-        $ed_sql = " update dental_thorton_view set 
+        $ed_sql = " update dental_thorton set 
             snore_1 = '".s_for($snore_1)."',
             snore_2 = '".s_for($snore_2)."',
             snore_3 = '".s_for($snore_3)."',

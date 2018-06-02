@@ -65,7 +65,7 @@
 	            $_SESSION['adminuserid'] = $check_myarray['adminid'];
 	            $_SESSION['admin_access'] = $check_myarray['admin_access'];
             	$_SESSION['admincompanyid'] = $check_myarray['companyid'];
-                $_SESSION['admin_api_token'] = generateAdminApiToken($username, $rawPassword);
+                adminApiToken(generateAdminApiToken($username, $rawPassword));
             
 ?>
 		        <script type="text/javascript">

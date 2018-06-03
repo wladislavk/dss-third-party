@@ -223,6 +223,27 @@ class Main extends BaseContext
     }
 
     /**
+     * @Then I see :page page url
+     *
+     * @param string $page
+     * @throws BehatException
+     */
+    public function testSeeCustomPageUrl($page)
+    {
+        if (SUT_HOST == 'vue') {
+            $this->wait(SHORT_WAIT_TIME);
+        }
+        $url = self::START_URL;
+        if (SUT_HOST == 'vue') {
+            $url .= '/main';
+        }
+        if ($page != 'start') {
+            $url = Pages::getUrl($page);
+        }
+        Assert::assertEquals($url, $this->getCommonClient()->getCurrentUrl());
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link

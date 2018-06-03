@@ -180,7 +180,7 @@ if (!$isHistoricView && $_POST['ex_page7sub'] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = "update dental_ex_page7_view set 
+        $ed_sql = "update dental_ex_page7 set 
             sleep_study_on = '".s_for($sleep_study_on)."',
             sleep_study_by = '".s_for($sleep_study_by)."',
             assessment_chkyes = '".s_for($assessment_chkyes)."',

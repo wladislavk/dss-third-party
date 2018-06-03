@@ -15,6 +15,7 @@ $create = true;
 
 $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='$docId'";
 
+$db = new Db();
 $let_r = $db->getRow($let_sql);
 $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
     if ($id == "7" || $id == "4") {  //device deliver - check if impressions are done
@@ -40,7 +41,8 @@ $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         } else {
-            $sqlex = "update dental_ex_page5_view set dentaldevice_date=CURDATE() where patientid='$pid'";
+            $exPage5Id = $db->getRow($sql)['ex_page5id'];
+            $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where ex_page5id=$exPage5Id";
         }
         $qex = $db->query($sqlex);
     }

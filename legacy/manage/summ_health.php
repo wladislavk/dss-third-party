@@ -544,7 +544,7 @@ if ($deistema != '') { ?>
     <?php
 }
 
-$sql = "select * from dental_ex_page1_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page1_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page1id = st($myarray['ex_page1id']);

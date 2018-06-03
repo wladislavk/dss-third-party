@@ -586,39 +586,6 @@ function indexBy(array $array, $field)
     return array_combine($keys, $array);
 }
 
-function nestedUtf8Encode(&$value)
-{
-    if (is_null($value)) {
-        $value = '';
-        return;
-    }
-
-    if (!is_string($value)) {
-        return;
-    }
-
-    $value = utf8_encode($value);
-}
-
-function utf8Encode($object)
-{
-    if (is_string($object)) {
-        return utf8_encode($object);
-    }
-
-    if (is_array($object)) {
-        array_walk_recursive($object, __NAMESPACE__ . '\\nestedUtf8Encode');
-    }
-
-    return $object;
-}
-
-function safeJsonEncode($object)
-{
-    $object = utf8Encode($object);
-    return json_encode($object);
-}
-
 function keyLabelMap(array $array, $key, $label)
 {
     $map = array_map(function ($each) use ($key, $label) {

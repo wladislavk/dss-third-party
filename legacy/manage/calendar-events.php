@@ -54,20 +54,6 @@ foreach ($eventList as &$event) {
     ];
 }
 
-function safeJsonEncode ($object) {
-    if (is_array($object)) {
-        array_walk_recursive($object, function(&$value){
-            if (is_string($value)) {
-                $value = utf8_encode($value);
-            }
-        });
-    } elseif (is_string($object)) {
-        $object = utf8_encode($object);
-    }
-
-    return json_encode($object);
-}
-
 header('Content-Type: text/json');
 
 echo safeJsonEncode($eventList);

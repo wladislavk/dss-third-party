@@ -1,11 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 
 $db = new Db();
 $baseTable = 'dental_ex_page7_view';
 $baseSearch = [
     'patientid' => '$patientId',
-    'docid' => '$docId'
+    'docid' => '$docId',
 ];
 
 /**
@@ -17,42 +18,41 @@ $baseSearch = [
  * Backup tables as needed
  */
 require_once __DIR__ . '/includes/form-backup-setup.php';
-
 ?>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			window.onbeforeunload = confirmExit;
-		});
-		$('#ex_page7frm').submit(function() {
-			window.onbeforeunload = null;
-		});
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
+    $(document).ready(function () {
+        $(':input:not(#patient_search)').change(function () {
+            window.onbeforeunload = confirmExit;
+        });
+        $('#ex_page7frm').submit(function() {
+            window.onbeforeunload = null;
+        });
+    });
+    function confirmExit() {
+        return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+    }
 </script>
 <?php
-function trigger_letter7($pid) {
-  $letterid = '7';
-	$md_list = get_mdcontactids($pid);
+function trigger_letter7($pid)
+{
+    $letterid = '7';
+    $md_list = get_mdcontactids($pid);
 
-  $md_referral_list = get_mdreferralids($pid); 
-  $contacts['mds'] = explode(",", $md_list);
-  foreach ($contacts['mds'] as $contact) {
-    $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
-    $letter_result = mysqli_query($con, $letter_query);
-    $num_rows = mysqli_num_rows($letter_result);
-    if(!$letter_result) {
-      print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";
-        trigger_error("Die called", E_USER_ERROR);
+    $md_referral_list = get_mdreferralids($pid);
+    $contacts['mds'] = explode(",", $md_list);
+    foreach ($contacts['mds'] as $contact) {
+        $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
+        $letter_result = mysqli_query($con, $letter_query);
+        $num_rows = mysqli_num_rows($letter_result);
+        if (!$letter_result) {
+            echo "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";
+            trigger_error("Die called", E_USER_ERROR);
+        }
+        if ($num_rows == 0) {
+            $recipients['mds'][] = $contact;
+        }
     }
-    if ($num_rows == 0) {
-      $recipients['mds'][] = $contact;
-    }
-  }
-  $contacts['md_referrals'] = explode(",", $md_referral_list);
+    $contacts['md_referrals'] = explode(",", $md_referral_list);
   foreach ($contacts['md_referrals'] as $contact) {
     $letter_query = "SELECT md_referral_list FROM dental_letters WHERE md_referral_list IS NOT NULL AND CONCAT(',', md_referral_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
     $letter_result = mysqli_query($con, $letter_query);
@@ -269,7 +269,7 @@ $additional_paragraph_candidate = st($myarray['additional_paragraph_candidate'])
 $additional_paragraph_suffers = st($myarray['additional_paragraph_suffers']);
 
 if (!$isHistoricView) {
-    $q2_sql = "SELECT * FROM dental_q_page2_view WHERE patientid='$patientId'";
+    $q2_sql = "SELECT * FROM dental_q_page2_pivot WHERE patientid='$patientId'";
     $q2_my = mysqli_query($con, $q2_sql);
     $q2_myarray = mysqli_fetch_array($q2_my);
 

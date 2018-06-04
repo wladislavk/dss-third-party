@@ -1,5 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-$sql = "select * from dental_q_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+<?php
+namespace Ds3\Libraries\Legacy;
+$sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_page3id = st($myarray['q_page3id']);
@@ -71,7 +72,6 @@ $clinch_grind_text  = $myarray['clinch_grind_text'];
 $future_dental_det = $myarray['future_dental_det'];
 $drymouth_text = $myarray['drymouth_text'];
 ?>
-
 <h3 class="sect_header">Medications / Allergies</h3>
 <div class="box">
     <?php
@@ -346,7 +346,7 @@ if ($other_history != '') { ?>
 </div>
 <?php
 
-$sql = "select * from dental_ex_page4_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page4_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page4id = st($myarray['ex_page4id']);
@@ -670,7 +670,7 @@ if ($tongue != "" || $additional_paragraph != "") { ?>
     }
 }
 
-$sql = "select * from dental_ex_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page2id = st($myarray['ex_page2id']);
@@ -817,7 +817,7 @@ $tonsils_grade = st($myarray['tonsils_grade']);
     } ?>
 </div>
 <?php
-$sql = "select * from dental_ex_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page3id = st($myarray['ex_page3id']);
@@ -979,7 +979,7 @@ if ($nasal_passages != '' || $other_nasal_passages != '') { ?>
     }
 }
 
-$sql = "select * from dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page5_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page5id = st($myarray['ex_page5id']);

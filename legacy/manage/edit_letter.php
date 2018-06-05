@@ -263,7 +263,7 @@ $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
 
 $dd_r = $db->getRow("SELECT dd.device, ex.dentaldevice_date
-    FROM dental_ex_page5_view ex
+    FROM dental_ex_page5_pivot ex
         LEFT JOIN dental_device dd ON dd.deviceid = ex.dentaldevice
     WHERE ex.patientid = '$patientId'");
 
@@ -277,7 +277,7 @@ $sleeplab_name = $db->getColumn("SELECT company
 
 // Oldest Subjective results
 $subj1 = $db->getRow("SELECT ess AS ep_eadd, snoring_sound AS ep_sadd, energy_level AS ep_eladd, sleep_qual AS sleep_qualadd
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'");
 
 // Newest Subjective Results
@@ -303,15 +303,15 @@ $bmi = $db->getColumn("SELECT bmi
 
 // Reason seeking treatment
 $reason_seeking_tx = $db->getColumn("SELECT reason_seeking_tx
-    FROM dental_summary_view
+    FROM dental_summary_pivot
     WHERE patientid = '$patientId'", 'reason_seeking_tx');
 
 $reason_seeking_tx = $db->getColumn("SELECT chief_complaint_text
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'", 'chief_complaint_text');
 
 $q1_myarray = $db->getRow("SELECT *
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'");
 
 $main_reason = st($q1_myarray['main_reason']);
@@ -351,7 +351,7 @@ if ($complaintid <> '') {
 
 // Symptoms
 $complaintid = $db->getColumn("SELECT complaintid
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'
     LIMIT 1", 'complaintid');
 $complaint = explode('~', rtrim($complaintid, '~'));
@@ -397,7 +397,7 @@ $followup = $db->getRow("SELECT nightsperweek, ep_eadd, ep_tsadd
 
 // Nights per Week and Current ESS TSS
 $initesstss_query = $db->getRow("SELECT ess, tss
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'
     LIMIT 1");
 

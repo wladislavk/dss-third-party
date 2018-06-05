@@ -24,7 +24,10 @@ if ($_POST['q_sleepsub'] == 1) {
     $snore_4 = $_POST['snore_4'];
     $snore_5 = $_POST['snore_5'];
     $tot_score = $_POST['tot_score'];
-	
+
+    $newEss = mysqli_real_escape_string($con, $_POST['epTot']);
+    $newTss = s_for($tot_score);
+
     if ($_POST['ed'] == '') {
         $ins_sql = "insert into dental_q_sleep set 
             patientid = '".s_for($_SESSION['pid'])."',
@@ -46,19 +49,20 @@ if ($_POST['q_sleepsub'] == 1) {
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-        $exist_sql = "SELECT patientid FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if (mysqli_num_rows($exist_q) == 0) {
             $ed_sql = "insert into dental_q_page1 set
-                ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
-                tss='".s_for($tot_score)."',
+                ess='$newEss',
+                tss='$newTss',
                 patientid='".$_SESSION['pid']."'";
             mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         } else {
-            $ed_sql = "update dental_q_page1_view set
-                ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
-                tss='".s_for($tot_score)."'
-                WHERE patientid='".$_SESSION['pid']."'";
+            $qPage1Id = mysqli_fetch_field($exist_q);
+            $ed_sql = "update dental_q_page1 set
+                ess='$newEss',
+                tss='$newTss'
+                WHERE q_page1id=$qPage1Id";
             mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         }
         mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
@@ -87,19 +91,20 @@ if ($_POST['q_sleepsub'] == 1) {
             where thortonid = '".s_for($_POST['ted'])."'";
         mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-        $exist_sql = "SELECT patientid FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if (mysqli_num_rows($exist_q) == 0) {
             $ed_sql = "insert into dental_q_page1 set
-                ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
-                tss='".s_for($tot_score)."',
+                ess='$newEss',
+                tss='$newTss',
                 patientid='".$_SESSION['pid']."'";
             mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         } else {
-            $ed_sql = "update dental_q_page1_view set
-                ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
-                tss='".s_for($tot_score)."'
-                WHERE patientid='".$_SESSION['pid']."'";
+            $qPage1Id = mysqli_fetch_field($exist_q);
+            $ed_sql = "update dental_q_page1 set
+                ess='$newEss',
+                tss='$newTss'
+                WHERE q_page1id=$qPage1Id";
     		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
     	}
         mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");

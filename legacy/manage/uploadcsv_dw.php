@@ -181,13 +181,13 @@ if(isset($_POST['submitbut'])){
                                 case 'zip':
                                     if($field!='' && $data[$id] !=''){
                                         $patientzip = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'gender':
                                     if($field!='' && $data[$id] !=''){
                                         $patientgender = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'email':

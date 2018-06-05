@@ -6,19 +6,23 @@ include_once('../includes/constants.inc');
 include("../includes/sescheck.php");
 include_once('../includes/general_functions.php');
 
+$db = new Db();
 if (isset($_REQUEST['submit'])) {
     $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$_GET['pid']."'";
-      
+
+    $escapedDentalDevice = mysqli_real_escape_string($con, $_REQUEST['dentaldevice']);
     if ($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 
-            dentaldevice='".mysqli_real_escape_string($con, $_REQUEST['dentaldevice'])."', 
+            dentaldevice='$escapedDentalDevice', 
             patientid='".$_GET['pid']."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     } else {
-        $sqlex = "update dental_ex_page5_view set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+        $exPageId5Row = $db->getRow($sql);
+        $exPage5Id = $exPageId5Row['ex_page5id'];
+        $sqlex = "update dental_ex_page5 set dentaldevice='$escapedDentalDevice' where ex_page5id=$exPage5Id";
     }
 
     $qex = $db->query($sqlex);

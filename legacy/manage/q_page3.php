@@ -1162,7 +1162,7 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
 <?php
 		} // end history status check
 	} else {  // end pt info check
-		print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+		echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 	}
 ?>
 <?php include __DIR__ . '/includes/vue-setup.htm'; ?>

@@ -48,7 +48,7 @@
 	$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
 
 	// Get Medical Information
-	$q3_sql = "SELECT history, medications from dental_q_page3_view WHERE patientid = '".$patientid."';";
+	$q3_sql = "SELECT history, medications from dental_q_page3_pivot WHERE patientid = '".$patientid."';";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = $q3_myarray['history'];
@@ -456,11 +456,11 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 					Print Letter 
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 					Word Document
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;

@@ -258,7 +258,7 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
         }
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = " update dental_q_page3_view set 
+        $ed_sql = " update dental_q_page3 set 
             allergens = '".s_for($allergens_arr)."',
             other_allergens = '".s_for($other_allergens)."',
             medications = '".s_for($medications_arr)."',

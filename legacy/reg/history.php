@@ -126,7 +126,7 @@ if ($_POST['q_page3sub'] == 1) {
         $history_arr = '~' . $history_arr;
     }
 
-    $exist_sql = "SELECT patientid FROM dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $exist_sql = "SELECT q_page3id FROM dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
     $exist_q = mysqli_query($con, $exist_sql);
     if (mysqli_num_rows($exist_q) == 0) {
         $ins_sql = "insert into dental_q_page3 set 
@@ -213,7 +213,8 @@ if ($_POST['q_page3sub'] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = " update dental_q_page3_view set 
+        $qPage3Id = mysqli_fetch_field($exist_q);
+        $ed_sql = "update dental_q_page3 set 
             allergens = '".s_for($allergens_arr)."',
             allergenscheck = '".s_for($allergenscheck)."',
             other_allergens = '".s_for($all_text.$other_allergens)."',
@@ -273,7 +274,7 @@ if ($_POST['q_page3sub'] == 1) {
             clinch_grind_text  = '".s_for($clinch_grind_text)."',
             future_dental_det = '".s_for($future_dental_det)."',
             drymouth_text = '".s_for($drymouth_text)."'
-    		where patientid = '".s_for($_SESSION['pid'])."'";
+    		where q_page3id = $qPage3Id";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
         mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");

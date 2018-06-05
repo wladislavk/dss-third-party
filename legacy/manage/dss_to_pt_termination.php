@@ -30,7 +30,7 @@
 		$age = 'N/A';
 	}
 
-	$q2_sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -65,11 +65,11 @@
 	<br /><br>
 
 	<div align="right">
-		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_to_pt_no_treatment_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_to_pt_no_treatment_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

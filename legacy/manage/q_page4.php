@@ -1,12 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include "includes/top.htm";
-    include_once('includes/patient_info.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+include_once 'includes/patient_info.php';
 
 $db = new Db();
 $baseTable = 'dental_q_page4_view';
 $baseSearch = [
     'patientid' => '$patientId',
-    'docid' => '$docId'
+    'docid' => '$docId',
 ];
 
 /**
@@ -71,7 +73,7 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
 <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $ed_sql = " update dental_q_page4_view set 
+            $ed_sql = " update dental_q_page4 set 
                 family_had = '".s_for($family_had_arr)."',
                 family_diagnosed = '".s_for($family_diagnosed)."',
                 additional_paragraph = '".s_for($additional_paragraph)."',
@@ -98,7 +100,7 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
     
     $pat_myarray = $db->getRow($pat_sql);
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-    if($pat_myarray['patientid'] == '') {
+    if ($pat_myarray['patientid'] == '') {
 ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -285,32 +287,24 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
                                     <input type="radio" name="sedative" value="occasionally" class="tbox" style="width:10px;" <?php if($sedative == 'occasionally')  echo " checked";?> />
                                     Occasionally
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
                                     <input type="radio" name="sedative" value="never" class="tbox" style="width:10px;" <?php if($sedative == 'never')  echo " checked";?> />
                                     Never
                                     <br /><br />
-                                    
-                                    
                                     Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?
                                     <br />
-                                    
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="radio" name="caffeine" value="Daily" class="tbox" style="width:10px;" <?php if($caffeine == 'Daily')  echo " checked";?> />
                                     Daily
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            
                                     <input type="radio" name="caffeine" value="1/day" class="tbox" style="width:10px;" <?php if($caffeine == '1/day')  echo " checked";?> />
                                     1/Day
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
                                     <input type="radio" name="caffeine" value="several days/week" class="tbox" style="width:10px;" <?php if($caffeine == 'several days/week')  echo " checked";?> />
                                     Several Days/Week
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
                                     <input type="radio" name="caffeine" value="occasionally" class="tbox" style="width:10px;" <?php if($caffeine == 'occasionally')  echo " checked";?> />
                                     Occasionally
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
                                     <input type="radio" name="caffeine" value="never" class="tbox" style="width:10px;" <?php if($caffeine == 'never')  echo " checked";?> />
                                     Never
                                     <br /><br />
@@ -321,29 +315,22 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
                                     <input type="radio" name="smoke" value="Yes" class="tbox" style="width:10px;" <?php if($smoke == 'Yes')  echo " checked";?>  onclick="displaysmoke();" />
                                     Yes
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            
                                     <input type="radio" name="smoke" value="No" class="tbox" style="width:10px;" <?php if($smoke == 'No')  echo " checked";?> onclick="hidesmoke();" />
                                     No
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            
                                     <br />
-                            
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div id="smoke">If Yes, number of packs per day
                                         <input type="text" name="smoke_packs" value="<?php echo $smoke_packs?>" class="tbox" style="width:50px;" />
                                     </div>
                                     <br /><br />
-                            
-                                    Do you use Chewing Tobacco? 
-                                    
+                                    Do you use Chewing Tobacco?
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="radio" name="tobacco" value="Yes" class="tbox" style="width:10px;" <?php if($smoke == 'Yes')  echo " checked";?> />
                                     Yes
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
                                     <input type="radio" name="tobacco" value="No" class="tbox" style="width:10px;" <?php if($smoke == 'No')  echo " checked";?> />
                                     No
-
                                 </span>
                             </div>
                         <br />
@@ -355,7 +342,7 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
 
         <div align="right">
             <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
-            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <input type="submit" value="" style="visibility: hidden; width: 0; height: 0; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
             <button class="do-backup hidden" title="Save a copy of the last saved values">
                 <span class="done">Archive page</span>
                 <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
@@ -389,7 +376,7 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
 
 <?php
     } else {  // end pt info check
-        print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+        echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
 <?php include __DIR__ . '/includes/vue-setup.htm'; ?>

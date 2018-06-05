@@ -146,10 +146,12 @@ if ($patient_info) { ?>
                     patientid = '$patientId',
                     docid = '$docId'";
             } else {
-                $ed_sql = "update dental_q_page1_view set 
+                $qPage1RowSelected = $db->getRow($page1_sql);
+                $qPage1IdSelected = $qPage1RowSelected['q_page1id'];
+                $ed_sql = "update dental_q_page1 set 
                     ess = '".s_for($ess_score)."',
                     tss = '".s_for($tot_score)."'
-                    WHERE patientid = '$patientId'";
+                    WHERE q_page1id = $qPage1IdSelected";
             }
             $db->query($ed_sql);
             $msg = " Edited Successfully";

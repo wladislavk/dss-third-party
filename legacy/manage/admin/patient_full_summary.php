@@ -1218,26 +1218,28 @@ $drymouth_text = $myarray['drymouth_text'];
         Do you Smoke?
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <?php echo $smoke;?>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div id="smoke">If Yes, number of packs per day
-                            <?php echo $smoke_packs?>
-                            </div>
-                            <br /><br />
-                <?php } ?>
-                <?php if($tobacco != ''){ ?>
-                            Do you use Chewing Tobacco?
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <?php echo  $tobacco;?>
-                        </span>
-                <br /><br />
-                <?php } ?>
-                <?php if ($additional_paragraph != '') { ?>
-                <div>
-                        <span>
-                            Additional Paragraph<br />
-                            <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph;?></textarea>
-                        </span>
-                </div>
-                <?php } ?>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div id="smoke">If Yes, number of packs per day
+            <?php echo $smoke_packs?>
+        </div>
+        <br /><br />
+        <?php
+    }
+    if ($tobacco != '') { ?>
+        Do you use Chewing Tobacco?
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php echo $tobacco;?>
+        <br /><br />
+        <?php
+    }
+    if ($additional_paragraph != '') { ?>
+        <div>
+            <span>
+                Additional Paragraph<br />
+                <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph;?></textarea>
+            </span>
+        </div>
+        <?php
+    } ?>
 </div>
 <?php include "includes/bottom.htm"; ?>

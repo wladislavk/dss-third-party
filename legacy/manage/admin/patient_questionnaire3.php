@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -27,13 +28,14 @@ if (!empty($_GET['own']) && $_GET['own'] == 1) {
     $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
     mysqli_query($con, $own_sql);
     if ($_GET['own_completed'] == 1) {
-        $q1_sql = "SELECT q_page1id from dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
         $q1_q = mysqli_query($con, $q1_sql);
         if (mysqli_num_rows($q1_q) == 0) {
             $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
             mysqli_query($con, $ed_sql);
         } else {
-            $ed_sql = "UPDATE dental_q_page1_view SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
+            $qPage1Id = mysqli_fetch_field($q1_q);
+            $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE q_page1id=$qPage1Id";
             mysqli_query($con, $ed_sql);
         }
     } ?>

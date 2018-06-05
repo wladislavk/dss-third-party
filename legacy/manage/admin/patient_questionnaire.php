@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -18,7 +19,7 @@ include "includes/patient_nav.php";
 <?php
 if (!empty($_GET['own']) && $_GET['own'] == 1) {
     $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-    $c_q = mysqli_query($con,$c_sql);
+    $c_q = mysqli_query($con, $c_sql);
     $changed = mysqli_num_rows($c_q);
     $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
     mysqli_query($con, $own_sql);
@@ -29,7 +30,8 @@ if (!empty($_GET['own']) && $_GET['own'] == 1) {
             $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
             mysqli_query($con, $ed_sql);
         } else {
-            $ed_sql = "UPDATE dental_q_page1_view SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
+            $qPage1Id = mysqli_fetch_field($q1_q);
+            $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE q_page1id=$qPage1Id";
             mysqli_query($con, $ed_sql);
         }
     } ?>
@@ -114,29 +116,28 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
             patientid = '".s_for($_GET['pid'])."',
             exam_date = '".s_for($exam_date)."',
             ess = '".s_for($ess)."',
-        tss = '".s_for($tss)."',
-        chief_complaint_text = '".s_for($chief_complaint_text)."',
-        sleep_qual = '".s_for($sleep_qual)."',
-        complaintid = '".s_for($comp_arr)."',
-        other_complaint = '".s_for($other_complaint)."',
-        additional_paragraph = '".s_for($additional_paragraph)."',
-        energy_level = '".s_for($energy_level)."',
-        snoring_sound = '".s_for($snoring_sound)."',
-        wake_night = '".s_for($wake_night)."',
-        breathing_night = '".s_for($breathing_night)."',
-        morning_headaches = '".s_for($morning_headaches)."',
-        hours_sleep = '".s_for($hours_sleep)."',
-        quit_breathing = '".s_for($quit_breathing)."',
-        bed_time_partner = '".s_for($bed_time_partner)."',
-        sleep_same_room = '".s_for($sleep_same_room)."',
-        told_you_snore = '".s_for($told_you_snore)."',
-        main_reason = '".s_for($main_reason_arr)."',
-        main_reason_other = '".s_for($main_reason_other)."',
-        userid = '".s_for($_SESSION['userid'])."',
-        docid = '".s_for($_SESSION['docid'])."',
-        adddate = '".date('m/d/Y')."',
-        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
+            tss = '".s_for($tss)."',
+            chief_complaint_text = '".s_for($chief_complaint_text)."',
+            sleep_qual = '".s_for($sleep_qual)."',
+            complaintid = '".s_for($comp_arr)."',
+            other_complaint = '".s_for($other_complaint)."',
+            additional_paragraph = '".s_for($additional_paragraph)."',
+            energy_level = '".s_for($energy_level)."',
+            snoring_sound = '".s_for($snoring_sound)."',
+            wake_night = '".s_for($wake_night)."',
+            breathing_night = '".s_for($breathing_night)."',
+            morning_headaches = '".s_for($morning_headaches)."',
+            hours_sleep = '".s_for($hours_sleep)."',
+            quit_breathing = '".s_for($quit_breathing)."',
+            bed_time_partner = '".s_for($bed_time_partner)."',
+            sleep_same_room = '".s_for($sleep_same_room)."',
+            told_you_snore = '".s_for($told_you_snore)."',
+            main_reason = '".s_for($main_reason_arr)."',
+            main_reason_other = '".s_for($main_reason_other)."',
+            userid = '".s_for($_SESSION['userid'])."',
+            docid = '".s_for($_SESSION['docid'])."',
+            adddate = '".date('m/d/Y')."',
+            ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
         $msg = "Added Successfully";
@@ -153,7 +154,7 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
         }
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = "update dental_q_page1_view set 
+        $ed_sql = "update dental_q_page1 set 
             exam_date = '".s_for($exam_date)."',
             ess = '".s_for($ess)."',
             tss = '".s_for($tss)."',
@@ -175,9 +176,8 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
             main_reason = '".s_for($main_reason_arr)."',
             main_reason_other = '".s_for($main_reason_other)."'
             where q_page1id = '".s_for($_POST['ed'])."'";
-
         mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
+
         $msg = "Edited Successfully";
         if (isset($_POST['q_pagebtn_proceed'])) { ?>
             <script type="text/javascript">
@@ -185,10 +185,10 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
             </script>
             <?php
         } else { ?>
-		    <script type="text/javascript">
+            <script type="text/javascript">
                 window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>#form';
             </script>
-		    <?php
+            <?php
         }
         trigger_error("Die called", E_USER_ERROR);
     }
@@ -230,7 +230,7 @@ $main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
 if ($complaintid != '') {
-    $comp_arr1 = explode('~',$complaintid);
+    $comp_arr1 = explode('~', $complaintid);
     foreach ($comp_arr1 as $i => $val) {
         $comp_arr2 = explode('|', $val);
         $compid[$i] = $comp_arr2[0];
@@ -245,11 +245,9 @@ if ($complaintid != '') {
 <script type="text/javascript" src="script/questionnaire.js"></script>
 
 <a name="top"></a>
-<?php include("../includes/form_top.htm");?>
-
+<?php include "../includes/form_top.htm";?>
 <br />
-<br>
-
+<br />
 <div align="center" class="red">
     <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
@@ -257,12 +255,10 @@ if ($complaintid != '') {
 <script type="text/javascript">
     function chk_chief(sel_val, comp_id) {
         fa = document.q_page1frm;
-
         same = 0;
         <?php
         $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-        $complaint_my = mysqli_query($con,$complaint_sql);
-
+        $complaint_my = mysqli_query($con, $complaint_sql);
         while ($complaint_myarray = mysqli_fetch_array($complaint_my)) { ?>
             if (comp_id != <?php echo st($complaint_myarray['complaintid']);?>) {
                 if (fa.complaint_<?php echo st($complaint_myarray['complaintid']);?>.value == sel_val && fa.complaint_<?php echo st($complaint_myarray['complaintid']);?>.value != '') {
@@ -271,7 +267,6 @@ if ($complaintid != '') {
             }
             <?php
         } ?>
-
         if (same == 1) {
             alert("Duplicate Sequence, Please Select another Sequence");
             eval("fa.complaint_"+comp_id).value = '';

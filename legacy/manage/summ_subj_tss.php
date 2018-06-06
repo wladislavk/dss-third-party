@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-	//include_once('admin/includes/main_include.php');
 
 	include_once 'admin/includes/config.php';
 	include_once 'admin/includes/general.htm';

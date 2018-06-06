@@ -5,7 +5,7 @@ include("includes/sescheck.php");
 
 
 $sql = "select * from dental_doc_lab where doc_labid='".s_for($_GET['id'])."'";
-$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con)trigger_error);
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con));
 $myarray = mysqli_fetch_array($my);
 $num_users=mysqli_num_rows($my);
 

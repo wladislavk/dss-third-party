@@ -165,5 +165,3 @@
 	<!-- END LOGIN FORM -->
 		
 	<div class="copyright"><?= date('Y') ?> &copy; dentalsleepsolutions.com</div>
-
-<?php //require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

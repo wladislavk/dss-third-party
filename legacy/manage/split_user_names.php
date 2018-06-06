@@ -21,10 +21,6 @@ while($r = mysqli_fetch_assoc($q)){
 		last_name = '".mysqli_real_escape_string($con, $l)."'
 		WHERE userid='".mysqli_real_escape_string($con, $r['userid'])."'
 		";
-  //mysqli_query($con, $u);
-
-
-
 }
 
 

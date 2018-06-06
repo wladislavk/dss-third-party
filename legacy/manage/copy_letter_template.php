@@ -11,8 +11,4 @@ $cid = $c['id'];
 $s = "INSERT INTO dental_letter_templates (name, body, companyid, triggerid)
 	SELECT name, body, '".$cid."', '".mysqli_real_escape_string($con, $tid)."' FROM dental_letter_templates 
 		WHERE id='".mysqli_real_escape_string($con, $tid)."'";
-//mysqli_query($con, $s);
-
-
-
 }

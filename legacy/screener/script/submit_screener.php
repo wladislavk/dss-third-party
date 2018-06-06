@@ -5,14 +5,6 @@ $userid = $_REQUEST['userid'];
 $first_name = $_REQUEST['first_name'];
 $last_name = $_REQUEST['last_name'];
 $phone = $_REQUEST['phone'];
-/*$epworth_reading = $_REQUEST['epworth_reading'];
-$epworth_public = $_REQUEST['epworth_public'];
-$epworth_passenger = $_REQUEST['epworth_passenger'];
-$epworth_lying = $_REQUEST['epworth_lying'];
-$epworth_talking = $_REQUEST['epworth_talking'];
-$epworth_lunch = $_REQUEST['epworth_lunch'];
-$epworth_traffic = $_REQUEST['epworth_traffic'];
-*/
 $snore_1 = $_REQUEST['snore_1'];
 $snore_2 = $_REQUEST['snore_2'];
 $snore_3 = $_REQUEST['snore_3'];

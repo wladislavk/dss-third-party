@@ -1,6 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../admin/includes/main_include.php';
-//include_once '../admin/includes/general.htm';
 $id = $_REQUEST['id'];
 $sched = ($_REQUEST['sched']!='')?date('Y-m-d', strtotime($_REQUEST['sched'])):'';
 $pid = $_REQUEST['pid'];
@@ -21,12 +20,10 @@ clean_steps($pid);
         }
         $letterid = array();
         if ($id == "2") { // Consultation
-//              $letterid[] = trigger_letter5($_GET['pid'], $numsteps);
                 $letterid[] = trigger_letter6($pid, $info_id);
         }
         if ($consulted == true && $id == "4") { // Impressions
                 $letterid[] = trigger_letter9($pid, $info_id);
-                //$letterid[] = trigger_letter13($pid, $numsteps);
         }
 
 
@@ -79,18 +76,15 @@ function trigger_letter6($pid, $info_id) {
 
 function trigger_letter9($pid, $info_id) {
   $letterid = '9';
-  $md_list = '';//get_mdcontactids($pid);
+  $md_list = '';
   $md_referral_list = get_mdreferralids($pid);
 
-        //if ($md_referral_list != "") {
                 $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
                 if (!is_numeric($letter)) {
                         print "Can't send letter 9: " . $letter;
-                        //trigger_error("Die called", E_USER_ERROR);
                 } else {
                         return $letter;
                 }
-        //}
 }
 
 

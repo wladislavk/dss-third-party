@@ -4,8 +4,6 @@ include_once('includes/password.php');
 
 ?>
 
-<?php //require_once dirname(__FILE__) . '/includes/top.htm'; ?>
-
 <script type="text/javascript">
 $(document).ready(function(){
   document.getElementById('future_dental_det').style.display = 'none';
@@ -71,7 +69,6 @@ $(document).ready(function(){
 			mysqli_query($con, $up_sql);
 			?>
                 <script type="text/javascript">
-                        //alert("<?= $check_myarray['userid']; ?>");
                         window.location.replace('index.php?msg=Password reset');
                 </script>
                 <?
@@ -82,27 +79,12 @@ $(document).ready(function(){
 	if(mysqli_num_rows($check_my) == 1) 
 	{
 		$check_myarray = mysqli_fetch_array($check_my);
-		
-		//$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
-		//$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
-		//mysqli_query($con, $ins_sql);
-		
-		//$ins_id = mysqli_insert_id($con);
-		
-		
-		?>
-		<script type="text/javascript">
-			//alert("<?= $check_myarray['userid']; ?>");
-			//window.location.replace('login.php?msg=Email sent');
-		</script>
-		<?
 	}
 	else
 	{
 		$msg='Unable to find user.';
 		?>
 		<script type="text/javascript">
-			//alert("<?= $msg; ?>");
 			window.location.replace('forgot_password.php?msg=<?=$msg;?>');
 		</script>
 		<?

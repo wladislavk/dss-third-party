@@ -795,7 +795,6 @@ mysqli_query($con, $sql);
             // FDF data, push ti back to the user with a header() call, etc.
 
             // write the file out
-            //echo  $fdf;
 	$handle = fopen("../../../shared/q_file/".$file, 'x+');
 	fwrite($handle, $xfdf);
 	fclose($handle);

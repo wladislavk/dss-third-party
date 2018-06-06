@@ -229,29 +229,6 @@ function DaysArray(n) {
 }
 
 function isDate(strDay, strMonth, strYear){
-/*
-	//bypass check date	
-	strYr=strYear
-	if (strDay.charAt(0)=="0" && strDay.length>1) strDay=strDay.substring(1)
-	if (strMonth.charAt(0)=="0" && strMonth.length>1) strMonth=strMonth.substring(1)
-	for (var i = 1; i <= 3; i++) {
-		if (strYr.charAt(0)=="0" && strYr.length>1) strYr=strYr.substring(1)
-	}
-	month=parseInt(strMonth)
-	day=parseInt(strDay)
-	year=parseInt(strYr)
-	if (strMonth.length<1 || month<1 || month>12){
-		alert("Please enter a valid month")
-		return false
-	}
-	if (strDay.length<1 || day<1 || day>31 || day > daysInMonth(month, year)){
-		alert("Please enter a valid day")
-		return false
-	}
-	if (strYear.length != 4 || year==0 || year<minYear || year>maxYear){
-		alert("Please enter a valid 4 digit year between "+minYear+" and "+maxYear)
-		return false
-	}*/
 	return true
 }
 
@@ -289,8 +266,6 @@ function isDateAllow(objname, strDay, strMonth, strYear){
 				var da2Date=new Date();
 				da2Date.setFullYear(da2Arr[0],da2Arr[1]-1,da2Arr[2]);
 				
-				//alert(date2Set+"\n"+da1Date+"\n"+da2Date);
-				
 				return (date2Set>=da1Date && date2Set<=da2Date) ? true : false;
 			}else if(da1){
 				
@@ -314,9 +289,6 @@ function isDateAllow(objname, strDay, strMonth, strYear){
 				
 				var da2Date=new Date();
 				da2Date.setFullYear(da2Arr[0],da2Arr[1]-1,da2Arr[2]);
-				
-				//alert(date2Set);
-				//alert(da2Date);
 				
 				return (date2Set<=da2Date) ? true : false;
 			}
@@ -413,11 +385,6 @@ function padString(stringToPad, padLength, padString) {
 			stringToPad = padString + stringToPad;
 		}
 	}else {}
-/*
-	if (stringToPad.length > padLength) {
-		stringToPad = stringToPad.substring((stringToPad.length - padLength), padLength);
-	} else {}
-*/	
 	return stringToPad;
 }
 
@@ -425,8 +392,7 @@ function tc_updateDay(objname, yearNum, monthNum, daySelected){
 	var totalDays = daysInMonth(monthNum, yearNum);
 	
 	var dayObj = document.getElementById(objname+"_day");
-	//var prevSelected = dayObj.value;
-	
+
 	if(dayObj.options[0].value == 0 || dayObj.options[0].value == "") 
 		dayObj.length = 1;
 	else dayObj.length = 0;

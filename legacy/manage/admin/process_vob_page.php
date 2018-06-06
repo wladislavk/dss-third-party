@@ -168,7 +168,6 @@ if (!empty($_POST['save_vob']) && $canEdit) {
         WHERE id = '$preAuthId'";
     $db->query($sql);
     
-    //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
     $msg = "Verification of Benefits $task_label Successfully";
     

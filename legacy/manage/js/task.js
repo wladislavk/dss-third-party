@@ -7,8 +7,7 @@ $('.task_status').click(function(){
                                         data: {id: t},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
+                                                if(!r.error){
                                                         x = $('#task_'+t).clone();
                                                         x.find('td.status_col').remove();
 							$('.task_'+t).remove();
@@ -18,7 +17,6 @@ $('.task_status').click(function(){
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
                                         }
                                   });
 });
@@ -52,15 +50,13 @@ function delete_task(id){
                                         data: {id: id},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
+                                                if(!r.error){
                                                         $('.task_'+id).remove();
                                                         $('#task_count').html($('#task_count').html()-1);
                                                         clean_task_menu();
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
                                         }
                                   });
 

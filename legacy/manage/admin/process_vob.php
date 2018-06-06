@@ -142,7 +142,6 @@ if (isset($_REQUEST['ed'])) {
         $ut_q = mysqli_query($con, $ut_sql);
         $ut_r = mysqli_fetch_assoc($ut_q);
 	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-	  //$sql .= ", invoice_amount = '45.00' ";
 	  invoice_add_vob('1', $_SESSION['docid'], $_POST['preauth_id']);
 	}
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
@@ -156,7 +155,6 @@ if (isset($_REQUEST['ed'])) {
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
     mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
-    //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
     $msg = "Verification of Benefits $task_label Successfully";
     print "<script type='text/javascript'>";

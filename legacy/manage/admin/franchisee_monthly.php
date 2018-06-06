@@ -9,7 +9,6 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
@@ -24,14 +23,6 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-/*$sql = "select du.name, du.userid, du.username, count(dl.ledgerid) as num_trxn from dental_users du 
-    LEFT JOIN dental_ledger dl 
-	ON dl.docid=du.userid 
-		AND dl.status = '".DSS_PERCASE_PENDING."' 
-WHERE du.docid=0
- group by du.name, du.username, du.userid";
-echo $sql;
-*/
 if(isset($_REQUEST['start_date'])){
   $start_date = date('Y-m-d', strtotime($_REQUEST['start_date']));
   $end_date = date('Y-m-d', strtotime($_REQUEST['end_date']));

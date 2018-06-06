@@ -101,7 +101,6 @@ if($_POST["doc_marketingub"] == 1)
 		$ed_sql = "update dental_doc_marketing set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where doc_marketingid='".$_POST["ed"]."'";
 		mysqli_query($con, $ed_sql);
 		
-		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -253,7 +252,6 @@ if($_POST["doc_marketingub"] == 1)
             	<? 
 				$doc_sql = "select * from dental_users where status=1 and docid=0 order by username";
 				$doc_my = mysqli_query($con, $doc_sql);
-				//echo mysqli_num_rows($doc_my);
 				?>
             	<input type="radio" name="show_to" value="0" <? if($show_to == 0) echo " checked";?> />
                 <b>ALL Doctors</b>

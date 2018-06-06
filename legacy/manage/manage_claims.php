@@ -82,7 +82,6 @@ if(isset($_REQUEST["delid"]))
     $msg= "Deleted Successfully";
     ?>
     <script type="text/javascript">
-            //alert("Deleted Successfully");
             window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
     </script>
     <?php
@@ -574,12 +573,9 @@ if(v == '100'){
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
-                                                }else{
-                                                        //window.location.reload();
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
                                         }
                                   });
 
@@ -595,12 +591,9 @@ if(v == '100'){
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
-                                                }else{
-                                                        //window.location.reload();
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
                                         }
                                   });
 

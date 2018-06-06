@@ -8,25 +8,6 @@ if($_GET['backoffice'] == '1') {
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
 
-/*
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con, $pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-
-$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-
-if($pat_myarray['patientid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?
-	trigger_error("Die called", E_USER_ERROR);
-}*/
-
 $letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 // Select Letter
@@ -170,8 +151,6 @@ $delay['description'] = str_replace(".", "", strtolower($delay['description']));
 <br /><br>
 
 <?php
-//print_r ($_POST);
-
 if ($topatient) {
 	$contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
 } else {
@@ -352,7 +331,6 @@ if ($_POST != array()) {
 		$new_template[$resetid] = null;
 	}
 }
-//print_r($new_template);
 
 foreach ($letter_contacts as $key => $contact) {
 	// Token search and replace arrays

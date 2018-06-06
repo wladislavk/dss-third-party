@@ -53,13 +53,6 @@ function preauth_errors(){
   if(mysqli_num_rows($pa)>0)
     array_push($errors, "Already has verification of benefits");
 
-  /* $sql = "SELECT * FROM dental_patients p JOIN dental_contact r ON p.referred_by = r.contactid WHERE p.patientid=".$_GET['pid'];
-  $my = mysqli_query($con, $sql);
-  $num = mysqli_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing referral"); 
-  }*/
-
 $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -106,14 +99,6 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
     }
   }
 
-  /*$sql = "SELECT * FROM dental_patients p JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
-  $my = mysqli_query($con, $sql);
-  $num = mysqli_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing questionnaire page 3"); // The file and table are named q_page2, but this is displayed on page 3 of questionnaire
-  }*/
-
-
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysqli_query($con, $flowquery);
 if(mysqli_num_rows($flowresult) <= 0){
@@ -143,13 +128,6 @@ if(mysqli_num_rows($flowresult) <= 0){
     $insverbendate1 = $flow['insverbendate1'];
     $insverbendate2 = $flow['insverbendate2'];
 }
-
-
-    if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == ''  /*$clinnotereq == '' || $clinnoterec == ''*/){
-       //array_push($errors, "Medical insurance dates are not filled out."); 
-     }
-
-
 
 return $errors;
 }

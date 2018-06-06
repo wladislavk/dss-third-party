@@ -78,7 +78,6 @@ if(!$isHistoricView && !empty($_POST['missingsub']) && $_POST['missingsub'] == 1
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?php
@@ -103,7 +102,6 @@ if(!$isHistoricView && !empty($_POST['missingsub']) && $_POST['missingsub'] == 1
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?php

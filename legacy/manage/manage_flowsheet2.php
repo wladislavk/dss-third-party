@@ -8,7 +8,6 @@ if($_REQUEST["delid"] != "")
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
 	</script>
 	<?
@@ -895,24 +894,6 @@ else
 							<label for="add2">Diagnosis received</label>
 						</span>
 					</div>
-					
-					<!--<div>
-						<span class="left">
-							<select name="select_type1" class="field text addr tbox" onchange="t_type1()">
-								<option value=""></option>
-								<option value="Beginning Treatment">
-									Beginning Treatment
-								</option>
-								<option value="Need PSG sleep study" >
-									Need PSG sleep study
-								</option>
-								<option value="Patient not doing device" >
-									Patient not doing device
-								</option>
-							</select>
-						</span>
-					</div> -->
-					
 				</li>
 			</ul>
 		</td>
@@ -1143,8 +1124,6 @@ else
 
 <div style="clear:both;"></div>
 <script type="text/javascript">
-try
-  {
 	t_type();
 	pt_1();
 </script>

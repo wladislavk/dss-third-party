@@ -81,7 +81,6 @@ if(!empty($_POST["evaluation_estsub"]) && $_POST["evaluation_estsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_evaluation_est.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

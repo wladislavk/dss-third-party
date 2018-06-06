@@ -49,12 +49,6 @@ if(!$isHistoricView && $_POST['ex_page6sub'] == 1)
 	if($recommended_arr != '')
 		$recommended_arr = '~'.$recommended_arr;
 	
-	
-	/*echo "completed - ".$completed_arr."<br>";
-	echo "recommended - ".$recommended_arr."<br>";
-	echo "other_diagnostic - ".$other_diagnostic."<br>";
-	echo "additional_paragraph - ".$additional_paragraph."<br>";*/
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page6 set 

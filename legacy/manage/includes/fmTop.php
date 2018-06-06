@@ -781,7 +781,6 @@ form#sort_form {
 }
 /* Edit form */
 form#edit, #main {
-/*  margin-left:265px;*/
 float:left;
 }
 form#edit textarea {

@@ -21,10 +21,6 @@ while($r = mysqli_fetch_assoc($q)){
 		last_name = '".mysqli_real_escape_string($con, $l)."'
 		WHERE adminid='".mysqli_real_escape_string($con, $r['adminid'])."'
 		";
-  //mysqli_query($con, $u);
-
-
-
 }
 
 

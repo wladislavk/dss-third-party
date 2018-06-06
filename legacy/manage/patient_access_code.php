@@ -74,13 +74,7 @@ $expirationDate = date('m/d/Y', strtotime(date('Y-m-d', strtotime($patientData['
                 try {
                     parent.$('#access-code').text(<?= json_encode($accessCode) ?>);
                 } catch (e) {
-                    /**
-                     * @see DSS-513
-                     *
-                     * It is not possible to reload the page immediately, otherwise the "mail patient" option
-                     * won't be shown to the user
-                     */
-                    // parent.location.search = ['?ed=', patientId, '&addtopat=1&pid=', patientId, '&sendPin=1'].join('');
+                    // do nothing
                 }
             </script>
         <?php } ?>

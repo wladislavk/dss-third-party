@@ -264,8 +264,6 @@ try{
   // Something else happened, completely unrelated to Stripe
   $body = $e->getMessage();
   echo e($body).". Please contact your Credit Card billing administrator to resolve this issue.";
-  //trigger_error("Die called", E_USER_ERROR);
-
 }
 echo $charge->source->last4;
 ?>

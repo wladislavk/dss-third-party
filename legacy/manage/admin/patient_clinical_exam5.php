@@ -88,7 +88,7 @@ if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
 		}
 	}
 	
-	$join_exam_arr = '';
+	$joint_exam_arr = '';
 	if(is_array($joint_exam))
 	{
 		foreach($joint_exam as $val)
@@ -101,39 +101,6 @@ if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
 		$joint_exam_arr = '~'.$joint_exam_arr;
 		
 	
-	/*echo "palpationid - ".$pal_arr."<br>";
-	echo "palpationRid - ".$palR_arr."<br>";
-	echo "additional_paragraph_pal - ".$additional_paragraph_pal."<br>";
-	echo "joint_exam - ".$joint_exam_arr."<br>";
-	echo "jointid - ".$joi_arr."<br>";
-	echo "i_opening_from - ".$i_opening_from."<br>";
-	echo "i_opening_to - ".$i_opening_to."<br>";
-	echo "i_opening_equal - ".$i_opening_equal."<br>";
-	echo "protrusion_from - ".$protrusion_from."<br>";
-	echo "protrusion_to - ".$protrusion_to."<br>";
-	echo "protrusion_equal - ".$protrusion_equal."<br>";
-	echo "l_lateral_from - ".$l_lateral_from."<br>";
-	echo "l_lateral_to - ".$l_lateral_to."<br>";
-	echo "l_lateral_equal - ".$l_lateral_equal."<br>";
-	echo "r_lateral_from - ".$r_lateral_from."<br>";
-	echo "r_lateral_to - ".$r_lateral_to."<br>";
-	echo "r_lateral_equal - ".$r_lateral_equal."<br>";
-	echo "deviation_from - ".$deviation_from."<br>";
-	echo "deviation_to - ".$deviation_to."<br>";
-	echo "deviation_equal - ".$deviation_equal."<br>";
-	echo "deflection_from - ".$deflection_from."<br>";
-	echo "deflection_to - ".$deflection_to."<br>";
-	echo "deflection_equal - ".$deflection_equal."<br>";
-	echo "range_normal - ".$range_normal."<br>";
-	echo "normal - ".$normal."<br>";
-	echo "other_range_motion - ".$other_range_motion."<br>";
-	echo "additional_paragraph_rm - ".$additional_paragraph_rm."<br>";
-	echo "screening_aware - ".$screening_aware."<br>";
-	echo "screening_normal - ".$screening_normal."<br>";
-	echo "deviation_r_l - ".$deviation_r_l."<br>";
-	echo "deflection_r_l - ".$deflection_r_l."<br>";*/
-
-
 $sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 $q = mysqli_query($con,$sql);
 $row = mysqli_fetch_assoc($q);
@@ -212,7 +179,6 @@ $num = mysqli_num_rows($q);
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='ex_page4.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -220,7 +186,6 @@ $num = mysqli_num_rows($q);
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -407,8 +372,6 @@ if($jointid <> '')
 	function chk_normal()
 	{
 		fa = document.ex_page5frm;
-		
-		//alert(fa.range_normal.checked);
 		if(fa.range_normal.checked)
 		{
 			fa.i_opening_from.disabled = true;
@@ -566,13 +529,6 @@ if($jointid <> '')
                         </span>
                    	</div>
                     <br />
-                    
-                    <!--<div>
-                    	<span>
-                            <input type="checkbox" name="palpation_normal" value="1" />
-                            Within normal limits
-                        </span>
-                    </div> -->
                 </li>
                 
                 <li id="foli8" class="complex">	
@@ -718,7 +674,6 @@ if($jointid <> '')
                                   }
 			       </script>
                                <tr>
-                                </td>
                                     <td valign="top">
                                     <span>George Scale</span>
                                     </td>

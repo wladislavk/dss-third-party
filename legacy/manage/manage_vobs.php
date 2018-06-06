@@ -76,8 +76,6 @@ function insert_preauth_row($patient_id) {
        . "  '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-  //print_r($my_array);
-  //print_r($sql);trigger_error("Exit called", E_USER_ERROR);
   $my = $db->query($sql);
 }
 

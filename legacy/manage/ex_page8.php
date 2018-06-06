@@ -85,18 +85,6 @@ if(!$isHistoricView && $_POST['ex_page8sub'] == 1)
 	if($followup_arr != '')
 		$followup_arr = '~'.$followup_arr;
 	
-	
-	/*echo "inserted - ".$inserted_arr."<br>";
-	echo "recommended - ".$recommended_arr."<br>";
-	echo "other_inserted - ".$other_inserted."<br>";
-	echo "other_recommended - ".$other_recommended."<br>";
-	echo "see_number - ".$see_number."<br>";
-	echo "see_type - ".$see_type."<br>";
-	echo "followup - ".$followup_arr."<br>";
-	echo "additional_paragraph_followup - ".$additional_paragraph_followup."<br>";
-	echo "referring - ".$referring."<br>";
-	echo "additional_paragraph_referral - ".$additional_paragraph_referral."<br>";*/
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page8 set 
@@ -151,7 +139,6 @@ if(!$isHistoricView && $_POST['ex_page8sub'] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -357,41 +344,7 @@ if($see_type == "")
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
-                    <!--<div>
-                    	<span class="full">
-                        	At that time we would like to verify the effectiveness of the oral appliance with
-                            <br />
-                            <table width="95%" align="right">
-                        	<?
-							$followup_sql = "select * from dental_followup where status=1 order by sortby";
-							$followup_my = mysqli_query($con, $followup_sql);
-							
-							while($followup_myarray = mysqli_fetch_array($followup_my))
-							{
-							?>
-                            	<tr>
-                                	<td valign="top" width="5%">
-								<input type="checkbox" id="followup" name="followup[]" value="<?=st($followup_myarray['followupid'])?>" <? if(strpos($followup,'~'.st($followup_myarray['followupid']).'~') === false) {} else { echo " checked";}?> />
-                                	</td>
-                                    
-                                    <td valign="top" width="95%">
-                                    	<span>
-		                                    <?=st($followup_myarray['followup']);?>
-                                        </span>
-                                	</td>
-								</tr>
-							<?
-							}
-							?>
-							</table>
-                            
-                        </span>
-                   	</div> -->
-                    <br />
-                    
-				</li>
-                
-                <li id="foli8" class="complex">	
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
                         /

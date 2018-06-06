@@ -84,9 +84,7 @@
 			$date = date("Ymd");
 			$origfilename = $_FILES["file"]["name"];
 			$random = rand(111111111,999999999);
-			//$scanext = preg_replace('/^.*[.]([^.]+)$/', '$1', ($origfilename));
 			$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$date."');";
-			//echo $insslquery;
 
 			$sleepstudyid = $db->getInsertId($insslquery);
 
@@ -114,11 +112,9 @@
 							</script>           
 		<?php
 						} else {
-							//$filename = $patientid.'-'.$random.".".$scanext;
 							$scanext = preg_replace('/^.*[.]([^.]+)$/', '$1', ($origfilename));
 							$fullfilename = $filename . "." . $scanext;
 							$success = uploadImage($_FILES["file"],"../../../shared/q_file/".$fullfilename);
-							//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 							if ($success) {
 					  			// Delete previous file if updating, then add reference to filename in database
 								if ($updated) {
@@ -318,9 +314,6 @@
             						<div id="hideifno<?php echo $i; ?>">
 									<td>            
 										<input id="scheddate<?php echo $i; ?>" name="data[<?php echo  $i ?>][scheddate]" type="text" class="field text addr tbox calendar" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
-										<script id="js<?php echo $i; ?>" type="text/javascript">
-            								//var cal<?php echo $i; ?> = new CalendarPopup();
-        								</script>
 									</td>
 								</tr>
                                 <tr style="height:30px;">
@@ -457,24 +450,11 @@
 			</script>
  		<?php } ?>
 
-		<script type="text/javascript">
-		// <!--var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);-->
-		</script>
-
 		<?php
 					$i--;
 				}
 	 		}
  		?>
-
-		<script type="text/javascript">
-			<?php
-				foreach ($calendar_vars as $key => $calid) {
-					//print "var cal_" . $calid['scheddate_id'] . " = new calendar2(document.getElementById('" . $calid['scheddate_id'] . "'));";
-					//print "var cal_" . $calid['copyreqdate_id'] . " = new calendar2(document.getElementById('" . $calid['copyreqdate_id'] . "'));";
-				}
-			?>
-		</script> 
 
 	</body>
 </html>

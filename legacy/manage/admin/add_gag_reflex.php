@@ -26,7 +26,6 @@ if(!empty($_POST["mult_gag_reflexsub"]) && $_POST["mult_gag_reflexsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_gag_reflex.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["gag_reflexsub"]) && $_POST["gag_reflexsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_gag_reflex.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

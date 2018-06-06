@@ -26,7 +26,6 @@ if(!empty($_POST["mult_joint_examsub"]) && $_POST["mult_joint_examsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		parent.window.location='manage_joint_exam.php?msg=<?=$msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["joint_examsub"]) && $_POST["joint_examsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_joint_exam.php?msg=<?=$msg;?>';
 			</script>
 			<?

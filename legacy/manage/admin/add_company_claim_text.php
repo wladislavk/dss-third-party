@@ -33,7 +33,6 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_company_claim_text.php?companyid=<?= $_GET['companyid']; ?>&msg=<?=$msg;?>';
 			</script>
 			<?

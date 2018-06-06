@@ -8,7 +8,6 @@ edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
 			edited = true;
-			//window.onbeforeunload = confirmExit;
 		});
 		$('#q_page3frm').submit(function() {
 			window.onbeforeunload = null;
@@ -99,9 +98,6 @@ $injurytohead = $_POST['injurytohead'];
 		}
 	}
 	
-	//if($allergens_arr != '')
-		//$allergens_arr = '~'.$allergens_arr;
-		
 	$medications_arr = $med_text = '';
 	if(is_array($medications))
 	{
@@ -299,7 +295,6 @@ $injurytohead = $_POST['injurytohead'];
                         where 
                         patientid='".$_SESSION["pid"]."'";
                 mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-		//echo $ed_sql;
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">

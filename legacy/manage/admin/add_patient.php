@@ -109,11 +109,9 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?
@@ -224,7 +222,6 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?

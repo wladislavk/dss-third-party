@@ -167,12 +167,6 @@ $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st(
 
 if($pat_myarray['patientid'] == '')
 {
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_patient.php';
-	</script>
-	<?
-	//trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page1_view where patientid='".$_SESSION['pid']."' ";
 $my = mysqli_query($con, $sql);
@@ -325,14 +319,6 @@ function in_array(needle, haystack)
 
                     <div style="width:48%;float:left;">
                         <span>
-                    <!--    	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
-                            	<option value=""></option>
-                            	<? 
-								for($i=1;$i<=$complaint_number;$i++)
-								{?>
-                            		<option value="<?=$i;?>" <? if($chk == $i) echo " selected";?>><?=$i;?></option>
-                                <? }?>
-                            </select>-->
 			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
                             &nbsp;&nbsp;
                             <?=st($complaint_myarray['complaint']);?><br />&nbsp;
@@ -519,51 +505,6 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>
                     </div>
-<!--	
-	<tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        What is the main reason that you are seeking treatment?<br /><font style="font-size:10px;">Control + Click to select multiple (Command + Click - Mac)
-                    </label>
-                    
-                    <div>
-                    	<span class="full">
-                        	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
-                            	<tr>
-                                    <td valign="top">
-                                    	<select multiple="multiple" id="main_reason" name="main_reason[]" class="field text addr tbox" onchange="showOtherBox()" style="width:350px;" size="7">
-                                    	      <?php
-                                            $cmp_query = "SELECT * FROM dental_complaint WHERE status=1";
-                                            $cmp_array = mysqli_query($con, $cmp_query);
-                                            while($cmp_res = mysqli_fetch_array($cmp_array)){
-                                            ?>
-                                    	
-                                           	<option value="<?php echo $cmp_res['complaint']; ?><?php// echo $cmp_res['complaintid']; ?>" <?php if($main_reason == "~".$cmp_res['complaint']."~"){ echo "selected=\"selected\""; } ?>>
-												                    <?php echo $cmp_res['complaint']; ?>
-                                            </option>
-											                      <?php } ?>
-                                            <option value="other" <? if(strpos($main_reason,'~other~') === false) {} else { echo " selected";}?> >
-												Other - Fill in below
-											</option>
-                                        </select>
-				<div id="main_reason_other_div">
-						<br /><br />
-										Other Main Reason for Seeking Treatment:
-										<br />
-										<input id="main_reason_other" name="main_reason_other" type="text" class="tbox" value="<?=$main_reason_other?>" maxlength="255" />
-				</div>
-                                    </td>
-                                </tr>
-							</table>
-						</span>
-					</div>
-				</li>
-			</ul>
-		</td>
-	</tr>-->
-	   
 </table>
 
 <script type="text/javascript">

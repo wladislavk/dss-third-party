@@ -93,7 +93,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_users.php?msg=<?=$msg;?>';
 			</script>
 			<?

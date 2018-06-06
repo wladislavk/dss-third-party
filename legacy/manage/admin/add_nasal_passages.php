@@ -81,7 +81,6 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_nasal_passages.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

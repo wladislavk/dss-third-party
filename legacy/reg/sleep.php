@@ -27,10 +27,6 @@ if($_POST['q_sleepsub'] == 1)
         $snore_5 = $_POST['snore_5'];
         $tot_score = $_POST['tot_score'];
 	
-	/*echo "epworthid - ".$epworth_arr."<br>";
-	echo "analysis - ".$analysis."<br>";*/
-	
-
         if($_POST['ed'] == '')
         {
                 $ins_sql = " insert into dental_q_sleep set 
@@ -115,7 +111,6 @@ if($_POST['q_sleepsub'] == 1)
 			tss='".s_for($tot_score)."'
 			WHERE patientid='".$_SESSION['pid']."'";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		//echo $ed_sql;
 	}
                 mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
                 mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
@@ -216,19 +211,6 @@ if($epworthid <> '')
 								function cal_analaysis(fa)
 								{
 									var an_tot = 0;
-									/*									
-									alert(document.q_sleepfrm.elements.length);
-									for(i=0; i<document.q_sleepfrm.elements.length; i++)
-									{
-										if(document.q_sleepfrm.elements[i].type == 'select-one')
-										{
-											if(document.q_sleepfrm.elements[i].value != '')
-											{
-												an_tot = an_tot + parseInt(document.q_sleepfrm.elements[i].value, 10);
-											}
-										}
-									}
-									*/
 									an_tot += parseInt($('#epworth_1').val());
                                                                         an_tot += parseInt($('#epworth_2').val());
                                                                         an_tot += parseInt($('#epworth_3').val());
@@ -259,7 +241,6 @@ if($epworthid <> '')
 									
 									document.q_sleepfrm.analysis.value = an_text;
 									document.q_sleepfrm.epTot.value = an_tot;
-									//alert("Tot: " + an_tot+"\nText: "+an_text);
 								}
 							</script>
                     <?

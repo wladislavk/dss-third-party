@@ -54,11 +54,9 @@ if($status == DSS_TRXN_NA){
 $sql = "UPDATE dental_ledger SET service_date = '".date('Y-m-d', strtotime($form['service_date']))."', status='".$form['status']."', primary_claim_id='".$claim_id."' WHERE ledgerid=".$form['ledgerid']; 
 
 mysqli_query($con, $sql);
-//echo $sql;
 }
 ?>
 <script type="text/javascript">
-//history.go(-1);
 parent.window.location = parent.window.location;
 </script>
 

@@ -205,7 +205,6 @@ if (!empty($_GET['file'])) {
 
 // Let the browser know that a PDF file is coming.
 header("Content-type: application/pdf");
-//header("Content-Length: " . filesize($filename));
 header("Content-Disposition: attachment; filename=$output.pdf");
 
 // Send the file to the browser.

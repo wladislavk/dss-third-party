@@ -63,71 +63,12 @@ Generated On
 </td>
 
 
-<!--<td width="26" style="text-align:center;">
-&#8730;&nbsp;
-</td>
-
-
-<td width="102">
-Sent via
-</td>-->
-                                              
-
 <td width="250">
 Next Appointment
 </td>
 </tr>
 
-
 <?php
-
-?>
-
-
-  
-
-
-<?php
-/*
-    function array_sort($array, $on, $order)
-    {
-      $new_array = array();
-      $sortable_array = array();
- 
-      if (count($array) > 0) {
-          foreach ($array as $k => $v) {
-              if (is_array($v)) {
-                  foreach ($v as $k2 => $v2) {
-                      if ($k2 == $on) {
-                          $sortable_array[$k] = $v2;
-                      }
-                  }
-              } else {
-                  $sortable_array[$k] = $v;
-              }
-          }
- 
-          switch($order)
-          {
-              case 'SORT_ASC':   
-                  echo "ASC";
-                  asort($sortable_array);
-              break;
-              case 'SORT_DESC':
-                  echo "DESC";               
-                  arsort($sortable_array);
-              break;
-          }
- 
-          foreach($sortable_array as $k => $v) {
-              $new_array[] = $array[$k];
-          }
-      }
-      return $new_array;
-    }   
-
- */
-
 	$qso = "SELECT `consultrow`, `sleepstudyrow`, `impressionrow`, `delayingtreatmentrow`, `refusedtreatmentrow`, `devicedeliveryrow`, `checkuprow`, `patientnoncomprow`, `homesleeptestrow`, `starttreatmentrow`, `annualrecallrow`, `terminationrow` FROM `segments_order` WHERE `patientid` = '".$_GET['pid']."'";
 	$qso_query = mysqli_query($con, $qso);
 	
@@ -143,52 +84,16 @@ Next Appointment
 	$fsData_array = mysqli_fetch_array($fsData_query);
 	
 	
-	/*
-	$final_fsData_array = array();
-	$fsIt = 1;
-	
-	while ($fsdataRow = mysqli_fetch_assoc($fsData_query))
-	{
-		$current_section = $fsdataRow['section'];
-		
-		$final_fsData_array[$fsIt] = array( 'order' => $qsoResult[0]["$current_section"], 'section' => $current_section);
-		
-		$fsIt++;
-	}
-	
-	*/
-	
-	
- 	if (!empty($fsData_array['steparray'])) {
-		$order = explode(",",$fsData_array['steparray']);
-  	$order = array_reverse($order);
-  	//print_r($order);
-	}
-	
-	
-	/*
-	echo '<pre>';
-	echo print_r($final_fsData_array);
-	echo '</pre>';	
-  echo '<br /><br />';
-  */
-   
-  
-  
-  
-  
   $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
   $flow_pg2_info_res = mysqli_query($con, $flow_pg2_info_query);
   while ($row = mysqli_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
   }
-//print_r($flow_pg2_info);
   foreach ($flow_pg2_info as $row) {
 		if ($row['letterid'] != "") {
 			$letters[$row['stepid']] = trim($row['letterid'], ',');
 		}
   }
-//print_r($letters);
   $letter_list = implode(",", $letters);
   $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list."))ORDER BY stepid ASC;";
   $dental_letters_res = mysqli_query($con, $dental_letters_query);
@@ -196,9 +101,6 @@ Next Appointment
   while ($row = mysqli_fetch_assoc($dental_letters_res)) {
     $dental_letters[$row['stepid']][] = $row;
   }
-//print $dental_letters_query;
-
-  //print_r($flow_pg2_info);
 	$calendar_vars = array();
   $i = 0;
   while($section = $order && $i < count($order)){
@@ -209,23 +111,8 @@ Next Appointment
   }else{
     echo "Error selecting segments from flowsheet"; 
   }
-	if ($order[$i] != 1 && $order[$i] != 5 && $order[$i] != 6 && $order[$i] != 9 && $order[$i] != 13 && $order[$i] != 14) {
-		//$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
-		//$calendar_vars[$i]['varsched'] = "cal_sched$i";
-	}
-	//$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
-	//$calendar_vars[$i]['varcomp'] = "cal_comp$i";
-	//$caldatesched = $calendar_vars[$i]['varsched'];
-	//$caldatecomp = $calendar_vars[$i]['varcomp'];
 	$schedid = "datesched$i";
 	$compid = "datecomp$i";
-
-  /*$getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
-  $steparrayqry = mysqli_query($con, $getsteparray);
-  $steparray = mysqli_fetch_array($steparrayqry);
-  $steparray = explode(",", $steparray['steparray']);
-  $stepcount = count($steparray);
-  $steparray_last = end($steparray);*/
 
   $step = count($order) - $i;
   $datesched = date('m/d/Y', $flow_pg2_info[$step]['date_scheduled']);
@@ -318,9 +205,7 @@ Next Appointment
 		}
 	}
   eval('?>' . $segment['content'] . '<?');
-  
-  //echo "<br />".$i."<br />";
-  $i++; 
+  $i++;
   }
     
 

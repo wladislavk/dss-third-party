@@ -50,28 +50,6 @@ if($_POST['q_page1sub'] == 1)
 	if($main_reason_arr != '')
 		$main_reason_arr = '~'.$main_reason_arr;
 	
-	/*
-	echo "feet - ".$feet."<br>";
-	echo "inches - ".$inches."<br>";
-	echo "weight - ".$weight."<br>";
-	echo "bmi - ".$bmi."<br>";
-	echo "complaintid - ".$comp_arr ."<br>";
-	echo "other_complaint - ".$other_complaint ."<br>";
-	echo "additional_paragraph - ".$additional_paragraph ."<br>";
-	echo "energy_level - ".$energy_level ."<br>";
-	echo "snoring_sound - ".$snoring_sound ."<br>";
-	echo "wake_night - ".$wake_night ."<br>";
-	echo "breathing_night - ".$breathing_night ."<br>";
-	echo "morning_headaches - ".$morning_headaches ."<br>";
-	echo "hours_sleep - ".$hours_sleep ."<br>";
-	echo "quit_breathing - ".$quit_breathing ."<br>";
-	echo "bed_time_partner - ".$bed_time_partner ."<br>";
-	echo "sleep_same_room - ".$sleep_same_room ."<br>";
-	echo "told_you_snore - ".$told_you_snore ."<br>";
-	echo "main_reason - ".$main_reason_arr ."<br>";
-	echo "main_reason_other - ".$main_reason_other."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page1 set 
@@ -292,7 +270,6 @@ if($complaintid <> '')
 						var wei = parseInt(fa.weight.value) * 703;
 						var bmi = parseInt(wei) / parseInt(inc_sqr);
 						
-						//alert("BMI " + bmi.toFixed(2));
 						fa.bmi.value = bmi.toFixed(1);
 					}
 					else
@@ -528,20 +505,6 @@ if($complaintid <> '')
                                         </select>
                                     </td>
                                 </tr>
-                                <!--<tr>
-                                	<td valign="top">
-                                    	On average how many times per night does your bed time partner notice you quick breathing per night?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="breathing_night" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
-                                            {?>
-                                                <option value="<?=$i;?>" <? if($breathing_night == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
-                                        </select>
-                                    </td>
-                                </tr> -->
                                 <tr>
                                 	<td valign="top">
                                     	How often do you wake up with morning headaches?

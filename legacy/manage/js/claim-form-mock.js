@@ -583,51 +583,13 @@ $(document).ready(function(){
                 .append($('<button>Compare forms</button>').click(function(){
                     compareForms();
                 }));
-            /**
-             * Buttons to help map/match form fields
-                .append($('<button>Save</button>').click(function(){
-                    mapping[paperCandidate] = efileCandidate;
-                    paper.contents().find('[name="' + paperCandidate + '"]').addClass('debug-mismatch-data');
-                    efile.contents().find('[name="' + efileCandidate + '"]').addClass('debug-mismatch-data');
-                }))
-                .append($('<button style="float:right">Report</button>').click(function(){
-                    console.info(mapping);
-                    console.info(JSON.stringify(mapping));
-                }))
-             */
 
             paper.load(function(){
                 console.info('paper iframe ready!');
-                /**
-                 * Action to help map/match form fields
-                paper.contents().find('#claim-form [name]').click(function(){
-                    var $this = $(this),
-                        $form = $this.closest('form');
-
-                    $form.find('.debug-extra-data').removeClass('debug-extra-data');
-                    $form.find('[name="' + this.name + '"]').addClass('debug-extra-data');
-
-                    paperCandidate = this.name;
-                    $('#paper-candidate').text(paperCandidate);
-                });
-                 */
             });
 
             efile.load(function(){
                 console.info('e-file iframe ready!');
-                /**
-                 * Action to help map/match form fields
-                efile.contents().find('#claim-form [name]').click(function(){
-                    var $this = $(this),
-                        $form = $this.closest('form');
-
-                    $form.find('.debug-extra-data').removeClass('debug-extra-data');
-                    $form.find('[name="' + this.name + '"]').addClass('debug-extra-data');
-
-                    efileCandidate = this.name;
-                    $('#efile-candidate').text(efileCandidate);
-                });
-                 */
             });
 
             $.ajax({

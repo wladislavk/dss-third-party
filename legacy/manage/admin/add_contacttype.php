@@ -26,7 +26,6 @@ if(!empty($_POST["mult_contacttypesub"]) && $_POST["mult_contacttypesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 	</script>
 	<?

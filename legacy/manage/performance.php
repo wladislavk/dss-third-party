@@ -219,16 +219,6 @@ $myarray = $db->getRow($sql);
   <span class="value"></span>
 </div>
 
-<!--
-<div class="data">
-  <label>Ledger Charges</label>
-  <span class="value">$<?php echo  number_format($total_charge_sum,2); ?></span>
-</div>
-
-<div class="data">
-  <label>Ledger Credits</label>
-  <span class="value">$<?echo number_format($total_credits_sum,2); ?></span>
-</div>-->
 <?php
                 if($start_date){
                    $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";

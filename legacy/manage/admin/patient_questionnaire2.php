@@ -53,7 +53,6 @@ edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
 			edited = true;
-			//window.onbeforeunload = confirmExit;
 		});
 		$('#q_page2frm').submit(function() {
 			window.onbeforeunload = null;
@@ -132,26 +131,6 @@ if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 	if($polysomnographic == '')
 		$polysomnographic = 0;
 	
-	/*echo "polysomnographic - ".$polysomnographic."<br>";
-	echo "sleep_center_name - ".$sleep_center_name."<br>";
-	echo "sleep_study_on - ".$sleep_study_on."<br>";
-	echo "confirmed_diagnosis - ".$confirmed_diagnosis."<br>";
-	echo "rdi - ".$rdi."<br>";
-	echo "ahi - ".$ahi."<br>";
-	echo "cpap - ".$cpap."<br>";
-	echo "intolerance - ".$intolerance."<br>";
-	echo "other_intolerance - ".$other_intolerance ."<br>";
-	echo "other_therapy - ".$other_therapy ."<br>";
-	echo "int_arr - ".$int_arr ."<br>";
-	echo "other - ".$other_arr ."<br>";
-	echo "affidavit - ".$affidavit ."<br>";
-	echo "type_study - ".$type_study ."<br>";
-	echo "nights_wear_cpap - ".$nights_wear_cpap ."<br>";
-	echo "percent_night_cpap - ".$percent_night_cpap ."<br>";
-	echo "custom_diagnosis - ".$custom_diagnosis ."<br>";
-	echo "sleep_study_by - ".$sleep_study_by."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page2 set 
@@ -202,7 +181,6 @@ if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -269,7 +247,6 @@ if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -512,7 +489,6 @@ if($cpap == '')
         $pat_row = mysqli_fetch_assoc($patient_q);
         if(mysqli_num_rows($patient_q) == 0){
 		$showEdits = false;
-                //echo "Patient edits.";
         }else{
 		$showEdits = true;
 	}
@@ -543,9 +519,6 @@ if($cpap == '')
 						                            <?php
                                 showPatientValue('dental_q_page2_view', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
                             ?>
-	
-                        	<!--<input type="checkbox" name="polysomnographic" value="1" class="tbox" style="width:10px;"  onclick="chk_poly()" <? if($polysomnographic == 1) echo " checked";?> />
-                            A polysomnographic evaluation was performed at a sleep disorder center -->
                         </span>
                     </div>
                     

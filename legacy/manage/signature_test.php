@@ -36,7 +36,6 @@
 
     <div style="clear:both;"></div>
 
-    <!--[if lt IE 9]><script src="flashcanvas.js"></script><![endif]-->
     <script src="3rdParty/thomasjbradley-signature-pad/build/jquery.signaturepad.min.js"></script>
     <script src="3rdParty/thomasjbradley-signature-pad/build/json2.min.js"></script>
 

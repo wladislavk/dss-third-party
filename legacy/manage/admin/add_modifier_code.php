@@ -26,7 +26,6 @@ if(!empty($_POST["mult_modifier_codesub"]) && $_POST["mult_modifier_codesub"] ==
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		parent.window.location='manage_modifier_code.php?msg=<?=$msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_modifier_code.php?msg=<?=$msg;?>';
 			</script>
 			<?

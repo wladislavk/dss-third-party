@@ -656,7 +656,6 @@ if($complaintid <> '')
             ?>Patient has not previously attempted CPAP therapy.<?php
 
           }else{
-        //echo $pat_myarray['cpap'];
         ?>
     <label>
 <br />

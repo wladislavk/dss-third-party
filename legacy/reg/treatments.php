@@ -392,8 +392,6 @@ if($cpap == '')
                             <input type="radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
                             No
 							
-                        	<!--<input type="checkbox" name="polysomnographic" value="1" class="tbox" style="width:10px;"  onclick="chk_poly()" <? if($polysomnographic == 1) echo " checked";?> />
-                            A polysomnographic evaluation was performed at a sleep disorder center -->
                     <br />
                     <div class="poly_options">
                         <label class="lbl_in">If yes where:</label> 

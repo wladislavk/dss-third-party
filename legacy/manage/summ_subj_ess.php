@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
-// require_once 'admin/includes/config.php';
 include_once 'admin/includes/main_include.php';
 include_once 'admin/includes/general.htm';
 
@@ -34,12 +33,6 @@ if(!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1)
 
 <?php
 	$msg = " Edited Successfully";
-?>
-	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
-		//parent.disablePopup();
-	</script>
-<?php
 		trigger_error("Die called", E_USER_ERROR);
 }
 

@@ -7,7 +7,6 @@ if($_POST['selsub'] == 1)
 	<script type="text/javascript">	
 		parent.document.ex_page1frm.additional_paragraph.value = '<?=st($_POST['description']);?>';
 		parent.disablePopup1();
-		//alert("Hello");
 		window.opener.location = '#add_para';
 	</script>
 	<?

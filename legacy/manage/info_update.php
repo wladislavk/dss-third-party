@@ -20,7 +20,6 @@ while($l_r = mysqli_fetch_assoc($l_q)){
     $info_r = mysqli_fetch_assoc($info_q);
     if($info_r['id']!=''){
     $up_sql = "UPDATE dental_letters set info_id='".$info_r['id']."' where letterid='".$l_r['letterid']."'";
-    //mysqli_query($con, $up_sql);
     echo $up_sql ."<br />";
     }
 

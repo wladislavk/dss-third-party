@@ -26,7 +26,6 @@ if(!empty($_POST["mult_medicationssub"]) && $_POST["mult_medicationssub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_medications.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["medicationssub"]) && $_POST["medicationssub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_medications.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

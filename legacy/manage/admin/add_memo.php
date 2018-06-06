@@ -4,7 +4,6 @@ include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/general.htm';
-//include "includes/top.htm";
 ?>
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
@@ -26,7 +25,6 @@ if(!empty($_POST["memosub"]) && $_POST["memosub"] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			alert('Thank you for your submission!');
 			parent.window.location='manage_memos.php?msg=<?php echo $msg;?>';
 		</script>

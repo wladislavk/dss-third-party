@@ -27,11 +27,9 @@ if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
             		sleeplabid='".$_POST["ed"]."'";
 		$db->query($ed_sql);
 		
-		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_sleeplab.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
@@ -68,7 +66,6 @@ if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
 		<?php
 		}else{?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_sleeplab.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php

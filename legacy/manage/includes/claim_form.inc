@@ -143,7 +143,6 @@ if (!empty($_REQUEST["delid"])) {
 	$msg= "Deleted Successfully";
         ?>
         <script type="text/javascript">
-                //alert("Deleted Successfully");
                 window.location="delete_insurance.php?pid=<?php echo $_GET['pid'];?>&msg=<?php echo $msg?>&delid=<?php echo $_REQUEST['delid'];?>";
         </script>
         <?
@@ -152,7 +151,6 @@ if (!empty($_REQUEST["delid"])) {
 }
 
 $is_new_claim = (empty($_REQUEST['insid']) && empty($_POST['ed'])) ? true : false;
-//print "\$is_new_claim: $is_new_claim";trigger_error("Exit called", E_USER_ERROR);
 
 if(!empty($_POST['ex_statusbtn'])){
 ?>
@@ -166,7 +164,6 @@ trigger_error("Die called", E_USER_ERROR);
 }elseif (!empty($_POST['insurancesub']) && $_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn'])) {
     if($is_sent){
             print '<script type="text/javascript">';
-        //print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '  window.location="' . $called_from . '?status=0&insid='.(!empty($_GET['insid']) ? $_GET['insid'] : '').'&showins=1&pid=' . (!empty($_GET['pid']) ? $_GET['pid'] : '') . '&msg=' . $msg . '";';
         print '</script>';
     }
@@ -813,37 +810,6 @@ trigger_error("Die called", E_USER_ERROR);
 		}
 		$ed_sql .= " where insuranceid = '".s_for(!empty($_POST['ed']) ? $_POST['ed'] : '')."'";
 		
-/*
-	//TAKE OUT INSURANCE FIELDS SO THEY KEEP ORIGINAL VALUES
-		patient_relation_insured = '".s_for($patient_relation_insured)."',
-                insurance_type = '".s_for($insurance_type)."',
-                insured_id_number = '".s_for($insured_id_number)."',
-                insured_firstname = '".s_for($insured_firstname)."',
-                insured_lastname = '".s_for($insured_lastname)."',
-                insured_middle = '".s_for($insured_middle)."',
-                insured_address = '".s_for($insured_address)."',
-                insured_city = '".s_for($insured_city)."',
-                insured_state = '".s_for($insured_state)."',
-                insured_zip = '".s_for($insured_zip)."',
-                insured_phone_code = '".s_for($insured_phone_code)."',
-                insured_phone = '".s_for($insured_phone)."',
-                other_insured_firstname = '".s_for($other_insured_firstname)."',
-                other_insured_lastname = '".s_for($other_insured_lastname)."',
-                other_insured_middle = '".s_for($other_insured_middle)."',
-                insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
-                other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
-                insured_dob = '".s_for($insured_dob)."',
-                insured_sex = '".s_for($insured_sex)."',
-                other_insured_dob = '".s_for($other_insured_dob)."',
-                other_insured_sex = '".s_for($other_insured_sex)."',
-                insured_employer_school_name = '".s_for($insured_employer_school_name)."',
-                other_insured_employer_school_name = '".s_for($other_insured_employer_school_name)."',
-                insured_insurance_plan = '".s_for($insured_insurance_plan)."',
-                other_insured_insurance_plan = '".s_for($other_insured_insurance_plan)."',
-*/
-
-
-
 		$db->query($ed_sql);
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
@@ -1371,15 +1337,11 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
                         <input type="hidden" name="status" value="<?php echo DSS_CLAIM_SEC_SENT?>" />
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
-
         <?php } ?>
 
                <?php } ?>
 
                 <?php } ?>
-		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-
 		&nbsp;&nbsp;&nbsp;
 	</div>
 <?php
@@ -1622,7 +1584,7 @@ $(document).ready(function(){
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){ //$patient_dob = date('m-d-Y', strtotime($patient_dob)); 
+									<?php if($patient_dob!=''){
 } ?>
 									<input type="text" value="<?php echo $patient_dob?>" name="patient_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
@@ -2940,13 +2902,6 @@ if ($is_pending) {
                                                 Delete
                                         </a>
 				<? } ?> 
-			<!--
-			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
-			<div id="reject_reason_div" <?php echo  ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
-				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?php echo  $reject_reason; ?></textarea>
-				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
-			</div>
-			-->
 			<?php }else{ ?>
                     <a href="manage_insurance.php?delid=<?php echo $insuranceid;?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete

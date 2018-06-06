@@ -37,7 +37,6 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

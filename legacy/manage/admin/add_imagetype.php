@@ -81,7 +81,6 @@ if(!empty($_POST["imagetypesub"]) && $_POST["imagetypesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_imagetype.php?msg=<?=$msg;?>';
 			</script>
 			<?

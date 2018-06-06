@@ -9,7 +9,6 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
 	<?

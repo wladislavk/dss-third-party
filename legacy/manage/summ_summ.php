@@ -232,7 +232,6 @@ if ($imp_r['segmentid'] == '4') { ?>
                     if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
                         $chk = '';
                     } else {
-                        // $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
                         ?>
                         <li><?= $complaint_myarray['complaint']; ?></li>
                         <?php
@@ -492,7 +491,6 @@ $segments[1] = "Initial Contact";
             Patient has not previously attempted CPAP therapy.
             <?php
         } else {
-            // echo $pat_myarray['cpap'];
             ?>
             <label>
                 <br />

@@ -9,20 +9,13 @@ function delete_segment (id) {
                 pid: pid
             },
             success: function(data){
-                //alert(data);
                 var r = $.parseJSON(data);
                 
-                if (r.error) {
-                    if (r.error == 'sent') {
-                        //alert('Letter sent');
-                    }
-                }
-                else {
+                if (!r.error) {
                     $('#completed_row_'+id).remove();
                 }
             },
             failure: function(data){
-                //alert('fail');
             }
         });
     }
@@ -45,14 +38,12 @@ function update_completed_date (cid) {
             pid: pid
         },
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
             
             if (r.error) {}
             else {}
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 }
@@ -78,7 +69,6 @@ $(document).delegate('.delay_reason', "change", function(){
             pid: pid
         },
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
             
             if (r.error) {}
@@ -93,7 +83,6 @@ $(document).delegate('.delay_reason', "change", function(){
             }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });
@@ -119,7 +108,6 @@ $(document).delegate('.noncomp_reason', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
             if (r.error) {} else {
                 if (reason == "other") {
@@ -132,7 +120,6 @@ $(document).delegate('.noncomp_reason', "change", function () {
             }
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });
@@ -152,12 +139,9 @@ $(document).delegate('.dentaldevice', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
-            if (r.error) {} else {}
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });
@@ -176,12 +160,9 @@ $(document).delegate('.study_type', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
-            if (r.error) {} else {}
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });

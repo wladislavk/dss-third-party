@@ -42,11 +42,6 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 	if($tonsils_arr != '')
 		$tonsils_arr = '~'.$tonsils_arr;
 	
-	/*echo "mallampati - ".$mallampati."<br>";
-	echo "tonsils - ".$tonsils_arr."<br>";
-	echo "tonsils_grade - ".$tonsils_grade."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page2 set 
@@ -66,7 +61,6 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='ex_page3.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -74,7 +68,6 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -96,7 +89,6 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='ex_page3.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?

@@ -81,7 +81,6 @@ if(!empty($_POST["ins_typesub"]) && $_POST["ins_typesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_ins_type.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

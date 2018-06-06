@@ -26,7 +26,6 @@ if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -81,7 +79,6 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
 			<?

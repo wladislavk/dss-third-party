@@ -256,18 +256,7 @@ if($_SESSION['userid'] != '')
 			<a href="Javascript: ;" class="click" title="Welcome Video" onclick="Javascript: loadPopup('welcome_detail.php?v_f=<?=st($welcome_myarray['video_file'])?>'); getElementById('popupContact').style.top = '200px'; return false;">
 				Click Here for Welcome Video </a>
 			</center>
-			
-			<!--<center>
-			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="414" height="340">
-				<param name="movie" value="video_lounge_with_fullscreen.swf" />
-				<param name="quality" value="high" />
-				<param name="menu" value="false" />
-				<param name="allowScriptAccess" value="sameDomain" />
-				<param name="FlashVars" value="flv_name=<?=st($welcome_myarray['video_file'])?>" />
-				<embed src="video_lounge_with_fullscreen.swf" width="414" height="340" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" menu="false" flashvars="flv_name=<?=st($welcome_myarray['video_file'])?>" allowScriptAccess="sameDomain"></embed>
-			</object>
-			</center> -->
-		<? 
+		<?
 		}
 		?>
 		<?=html_entity_decode(st($welcome_myarray['description']));?>
@@ -295,66 +284,6 @@ if($_SESSION['userid'] != '')
 			?>
 				<font style="font-size:15px; font-weight:bold; color:#00457c;"><center>Welcome to <?=$sitename;?></center></font>
 			<? }?><br />
-	
-	
-
-
-	<!--<br />
-	
-	<span class="admin_head"><em>
-		Insurance Information:	</em></span>
-	<br />
-	<table width="660" border="0" align="center" cellpadding="1" cellspacing="1" class="sample">
-  <tr>
-    <td valign="top">
-	<table width="659" cellpadding="0" cellspacing="0" border="0" align="center" class="em_box">
-	<tr >
-			  <td valign="top" class="em_boxhead">Title</td>
-			  <td valign="top"  align="center"  class="em_boxhead">Related Document</td>
-			  <td valign="top"  align="center" class="em_boxhead" >View Detail</td>
-	  </tr>
-		<?
-		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysqli_query($con, $insurance_sql) or trigger_error($insurance_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
-		if(mysqli_num_rows($insurance_my) == 0)
-		{
-		?>
-			<tr>
-				<td valign="top" colspan="3" align="center">
-					<b>No Records</b>
-				</td>
-			</tr>
-		<?
-		}
-		else
-		{
-			while($insurance_myarray = mysqli_fetch_array($insurance_my)) 
-			{
-				?>
-				<tr>
-					<td valign="top" width="50%"  class="titlesub">
-						<?=st($insurance_myarray['title'])?>
-					</td>
-					<td width="30%" align="center" valign="top">
-						<? if(st($insurance_myarray['doc_file']) <> '') {?>
-						<a href="doc_file/<?=st($insurance_myarray['doc_file'])?>" target="_blank" class="viewtable" title="EDIT">
-							View / Download</a>
-						<? }?>					</td>
-					<td width="20%" align="center" valign="top">
-						<a href="Javascript: ;" target="_blank" class="viewtable" title="EDIT" onclick="Javascript: loadPopup('insurance_detail.php?id=<?=st($insurance_myarray['doc_insuranceid'])?>'); getElementById('popupContact').style.top = '500px'; return false;">
-							View Detail</a>					</td>
-				</tr>
-				<?
-			}
-		}
-		?>
-	</table></td>
-  </tr>
-</table>
- -->
-	
-	
 <?
 }?>
 </div>

@@ -1,7 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
 require_once('admin/includes/main_include.php');
-//include("includes/sescheck.php");
 require_once("admin/includes/general.htm");
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
@@ -24,7 +23,6 @@ $i = 0;
 while ($row = mysqli_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['payer_id'];
   $patients[$i]['name'] = $row['payer_id'] ." - ".$row['name'];
-  //$patients[$i]['source'] = $row['referral_type'];
   $i++;
 }
 

@@ -305,8 +305,7 @@ $num_users = count($my);
             }else{
                 echo "Pend";
             }
-            //$tot_credit += st($myarray["paid_amount"]);
-        }?>         
+        }?>
         </td>
     </tr>
     <?php } ?> 

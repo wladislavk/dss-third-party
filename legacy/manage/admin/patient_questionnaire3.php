@@ -58,7 +58,6 @@ edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
 			edited = true;
-			//window.onbeforeunload = confirmExit;
 		});
 		$('#q_page3frm').submit(function() {
 			window.onbeforeunload = null;
@@ -176,29 +175,6 @@ $injurytohead = $_POST['injurytohead'];
 	if($history_arr != '')
 		$history_arr = '~'.$history_arr;
 	
-	
-	/*echo "allergens - ".$allergens_arr."<br>";
-	echo "other_allergens - ".$other_allergens."<br>";
-	echo "medications - ".$medications_arr."<br>";
-	echo "other_medications - ".$other_medications."<br>";
-	echo "history - ".$history_arr."<br>";
-	echo "other_history - ".$other_history."<br>";
-	echo "dental_health - ".$dental_health."<br>";
-	echo "removable - ".$removable."<br>";
-	echo "year_completed - ".$year_completed."<br>";
-	echo "tmj - ".$tmj."<br>";
-	echo "gum_problems - ".$gum_problems."<br>";
-	echo "dental_pain - ".$dental_pain."<br>";
-	echo "dental_pain_describe - ".$dental_pain_describe."<br>";
-	echo "completed_future - ".$completed_future."<br>";
-	echo "clinch_grind - ".$clinch_grind."<br>";
-	echo "wisdom_extraction - ".$wisdom_extraction."<br>";
-	echo "no_allergens - ".$no_allergens."<br>";
-	echo "no_medications - ".$no_medications."<br>";
-	echo "no_history - ".$no_history."<br>";
-	echo "orthodontics - ".$orthodontics."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page3 set 
@@ -282,7 +258,6 @@ $injurytohead = $_POST['injurytohead'];
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
                         window.location='q_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
@@ -290,7 +265,6 @@ $injurytohead = $_POST['injurytohead'];
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -370,12 +344,10 @@ $injurytohead = $_POST['injurytohead'];
                         where 
                         patientid='".$_GET["pid"]."'";
                 mysqli_query($con,$ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-		//echo $ed_sql;
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
                         window.location='q_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
@@ -383,7 +355,6 @@ $injurytohead = $_POST['injurytohead'];
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -603,7 +574,6 @@ label {
         $pat_row = mysqli_fetch_assoc($patient_q);
         if(mysqli_num_rows($patient_q) == 0){
                 $showEdits = false;
-                //echo "Patient edits.";
         }else{
                 $showEdits = true;
         }

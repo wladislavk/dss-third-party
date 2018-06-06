@@ -227,7 +227,6 @@ class tc_calendar{
 			}
 			
 			$div_align = "top:".$img_height."px;right:0px;";
-			//$div_align = "bottom:".$img_height."px;right:0px;";
 		}else{
 			$div_display = "visible";
 			$div_position = "relative";
@@ -268,7 +267,6 @@ class tc_calendar{
 	
 	//write the year textbox
 	function writeYear(){
-		//echo("<input type=\"textbox\" name=\"".$this->objname."_year\" id=\"".$this->objname."_year\" value=\"$this->year\" maxlength=4 size=5 onBlur=\"javascript:tc_setYear('".$this->objname."', this.value, '$this->path');\" onKeyPress=\"javascript:if(yearEnter(event)){ tc_setYear('".$this->objname."', this.value, '$this->path'); return false; }\"> ");
 		echo("<select name=\"".$this->objname."_year\" id=\"".$this->objname."_year\" onChange=\"javascript:tc_setYear('".$this->objname."', this[this.selectedIndex].value, '$this->path');\" class=\"tcyear\">");
 		echo("<option value=\"0000\">Year</option>");
 		

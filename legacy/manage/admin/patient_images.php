@@ -3,9 +3,6 @@ include "includes/top.htm";
 
 include 'includes/patient_nav.php';
 
-
-
-//$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con,$pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);

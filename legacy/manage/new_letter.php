@@ -509,96 +509,6 @@ if (isset($_POST['submit'])) {
 
 	trigger_letter($templateid, $patientid, $topatient, $md_referral_list, $md_list, $send_method);
 
-	/*switch ($templateid) {
-		case 1:
-			trigger_letter1($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 2:
-			trigger_letter2($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 3:
-			trigger_letter3($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 4:
-			trigger_letter4($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 5:
-			trigger_letter5($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 6:
-			trigger_letter6($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 7:
-			trigger_letter7($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 8:
-			trigger_letter8($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 9:
-			trigger_letter9($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 10:
-			trigger_letter10($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 11:
-			trigger_letter11($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 12:
-			trigger_letter12($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 13:
-			trigger_letter13($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 14:
-			trigger_letter14($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 15:
-			trigger_letter15($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 16:
-			trigger_letter16($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 17:
-			trigger_letter17($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 18:
-			trigger_letter18($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 19:
-			trigger_letter19($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 20:
-			trigger_letter20($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 21:
-			trigger_letter21($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 22:
-			trigger_letter22($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 23:
-			trigger_letter23($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 24:
-			trigger_letter24($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-		case 25:
-			trigger_letter25($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-			break;
-                case 99:
-                        trigger_letter99($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-                        break;
-                case 126:
-                        trigger_letter126($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-                        break;
-                case 178:
-                        trigger_letter178($patientid, $topatient, $md_referral_list, $md_list, $send_method);
-                        break;
-
-
-		default:
-			break;
-	}*/
 }
 
 ?>
@@ -690,9 +600,6 @@ if (isset($_POST['submit'])) {
 			}else{
 			}
 		});
-		if (errorMsg != '') {
-			//alert(errorMsg);
-		}
   }
 	function sendValues(templateid, patientid) {
 		$.post(
@@ -824,7 +731,7 @@ if (isset($_POST['submit'])) {
 			</td>
 		</tr>
 		<tr>
-			<td id="contact_header" style="display:none;">Select Contacts:<br /><!--<input id="default_contacts" type="checkbox" name="defaults" value="defaults" />Default Contacts<br />--></td>
+			<td id="contact_header" style="display:none;">Select Contacts:<br /></td>
 		</tr>
 		<tr>
 			<td id="contacts">

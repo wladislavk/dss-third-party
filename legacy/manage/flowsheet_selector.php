@@ -1,24 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-$consultstep
-$sleepstudystep
-$impressionsstep
-$delayingtreatmentstep
-$refusedtreatmentstep
-$devicedelivery
-$checkfollowupstep
-$noncompliantstep
-$homesleepteststep
-$treatmentcompletestep
-$annualrecallstep
-$terminationstep
-
+<?php namespace Ds3\Libraries\Legacy;
 $getstepqry = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$_GET['patientid']."'";
 if(!mysqli_query($con, $getstepqry)){
 
-$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid`,`steparray`) VALUES ('".$_POST['patientid']."','".$_POST['steparray']."';
+$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid`,`steparray`) VALUES ('".$_POST['patientid']."','".$_POST['steparray']."')";
 }else{
-
-$updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray`='".$_POST['steparray']."' WHERE `patientid`='".$_POST['patientid']."'";
+$updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray` = '".$_POST['steparray']."' WHERE `patientid` = '".$_POST['patientid']."'";
 }
 
 ?>

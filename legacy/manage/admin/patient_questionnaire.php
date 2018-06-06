@@ -53,8 +53,6 @@ if(!empty($_GET['own']) && $_GET['own']==1){
 	edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
-			//window.onbeforeunload = confirmExit;
-			//window.onunload = submitForm;
 			edited = true;
 		});
 		$('#q_page1frm').submit(function() {
@@ -121,28 +119,6 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 	if($main_reason_arr != '')
 		$main_reason_arr = '~'.$main_reason_arr;
 	
-	/*
-	echo "feet - ".$feet."<br>";
-	echo "inches - ".$inches."<br>";
-	echo "weight - ".$weight."<br>";
-	echo "bmi - ".$bmi."<br>";
-	echo "complaintid - ".$comp_arr ."<br>";
-	echo "other_complaint - ".$other_complaint ."<br>";
-	echo "additional_paragraph - ".$additional_paragraph ."<br>";
-	echo "energy_level - ".$energy_level ."<br>";
-	echo "snoring_sound - ".$snoring_sound ."<br>";
-	echo "wake_night - ".$wake_night ."<br>";
-	echo "breathing_night - ".$breathing_night ."<br>";
-	echo "morning_headaches - ".$morning_headaches ."<br>";
-	echo "hours_sleep - ".$hours_sleep ."<br>";
-	echo "quit_breathing - ".$quit_breathing ."<br>";
-	echo "bed_time_partner - ".$bed_time_partner ."<br>";
-	echo "sleep_same_room - ".$sleep_same_room ."<br>";
-	echo "told_you_snore - ".$told_you_snore ."<br>";
-	echo "main_reason - ".$main_reason_arr ."<br>";
-	echo "main_reason_other - ".$main_reason_other."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page1 set 
@@ -178,7 +154,6 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='q_page2.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -186,7 +161,6 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>#form';
 		</script>
 		<?
@@ -224,7 +198,6 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='q_page2.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -232,7 +205,6 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>#form';
 		</script>
 		<?
@@ -358,7 +330,6 @@ if($complaintid <> '')
 	$pat_row = mysqli_fetch_assoc($patient_q);
         if(mysqli_num_rows($patient_q) == 0){
 		$showEdits = false;
-		//echo "Patient edits.";
 	}else{
 		$showEdits = true;
 	}
@@ -437,9 +408,6 @@ if($complaintid <> '')
                                         $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                         $epworth_my = mysqli_query($con,$epworth_sql);
                                         $epworth_number = mysqli_num_rows($epworth_my);
-                                        ?>
-
-                    <?
                                         while($epworth_myarray = mysqli_fetch_array($epworth_my))                                        {
                                                 if(@array_search($epworth_myarray['epworthid'],$epid) === false)
                                                 {
@@ -591,7 +559,7 @@ function in_array(needle, haystack)
                                                 }
                                                 else
                                                 {
-                                                        $patchk = 1;//($compseq[@array_search($complaint_myarray['complaintid'],$pat_row['complaintid'])])?1:0;
+                                                        $patchk = 1;
                                                 }	
 					?>
 
@@ -774,20 +742,6 @@ function in_array(needle, haystack)
 
                                     </td>
                                 </tr>
-                                <!--<tr>
-                                	<td valign="top">
-                                    	On average how many times per night does your bed time partner notice you quick breathing per night?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="breathing_night" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <?php for($i=0;$i<11;$i++)
-                                            {?>
-                                                <option value="<?php echo $i;?>" <?php if($breathing_night!='' && $breathing_night == $i) echo " selected";?>><?php echo $i;?></option>
-                                            <?php }?>
-                                        </select>
-                                    </td>
-                                </tr> -->
                                 <tr>
                                 	<td valign="top">
                                     	On average how many hours of sleep do you get per night?
@@ -828,27 +782,6 @@ function in_array(needle, haystack)
                                                 Never
                                             </option>
                                         </select>
-                                        <!--<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <option value="Most Mornings" <?php if($morning_headaches == 'Most Mornings') echo " selected";?>>
-                                                Most Mornings
-                                            </option>
-                                            <option value="Several times per week" <?php if($morning_headaches == 'Several times per week') echo " selected";?>>
-                                                Several times per week
-                                            </option>
-                                            <option value="Several times per month" <?php if($morning_headaches == 'Several times per month') echo " selected";?>>
-                                                Several times per month
-                                            </option>
-                                            <option value="Occasionally" <?php if($morning_headaches == 'Occasionally') echo " selected";?>>
-                                                Occasionally
-                                            </option>
-                                            <option value="Rarely" <?php if($morning_headaches == 'Rarely') echo " selected";?>>
-                                                Rarely
-                                            </option>
-                                            <option value="Never" <?php if($morning_headaches == 'Never') echo " selected";?>>
-                                                Never
-                                            </option>
-                                        </select>-->
                             <?php
                                 showPatientValue('dental_q_page1_view', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
                             ?>
@@ -949,51 +882,6 @@ function in_array(needle, haystack)
 			</ul>
 		</td>
 	</tr>  
-<!--	
-	<tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        What is the main reason that you are seeking treatment?<br /><font style="font-size:10px;">Control + Click to select multiple (Command + Click - Mac)
-                    </label>
-                    
-                    <div>
-                    	<span class="full">
-                        	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
-                            	<tr>
-                                    <td valign="top">
-                                    	<select multiple="multiple" id="main_reason" name="main_reason[]" class="field text addr tbox" onchange="showOtherBox()" style="width:350px;" size="7">
-                                    	      <?php
-                                            $cmp_query = "SELECT * FROM dental_complaint WHERE status=1";
-                                            $cmp_array = mysqli_query($con,$cmp_query);
-                                            while($cmp_res = mysqli_fetch_array($cmp_array)){
-                                            ?>
-                                    	
-                                           	<option value="<?php echo $cmp_res['complaint']; ?><?php// echo $cmp_res['complaintid']; ?>" <?php if($main_reason == "~".$cmp_res['complaint']."~"){ echo "selected=\"selected\""; } ?>>
-												                    <?php echo $cmp_res['complaint']; ?>
-                                            </option>
-											                      <?php } ?>
-                                            <option value="other" <?php if(strpos($main_reason,'~other~') === false) {} else { echo " selected";}?> >
-												Other - Fill in below
-											</option>
-                                        </select>
-				<div id="main_reason_other_div">
-						<br /><br />
-										Other Main Reason for Seeking Treatment:
-										<br />
-										<input id="main_reason_other" name="main_reason_other" type="text" class="tbox" value="<?php echo $main_reason_other?>" maxlength="255" />
-				</div>
-                                    </td>
-                                </tr>
-							</table>
-						</span>
-					</div>
-				</li>
-			</ul>
-		</td>
-	</tr>-->
-	   
 </table>
 
 <script type="text/javascript">

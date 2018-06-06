@@ -1,5 +1,4 @@
 function updateiframe(w){
-    //$('#sleepstudies').css('width', ((w+1)*185)+'px');
 }
 
 function show_new_study(){

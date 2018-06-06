@@ -176,9 +176,6 @@ tabdropdown.init("slidemenu")
         else
         {
         ?>
-        	<!--<a href="myaccount.php" class="leftnav">My Page</a>
-	        &nbsp;&nbsp; -->
-            
             <? if($_SESSION['user_access'] >1)
             {?>
                 <? if($unload == 1) 
@@ -266,7 +263,7 @@ tabdropdown.init("slidemenu")
         }?>
 	</div>
 	<script type="text/javascript">
-ddlevelsmenu.setup("ddtopmenubar", "topbar") //ddlevelsmenu.setup("mainmenuid", "topbar|sidebar")
+ddlevelsmenu.setup("ddtopmenubar", "topbar")
 </script>
 
 

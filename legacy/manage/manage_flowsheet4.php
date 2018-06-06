@@ -346,7 +346,7 @@
 								updateflowsheet2($_POST['patientid'], $_POST['stepselectedsubmit']);
 						?>
 								<script type="text/javascript">
-									window.location.href = 'manage_flowsheet3.php?page=2&pid='+<?php echo($_GET['pid']); ?>+'&addtopat=1';		
+									window.location.href = 'manage_flowsheet3.php?page=2&pid=' + <?php echo($_GET['pid']); ?>+'&addtopat=1';
 								</script>	
 						<?php
 							}
@@ -437,7 +437,7 @@
 							    }
 
 								foreach($a2 as $order){
-									if($order/*["$title"]*/ == $z){
+									if($order == $z){
 										eval('?>' . $section['content'] . '<?');
 									}
 									$z++;
@@ -472,18 +472,6 @@
 					var cal3 = new calendar2(document.getElementById('thxletter'));
 					var cal4 = new calendar2(document.getElementById('queststartdate'));
 					var calendar25 = new calendar2(document.getElementById('questcompdate'));
-					// var cal6 = new calendar2(document.getElementById('insinforec'));
-					// var cal7 = new calendar2(document.getElementById('rxreq'));
-					// var cal8 = new calendar2(document.getElementById('rxrec'));
-					// var cal9 = new calendar2(document.getElementById('lomnreq'));
-					// var cal10 = new calendar2(document.getElementById('lomnrec'));
-					// var cal11 = new calendar2(document.getElementById('clinnotereq'));
-					// var cal12 = new calendar2(document.getElementById('clinnoterec'));
-					// var cal13 = new calendar2(document.getElementById('refneeddate1'));
-					// var cal14 = new calendar2(document.getElementById('refneeddate2'));
-					// var cal15 = new calendar2(document.getElementById('preautho1'));
-					// var cal16 = new calendar2(document.getElementById('preautho2'));
-					// var cal17 = new calendar2(document.getElementById('insverbendate'));
 				</script>
 
 <?php include "includes/bottom.htm";?>

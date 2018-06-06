@@ -117,8 +117,6 @@ $(document).ready(function(){
     <span class="description">Optional. Use specific service coverage (diagnostic, lab, etc)</span>
   </div>
 
-
-  <!--<input type="submit" style="clear:both;"  name="api_submit" id="api_submit_old" class="addButton" value="Submit Request" />-->
   <a href="#" onclick="return false;" class="addButton" id="api_submit">Submit AJAX</a>
 </form>
 
@@ -175,7 +173,6 @@ echo $result;
                                                 },
                                         complete: function(data){
 console.log(data);
-                                                //$('#api_output').html(data.responseText);
                                                 $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
 						$.ajax({
@@ -183,11 +180,9 @@ console.log(data);
 							type: "post",
 							data: {response: data.responseText, type: 2},
 							success: function(data2){
-								//$('#api_output').append(data2);
-								//alert(data2);
 							}
 						}); 
-                                                pr = false;//r['primary_insurance'];
+                                                pr = false;
 if(pr){
 						din_ind = r.deductible_in_network.individual
                                                 din_fam = r.deductible_in_network.family
@@ -213,8 +208,6 @@ if(pr){
                                                 $('#api_output').append('<h4>Family</h4>');
                                                 $('#api_output').append('Base Period: '+don_fam.base_period);
                                                 $('#api_output').append('<br />Remaining: '+don_fam.remaining);
-}else{
-//$('#api_output').append("<h3>Error</h3>");
 }
 pr = r['primary_insurance'];
 s1 = r['1'];

@@ -9,7 +9,6 @@ if(!empty($_REQUEST["delid"]))
 	$msg= "Deleted Successfully";
 ?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?php
@@ -78,14 +77,6 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 		<td valign="top" class="col_head" width="20%">
 			Appointment Type Color
 		</td>
-<?php /*		<td valign="top" class="col_head" width="60%">
-			Name
-		</td>
-                <td valign="top" class="col_head" width="10%">
-                        Producer
-                </td>
-*/
-?>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -101,17 +92,7 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 	else
 	{
 		foreach ($my as $myarray) {
-
 			$tr_class = "tr_active";
-/*			if($myarray["status"] == 1)
-			{
-				$tr_class = "tr_active";
-			}
-			else
-			{
-				$tr_class = "tr_inactive";
-			}
-*/
 		?>
 	<tr class="<?php echo $tr_class;?>">
 		<td valign="top">
@@ -120,14 +101,6 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 		<td style="background-color: #<?php print $myarray['color']; ?>" valign="top">
 			<?php echo st($myarray["color"]);?>
 		</td>
-<?php /*
-				<td valign="top">
-					<?php echo st($myarray["name"]);?>
-				</td>
-                                <td valign="top">
-                                        <?php echo ($myarray["producer"]==1)?"X":''; ?>
-                                </td>
-*/ ?>
 		<td valign="top">
 		<?php
 		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";

@@ -1,10 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 set_time_limit(300);
 session_start();
-//header("Content-type:application/pdf");
 
 // It will be called downloaded.pdf
-//header("Content-Disposition:attachment;filename='downloaded.pdf'");
 require_once('3rdParty/tcpdf/config/lang/eng.php');
 require_once('3rdParty/tcpdf/tcpdf.php');
 
@@ -41,9 +39,6 @@ $title = "test";
 
         //set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        //set some language-dependent strings
-        //$pdf->setLanguageArray($l);
 
         // set font
         $pdf->SetFont('dejavusans', '', 10);
@@ -327,7 +322,6 @@ $html .= '<tr>
 $html .= '<tr>
         <td colspan="5" align="right">>>>>>>>>>Balance Due Now:</td>
         <td colspan="2" align="right">'.number_format(st($cur_bal),2).'</td></tr>';
-//echo $html;
 
 $head = '<table><tr><td width="60%">';
 $head .= '<div style="display:block; ">';
@@ -384,62 +378,11 @@ $html = $head.$html;
 //finish pdf
 	$filename = '/manage/letterpdfs/unpaid_statement_'.date('YmdHis').'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
-//$pdf->Output('example_001.pdf', 'I');
 
-/*	$state_sql = "INSERT INTO dental_ledger_statement SET
-			producerid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-			filename = '".mysqli_real_escape_string($con, $filename)."',
-			service_date = CURDATE(),
-			entry_date = CURDATE(),
-			patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
-			adddate = now(),
-			ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-	mysqli_query($con, $state_sql);
-*/
 ?>
 <script type="text/javascript">
   window.location = "<?= $filename; ?>";
 </script>
-<?php
-// Extend the TCPDF class to create custom Header and Footer
-/*class STATEMENTPDF extends TCPDF {
-
-                public $footerText = '';
-
-                //Page header
-                public function Header() {
-                                // Logo
-                                $image_file = K_PATH_IMAGES.'dss_print_header.jpg';
-                                        //$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-                        }
-
-                        // Page footer
-                        public function Footer() {
-                                // Position at 26 mm from bottom
-                                $this->SetY(-17);
-                                $this->Cell(0, 10, $this->footerText, 0, false, 'C', 0, '', 0, false, 'T', 'M');
-                }
-        public function AcceptPageBreak() {
-                if ($this->num_columns > 1) {
-                        // multi column mode
-                        if ($this->current_column < ($this->num_columns - 1)) {
-                                // go to next column
-                                $this->selectColumn($this->current_column + 1);
-                        } else {
-                                // add a new page
-                                $this->AddPage();
-                                // set first column
-                                $this->selectColumn(0);
-                        }
-                        // avoid page breaking from checkPageBreak()
-                        return false;
-                }
-                $this->setMargins(18,40,18);
-                return $this->AutoPageBreak;
-        }
-}
-*/
-?>
 <script type="text/javascript">
 function concat_checked(ids){
 var s = '';

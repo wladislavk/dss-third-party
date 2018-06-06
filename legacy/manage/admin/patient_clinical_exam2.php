@@ -48,14 +48,6 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 	if($tongue_arr != '')
 		$tongue_arr = '~'.$tongue_arr;
 	
-	/*echo "blood_pressure - ".$blood_pressure."<br>";
-	echo "pulse - ".$pulse."<br>";
-	echo "bmi - ".$bmi."<br>";
-	echo "neck_measurement - ".$neck_measurement."<br>";
-	echo "additional_paragraph - ".$additional_paragraph."<br>";
-	echo "tongue - ".$tongue_arr."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page1 set 
@@ -84,7 +76,6 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
                         window.location='ex_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
@@ -92,7 +83,6 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -123,7 +113,6 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
                         window.location='ex_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
@@ -131,7 +120,6 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -172,7 +160,6 @@ $ex_page1id = st($myarray['ex_page1id']);
 $blood_pressure = st($myarray['blood_pressure']);
 $pulse = st($myarray['pulse']);
 $neck_measurement = st($myarray['neck_measurement']);
-//$bmi = st($myarray['bmi']);
 $additional_paragraph = st($myarray['additional_paragraph']);
 $tongue = st($myarray['tongue']);
 
@@ -262,13 +249,9 @@ $tongue = st($myarray['tongue']);
                                         if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
                                         {
                                                 var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-                                                //alert(inc);
-                                                
                                                 var inc_sqr = parseInt(inc) * parseInt(inc);
                                                 var wei = parseInt(fa.weight.value) * 703;
                                                 var bmi = parseInt(wei) / parseInt(inc_sqr);
-                                                
-                                                //alert("BMI " + bmi.toFixed(2));
                                                 fa.bmi.value = bmi.toFixed(1);
                                         }
                                         else

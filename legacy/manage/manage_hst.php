@@ -114,7 +114,6 @@ $rec_disp = ($rec_disp != 0) ? $rec_disp : 1;
 
 $no_pages = $total_rec/$rec_disp;
 
-//$sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
 ?>

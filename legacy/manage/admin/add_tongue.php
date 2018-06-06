@@ -26,7 +26,6 @@ if(!empty($_POST["mult_tonguesub"]) && $_POST["mult_tonguesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_tongue.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["tonguesub"]) && $_POST["tonguesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_tongue.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

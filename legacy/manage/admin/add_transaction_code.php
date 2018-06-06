@@ -32,7 +32,6 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -78,7 +77,6 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -97,7 +95,6 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

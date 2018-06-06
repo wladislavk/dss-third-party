@@ -686,7 +686,6 @@ $otherRelationships = [
 onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
 		<?php } ?>
 		value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
         <?php } ?>
@@ -705,12 +704,10 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
   if($api_r['use_eligible_api']==1){
   if($isPending){
 ?>
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
   <?php }elseif($isRejected || $isDispute){
 ?>
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
   <?php
   } ?>
@@ -722,14 +719,11 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
                         <input type="hidden" name="status" value="<?php echo DSS_CLAIM_SEC_SENT?>" />
         <?php if (!$isSent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
-
         <?php } ?>
 
                <?php } ?>
 
                 <?php } ?>
-		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
 <?php
 if (!empty($is_back_office)){
 ?>
@@ -983,23 +977,6 @@ Medicare
                                                                         <input name="insurance_type" type="radio" value="7" <?php if($insurancetype == '7') {echo " checked";}?> />
                                                                         <span class="small_cap">(ID)</span>
                                                                 </td>
-
-
-									<!--Payer
-
-									<input type="text" name="payer_id" style="width:120px" />
-									<input type="text" name="payer_name" />
-									<input type="text" name="payer_add1" />
-									<input type="text" name="payer_add2" />
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top">
-									<input type="text" name="payer_city" />
-									<input type="text" name="payer_state" />
-									<input type="text" name="payer_zip" />
-                                                                </td>
-									-->
 							</tr>
 						</table>
 						<input type="hidden" name="other_insurance_type" value="<?php echo  $other_insurancetype; ?>" />
@@ -2407,8 +2384,6 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
                         <input type="hidden" name="status" value="<?php echo DSS_CLAIM_SEC_SENT?>" />
         <?php if (!$isSent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
-
         <?php } ?>
 
                <?php } ?>

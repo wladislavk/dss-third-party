@@ -210,8 +210,8 @@ $drymouth_text = $myarray['drymouth_text'];
     <?php if ($dental_health != '') { ?>
         <tr>
             <th>
-                How would you describe your dental health?:</strong>
-            </td>
+                How would you describe your dental health?:
+            </th>
             <td colspan="2">
                 <?php echo  $dental_health;?>
             </td>

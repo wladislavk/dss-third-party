@@ -173,8 +173,6 @@ function uploadImage($image, $file_path, $type = 'general'){
 	$newwidth = $width;
 	$newheight = $height;
     }
-    //$newwidth=DSS_IMAGE_MAX_WIDTH;
-    //$newheight=($height/$width)*$newwidth;
     $tmp=imagecreatetruecolor($newwidth,$newheight);
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )
@@ -822,8 +820,6 @@ function format_phone($data){
 
 function split_phone($num, $a){
         $num = preg_replace("/[^0-9]/", "", $num);
-        // preg_match('/([0-1]*)(.*)/',$num, $m);
-        // $num = $m[2];
   if($a){
         return substr($num, 0, 3);
   }else{
@@ -951,7 +947,6 @@ function stateList () {
         'WV' =>  'West Virginia',
         'WI' =>  'Wisconsin',
         'WY' =>  'Wyoming',
-        'PR' =>  'Puerto Rico',
     ];
 
     return $stateList;
@@ -1371,7 +1366,6 @@ function backupExamQuestionnaireTable($tableView, $docId, $userId, $patientId)
 
     if (!in_array($tableView, $referenceTables)) {
         throw new \Exception("Not in list: $tableView");
-        return;
     }
 
     $sourceTable = preg_replace('/_view$/', '', $tableView);

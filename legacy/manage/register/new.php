@@ -145,8 +145,6 @@ include __DIR__ . '/includes/header.php';
       <div style="clear:both;"></div>
 
   <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
-  <!-- jQuery is used only for this example; it isn't required to use Stripe -->
-  <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
   <script type="text/javascript">
     // this identifies your website in the createToken call below
     Stripe.setPublishableKey('<?php echo   $c_r['stripe_publishable_key']; ?>');

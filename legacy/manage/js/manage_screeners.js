@@ -8,10 +8,6 @@ $('.contact_chbx').click(function(){
     data: {id: id, c: c},
     success: function(data){
           var r = $.parseJSON(data);
-
-          if (r.error) {
-          } else {
-          }
     }
   });
 });

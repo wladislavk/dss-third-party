@@ -5,14 +5,6 @@
         $con = $GLOBALS['con'];
 
         $errors = array();
-        /*
-           $sql = "SELECT * FROM dental_patients p WHERE p.referred_source IS NOT NULL AND p.referred_source != '' AND p.patientid=".$pid;
-          $my = mysqli_query($con, $sql);
-          $num = mysqli_num_rows($my);
-          if( $num <= 0 ){
-            array_push($errors, "Missing referral - Flow Sheet");
-          }
-        */
         if ($medicare) {
             $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".(!empty($pid) ? $pid : '')." LIMIT 1";
             
@@ -109,22 +101,6 @@
                 }
             }
         }
-
-        /*
-        $sql = "SELECT * FROM dental_summ_sleeplab p WHERE p.patiendid=".$pid;
-          $my = mysqli_query($con, $sql);
-          $num = mysqli_num_rows($my);
-          if( $num <= 0 ){
-            array_push($errors, "Missing sleep lab");
-          }
-        */
-        /*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
-          $my = mysqli_query($con, $sql);
-          $num = mysqli_num_rows($my);
-          if( $num <= 0 ){
-            array_push($errors, "Missing questionnaire page 2");
-          }
-        */
 
         $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$pid."' LIMIT 1;";
         

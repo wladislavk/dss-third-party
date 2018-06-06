@@ -280,7 +280,7 @@ $main_disp .= $m_val."
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 	</head>
 
-	<body onLoad="window.print(); //window.close();">
+	<body onLoad="window.print();">
 		<table width="780" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
 		  	<tr bgcolor="#FFFFFF">
 		    	<td colspan="2" > 	

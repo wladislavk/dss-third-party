@@ -25,16 +25,12 @@ if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 
 		if(isset($addtopat)){?>
 			<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
-			//window.location='add_patient.php?ed=<?php echo $addedtopat;?>';
-			//<?php $_GET['ed'] = $addedtopat; ?>
 				window.history.go(-2)
 			</script>
 		<?php
 		}else{
 		?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_referredby.php?msg=<?php echo $msg;?>';
 			</script>
 		<?
@@ -67,20 +63,16 @@ if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 		<?php
 		}elseif(isset($addtopat)){?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
-				//window.location='add_patient.php?ed=<?php echo $addedtopat;?>';
 				window.history.go(-2)
 			</script>
 		<?php
 		}else{
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_referredby.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
 		}
-		//trigger_error("Die called", E_USER_ERROR);
 	}
 }?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -349,32 +341,7 @@ if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
 	            </td>
 	        </tr>
         </tr>
-        <!--<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                                <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?php echo $greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
-                                <label for="greeting">Greeting</label>
-                            </span>
-                            
-                            
-                    	</div>
-                        
-                        <div>
-                        	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?php echo $sincerely?></textarea>
-                                <label for="sincerely">Sincerely</label>
-                            </span>
-                            
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>-->
-        
-         <tr> 
+         <tr>
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	

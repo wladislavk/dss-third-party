@@ -10,11 +10,9 @@ if($_POST["proceduresub"] == 1)
 		$ed_sql = "update dental_procedure set patientid = '".s_for($_GET["pid"])."', insuranceid = '".s_for($_GET["insid"])."', service_date_from = '".s_for($_POST["service_date_from"])."', service_date_to = '".s_for($_POST["service_date_to"])."', place_service = '".s_for($_POST["place_service"])."', type_service = '".s_for($_POST["type_service"])."', cpt_code = '".s_for($_POST["cpt_code"])."', units = '".s_for($_POST["units"])."', charge = '".s_for($_POST["charge"])."', total_charge = '".s_for($_POST["total_charge"])."', applies_icd = '".s_for($_POST["applies_icd"])."', npi = '".s_for($_POST["npi"])."', other_id = '".s_for($_POST["other_id"])."', other_id_qualifier = '".s_for($_POST["other_id_qualifier"])."', modifier_code_1 = '".s_for($_POST["modifier_code_1"])."', modifier_code_2 = '".s_for($_POST["modifier_code_2"])."', modifier_code_3 = '".s_for($_POST["modifier_code_3"])."', modifier_code_4 = '".s_for($_POST["modifier_code_4"])."', epsdt = '".s_for($_POST["epsdt"])."', emg = '".s_for($_POST["emg"])."', supplemental_info = '".s_for($_POST["supplemental_info"])."' where procedureid='".$_POST["ed"]."'";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			parent.window.location='insurance.php?msg=<?=$msg;?>&insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>';
 		</script>
 		<?
@@ -28,7 +26,6 @@ if($_POST["proceduresub"] == 1)
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			parent.window.location='insurance.php?msg=<?=$msg;?>&insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>';
 		</script>
 		<?

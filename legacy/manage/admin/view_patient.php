@@ -47,11 +47,9 @@ function trigger_letter1and2($pid) {
     } 
     if (count($recipients) > 0) {
       $recipients_list = implode(',', $recipients);
-      //$letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
-      
+
       //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
       if($_SESSION['user_type']!= DSS_USER_TYPE_SOFTWARE){
-        //$letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
         if (!is_numeric($letter1)) {
           print $letter1;
           trigger_error("Die called", E_USER_ERROR);
@@ -67,7 +65,6 @@ function trigger_letter1and2($pid) {
 function trigger_letter3($pid) {
   $letterid = '3';
   $topatient = '1';
-  //$letter = create_letter($letterid, $pid, '', $topatient);
   if (!is_numeric($letter)) {
     print $letter;
     trigger_error("Die called", E_USER_ERROR);
@@ -526,9 +523,7 @@ $ed_sql .="
 		}
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
       $flowinsert = $db->query($flowinsertqry);
-      if(empty($flowinsert)){
-        //$message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting flowsheet record, please try again!1";
-      }else{
+      if(!empty($flowinsert)){
         $referred_result = $db->query($referredbyqry);
         $message = "Successfully updated flowsheet!2";
       }
@@ -961,16 +956,6 @@ $doc_username = $docr['username'];
 </div>
 <?php }
 
-/*$notifications = find_patient_notifications($_GET['pid']);
-foreach($notifications AS $not){
-?>
-<div id="not_<?php echo  $not['id']; ?>" class="warning <?php echo  $not['notification_type']; ?>">
-<span><?php echo  $not['notification']; ?> <?php echo  ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
-<a href="#" class="close_but" onclick="remove_notification('<?php echo  $not['id']; ?>');return false;">X</a>
-</div>
-<?php
-}
-*/
   if(isset($_GET['search']) && $_GET['search'] != ''){
 	  if(strpos($_GET['search'], ' ')){
             $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
@@ -1127,29 +1112,7 @@ $num_face = count($itype_my);
                 </ul>
             </td>
         </tr>
-        <!-- <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
-                            Premedication
-                            <span id="req_0" class="req">*</span>
-                        </label>
-                        <div>
-                            <span>
-                                <label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
-                                
-                            </span>
-                            <span>
-                                <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?php echo $premeddet;?></textarea>
-                            </span>
-                          
-                       </div>   
-                    </li>
-                </ul>
-            </td>
-        </tr>-->
-        <tr> 
+        <tr>
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -1233,9 +1196,6 @@ $num_face = count($itype_my);
                                                                 <?
                                                                 }?>
                             </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
-                            ?>
                             <label for="feet">Height: Feet</label>
                         </span>
 
@@ -1249,9 +1209,6 @@ $num_face = count($itype_my);
                                                                 <?
                                                                 }?>
                             </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
-                            ?>
                             <label for="inches">Inches</label>
                         </span>
 
@@ -1265,10 +1222,6 @@ $num_face = count($itype_my);
                                                                 <?
                                                                 }?>
                             </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
-                            ?>
-
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         </span>
 
@@ -1320,9 +1273,6 @@ $num_face = count($itype_my);
         	<td valign="top" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                    	<!--<label class="desc" id="title0" for="Field0">
-                            Optional Fields (not used in letters)
-                        </label>-->
 			  <div>
                             <span>
                             	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
@@ -1405,8 +1355,6 @@ $num_face = count($itype_my);
 					</div>
 <input type="hidden" name="referred_by" id="referred_by" value="<?php echo $referred_by;?>" />
 <input type="hidden" name="referred_source" id="referred_source" value="<?php echo $referred_source;?>" />
-
-                               <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?php echo $referred_by?>" maxlength="255" style="width:300px;" /> -->
                             </div>
                     </li>
 				</ul>
@@ -1873,47 +1821,6 @@ $image = $itype_my;
 				      </ul>
             </td>
           </tr>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-		
-		      <?php //if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
 		    	  <tr>
 	      <td colspan="2">
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</font>	      

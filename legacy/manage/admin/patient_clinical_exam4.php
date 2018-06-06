@@ -110,20 +110,6 @@ if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
 	if($nasal_passages_arr != '')
 		$nasal_passages_arr = '~'.$nasal_passages_arr;
 	
-	/*echo "maxilla - ".$maxilla_arr."<br>";
-	echo "other_maxilla - ".$other_maxilla."<br>";
-	echo "mandible - ".$mandible_arr."<br>";
-	echo "other_mandible - ".$other_mandible."<br>";
-	echo "soft_palate - ".$soft_palate_arr."<br>";
-	echo "other_soft_palate - ".$other_soft_palate."<br>";
-	echo "uvula - ".$uvula_arr."<br>";
-	echo "other_uvula - ".$other_uvula."<br>";
-	echo "gag_reflex - ".$gag_reflex_arr."<br>";
-	echo "other_gag_reflex - ".$other_gag_reflex."<br>";
-	echo "nasal_passages - ".$nasal_passages_arr."<br>";
-	echo "other_nasal_passages - ".$other_nasal_passages."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page3 set 
@@ -151,7 +137,6 @@ if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='ex_page5.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -159,7 +144,6 @@ if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -189,7 +173,6 @@ if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?php echo $msg;?>");
                         window.location='ex_page5.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
@@ -197,7 +180,6 @@ if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -416,15 +398,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                        <?php
 							$uvula_sql = "select * from dental_uvula where status=1 order by sortby";
 							$uvula_my = mysqli_query($con,$uvula_sql);
-							//$uvula_prearray = mysqli_fetch_array($uvula_my);
-							
-							?>
-                      <!--<input type="checkbox" name="uvula[]" id="uvula" onclick="showMe('uvuladiv')" value="1" <?php if(in_array("1", $uvula_prearray)){ echo "checked=\"checked\""; }?> >&nbsp;&nbsp;&nbsp;&nbsp;Not Clinically Present<br />
-                      
-                      <div id="uvuladiv" <?php if(in_array("1", $uvula_prearray)){ echo "style=\"display:none;\""; }?>> 
-                      -->
-                        	<?
-							  
+
 							while($uvula_myarray = mysqli_fetch_array($uvula_my))
 							{
 							?>
@@ -433,8 +407,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                                 <?php echo st($uvula_myarray['uvula']);?><br />
 							<?
 							}
-							?> <!--</div>-->
-						
+							?>
+
                         </span>
                    	</div>
                     <div class="ta_half">
@@ -546,7 +520,5 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 <br />
 
 
-
-?>
 
 <?php include "includes/bottom.htm";?>

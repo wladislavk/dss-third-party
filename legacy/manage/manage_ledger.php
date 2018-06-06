@@ -45,7 +45,6 @@ if(!empty($_REQUEST["delid"]))
   $msg= "Deleted Successfully";?>
 
   <script type="text/javascript">
-    //alert("Deleted Successfully");
                 <?php if($_GET['popup']==1){ ?>
                   parent.window.location.reload();
                 <?php }else{ ?>
@@ -103,7 +102,6 @@ if(!empty($_REQUEST["delnoteid"]))
         }
         ?>
         <script type="text/javascript">
-                //alert("Deleted Successfully");
                 <?php if($_GET['popup']==1){ ?>
                   parent.window.location.reload();
                 <?php }else{ ?>
@@ -123,12 +121,6 @@ $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($
 
 if(empty($pat_myarray['patientid']))
 {
-  ?>
-  <script type="text/javascript">
-    //window.location = 'manage_patient.php';
-  </script>
-  <?php
-  //trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 2000;
@@ -199,10 +191,6 @@ $my = $db->getResults($sql);
 $num_users = count($my);
 ?>
 
-<!--
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/popup.js" type="text/javascript"></script>
--->
 <span class="admin_head">
   Ledger Card
 </span>
@@ -568,9 +556,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       if((!empty($myarray['ledger']) && $myarray['ledger']=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'){ ?>
         <a href="Javascript:;" 
 <?php
-      // column 'edit_ledger_entries' is exist in 'dental_users' table
-      // $pla_sql = "SELECT edit_ledger_entries FROM dental_users where userid='".$_SESSION['userid']."'";
-      // $pla = $db->getRow($pla_sql);
         if(!empty($pla) && $pla['edit_ledger_entries'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){?>
                                     onclick="alert('You do not have permission to edit ledger entries.  Please contact your office manager to resolve this issue.');" 
 <?php 
@@ -773,13 +758,5 @@ if($_GET['sortdir']=='DESC'){ ?>
 <div id="backgroundPopup"></div>
 
 <br /><br />  
-
-<?php
-
-// } else {  // end pt info check
-//  print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
-// }
-
-?>
 
 <?php include "includes/bottom.htm";?>

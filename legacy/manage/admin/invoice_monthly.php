@@ -18,39 +18,6 @@ include_once 'includes/main_include.php';
                         WHERE docid=du.userid AND 
                                 status = '".DSS_INVOICE_PENDING."') = 0";
 
-/*
-		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                        JOIN dental_patients dp ON dl.patientid=dp.patientid
-                        WHERE 
-                                dl.transaction_code='E0486' AND
-                                dl.docid=du.userid AND
-                                dl.percase_status = '".DSS_PERCASE_PENDING."') = 0 AND
-                (SELECT COUNT(*) AS num_trxn FROM dental_claim_electronic e 
-                        JOIN dental_insurance i ON i.insuranceid=e.claimid
-                        JOIN dental_patients dp ON i.patientid=dp.patientid
-                        WHERE 
-                                i.docid=du.userid AND
-                                e.percase_invoice IS NULL) = 0 AND
-		(SELECT count(*) as total_faxes FROM dental_faxes f
-        		WHERE 
-                f.docid='".$_REQUEST['docid']."' AND
-                f.status = '0') <=  c.free_fax AND
-(SELECT count(*) as total_eligibility FROM dental_eligibility f
-                        WHERE 
-                f.docid='".$_REQUEST['docid']."' AND
-                f.eligibility_invoice IS NULL) <= plan.free_eligibility AND
-(SELECT count(*) as total_enrollment FROM dental_eligible_enrollment f
-                        WHERE 
-                f.docid='".$_REQUEST['docid']."' AND
-                f.enrollment_invoice IS NULL) <= plan.free_enrollment AND
-		(SELECT COUNT(*) FROM dental_insurance_preauth p
-                JOIN dental_patients dp ON p.patient_id=dp.patientid
-		        WHERE 
-                p.doc_id='".$_REQUEST['docid']."' AND
-                p.status = '".DSS_PREAUTH_COMPLETE."' AND
-                p.invoice_status = '".DSS_PERCASE_PENDING."') = 0
-                ";
-*/
   if(isset($_GET['company']) && $_GET['company'] != ""){
         $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['company'])."' ";
   }
@@ -120,37 +87,6 @@ if(mysqli_num_rows($doc_q) == 0){
  		  array_push($no_card, $r['first_name']." ".$r['last_name']);
 		}
 	}
-/*
-$fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(sent_date) as end_date FROM dental_faxes f
-        WHERE 
-                f.docid='".$r['userid']."' AND
-                f.status = '0'
-";
-$fax_q = mysqli_query($con,$fax_sql);
-$fax = mysqli_fetch_assoc($fax_q);
-
-if($fax['total_faxes'] > 0 ){
-    $fax_start_date = ($fax['start_date'])?date('Y-m-d', strtotime($fax['start_date'])):'';
-    $fax_end_date = ($fax['end_date'])?date('Y-m-d', strtotime($fax['end_date'])):'';
-
-    $fax_in_sql = "INSERT INTO dental_fax_invoice SET
-                invoice_id = '".mysqli_real_escape_string($con,$invoiceid)."',
-                description = '".mysqli_real_escape_string($con,"Free Faxes – ". $fax['total_faxes']." at $0.00 each")."',
-                start_date = '".mysqli_real_escape_string($con,$fax_start_date)."',
-                end_date = '".mysqli_real_escape_string($con,$fax_end_date)."',
-                amount = '0.00',
-                adddate = now(),
-                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-    mysqli_query($con,$fax_in_sql);
-    $fax_invoice_id = mysqli_insert_id($con);
-
-    $up_sql = "UPDATE dental_faxes SET
-                status = '1',
-                fax_invoice_id = '".$fax_invoice_id."' 
-                WHERE status='0' AND docid='".mysqli_real_escape_string($con,$r['docid'])."'";
-    mysqli_query($con,$up_sql);
-}
-*/
 $_GET['invoice_id'] = $invoiceid;
 $redirect = false;
 include 'percase_invoice_pdf.php';

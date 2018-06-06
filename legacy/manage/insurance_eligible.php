@@ -4,7 +4,6 @@
 	include("includes/sescheck.php");
 	include('includes/claim_create.php');
 	include('includes/claim_functions.php');
-	//include('includes/general_functions.php');
 
 	$is_front_office = true;
 	$manage_path = "";

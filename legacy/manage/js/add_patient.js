@@ -184,7 +184,6 @@ function update_insurance_type(){
 
 function checkMedicare(){
   if($('#s_m_ins_type').val() == 1){
-    //$('#s_m_ins_type').val('');
     alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
   }
 }

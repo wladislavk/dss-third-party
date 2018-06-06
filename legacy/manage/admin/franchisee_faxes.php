@@ -32,14 +32,6 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-/*$sql = "select du.name, du.userid, du.username, count(dl.ledgerid) as num_trxn from dental_users du 
-    LEFT JOIN dental_ledger dl 
-	ON dl.docid=du.userid 
-		AND dl.status = '".DSS_PERCASE_PENDING."' 
-WHERE du.docid=0
- group by du.name, du.username, du.userid";
-echo $sql;
-*/
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT du.*, c.name AS company_name 
                 FROM dental_users du 
@@ -57,7 +49,6 @@ $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-//$sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
 $num_users = mysqli_num_rows($my);
 

@@ -53,25 +53,6 @@ if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1)
 	if($exam_teeth_arr != '')
 		$exam_teeth_arr = '~'.$exam_teeth_arr;
 		
-	
-	/*echo "exam_teeth - ".$exam_teeth_arr."<br>";
-	echo "other_exam_teeth - ".$other_exam_teeth."<br>";
-	echo "caries - ".$caries."<br>";
-	echo "where_facets - ".$where_facets."<br>";
-	echo "missing - ".$missing."<br>";
-	echo "cracked_fractured - ".$cracked_fractured."<br>";
-	echo "old_worn_inadequate_restorations - ".$old_worn_inadequate_restorations."<br>";
-	echo "dental_class_right - ".$dental_class_right."<br>";
-	echo "dental_division_right - ".$dental_division_right."<br>";
-	echo "dental_class_left - ".$dental_class_left."<br>";
-	echo "dental_division_left - ".$dental_division_left."<br>";
-	echo "additional_paragraph - ".$additional_paragraph."<br>";
-	echo "initial_tooth - ".$initial_tooth."<br>";
-	echo "open_proximal - ".$open_proximal."<br>";
-	echo "deistema - ".$deistema."<br>";
-	echo "crossbite - ".$crossbite."<br>";*/
-	
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page4 set 
@@ -103,14 +84,12 @@ if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1)
 		if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
                         window.location='ex_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
 		}else{
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -151,7 +130,6 @@ if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1)
                 }else{
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -201,10 +179,6 @@ $crossbite = st($myarray['crossbite']);
 
 ?>
 
-<!--
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/popup.js" type="text/javascript"></script>
--->
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
 <a name="top"></a>
@@ -255,7 +229,6 @@ $crossbite = st($myarray['crossbite']);
                             <input type="text" name="missing" value="<?=$missing?>" class="field text addr tbox" readonly="readonly" />
                             <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
 							
-							<!--<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>-->
                                                         <button onclick="toggle_perio(); return false;">Perio Chart</button>
 							
                         </span>
@@ -334,21 +307,6 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-                    
-                    <!--<div>
-                        <span style="color:#000000;">
-                        	Teeth in Crossbite Tooth # 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            
-                            <input type="text" name="teeth_crossbite" value="<?=$teeth_crossbite?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=teeth_crossbite'); getElementById('popupContact').style.top = '500px'; return false;">Change</button>
-                        </span>
-                    </div>
-                    <br /> -->
-                    
                 </li>
             </ul>
         </td>

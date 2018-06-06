@@ -243,7 +243,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                             $chk = '';
                         }
                         else {
-                            #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
                             ?>
                             <li class="list-group-item"><?php echo  $complaint_myarray['complaint']; ?></li>
                             <?php

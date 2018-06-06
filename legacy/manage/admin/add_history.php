@@ -26,7 +26,6 @@ if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

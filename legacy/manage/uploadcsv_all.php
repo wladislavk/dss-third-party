@@ -200,13 +200,6 @@ $csv = array();
                                         $s .= $field . " = '4', ";
                                 }
                                 break;
-			/*case 'marital_status':
-				if(trim($data[$id])=="M"){
-					$s .= $field . " = 'Married', ";
-				}elseif(trim($data[$id])=="U"){
-					$s .= $field . " = 'Single', ";
-                                }
-				break;*/
 			case 'dob':
 				if($data[$id]!=''){
 				  $patientdob = true;
@@ -276,7 +269,6 @@ $csv = array();
 		   }
 		}
 			$s .= " docid = '".$_SESSION[docid]."'";
-			//echo $s;
 			mysqli_query($con, $s);
 			$pid = mysqli_insert_id($con);
 
@@ -307,12 +299,7 @@ $csv = array();
                                 	$steparray_insert = mysqli_query($con, $steparray_query);
                                 	$flow_pg2_info_insert = mysqli_query($con, $flow_pg2_info_query);
 				}
-				//echo $steparray_query;
-				//echo $flow_pg2_info_query;
 			}
-                //$csv[$row]['lastname'] = $data[0];
-                //$csv[$row]['firstname'] = $data[1];
-
                 // inc the row
                		$row++;
 		

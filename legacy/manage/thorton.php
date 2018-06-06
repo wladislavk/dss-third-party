@@ -1,7 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include "admin/includes/main_include.php";
 ?>
-<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -28,13 +27,6 @@ if($_POST['thortonsub'] == 1)
 	$snore_5 = $_POST['snore_5'];
 	$tot_score = $_POST['tot_score'];
 	
-	/*echo "snore_1 - ".$snore_1."<br>";
-	echo "snore_2 - ".$snore_2."<br>";
-	echo "snore_3 - ".$snore_3."<br>";
-	echo "snore_4 - ".$snore_4."<br>";
-	echo "snore_5 - ".$snore_5."<br>";
-	echo "tot_score - ".$tot_score."<br>";*/
-	
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_thorton set 
@@ -55,7 +47,6 @@ if($_POST['thortonsub'] == 1)
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
@@ -77,7 +68,6 @@ if($_POST['thortonsub'] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?

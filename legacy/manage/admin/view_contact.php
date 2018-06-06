@@ -2,9 +2,7 @@
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
-//include "../includes/general_functions.php";
 include_once "includes/general.htm";
-//include "includes/top.htm";
 ?>
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 

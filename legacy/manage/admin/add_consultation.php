@@ -26,7 +26,6 @@ if(!empty($_POST["mult_consultationsub"]) && $_POST["mult_consultationsub"] == 1
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_consultation.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["consultationsub"]) && $_POST["consultationsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_consultation.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

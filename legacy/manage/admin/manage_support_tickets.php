@@ -24,7 +24,6 @@ if (isset($_GET['rid'])) {
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
-<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
 <?php
 
 $showClosed = isset($_GET['closed']);
@@ -268,7 +267,7 @@ if (!$showClosed) {
         View Closed Tickets
         <span class="glyphicon glyphicon-ok-sign"></span>
     </a>
-<?php } else { //isset($_GET['all'])
+<?php } else {
     $sql = "SELECT
             t.*,
             CONCAT(u.first_name, ' ', u.last_name) AS user,

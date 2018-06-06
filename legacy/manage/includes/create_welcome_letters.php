@@ -1,6 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../admin/includes/main_include.php';
-//require_once '../admin/includes/general.htm';
 $s = "SELECT dc.* FROM dental_contact dc
 	JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
 	WHERE dct.physician=1

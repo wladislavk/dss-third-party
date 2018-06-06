@@ -49,32 +49,6 @@ $ft["plugins"]["edit"] = array(
    "converttabs" => FALSE
  )
 );
-/*
-$ft["plugins"]["tinymce"] = array(
-  "settings" => array(
-    "path" => "tinymce/jscripts/tiny_mce/tiny_mce.js",
-    "list" => "html htm"
-  )
-);
-*/
-
-# Additional users - 
-
-/*
-$ft['users']['REPLACE_WITH_USERNAME'] = array(
-  'password' => 'REPLACE_WITH_PASSWORD', 
-  'group' => 'REPLACE_WITH_GROUPNAME'
-);
-*/
-
-# User groups for additional users 
-
-/*
-$ft['groups']['REPLACE_WITH_GROUPNAME'] = array(
-  'DIR' => 'REPLACE_WITH_CUSTOM_DIR', 
-);
-*/
-
 
 /**
  * Check if a login cookie is valid.

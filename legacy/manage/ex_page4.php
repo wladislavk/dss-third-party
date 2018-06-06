@@ -5,14 +5,14 @@ include_once "includes/top.htm";
 include_once('includes/patient_info.php');
 
 $db = new Db();
-$baseTable = 'dental_ex_page4_view';
+$baseTable = 'dental_ex_page4_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',
 ];
 
 $secondaryTables = [
-    'dental_missing_view' => ['patientid' => '$patientId'],
+    'dental_missing_pivot' => ['patientid' => '$patientId'],
 ];
 
 /**

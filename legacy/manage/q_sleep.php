@@ -5,15 +5,15 @@ include "includes/top.htm";
 include_once('includes/patient_info.php');
 
 $db = new Db();
-$baseTable = 'dental_q_page1_view';
+$baseTable = 'dental_q_page1_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',
 ];
 
 $secondaryTables = [
-    'dental_q_sleep_view' => ['patientid' => '$patientId'],
-    'dental_thorton_view' => ['patientid' => '$patientId'],
+    'dental_q_sleep_pivot' => ['patientid' => '$patientId'],
+    'dental_thorton_pivot' => ['patientid' => '$patientId'],
 ];
 
 $canBackup = false;
@@ -165,7 +165,7 @@ if ($patient_info) { ?>
     }
 
     $sql = "select *
-        from {$secondarySourceTables['dental_thorton_view']}
+        from {$secondarySourceTables['dental_thorton_pivot']}
         where patientid = '$patientId'
         $andReferenceIdConditional
         $andNullConditional";
@@ -191,7 +191,7 @@ if ($patient_info) { ?>
     }
 
     $sql = "select *
-        from {$secondarySourceTables['dental_q_sleep_view']}
+        from {$secondarySourceTables['dental_q_sleep_pivot']}
         where patientid = '$patientId'
         $andReferenceIdConditional
         $andNullConditional";

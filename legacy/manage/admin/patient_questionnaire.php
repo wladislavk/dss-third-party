@@ -308,14 +308,14 @@ if (mysqli_num_rows($patient_q) == 0) {
             Baseline Epworth Sleepiness Score: <input type="text" id="ess" style="width:30px;" name="ess" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo $ess; ?>" />
             <?php
             if ($pat_row['ess'] != '') {
-                showPatientValue('dental_q_page1_view', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
+                showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
             } ?>
             <?php echo $analysis; ?>
             <br /><br />
             Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" style="width:30px;" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo $tss; ?>" />
             <?php
             if ($pat_row['tss'] != '') {
-                showPatientValue('dental_q_page1_view', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
+                showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
             } ?>
             > 5 indicates snoring is significantly affecting quality of life.
             <?php
@@ -399,7 +399,7 @@ if (mysqli_num_rows($patient_q) == 0) {
             </label>
             <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?php echo  $chief_complaint_text; ?></textarea>
                 <?php
-                showPatientValue('dental_q_page1_view', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
+                showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
                 ?>
         </td>
     </tr>
@@ -412,7 +412,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                     <label class="desc" id="title0" for="Field0">
                         Other Complaints
                         <?php
-                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
+                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
                         ?>
                     </label>
                     <?php 
@@ -509,7 +509,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_complaint;?></textarea>
                             <?php
-                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
+                            showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
                             ?>
                         </span>
                     </div>
@@ -550,7 +550,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             <?php } ?>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -566,7 +566,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             <?php } ?>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -591,7 +591,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             </option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -608,7 +608,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             <option value="Don't know">Don't know</option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -624,7 +624,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             <?php } ?>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -640,7 +640,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             <?php } ?>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -668,7 +668,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             </option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -690,7 +690,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             </option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -712,7 +712,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             </option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>
@@ -743,7 +743,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                                             </option>
                                         </select>
                                         <?php
-                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
+                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
                                         ?>
                                     </td>
                                 </tr>

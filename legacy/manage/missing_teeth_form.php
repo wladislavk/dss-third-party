@@ -4,14 +4,14 @@ namespace Ds3\Libraries\Legacy;
 include_once "admin/includes/main_include.php";
 
 $db = new Db();
-$baseTable = 'dental_ex_page4_view';
+$baseTable = 'dental_ex_page4_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',
 ];
 
 $secondaryTables = [
-    'dental_missing_view' => ['patientid' => '$patientId'],
+    'dental_missing_pivot' => ['patientid' => '$patientId'],
 ];
 
 $canBackup = false;
@@ -26,14 +26,14 @@ $canBackup = false;
  */
 require_once __DIR__ . '/includes/form-backup-setup.php';
 
-if(!$isHistoricView && !empty($_POST['missingsub']) && $_POST['missingsub'] == 1) {
+if (!$isHistoricView && !empty($_POST['missingsub']) && $_POST['missingsub'] == 1) {
     $rec = '~';
     $rec1 = '~';
     $pck = '~';
     $pck1 = '~';
     $mob = '~';
 
-    for($i = 1; $i < 17; $i++) {
+    for ($i = 1; $i < 17; $i++) {
         if ($i < 10) {
             $i = '0' . $i;
         }
@@ -111,7 +111,7 @@ $pat_myarray = $db->getRow($pat_sql);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 $sql = "select *
-    from {$secondarySourceTables['dental_missing_view']}
+    from {$secondarySourceTables['dental_missing_pivot']}
     where patientid = '$patientId'
     $andReferenceIdConditional
     $andNullConditional";

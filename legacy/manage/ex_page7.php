@@ -3,7 +3,7 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 
 $db = new Db();
-$baseTable = 'dental_ex_page7_view';
+$baseTable = 'dental_ex_page7_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',

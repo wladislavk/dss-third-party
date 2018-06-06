@@ -4,7 +4,7 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 include_once('includes/patient_info.php');
 
-$baseTable = 'dental_ex_page5_view';
+$baseTable = 'dental_ex_page5_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',

@@ -5,7 +5,7 @@ include "includes/top.htm";
 include_once('includes/patient_info.php');
 
 $db = new Db();
-$baseTable = 'dental_ex_page2_view';
+$baseTable = 'dental_ex_page2_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',

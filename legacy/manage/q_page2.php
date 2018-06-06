@@ -5,14 +5,14 @@ require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/includes/patient_info.php';
 
 $db = new Db();
-$baseTable = 'dental_q_page2_view';
+$baseTable = 'dental_q_page2_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',
 ];
 
 $secondaryTables = [
-    'dental_q_page2_surgery_view' => [
+    'dental_q_page2_surgery_pivot' => [
         'patientid' => '$patientId',
     ],
 ];
@@ -388,7 +388,7 @@ if ($patient_info) {
                                     <input type="radio" class="polysomnographic_radio" id="polysomnographic_no" name="polysomnographic" value="0" <?php if ($polysomnographic == '0') echo " checked";?> onchange="chk_poly()"  />
                                     <label class="inline" for="polysomnographic_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <br />
@@ -397,13 +397,13 @@ if ($patient_info) {
                                         If yes where
                                         <input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="field text addr tbox" value="<?php echo $sleep_center_name_text;?>"  maxlength="255" style="width:225px;" />
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
                                         ?>
                                         Date
                                         &nbsp;&nbsp;
                                         <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox calendar" value="<?php echo $sleep_study_on;?>"  maxlength="10" style="width:75px;" />
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
                                         ?>
                                     </span>
                                 </div>
@@ -429,7 +429,7 @@ if ($patient_info) {
                                     <input type="radio" class="cpap_radio" id="cpap_no" name="cpap" value="No" <?php if ($cpap == 'No') echo " checked";?> onchange="chk_cpap()"  />
                                     <label class="inline" for="cpap_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <fieldset class="cpap_options">
@@ -441,7 +441,7 @@ if ($patient_info) {
                                     <input type="radio" class="cur_cpap_radio" id="cur_cpap_no" name="cur_cpap" value="No" <?php if ($cur_cpap == 'No') echo " checked";?> onchange="chk_cpap()"  />
                                     <label class="inline" for="cur_cpap_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <div class="cpap_options2">
@@ -449,7 +449,7 @@ if ($patient_info) {
                                         If currently using CPAP, how many nights / week do you wear it?
                                         <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?php echo $nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
                                         ?>
                                         <br />&nbsp;
                                     </span>
@@ -459,7 +459,7 @@ if ($patient_info) {
                                         How many hours each night do you wear it?
                                         <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?php echo $percent_night_cpap;?>" maxlength="255" style="width:225px;" />
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
                                         ?>
                                         <br />&nbsp;
                                     </span>
@@ -468,7 +468,7 @@ if ($patient_info) {
                                     <span>
                                         What are your chief complaints about CPAP?
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
                                         ?>
                                         <br />
                                         <?php
@@ -536,7 +536,7 @@ if ($patient_info) {
                                     <input type="radio" class="dd_wearing_radio" id="dd_wearing_no" name="dd_wearing" value="No" <?php if ($dd_wearing == 'No') echo " checked";?> onchange="chk_dd()"  />
                                     <label class="inline" for="dd_wearing_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <fieldset>
@@ -548,7 +548,7 @@ if ($patient_info) {
                                     <input type="radio" class="dd_prev_radio" id="dd_prev_no" name="dd_prev" value="No" <?php if ($dd_prev == 'No') echo " checked";?> onchange="chk_dd()"  />
                                     <label class="inline" for="dd_prev_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <fieldset class="dd_options">
@@ -560,7 +560,7 @@ if ($patient_info) {
                                     <input type="radio" class="dd_otc_radio" id="dd_otc_no" name="dd_otc" value="No" <?php if ($dd_otc == 'No') echo " checked";?> />
                                     <label class="inline" for="dd_otc_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <fieldset class="dd_options">
@@ -572,14 +572,14 @@ if ($patient_info) {
                                     <input type="radio" class="dd_fab_radio" id="dd_fab_no" name="dd_fab" value="No" <?php if ($dd_fab == 'No') echo " checked";?> />
                                     <label class="inline" for="dd_fab_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <div class="dd_options">
                                     <span>
                                         Who <input type="text" id="dd_who" name="dd_who" value="<?php echo $dd_who; ?>" />
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
                                         ?>
                                     </span>
                                 </div>
@@ -588,7 +588,7 @@ if ($patient_info) {
                                         Describe your experience<br />
                                         <textarea id="dd_experience" class="field text addr tbox" style="width:650px; height:100px;" name="dd_experience"><?php echo $dd_experience; ?></textarea>
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
                                         ?>
                                     </span>
                                 </div>
@@ -611,7 +611,7 @@ if ($patient_info) {
                                     <input type="radio" class="surgery_radio" id="surgery_no" name="surgery" value="No" <?php if ($surgery == 'No') echo " checked";?> onchange="chk_s()" />
                                     <label class="inline" for="surgery_no">No</label>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
                                     ?>
                                 </fieldset>
                                 <div class="s_options">
@@ -625,7 +625,7 @@ if ($patient_info) {
                                         </tr>
                                         <?php
                                         $s_sql = "SELECT *
-                                            FROM {$secondarySourceTables['dental_q_page2_surgery_view']}
+                                            FROM {$secondarySourceTables['dental_q_page2_surgery_pivot']}
                                             WHERE patientid = '$patientId'
                                             $andReferenceIdConditional
                                             $andNullConditional";
@@ -685,7 +685,7 @@ if ($patient_info) {
                                         <br />
                                         <textarea name="other_therapy" class="field text addr tbox" style="width:650px; height:100px;" ><?php echo $other_therapy;?></textarea>
                                         <?php
-                                        showPatientValue('dental_q_page2_view', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
+                                        showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
                                         ?>
                                     </span>
                                 </div>

@@ -453,7 +453,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="polysomnographic_radio" name="polysomnographic" value="0" <?php if ($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -463,13 +463,13 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     If yes where
                                     <input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="field text addr tbox" value="<?=$sleep_center_name_text;?>"  maxlength="255" style="width:225px;" />
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
                                     ?>
                                     Date
                                     &nbsp;&nbsp;
                                     <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox" value="<?=$sleep_study_on;?>"  maxlength="10" style="width:75px;" />
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
                                     ?>
                                 </span>
                             </div>
@@ -497,7 +497,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="cpap_radio" name="cpap" value="No" <?php if ($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -509,7 +509,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="No" <?php if ($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -518,7 +518,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     If currently using CPAP, how many nights / week do you wear it?
                                     <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
                                     ?>
                                     <br />&nbsp;
                                 </span>
@@ -528,7 +528,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     How many hours each night do you wear it?
                                     <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
                                     ?>
                                     <br />&nbsp;
                                 </span>
@@ -537,7 +537,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                 <span>
                                     What are your chief complaints about CPAP?
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
                                     ?>
                                     <br />
                                     <?php
@@ -593,7 +593,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="No" <?php if ($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()" />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -605,7 +605,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="dd_prev_radio" name="dd_prev" value="No" <?php if ($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -617,7 +617,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="dd_otc_radio" name="dd_otc" value="No" <?php if ($dd_otc == 'No') echo " checked";?> />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -629,7 +629,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="dd_fab_radio" name="dd_fab" value="No" <?php if ($dd_fab == 'No') echo " checked";?> />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -638,7 +638,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     Who
                                     <input type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
                                     ?>
                                 </span>
                             </div>
@@ -647,7 +647,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     Describe your experience<br />
                                     <textarea id="dd_experience" class="field text addr tbox" style="width:650px; height:100px;" name="dd_experience"><?= $dd_experience; ?></textarea>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
                                     ?>
                                 </span>
                             </div>
@@ -673,7 +673,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <input type="radio" class="surgery_radio" name="surgery" value="No" <?php if ($surgery == 'No') echo " checked";?> onclick="chk_s()" />
                                     No
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
                                     ?>
                                 </span>
                             </div>
@@ -751,7 +751,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                     <br />
                                     <textarea name="other_therapy" class="field text addr tbox" style="width:650px; height:100px;" ><?=$other_therapy;?></textarea>
                                     <?php
-                                    showPatientValue('dental_q_page2_view', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
+                                    showPatientValue('dental_q_page2_pivot', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
                                     ?>
                                 </span>
                                 <script>

@@ -5,15 +5,15 @@ include "includes/top.htm";
 require_once('includes/patient_info.php');
 
 $db = new Db();
-$baseTable = 'dental_q_page1_view';
+$baseTable = 'dental_q_page1_pivot';
 $baseSearch = [
     'patientid' => '$patientId',
     'docid' => '$docId',
 ];
 
 $secondaryTables = [
-    'dental_q_sleep_view' => ['patientid' => '$patientId'],
-    'dental_thorton_view' => ['patientid' => '$patientId'],
+    'dental_q_sleep_pivot' => ['patientid' => '$patientId'],
+    'dental_thorton_pivot' => ['patientid' => '$patientId'],
 ];
 
 /**
@@ -238,7 +238,7 @@ if ($patient_info) {
 
         $sql = "select p1.*, s.analysis
             from $sourceTable p1
-            LEFT JOIN {$secondarySourceTables['dental_q_sleep_view']} s ON s.patientid=p1.patientid
+            LEFT JOIN {$secondarySourceTables['dental_q_sleep_pivot']} s ON s.patientid=p1.patientid
             $andJoinConditional
             where p1.patientid='".$_GET['pid']."'
             $andAliasedConditional
@@ -370,7 +370,7 @@ if ($patient_info) {
                         <input type="text" id="ess" style="width:30px;" name="ess" class="form-backup-enable" <?= $isCreateNew ? 'disabled title="This value cannot be updated while preparing a snapshot"' : '' ?> onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>';" readonly="readonly" value="<?php echo $ess; ?>" />
                         <?php
                         if ($pat_row['ess'] != '') {
-                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
+                            showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
                         } ?>
                         <?php echo $analysis; ?>
                         <br /><br />
@@ -378,12 +378,12 @@ if ($patient_info) {
                         <input type="text" id="tss" name="tss" class="form-backup-enable" style="width:30px;" <?= $isCreateNew ? 'disabled title="This value cannot be updated while preparing a snapshot"' : '' ?> onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>';" readonly="readonly" value="<?php echo $tss; ?>" />
                         <?php
                         if ($pat_row['tss'] != '') {
-                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
+                            showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
                         } ?>
                         > 5 indicates snoring is significantly affecting quality of life.
                         <?php
                         $sleep_sql = "SELECT s.*
-                            FROM {$secondarySourceTables['dental_q_sleep_view']} s
+                            FROM {$secondarySourceTables['dental_q_sleep_pivot']} s
                             WHERE s.patientid = '$patientId'
                             $andJoinConditional
                             $andNullConditional";
@@ -400,7 +400,7 @@ if ($patient_info) {
                                     <h3>Epworth</h3>
                                     <?php
                                     $sql = "select s.*
-                                        from {$secondarySourceTables['dental_q_sleep_view']} s
+                                        from {$secondarySourceTables['dental_q_sleep_pivot']} s
                                         where s.patientid = '$patientId'
                                         $andJoinConditional
                                         $andNullConditional";
@@ -441,7 +441,7 @@ if ($patient_info) {
                                     <h3>Thornton</h3>
                                     <?php
                                     $sql = "select s.*
-                                        from {$secondarySourceTables['dental_thorton_view']} s
+                                        from {$secondarySourceTables['dental_thorton_pivot']} s
                                         where s.patientid = '$patientId'
                                         $andJoinConditional
                                         $andNullConditional";
@@ -471,7 +471,7 @@ if ($patient_info) {
                         <label style="display:block;">What is the main reason you are seeking treatment?</label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?php echo $chief_complaint_text; ?></textarea>
                         <?php
-                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
+                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
                         ?>
                     </td>
                 </tr>
@@ -484,7 +484,7 @@ if ($patient_info) {
                                 <label class="desc" id="title0" for="Field0">
                                     Other Complaints
                                     <?php
-                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
+                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
                                     ?>
                                 </label>
                                 <?php
@@ -550,7 +550,7 @@ if ($patient_info) {
                                             (Enter Each Complaint on Different Line)<br />
                                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_complaint;?></textarea>
                                             <?php
-                                            showPatientValue('dental_q_page1_view', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
+                                            showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
                                             ?>
                                         </span>
                                     </div>
@@ -580,7 +580,7 @@ if ($patient_info) {
                                                         <?php } ?>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -596,7 +596,7 @@ if ($patient_info) {
                                                         <?php } ?>
                                                     </select>
                                                     <?php
-                                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
+                                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -621,7 +621,7 @@ if ($patient_info) {
                                                         </option>
                                                     </select>
                                                     <?php
-                                                        showPatientValue('dental_q_page1_view', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
+                                                        showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -638,7 +638,7 @@ if ($patient_info) {
                                                         <option value="Don't know">Don't know</option>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -654,7 +654,7 @@ if ($patient_info) {
                                                         <?php } ?>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -670,7 +670,7 @@ if ($patient_info) {
                                                         <?php } ?>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -698,7 +698,7 @@ if ($patient_info) {
                                                         </option>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -720,7 +720,7 @@ if ($patient_info) {
                                                         </option>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -742,7 +742,7 @@ if ($patient_info) {
                                                         </option>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>
@@ -773,7 +773,7 @@ if ($patient_info) {
                                                         </option>
                                                     </select>
                                                     <?php
-                                                    showPatientValue('dental_q_page1_view', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
+                                                    showPatientValue('dental_q_page1_pivot', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
                                                     ?>
                                                 </td>
                                             </tr>

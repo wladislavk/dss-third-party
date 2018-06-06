@@ -17,7 +17,7 @@ if (!empty($num_face)) {
     }
 }
 
-$sql = "select * from dental_q_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_page1_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -43,7 +43,7 @@ $main_reason = st($myarray['main_reason']);
 $main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
-$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sqlex = "select * from dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myex = mysqli_query($con,$sqlex);
 $myarrayex = mysqli_fetch_array($myex);
 
@@ -70,7 +70,7 @@ else {
     $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
 }
 
-$sqls = "select * from dental_summary where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sqls = "select * from dental_summary_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $mys = mysqli_query($con,$sqls);
 $myarrays = mysqli_fetch_array($mys);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
@@ -208,7 +208,7 @@ $last_r = mysqli_fetch_assoc($last_q);
                 <strong>Reason for seeking tx:</strong>
                 <?php
                 
-                $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                $c_sql = "SELECT chief_complaint_text from dental_q_page1_view WHERE patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                 $c_q = mysqli_query($con,$c_sql);
                 $c_r = mysqli_fetch_assoc($c_q);
                 
@@ -590,11 +590,11 @@ $last_r = mysqli_fetch_assoc($last_q);
         
         <?php
         
-        $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+        $pat_sql = "select cpap from dental_q_page2_view where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         $pat_my = mysqli_query($con,$pat_sql);
         $pat_myarray = mysqli_fetch_array($pat_my);
         
-        $sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+        $sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         $my = mysqli_query($con,$sql);
         $myarray = mysqli_fetch_array($my);
         
@@ -760,7 +760,7 @@ function checkIncisal () {
     
     pos = Number($('#i_pos').val());
     dist = Math.abs(pos-min);
-    perc = (dist/range);
+    perc = range ? dist/range : 0;
     
     $('#initial_device_titration_equal_h').val(Math.round(dist));
     $('#i_perc').val(Math.round(perc*100));

@@ -11,10 +11,10 @@ Feature: Patient Chart
     And I click on "Smith, Pat" in list of patients
     And I click on "Questionnaire" patient chart menu point
     Then I see questionnaire subpoints:
-      | name                |
-      | Symptoms            |
-      | Previous Treatments |
-      | Health Hx.          |
+      | name                    |
+      | Baseline Sleep Symptoms |
+      | Previous Treatments     |
+      | Health Hx.              |
     When I click on "Images" patient chart menu point
     Then I see add button with text "Add New Image"
     When I click add button with text "Add New Image"

@@ -208,7 +208,7 @@ class ReferredByContactsController extends BaseRestController
         // we have checked them during the validation above, so referredby_info -> 1
         $contactFormData = array_merge($contactFormData, [
             'referredby_info' => 1,
-            'docid'           => $this->user->docid,
+            'docid'           => $this->user()->docid,
             'ip_address'      => $request->ip()
         ]);
 

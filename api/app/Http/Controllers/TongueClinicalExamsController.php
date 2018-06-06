@@ -7,6 +7,24 @@ namespace DentalSleepSolutions\Http\Controllers;
  */
 class TongueClinicalExamsController extends BaseRestController
 {
+    /** @var string */
+    protected $ipAddressKey = 'ip_address';
+
+    /** @var string */
+    protected $patientKey = 'patientid';
+
+    /** @var string */
+    protected $doctorKey = 'docid';
+
+    /** @var string */
+    protected $userKey = 'userid';
+
+    /** @var string */
+    protected $filterByDoctorKey = 'docid';
+
+    /** @var string */
+    protected $filterByPatientKey = 'patientid';
+
     /**
      * @SWG\Get(
      *     path="/tongue-clinical-exams",

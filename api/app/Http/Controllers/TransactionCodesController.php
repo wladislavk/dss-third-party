@@ -7,6 +7,8 @@ namespace DentalSleepSolutions\Http\Controllers;
  */
 class TransactionCodesController extends BaseRestController
 {
+    protected $filterByDoctorKey = 'docid';
+
     /**
      * @SWG\Get(
      *     path="/transaction-codes",

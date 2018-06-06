@@ -3,7 +3,10 @@ include_once __DIR__ . '/includes/dual_app.php';
 dualAppRedirect('main/index');
 
 include 'includes/top.htm';
-  
+
+$docId = (int)$_SESSION['docid'];
+$apiToken = apiToken();
+
 $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
 $r = $db->getRow($sql);
 
@@ -57,7 +60,12 @@ endif ?>
                                 <li><a href="manage_claim_setup.php">Claim Setup</a></li>
                                 <li><a href="manage_profile.php">Profile</a></li>
                                 <li><a href="#">Text</a>
-                                    <ul>
+                                    <ul id="soap-permissions-index-menu" class="soap-permissions"
+                                        v-bind:doc-id="<?= $docId ?>" v-bind:patient-id="0">
+                                        <li v-cloak v-for="group in groups"
+                                            v-if="group.slug == 'soap-notes' && userPermissions[group.id].enabled">
+                                            <a href="manage_custom.php?soap=1">Custom SOAP Note</a>
+                                        </li>
                                         <li><a href="manage_custom.php">Custom Text</a></li>
                                         <li><a href="manage_custom_letters.php">Custom Letters</a></li>
                                     </ul>
@@ -443,4 +451,10 @@ endif ?>
 
 <script type="text/javascript" src="../Scripts/sucker_tree_home.js"></script>
 
-<?php include 'includes/bottom.htm'; ?>
+<?php require_once __DIR__ . '/includes/vue-setup.htm'; ?>
+<script>
+    Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
+</script>
+<script src="/assets/app/soap-permissions.js?v=20180502" type="text/javascript"></script>
+<script src="/assets/app/vue-cleanup.js" type="text/javascript"></script>
+<?php  include 'includes/bottom.htm';?>

@@ -216,7 +216,7 @@ class LedgerHistoriesController extends BaseRestController
         $ledgerId = $request->input('ledger_id', 0);
         $type = $request->input('type', 'ledger');
 
-        $data = $this->repository->getHistoriesForLedgerReport($this->user->docid, $patientId, $ledgerId, $type);
+        $data = $this->repository->getHistoriesForLedgerReport($this->user()->docid, $patientId, $ledgerId, $type);
 
         return ApiResponse::responseOk('', $data);
     }

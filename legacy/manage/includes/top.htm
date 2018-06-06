@@ -438,6 +438,7 @@ if ($r['homepage'] != '1') {
         <script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
 
         <script src="/assets/vendor/moment.js" type="text/javascript"></script>
+        <script src="/assets/vendor/moment-timezone-with-data.js" type="text/javascript"></script>
         <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
         <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -544,7 +545,7 @@ if ($r['homepage'] != '1') {
                 $title .= "Pre-medication: " . $myarray['premed']."\n";
             }
 
-            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_view WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
             $myq3array = $db->getRow($sqlq3);
             $allergen = $myq3array['allergenscheck'];

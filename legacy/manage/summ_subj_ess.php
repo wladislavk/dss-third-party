@@ -57,7 +57,7 @@ if(empty($pat_myarray['patientid']))
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_q_sleep where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_sleep_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_sleepid = st($myarray['q_sleepid']);

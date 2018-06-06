@@ -51,10 +51,10 @@ if (!isset($_GET['noheaders'])) {
     <?php
 }
 
+$db = new Db();
+
 if (!empty($_POST['from_tracker'])) {
-    if (isset($db) && $db instanceof Db) {
-        $notes = $db->escape($_POST['tracker_notes']);
-    }
+    $notes = $db->escape($_POST['tracker_notes']);
     $docId = intval($_SESSION['docid']);
 
     $db->query("UPDATE dental_patient_summary summary
@@ -71,7 +71,6 @@ require_once 'admin/includes/password.php';
 require_once 'includes/preauth_functions.php';
 require_once 'includes/hst_functions.php';
 
-$db = new Db();
 $docId = (int)$_SESSION['docid'];
 $b_sql = "
     SELECT c.name, u.is_billing_exclusive AS exclusive
@@ -415,10 +414,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary where patientid='$patientId'";
+            $ds_sql = "SELECT * FROM dental_summary_view where patientid='$patientId'";
             $ds_q = $db->getRow($ds_sql);
             if ($ds_q) {
-                $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
+                $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
             } else {
                 $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
             }
@@ -1145,9 +1144,9 @@ if (isset($msg) && $msg != '') {
     $referred_notes = st($themyarray["referred_notes"]);
     $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-    $loc_sql = "SELECT location from dental_summary WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
-    $loc_r = $db->getRow($loc_sql);
-    $location = $loc_r['location'];
+  $loc_sql = "SELECT location from dental_summary_view WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+  $loc_r = $db->getRow($loc_sql);
+  $location = $loc_r['location'];
 
     $but_text = "Add ";
 }
@@ -1402,6 +1401,23 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                         <?php
                     }
                 }
+                ?>
+                <span class="endpoint-permissions" style="display: inline-block;"
+                      v-bind:doc-id="<?= (int)$_SESSION['docid'] ?>" v-bind:patient-id="<?= $patientId ?>">
+                    <button class="button"
+                            v-on:click.prevent="toggleEndpoint(group.id)"
+                            v-for="group in groups"
+                            v-if="group.authorize_per_patient && patientPermissions[group.id].enabled">
+                        Deactivate {{ group.name }}
+                    </button>
+                    <button v-cloak class="button grayButton"
+                            v-on:click.prevent="toggleEndpoint(group.id)"
+                            v-for="group in groups"
+                            v-if="group.authorize_per_patient && !patientPermissions[group.id].enabled">
+                        Activate {{ group.name }}
+                    </button>
+                </span>
+                <?php
                 $bu_sql = "
                     SELECT h.*, uhc.id as uhc_id FROM companies h 
                     JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
@@ -1427,6 +1443,17 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
             <td valign="top" colspan="2" class="frmhead">
                 <ul>
                     <li id="foli8" class="complex">
+                        <div id="endpoint-permissions-indicator" style="text-align: center;"
+                             v-bind:doc-id="<?= (int)$_SESSION['docid'] ?>" v-bind:patient-id="<?= $patientId ?>">
+                            <span style="float: none;" v-for="group in groups"
+                                  v-if="group.authorize_per_patient && patientPermissions[group.id].enabled">
+                                {{ group.name }}: <span style="float: none;" class="red">Active</span>
+                            </span>
+                                                    <span style="float: none;" v-cloak v-for="group in groups"
+                                                          v-if="group.authorize_per_patient && !patientPermissions[group.id].enabled">
+                                {{ group.name }}: <span style="float: none;" class="red">Not Active</span>
+                            </span>
+                        </div>
                         <div id="profile_image" style="float:right; width:270px;">
                             <?php
                             $pid = (!empty($_GET['pid'])) ? $_GET['pid'] : '-1';
@@ -2500,6 +2527,11 @@ if (!isset($_GET['noheaders'])) { ?>
     <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopupRef"></div>
+
+<?php require_once __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/endpoint-permissions.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/endpoint-permissions-indicator.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 
 <?php
 if (isset($_REQUEST['readonly'])) { ?>

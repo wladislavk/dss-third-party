@@ -484,7 +484,7 @@ class PatientsController extends BaseRestController
         $partialName = preg_replace($regExp, '', $partialName);
 
         $names = explode(' ', $partialName);
-        $data = $this->repository->getListPatients($this->user->docid, $names);
+        $data = $this->repository->getListPatients($this->user()->normalizedDocId(), $names);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -501,7 +501,7 @@ class PatientsController extends BaseRestController
      */
     public function destroyForDoctor($patientId)
     {
-        $this->repository->deleteForDoctor($patientId, $this->user->docid);
+        $this->repository->deleteForDoctor($patientId, $this->user()->normalizedDocId());
 
         return ApiResponse::responseOk('Resource deleted');
     }
@@ -519,8 +519,8 @@ class PatientsController extends BaseRestController
     public function find(Request $request, PatientFinder $patientFinder)
     {
         $patientFinderData = new PatientFinderData();
-        $patientFinderData->docId = $this->user->docid;
-        $patientFinderData->userType = $this->user->user_type;
+        $patientFinderData->docId = $this->user()->normalizedDocId();
+        $patientFinderData->userType = $this->user()->user_type;
         $patientFinderData->patientId = $request->input('patientId', 0);
         $patientFinderData->type = $request->input('type', 1);
         $patientFinderData->pageNumber = $request->input('page', 0);
@@ -603,7 +603,7 @@ class PatientsController extends BaseRestController
             $trackerNotes = $request->input('tracker_notes');
             $this->validate($request, (new PatientSummary())->updateRules());
             try {
-                $trackerNotesHandler->update($patientId, $this->user->docid, $trackerNotes);
+                $trackerNotesHandler->update($patientId, $this->user()->normalizedDocId(), $trackerNotes);
             } catch (GeneralException $e) {
                 return ApiResponse::responseError($e->getMessage());
             }
@@ -638,7 +638,7 @@ class PatientsController extends BaseRestController
             $patientFormDataUpdater->setEmailBounce($unchangedPatient);
             $patientFormDataUpdater->modifyLogin($unchangedPatient->login);
         }
-        $requestData->hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($this->user->docid);
+        $requestData->hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($this->user()->normalizedDocId());
         $requestData->shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
         $requestData->patientName = $patientFormDataUpdater->getPatientName();
         $requestData->mdContacts = $patientFormDataUpdater->setMDContacts();
@@ -652,7 +652,7 @@ class PatientsController extends BaseRestController
 
         $updatedFormData = $patientFormDataUpdater->getPatientFormData();
         $responseData = $patientEditor->editPatient(
-            $updatedFormData, $this->user, $requestData, $unchangedPatient
+            $updatedFormData, $this->user(), $requestData, $unchangedPatient
         );
 
         return ApiResponse::responseOk('', $responseData->toArray());
@@ -735,7 +735,7 @@ class PatientsController extends BaseRestController
 
         $names = explode(' ', $partial);
 
-        $contacts = $this->repository->getReferrers($this->user->docid, $names);
+        $contacts = $this->repository->getReferrers($this->user()->normalizedDocId(), $names);
 
         $response = [];
         if (!count($contacts)) {
@@ -820,10 +820,13 @@ class PatientsController extends BaseRestController
         TempPinDocumentCreator $tempPinDocumentCreator,
         $patientId
     ) {
-        try {
-            $url = $tempPinDocumentCreator->createDocument($patientId, $this->user->docid);
-        } catch (EmailHandlerException $e) {
-            return ApiResponse::responseError($e->getMessage(), 404);
+        $url = '';
+        if ($patientId) {
+            try {
+                $url = $tempPinDocumentCreator->createDocument($patientId, $this->user->docid);
+            } catch (EmailHandlerException $e) {
+                return ApiResponse::responseError($e->getMessage(), 404);
+            }
         }
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
     }
@@ -847,7 +850,7 @@ class PatientsController extends BaseRestController
     ) {
         /** @var Patient $patient */
         $patient = $this->repository->find($patientId);
-        $docId = $this->user->getDocIdOrZero();
+        $docId = $this->user()->normalizedDocId();
         if ($docId != $patient->docid) {
             $message = "Patient with ID $patientId does not belong to user $docId";
             return ApiResponse::responseError($message, 403);

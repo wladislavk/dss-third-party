@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Services\Auth\PasswordGenerator;
 use DentalSleepSolutions\Services\Patients\PatientEditors\PatientCreator;

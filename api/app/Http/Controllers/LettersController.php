@@ -244,10 +244,11 @@ class LettersController extends BaseRestController
     ) {
         $templateId = (int)$request->input('template_id', 0);
         $contactTypeId = (int)$request->input('contact_type_id', 0);
+        $docId = $this->user()->normalizedDocId();
 
         try {
             $data = $welcomeLetterCreator->createWelcomeLetter(
-                $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
+                $docId, $templateId, $contactTypeId, $this->user()->user_type
             );
         } catch (ValidatorException $e) {
             return ApiResponse::responseError($e->getMessage());

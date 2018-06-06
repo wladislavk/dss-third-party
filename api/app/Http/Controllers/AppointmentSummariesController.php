@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
@@ -13,8 +14,8 @@ use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Structs\AppointmentSummaryData;
 use DentalSleepSolutions\Structs\SummaryLetterTriggerData;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class AppointmentSummariesController extends BaseRestController
@@ -32,14 +33,15 @@ class AppointmentSummariesController extends BaseRestController
     private $appointmentSummaryUpdater;
 
     public function __construct(
+        Auth $auth,
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         LetterRepository $letterRepository,
         AppointmentSummaryCreator $appointmentSummaryCreator,
         AppointmentSummaryUpdater $appointmentSummaryUpdater
     ) {
-        parent::__construct($config, $repository, $request);
+        parent::__construct($auth, $config, $repository, $request);
         $this->letterRepository = $letterRepository;
         $this->appointmentSummaryCreator = $appointmentSummaryCreator;
         $this->appointmentSummaryUpdater = $appointmentSummaryUpdater;
@@ -130,8 +132,8 @@ class AppointmentSummariesController extends BaseRestController
         $stepId = (int)$this->request->input('step_id');
         $patientId = (int)$this->request->input('patient_id');
         $appointmentType = (int)$this->request->input('appt_type');
-        $docId = $this->user->getDocIdOrZero();
-        $userId = $this->user->getUserIdOrZero();
+        $docId = $this->user()->normalizedDocId();
+        $userId = $this->user()->userid;
         $triggerData = new SummaryLetterTriggerData();
         $triggerData->patientId = $patientId;
         $triggerData->stepId = $stepId;
@@ -168,8 +170,8 @@ class AppointmentSummariesController extends BaseRestController
         $data = new AppointmentSummaryData();
         $data->summaryId = $id;
         $data->patientId = (int)$this->request->input('patient_id');
-        $data->docId = $this->user->getDocIdOrZero();
-        $data->userId = $this->user->getUserIdOrZero();
+        $data->docId = $this->user()->normalizedDocId();
+        $data->userId = $this->user()->userid;
         $data->studyType = $this->request->input('type', null);
         $data->delayReason = $this->request->input('delay_reason', null);
         $data->nonComplianceReason = $this->request->input('noncomp_reason', null);
@@ -216,7 +218,7 @@ class AppointmentSummariesController extends BaseRestController
         $now = new \DateTime();
         $data = [
             'deleted' => 1,
-            'deleted_by' => $this->user->getUserIdOrZero(),
+            'deleted_by' => $this->user()->userid,
             'deleted_on' => $now->format('Y-m-d H:i:s'),
         ];
         $this->letterRepository->updateBy($criteria, $data);

@@ -1,6 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-$sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -404,7 +404,7 @@ $drymouth_text = $myarray['drymouth_text'];
         <ul class="list-group">
             <?
             
-            $sql = "select * from dental_ex_page4 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+            $sql = "select * from dental_ex_page4_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
             $my = mysqli_query($con,$sql);
             $myarray = mysqli_fetch_array($my);
 
@@ -573,7 +573,7 @@ $drymouth_text = $myarray['drymouth_text'];
 
 <?php
 
-$sql = "select * from dental_ex_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_ex_page1_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -726,7 +726,7 @@ $weight = st($bmi_myarray['weight']);
         <?php } ?>
     <?php }
     
-    $sql = "select * from dental_ex_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $sql = "select * from dental_ex_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
@@ -855,7 +855,7 @@ $weight = st($bmi_myarray['weight']);
     
     <?php
     
-    $sql = "select * from dental_ex_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $sql = "select * from dental_ex_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
@@ -1050,7 +1050,7 @@ $weight = st($bmi_myarray['weight']);
     
     <?php
     
-    $sql = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $sql = "select * from dental_ex_page5_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     

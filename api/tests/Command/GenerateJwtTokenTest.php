@@ -4,19 +4,19 @@ namespace Tests\Command;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Console\Commands\GenerateJwtToken;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCases\ApiTestCase;
 use Tests\TestCases\BaseApiTestCase;
+use Tests\TestCases\JwtAuthenticationMiddlewareTestCase;
 
 class GenerateJwtTokenTest extends BaseApiTestCase
 {
-    const INVALID_ID = '-';
-    const USER_ID = 'u_1';
-    const ADMIN_ID = 'a_1';
-
-    const BASE_64_REGEXP = '[a-z\d\+\/\_\-]+';
-    const TOKEN_REGEXP = '/' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '/i';
+    public const ADMIN_ID = 1;
+    public const USER_ID = 1;
+    public const PATIENT_ID = 1;
+    public const TOKEN_REGEXP = '/' . JwtAuthenticationMiddlewareTestCase::TOKEN_REGEXP . '/';
 
     /** @var string */
     private $expire;
@@ -43,46 +43,77 @@ class GenerateJwtTokenTest extends BaseApiTestCase
         $this->output = new BufferedOutput();
     }
 
-    public function testInvalidId()
+    public function testInvalidRole()
     {
-        $id = self::INVALID_ID;
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
+        $role = 'none';
+        $id = 0;
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
         $this->assertEquals('', $token);
     }
 
-    public function testUserId()
+    public function testInvalidId()
     {
-        $id = self::USER_ID;
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
-        $this->assertRegExp(self::TOKEN_REGEXP, $token);
+        $role = JwtHelper::ROLE_USER;
+        $id = 0;
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
+        $this->assertEquals('', $token);
     }
 
     public function testAdminId()
     {
+        $role = JwtHelper::ROLE_ADMIN;
         $id = self::ADMIN_ID;
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
+        $this->assertRegExp(self::TOKEN_REGEXP, $token);
+    }
+
+    public function testUserId()
+    {
+        $role = JwtHelper::ROLE_USER;
+        $id = self::USER_ID;
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
+        $this->assertRegExp(self::TOKEN_REGEXP, $token);
+    }
+
+    public function testPatientId()
+    {
+        $role = JwtHelper::ROLE_PATIENT;
+        $id = self::PATIENT_ID;
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
         $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }
 
     public function testExpireOption()
     {
+        $role = JwtHelper::ROLE_USER;
         $id = self::USER_ID;
         $this->expire = $this->date(1);
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
         $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }
 
     public function testNotBeforeOption()
     {
+        $role = JwtHelper::ROLE_USER;
         $id = self::USER_ID;
         $this->notBefore = $this->date(-1);
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
+        $token = $this->runCommand($role, $id, $this->expire, $this->notBefore);
         $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }
 
-    private function runCommand($id, $expire, $notBefore)
+    /**
+     * @param string $role
+     * @param int $id
+     * @param string $expire
+     * @param string $notBefore
+     * @return string
+     */
+    private function runCommand(string $role, int $id, string $expire, string $notBefore): string
     {
-        $options = ['id' => $id];
+        $options = [
+            'role' => $role,
+            'id' => $id,
+        ];
 
         if ($expire) {
             $options['--expire'] = $expire;
@@ -99,7 +130,11 @@ class GenerateJwtTokenTest extends BaseApiTestCase
         return trim($result);
     }
 
-    private function date($yearOffset = 0)
+    /**
+     * @param int $yearOffset
+     * @return string
+     */
+    private function date(int $yearOffset = 0): string
     {
         return Carbon::now()
             ->addYears($yearOffset)

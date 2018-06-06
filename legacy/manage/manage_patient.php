@@ -177,10 +177,10 @@ $patientsQuery = "SELECT
     FROM dental_patients p
         LEFT JOIN (
             SELECT patientid, MAX(q_page3id) AS max_id
-            FROM dental_q_page3
+            FROM dental_q_page3_view
             GROUP BY patientid
         ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
-        LEFT JOIN dental_q_page3 allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id
+        LEFT JOIN dental_q_page3_view allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id
         
         LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid
         
@@ -214,10 +214,10 @@ $patientsQuery = "SELECT
         
         LEFT JOIN (
             SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
-            FROM dental_ex_page5
+            FROM dental_ex_page5_view
             GROUP BY patientid
         ) device_pivot ON device_pivot.patientid = p.patientid
-        LEFT JOIN dental_ex_page5 device_date ON device_date.ex_page5id = device_pivot.max_id
+        LEFT JOIN dental_ex_page5_view device_date ON device_date.ex_page5id = device_pivot.max_id
         LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice
     
     WHERE $conditionals
@@ -588,10 +588,10 @@ function joinList ($section='all') {
     $joinSections = [
         'allergens-check' => 'LEFT JOIN (
             SELECT patientid, MAX(q_page3id) AS max_id
-            FROM dental_q_page3
+            FROM dental_q_page3_view
             GROUP BY patientid
         ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
-        LEFT JOIN dental_q_page3 allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
+        LEFT JOIN dental_q_page3_view allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
         'summary' => 'LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid',
         'rx-lomn' => 'LEFT JOIN (
             SELECT pid AS patientid, MAX(id) AS max_id
@@ -620,10 +620,10 @@ function joinList ($section='all') {
         LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id',
         'device' => 'LEFT JOIN (
             SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
-            FROM dental_ex_page5
+            FROM dental_ex_page5_view
             GROUP BY patientid
         ) device_pivot ON device_pivot.patientid = p.patientid
-        LEFT JOIN dental_ex_page5 device_date ON device_date.ex_page5id = device_pivot.max_id
+        LEFT JOIN dental_ex_page5_view device_date ON device_date.ex_page5id = device_pivot.max_id
         LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice',
     ];
 

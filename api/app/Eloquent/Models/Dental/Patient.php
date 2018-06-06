@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Contracts\NamedModelInterface;
-use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractAuthenticatableModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
@@ -337,7 +337,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\TonsilsClinicalExam $tonsilsClinicalExam
  * @mixin \Eloquent
  */
-class Patient extends AbstractModel implements NamedModelInterface
+class Patient extends AbstractAuthenticatableModel implements NamedModelInterface
 {
     use WithoutUpdatedTimestamp;
 

@@ -30,19 +30,47 @@ function logoutBO () {
     $_SESSION['admin_api_token'] = '';
 }
 
-function generateApiToken($idOrEmail) {
-    $apiPath = env('API_PATH');
-    $phpPath = env('PHP_PATH');
+function generateUserApiToken($username, $password)
+{
+    return generateApiToken($username, $password);
+}
 
-    if ($apiPath && $phpPath) {
-        $idOrEmail = escapeshellarg($idOrEmail);
-        $token = exec("$phpPath {$apiPath}/artisan jwt:token {$idOrEmail}");
-        $token = trim($token);
+function generateAdminApiToken($username, $password)
+{
+    return generateApiToken($username, $password, ['admin' => 1]);
+}
 
-        return $token;
+function generatePatientApiToken($username, $password)
+{
+    return generateApiToken($username, $password, ['patient' => 1]);
+}
+
+function generateApiToken($username, $password, array $options=[])
+{
+    $postFields = $options;
+    $postFields['username'] = $username;
+    $postFields['password'] = $password;
+    $curl = curl_init(config('app.lanApiUrl') . 'auth');
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query($postFields),
+    ]);
+    $response = curl_exec($curl);
+    $error = curl_error($curl);
+    try {
+        $json = json_decode($response, true);
+        if (
+            !empty($json['status'])
+            && $json['status'] === 'Authenticated'
+            && !empty($json['token'])
+        ) {
+            return $json['token'];
+        }
+    } catch (\Exception $e) {
+        return 'exception: ' . $e->getMessage();
     }
-
-    return '';
+    return 'no-token: ' . $error;
 }
 
 function apiToken() {
@@ -51,6 +79,10 @@ function apiToken() {
 
 function adminApiToken () {
     return isset($_SESSION['admin_api_token']) ? $_SESSION['admin_api_token'] : '';
+}
+
+function patientApiToken () {
+    return isset($_SESSION['patient_api_token']) ? $_SESSION['patient_api_token'] : '';
 }
 
 function secureSessionStart() {
@@ -363,7 +395,7 @@ function retrieveMailerData ($patientId) {
         WHERE patientid = '$patientId'");
 
     $locationId = $db->getColumn("SELECT location
-        FROM dental_summary
+        FROM dental_summary_view
         WHERE patientid = '$patientId'", 'location');
 
     if ($locationId) {
@@ -918,7 +950,8 @@ function stateList () {
         'WA' =>  'Washington',
         'WV' =>  'West Virginia',
         'WI' =>  'Wisconsin',
-        'WY' =>  'Wyoming'
+        'WY' =>  'Wyoming',
+        'PR' =>  'Puerto Rico',
     ];
 
     return $stateList;
@@ -994,6 +1027,189 @@ function isOptionSelected ($value) {
     }
 
     return $value === 1 || $value === true;
+}
+
+/**
+ * Generate options for a select dropdown
+ *
+ * @param array      $fields
+ * @param mixed|null $selected
+ * @return string
+ */
+function dropdown (Array $fields, $selected=null) {
+    ob_start();
+
+    foreach ($fields as $value=>$current) {
+        if (!is_array($current)) {
+            $label = $current;
+            $class = '';
+        } else {
+            $label = $current['label'];
+            $class = $current['class'];
+        }
+
+        ?>
+        <option class="<?= e($class) ?>" value="<?= e($value) ?>"<?= !is_null($selected) && $value == $selected ? ' selected' : '' ?>>
+            <?= e($label) ?>
+        </option>
+    <?php }
+
+    return ob_get_clean();
+}
+
+/**
+ * @return array
+ */
+function questionnairesExamSections()
+{
+    return [
+        'questionnaire' => [
+            'q_page1' => 'Baseline Sleep Symptoms',
+            'q_page2' => 'Previous Treatments',
+            'q_page3' => 'Health Hx.',
+            'q_page5' => 'Pain/TMD Symptoms',
+        ],
+        'exam' => [
+            'ex_page4' => 'Dental Exam',
+            'ex_page1' => 'Vital Data/Tongue',
+            'ex_page2' => 'Mallampati/Tonsils',
+            'ex_page3' => 'Airway Evaluation',
+            'ex_page5' => 'TMJ/ROM',
+            'ex_page9' => 'Adv. Pain/TMD',
+            'ex_page10' => 'E/M Exam',
+            'ex_page11' => 'Assessment/Plan',
+        ]
+    ];
+}
+
+/**
+ * @param string $slugName
+ * @return array
+ */
+function questionnairesExamsSectionName($slugName)
+{
+    $sections = questionnairesExamSections();
+
+    foreach ($sections as $sectionName => $section) {
+        if (array_key_exists($slugName, $section)) {
+            return [
+                'section' => $sectionName,
+                'slug' => $slugName,
+                'name' => $section[$slugName],
+            ];
+        }
+    }
+
+    return [
+        'section' => 'None',
+        'slug' => '',
+        'name' => 'Unnamed',
+    ];
+}
+
+/**
+ * Create tabs/menu for patient's Questionnaires and Exams
+ *
+ * @param string $phpSelf
+ * @return string
+ */
+function questionnairesExamsMenu ($phpSelf, $elementClass) {
+    $lastdot = strrpos($phpSelf, '.');
+    $page_path = substr($phpSelf, 0, $lastdot);
+
+    $lastslash = strrpos($page_path, '/') + 1;
+    $cur_page = substr($page_path, $lastslash);
+
+    $sections = questionnairesExamSections();
+
+    $currentPage = preg_replace('/.+?\/((?:q|ex)_page\d+)\.php.*/', '$1', $phpSelf);
+    $currentSection = strpos($currentPage, 'ex_') === false && $_GET['ex'] != 1 ? 'questionnaire' : 'exam';
+    $contents = $sections[$currentSection];
+
+    $columnWidth = number_format(100/count($contents), 1) . '%';
+    $patientId = (int)$_GET['pid'];
+
+    ob_start();
+    ?>
+    <script>
+        var examsNavigation = typeof examsNavigation !== 'undefined' ?
+            examsNavigation : <?= json_encode(jsonOrderedObject($sections)) ?>;
+    </script>
+    <style>
+        [v-cloak] { display: none; }
+        table.menu-table td { border: 1px solid #abcdef; }
+        table.menu-table.menu-top td.top_m_active { border-bottom: 1px solid #fff; }
+        table.menu-table.menu-bottom td.top_m_active { border-top: 1px solid #fff; }
+    </style>
+    <table class="endpoint-permissions-menu menu-table <?= e($elementClass) ?>"
+           v-bind:doc-id="<?= (int)$_SESSION['docid'] ?>" v-bind:patient-id="<?= $patientId ?>"
+           width="98%" bgcolor="#abcdef" cellpadding="5" cellspacing="0" border="0" align="center">
+        <tr>
+            <?php foreach ($contents as $page=>$label) {
+                $selected = $currentPage == $page;
+                ?>
+                <td v-if="!resources['<?= $page ?>']
+                    || (
+                        userPermissions[resources['<?= $page ?>'].group_id]
+                        && userPermissions[resources['<?= $page ?>'].group_id].enabled
+                    )
+                    || (
+                        patientPermissions[resources['<?= $page ?>'].group_id]
+                        && patientPermissions[resources['<?= $page ?>'].group_id].enabled
+                    )"
+                    width="<?= $columnWidth ?>" valign="top" class="<?= $selected ? 'top_m_active' : 'top_m' ?>">
+                    <?php if ($selected) { ?>
+                        <?= e($label) ?>
+                    <?php } else { ?>
+                        <a href="javascript:;"
+                           onclick="javascript: change_page('<?= $page ?>', document.<?= $cur_page ?>frm, <?= $patientId ?>);">
+                            <?= e($label) ?>
+                        </a>
+                    <?php } ?>
+                </td>
+            <?php } ?>
+        </tr>
+    </table>
+    <?php
+
+    $menu = ob_get_clean();
+    return $menu;
+}
+
+/**
+ * Generate nested arrays, to allow the resulting JSON array to be walked in order, as ECMAScript does not guarantee
+ * object elements to be in order.
+ *
+ * @see http://stackoverflow.com/a/35522045/208067
+ * @param array $data
+ * @return array
+ */
+function jsonOrderedObject ($data) {
+    return array_map(
+        function ($key, $value) {
+            if (is_array($value)) {
+                $value = jsonOrderedObject($value);
+            }
+
+            return array($key, $value);
+        },
+        array_keys($data),
+        array_values($data)
+    );
+}
+
+/**
+ * Auxiliary function to change spaces to low dashes
+ *
+ * @param string $string
+ * @return string
+ */
+function tokenizeString ($string) {
+    $string = preg_replace('/[^a-z]+/', ' ', $string);
+    $string = trim($string);
+    $string = str_replace(' ', '_', $string);
+
+    return strtolower($string);
 }
 
 /**
@@ -1103,4 +1319,184 @@ function linkRequestData ($itemTable, $itemId) {
     ]);
 
     $db->query("INSERT INTO dental_request_data_type SET $typeData, created_at = NOW()");
+}
+
+/**
+ * List of exam/questionnaire tables.
+ *
+ * @return array
+ */
+function examQuestionnaireTables () {
+    /**
+     * dental_q_page1_view is the reference table. It MUST be first always
+     */
+    $tables = [
+        'dental_ex_page1_view',
+        'dental_ex_page2_view',
+        'dental_ex_page3_view',
+        'dental_ex_page4_view',
+        'dental_ex_page5_view',
+        'dental_ex_page6_view',
+        'dental_ex_page7_view',
+        'dental_ex_page8_view',
+        'dental_q_page1_view',
+        'dental_q_page2_view',
+        'dental_q_page3_view',
+        'dental_q_page4_view',
+        'dental_questionnaire_pain_tmd',
+        'dental_exam_pain_tmd',
+        'dental_exam_evaluation_management',
+        'dental_exam_assessment_plan',
+        'dental_summary_view',
+        'dental_q_page2_surgery_view',
+        'dental_q_sleep_view',
+        'dental_thorton_view',
+        'dental_missing_view',
+    ];
+
+    return $tables;
+}
+
+/**
+ * @param string $tableView
+ * @param int    $docId
+ * @param int    $userId
+ * @param int    $patientId
+ */
+function backupExamQuestionnaireTable($tableView, $docId, $userId, $patientId)
+{
+    $db = new Db();
+
+    $referenceTables = examQuestionnaireTables();
+
+    if (!in_array($tableView, $referenceTables)) {
+        throw new \Exception("Not in list: $tableView");
+        return;
+    }
+
+    $sourceTable = preg_replace('/_view$/', '', $tableView);
+    $columns = $db->getColumnNames($sourceTable);
+    $primaryKey = $db->primaryKey($sourceTable);
+    $newRow = [];
+
+    foreach ($columns as $column) {
+        if ($column === $primaryKey || $column === 'adddate' || $column === 'updated_at') {
+            continue;
+        }
+
+        if ($column === 'patientid' || $column === 'patiendid') {
+            $newRow[$column] = $patientId;
+            continue;
+        }
+
+        if ($column === 'userid') {
+            $newRow[$column] = $userId;
+            continue;
+        }
+
+        if ($column === 'docid') {
+            $newRow[$column] = $docId;
+            continue;
+        }
+
+        $newRow[$column] = '';
+    }
+
+    $columns = $db->escapeList(array_keys($newRow), true);
+    $newRow = $db->escapeList($newRow);
+    $db->query("INSERT INTO $sourceTable
+        ($columns, adddate, updated_at) VALUES ($newRow, NOW(), NOW())
+    ");
+}
+
+/**
+ * Remove all form values from the form. Preserves relevant IDs as patient, doctor, creator, parent form/contact, etc.
+ *
+ * At least ONE table contains a typo in the column name, "patiendid" instead of "patientid".
+ *
+ * @param string $sourceTable
+ * @param int    $sourceId
+ * @return bool
+ */
+function resetExamQuestionnaireTable ($sourceTable, $sourceId) {
+    $db = new Db();
+    $referenceTables = examQuestionnaireTables();
+
+    if (!in_array($sourceTable, $referenceTables)) {
+        return false;
+    }
+
+    $primaryKey = $db->primaryKey($sourceTable);
+
+    $protectedColumns = [
+        $primaryKey,
+        'patientid',
+        'patiendid',
+        'patient_id',
+        'parentpatientid',
+        'parentpatiendid',
+        'parentpatient_id',
+        'parent_patientid',
+        'parent_patiendid',
+        'parent_patient_id',
+        'docid',
+        'doc_id',
+        'formid',
+        'form_id',
+        'userid',
+        'user_id',
+        'status',
+        'adddate',
+        'ip_address',
+        'referenceid',
+        'reference_id',
+        'epworthid',
+        'epworth_id',
+        'created_at',
+        'updated_at'
+    ];
+
+    $columns = $db->getColumnNames($sourceTable);
+    $filteredColumns = array_diff($columns, $protectedColumns);
+    $resetArray = array_fill_keys($filteredColumns, '');
+    $resetData = $db->escapeAssignmentList($resetArray);
+
+    $db->query("UPDATE `$sourceTable`
+        SET $resetData
+        WHERE `$primaryKey` = '$sourceId'");
+
+    return true;
+}
+
+function nestedUtf8Encode(&$value)
+{
+    if (is_null($value)) {
+        $value = '';
+        return;
+    }
+
+    if (!is_string($value)) {
+        return;
+    }
+
+    $value = utf8_encode($value);
+}
+
+function utf8Encode($object)
+{
+    if (is_string($object)) {
+        return utf8_encode($object);
+    }
+
+    if (is_array($object)) {
+        array_walk_recursive($object, __NAMESPACE__ . '\\nestedUtf8Encode');
+    }
+
+    return $object;
+}
+
+function safeJsonEncode($object)
+{
+    $object = utf8Encode($object);
+    return json_encode($object);
 }

@@ -129,7 +129,7 @@ return [
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
-        DentalSleepSolutions\Providers\FoundationServiceProvider::class,
+        Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
@@ -145,6 +145,7 @@ return [
         /*
          * 3rd party providers...
          */
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
@@ -156,9 +157,9 @@ return [
         DentalSleepSolutions\Providers\EventServiceProvider::class,
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
+        DentalSleepSolutions\Providers\AuthServiceProvider::class,
         DentalSleepSolutions\Providers\CommandServiceProvider::class,
         DentalSleepSolutions\Providers\CustomValidationServiceProvider::class,
-        DentalSleepSolutions\Providers\ControllerServiceProvider::class,
     ],
 
     /*

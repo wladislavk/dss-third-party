@@ -6,7 +6,7 @@ use DentalSleepSolutions\Services\ClinicalExams\FlowDeviceUpdater;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 

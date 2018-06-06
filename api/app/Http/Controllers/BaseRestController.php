@@ -7,7 +7,10 @@ use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
 
@@ -93,10 +96,13 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent\\Models';
     const DEFAULT_MODEL_NAMESPACE = self::BASE_MODEL_NAMESPACE . '\\Dental';
 
+    /** @var Auth */
+    protected $auth;
+
     /** @var bool */
     protected $hasIp = true;
 
-    /** @var BaseRepository */
+    /** @var AbstractRepository */
     protected $repository;
 
     /** @var string */
@@ -107,6 +113,9 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     /** @var string */
     protected $userKey;
+
+    /** @var string */
+    protected $patientKey;
 
     /** @var string */
     protected $createdByUserKey;
@@ -120,12 +129,31 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var string */
     protected $updatedByAdminKey;
 
+    /** @var string */
+    protected $filterByAdminKey;
+
+    /** @var string */
+    protected $filterByUserKey;
+
+    /** @var string */
+    protected $filterByDoctorKey;
+
+    /** @var string */
+    protected $filterByPatientKey;
+
+    /**
+     * @param Auth $auth
+     * @param Config $config
+     * @param BaseRepository $repository
+     * @param Request $request
+     */
     public function __construct(
+        Auth $auth,
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request
     ) {
-        parent::__construct($config, $request);
+        parent::__construct($auth, $config, $request);
         $this->repository = $repository;
     }
 
@@ -136,8 +164,10 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      */
     public function index()
     {
-        $data = $this->repository->all();
-
+        $filter = $this->getIndexConditionals();
+        $fields = $this->request->query('fields', '*');
+        $fields = explode(',', $fields);
+        $data = $this->repository->getWithFilter($fields, $filter);
         return ApiResponse::responseOk('', $data);
     }
 
@@ -163,14 +193,14 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function store()
     {
         $this->validate($this->request, $this->request->storeRules());
-        $data = $this->request->all();
+        $data = $this->request->payload();
+        /** @var \DentalSleepSolutions\Eloquent\Models\AbstractModel $resource */
+        $resource = $this->repository->create($data);
         $createData = $this->getCreateAttributes();
 
         if (count($createData)) {
-            $data = array_merge($data, $createData);
+            $resource->forceFill($createData)->save();
         }
-
-        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -184,16 +214,16 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        $data = $this->request->all();
+        $data = $this->request->payload();
+        /** @var \DentalSleepSolutions\Eloquent\Models\AbstractModel $resource */
+        $resource = $this->repository->find($id);
+        $resource->update($data);
         $updateData = $this->getUpdateAttributes();
 
         if (count($updateData)) {
-            $data = array_merge($data, $updateData);
+            $resource->forceFill($updateData);
+            $resource->save();
         }
-
-        /** @var Model $resource */
-        $resource = $this->repository->find($id);
-        $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
@@ -215,7 +245,28 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     }
 
     /**
+     * Display most recent entry
+     *
+     * @return JsonResponse
+     */
+    public function latest()
+    {
+        $filter = $this->getIndexConditionals();
+        $fields = $this->request->query('fields', '*');
+        $fields = explode(',', $fields);
+        $data = $this->repository
+            ->getWithFilter($fields, $filter)
+        ;
+        if (!sizeof($data)) {
+            throw (new ModelNotFoundException())->setModel($this->repository->model());
+        }
+
+        return ApiResponse::responseOk('', $data[0]);
+    }
+
+    /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getSingular()
     {
@@ -226,6 +277,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public function getPlural()
     {
@@ -254,19 +306,23 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         }
 
         if ($this->doctorKey) {
-            $attributes[$this->doctorKey] = $this->user->docid;
+            $attributes[$this->doctorKey] = $this->user()->normalizedDocId();
         }
 
         if ($this->userKey) {
-            $attributes[$this->userKey] = $this->user->userid;
+            $attributes[$this->userKey] = $this->user()->userid;
+        }
+
+        if ($this->patientKey) {
+            $attributes[$this->patientKey] = $this->patient()->patientid;
         }
 
         if ($this->createdByUserKey) {
-            $attributes[$this->createdByUserKey] = $this->user->userid;
+            $attributes[$this->createdByUserKey] = $this->user()->userid;
         }
 
         if ($this->createdByAdminKey) {
-            $attributes[$this->createdByAdminKey] = $this->admin->adminid;
+            $attributes[$this->createdByAdminKey] = $this->admin()->adminid;
         }
 
         return $attributes;
@@ -280,11 +336,38 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         $attributes = [];
 
         if ($this->updatedByUserKey) {
-            $attributes[$this->updatedByUserKey] = $this->user->userid;
+            $attributes[$this->updatedByUserKey] = $this->user()->userid;
         }
 
         if ($this->updatedByAdminKey) {
-            $attributes[$this->updatedByAdminKey] = $this->admin->adminid;
+            $attributes[$this->updatedByAdminKey] = $this->admin()->adminid;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getIndexConditionals()
+    {
+        $attributes = [];
+
+        if ($this->filterByAdminKey) {
+            $attributes[$this->filterByAdminKey] = $this->admin()->adminid;
+        }
+
+        if ($this->filterByDoctorKey) {
+            $attributes[$this->filterByDoctorKey] = $this->user()->normalizedDocId();
+        }
+
+        if ($this->filterByUserKey) {
+            $attributes[$this->filterByUserKey] = $this->user()->userid;
+        }
+
+        // Patient ID can be zero, in which case it is not taken into account
+        if ($this->filterByPatientKey && $this->patient()->patientid) {
+            $attributes[$this->filterByPatientKey] = $this->patient()->patientid;
         }
 
         return $attributes;

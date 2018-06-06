@@ -7,12 +7,13 @@ trait UserTrait
     /**
      * @return int
      */
-    public function getDocIdOrZero()
+    public function normalizedDocId(): int
     {
-        if ($this->docid) {
-            return $this->docid;
+        $docId = (int)$this->docid;
+        if ($docId) {
+            return $docId;
         }
-        return 0;
+        return (int)$this->userid;
     }
 
     /**

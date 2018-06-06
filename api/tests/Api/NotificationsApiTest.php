@@ -37,9 +37,16 @@ class NotificationsApiTest extends ApiTestCase
 
     public function testGetWithFilter()
     {
-        $this->post(self::ROUTE_PREFIX . '/notifications/with-filter');
+        factory($this->getModel(), 4)->create(['patientid' => 1]);
+        factory($this->getModel(), 4)->create(['patientid' => 2]);
+        $filter = [
+            'where' => [
+                'patientid' => 2,
+            ],
+        ];
+        $this->post(self::ROUTE_PREFIX . '/notifications/with-filter', $filter);
         $this->assertResponseOk();
-        $this->assertEquals(147, count($this->getResponseData()));
-        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
+        $this->assertEquals(4, count($this->getResponseData()));
+        $this->assertEquals(2, $this->getResponseData()[0]['patientid']);
     }
 }

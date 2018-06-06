@@ -175,7 +175,7 @@ class SleeplabsController extends BaseRestController
         $sortDir = $request->input('sort_dir', 'asc');
         $letter = $request->input('letter');
 
-        $sleeplabs = $this->repository->getList($this->user->docid, $page, $rowsPerPage, $sort, $sortDir, $letter);
+        $sleeplabs = $this->repository->getList($this->user()->docid, $page, $rowsPerPage, $sort, $sortDir, $letter);
 
         if ($sleeplabs['total'] > 0) {
             $sleeplabs['result']->map(function ($sleeplab) use ($patientRepository) {
@@ -226,7 +226,7 @@ class SleeplabsController extends BaseRestController
         }
 
         $sleeplabFormData = array_merge($sleeplabFormData, [
-            'docid' => $this->user->docid,
+            'docid' => $this->user()->docid,
             'ip_address' => $request->ip(),
         ]);
 

@@ -6,7 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class TmjClinicalExamsApiTest extends ApiTestCase
 {
@@ -24,7 +24,6 @@ class TmjClinicalExamsApiTest extends ApiTestCase
     {
         return [
             "formid" => 100,
-            "patientid" => 5,
             "palpationid" => "1|0~2|0~3|0~4|0~5|0~6|0~7|0~",
             "palpationRid" => "1|1~3|4~5|0~",
             "additional_paragraph_pal" => "Dolor rerum aut provident quod aspernatur atque ducimus. Et autem modi ipsum aut praesentium quis nulla. Laudantium facere ullam quasi mollitia. Ullam itaque harum fugit sint.",
@@ -54,8 +53,6 @@ class TmjClinicalExamsApiTest extends ApiTestCase
             "additional_paragraph_rm" => "Similique recusandae dolor voluptatibus repudiandae. Non rerum amet fuga et itaque sit. Ea odio sed accusantium repellendus. Facilis voluptatem id culpa adipisci qui assumenda commodi.",
             "screening_aware" => "1",
             "screening_normal" => "3",
-            "userid" => 4,
-            "docid" => 1,
             "status" => 6,
             "deviation_r_l" => "Left",
             "deflection_r_l" => "Right",
@@ -66,15 +63,14 @@ class TmjClinicalExamsApiTest extends ApiTestCase
     protected function getUpdateData()
     {
         return [
-            'patientid'          => 100,
             'other_range_motion' => 'test',
         ];
     }
 
     public function testUpdateFlowDeviceCreate()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         /** @var Device $device */
         $device = factory(Device::class)->create();
@@ -111,8 +107,8 @@ class TmjClinicalExamsApiTest extends ApiTestCase
 
     public function testUpdateFlowDeviceUpdate()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         /** @var Device $device */
         $device = factory(Device::class)->create();
@@ -144,17 +140,15 @@ class TmjClinicalExamsApiTest extends ApiTestCase
 
     public function testStoreForPatient()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $data = [
-            'patient_id' => 666,
             'dentaldevice' => 'foo',
         ];
         $this->post(self::ROUTE_PREFIX . '/tmj-clinical-exams/store-for-patient', $data);
         $this->assertResponseOk();
         $expectedData = [
-            'patientid' => 666,
             'dentaldevice' => 'foo',
             'userid' => 1,
             'docid' => 1,

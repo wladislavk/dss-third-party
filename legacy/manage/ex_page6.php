@@ -1,7 +1,24 @@
 <?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
-if($_POST['ex_page6sub'] == 1)
+$db = new Db();
+$baseTable = 'dental_ex_page6_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
+if(!$isHistoricView && $_POST['ex_page6sub'] == 1)
 {
 	$completed = $_POST['completed'];
 	$recommended = $_POST['recommended'];
@@ -64,7 +81,7 @@ if($_POST['ex_page6sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_ex_page6 set 
+		$ed_sql = " update dental_ex_page6_view set 
 		completed = '".s_for($completed_arr)."',
 		recommended = '".s_for($recommended_arr)."',
 		other_diagnostic = '".s_for($other_diagnostic)."',
@@ -101,7 +118,12 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_ex_page6 where patientid='".$_GET['pid']."'";
+$sql = "select *
+    from $sourceTable
+    where patientid = '$patientId'
+        $andHistoryIdConditional
+        $andNullConditional";
+
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -133,14 +155,16 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form name="ex_page6frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form name="ex_page6frm" class="ex_form" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
 <input type="hidden" name="ex_page6sub" value="1" />
-<input type="hidden" name="ed" value="<?=$ex_page6id;?>" />
+    <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+    <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="ex_pagebtn" value="Save" />
+    <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+	<input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -224,8 +248,15 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+	<input type="reset" value="Reset" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+    <button class="do-backup hidden" title="Save a copy of the last saved values">
+        <span class="done">Archive page</span>
+        <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+    </button>
+    <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+    <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>
@@ -241,5 +272,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <? include "includes/bottom.htm";?>

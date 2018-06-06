@@ -3,6 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 
 class PatientsApiTest extends ApiTestCase
@@ -112,8 +113,8 @@ class PatientsApiTest extends ApiTestCase
         $data = [
             'partial_name' => 'smi',
         ];
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $this->post(self::ROUTE_PREFIX . '/patients/list', $data);
         $this->assertResponseOk();
@@ -222,8 +223,8 @@ class PatientsApiTest extends ApiTestCase
 
     public function testEditingPatient()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         /** @var Patient $newPatient */
         $newPatient = factory($this->getModel())->create(['docid' => 9]);
@@ -270,8 +271,8 @@ class PatientsApiTest extends ApiTestCase
     public function testGetPatientData()
     {
         $patientId = 170;
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $this->get(self::ROUTE_PREFIX . '/patients/data/' . $patientId);
         $this->assertResponseOk();

@@ -18,7 +18,7 @@ if($pat_myarray['patientid'] == '')
 }
 
 
-$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_thorton_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 

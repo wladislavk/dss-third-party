@@ -3,6 +3,22 @@
 	include("includes/sescheck.php");
 	include_once('admin/includes/password.php');
 
+$db = new Db();
+$docId = (int)$_SESSION['docid'];
+
+$isSoapAuthorized = $db->getNumberRows("SELECT doc_id
+    FROM dental_api_permissions permission
+        LEFT JOIN dental_api_permission_resource_groups api_group ON api_group.id = permission.group_id
+    WHERE permission.doc_id = '$docId'
+");
+
+$isSoapAuthorized = $isSoapAuthorized && !empty($_GET['soap']);
+$conditionalNot = 'NOT';
+
+if ($isSoapAuthorized) {
+    $conditionalNot = '';
+}
+
 // Log info to debug #216
 if (!empty($_GET['forced'])) {
     error_log("The following browser requested a forced template load: {$_SERVER['HTTP_USER_AGENT']}");
@@ -15,8 +31,14 @@ if (!empty($_GET['forced'])) {
 
 	if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
 		$notes = $_POST['notes'];
-	   	$procedure_date = ($_POST['procedure_date']!='')?date('Y-m-d', strtotime($_POST['procedure_date'])):'';	
+
+		if (!empty($_POST['is_soap'])) {
+		    $notes = safeJsonEncode($_POST['soap_notes']);
+        }
+
+	   	$procedure_date = ($_POST['procedure_date']!='')?date('Y-m-d', strtotime($_POST['procedure_date'])):'';
 		$editor_initials = $_POST['editor_initials'];
+
 		if($_POST['ed'] == '') {
 			$ins_sql = "insert into dental_notes set 
 						patientid = '".$db->escape($_GET['pid'])."',
@@ -57,7 +79,35 @@ if (!empty($_GET['forced'])) {
 		 	$id = $db->getInsertId($ins_sql);
 			$db->query("UPDATE dental_notes SET parentid='".$id."' WHERE notesid='".$id."'");	
 			$msg = "Added Successfully";
-			
+
+            $note = $db->getRow("SELECT *
+			    FROM dental_notes
+			    WHERE notesid = '$id'
+            ");
+
+			?>
+            <script type="text/javascript">
+                function setField(form, note)
+                {
+                    try {
+                        parent.Events.trigger('addNote', {
+                            namespace: form,
+                            note: note
+                        });
+                    } catch (e) { /* Fall through */ }
+                }
+
+                var form = <?= json_encode($_GET['fr']) ?>,
+                    note = <?= json_encode($note) ?>;
+
+                setField(form, note);
+
+                if (typeof parent.disablePopupRefClean !== 'undefined') {
+                    parent.disablePopupRefClean();
+                }
+            </script>
+            <?php
+
 			if(isset($_REQUEST['goto'])) {
 ?>
 	            <script type="text/javascript">
@@ -137,7 +187,33 @@ if (!empty($_GET['forced'])) {
 
 			$db->query($ins_sql);
 			$msg = "Edited Successfully";
-?>
+
+            $note = $db->getRow("SELECT *
+			    FROM dental_notes
+			    WHERE notesid = '$noteId'
+            ");
+
+            ?>
+            <script type="text/javascript">
+                function setField(form, note)
+                {
+                    try {
+                        parent.Events.trigger('addNote', {
+                            namespace: form,
+                            note: note
+                        });
+                    } catch (e) { /* Fall through */ }
+                }
+
+                var form = <?= json_encode($_GET['fr']) ?>,
+                    note = <?= json_encode($note) ?>;
+
+                setField(form, note);
+
+                if (typeof parent.disablePopupRefClean !== 'undefined') {
+                    parent.disablePopupRefClean();
+                }
+            </script>
 		 	<?php if(isset($_REQUEST['goto'])){ ?>
 		 		<script type="text/javascript">
 					parent.window.location = "<?php echo  $_REQUEST['goto']; ?>";
@@ -151,7 +227,13 @@ if (!empty($_GET['forced'])) {
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
-	$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+
+	$sql = "SELECT *
+        FROM dental_custom
+        WHERE docid = '$docId'
+            AND description $conditionalNot LIKE '%\"is_soap\":\"1\",%'
+        ORDER BY title
+    ";
 	
 	$total_rec = $db->getNumberRows($sql);
 	$pat_sql = "select * from dental_patients where patientid='".$db->escape($_GET['pid'])."'";
@@ -169,7 +251,12 @@ if (!empty($_GET['forced'])) {
 	}
 ?>
 	<?php
-	    $sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+	    $sql = "SELECT *
+        FROM dental_custom
+        WHERE docid = '$docId'
+            AND description $conditionalNot LIKE '%\"is_soap\":\"1\",%'
+        ORDER BY title
+    ";
 	    $my = $db->getResults($sql);
 
     $customNotes = [];
@@ -177,9 +264,32 @@ if (!empty($_GET['forced'])) {
 
     if ($my) {
         foreach ($my as $myarray) {
+            $description = $myarray['description'];
+
+            try {
+                $jsonDescription = json_decode($description, true);
+
+                if (is_array($jsonDescription)) {
+                    $description = $jsonDescription;
+                }
+            } catch (\Exception $e) {
+                /* Fall through */
+            }
+
+            if (is_string($description)) {
+                $description = trim(utf8_encode($description));
+            }
+
+            if (is_array($description)) {
+                $description['subjective'] = trim(utf8_encode($description['subjective']));
+                $description['objective'] = trim(utf8_encode($description['objective']));
+                $description['assessment'] = trim(utf8_encode($description['assessment']));
+                $description['plan'] = trim(utf8_encode($description['plan']));
+            }
+
             $customNotes []= [
                 'title' => trim(utf8_encode($myarray['title'])),
-                'description' => trim(utf8_encode($myarray['description']))
+                'description' => $description,
             ];
         }
 
@@ -200,9 +310,9 @@ if (!empty($_GET['forced'])) {
 		<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
 		<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 		<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-		<script type="text/javascript" src="script/validation.js"></script>
+		<script type="text/javascript" src="script/validation.js?v=20171219"></script>
 		<script type="text/javascript" src="script/autocomplete.js?v=20160719"></script>
-		<script type="text/javascript" src="js/add_notes.js?v=<?= time() ?>"></script>
+		<script type="text/javascript" src="js/add_notes.js?v=20171219"></script>
 		<link rel="stylesheet" href="css/form.css" type="text/css" />
         <script type="text/javascript">
             var customNotes = <?= json_encode($customNotes) ?>;
@@ -212,19 +322,37 @@ if (!empty($_GET['forced'])) {
 		<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
 		<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
     	<?php
-		
+
 		include("includes/calendarinc.php");
 
 		  $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
 					LEFT JOIN dental_users u on u.userid=n.userid
 					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			$themyarray = $db->getRow($thesql);
-			$notes = is_null($currentNote) ? e($themyarray['notes']) : e($customNotes[$currentNote]['description']);
+            $notes = $themyarray['notes'];
+
+            if (count($themyarray)) {
+                try {
+                    $notes = json_decode($themyarray['notes'], true);
+                    $isSoapAuthorized = true;
+                } catch (\Exception $e) { /* Fall through */ }
+            }
+
+            if (!is_null($currentNote)) {
+                $notes = $customNotes[$currentNote]['description'];
+            }
+
+            $soapDisabled = 'disabled';
+
+            if ($isSoapAuthorized) {
+                $soapDisabled = '';
+            }
+
 			$editor_initials = e($themyarray['editor_initials']);
 			$procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
 			$but_unsigned_text = "Save and keep UNSIGNED";
 			$but_signed_text = "Save Progress Note and SIGN";
-	
+
 			if($themyarray["userid"] != '') {
 		    	$but_unsigned_text = "Save changes and keep UNSIGNED";
 		    	$but_signed_text = "Save changes and SIGN";
@@ -233,7 +361,7 @@ if (!empty($_GET['forced'])) {
 		       	$but_signed_text = "Save Progress Note and SIGN";
 				$procedure_date = date('m/d/Y');
 			}
-		?>	
+		?>
 		<?php
 			if(!empty($msg)) {
 		?>
@@ -244,14 +372,17 @@ if (!empty($_GET['forced'])) {
     		}
     	?>
 	
-	    <form action="?" method="get">
+	    <form method="get">
+            <input type="hidden" name="fr" value="<?= e($_GET['fr']) ?>" />
             <input type="hidden" name="add" value="1" />
+            <input type="hidden" name="soap" value="<?= $isSoapAuthorized ?>" />
             <input type="hidden" name="pid" value="<?= intval($_GET['pid']) ?>" />
             <input type="hidden" name="forced" value="1" />
 		    <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 		        <tr>
 		            <td colspan="2" class="cat_head" style="font-size:16px;">
-		               	<?php echo (!empty($but_text) ? $but_text : ''); ?> Progress Notes
+		               	<?php echo (!empty($but_text) ? $but_text : ''); ?>
+                        <?= $isSoapAuthorized ? 'SOAP' : 'Progress' ?> Notes
 					   	-
 		   				Patient <i><?php echo $name;?></i>
 						Entry Date: <?php echo  date('m/d/Y', strtotime($procedure_date)); ?>
@@ -260,15 +391,15 @@ if (!empty($_GET['forced'])) {
 		        </tr>
 		        <tr>
 		        	<td valign="top" colspan="2" class="frmhead">
-						Text Templates
+						<?= $isSoapAuthorized ? 'SOAP Notes' : 'Text' ?> Templates
 						<span class="red">*</span>
 			            <select name="title" class="tbox">
 			                <option value="">Select</option>
-			                    <?php foreach ($customNotes as $index=>$note) { ?>
-		                            <option value="<?= $index ?>" <?= !is_null($currentNote) && $index == $currentNote ? 'selected="selected"' : '' ?> <?= $note['title'] === '' ? 'style="font-style: italic"' : '' ?>>
-		                        		<?= htmlspecialchars($note['title'] ?: 'no title') ?>
-		                    		</option>
-	                            <?php } ?>
+                            <?php foreach ($customNotes as $index=>$note) { ?>
+                                <option value="<?= $index ?>" <?= !is_null($currentNote) && $index == $currentNote ? 'selected="selected"' : '' ?> <?= $note['title'] === '' ? 'style="font-style: italic"' : '' ?>>
+                                    <?= htmlspecialchars($note['title'] ?: 'no title') ?>
+                                </option>
+                            <?php } ?>
 	            		</select>
                         <span title="Click here if the text template does not load automatically.&#013;Your changes will be lost" style="cursor: pointer;">
                             <input type="submit" class="button" value="Load">
@@ -299,11 +430,32 @@ if (!empty($_GET['forced'])) {
 				</tr>
             </table>
         </form>
-        <form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" onSubmit="return notesabc(this)">
+        <form name="notesfrm" method="post" onSubmit="return notesabc(this)"
+              action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>&fr=<?= e($_GET['fr']) ?>">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 				<tr>
 		        	<td colspan="2" valign="top" class="frmdata">
-						<textarea id="notes" name="notes" class="tbox" style="width:100%; height:190px;"><?php echo $notes;?></textarea>
+                        <div id="not-soap-container" <?= $isSoapAuthorized ? 'style="display:none;"' : '' ?>>
+                            <textarea id="notes" name="notes" class="tbox" style="width:100%; height:190px;"><?php echo $notes;?></textarea>
+                        </div>
+                        <div id="soap-container" <?= $isSoapAuthorized ? '' : 'style="display:none;"' ?>>
+                            <input <?= $soapDisabled ?> type="hidden" name="is_soap" value="<?= $isSoapAuthorized ?>">
+                            <strong>Subjective</strong>
+                            <textarea <?= $soapDisabled ?> id="subjective" name="soap_notes[subjective]" class="tbox"
+                                      style="width:100%; height:60px;"><?= e($notes['subjective']) ?></textarea>
+
+                            <strong>Objective</strong>
+                            <textarea <?= $soapDisabled ?> id="objective" name="soap_notes[objective]" class="tbox"
+                                      style="width:100%; height:60px;"><?= e($notes['objective']) ?></textarea>
+
+                            <strong>Assessment</strong>
+                            <textarea <?= $soapDisabled ?> id="assessment" name="soap_notes[assessment]" class="tbox"
+                                      style="width:100%; height:60px;"><?= e($notes['assessment']) ?></textarea>
+
+                            <strong>Plan</strong>
+                            <textarea <?= $soapDisabled ?> id="plan" name="soap_notes[plan]" class="tbox"
+                                      style="width:100%; height:60px;"><?= e($notes['plan']) ?></textarea>
+                        </div>
 		            </td>
 		        </tr>
 		        <tr>

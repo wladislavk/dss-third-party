@@ -31,7 +31,7 @@
 		$age = 'N/A';
 	}
 
-	$q3_sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+	$q3_sql = "select * from dental_q_page3_view where patientid='".$_GET['pid']."'";
 
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
@@ -66,7 +66,7 @@
 		}
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -77,7 +77,7 @@
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['type_study']);
 	$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
-	$sum_sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+	$sum_sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 
 	$sum_myarray = $db->getRow($sum_sql);
 	$sti_o2_1 = st($sum_myarray['sti_o2_1']);

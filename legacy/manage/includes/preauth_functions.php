@@ -118,7 +118,7 @@
             array_push($errors, "Missing sleep lab");
           }
         */
-        /*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
+        /*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
           $my = mysqli_query($con, $sql);
           $num = mysqli_num_rows($my);
           if( $num <= 0 ){
@@ -225,7 +225,8 @@
              . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
              . "  JOIN dental_users d ON p.docid = d.userid "
              . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-             . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+             . "  LEFT JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid  "
+             . "  LEFT JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid  "
              . "WHERE "
              . "  p.patientid = ".$pid;
 

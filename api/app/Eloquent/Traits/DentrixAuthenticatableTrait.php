@@ -7,9 +7,9 @@ trait DentrixAuthenticatableTrait
     /**
      * Get the unique identifier for the user.
      *
-     * @return mixed
+     * @return string
      */
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): string
     {
         return $this->getKey();
     }
@@ -19,7 +19,7 @@ trait DentrixAuthenticatableTrait
      *
      * @return string
      */
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->api_key;
     }
@@ -29,7 +29,7 @@ trait DentrixAuthenticatableTrait
      *
      * @return string
      */
-    public function getRememberToken()
+    public function getRememberToken(): string
     {
         return '';
     }
@@ -50,7 +50,7 @@ trait DentrixAuthenticatableTrait
      *
      * @return string
      */
-    public function getRememberTokenName()
+    public function getRememberTokenName(): string
     {
         return '';
     }

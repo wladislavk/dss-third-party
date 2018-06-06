@@ -669,44 +669,44 @@ $thesql = "SELECT
                 <strong>ID and Access Details</strong>
             </div>
             <div class="form-group expanded">
-                <label for="username" class="col-md-3 control-label">Username</label>
-                <div class="col-md-9">
+                <label for="username" class="col-md-3 col-sm-3 col-xs-3 control-label">Username</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?php echo  $username ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="npi" class="col-md-3 control-label">NPI Number</label>
-                <div class="col-md-9">
+                <label for="npi" class="col-md-3 col-sm-3 col-xs-3 control-label">NPI Number</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="npi" id="npi" placeholder="NPI Number" value="<?php echo  $npi ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="medicare_npi" class="col-md-3 control-label">Medicare Provider (NPI/DME) Number</label>
-                <div class="col-md-9">
+                <label for="medicare_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Medicare Provider (NPI/DME) Number</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="medicare_npi" id="medicare_npi" placeholder="Medicare Provider (NPI/DME) Number" value="<?php echo  $medicare_npi ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="medicare_ptan" class="col-md-3 control-label">Medicare PTAN Number</label>
-                <div class="col-md-9">
+                <label for="medicare_ptan" class="col-md-3 col-sm-3 col-xs-3 control-label">Medicare PTAN Number</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="medicare_ptan" id="medicare_ptan" placeholder="Medicare PTAN Number" value="<?php echo  $medicare_ptan ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="tax_id_or_ssn" class="col-md-3 control-label">Tax ID or SSN</label>
-                <div class="col-md-9">
+                <label for="tax_id_or_ssn" class="col-md-3 col-sm-3 col-xs-3 control-label">Tax ID or SSN</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="tax_id_or_ssn" id="tax_id_or_ssn" placeholder="Tax ID/SSN" value="<?php echo  $tax_id_or_ssn ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label class="col-md-3 control-label">EIN or SSN required</label>
-                <div class="col-md-2 col-md-push-3 checkbox">
+                <label class="col-md-3 col-sm-3 col-xs-3 control-label">EIN or SSN required</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-md-push-3 col-sm-push-3 col-xs-push-3 checkbox">
                     <label>
                         EIN
                         <input id="ein" type="checkbox" name="ein" value="1" <?php echo  ($ein)?'checked="checked"':''; ?>>
                     </label>
                 </div>
-                <div class="col-md-2 col-md-push-3 checkbox">
+                <div class="col-md-2 col-sm-2 col-xs-2 col-md-push-3 col-sm-push-3 col-xs-push-3 checkbox">
                     <label>
                         SSN
                         <input id="ssn" type="checkbox" name="ssn" value="1" <?php echo  ($ssn)?'checked="checked"':''; ?>>
@@ -714,21 +714,21 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="practice" class="col-md-3 control-label">Practice</label>
-                <div class="col-md-9">
+                <label for="practice" class="col-md-3 col-sm-3 col-xs-3 control-label">Practice</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="practice" id="practice" placeholder="Practice" value="<?php echo  $practice ?>">
                 </div>
             </div>
             <?php if (!isset($_REQUEST['ed'])) { ?>
             <div class="form-group expanded">
-                <label for="password" class="col-md-3 control-label">Password</label>
-                <div class="col-md-9">
+                <label for="password" class="col-md-3 col-sm-3 col-xs-3 control-label">Password</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="password" class="form-control" name="password" id="password" placeholder="Your password">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="password2" class="col-md-3 control-label">Confirm your password</label>
-                <div class="col-md-9">
+                <label for="password2" class="col-md-3 col-sm-3 col-xs-3 control-label">Confirm your password</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm your password">
                 </div>
             </div>
@@ -738,56 +738,56 @@ $thesql = "SELECT
                 <strong>Personal Details</strong>
             </div>
             <div class="form-group">
-                <label for="first_name" class="col-md-3 control-label">First Name</label>
-                <div class="col-md-9">
+                <label for="first_name" class="col-md-3 col-sm-3 col-xs-3 control-label">First Name</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name" value="<?php echo  $first_name ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="last_name" class="col-md-3 control-label">Last Name</label>
-                <div class="col-md-9">
+                <label for="last_name" class="col-md-3 col-sm-3 col-xs-3 control-label">Last Name</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name" value="<?php echo  $last_name ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="email" class="col-md-3 control-label">Email</label>
-                <div class="col-md-9">
+                <label for="email" class="col-md-3 col-sm-3 col-xs-3 control-label">Email</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo  $email ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="address" class="col-md-3 control-label">Address</label>
-                <div class="col-md-9">
+                <label for="address" class="col-md-3 col-sm-3 col-xs-3 control-label">Address</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?php echo  $address ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="city" class="col-md-3 control-label">City</label>
-                <div class="col-md-9">
+                <label for="city" class="col-md-3 col-sm-3 col-xs-3 control-label">City</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?php echo  $city ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="state" class="col-md-3 control-label">State</label>
-                <div class="col-md-9">
+                <label for="state" class="col-md-3 col-sm-3 col-xs-3 control-label">State</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?php echo  $state ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
-                <div class="col-md-9">
+                <label for="zip" class="col-md-3 col-sm-3 col-xs-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?php echo  $zip ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="phone" class="col-md-3 control-label">Phone</label>
-                <div class="col-md-9">
+                <label for="phone" class="col-md-3 col-sm-3 col-xs-3 control-label">Phone</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control extphonemask" name="phone" id="phone" placeholder="Phone number" value="<?php echo  $phone ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="fax" class="col-md-3 control-label">Fax</label>
-                <div class="col-md-9">
+                <label for="fax" class="col-md-3 col-sm-3 col-xs-3 control-label">Fax</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control phonemask" name="fax" id="fax" placeholder="Fax number" value="<?php echo  $fax ?>">
                 </div>
             </div>
@@ -796,135 +796,135 @@ $thesql = "SELECT
                 <strong>Mailing Details</strong>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_practice" class="col-md-3 control-label">Practice</label>
-                <div class="col-md-9">
+                <label for="mailing_practice" class="col-md-3 col-sm-3 col-xs-3 control-label">Practice</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_practice" id="mailing_practice" placeholder="Practice" value="<?php echo  $mailing_practice ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_name" class="col-md-3 control-label">Name</label>
-                <div class="col-md-9">
+                <label for="mailing_name" class="col-md-3 col-sm-3 col-xs-3 control-label">Name</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_name" id="mailing_name" placeholder="Name" value="<?php echo  $mailing_name ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_email" class="col-md-3 control-label">Email</label>
-                <div class="col-md-9">
+                <label for="mailing_email" class="col-md-3 col-sm-3 col-xs-3 control-label">Email</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="email" class="form-control" name="mailing_email" id="mailing_email" placeholder="Email" value="<?php echo  $mailing_email ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_address" class="col-md-3 control-label">Address</label>
-                <div class="col-md-9">
+                <label for="mailing_address" class="col-md-3 col-sm-3 col-xs-3 control-label">Address</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_address" id="mailing_address" placeholder="Address" value="<?php echo  $mailing_address ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_city" class="col-md-3 control-label">City</label>
-                <div class="col-md-9">
+                <label for="mailing_city" class="col-md-3 col-sm-3 col-xs-3 control-label">City</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_city" id="mailing_city" placeholder="City" value="<?php echo  $mailing_city ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_state" class="col-md-3 control-label">State</label>
-                <div class="col-md-9">
+                <label for="mailing_state" class="col-md-3 col-sm-3 col-xs-3 control-label">State</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_state" id="mailing_state" placeholder="State" value="<?php echo  $mailing_state ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_zip" class="col-md-3 control-label">Zip/Postal Code</label>
-                <div class="col-md-9">
+                <label for="mailing_zip" class="col-md-3 col-sm-3 col-xs-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control" name="mailing_zip" id="mailing_zip" placeholder="Zip/Postal Code" value="<?php echo  $mailing_zip ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_phone" class="col-md-3 control-label">Phone</label>
-                <div class="col-md-9">
+                <label for="mailing_phone" class="col-md-3 col-sm-3 col-xs-3 control-label">Phone</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control extphonemask" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?php echo  $mailing_phone ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_fax" class="col-md-3 control-label">Fax</label>
-                <div class="col-md-9">
+                <label for="mailing_fax" class="col-md-3 col-sm-3 col-xs-3 control-label">Fax</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <input type="text" class="form-control phonemask" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?php echo  $mailing_fax ?>">
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="use_service_npi" class="col-md-3 control-label">Use Service NPI?</label>
-           	<div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Use Service NPI?</label>
+           	<div class="col-md-9 col-sm-9 col-xs-9">
                      <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <?php if($use_service_npi == 1) echo " checked='checked'";?> />
 		</div>
 	    </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Name</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Name</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
 
                 <input id="service_name" class="form-control" type="text" name="service_name" value="<?php echo $service_name;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Address</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Address</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_address" class="form-control" type="text" name="service_address" value="<?php echo $service_address;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service City</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service City</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_city" class="form-control" type="text" name="service_city" value="<?php echo $service_city;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service State</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service State</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_state" class="form-control" type="text" name="service_state" value="<?php echo $service_state;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Zip</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Zip</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_zip" class="form-control" type="text" name="service_zip" value="<?php echo $service_zip;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Phone</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Phone</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?php echo $service_phone;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Fax</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?php echo $service_fax;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service NPI</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service NPI</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?php echo $service_npi;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Medicare NPI</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Medicare NPI</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?php echo $service_medicare_npi;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Medicare PTAN</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Medicare PTAN</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?php echo $service_medicare_ptan;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service Tax ID or SSN</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service Tax ID or SSN</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?php echo $service_tax_id_or_ssn;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
-                <label for="use_service_npi" class="col-md-3 control-label">Service EIN or SSN</label>
-                <div class="col-md-9">
+                <label for="use_service_npi" class="col-md-3 col-sm-3 col-xs-3 control-label">Service EIN or SSN</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                 <input id="service_ein" type="checkbox" name="service_ein" value="1" <?php echo  ($service_ein)?'checked="checked"':''; ?> class="tbox" />
                 EIN
                 <input id="service_ssn" type="checkbox" name="service_ssn" value="1" <?php echo  ($service_ssn)?'checked="checked"':''; ?> class="tbox" />
@@ -936,78 +936,90 @@ $thesql = "SELECT
                 <strong>Options</strong>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label">Active services</label>
-                <div class="col-md-9">
-                    <label class="col-md-4">
+                <label class="col-md-3 col-sm-3 col-xs-3 control-label">Active services</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_patient_portal" value="1" <?php if($use_patient_portal == 1) echo " checked='checked'";?>>
                         Patient Portal
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_digital_fax" value="1" <?php if($use_digital_fax == 1) echo " checked='checked'";?>>
                         Digital Fax
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_letters" value="1" <?php if($use_letters == 1) echo " checked='checked'";?>>
                         Letters
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-9 col-md-push-3">
-                    <label class="col-md-4">
+                <div class="col-md-9 col-sm-9 col-xs-9 col-md-push-3 col-sm-push-3 col-xs-push-3">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_eligible_api" value="1" <?php if($use_eligible_api == 1) echo " checked='checked'";?>>
                         Eligible API
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_course" value="1" <?php if($use_course == 1) echo " checked='checked'";?>>
                         Course
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_course_staff" value="1" <?php if($use_course_staff == 1) echo " checked='checked'";?>>
                         Staff Course
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-9 col-md-push-3">
-                    <label class="col-md-4">
+                <div class="col-md-9 col-sm-9 col-xs-9 col-md-push-3 col-sm-push-3 col-xs-push-3">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="eligible_test" value="1" <?php if($eligible_test == 1) echo " checked='checked'";?>>
                         Eligible Test?
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_payment_reports" value="1" <?php if($use_payment_reports == 1) echo " checked='checked'";?>>
                         Payment Reports
                     </label>
                     <?php if (is_super($_SESSION['admin_access'])) { ?>
-                    <label id="dentrix-api-checkbox" class="col-md-4" v-cloak>
+                    <label id="dentrix-api-checkbox" class="col-md-4 col-sm-4 col-xs-4" v-cloak>
                         <input type="checkbox" v-model="fields.enabled">
                         Dentrix API
                     </label>
                     <?php } ?>
                 </div>
             </div>
-
+            <?php if (is_super($_SESSION['admin_access'])) { ?>
+                <div class="form-group" id="api-permissions-container" v-cloak>
+                    <div class="col-md-9 col-sm-9 col-xs-9 col-md-push-3 col-sm-push-3 col-xs-push-3">
+                        <label v-repeat="group in groups"
+                               class="col-md-4 col-sm-4 col-xs-4">
+                            <input type="checkbox" value="{{ group.id }}"
+                                   v-model="permissions[group.id].enabled">
+                            <span v-if="group.name.length < 18">{{ group.name }}</span>
+                            <small v-if="group.name.length >= 18">{{ group.name }}</small>
+                        </label>
+                    </div>
+                </div>
+            <?php } ?>
             <div class="form-group">
-                <label class="col-md-3 control-label">Automated services</label>
-                <div class="col-md-9">
-                    <label class="col-md-4">
+                <label class="col-md-3 col-sm-3 col-xs-3 control-label">Automated services</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="tracker_letters" value="1" <?php if($tracker_letters == 1) echo " checked='checked'";?>>
                         Tracker Letters 
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="intro_letters" value="1" <?php if($intro_letters == 1) echo " checked='checked'";?>>
                         Intro Letters 
                     </label>
                 </div>
             </div>
             <div class="form-group expanded">
-                <label class="col-md-3 control-label">Visuals to use</label>
-                <div class="col-md-9">
-                    <label class="col-md-4">
+                <label class="col-md-3 col-sm-3 col-xs-3 control-label">Visuals to use</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="homepage" value="1" <?php if($homepage == 1) echo " checked='checked'";?>>
                         New Homepage
                     </label>
-                    <label class="col-md-4">
+                    <label class="col-md-4 col-sm-4 col-xs-4">
                         <input type="checkbox" name="use_letter_header" value="1" <?php if($use_letter_header == 1) echo " checked='checked'";?>>
                         Letter Header 
                     </label>
@@ -1019,24 +1031,24 @@ $thesql = "SELECT
                 <strong>Dentrix API Details</strong>
             </div>
             <div class="form-group" v-cloak v-show="fields.enabled">
-                <label for="user-api_key" class="col-md-3 control-label">API key</label>
-                <div class="col-md-9">
+                <label for="user-api_key" class="col-md-3 col-sm-3 col-xs-3 control-label">API key</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <div class="input-group">
                         <input type="text" class="form-control" id="user-api_key" v-model="fields.api_key" readonly><span class="input-group-addon" v-on="click: generateApiKey(fields)"><i class="glyphicon glyphicon-refresh"></i></span>
                     </div>
                 </div>
             </div>
             <div class="form-group" v-cloak v-show="fields.enabled">
-                <label for="user-valid_from" class="col-md-3 control-label">Valid from</label>
-                <div class="col-md-9">
+                <label for="user-valid_from" class="col-md-3 col-sm-3 col-xs-3 control-label">Valid from</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <div class="input-group date" data-date-format="yyyy-mm-dd">
                         <input type="text" class="form-control" id="user-valid_from" v-model="fields.valid_from"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
             </div>
             <div class="form-group" v-cloak v-show="fields.enabled">
-                <label for="user-valid_to" class="col-md-3 control-label">Valid to</label>
-                <div class="col-md-9">
+                <label for="user-valid_to" class="col-md-3 col-sm-3 col-xs-3 control-label">Valid to</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <div class="input-group date" data-date-format="yyyy-mm-dd">
                         <input type="text" class="form-control" id="user-valid_to" v-model="fields.valid_to"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                     </div>
@@ -1047,8 +1059,8 @@ $thesql = "SELECT
                 <strong>Administration Details</strong>
             </div>
             <div class="form-group">
-                <label for="companyid" class="col-md-3 control-label">Admin Company</label>
-                <div class="col-md-9">
+                <label for="companyid" class="col-md-3 col-sm-3 col-xs-3 control-label">Admin Company</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="companyid" id="companyid" class="form-control">
                        <?php
                        
@@ -1062,8 +1074,8 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group">
-                <label for="user_type" class="col-md-3 control-label">User Type</label>
-                <div class="col-md-9">
+                <label for="user_type" class="col-md-3 col-sm-3 col-xs-3 control-label">User Type</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="user_type" id="user_type" class="form-control">
                        <option value="<?php echo  DSS_USER_TYPE_FRANCHISEE; ?>" <?php echo  ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?php echo  $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
                        <option value="<?php echo  DSS_USER_TYPE_SOFTWARE; ?>" <?php echo  ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?php echo  $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
@@ -1076,8 +1088,8 @@ $thesql = "SELECT
                 <strong>Companies Details</strong>
             </div>
             <div class="form-group">
-                <label for="billing_company_id" class="col-md-3 control-label">Billing Company</label>
-                <div class="col-md-9">
+                <label for="billing_company_id" class="col-md-3 col-sm-3 col-xs-3 control-label">Billing Company</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="billing_company_id" id="billing_company_id" class="form-control">
                         <option value="">None</option>
                         <?php
@@ -1097,8 +1109,8 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label">HST Company</label>
-                <div class="col-md-9">
+                <label class="col-md-3 col-sm-3 col-xs-3 control-label">HST Company</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <?php
                     
                     $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
@@ -1115,8 +1127,8 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group">
-                <label for="access_code_id" class="col-md-3 control-label">Access Code</label>
-                <div class="col-md-9">
+                <label for="access_code_id" class="col-md-3 col-sm-3 col-xs-3 control-label">Access Code</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="access_code_id" id="access_code_id" class="form-control">
                         <?php
                         
@@ -1130,8 +1142,8 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group">
-                <label for="plan_id" class="col-md-3 control-label">Software Plan</label>
-                <div class="col-md-9">
+                <label for="plan_id" class="col-md-3 col-sm-3 col-xs-3 control-label">Software Plan</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="plan_id" id="plan_id" class="form-control">
                         <?php
                         
@@ -1145,8 +1157,8 @@ $thesql = "SELECT
                 </div>
             </div>
             <div class="form-group">
-                <label for="billing_plan_id" class="col-md-3 control-label">Billing Plan</label>
-                <div class="col-md-9">
+                <label for="billing_plan_id" class="col-md-3 col-sm-3 col-xs-3 control-label">Billing Plan</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select name="billing_plan_id" id="billing_plan_id" class="form-control">
                         <?php
 
@@ -1163,8 +1175,8 @@ $thesql = "SELECT
                 <strong>Status Details</strong>
             </div>
             <div class="form-group">
-                <label for="status" class="col-md-3 control-label">Status</label>
-                <div class="col-md-9">
+                <label for="status" class="col-md-3 col-sm-3 col-xs-3 control-label">Status</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <select id="status" name="status" class="form-control" onchange="showSuspended();">
                         <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
                         <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
@@ -1183,16 +1195,17 @@ $thesql = "SELECT
 </script>
 
             <div id="suspended_reason" class="form-group" <?php echo  ($status!=3)?'style="display:none;"':''; ?>>
-                <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
-                <div class="col-md-9">
+                <label for="suspended_reason" class="col-md-3 col-sm-3 col-xs-3 control-label">Suspended Reason</label>
+                <div class="col-md-9 col-sm-9 col-xs-9">
                     <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?php echo  $suspended_reason ?></textarea>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-9 col-md-offset-3">
+                <div class="col-md-9 col-sm-9 col-xs-9 col-md-offset-3 col-sm-offset-3 col-xs-offset-3">
                     <input type="hidden" name="usersub" value="1">
                     <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>">
+                    <input type="hidden" name="docid" value="<?php echo $themyarray["docid"]?>">
                     <input type="submit" name="save_but" v-on="click: saveUser" value=" <?php echo $but_text?> User" class="btn btn-primary">
                 <?php if ($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3) { ?>
                     <a href="javascript:parent.window.location='manage_users.php?delid=<?php echo $themyarray["userid"];?>'" v-on="click: deleteUser" class="btn btn-danger pull-right" title="DELETE">
@@ -1211,6 +1224,13 @@ $thesql = "SELECT
                         ?>
                         <a href="#" onclick="alert('<?php echo  $registration_link; ?>');return false;">Registration Link</a>
                 <?php } ?>
+                    <?php if (getenv('DOCKER_USED') && $isSuperAdmin) { ?>
+                        <a class="btn btn-danger delete-stripe-customer" alt="Delete Stripe data"
+                           data-docid="<?= (int)$themyarray['userid'] ?>" href="#">
+                            Delete Stripe data
+                            <span class="fa fa-spinner hidden"></span>
+                        </a>
+                    <?php } ?>
                 </div>
             </div>
         </form>
@@ -1226,6 +1246,57 @@ $thesql = "SELECT
         <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
             $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
         <?php } ?>
+
+        function resetFontAwesomeIndicator ($indicator) {
+            $indicator.removeClass('fa-exclamation-triangle fa-spinner fa-spin hidden')
+                .attr('title', '')
+                .text('')
+            ;
+        }
+
+        $('a.btn.delete-stripe-customer').on('click', function (e) {
+            e.preventDefault();
+
+            var $this = $(this),
+                $indicator = $this.find('.fa');
+
+            $this.addClass('disabled');
+            resetFontAwesomeIndicator($indicator);
+            $indicator.addClass('fa-spinner fa-spin')
+                .text(' processing')
+            ;
+
+            $.ajax({
+                url: '/manage/admin/delete-stripe-customer.php',
+                type: 'post',
+                data: { docid: $this.data('docid') },
+                dataType: 'json',
+                success: function (response) {
+                    resetFontAwesomeIndicator($indicator);
+                    $indicator.addClass('fa-check')
+                        .text(' success')
+                    ;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var response = errorThrown;
+
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('status')) {
+                        response = jqXHR.responseJSON.status;
+                    }
+
+                    resetFontAwesomeIndicator($indicator);
+                    $indicator.addClass('fa-exclamation-triangle')
+                        .attr('title', response)
+                        .text(' error')
+                    ;
+                },
+                complete: function () {
+                    $this.removeClass('disabled');
+                }
+            });
+
+            return false;
+        });
 
         $('[name=status]').on('change keydown',function(){
             var $this = $(this);
@@ -1282,7 +1353,7 @@ $thesql = "SELECT
 <script src="/assets/vendor/moment.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-<script src="/assets/app/external-user.js?v=20170517<?= time() ?>" type="text/javascript"></script>
+<script src="/assets/app/add-user.js?v=20180502"text/javascript"></script>
 <?php } ?>
 </body>
 </html>

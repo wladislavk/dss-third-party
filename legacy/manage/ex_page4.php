@@ -1,12 +1,34 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once "includes/top.htm";
 	include_once('includes/patient_info.php');
+
+$db = new Db();
+$baseTable = 'dental_ex_page4_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+$secondaryTables = [
+    'dental_missing_view' => ['patientid' => '$patientId'],
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
 	if ($patient_info) {
 ?>
     <script type="text/javascript" src="js/ex_page4.js"></script>
     <script type="text/javascript" src="/manage/js/select_teeth_cross.js"></script>
 <?php
-    if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
+    if(!$isHistoricview && !empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
         $exam_teeth = $_POST['exam_teeth'];
         $other_maxilla = $_POST['other_maxilla'];
         $other_exam_teeth = $_POST['other_exam_teeth'];
@@ -78,7 +100,7 @@
 			}
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$ed_sql = " update dental_ex_page4 set 
+			$ed_sql = " update dental_ex_page4_view set 
 			exam_teeth = '".s_for($exam_teeth_arr)."',
 			other_exam_teeth = '".s_for($other_exam_teeth)."',
 			caries = '".s_for($caries)."',
@@ -129,7 +151,12 @@
 		trigger_error("Die called", E_USER_ERROR);
 	}
 
-    $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
+    $sql = "select *
+        from $sourceTable
+        where patientid = '$patientId'
+            $andHistoryIdConditional
+            $andNullConditional";
+
     $myarray = $db->getRow($sql);
 
     $ex_page4id = st($myarray['ex_page4id']);
@@ -164,16 +191,21 @@
         <b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
-    <form id="ex_page4frm" class="ex_form" name="ex_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
+    <form id="ex_page4frm" class="ex_form" name="ex_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" method="post">
         <input type="hidden" name="ex_page4sub" value="1" />
-        <input type="hidden" name="ed" value="<?php echo $ex_page4id;?>" />
+        <input type="hidden" name="ed" value="<?= $targetId ?: '' ?>" />
+        <input type="hidden" name="backup_table" value="<?= $isCreateNew ?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -204,11 +236,13 @@
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="text" name="missing" value="<?php echo $missing?>" class="field text addr tbox" readonly="readonly" />
                                     <button id="missing_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
-                                    <button onclick="toggle_perio(); return false;">Perio Chart</button>
+                                    <button onclick="$('[name=missing]').val('None'); return false;">None</button>
+                                    <button onclick="toggle_perio(); return false;" class="form-backup-enable"
+                                        <?= $isCreateNew ? 'disabled title="This value cannot be updated while preparing a snapshot"' : '' ?>>Perio Chart</button>
                                 </span>
                             </div>
                             <div id="perio_chart" style="display:none;">
-                                <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?php echo $_GET['pid']?>&mt=<?php echo  $missing ?>" width="920" height="840"></iframe>
+                                <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?php echo $_GET['pid']?>&mt=<?php echo  $missing ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>" width="920" height="840"></iframe>
                             </div>
                             <br />
                             <label class="desc" id="title0" for="Field0">
@@ -222,7 +256,7 @@
                                         $exam_teeth_my = $db->getResults($exam_teeth_sql);
                                         foreach ($exam_teeth_my as $exam_teeth_myarray) {
                                     ?>
-                                            <input type="checkbox"  id="exam_teeth<?php echo st($exam_teeth_myarray['exam_teethid'])?>" name="exam_teeth[]" value="<?php echo st($exam_teeth_myarray['exam_teethid'])?>" <?php  if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
+                                            <input type="checkbox" id="exam_teeth<?php echo st($exam_teeth_myarray['exam_teethid'])?>" name="exam_teeth[]" value="<?php echo st($exam_teeth_myarray['exam_teethid'])?>" <?php  if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
                                             &nbsp;&nbsp;
                                             <?php echo st($exam_teeth_myarray['exam_teeth']);?><br />
                                     <?php
@@ -245,6 +279,7 @@
                                     <label class="exam_label">Caries Tooth #</label>
                                     <input type="text" name="caries" value="<?php echo $caries?>" class="field text addr tbox" readonly="readonly" />
                                     <button id="caries_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); return false;">Change</button>
+                                    <button onclick="$('[name=caries]').val('None'); return false;">None</button>
                                 </span>
                             </div>
                             <br />
@@ -253,6 +288,7 @@
                                     <label class="exam_label">Wear Facets Tooth #</label>
                                     <input type="text" name="wear_facets" value="<?php echo $where_facets?>" class="field text addr tbox" readonly="readonly" />
                                     <button id="wearFacetsTooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Change</button>
+                                    <button onclick="$('[name=wear_facets]').val('None'); return false;">None</button>
                                     <button onclick="Javascript: loadPopupRefer('select_general.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Generalized</button>
                                 </span>
                             </div>
@@ -262,6 +298,7 @@
                                     <label class="exam_label">Cracked or Fractured Tooth #</label>
                                     <input type="text" name="cracked_fractured" value="<?php echo $cracked_fractured?>" class="field text addr tbox" readonly="readonly" />
                                     <button id="cr_frac_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); return false;">Change</button>
+                                    <button onclick="$('[name=cracked_fractured]').val('None'); return false;">None</button>
                                 </span>
                             </div>
                             <br />
@@ -270,6 +307,7 @@
                                     <label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label>
                                     <input type="text" name="old_worn_inadequate_restorations" value="<?php echo $old_worn_inadequate_restorations?>" class="field text addr tbox" readonly="readonly" />
                                     <button id="owirt" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); return false;">Change</button>
+                                    <button onclick="$('[name=old_worn_inadequate_restorations]').val('None'); return false;">None</button>
                                 </span>
                             </div>
                             <br />
@@ -413,6 +451,7 @@
                                     <label class="exam_label">Teeth in Crossbite</label>
                                     <input type="text" name="crossbite" value="<?php echo $crossbite;?>" class="field text addr tbox" readonly="readonly" />
                                     <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=crossbite&fval=<?php echo $crossbite;?>');  return false;">Chart</button>
+                                    <button onclick="$('[name=crossbite]').val('None'); return false;">None</button>
                                 </span>
                             </div>
                             <br />
@@ -439,6 +478,7 @@
                                     <label class="exam_label">Diastema(s) present between teeth numbers</label>
                                     <input type="text" name="deistema" value="<?php echo $deistema;?>" class="field text addr tbox" readonly="readonly" />
                                     <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=deistema&fval=<?php echo $deistema;?>'); return false;">Chart</button>
+                                    <button onclick="$('[name=deistema]').val('None'); return false;">None</button>
                                 </span>
                             </div>
                             <br />
@@ -448,12 +488,16 @@
             </tr>
         </table>
 
-        <div style="float:left; margin-left:10px;">
-            <input type="reset" value="Undo Changes" />
-        </div>
+
         <div style="float:right;">
-            <input type="submit" name="ex_pagebtn" value="Save" />
-            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0px; height: 0px; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
             &nbsp;&nbsp;&nbsp;
         </div>
     </form>
@@ -481,5 +525,6 @@
         print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php  include_once "includes/bottom.htm";?>

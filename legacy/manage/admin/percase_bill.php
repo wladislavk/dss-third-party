@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/includes/stripe-functions.php';
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
@@ -18,21 +19,15 @@ $sql = "SELECT * FROM dental_users
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
 
-$key_sql = "SELECT stripe_secret_key FROM companies c 
-                JOIN dental_user_company uc
-                        ON c.id = uc.companyid
-                 WHERE uc.userid='".mysqli_real_escape_string($con,$id)."'";
-$key_q = mysqli_query($con,$key_sql);
-$key_r= mysqli_fetch_assoc($key_q);
+$key_r = getStripeRelatedUserData($id);
+setupStripeConnection($key_r['stripe_secret_key']);
+$customer = getStripeCustomer($key_r['cc_id']);
+$card = getActiveStripeCard($customer);
+$last4 = '';
 
-$curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-\Stripe\ApiRequestor::setHttpClient($curl);
-\Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
-
-
-$cards = \Stripe\Customer::retrieve($r['cc_id'])->cards->all();
-$last4 = $cards['data'][0]['last4'];
-
+if ($card) {
+    $last4 = $card->last4;
+}
 
 if(isset($_POST['bill_submit'])){
   $customerID = $r['cc_id'];
@@ -75,11 +70,10 @@ try{
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Exception $e) {
+} catch (\Exception $e) {
   // Something else happened, completely unrelated to Stripe
-  $body = $e->getJsonBody();
-  $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  $body = $e->getMessage();
+  echo e($body).". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
 
@@ -87,7 +81,7 @@ try{
 
   $stripe_charge = $charge->id;
   $stripe_customer = $charge->customer;
-  $stripe_card_fingerprint = $charge->card->fingerprint;
+  $stripe_card_fingerprint = $charge->source->fingerprint;
   $charge_sql = "INSERT INTO dental_charge SET
 			amount='".mysqli_real_escape_string($con,str_replace(',','',$_POST['amount']))."',
                         userid='".mysqli_real_escape_string($con,$id)."',

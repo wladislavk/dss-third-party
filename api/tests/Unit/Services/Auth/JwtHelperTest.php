@@ -76,7 +76,10 @@ class JwtHelperTest extends UnitTestCase
         $token = $this->helper->createToken($claims, $expireDate, $notBefore);
         $this->assertEquals(self::TOKEN, $token);
     }
-    
+
+    /**
+     * @throws TokenInvalidException
+     */
     public function testParseToken()
     {
         $payload = $this->helper->parseToken(self::TOKEN);

@@ -22,9 +22,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'jwt.auth.admin' => \DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware::class,
-        'jwt.auth.user' => \DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware::class,
-        'dentrix.auth' => \DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware::class,
+        'jwt.authentication' => \DentalSleepSolutions\Http\Middleware\JwtAuthenticationMiddleware::class,
+        'sudo.authentication' => \DentalSleepSolutions\Http\Middleware\SudoAuthenticationMiddleware::class,
+        'authorization' => \DentalSleepSolutions\Http\Middleware\AuthorizationMiddleware::class,
+        'dentrix.auth' => \DentalSleepSolutions\Http\Middleware\DentrixAuthenticationMiddleware::class,
         'api.log' => \DentalSleepSolutions\Http\Middleware\ApiLogMiddleware::class,
+        'api.permissions' => \DentalSleepSolutions\Http\Middleware\ApiPermissionsLookupMiddleware::class,
     ];
 }

@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 
@@ -31,36 +32,32 @@ if (!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
         $sql = "delete from dental_users where userid='$deleteId'";
         $db->query($sql);
         edx_user_delete($r['edx_id']);
+        $stripeError = '';
 
         if ($r['cc_id'] != '') {
-            $sql = "SELECT stripe_secret_key FROM companies c
-                JOIN dental_user_company uc
-                        ON c.id = uc.companyid
-                 WHERE uc.userid='$deleteId'";
-            $key_r = $db->getRow($sql);
-
-            $curl = new \Stripe\HttpClient\CurlClient(array(CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2));
-            \Stripe\ApiRequestor::setHttpClient($curl);
-            \Stripe\Stripe::setApiKey($key_r['stripe_secret_key']);
+            $key_r = getStripeRelatedUserData($deleteId);
+            setupStripeConnection($key_r['stripe_secret_key']);
 
             try {
                 /** @var \Stripe\Customer $cu */
-                $cu = \Stripe\Customer::retrieve($r['cc_id']);
-                $cu->delete();
-            } catch(\Stripe\Error\Card $e) {
+                $cu = getStripeCustomer($r['cc_id']);
+                if ($cu) {
+                    $cu->delete();
+                }
+            } catch(\Stripe\Error\Base $e) {
                 // Since it's a decline, Stripe_CardError will be caught
                 $body = $e->getJsonBody();
                 $err  = $body['error'];
-                echo $err['message'];
-            } catch (\Stripe\Error\InvalidRequest $e) {
-                // Invalid parameters were supplied to Stripe's API
-                $body = $e->getJsonBody();
-                $err  = $body['error'];
-                echo $err['message'];
+                $stripeError = $err['message'];
             }
         }
 
         $msg = "Deleted Successfully";
+
+        if (strlen($stripeError)) {
+            $msg = "$msg. Stripe errors happened, please review Stripe logs.";
+        }
+
         ?>
         <script type="text/javascript">
             window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";

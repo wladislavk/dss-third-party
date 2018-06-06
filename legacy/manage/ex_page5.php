@@ -1,15 +1,36 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
-	include_once('includes/patient_info.php');
-	if ($patient_info) {
-?>
-
-<script type="text/javascript" src="js/ex_page5.js"></script>
-<script type="text/javascript" src="/manage/js/summ_summ_check.js"></script>
-
 <?php
-		if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
-		{
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+include_once('includes/patient_info.php');
+
+$baseTable = 'dental_ex_page5_view';
+$baseSearch = [
+    'patientid' => '$patientId',
+    'docid' => '$docId'
+];
+
+/**
+ * Define $patientId, $docId, $userId, $adminId
+ * Define $isHistoricView, $historyId, $snapshotDate
+ * Define $historyTable, $sourceTable
+ * Define $isCreateNew, $isBackupTable
+ *
+ * Backup tables as needed
+ */
+require_once __DIR__ . '/includes/form-backup-setup.php';
+
+if (empty($patient_info)) { ?>
+    <div style="width: 65%; margin: auto;">
+        Patient information incomplete -- Please complete the required fields in Patient info section to enable this page.
+    </div>
+    <?php
+
+    include "includes/bottom.htm";
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
 			$additional_paragraph_pal = $_POST['additional_paragraph_pal'];
 			$caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
 			$joint_exam = $_POST['joint_exam'];
@@ -89,9 +110,7 @@
 			if($joint_exam_arr != '')
 				$joint_exam_arr = '~'.$joint_exam_arr;
 
-			$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
-			
-			$row = $db->getRow($sql);
+			$sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 			$num = $db->getNumberRows($sql);
 
 	        if($num==0)
@@ -110,7 +129,7 @@
                 
                 $db->query($ins_sql);
 	        }else{
-                $ed_sql = "update dental_summary set 
+                $ed_sql = "update dental_summary_view set 
                 initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
                 initial_device_titration_equal_h = '".s_for(!empty($_POST['initial_device_titration_equal_h']) ? $_POST['initial_device_titration_equal_h'] : '')."',
                 initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
@@ -176,7 +195,7 @@
 				}
 				trigger_error("Die called", E_USER_ERROR);
 			} else {
-				$ed_sql = " update dental_ex_page5 set 
+				$ed_sql = " update dental_ex_page5_view set 
 				palpationid = '".s_for($pal_arr)."',
 				palpationRid = '".s_for($palR_arr)."',
 				additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
@@ -228,7 +247,7 @@
 			}
 		}
 
-		$sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
+		$sqls = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
 
 		$myarrays = $db->getRow($sqls);
 		$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
@@ -252,7 +271,11 @@
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
-		$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sql = "SELECT *
+    FROM $sourceTable
+    WHERE patientid = '$patientId'
+        $andHistoryIdConditional
+        $andNullConditional";
 		
 		$myarray = $db->getRow($sql);
 		$ex_page5id = st($myarray['ex_page5id']);
@@ -299,18 +322,19 @@
 			}
 		}
 
-		if($palpationRid <> '')
-		{	
-			$palR_arr1 = explode('~',$palpationRid);
-			
-			foreach($palR_arr1 as $i => $val)
-			{
-				$palR_arr2 = explode('|',$val);
-				
-				$palRid[$i] = $palR_arr2[0];
-				$palRseq[$i] = isset($palR_arr2[1]) ? $palR_arr2[1] : '';
-			}
-		}
+$selectedPalpations = [];
+$explodedPalpations = [
+    'left' => explode('~', $palpationid),
+    'right' => explode('~', $palpationRid)
+];
+
+foreach ($explodedPalpations as $side=>$list) {
+    foreach ($list as $pair) {
+        // Add extra separators to avoid empty array elements
+        list($index, $value) = explode('|', "$pair|");
+        array_set($selectedPalpations, "$index.$side", $value);
+    }
+}
 
 		if($jointid <> '')
 		{	
@@ -324,12 +348,71 @@
 				$joseq[$i] = (!empty($jo_arr2[1]) ? $jo_arr2[1] : '');
 			}
 		}
-?>
 
-	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+$palpationValues = [
+    0 => [
+        'label' => 0,
+        'class' => 'ex_p5_0',
+    ],
+    1 => [
+        'label' => 1,
+        'class' => 'ex_p5_1',
+    ],
+    2 => [
+        'label' => 2,
+        'class' => 'ex_p5_2',
+    ],
+    3 => [
+        'label' => 3,
+        'class' => 'ex_p5_3',
+    ],
+];
+
+$stages = [
+    'early' => 'Early',
+    'middle' => 'Middle',
+    'late' => 'Late',
+];
+
+$soundValues = [
+    'L' => 'L',
+    'R' => 'R',
+    'B' => 'B',
+    'WNL' => 'WNL'
+];
+
+$palpations = $db->getResults("SELECT *
+    FROM dental_palpation
+    WHERE `status` = 1
+    ORDER BY sortby");
+$maxRows = ceil(count($palpations)/2);
+
+$jointExams = $db->getResults("SELECT *
+    FROM dental_joint_exam
+    WHERE `status` = 1
+    ORDER BY sortby");
+
+$joints = $db->getResults("SELECT *
+    FROM dental_joint
+    WHERE `status` = 1
+    ORDER BY sortby");
+
+?>
+	<script>
+		var jointExamTypes = <?= json_encode($jointExams) ?>;
+		var jointSoundTypes = <?= json_encode($joints) ?>;
+	</script>
+	<script type="text/javascript" src="js/ex_page5.js"></script>
+	<script type="text/javascript" src="/manage/js/summ_summ_check.js"></script>
+	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
 	<script src="admin/popup/popup1.js" type="text/javascript"></script>
 
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
+	<style>
+		input.error {
+            color: red;
+		}
+	</style>
 
 	<a name="top"></a>
 	&nbsp;&nbsp;
@@ -341,414 +424,362 @@
 		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
-	<form id="ex_page5frm" class="ex_form" name="ex_page5frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >
-		<input type="hidden" name="ex_page5sub" value="1" />
-		<input type="hidden" name="ed" value="<?php echo $ex_page5id;?>" />
-		<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-		<div style="float:left; margin-left:10px;">
-	        <input type="reset" value="Undo Changes" />
-		</div>
+<form id="tmj-rom" class="ex_form vue-module" name="ex_page5frm"
+      v-bind:raw-joint-exams="<?= e(json_encode($jointExams)) ?>"
+      action="?pid=<?= intval($_GET['pid']) ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>"
+      method="post">
+    <input type="hidden" name="patient_id" value="<?= $patientId ?>" />
+    <input type="hidden" name="history_id" value="<?= $historyId ?>" />
+    <input type="hidden" name="create_new" value="<?= $isCreateNew ?>" />
 		<div style="float:right;">
-	        <input type="submit" name="ex_pagebtn" value="Save" />
-	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
-		    &nbsp;&nbsp;&nbsp;
-		</div>
+        <button class="save-action hidden"
+                title="Save a copy of the last saved values"
+                v-bind:disabled="backupInProgress ? true : false"
+                v-on:click.prevent="backup">
+            <span v-show="!backupInProgress">Archive page</span>
+            <span v-show="backupInProgress">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <button class="save-action" v-on:click.prevent="resetData">Undo Changes</button>
+        <button class="save-action" v-on:click.prevent="save">Save</button>
+        <button class="save-action" v-on:click.prevent="saveAndProceed">Save And Proceed</button>
+        &nbsp;&nbsp;&nbsp;
+    </div>
+    <div is="errors-display" v-bind:errors="errors"></div>
 		<table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 			<tr>
 		        <td valign="top" class="frmhead">
 		        	<ul>
-		                <li id="foli8" class="complex">	
+		                <li id="foli8" class="complex">
 		                    <label class="desc" id="title0" for="Field0">
-		                      	Muscles & Manual Palpation
+		                      	Muscles & manual palpation
 		                    </label>
 							<br />
-		                    <div align="right" style="text-align:right; float:right;">
-		                    	<span class="ex_p5_0"> 
-		                    		0 - No Tenderness
-		                        </span>
-		                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                        <span class="ex_p5_1" style="padding-left:10px;">
-		                            1 - Mild
-		                        </span>
-		                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                        <span class="ex_p5_2"  style="padding-left:10px;">
-		                            2 - Moderate
-		                        </span>
-		                        &nbsp;&nbsp;&nbsp;
-		                        <span class="ex_p5_3" style="padding-left:10px;" >
-		                            3 - Severe
-		                        </span>
-								<br />
-								<button onclick="setDefaults();return false;">Set all to 0</button>
-							</div>
-		                    <div id="topcb">
-		                    	<span class="full">
-		                        	<table width="80%" cellpadding="3" cellspacing="1" border="0">
-		                            	<tr>
-		                                	<td valign="top" width="20%">
-		                                    	Left
-		                                    </td>
-		                                	<td valign="top" width="20%">
-		                                    	Right
-		                                    </td>
-		                                	<td valign="top" width="60%">&nbsp;</td>
-		                                </tr>
-		                                <?php
-											$palpation_sql = "select * from dental_palpation where status=1 order by sortby";
-											
-											$palpation_my = $db->getResults($palpation_sql);
-											foreach ($palpation_my as $palpation_myarray) {
-												if(@array_search($palpation_myarray['palpationid'],$palid) === false){
-													$chk = '';
-												} else {
-													$chk = isset($palseq[@array_search($palpation_myarray['palpationid'],$palid)]) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '';
-												}
-												
-												if(@array_search($palpation_myarray['palpationid'],$palRid) === false) {
-													$chkR = '';
-												} else {
-													$chkR = isset($palRseq[@array_search($palpation_myarray['palpationid'],$palRid)]) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '';
-												}
-										?>
-			                                <tr>
-			                                	<td valign="top">
-													<select id="palpation_<?php echo st($palpation_myarray['palpationid']);?>" name="palpation_<?php echo st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
-														<option value=""></option>
-														<option value="0" <?php if($chk == '0') echo " selected";?> class="ex_p5_0">
-															0
-														</option>
-														<option value="1" <?php if($chk == '1') echo " selected";?> class="ex_p5_1">
-															1
-														</option>
-														<option value="2" <?php if($chk == '2') echo " selected";?> class="ex_p5_2">
-															2
-														</option>
-														<option value="3" <?php if($chk == '3') echo " selected";?> class="ex_p5_3">
-															3
-														</option>
-													</select>
-			                                     </td>
-			                                     <td valign="top">
-			                                     	<select id="palpationR_<?php echo st($palpation_myarray['palpationid']);?>" name="palpationR_<?php echo st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
-														<option value=""></option>
-														<option value="0" <?php if($chkR == '0') echo " selected";?> class="ex_p5_0">
-															0
-														</option>
-														<option value="1" <?php if($chkR == '1') echo " selected";?> class="ex_p5_1">
-															1
-														</option>
-														<option value="2" <?php if($chkR == '2') echo " selected";?> class="ex_p5_2">
-															2
-														</option>
-														<option value="3" <?php if($chkR == '3') echo " selected";?> class="ex_p5_3">
-															3
-														</option>
-													</select>
-                                     			</td>
-												<td valign="top">
-													<span>
-														<?php echo st($palpation_myarray['palpation']);?>
-													</span>
-												</td>
-                                  			</tr>	
-										<?php } ?>
-		                                <tr>
-		                                	<td valign="top" colspan="3" align="right"></td>
-		                                </tr>
-                            		</table>
-		                        </span>
-		                   	</div>
+		                    <div is="muscle-palpation-selector"
+                                 v-bind:setter.sync="dynamic.musclePalpationDefaults"
+                                 v-bind:getter.sync="dynamic.musclePalpation"
+                                 v-bind:stop-callbacks="<?= $historyId ? 'true' : 'false' ?>"
+                                 v-bind:doc-id="<?= $docId ?>"></div>
                     		<br />
-                		</li>
-		                <li id="foli8" class="complex">	
-		                    <label class="desc" id="title0" for="Field0">
-		                        Additional Paragraph
-		                        /
-		                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_pal'); getElementById('popupContact1').style.top = '400px'; return false;">Custom Text</button>
-		                    </label>
-		                    <div>
-		                    	<span>
-		                        	<textarea name="additional_paragraph_pal" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph_pal;?></textarea>
-		                        </span>
-		                    </div>
-		                    <br />
-		                </li>
-              		</ul>
-		        </td>
+                    </li>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
+                            Additional paragraph
+                            /
+                            <button v-on:click.prevent="loadCustomText('additional_paragraph_pal')">
+                                Custom text
+                            </button>
+                        </label>
+                        <div>
+                            <span>
+                                <textarea class="field text addr tbox" style="width:650px; height:100px;"
+                                    name="additional_paragraph_pal"
+                                    v-model="form.additional_paragraph_pal"><?= e($additional_paragraph_pal) ?></textarea>
+                            </span>
+                        </div>
+                		<br />
+                    </li>
+                </ul>
+            </td>
 		    </tr>
 		    <tr>
-		        <td valign="top" class="frmhead">
-		        	<ul>
-		                <li id="foli8" class="complex">	
-		                    <label class="desc" id="title0" for="Field0">Joint Sounds</label>
-		                    <div>
-		                    	<span style="width:350px;">
-		                        	Examination Type:
-		                        </span>
-								<span>L = Left, R = Right, B = Both, WNL = Within Normal Limits</span>
-								<a href="#" onclick="$('.jointdd').val('WNL');return false;" class="button">Set all to WNL</a>                   
-							</div>
-		                    <div>
-		                    	<span class="full">
-		                        	<table width="100%" cellpadding="3" cellspacing="1" >
-		                            	<tr>
-		                                	<td valign="top" width="40%">
-		                                		<span>
-			                                    	<?php
-														$joint_exam_sql = "select * from dental_joint_exam where status=1 order by sortby";
-														
-														$joint_exam_my = $db->getResults($joint_exam_sql);
-														if ($joint_exam_my) foreach ($joint_exam_my as $joint_exam_myarray) {
-													?>
-															<input type="checkbox" id="joint_exam<?php echo st($joint_exam_myarray['joint_examid'])?>" name="joint_exam[]" value="<?php echo st($joint_exam_myarray['joint_examid'])?>" <?php if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
-															&nbsp;&nbsp;
-															<?php echo st($joint_exam_myarray['joint_exam']);?><br />
-													<?php
-														}
-													?>
-												</span>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<table width="100%" cellpadding="3" cellspacing="1">
-		                                    	    <?php
-														$joint_sql = "select * from dental_joint where status=1 order by sortby";
-														
-														$joint_my = $db->getResults($joint_sql);
-														if ($joint_my) foreach ($joint_my as $joint_myarray) {
-															if(@array_search($joint_myarray['jointid'],$joid) === false) {
-																$chkJ = '';
-															} else {
-																$chkJ = (!empty($joseq[@array_search($joint_myarray['jointid'],$joid)]) ? $joseq[@array_search($joint_myarray['jointid'],$joid)] : '');
-															}
-													?>
-			                                            	<tr>
-			                                                	<td valign="top" width="40%">
-			                                                		<span>
-																		<?php echo st($joint_myarray['joint']);?>
-																	</span>
-			                                                    </td>
-			                                                    <td valign="top">
-			                                                        <select class="jointdd" id="joint_<?php echo st($joint_myarray['jointid']);?>" name="joint_<?php echo st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
-			                                                            <option value=""></option>
-			                                                            <option value="L" <?php if($chkJ == 'L') echo " selected";?> >
-			                                                                L
-			                                                            </option>
-			                                                            <option value="R" <?php if($chkJ == 'R') echo " selected";?>>
-			                                                                R
-			                                                            </option>
-			                                                            <option value="B" <?php if($chkJ == 'B') echo " selected";?>>
-			                                                                B
-			                                                            </option>
-			                                                            <option value="WNL" <?php if($chkJ == 'WNL') echo " selected";?>>
-			                                                                WNL
-			                                                            </option>
-
-			                                                        </select>
-																</td>
-															</tr>
-													<?php } ?>
-		                                        </table>
-		                                    </td>
-		                                </tr>
-		                            </table>
-                        		</span>
-		                    </div>
-                   		</li>
-					</ul>
-				</td>
-			</tr>
-		    <tr>
-		        <td valign="top" class="frmhead">
-		        	<ul>
-		                <li id="foli8" class="complex">	
-		                    <label class="desc" id="title0" for="Field0">
-		                        Range Of Motion
-		                    </label>
-		                    <div>
-		                    	<span >
-		                        	<table width="100%" cellpadding="3" cellspacing="1">
-		                            	<tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    	Interincisal Opening
-		                                        </span>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                        	<input type="text" name="i_opening_from" class="field text addr tbox" style="width:50px;" value="<?php echo $i_opening_from;?>">
-		                                        </span>
-		                                    </td>
-		                                </tr>
-										<tr>
-			                                <td valign="top">
-		                                    	<span>George Scale</span>
-		                                    </td>
-	                                        <td valign="top">
-		                                        <input type="text" id="protrusion_from" name="protrusion_from" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_from;?>">
-		                                        &nbsp;&nbsp;&nbsp;
-		                                        to
-		                                        &nbsp;&nbsp;&nbsp;
-		                                        <input type="text" id="protrusion_to" name="protrusion_to" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to;?>">
-	                                    	</td>
-		                                </tr>
- 										<tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    		Protrusion (Automatically calculated from George Gauge above)
-		                                        </span>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                    		<input type="text" id="protrusion_equal" onkeyup="check_georges(this.form);" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_equal;?>">
-		                                		</span>
-		                                	</td>
-		                                </tr>
-		                                <tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    		Left Lateral Excursion
-		                                        </span>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                    		<input type="text" name="l_lateral_from" class="field text addr tbox" style="width:50px;" value="<?php echo $l_lateral_from;?>">
-		                                        </span>
-		                                    </td>
-		                                </tr>
-		                                <tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    		Right Lateral Excursion
-		                                        </span>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                    		<input type="text" name="r_lateral_from" class="field text addr tbox" style="width:50px;" value="<?php echo $r_lateral_from;?>">
-		                                        </span>
-		                                    </td>
-		                                </tr>
-		                                <tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    		Deviation
-		                                        </span>
-												&nbsp;&nbsp;
-												<select id="deviation_r_l" name="deviation_r_l" class="field text addr tbox" style="width:60px;">
-													<option value=""></option>
-													<option value="Right" <?php if($deviation_r_l == 'Right') echo " selected";?> >
-														Right
-													</option>
-													<option value="Left" <?php if($deviation_r_l == 'Left') echo " selected";?>>
-														Left
-													</option>
-												</select>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                    		<input type="text" name="deviation_from" class="field text addr tbox" style="width:50px;" value="<?php echo $deviation_from;?>">
-		                                        </span>
-		                                    </td>
-		                                </tr>
-		                                <tr>
-		                                	<td valign="top">
-		                                    	<span>
-		                                    		Deflection
-		                                        </span>
-												&nbsp;
-												<select id="deflection_r_l" name="deflection_r_l" class="field text addr tbox" style="width:60px;">
-													<option value=""></option>
-													<option value="Right" <?php if($deflection_r_l == 'Right') echo " selected";?> >
-														Right
-													</option>
-													<option value="Left" <?php if($deflection_r_l == 'Left') echo " selected";?>>
-														Left
-													</option>
-												</select>
-		                                    </td>
-		                                    <td valign="top">
-		                                    	<span>
-		                                    		<input type="text" name="deflection_from" class="field text addr tbox" style="width:50px;" value="<?php echo $deflection_from;?>">
-		                                        </span>
-		                                    </td>
-		                                </tr>    
-										<tr>
-											<td valign="top"><span>Best Eccovision</span></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td>
-										       <span style="padding-left:30px">Horizontal</span>
-										    </td>
-										    <td>
-										    	 <input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm
-										  	</td>
-										<tr>
-										  	<td>
-										  		<span style="padding-left:30px">Vertical</span>
-										  	</td>
-										  	<td>
-										  		<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
-										  	</td>
-										</tr>
-										<tr>
-						  					<td valign="top">
-										  		<span>
-										   			Initial Device Setting
-										  		</span>
-											</td>
-						 					<td></td>
-  										</tr>
-										<tr>
-											<td>
-											 	<span style="padding-left:30px">Incisal Edge Position (George/TAP Gauge Setting)</span>
-											</td>
-											<td>
-												 <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm 
-											</td>
-										</tr>
-										<tr>
-											<td>
-										  		<span style="padding-left:30px">Vertical</span>
-										  	</td>
-										  	<td>
-										  		 <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
-						  					</td>
-										</tr>
-                           			</table>
-                            		<input type="checkbox" name="range_normal" value="1" <?php if($range_normal == 1) echo " checked"; ?>/>
-		                            Within normal limits
-		                            <br /><br />
-		                            NOTE: (Normal range of motion has been noted Vertical 40 - 50mm,  Lateral 12mm, Protrusive 9mm)
-                        		</span>
-                   			</div>
-                    		<br />
-		                </li>
-		                <li id="foli8" class="complex">	
-		                    <label class="desc" id="title0" for="Field0">
-		                        Additional Paragraph
-		                        /
-		                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_rm'); return false;">Custom Text</button>
-		                    </label>
-		                    <div>
-		                    	<span>
-		                        	<textarea name="additional_paragraph_rm" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph_rm;?></textarea>
-		                        </span>
-		                    </div>
-		                    <br />
-		                </li>
-					</ul>
-				</td>
-			</tr>        
- 		</table>
-		<div style="float:left; margin-left:10px;">
-	        <input type="reset" value="Undo Changes" />
-		</div>
-		<div style="float:right;">
-	        <input type="submit" name="ex_pagebtn" value="Save" />
-	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
-		    &nbsp;&nbsp;&nbsp;
-		</div>
-	</form>
+            <td valign="top" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">Joint sounds</label>
+                        <div>
+                            <span style="width:350px;">
+                                Examination type:
+                            </span>
+                            <span>L = Left, R = Right, B = Both, WNL = Within normal limits</span>
+                            <a href="#" class="button form-backup-disable"
+                               v-on:click.prevent="setJointSoundsCallback()">Set all to WNL</a>
+                        </div>
+                        <table width="100%" cellpadding="3" cellspacing="1">
+                            <tr>
+                                <td valign="top" width="40%">
+                                    <?php foreach ($jointExams as $current) { ?>
+                                        <input type="checkbox" style="width:auto;"
+                                            id="joint_type_<?= $current['joint_examid'] ?>"
+                                            name="joint_exam[<?= $current['joint_examid'] ?>]"
+                                            v-model="dynamic.jointExams[<?= $current['joint_examid'] ?>]"
+                                            v-bind:true-value="1" v-bind:false-value="0" />
+                                        &nbsp;&nbsp;
+                                        <label for="joint_type_<?= $current['joint_examid'] ?>">
+                                            <?= e($current['joint_exam']) ?>
+                                        </label>
+                                        <br/>
+                                    <?php } ?>
+                                </td>
+                                <td valign="top">
+                                    <table width="100%" cellpadding="3" cellspacing="1">
+                                        <?php foreach ($joints as $current) { ?>
+                                            <tr>
+                                                <td valign="top" width="40%">
+                                                    <span>
+                                                        <?= e($current['joint']) ?>
+                                                    </span>
+                                                </td>
+                                                <td valign="top">
+                                                    <select class="field text addr tbox" style="width:60px;"
+                                                        name="joint_<?= $current['jointid'] ?>"
+                                                        v-model="dynamic.jointSounds[<?= $current['jointid'] ?>].position">
+                                                        <option value=""></option>
+                                                        <?= dropdown($soundValues) ?>
+                                                    </select>
+                                                    <?php if (in_array($current['joint'], ['Closing click', 'Opening click'])) { ?>
+                                                        <select style="width:65px;"
+                                                            name="jointid_stages[<?= $current['jointid'] ?>]"
+                                                            v-model="dynamic.jointSounds[<?= $current['jointid'] ?>].stage">
+                                                            <option></option>
+                                                            <?= dropdown($stages) ?>
+                                                        </select>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <table width="100%" cellpadding="3" cellspacing="1">
+                            <colgroup>
+                                <col width="27%"/>
+                                <col width="20%"/>
+                                <col width="6%"/>
+                                <col width="27%"/>
+                                <col width="20%"/>
+                            </colgroup>
+                            <tr>
+                                <th colspan="5">
+                                    <label class="desc">
+                                        Range of motion
+                                    </label>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                    Interincisal opening
+                                    </span>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" style="width:50px;"
+                                            name="i_opening_from"
+                                            v-model="form.i_opening_from" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td colspan="2" valign="top">
+                                    <span>
+                                        Best eccovision
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>Protrusive range (min to max)</span>
+                                </td>
+                                <td valign="top">
+                                    <input type="text" class="field text addr tbox" style="width:50px;"
+                                        name="protrusion_from"
+                                        v-model="form.protrusion_from" />
+                                    to
+                                    <input type="text" class="field text addr tbox" style="width:50px;"
+                                        name="protrusion_to"
+                                        v-model="form.protrusion_to" />
+                                </td>
+                                <td></td>
+                                <td valign="top">
+                                    <span style="padding-left:30px">Horizontal</span>
+                                </td>
+                                <td valign="top">
+                                    <input type="text" size="5"
+                                        name="optimum_echovision_hor"
+                                        v-model="eccovisionHorizontal" />mm
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                        Protrusion total (automatically calculated from above)
+                                    </span>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" readonly style="width:50px;"
+                                            v-bind:class="[protrusionRange < 0 ? 'error' : '']"
+                                            v-bind:title="[protrusionRange < 0 ? 'The start of the range cannot be higher than the end' : '']"
+                                            name="protrusion_equal"
+                                            v-model="protrusionRange" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td valign="top">
+                                    <span style="padding-left:30px">Vertical</span>
+                                </td>
+                                <td valign="top">
+                                    <input type="text" size="5"
+                                        name="optimum_echovision_ver"
+                                        v-model="eccovisionVertical" />mm
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                        Left lateral excursion
+                                    </span>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" style="width:50px;"
+                                            name="l_lateral_from"
+                                            v-model="form.l_lateral_from" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td colspan="2" valign="top">
+                                    <span>
+                                        Initial device setting
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                        Right lateral excursion
+                                    </span>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" style="width:50px;"
+                                            name="r_lateral_from"
+                                            v-model="form.r_lateral_from" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td valign="top">
+                                    <span style="padding-left:30px">
+                                        Incisal edge position (George/Pro gauge setting)
+                                    </span>
+                                </td>
+                                <td valign="top">
+                                    <input type="text" size="5"
+                                        v-on:change="checkIncisal"
+                                        name="initial_device_titration_1"
+                                        v-model="deviceSettingsIncisal" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                        Deviation
+                                    </span>
+                                    &nbsp;&nbsp;
+                                    <select class="field text addr tbox" style="width:60px;"
+                                        name="deviation_r_l"
+                                        v-model="form.deviation_r_l">
+                                        <option></option>
+                                        <option>WNL</option>
+                                        <option>Right</option>
+                                        <option>Left</option>
+                                    </select>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" style="width:50px;"
+                                            name="deviation_from"
+                                            v-model="form.deviation_from" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td valign="top">
+                                    <span style="padding-left:30px">Vertical</span>
+                                </td>
+                                <td valign="top">
+                                    <input type="text" size="5"
+                                        name="optimum_echovision_ver"
+                                        v-model="deviceSettingsVertical" />mm
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <span>
+                                        Deflection
+                                    </span>
+                                    &nbsp;
+                                    <select class="field text addr tbox" style="width:60px;"
+                                        name="deflection_r_l"
+                                        v-model="form.deflection_r_l">
+                                        <option></option>
+                                        <option>WNL</option>
+                                        <option>Right</option>
+                                        <option>Left</option>
+                                    </select>
+                                </td>
+                                <td valign="top">
+                                    <span>
+                                        <input type="text" class="field text addr tbox" style="width:50px;"
+                                            name="deflection_from"
+                                            v-model="form.deflection_from" />mm
+                                    </span>
+                                </td>
+                                <td></td>
+                                <td valign="top"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td valign="top" colspan="2">
+                                    NOTE: (Normal range of motion has been noted Vertical 40 - 50mm, Lateral 12mm,
+                                    Protrusive 9mm)
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                    </li>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
+                            Additional paragraph
+                            /
+                            <button v-on:click.prevent="loadCustomText('additional_paragraph_rm')">
+                                Custom text
+                            </button>
+                        </label>
+                        <div>
+                            <span>
+                                <textarea class="field text addr tbox" style="width:650px; height:100px;"
+                                    name="additional_paragraph_rm"
+                                    v-model="form.additional_paragraph_rm"><?= e($additional_paragraph_rm) ?></textarea>
+                            </span>
+                        </div>
+                        <br/>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <div style="float:right;">
+        <button class="save-action hidden"
+                title="Save a copy of the last saved values"
+                v-bind:disabled="backupInProgress ? true : false"
+                v-on:click.prevent="backup">
+            <span v-show="!backupInProgress">Archive page</span>
+            <span v-show="backupInProgress">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+        </button>
+        <button class="save-action" v-on:click.prevent="resetData">Undo Changes</button>
+        <button class="save-action" v-on:click.prevent="save">Save</button>
+        <button class="save-action" v-on:click.prevent="saveAndProceed">Save And Proceed</button>
+        &nbsp;&nbsp;&nbsp;
+    </div>
+</form>
 
 	<br />
 		<?php include("includes/form_bottom.htm");?>
@@ -775,11 +806,9 @@
 	</div>
 	<div id="backgroundPopup1"></div>
 	<br /><br />	
-
-<?php
-	} else {  // end pt info check
-		print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
-	}
-?>
-
+<?php include __DIR__ . '/includes/vue-setup.htm'; ?>
+<link rel="stylesheet" href="/assets/css/components/muscle-palpation-selector.css" />
+<script type="text/javascript" src="/assets/app/components/muscle-palpation-selector.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/patient/exams/tmj-rom.js?v=20180406"></script>
+<script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

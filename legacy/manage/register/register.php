@@ -172,6 +172,7 @@
                                                         <option <?php echo  ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                                         <option <?php echo  ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                                         <option <?php echo  ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                                                        <option <?php echo  ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
                                                     </select>
                                                 </div>
                                                 <div class="sepH_b third">
@@ -278,6 +279,7 @@
                                                     <option <?php echo  ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                                     <option <?php echo  ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                                     <option <?php echo  ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                                                    <option <?php echo  ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
                                                 </select>
                                             </div>
                                             <div class="sepH_b third">
@@ -389,6 +391,7 @@
                                                     <option <?php echo  ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                                     <option <?php echo  ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                                     <option <?php echo  ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                                                    <option <?php echo  ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
                                                 </select>
                                             </div>
                                             <div class="sepH_b third service_info">

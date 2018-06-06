@@ -5,7 +5,7 @@ namespace Tests\Unit\Services\Users;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PaymentReportRepository;
@@ -44,6 +44,9 @@ class UserNumberRetrieverTest extends UnitTestCase
         $this->userNumberRetriever = new UserNumberRetriever($repositoryFactory);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testAddNumbers()
     {
         $userData = $this->userNumberRetriever->addUserNumbers($this->user, $this->methods);
@@ -57,10 +60,14 @@ class UserNumberRetrieverTest extends UnitTestCase
                 'unmailed_claims' => 5,
                 'unmailed_claims_software' => 7,
             ],
+            'docid' => 0,
         ];
         $this->assertEquals($expected, $userData);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithoutAtChar()
     {
         $this->methods['payment_reports'] = 'foo';
@@ -69,6 +76,9 @@ class UserNumberRetrieverTest extends UnitTestCase
         $this->userNumberRetriever->addUserNumbers($this->user, $this->methods);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithNonexistentMethod()
     {
         $this->methods['support_tickets'] = SupportTicketRepository::class . '@getFoo';
@@ -77,6 +87,9 @@ class UserNumberRetrieverTest extends UnitTestCase
         $this->userNumberRetriever->addUserNumbers($this->user, $this->methods);
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function testWithSoftwareUserType()
     {
         $this->user->user_type = InsurancesController::DSS_USER_TYPE_SOFTWARE;
@@ -91,6 +104,7 @@ class UserNumberRetrieverTest extends UnitTestCase
                 'unmailed_claims' => 7,
                 'unmailed_claims_software' => 7,
             ],
+            'docid' => 0,
         ];
         $this->assertEquals($expected, $userData);
     }

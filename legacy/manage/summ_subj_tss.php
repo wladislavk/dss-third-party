@@ -20,7 +20,7 @@
 	else
 	{
 
-	$sql = "select * from dental_thorton where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$sql = "select * from dental_thorton_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$myarray = $db->getRow($sql);
 	$thortonid = st($myarray['thortonid']);
@@ -38,7 +38,7 @@
         ${'snore_'.$a['thorntonid']} = $a['answer'];
 	}
 
-	$sql = "select * from dental_q_sleep where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$sql = "select * from dental_q_sleep_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$myarray = $db->getRow($sql);
 

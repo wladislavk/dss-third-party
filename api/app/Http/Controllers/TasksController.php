@@ -2,13 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Services\Tasks\TaskRetriever;
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class TasksController extends BaseRestController
 {
@@ -19,12 +20,13 @@ class TasksController extends BaseRestController
     private $taskRetriever;
 
     public function __construct(
+        Auth $auth,
         Config $config,
-        BaseRepository $repository,
+        AbstractRepository $repository,
         Request $request,
         TaskRetriever $taskRetriever
     ) {
-        parent::__construct($config, $repository, $request);
+        parent::__construct($auth, $config, $repository, $request);
         $this->taskRetriever = $taskRetriever;
     }
 
@@ -52,7 +54,7 @@ class TasksController extends BaseRestController
      */
     public function index()
     {
-        $tasks = $this->taskRetriever->getTasksWithType($this->user);
+        $tasks = $this->taskRetriever->getTasksWithType($this->user());
         return ApiResponse::responseOk('', $tasks);
     }
 
@@ -87,7 +89,7 @@ class TasksController extends BaseRestController
      */
     public function indexForPatient($id)
     {
-        $tasks = $this->taskRetriever->getTasksWithType($this->user, $id);
+        $tasks = $this->taskRetriever->getTasksWithType($this->user(), $id);
         return ApiResponse::responseOk('', $tasks);
     }
 
@@ -211,25 +213,25 @@ class TasksController extends BaseRestController
     {
         switch ($type) {
             case 'all':
-                $tasks = $this->repository->getAll($this->user->userid);
+                $tasks = $this->repository->getAll($this->user()->userid);
                 break;
             case 'overdue':
-                $tasks = $this->repository->getOverdue($this->user->userid);
+                $tasks = $this->repository->getOverdue($this->user()->userid);
                 break;
             case 'today':
-                $tasks = $this->repository->getToday($this->user->userid);
+                $tasks = $this->repository->getToday($this->user()->userid);
                 break;
             case 'tomorrow':
-                $tasks = $this->repository->getTomorrow($this->user->userid);
+                $tasks = $this->repository->getTomorrow($this->user()->userid);
                 break;
             case 'this-week':
-                $tasks = $this->repository->getThisWeek($this->user->userid);
+                $tasks = $this->repository->getThisWeek($this->user()->userid);
                 break;
             case 'next-week':
-                $tasks = $this->repository->getNextWeek($this->user->userid);
+                $tasks = $this->repository->getNextWeek($this->user()->userid);
                 break;
             case 'later':
-                $tasks = $this->repository->getLater($this->user->userid);
+                $tasks = $this->repository->getLater($this->user()->userid);
                 break;
             default:
                 $tasks = [];
@@ -254,19 +256,19 @@ class TasksController extends BaseRestController
     {
         switch ($type) {
             case 'all':
-                $tasks = $this->repository->getAllForPatient($this->user->docid, $patientId);
+                $tasks = $this->repository->getAllForPatient($this->user()->docid, $patientId);
                 break;
             case 'overdue':
-                $tasks = $this->repository->getOverdueForPatient($this->user->docid, $patientId);
+                $tasks = $this->repository->getOverdueForPatient($this->user()->docid, $patientId);
                 break;
             case 'today':
-                $tasks = $this->repository->getTodayForPatient($this->user->docid, $patientId);
+                $tasks = $this->repository->getTodayForPatient($this->user()->docid, $patientId);
                 break;
             case 'tomorrow':
-                $tasks = $this->repository->getTomorrowForPatient($this->user->docid, $patientId);
+                $tasks = $this->repository->getTomorrowForPatient($this->user()->docid, $patientId);
                 break;
             case 'future':
-                $tasks = $this->repository->getFutureForPatient($this->user->docid, $patientId);
+                $tasks = $this->repository->getFutureForPatient($this->user()->docid, $patientId);
                 break;
             default:
                 $tasks = [];

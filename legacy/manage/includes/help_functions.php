@@ -1,6 +1,10 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
     function help_user_update($id, $help_con)
     {
+        if (getenv('DOCKER_USED')) {
+            return;
+        }
+
         //return true; //temp work around until fully setup
         $db = new Db();
 
@@ -51,6 +55,10 @@
 
     function help_user_delete($id, $help_con)
     {
+        if (getenv('DOCKER_USED')) {
+            return;
+        }
+
         $db = new Db();
 
         $sql = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $id)."'";

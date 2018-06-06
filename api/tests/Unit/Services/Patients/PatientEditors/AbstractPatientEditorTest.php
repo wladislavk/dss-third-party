@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use Tests\Dummies\DummyPatientEditor;
@@ -49,7 +49,7 @@ class AbstractPatientEditorTest extends PatientEditorTestCase
         $this->assertEquals($summary, $this->updatedSummary);
         $letters = [
             'patientId' => 1,
-            'docId' => 0,
+            'docId' => 2,
             'userId' => 2,
             'userType' => 0,
         ];

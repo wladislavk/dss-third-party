@@ -7,6 +7,21 @@ namespace DentalSleepSolutions\Http\Controllers;
  */
 class SummariesController extends BaseRestController
 {
+    /** @var string */
+    protected $ipAddressKey = 'ip_address';
+
+    /** @var string */
+    protected $patientKey = 'patientid';
+
+    /** @var string */
+    protected $doctorKey = 'docid';
+
+    /** @var string */
+    protected $userKey = 'userid';
+
+    /** @var string */
+    protected $filterByPatientKey = 'patientid';
+
     /**
      * @SWG\Get(
      *     path="/summaries",
@@ -63,7 +78,6 @@ class SummariesController extends BaseRestController
      * @SWG\Post(
      *     path="/summaries",
      *     @SWG\Parameter(name="formid", in="formData", type="integer"),
-     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
      *     @SWG\Parameter(name="patient_name", in="formData", type="string"),
      *     @SWG\Parameter(name="patient_dob", in="formData", type="string"),
      *     @SWG\Parameter(name="docpcp", in="formData", type="string", pattern="^[0-9]+$"),
@@ -201,8 +215,6 @@ class SummariesController extends BaseRestController
      *     @SWG\Parameter(name="year_check_3", in="formData", type="string"),
      *     @SWG\Parameter(name="year_check_4", in="formData", type="string"),
      *     @SWG\Parameter(name="additional_notes", in="formData", type="string"),
-     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
-     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
      *     @SWG\Parameter(name="status", in="formData", type="integer"),
      *     @SWG\Parameter(name="office", in="formData", type="string"),
      *     @SWG\Parameter(name="sleep_same_room", in="formData", type="string"),
@@ -284,7 +296,6 @@ class SummariesController extends BaseRestController
      *     path="/summaries/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
      *     @SWG\Parameter(name="formid", in="formData", type="integer"),
-     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
      *     @SWG\Parameter(name="patient_name", in="formData", type="string"),
      *     @SWG\Parameter(name="patient_dob", in="formData", type="string"),
      *     @SWG\Parameter(name="docpcp", in="formData", type="string", pattern="^[0-9]+$"),
@@ -422,8 +433,6 @@ class SummariesController extends BaseRestController
      *     @SWG\Parameter(name="year_check_3", in="formData", type="string"),
      *     @SWG\Parameter(name="year_check_4", in="formData", type="string"),
      *     @SWG\Parameter(name="additional_notes", in="formData", type="string"),
-     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
-     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
      *     @SWG\Parameter(name="status", in="formData", type="integer"),
      *     @SWG\Parameter(name="office", in="formData", type="string"),
      *     @SWG\Parameter(name="sleep_same_room", in="formData", type="string"),
@@ -502,5 +511,29 @@ class SummariesController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/summaries/latest",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Summary")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function latest()
+    {
+        return parent::latest();
     }
 }

@@ -9,14 +9,13 @@ include_once 'includes/constants.inc';
 include_once 'includes/dental_patient_summary.php';
 include_once 'includes/preauth_functions.php';
 
+$db = new Db();
 $last_sql = "
     SELECT * FROM dental_flow_pg2_info info
     JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
     WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ORDER BY date_completed DESC, info.id DESC
 ";
-if (isset($db) && $db instanceof Db) {
-    $last = $db->getRow($last_sql);
-}
+$last = $db->getRow($last_sql);
 
 if ($last['section'] == 1) {
     $final_sql = "

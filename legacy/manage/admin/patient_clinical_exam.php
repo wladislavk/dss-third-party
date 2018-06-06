@@ -119,7 +119,7 @@ if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1)
 	}
 	else
 	{
-		$ed_sql = " update dental_ex_page4 set 
+		$ed_sql = " update dental_ex_page4_view set 
 		exam_teeth = '".s_for($exam_teeth_arr)."',
 		other_exam_teeth = '".s_for($other_exam_teeth)."',
 		caries = '".s_for($caries)."',
@@ -177,7 +177,7 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page4_view where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 

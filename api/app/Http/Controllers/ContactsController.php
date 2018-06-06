@@ -123,7 +123,7 @@ class ContactsController extends BaseRestController
     {
         $data = array_merge($this->request->all(), [
             'ip_address' => $this->request->ip(),
-            'docid' => $this->user->docid,
+            'docid' => $this->user()->docid,
         ]);
 
         $resource = $this->repository->create($data);
@@ -222,7 +222,7 @@ class ContactsController extends BaseRestController
         $contacts = $contactsQueryComposer->composeFindContactQuery(
             $contactType,
             $status,
-            $this->user->docid,
+            $this->user()->docid,
             $letter,
             $sortDir,
             $orderByColumns
@@ -258,7 +258,7 @@ class ContactsController extends BaseRestController
         $partial = $request->input('partial_name', '');
 
         $response = $contactsAndCompaniesRetriever
-            ->retrieveContactsAndCompanies($this->user->docid, $partial, $withoutCompanies);
+            ->retrieveContactsAndCompanies($this->user()->docid, $partial, $withoutCompanies);
 
         return ApiResponse::responseOk('', $response);
     }
@@ -291,7 +291,7 @@ class ContactsController extends BaseRestController
      */
     public function getInsuranceContacts(Request $request)
     {
-        $data = $this->repository->getInsuranceContacts($this->user->docid);
+        $data = $this->repository->getInsuranceContacts($this->user()->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -323,7 +323,7 @@ class ContactsController extends BaseRestController
 
         $orderByColumns = $contactOrderRetriever->getContactsOrderByColumns($sort);
         $referredByContacts = $this->repository
-            ->getReferredByContacts($this->user->docid, $orderByColumns, $sortDir);
+            ->getReferredByContacts($this->user()->docid, $orderByColumns, $sortDir);
 
         $referredByContacts = $paginator->limitResultToPage($referredByContacts, $page, $contactsPerPage);
 

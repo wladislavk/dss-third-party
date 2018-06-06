@@ -2,15 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use DentalSleepSolutions\Facades\ApiResponse;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Request extends FormRequest
 {
-    /** @var Closure */
-    protected $adminResolver;
+    /** @var \Symfony\Component\HttpFoundation\ParameterBag */
+    public $request;
 
     /** @var array */
     protected $rules = [];
@@ -36,6 +35,14 @@ class Request extends FormRequest
     }
 
     /**
+     * @return array
+     */
+    public function payload()
+    {
+        return $this->getInputSource()->all();
+    }
+
+    /**
      * Get the proper failed validation response for the request.
      *
      * @param array $errors
@@ -51,45 +58,6 @@ class Request extends FormRequest
             ];
         }
         return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $transformed]);
-    }
-
-    /**
-     * Get the admin making the request.
-     *
-     * @return mixed
-     */
-    public function admin()
-    {
-        return call_user_func($this->getAdminResolver());
-    }
-
-    /**
-     * Get the admin resolver callback.
-     *
-     * @return Closure
-     */
-    public function getAdminResolver()
-    {
-        if ($this->adminResolver) {
-            return $this->adminResolver;
-        }
-
-        return function()
-        {
-            // noop
-        };
-    }
-
-    /**
-     * Set the admin resolver callback.
-     *
-     * @param Closure $callback
-     * @return $this
-     */
-    public function setAdminResolver(Closure $callback)
-    {
-        $this->adminResolver = $callback;
-        return $this;
     }
 
     /**

@@ -5,6 +5,7 @@ include('includes/formatters.php');
 
 $docId = intval($_SESSION['docid']);
 
+$db = new Db();
 if (isset($_REQUEST["delid"])) {
     $patientId = intval($_POST['delid']);
     $db->query("DELETE FROM dental_patients
@@ -417,7 +418,6 @@ function joinList($section = 'all')
         'rx-lomn' => 'LEFT JOIN (
             SELECT pid AS patientid, MAX(id) AS max_id
             FROM dental_flow_pg1
-            GROUP BY pid
             GROUP BY pid
         ) rx_lomn_pivot ON rx_lomn_pivot.patientid = p.patientid
         LEFT JOIN dental_flow_pg1 rx_lomn ON rx_lomn.id = rx_lomn_pivot.max_id',

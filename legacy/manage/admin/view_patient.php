@@ -229,10 +229,13 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
 
         if (isset($_POST['location'])) {
             $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='".$_GET['pid']."';";
+            $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
             if ($db->getNumberRows($ds_sql) > 0) {
-                $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+                $summaryRow = $db->getRow($ds_sql);
+                $summaryId = $summaryRow['summaryid'];
+                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
             } else {
-                $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+                $loc_query = "INSERT INTO dental_summary SET location='$escapedLocation', patientid='".$_GET['pid']."';";
             }
             $db->query($loc_query);
         }

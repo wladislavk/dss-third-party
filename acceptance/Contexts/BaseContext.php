@@ -8,8 +8,6 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\DriverException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
 
@@ -155,7 +153,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$parentElement) {
             $parentElement = $this->page;
         }
-        $element = $parentElement->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
+        $element = $parentElement->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
         if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }

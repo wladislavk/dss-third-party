@@ -43,8 +43,12 @@ RUN set -xe \
         php7.2-pdo \
         php7.2-tidy \
         php7.2-xml \
+        php7.2-xdebug \
         libapache2-mod-php7.2 \
     && apt-get -y upgrade \
+    # Disable Xdebug
+    && rm /etc/php/7.2/apache2/conf.d/20-xdebug.ini \
+    && rm /etc/php/7.2/cli/conf.d/20-xdebug.ini \
     # PDFtk
     && curl -sSLo pdftk-2.02-1.el6.x86_64.rpm https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm \
     && alien pdftk-2.02-1.el6.x86_64.rpm \

@@ -42,6 +42,7 @@ default:
                 - Contexts\PatientSummary
                 - Contexts\Profile
                 - Contexts\ProgressNotes
+                - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
 chrome:

@@ -125,5 +125,5 @@ if (!isset($patientId)) {
         <div id="backgroundPopupRef"></div>
 
 <script src="js/dss_summ.js" type="text/javascript"></script>
-<script src="/assets/app/soap-permissions.js?v=20180502"text/javascript"></script>
+<script src="/assets/app/soap-permissions.js?v=20180502" type="text/javascript"></script>
 <?php include 'includes/bottom.htm';?>

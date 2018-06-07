@@ -344,11 +344,11 @@ foreach ($letter_contacts as $key => $contact) {
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_did_not_come_in_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_did_not_come_in_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

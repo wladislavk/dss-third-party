@@ -474,7 +474,7 @@ if ($r['homepage'] != '1') {
         </script>
         <?php
         $hideallblocks = 0;
-        if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php") {
+        if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
             $getstepqrysql = "
                 SELECT * FROM dental_flow_pg2 
                 WHERE patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' 

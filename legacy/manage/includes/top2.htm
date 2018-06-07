@@ -173,7 +173,7 @@ include_once('includes/patient_changes.php');
     <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
     <link rel="stylesheet" href="css/form.css" type="text/css" />
 
- <?php if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php") {
+ <?php if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
     $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".$_GET['pid']."' LIMIT 1;";
 
     $stepquery = $db->getRow($getstepqrysql);

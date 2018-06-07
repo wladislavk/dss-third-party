@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-//include "includes/top.htm";
 
 session_start();
 require_once('admin/includes/main_include.php');
@@ -341,7 +340,6 @@ $cur_balfinal = $cur_bal - $cur_bal2;?>
 </table>
 
 <?php include 'ledger_summary_report.php'; ?>
-</div>
-<br /><br />	
+<br /><br />
 </body>
 </html>

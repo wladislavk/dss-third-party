@@ -25,6 +25,11 @@ class Pages
             'vue' => true,
         ],
         [
+            'name' => 'Scheduler',
+            'url' => '/manage/calendar.php',
+            'vue' => false,
+        ],
+        [
             'name' => 'Support',
             'url' => '/manage/support.php',
             'vue' => false,
@@ -43,7 +48,9 @@ class Pages
                 $url = $aPage['url'];
                 if ($aPage['vue']) {
                     $url = self::VUE_URL_PREFIX . $url;
+                    return $url;
                 }
+                $url = 'http://' . SUT_HOST . $url;
                 return $url;
             }
         }

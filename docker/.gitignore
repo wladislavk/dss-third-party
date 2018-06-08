@@ -2,4 +2,4 @@ ssh_keys
 .idea
 .env
 images/*
-!images/.gitkeep
+!images/resources

@@ -176,7 +176,7 @@ $bodywidth = ($numf * 160) + 320;
             <tr>
                 <td>
                     <?php
-                    $sqlex = "select * from dental_ex_page5_view where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                    $sqlex = "select * from dental_ex_page5_pivot where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                     $myarrayex = $db->getRow($sqlex);
                     $dentaldevice = st($myarrayex['dentaldevice']);
                     ?>
@@ -476,13 +476,13 @@ $bodywidth = ($numf * 160) + 320;
         }
     }
 
-    $q_sql = "SELECT * FROM dental_q_page1_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $q_sql = "SELECT * FROM dental_q_page1_pivot WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $q_row = $db->getRow($q_sql);
 
-    $t_sql = "SELECT tot_score FROM dental_thorton_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $t_sql = "SELECT tot_score FROM dental_thorton_pivot WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $t_row = $db->getRow($t_sql);
 
-    $s_sql = "SELECT analysis FROM dental_q_sleep_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $s_sql = "SELECT analysis FROM dental_q_sleep_pivot WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $s_row = $db->getRow($s_sql);
     $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     ?>
@@ -494,7 +494,7 @@ $bodywidth = ($numf * 160) + 320;
                 <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
             </tr>
             <?php
-            $s = "SELECT initial_device_titration_1 FROM dental_summary_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+            $s = "SELECT initial_device_titration_1 FROM dental_summary_pivot WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
             $r = $db->getRow($s); ?>
             <tr>
                 <td style="background: #F9FFDF;">

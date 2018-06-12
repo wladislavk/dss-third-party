@@ -764,7 +764,7 @@ function create_letter_pdf($letterid){
   $doc_phone = $loc_r['phone'];
   $doc_fax = $loc_r['fax'];
 
-  $loc_sql = "SELECT location FROM dental_summary_view where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
+  $loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
   $loc_r = $db->getRow($loc_sql);
   if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
     $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($GLOBALS['con'],$loc_r['location'])."' AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";

@@ -139,6 +139,3 @@ if(isset($_POST['add_doc'])){
 </table>
 
 <?php include "includes/bottom.htm";?>
-
-
- 

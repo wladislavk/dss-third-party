@@ -20,7 +20,6 @@ function send_letter(id, reload, page)
             }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 }

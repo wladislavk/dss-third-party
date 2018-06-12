@@ -55,8 +55,6 @@ function save_insurance_image($file, $imagetypeid) {
       $banner1 = str_replace(".","_",$banner1);
       $banner1 .= ".".$extension;
 
-      //@move_uploaded_file($file["tmp_name"],"q_file/".$banner1);
-      //@chmod("q_file/".$banner1,0777);
       uploadImage($file, '../../../shared/q_file/'.$banner1);
 
       $ins_sql = " insert into dental_q_image set 
@@ -397,8 +395,5 @@ $api_r = $db->getRow($api_sql);
 } else {  // end pt info check
   print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
-
-
-//include "includes/bottom.htm";
 ?>
 

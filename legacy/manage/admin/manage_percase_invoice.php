@@ -17,35 +17,6 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-/*$sql = "select du.name, du.userid, du.username, count(dl.ledgerid) as num_trxn from dental_users du 
-    LEFT JOIN dental_ledger dl 
-	ON dl.docid=du.userid 
-		AND dl.status = '".DSS_PERCASE_PENDING."' 
-WHERE du.docid=0
- group by du.name, du.username, du.userid";
-echo $sql;
-
-                $case_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                JOIN dental_patients dp ON dl.patientid=dp.patientid
-        WHERE 
-                dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['userid']."' AND
-                dl.percase_status = '".DSS_PERCASE_PENDING."'
-";
-$case_q = mysqli_query($con, $case_sql);
-                $case = mysqli_fetch_assoc($case_q);
-                $case30_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                JOIN dental_patients dp ON dl.patientid=dp.patientid
-        WHERE 
-                dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['userid']."' AND
-                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY) 
-";
-$case30_q = mysqli_query($con, $case30_sql);
-                $case30 = mysqli_fetch_assoc($case30_q);
-
-
-*/
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT du.*, c.name AS company_name, p.name AS plan_name,
 		(SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,

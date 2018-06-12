@@ -9,7 +9,6 @@ if($_REQUEST["delid"] != "")
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
 	<?
@@ -50,7 +49,6 @@ if($_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
 	</script>
 	<?

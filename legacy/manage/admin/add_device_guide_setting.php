@@ -35,7 +35,6 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -71,7 +70,6 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

@@ -57,8 +57,6 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
         $newwidth = $width;
         $newheight = $height;
     }
-    //$newwidth=DSS_IMAGE_MAX_WIDTH;
-    //$newheight=($height/$width)*$newwidth;
     $tmp=imagecreatetruecolor($newwidth,$newheight);
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )
@@ -100,12 +98,9 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
-
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?

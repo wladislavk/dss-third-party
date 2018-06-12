@@ -1,10 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-//include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
 include_once 'includes/constants.inc';
-//include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -80,17 +78,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
 <?php
 	trigger_error("Die called", E_USER_ERROR);
 }
-/*
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-</head>
-<body width="98%"> */ ?>
+?>
 <br /><br />
 <?php
 
@@ -231,17 +219,6 @@ foreach ($c_q as $c_r) {?>
 </form>
 
 </div>
-<!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
-  </td>
-</tr>-->
-<!-- Stick Footer Section Here -->
-<!--</table>-->
-<!--<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
--->
 <script type="text/javascript" src="script/contact.js"></script>
 <script type="text/javascript" src="/manage/js/add_ticket.js?v=20160328"></script>
 

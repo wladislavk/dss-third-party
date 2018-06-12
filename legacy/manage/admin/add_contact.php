@@ -11,7 +11,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         $msg = "Edited Successfully";
         ?>
         <script type="text/javascript">
-            //alert("<?php echo $msg;?>");
 	    <?php if($_POST['corp']=='1'){ ?>
               parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
 	    <?php }else{ ?>
@@ -30,7 +29,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         
         ?>
         <script type="text/javascript">
-            //alert("<?php echo $msg;?>");
             <?php if($_POST['corp']=='1'){ ?>
               parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
             <?php }else{ ?>

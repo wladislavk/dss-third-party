@@ -26,7 +26,6 @@ if(!empty($_POST["mult_mandiblesub"]) && $_POST["mult_mandiblesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_mandible.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["mandiblesub"]) && $_POST["mandiblesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_mandible.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

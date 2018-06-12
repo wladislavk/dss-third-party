@@ -53,16 +53,12 @@ if($rximgid != "" || $lomnimgid != ""){ ?>
             <td>
                 <input id="rxrec" name="rxrec" type="text" class="field text addr tbox calendar" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
             </td>
-            <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->
+            <td>
 <?php
     if ($rximgid != "") {?>
                 <a class="button" href="display_file.php?f=<?php echo $rximgname; ?>" target="_blank">View</a><?php
-                //print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rximgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                 print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=6&flow=');\" value=\"Edit\" title=\"Edit\" />";
                 print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
-                /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?php echo $_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
-    } else {
-                //print "<input id=\"rximg\" name=\"rximg\" type=\"file\" size=\"4\" />";
     }?>
             </td>
         </tr>
@@ -77,12 +73,8 @@ if($rximgid != "" || $lomnimgid != ""){ ?>
 <?php
     if ($lomnimgid != "") {?>
                 <a href="display_file.php?f=<?php echo $lomnimgname; ?>" target="_blank" class="button">View</a><?php
-                //print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$lomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                 print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=7&flow=');\" value=\"Edit\" title=\"Edit\" />";
                 print "<input id=\"lomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
-                /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?php echo $_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
-    } else {
-                //print "<input id=\"lomnimg\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
     }?>
             </td>
         </tr>
@@ -99,12 +91,8 @@ if($rximgid != "" || $lomnimgid != ""){ ?>
 <?php
     if ($rxlomnimgid != "") {?>
                 <a href="display_file.php?f=<?php echo $rxlomnimgname; ?>" target="_blank" class="button">View</a><?php
-                //print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                 print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=13&flow=');\" value=\"Edit\" title=\"Edit\" />";
                 print "<input id=\"rxlomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
-                /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?php echo $_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
-    } else {
-                //print "<input id=\"lomnimg\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
     }?>
             </td>
         </tr>

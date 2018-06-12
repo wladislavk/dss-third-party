@@ -26,7 +26,6 @@ if(!empty($_POST["mult_uvulasub"]) && $_POST["mult_uvulasub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_uvula.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["uvulasub"]) && $_POST["uvulasub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_uvula.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

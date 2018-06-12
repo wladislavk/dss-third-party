@@ -59,8 +59,5 @@
         $pdf->AddPage();
 
         $pdf->Output('margin_test.pdf', 'D');
-
-        //echo $fdf;
-
     }
 ?>

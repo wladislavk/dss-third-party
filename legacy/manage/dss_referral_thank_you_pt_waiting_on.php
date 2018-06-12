@@ -151,8 +151,6 @@ $delay['description'] = str_replace(".", "", strtolower($delay['description']));
 <br /><br>
 
 <?php
-//print_r ($_POST);
-
 if ($topatient) {
 	$contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
 } else {
@@ -333,7 +331,6 @@ if ($_POST != array()) {
 		$new_template[$resetid] = null;
 	}
 }
-//print_r($new_template);
 
 foreach ($letter_contacts as $key => $contact) {
 	// Token search and replace arrays

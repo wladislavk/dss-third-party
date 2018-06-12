@@ -26,7 +26,6 @@ if($_POST["mult_followupsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		parent.window.location='manage_followup.php?msg=<?=$msg;?>';
 	</script>
 	<?
@@ -68,7 +67,6 @@ if($_POST["followupsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_followup.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -82,7 +80,6 @@ if($_POST["followupsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_followup.php?msg=<?=$msg;?>';
 			</script>
 			<?

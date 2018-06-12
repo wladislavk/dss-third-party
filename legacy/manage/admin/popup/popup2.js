@@ -108,15 +108,6 @@ function centerPopup1(){
 //CONTROLLING EVENTS IN jQuery
 $(document).ready(function(){
 	
-	//LOADING POPUP
-	//Click the button event!
-	/*$("#button").click(function(){
-		//centering with css
-		centerPopup();
-		//load popup
-		loadPopup();
-	});*/
-				
 	//CLOSING POPUP
 	//Click the x event!
 	$("#popupContactClose").click(function(){
@@ -245,15 +236,6 @@ function centerPopup1(){
 //CONTROLLING EVENTS IN jQuery
 $(document).ready(function(){
 	
-	//LOADING POPUP
-	//Click the button event!
-	/*$("#button").click(function(){
-		//centering with css
-		centerPopup();
-		//load popup
-		loadPopup();
-	});*/
-				
 	//CLOSING POPUP
 	//Click the x event!
 	$("#popupMemo2Close").click(function(){

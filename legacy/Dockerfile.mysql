@@ -9,7 +9,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Be careful to specify .sql.gz OR .sql depending on imported file
 COPY db_dev_SCHEMA_170607-2025.sql /docker-entrypoint-initdb.d/0000-dump.sql
 COPY db_dev_SEED_170608-1543.sql.gz /docker-entrypoint-initdb.d/0001-dump.sql.gz
-# COPY sql_updates/ /docker-entrypoint-initdb.d/
 
 RUN set -x \
     && echo '[mysqld]' > /etc/mysql/conf.d/custom.cnf \

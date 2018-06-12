@@ -1,1 +1,0 @@
-ALTER TABLE dental_patient_summary ADD COLUMN tracker_notes VARCHAR(255) NOT NULL DEFAULT '';

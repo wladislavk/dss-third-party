@@ -105,7 +105,6 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
 		<?

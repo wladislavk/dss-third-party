@@ -38,15 +38,6 @@ if(isset($_FILES['pdf_file'])){
         $t_90 = str_replace(',','', $matches[1][0]);
     }
 
-    /*
-    if (preg_match_all('/DENTAL_DEVICE\s+([^,]+)/m', $out, $matches)) {
-        $device = $matches[1][0];
-    }
-    if (preg_match_all('/DENTAL_DEVICE_SETTING\s+([^,]+)/m', $out, $matches)) {
-        $device_setting = $matches[1][0];
-    }
-    */
-
     if($_FILES["pdf_file"]["name"] <> ''){
         $fname = $_FILES["pdf_file"]["name"];
         $lastdot = strrpos($fname,".");

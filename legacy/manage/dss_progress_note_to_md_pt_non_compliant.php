@@ -348,10 +348,6 @@ if ($_POST != array()) {
 	}
 }
 
-
-//print_r($new_template);
-
-
 foreach ($letter_contacts as $key => $contact) {
 	// Token search and replace arrays
 	$search = array();

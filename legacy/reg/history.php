@@ -121,7 +121,7 @@ if ($_POST['q_page3sub'] == 1) {
             $his_text .= $hrow['history'].", ";
         }
     }
-	
+
     if ($history_arr != '') {
         $history_arr = '~' . $history_arr;
     }
@@ -276,7 +276,6 @@ if ($_POST['q_page3sub'] == 1) {
             drymouth_text = '".s_for($drymouth_text)."'
     		where q_page3id = $qPage3Id";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-
         mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
         mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 

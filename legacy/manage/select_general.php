@@ -11,7 +11,6 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1)
 		if(old != 'Generalized - <?php echo  $t_text; ?>'){
 			parent.edited = true;
 		}
-		//parent.disablePopup1();
 		parent.disablePopupRefClean();
 		if("<?php echo  $_GET['tx']; ?>" == "missing"){
 			parent.reloadPerio("<?php echo $t_text; ?>");
@@ -54,7 +53,6 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1)
 	function fill_up(fa)
 	{
 		parent.document.q_recipientsfrm.<?php echo $_GET['tx']?>.value = fa;
-		//parent.disablePopup1();
 		parent.disablePopupRefClean();
 	}
 </script>

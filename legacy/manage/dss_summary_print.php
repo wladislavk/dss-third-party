@@ -478,7 +478,6 @@ $patient_photo = st($rec_myarray['q_file7']);
                             <strong>Type of Device:</strong>
                             &nbsp;&nbsp;
                             <input type="text" name="type_device" value="<?php echo $type_device;?>" class="tbox" />
-
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <br />&nbsp;
                         </td>

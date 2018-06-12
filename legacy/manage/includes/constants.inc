@@ -58,37 +58,21 @@ define('DSS_CLAIM_SEC_EFILE_ACCEPTED', 15);
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
 $dss_claim_status_labels[DSS_CLAIM_PENDING] = 'Pending';
-// $dss_claim_status_labels[DSS_CLAIM_PENDING]['short'] = 'Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SENT] = 'Sent';
-// $dss_claim_status_labels[DSS_CLAIM_SENT]['short'] = 'Sent';
 $dss_claim_status_labels[DSS_CLAIM_DISPUTE] = 'Disputed';
-// $dss_claim_status_labels[DSS_CLAIM_DISPUTE]['short'] = 'Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE] = 'Paid';
-// $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]['short'] = 'Paid';
 $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT] = 'Paid to Patient';
-// $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT]['short'] = 'Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED] = 'Rejected';
-// $dss_claim_status_labels[DSS_CLAIM_REJECTED]['short'] = 'Rej.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_PENDING] = 'Secondary Pending';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_PENDING]['short'] = 'Sec. Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_SENT] = 'Secondary Sent';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_SENT]['short'] = 'Sec. Sent';
 $dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE] = 'Secondary Disputed';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE]['short'] = 'Sec. Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE] = 'Secondary Paid';
-// $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
 $dss_claim_status_labels[DSS_CLAIM_PATIENT_DISPUTE] = 'Disputed';
-// $dss_claim_status_labels[DSS_CLAIM_PATIENT_DISPUTE]['short'] = 'Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT] = 'Secondary Paid to Patient';
-// $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT]['short'] = 'Sec. Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE] = 'Secondary Disputed';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE]['short'] = 'Sec. Disp.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_REJECTED] = 'Secondary Rejected';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_REJECTED]['short'] = 'Sec. Rej.';
 $dss_claim_status_labels[DSS_CLAIM_EFILE_ACCEPTED] = 'Efile Accepted';
-// $dss_claim_status_labels[DSS_CLAIM_EFILE_ACCEPTED]['short'] = 'E-Acc.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_EFILE_ACCEPTED] = 'Secondary Efile Accepted';
-// $dss_claim_status_labels[DSS_CLAIM_SEC_EFILE_ACCEPTED]['short'] = 'Sec. E-Acc.';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);
@@ -99,13 +83,9 @@ define('DSS_PREAUTH_REJECTED', 3);
 // A convenience array to get pre-auth labels
 $dss_preauth_status_labels = array();
 $dss_preauth_status_labels[DSS_PREAUTH_PENDING] = 'Pending';
-// $dss_preauth_status_labels[DSS_PREAUTH_PENDING]['short'] = 'Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE] = 'Complete';
-// $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
 $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] = 'Pre-Auth Pending';
-// $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
-// $dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_HST_CANCELED', -1);
@@ -136,15 +116,10 @@ define('DSS_TRXN_PAYER_DISCOUNT', 4);
 // A convenience array to get trxn payment labels
 $dss_trxn_payer_labels = array();
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY] = "Primary Insurance";
-// $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]['short'] = "Prim. Ins.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY] = "Secondary Insurance";
-// $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]['short'] = "Sec. Ins.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT] = "Patient";
-// $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]['short'] = "Pat.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF] = "Write Off";
-// $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]['short'] = "Write Off";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT] = "Professional Discount";
-// $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]['short'] = "Pro. Disc.";
 
 //Transaction Payment Types (ledger)
 define('DSS_TRXN_PYMT_CREDIT', 0);
@@ -157,17 +132,11 @@ define('DSS_TRXN_PYMT_EFT', 5);
 // A convenience array to get trxn payment type labels
 $dss_trxn_pymt_type_labels = array();
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT] = "Credit Card";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]['short'] = "CC";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT] = "Debit";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]['short'] = "Debit";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK] = "Check";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]['short'] = "Check";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH] = "Cash";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT] = "E-Funds Transfer (EFT)";
-// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]['short'] = "EFT";
 
 //Max File size allowed for upload forms
 define('DSS_FILE_MAX_SIZE', 10000000);
@@ -239,24 +208,6 @@ $dss_user_type_labels[DSS_USER_TYPE_ROOT] = "Root User";
 $dss_user_type_labels[DSS_USER_TYPE_GLOBAL] = "Global User";
 $dss_user_type_labels[DSS_USER_TYPE_ADMIN] = "Local Admin";
 $dss_user_type_labels[DSS_USER_TYPE_LOCAL] = "Local User";
-
-/* Dynamically provided in database and set up by backoffice form
-// Appliances 
-define('DSS_APPLIANCE_MRD', 1);
-define('DSS_APPLIANCE_TRD', 2);
-define('DSS_APPLIANCE_TRD2', 3);
-define('DSS_APPLIANCE_TAP3', 5);
-
-$dss_appliance_labels = array();
-$dss_appliance_labels[DSS_APPLIANCE_MRD] = "FDA approved mandibular repositioning device (MRD)";
-$dss_appliance_labels[DSS_APPLIANCE_MRD]["short"] = "";
-$dss_appliance_labels[DSS_APPLIANCE_TRD] = "FDA approved tongue retaining device";
-$dss_appliance_labels[DSS_APPLIANCE_TRD]["short"] = "";
-$dss_appliance_labels[DSS_APPLIANCE_TRD2] = "FDA approved tongue retaining device with breathing tube";
-$dss_appliance_labels[DSS_APPLIANCE_TRD2]["short"] = "";
-$dss_appliance_labels[DSS_APPLIANCE_TAP3] = "TAP 3";
-$dss_appliance_labels[DSS_APPLIANCE_TAP3]["short"] = "";
-*/
 
 define('DSS_REFERRED_PATIENT', 1);
 define('DSS_REFERRED_PHYSICIAN', 2);

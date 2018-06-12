@@ -36,7 +36,6 @@ if ($_POST["emailsub"] == 1) {
 
         ?>
         <script type="text/javascript">
-                //alert("<?= $msg; ?>");
                 window.location.replace('index.php?msg=Email sent');
         </script>
     <? } else {

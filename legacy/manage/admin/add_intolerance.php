@@ -26,7 +26,6 @@ if(!empty($_POST["mult_intolerancesub"]) && $_POST["mult_intolerancesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_intolerance.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["intolerancesub"]) && $_POST["intolerancesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location = 'manage_intolerance.php?msg=<?php echo $msg;?>';
 			</script>
 			<?php

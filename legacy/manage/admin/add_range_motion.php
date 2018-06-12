@@ -64,11 +64,9 @@ if($_POST["range_motionsub"] == 1)
 			$ed_sql = "update dental_range_motion set range_motion = '".s_for($_POST["range_motion"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where range_motionid='".$_POST["ed"]."'";
 			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_range_motion.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -82,7 +80,6 @@ if($_POST["range_motionsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_range_motion.php?msg=<?=$msg;?>';
 			</script>
 			<?

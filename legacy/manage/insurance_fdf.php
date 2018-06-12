@@ -1,6 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-    //header("Content-type: application/vnd.fdf");
-    //header('Content-Disposition: attachment; filename="file.fdf"');
     include_once('includes/constants.inc');
     include_once('admin/includes/main_include.php');
 
@@ -966,8 +964,6 @@
     $pdf->AddPage();
 
     $pdf->Output('insurance_claim.pdf', 'D');
-
-    //echo $fdf;
 
     function fill_cents($v)
     {

@@ -28,16 +28,6 @@ $doc_sql = "select * from dental_users where userid = '".s_for($_GET['docid'])."
 $doc_my = mysqli_query($con,$doc_sql);
 $doc_myarray = mysqli_fetch_array($doc_my);
 
-if(st($doc_myarray['username']) == '')
-{
-	?>
-	<script type="text/javascript">
-		// window.location = "manage_users.php?msg=Invalid Information.";
-	</script>
-	<?
-	// trigger_error("Die called", E_USER_ERROR);
-}
-
 $rec_disp = 20;
 
 if(!empty($_REQUEST["page"]))

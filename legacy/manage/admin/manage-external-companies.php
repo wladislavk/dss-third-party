@@ -3,9 +3,7 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
-
 ?>
-<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
 <div class="page-header">
     Manage Dentrix API companies
 </div>

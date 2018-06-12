@@ -26,7 +26,6 @@ if(!empty($_POST["mult_soft_palatesub"]) && $_POST["mult_soft_palatesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_soft_palate.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["soft_palatesub"]) && $_POST["soft_palatesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_soft_palate.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

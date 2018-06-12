@@ -11,7 +11,6 @@ if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -25,7 +24,6 @@ if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
 		<?

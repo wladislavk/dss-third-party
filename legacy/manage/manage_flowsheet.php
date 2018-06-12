@@ -1084,10 +1084,6 @@
 			var cal86 = new calendar2(document.forms['flowsheetfrm'].elements['ltr_pp_date_sent']);
 		</script>
 	
-		<script type="text/javascript">
-			//var cal80 = new calendar2(document.forms['flowsheetfrm'].elements['portable_date_comp']);
-		</script>
-					
 		<div id="popupContact" style="width:750px;">
 		    <a id="popupContactClose">
 		    	<button>X</button>

@@ -178,7 +178,6 @@ function sendInstructions(type, but){
    $.ajax({
     url: 'includes/send_instructions.php',
     type: 'post',
-    //data: 'email='+e+'&type='+type,
     data: {email: e, type: type},
     success: function( data ) {
         var r = $.parseJSON(data);

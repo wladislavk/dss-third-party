@@ -6,15 +6,6 @@
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-	if(/*empty($pat_myarray['patientid'])*/0)
-	{
-?>
-		<script type="text/javascript">
-			window.location = 'manage_patient.php';
-		</script>
-<?php
-		trigger_error("Die called", E_USER_ERROR);
-	}
 
 	$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	

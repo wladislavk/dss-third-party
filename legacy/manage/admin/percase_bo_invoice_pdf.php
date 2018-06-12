@@ -499,7 +499,6 @@ $title = "test";
 	
         $filename = 'percase_invoice_'.$invoice['companyid'].'_'.$_GET['invoice_id'].'.pdf';
         $pdf->Output('../../../../shared/q_file/'.$filename, 'F');
-//$pdf->Output('example_001.pdf', 'I');
 if(!isset($redirect) || $redirect){
 ?>
 

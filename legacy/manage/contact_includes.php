@@ -33,10 +33,6 @@
 		<td>
 		<hr />
 		<input class="button" style="width:150px;" type="submit" name="add_contact_but" value="Add Contact to Patient" />
-		<!--<a href="Javascript:;" class="addButton" onclick="Javascript: scroll(0,0);loadPopup('add_patient_to.php?ed=<?php echo $_GET['ed']; ?>');">
-				Add Contact to Patient
-			</a>-->
-
 		</td>
 	</tr>
  </table>

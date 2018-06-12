@@ -31,31 +31,6 @@ AND
                         ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
 
-
-/*
-        $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
-		pi.id as invoice_id,
-                (SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
-                (SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                        JOIN dental_patients dp ON dl.patientid=dp.patientid
-                        WHERE 
-                                dl.transaction_code='E0486' AND
-                                dl.docid=du.userid AND
-                                dl.percase_status = '".DSS_PERCASE_PENDING."') AS num_case, 
-                (SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                        JOIN dental_patients dp ON dl.patientid=dp.patientid
-                        WHERE 
-                                dl.transaction_code='E0486' AND
-                                dl.docid=du.userid AND
-                                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY)) as num_case30,
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
-                FROM dental_users du
-                        JOIN dental_percase_invoice pi ON pi.docid=du.userid 
-                JOIN dental_user_company uc ON uc.userid = du.userid
-                JOIN companies c ON c.id=uc.companyid
-                JOIN dental_plans p ON p.id=du.plan_id
-                WHERE pi.status='".DSS_INVOICE_PENDING."' ";
-*/
   if(isset($_GET['company']) && $_GET['company'] != ""){
     	$sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['company'])."' ";
   }
@@ -72,41 +47,6 @@ AND
 		!= 0
 		ORDER BY du.userid ASC
 		";
-		/*
-                ((SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                        JOIN dental_patients dp ON dl.patientid=dp.patientid
-                        WHERE 
-                                dl.transaction_code='E0486' AND
-                                dl.docid=du.userid AND
-                                dl.percase_status = '".DSS_PERCASE_PENDING."') != 0 OR 
-		(SELECT COUNT(*) AS num_trxn FROM dental_claim_electronic e 
-			JOIN dental_insurance i ON i.insuranceid=e.claimid
-                        JOIN dental_patients dp ON i.patientid=dp.patientid
-                        WHERE 
-                                i.docid=du.userid AND
-                                e.percase_invoice IS NULL) != 0 OR
-                (SELECT count(*) as total_faxes FROM dental_faxes f
-                        WHERE 
-                f.docid='".$_REQUEST['docid']."' AND
-                f.status = '0') >  plan.free_fax OR
-(SELECT count(*) as total_eligibility FROM dental_eligibility f
-                        WHERE 
-                f.userid='".$_REQUEST['docid']."' AND
-                f.eligibility_invoice_id IS NULL) > plan.free_eligibility OR
-(SELECT count(*) as total_enrollment FROM dental_eligible_enrollment f
-                        WHERE 
-                f.user_id='".$_REQUEST['docid']."' AND
-                f.enrollment_invoice_id IS NULL) >  plan.free_enrollment OR
-                (SELECT COUNT(*) FROM dental_insurance_preauth p
-                JOIN dental_patients dp ON p.patient_id=dp.patientid
-                        WHERE 
-                p.doc_id='".$_REQUEST['docid']."' AND
-		p.status = '".DSS_PREAUTH_COMPLETE."' AND
-                p.invoice_status = '".DSS_PERCASE_PENDING."') != 0
-		)
-		ORDER BY du.userid ASC
-                ";
-		*/
   }
 }
 $count_q = mysqli_query($con,$sql);
@@ -318,7 +258,6 @@ if(mysqli_num_rows($doc_q) == 0){
     $up_sql = "UPDATE dental_eligibility SET
                 eligibility_invoice_id = '".$ec_invoice_id."' 
                 WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
-    //mysqli_query($con,$up_sql);
   }else{
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_eligibility_invoice SET
@@ -967,7 +906,6 @@ $(document).ready(function(){
     
     $('#invoice_table').on('mouseenter', 'tr', function() {
         $(this).find('.btn.btn-danger').removeClass('hidden');
-	//$(this).find('.btn.btn-danger').trigger('mouseenter');
     });
     $('#invoice_table').on('mouseleave', 'tr', function() {
         $(this).find('.btn.btn-danger').addClass('hidden');
@@ -1058,7 +996,6 @@ function check_billed () {
             else {}
         },
         error: function(data){
-            //alert('fail');
         }
     });
     

@@ -22,25 +22,12 @@ class FTSSamples
 	
 		$this->apiKey = $keys['sfax_app_key'];//Required Key	
 	}
-  /* 	
-	public function __construct ()
-	{
-		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-		$key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
-		$key_q = mysqli_query($con, $key_sql);
-		$keys = mysqli_fetch_assoc($key_q);
-		$this->securityContext = $keys['sfax_security_context'];			//<--- IMPORTANT: Enter a valid securityContext
-	}
-  */
+
 	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
 {
 		// Service Connection and Security Settings
 		$isSuccess = false;
 
-		// IMPORTANT: key parameters
-		//$faxNumber = "15123668506";	//<--- IMPORTANT: Enter a valid fax number
-		//$filePath = getcwd() . "/Page1.tif";   //<--- IMPORTANT: Enter a valid path to primary file to be faxed
-		//$faxRecipient = "GeneTest";							
 	$optionalParams="CoverPageName=None;CoverPageSubject=PHPTest;CoverPageReference=PhpTest1234;TrackingCode=PHPTest1234";//Parameters to pass for CoverPages
 		
 		// Set Security Token
@@ -58,8 +45,6 @@ class FTSSamples
 		$url .= "&RecipientName=" . urlencode($faxRecipient);
 		$url .= "&OptionalParams=" . urlencode($optionalParams);
 		
-		//echo "URL: " . $url;
-		
 		//reference primary file to fax
 		$postData = array('file'=>"@$filePath");
 		
@@ -67,19 +52,12 @@ class FTSSamples
 		$ch = curl_init($url); 
 		curl_setopt($ch, CURLOPT_URL, $url); 
 		curl_setopt($ch, CURLOPT_HEADER, true); 
-		//curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		curl_setopt($ch, CURLOPT_NOBODY, false); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 		    curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
-		
-		//specific cURL options for HTTPS sites
-		//see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		//curl_setopt($ch, CURLOPT_CAINFO, getcwd() . "/EquifaxSecureGlobalBusinessCA-1.crt");
 		
 		//trust any cert - FOR DEVELOPMENT ONLY
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -102,10 +80,6 @@ class FTSSamples
 			//get additional information from XML payload
 			//response data xml payload
 			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
-			if ($xResponseData != null)
-			{
-				
-			}			
 		}
 		else
 		{
@@ -147,19 +121,11 @@ class FTSSamples
 		curl_setopt($ch, CURLOPT_HEADER, true); 
 		curl_setopt($ch, CURLOPT_NOBODY, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
-		//curl_setopt($ch, CURLOPT_POST, true);
-		//curl_setopt($ch, CURLOPT_GETHTTP, true);
-		//curl_setopt($ch, CURLOPT_POSTFIELDS, "");
-		
+
 		//specific cURL options for HTTPS sites
 		//see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		//curl_setopt($ch, CURLOPT_CAINFO, getcwd() . "/EquifaxSecureGlobaleBusinessCA-1.crt");
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		//execute curl and get response information
-		
-		//echo "URL: " . $url;
 		
 		$responseBody = curl_exec($ch);
 		$responseInfo = curl_getinfo($ch);
@@ -176,10 +142,6 @@ class FTSSamples
 			//get additional information from XML payload
 			//response data xml payload
 			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
-			if ($xResponseData != null)
-			{
-				
-			}			
 		}
 		else
 		{
@@ -254,14 +216,7 @@ class FTSAESHelper
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
                 $key_q = mysqli_query($con, $key_sql);
                 $keys = mysqli_fetch_assoc($key_q);
-/*
-                $this->pTokenContext = $pSecurityContext;
-                $this->pTokenUsername = $keys['app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 
-                $this->pTokenAppKey = $keys['app_key'];         //<--- IMPORTANT: Enter a valid Encryption key
-                $this->pTokenClient = "";                                                       //<--- IMPORTANT: Enter a valid Client IP
-                $this->pEncryptionKey = $keys['app_key'];       //<--- IMPORTANT: Enter a valid Encryption key
-                $this->pEncryptionInitVector = $keys['init_vector']; */
-	$this->pTokenContext=$pSecurityContext;                        
+	$this->pTokenContext=$pSecurityContext;
         $this->pTokenUsername=$keys['sfax_app_id'];  //<--- IMPORTANT: Enter a valid Username
         $this->pTokenApiKey=  $keys['sfax_app_key'];  //<--- IMPORTANT: Enter a valid ApiKey
         $this->pTokenClient="";   //<--- IMPORTANT: Leave Blank

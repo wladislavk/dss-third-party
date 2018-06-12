@@ -14,7 +14,6 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
 	</script>
 	<?
@@ -81,15 +80,6 @@ $num_users=mysqli_num_rows($my);
 
 <div class="page-header">
 	Manage Patient
-   <!-- -
-    <select class="tbox" onchange="Javascript: window.location='<?php echo $_SERVER['PHP_SELF'];?>?docid='+this.value;">
-        <?php while($doc_myarray = mysqli_fetch_array($doc_my))
-		{?>
-    		<option value="<?php echo st($doc_myarray['userid']);?>" <?php if(st($doc_myarray['userid']) == $_GET['docid']) echo " selected";?>>
-            	<?php echo st($doc_myarray['username']);?> [ <?php echo st($doc_myarray['name']);?> ]
-            </option>
-        <?php }?>
-    </select>-->
 </div>
 
 
@@ -101,7 +91,6 @@ $num_users=mysqli_num_rows($my);
     $(document).ready(function() {
         $('#patient_search').keyup(function(e) {
                 var a = e.which; // ascii decimal value
-                //var c = String.fromCharCode(a);
                 var listSize = $('#patient_list li').size();
                 var stringSize = $(this).val().length;
                 if ($(this).val().trim() == "") {
@@ -334,17 +323,6 @@ $num_users=mysqli_num_rows($my);
             row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
         } else {
             row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
-            /*
-            row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
-            row.find('.flowsheet').html(patient.fspage1_complete);
-            row.find('.next_visit').html(patient.next_visit);
-            row.find('.last_visit').html(patient.last_visit);
-            row.find('.last_treatment').html(patient.last_treatment);
-            row.find('.appliance').html(patient.device);
-            row.find('.appliance_since').html(patient.delivery_date);
-            row.find('.vob').html(patient.vob);
-            row.find('.ledger').html(patient.ledger)
-            */
         }
         return row;
     }
@@ -354,10 +332,8 @@ $num_users=mysqli_num_rows($my);
 
 
 <form>
-    <!--<form name="form" action="search.php" method="get">-->
   <div id="patient_search_div">
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
-  <!--<input type="submit" name="Submit" value="Patient Search By Last Name" class="btn btn-primary">-->
         <br />
         <div id="search_hints"  class="search_hints" style="display:none;">
                 <ul id="patient_list">

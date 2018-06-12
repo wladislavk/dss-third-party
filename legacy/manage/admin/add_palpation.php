@@ -26,7 +26,6 @@ if(!empty($_POST["mult_palpationsub"]) && $_POST["mult_palpationsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_palpation.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["palpationsub"]) && $_POST["palpationsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_palpation.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

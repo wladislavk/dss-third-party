@@ -104,7 +104,8 @@ function secureSessionStart()
     session_regenerate_id(true); // regenerated the session, delete the old one.
 }
 
-function isSharedFile ($name) {
+function isSharedFile ($name)
+{
     return strlen($name) && is_file(Q_FILE_FOLDER . $name);
 }
 

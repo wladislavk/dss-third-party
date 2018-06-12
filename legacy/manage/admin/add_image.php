@@ -210,7 +210,6 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
 
 		@chmod("../../../../shared/q_file/".$banner1,0777);
 		// Free up memory
-		//imagedestroy($thumb);
 		$uploaded = true;
 
 	  }else{ //ALL OTHER IMAGES
@@ -248,7 +247,6 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
         } else {
                 ?>
                         <script type="text/javascript">
-				//alert('<?php echo $_FILES["image_file"]["type"];?>');
                                 alert("Invalid File Type");
                         </script>
                 <?php
@@ -369,12 +367,6 @@ if($uploaded ){
 				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
-}else{
-  ?>
-                        <script type="text/javascript">
-                                //alert("Max image size exceeded. Uploaded files can be no larger than 10 megabytes.");
-                        </script>
-                <?php
 }
 }
 

@@ -42,11 +42,9 @@ if($_POST["adminsub"] == 1)
 			where adminid='".$_POST["ed"]."'";
 			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
 			<?

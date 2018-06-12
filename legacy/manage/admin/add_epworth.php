@@ -26,7 +26,6 @@ if(!empty($_POST["mult_epworthsub"]) && $_POST["mult_epworthsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_epworth.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_epworth.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

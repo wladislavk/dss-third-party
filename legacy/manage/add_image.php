@@ -707,8 +707,6 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
          *
          * Faulty logic at some other places dictate that empty fields must be NULL
          * otherwise this comparison will fail:
-         *
-         * $image_id != ""
          */
         $value = $value === '' ? 'NULL' : "'" . $db->escape($value) . "'";
         $updateValuesSql []= "$key = $value";

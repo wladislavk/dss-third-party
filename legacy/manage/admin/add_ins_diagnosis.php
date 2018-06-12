@@ -26,7 +26,6 @@ if(!empty($_POST["mult_ins_diagnosissub"]) && $_POST["mult_ins_diagnosissub"] ==
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_ins_diagnosis.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["ins_diagnosissub"]) && $_POST["ins_diagnosissub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_ins_diagnosis.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

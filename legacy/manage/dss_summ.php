@@ -112,7 +112,7 @@ if (!isset($patientId)) {
         </div>
     </div>
     <div class="clear"></div>
-    <div>
+</div>
         <div id="popupContact" style="width:750px;">
             <a id="popupContactClose"><button>X</button></a>
             <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
@@ -125,5 +125,5 @@ if (!isset($patientId)) {
         <div id="backgroundPopupRef"></div>
 
 <script src="js/dss_summ.js" type="text/javascript"></script>
-<script src="/assets/app/soap-permissions.js?v=20180502"text/javascript"></script>
+<script src="/assets/app/soap-permissions.js?v=20180502" type="text/javascript"></script>
 <?php include 'includes/bottom.htm';?>

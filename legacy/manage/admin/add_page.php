@@ -29,7 +29,6 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?

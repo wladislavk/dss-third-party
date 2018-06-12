@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+// this file is executed via cron and should not be deleted
 
 require(dirname(__FILE__).'/class.fax.php');
 require(dirname(__FILE__).'/config.php');

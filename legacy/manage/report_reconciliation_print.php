@@ -256,9 +256,6 @@
                             ".$p_date."
                             ";
 
-                if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])
-                   //$newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-    
                 if(isset($_REQUEST['sort'])){
                     if($_REQUEST['sort']=='patient'){
                         $newquery .= " ORDER BY lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];

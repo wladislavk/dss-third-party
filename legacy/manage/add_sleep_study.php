@@ -371,7 +371,6 @@ $pat_r = $db->getRow($pat_sql);
 <link rel="stylesheet" type="text/css" href="css/admin.css?v=20160404" />
 <link rel="stylesheet" type="text/css" href="css/form.css" />
 <link rel="stylesheet" type="text/css" href="/manage/css/add_sleep_study.css" media="screen" />
-<!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
 <script type="text/javascript">if (parent.updateiframe) { parent.updateiframe(<?= $num_labs ?>); }</script>
 <script type="text/javascript" src="/manage/js/add_sleep_study.js?v=<?= time() ?>"></script>
 <?php if ($errorMessage) { ?>

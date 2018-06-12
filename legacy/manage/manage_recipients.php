@@ -7,13 +7,6 @@ if($_POST['q_recipientssub'] == 1){
 	$physicians_other = $_POST['physicians_other'];
 	$patient_info = $_POST['patient_info'];
 	
-	/*
-	echo "referring_physician - ".$referring_physician."<br>";
-	echo "dentist - ".$dentist."<br>";
-	echo "physicians_other - ".$physicians_other."<br>";
-	echo "patient_info - ".$patient_info."<br>";
-	*/
-	
 	if($_POST['ed'] == ''){
 		$ins_sql = "insert into dental_q_recipients set 
 						patientid = '".s_for($_GET['pid'])."',
@@ -30,7 +23,6 @@ if($_POST['q_recipientssub'] == 1){
 		
 		$msg = "Added Successfully";?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?php
@@ -45,10 +37,8 @@ if($_POST['q_recipientssub'] == 1){
 		
 		$db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql;
 		$msg = "Edited Successfully";?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?php

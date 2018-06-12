@@ -33,7 +33,6 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_doctor_custom_text.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
 			</script>
 			<?

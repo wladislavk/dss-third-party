@@ -9,7 +9,6 @@ if(!empty($_REQUEST["delid"]))
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
 	</script>
 	<?

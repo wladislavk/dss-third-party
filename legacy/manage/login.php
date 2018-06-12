@@ -68,9 +68,6 @@ if(isset($_POST["loginsub"]))
 		if ($check_myarray['status'] == 3 || $check_myarray['doctor_status'] == 3) {
 			$msg='This account has been suspended.';
 		}else{
-			/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-			mysqli_query($con, $ins_sql);*/
-
 			$_SESSION['userid']=$check_myarray['userid'];
 			$_SESSION['username']=$check_myarray['username'];
 			$_SESSION['name']=$check_myarray['first_name']." ".$check_myarray['last_name'];

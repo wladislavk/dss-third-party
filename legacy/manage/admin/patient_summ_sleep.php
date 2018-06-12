@@ -133,8 +133,6 @@ Sleep Tests:
 		<div style="border: medium none; overflow: hidden;width:<?= $body_width; ?>px;">
 		<?php include '../add_sleep_study.php'; ?>
 		</div>
-                    <!--<iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&yellow=1">Iframes must be enabled to view this area.</iframe>-->
-
         </div>
 
 </div>

@@ -6,13 +6,11 @@ function delete_pending_letter(lid, type, rid, par){
                                     data: {lid: lid, type: type, rid: rid, par: par},
                                     success: function(data){
                                             var r = $.parseJSON(data);
-                                            if(r.error){
-                                            }else{
+                                            if(!r.error){
                                                     window.location.reload();
                                             }
                                     },
                                     failure: function(data){
-                                            //alert('fail');
                                     }
                               });
     }
@@ -28,13 +26,8 @@ $(document).ready(function(){
             data: {lid: lid, mailed: c},
             success: function(data){
                     var r = $.parseJSON(data);
-                    if(r.error){
-                    }else{
-                            //window.location.reload();
-                    }
             },
             failure: function(data){
-                    //alert('fail');
             }
         });
     });

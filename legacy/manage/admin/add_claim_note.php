@@ -2,11 +2,9 @@
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
-//include "../includes/general_functions.php";
 include_once "includes/general.htm";
-//include "includes/top.htm";
-?>
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+
+require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
@@ -97,8 +95,6 @@ $my = mysqli_query($con,$sql);
                         var desc_arr = new Array();
                         
                         <? $i=0;
-                        //$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
-                        //$my = mysqli_query($con,$sql);
                         while($myarray = mysqli_fetch_array($my))
                         {?>
                                 title_arr[<?php echo $i;?>] = "<?php echo st(addslashes($myarray['title']));?>";
@@ -199,9 +195,8 @@ $my = mysqli_query($con,$sql);
 		<input type="hidden" name="pid" value="<?php echo  $_REQUEST['pid']; ?>" />
 		<input type="hidden" name="nid" value="<?php echo  (!empty($_REQUEST['nid']) ? $_REQUEST['nid'] : ''); ?>" />
                 <input type="submit" value=" <?php echo $but_text?> Note" class="btn btn-primary" />
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
     </form>
 
 <script type="text/javascript">

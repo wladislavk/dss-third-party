@@ -5671,8 +5671,6 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
     //set image scale factor
     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
     $pdf->setCellHeightRatio($cellheight);
-    //set some language-dependent strings
-    //$pdf->setLanguageArray($l);
 
     // set font
     $pdf->SetFont('dejavusans', '', $fontsize);

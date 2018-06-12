@@ -26,7 +26,6 @@ if(!empty($_POST["mult_place_servicesub"]) && $_POST["mult_place_servicesub"] ==
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_place_service.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_place_service.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

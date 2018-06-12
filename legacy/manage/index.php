@@ -449,7 +449,7 @@ endif ?>
 
 <br /><br />
 
-<script type="text/javascript" src="../Scripts/sucker_tree_home.js"></script>
+<script type="text/javascript" src="3rdParty/suckertree/sucker_tree_home.js"></script>
 
 <?php require_once __DIR__ . '/includes/vue-setup.htm'; ?>
 <script>

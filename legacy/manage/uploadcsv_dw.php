@@ -12,6 +12,9 @@ include 'includes/dental_patient_summary.php';
 ?>
 <div style="width:90%; margin-left:5%;">
 <?php
+
+$db = new Db();
+
 if(isset($_POST['submitbut'])){
     $csv = array();
     // check there are no errors
@@ -160,31 +163,31 @@ if(isset($_POST['submitbut'])){
                                 case 'add1':
                                     if($field!='' && $data[$id] !=''){
                                         $patientadd = true;
-                                        $s .= $field . " = '" .mysqli_real_escape_string($con, $data[$id])."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'city':
                                     if($field!='' && $data[$id] !=''){
                                         $patientcity = true;
-                                        $s .= $field . " = '" .mysqli_real_escape_string($con, $data[$id])."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'state':
                                     if($field!='' && $data[$id] !=''){
                                         $patientstate = true;
-                                        $s .= $field . " = '" .mysqli_real_escape_string($con, $data[$id])."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'zip':
                                     if($field!='' && $data[$id] !=''){
                                         $patientzip = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'gender':
                                     if($field!='' && $data[$id] !=''){
                                         $patientgender = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                     }
                                     break;
                                 case 'email':
@@ -195,19 +198,19 @@ if(isset($_POST['submitbut'])){
                                 			$error_count++;
                                 		}else{
                                             $patientemail = true;
-                                            $s .= $field . " = '" .$data[$id]."', ";
+                                            $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                         }
                                     }
                                     break;
 
                     			default:
                     				if($field!=''){
-                    		  			$s .= $field . " = '" .mysqli_real_escape_string($con, $data[$id])."', ";
+                    		  			$s .= $field . " = '" .$db->escape($data[$id])."', ";
                     				}
                     				break;
                             }
                         }
-            			$s .= " docid = '".$_SESSION[docid]."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
+            			$s .= " docid = '".$_SESSION['docid']."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
             			//echo $s;
             			$pid = $db->getInsertId($s);
 
@@ -231,7 +234,7 @@ if(isset($_POST['submitbut'])){
               				$steparray_insert = $db->query($steparray_query);
               				$flow_pg2_info_insert = $db->query($flow_pg2_info_query);
 
-            				if($last_visit != ''){
+            				if(!empty($last_visit)){
             					$visit_date = date('Y-m-d', strtotime($last_visit));
             					$steparray_query = "UPDATE dental_flow_pg2 SET steparray = '1,2' WHERE patientid='".$pid."'";
             					$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '2', '2', '".$visit_date."', '".$visit_date."');";

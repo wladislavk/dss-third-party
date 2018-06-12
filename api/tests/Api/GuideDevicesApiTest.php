@@ -89,7 +89,7 @@ class GuideDevicesApiTest extends ApiTestCase
                 'id' => 2,
                 'name' => 'Dorsal Hard',
                 'value' => 33,
-                'image_path' => 'dental_device_2.jpg',
+                'image_path' => 'resources/dental_device_2.jpg',
             ],
             [
                 'id' => 14,
@@ -107,7 +107,7 @@ class GuideDevicesApiTest extends ApiTestCase
                 'id' => 1,
                 'name' => 'Dorsal Flex',
                 'value' => 30,
-                'image_path' => 'dental_device_1.jpg',
+                'image_path' => 'resources/dental_device_1.jpg',
             ],
             [
                 'id' => 20,

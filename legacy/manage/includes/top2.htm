@@ -220,7 +220,7 @@ include_once('includes/patient_changes.php');
         $title .= "Pre-medication: " . $myarray['premed']."\n";
       }
 
-      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_view WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
 
       $myq3array = $db->getRow($sqlq3);
       $allergen = $myq3array['allergenscheck'];

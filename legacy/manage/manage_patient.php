@@ -1,14 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 include('includes/top.htm');
 include('includes/formatters.php');
 
 $docId = intval($_SESSION['docid']);
 
+$db = new Db();
 if (isset($_REQUEST["delid"])) {
     $patientId = intval($_POST['delid']);
     $db->query("DELETE FROM dental_patients
         WHERE patientid = '$patientId'
-            AND docid = '$docId'");
+        AND docid = '$docId'");
 
     $msg = "Deleted Successfully";
 
@@ -28,23 +30,25 @@ $conditionals = [
 ];
 
 if ($patientId) {
-    $conditionals []= "p.patientid = '$patientId'";
+    $conditionals[] = "p.patientid = '$patientId'";
 }
 
 switch (intval($_GET['sh'])) {
     case 0:
+        // fall through
     case 1:
-        $conditionals []= 'p.status = 1';
+        $conditionals[] = 'p.status = 1';
         break;
     case 2:
-        $conditionals []= '(p.status = 1 OR p.status = 2)';
+        $conditionals[] = '(p.status = 1 OR p.status = 2)';
         break;
     case 3:
-        $conditionals []= 'p.status = 2';
+        $conditionals[] = 'p.status = 2';
+        break;
 }
 
 if (isset($_GET['letter']) && strlen($_GET['letter'])) {
-    $conditionals []= "p.lastname LIKE '" . $db->escape($_GET['letter']) . "%'";
+    $conditionals[] = "p.lastname LIKE '" . $db->escape($_GET['letter']) . "%'";
 }
 
 $queries = findPatients($sortColumn, $conditionals, $sortDir, $page, $count);
@@ -52,7 +56,7 @@ $queries = findPatients($sortColumn, $conditionals, $sortDir, $page, $count);
 $sortColumn = $queries['filter'];
 $patients = $queries['results'];
 $totalCount = $queries['count'];
-$totalPages = $totalCount/$count;
+$totalPages = $totalCount / $count;
 
 $headers = [
     'name' => 'Name',
@@ -92,49 +96,42 @@ $letters = range('A', 'Z');
 <link rel="stylesheet" href="css/manage_patient.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <div style="clear: both">
-<span class="admin_head">
-	Manage Patient <?php echo (isset($patient_info))?$patient_info:''; ?>
-    -
-	<select name="show" onchange="Javascript: window.location ='<?php echo $_SERVER['PHP_SELF'];?>?sh='+this.value;">
-        <option value="1">Active Patients</option>
-        <option value="2" <?php if(isset($_GET['sh'])){ if($_GET['sh'] == 2) echo " selected"; } ?> >All Patients</option>
-        <option value="3" <?php if(isset($_GET['sh'])){ if($_GET['sh'] == 3) echo " selected"; } ?> >In-active Patients</option>
-    </select>
-</span>
+    <span class="admin_head">
+        Manage Patient <?php echo (isset($patient_info))?$patient_info:''; ?>
+        -
+        <select name="show" onchange="window.location ='<?php echo $_SERVER['PHP_SELF'];?>?sh='+this.value;">
+            <option value="1">Active Patients</option>
+            <option value="2" <?php if (isset($_GET['sh'])){ if($_GET['sh'] == 2) echo " selected"; } ?> >All Patients</option>
+            <option value="3" <?php if (isset($_GET['sh'])){ if($_GET['sh'] == 3) echo " selected"; } ?> >In-active Patients</option>
+        </select>
+    </span>
     <div class="letter_select">
         <?php
-
         foreach ($letters as $let) {
-            $class = (isset($_GET['letter']) && $_GET['letter']==$let) ? 'class="selected_letter"' : '';
+            $class = (isset($_GET['letter']) && $_GET['letter'] == $let) ? 'class="selected_letter"' : '';
             $sh = isset($_GET['sh']) ? $_GET['sh'] : '';
             echo '<a ' . $class . 'href="?letter=' . $let . '&sh=' . $sh . '">' . $let . '</a> ';
         }
 
         if (isset($_GET['letter']) && $_GET['letter'] != '') {
             echo '<a href="?sh=' . $_GET['sh'] . '">View All</a>';
-        }
-
-        ?>
+        } ?>
     </div>
-    </br>
     <?php
-    if(isset($_GET['msg'])){
-        ?>
+    if (isset($_GET['msg'])) { ?>
         <div align="center" class="red">
             <b><?php echo $_GET['msg'];?></b>
         </div>
         <?php
     } ?>
-
 </div>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post" style="clear: both">
     <table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <?php if ($totalCount > $count) { ?>
             <tr bgColor="#ffffff">
-                <td  align="right" colspan="15" class="bp">
+                <td align="right" colspan="15" class="bp">
                     Pages:
                     <?php
-
                     $letter = isset($_GET['letter']) ? $_GET['letter'] : '';
                     $sh = isset($_GET['sh']) ? $_GET['sh'] : '';
                     paging($totalPages, $page, "letter=". $letter ."&sort=". $sortColumn ."&sortdir=". $sortDir ."&sh=". $sh );
@@ -143,7 +140,7 @@ $letters = range('A', 'Z');
             </tr>
         <?php } ?>
         <tr class="tr_bg_h">
-            <?php foreach ($headers as $sort=>$label) {
+            <?php foreach ($headers as $sort => $label) {
                 if ($sortColumn === $sort) {
                     $currentDir = strtolower($sortDir) === 'asc' ? 'DESC' : 'ASC';
                 } else {
@@ -152,7 +149,6 @@ $letters = range('A', 'Z');
 
                 $letter = isset($_GET['letter']) && strlen($_GET['letter']) ? $_GET['letter'] : '';
                 $sh = isset($_GET['sh']) && strlen($_GET['sh']) ? $_GET['sh'] : '';
-
                 ?>
                 <td valign="top" class="col_head  <?= $sortColumn == $sort ? 'arrow_' . strtolower($sortDir) : '' ?>" width="10%">
                     <a href="?<?=
@@ -207,14 +203,11 @@ $letters = range('A', 'Z');
                         $last_segmentid = $myarray['segmentid'];
                         $delivery_date = $myarray['dentaldevice_date'];
                         $device = $myarray['device'];
-
                         ?>
                         <td valign="top">
                             <?php
-
                             $ins_error = !$myarray['insurance_no_error'];
                             $study_error = $myarray['numsleepstudy'] == 0;
-
                             ?>
                             <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
                         </td>
@@ -258,7 +251,7 @@ $letters = range('A', 'Z');
                 </tr>
                 <?php
             }
-        }?>
+        } ?>
     </table>
 </form>
 
@@ -270,10 +263,10 @@ $letters = range('A', 'Z');
 
 <br /><br />
 <?php
-
 include "includes/bottom.htm";
 
-function itemSelector (Array $array, $section='all') {
+function itemSelector(array $array, $section = 'all')
+{
     if ($section === 'all') {
         return $array;
     }
@@ -287,7 +280,8 @@ function itemSelector (Array $array, $section='all') {
     return array_get($array, $section);
 }
 
-function querySections ($section='all') {
+function querySections($section = 'all')
+{
     $userTypeSoftware = DSS_USER_TYPE_SOFTWARE;
     
     $querySections = [
@@ -411,14 +405,15 @@ function querySections ($section='all') {
     return itemSelector($querySections, $section);
 }
 
-function joinList ($section='all') {
+function joinList($section = 'all')
+{
     $joinSections = [
         'allergens-check' => 'LEFT JOIN (
             SELECT patientid, MAX(q_page3id) AS max_id
-            FROM dental_q_page3_view
+            FROM dental_q_page3_pivot
             GROUP BY patientid
         ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
-        LEFT JOIN dental_q_page3_view allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
+        LEFT JOIN dental_q_page3_pivot allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
         'summary' => 'LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid',
         'rx-lomn' => 'LEFT JOIN (
             SELECT pid AS patientid, MAX(id) AS max_id
@@ -447,17 +442,18 @@ function joinList ($section='all') {
         LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id',
         'device' => 'LEFT JOIN (
             SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
-            FROM dental_ex_page5_view
+            FROM dental_ex_page5_pivot
             GROUP BY patientid
         ) device_pivot ON device_pivot.patientid = p.patientid
-        LEFT JOIN dental_ex_page5_view device_date ON device_date.ex_page5id = device_pivot.max_id
+        LEFT JOIN dental_ex_page5_pivot device_date ON device_date.ex_page5id = device_pivot.max_id
         LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice',
     ];
 
     return itemSelector($joinSections, $section);
 }
 
-function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $count=30) {
+function findPatients($filter, array $conditionalList = [], $sortDir, $page = 0, $count = 30)
+{
     $db = new Db();
 
     $sections = querySections();
@@ -485,15 +481,15 @@ function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $c
     $orderBy = str_replace('%DIR%', $sortDir, $orderBy);
 
     if (isset($section['select'])) {
-        $selectList []= $section['select'];
+        $selectList[] = $section['select'];
     }
 
     if (isset($section['join'])) {
-        $joinList []= $section['join'];
+        $joinList[] = $section['join'];
     }
 
     foreach ($joinList as $name) {
-        $tableList []= array_get($joins, $name);
+        $tableList[] = array_get($joins, $name);
         unset($joins[$name]);
     }
 
@@ -503,7 +499,7 @@ function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $c
 
     $page = intval($page);
     $count = intval($count);
-    $offset = $page*$count;
+    $offset = $page * $count;
 
     $countQuery = "SELECT COUNT(p.patientid) AS total FROM $tables WHERE $conditionals";
     $countResult = $db->getColumn($countQuery, 'total');

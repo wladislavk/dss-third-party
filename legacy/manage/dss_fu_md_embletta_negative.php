@@ -30,7 +30,7 @@ if(st($pat_myarray['dob']) <> '' ){
 	$age = 'N/A';
 }
 
-$q3_sql = "select * from dental_q_page3_view where patientid='".$_GET['pid']."'";
+$q3_sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
 $q3_myarray = $db->getRow($q3_sql);
 
 $history = st($q3_myarray['history']);
@@ -66,7 +66,7 @@ foreach($medications_arr as $val){
 	}
 }
 
-$q2_sql = "select * from dental_q_page2_view where patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
 $q2_myarray = $db->getRow($q2_sql);
 
 $polysomnographic = st($q2_myarray['polysomnographic']);
@@ -78,7 +78,7 @@ $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
 
-$sum_sql = "select * from dental_summary_view where patientid='".$_GET['pid']."'";
+$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
 $sum_myarray = $db->getRow($sum_sql);
 
 $sti_o2_1 = st($sum_myarray['sti_o2_1']);
@@ -105,11 +105,11 @@ if(st($pat_myarray['gender']) == 'Female'){
 <br /><br>
 
 <div align="right">
-	<button class="addButton" onclick="Javascript: window.open('dss_fu_md_embletta_negative_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="window.open('dss_fu_md_embletta_negative_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 		Print Letter 
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<button class="addButton" onclick="Javascript: window.open('dss_fu_md_embletta_negative_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="window.open('dss_fu_md_embletta_negative_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 		Word Document
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
@@ -146,8 +146,8 @@ if(st($pat_myarray['gender']) == 'Female'){
 			</strong> year old <strong>
 			<?php echo $pat_myarray['gender']?>
 			</strong> who was diagnosed with <strong>
-			<?php echo confirmed_diagnosis;?> 
-			<?php echo custom_diagnosis;?>
+			<?php echo $confirmed_diagnosis;?>
+			<?php echo $custom_diagnosis;?>
 			</strong> after undergoing <strong>
 			<?php echo $type_study;?>
 			</strong> on <strong>
@@ -213,10 +213,6 @@ if(st($pat_myarray['gender']) == 'Female'){
 			Please don�t hesitate to call if you have any questions.  I thank you again for the opportunity to participate in this patient�s treatment.<br><br>
 
 			Sincerely,<br><br><br><br>
-
-
-
-
 			<strong><?php echo $_SESSION['name']?>, DDS</strong><br><br>
 
 			CC:  <strong><?php echo $name;?></strong>

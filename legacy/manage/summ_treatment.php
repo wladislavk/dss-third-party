@@ -7,7 +7,7 @@
 <h3 class="sect_header">Previous Treatments</h3>
 <div class="box">
     <?php
-    $sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $myarray = $db->getRow($sql);
 
     $other_therapy = st($myarray['other_therapy']);
@@ -99,7 +99,7 @@
             </div>
             <?php
         }
-        $s_sql = "SELECT * FROM dental_q_page2_surgery_view WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'";
+        $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'";
         $s_q = $db->getResults($s_sql);
         $s_num = count($s_q);
         if ($s_num != 0) { ?>
@@ -113,7 +113,7 @@
                             <th>Surgery</th>
                             <th></th>
                         </tr>
-                <?php
+                    <?php
                     $s_count = 0;
                     foreach ($s_q as $s_row) { ?>
                         <tr id="surgery_row_<?= $s_count; ?>">

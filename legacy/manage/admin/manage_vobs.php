@@ -1,7 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
-include_once('../includes/constants.inc');
+include_once '../includes/constants.inc';
 include_once "includes/general.htm";
 
 $fid = (int)array_get($_REQUEST, 'fid', 0);
@@ -29,13 +30,15 @@ if ($iid) {
         WHERE contactid = '$iid'", 'company', '');
 }
 
+function insert_preauth_row($patient_id)
+{
+    if (empty($patient_id)) {
+        return;
+    }
 
-function insert_preauth_row($patient_id) {
-  if (empty($patient_id)) { return; }
-  
-  $db = new Db();
-  
-  $sql = "SELECT 
+    $db = new Db();
+
+    $sql = "SELECT 
         p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', 
         p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', 
         p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', 
@@ -46,24 +49,24 @@ function insert_preauth_row($patient_id) {
         d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', 
         tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', 
         d.userid as 'doc_id'
-    FROM dental_patients p
+        FROM dental_patients p
         JOIN dental_contact r ON p.referred_by = r.contactid  
         JOIN dental_contact i ON p.p_m_ins_co = i.contactid 
         JOIN dental_users d ON p.docid = d.userid 
         JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' 
-        JOIN dental_q_page2_view q2 ON p.patientid = q2.patientid
-    WHERE p.patientid = '$patient_id'";
-  
-  $my_array = $db->getRow($sql);
-  
-  $sql = "INSERT INTO dental_insurance_preauth (
+        JOIN dental_q_page2_pivot q2 ON p.patientid = q2.patientid
+        WHERE p.patientid = '$patient_id'";
+
+    $my_array = $db->getRow($sql);
+
+    $sql = "INSERT INTO dental_insurance_preauth (
         patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, 
         patient_ins_id, patient_firstname, patient_lastname, patient_add1, 
         patient_add2, patient_city, patient_state, patient_zip, patient_dob, 
         insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, 
         trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, 
-        front_office_request_date, status "
-       . ") VALUES (
+        front_office_request_date, status
+        ) VALUES (
         '" . $my_array['patient_id'] . "', 
         '" . $my_array['doc_id'] . "', 
         '" . $my_array['ins_co'] . "', 
@@ -91,11 +94,11 @@ function insert_preauth_row($patient_id) {
         '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-  $my = $db->query($sql);
+    $my = $db->query($sql);
 }
 
 if (!empty($_REQUEST['gen_preauth']) && $_REQUEST['gen_preauth'] == 1) {
-  insert_preauth_row($_REQUEST['patient_id']);
+    insert_preauth_row($_REQUEST['patient_id']);
 }
 
 define('SORT_BY_DATE', 0);
@@ -109,64 +112,60 @@ define('SORT_BY_EDIT', 7);
 $sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '');
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
 
 switch ($sort_by) {
-  case SORT_BY_DATE:
-    $sort_by_sql = "preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_PATIENT:
-    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_INSURANCE:
-    $sort_by_sql = "ins_co $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_FRANCHISEE:
-    $sort_by_sql = "doc_name $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_USER:
-    $sort_by_sql = "user_name $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_BC:
-    $sort_by_sql = "owner_billing_name $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  case SORT_BY_EDIT:
-    $sort_by_sql = "preauth.updated_at $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
-  default:
-    // default is SORT_BY_STATUS
-    $sort_by_sql = "preauth.status $sort_dir, preauth.front_office_request_date $sort_dir";
-    break;
+    case SORT_BY_DATE:
+        $sort_by_sql = "preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_PATIENT:
+        $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_INSURANCE:
+        $sort_by_sql = "ins_co $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_FRANCHISEE:
+        $sort_by_sql = "doc_name $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_USER:
+        $sort_by_sql = "user_name $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_BC:
+        $sort_by_sql = "owner_billing_name $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    case SORT_BY_EDIT:
+        $sort_by_sql = "preauth.updated_at $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
+    default:
+        // default is SORT_BY_STATUS
+        $sort_by_sql = "preauth.status $sort_dir, preauth.front_office_request_date $sort_dir";
+        break;
 }
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
-{
-	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	$db->query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
-	</script>
-	<?php 
-	trigger_error("Die called", E_USER_ERROR);
+if (!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
+    $del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
+    $db->query($del_sql);
+
+    $msg= "Deleted Successfully";
+    ?>
+    <script type="text/javascript">
+        window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = (int)array_get($_GET, 'count', 20);
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 
-/**
- * @see DSS-568
- */
 $escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
 $totalVobSubQuery = '0';
 $joinByUserCompany = '';
@@ -175,13 +174,11 @@ $conditionals = [];
 if ($isSuperAdmin) {
     $totalVobSubQuery = "(
         SELECT COUNT(dip.id)
-            FROM dental_insurance_preauth dip
-            WHERE dip.patient_id = p.patientid
-        )";
+        FROM dental_insurance_preauth dip
+        WHERE dip.patient_id = p.patientid
+    )";
 } elseif (is_billing($_SESSION['admin_access'])) {
     /**
-     * @see DSS-568
-     *
      * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
      * are DSS_PREAUTH_PENDING.
      */
@@ -194,44 +191,43 @@ if ($isSuperAdmin) {
     /**
      * Restrict by HST company
      */
-    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
-        AND uc.companyid = '$adminCompanyId'";
+    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '$adminCompanyId'";
 }
 
 $sql = "SELECT
-        preauth.id,
-        preauth.patient_id,
-        i.company AS ins_co,
-        p.firstname AS patient_firstname,
-        p.lastname AS patient_lastname,
-        preauth.doc_id,
-        preauth.updated_at,
-        preauth.front_office_request_date,
-        CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
-        preauth.status,
-        DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-        CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
-        $totalVobSubQuery AS total_vob,
-        doctor_billing_company.name AS current_billing_name,
-        vob_billing_company.name AS stored_billing_name,
-        CASE
-            WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
-            WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
-            ELSE vob_billing_company.name
-        END AS owner_billing_name,
-        doctor_billing_company.id AS current_billing_company_id,
-        vob_billing_company.id AS stored_billing_company_id
+    preauth.id,
+    preauth.patient_id,
+    i.company AS ins_co,
+    p.firstname AS patient_firstname,
+    p.lastname AS patient_lastname,
+    preauth.doc_id,
+    preauth.updated_at,
+    preauth.front_office_request_date,
+    CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
+    preauth.status,
+    DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+    CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
+    $totalVobSubQuery AS total_vob,
+    doctor_billing_company.name AS current_billing_name,
+    vob_billing_company.name AS stored_billing_name,
+    CASE
+        WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
+        WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
+        ELSE vob_billing_company.name
+    END AS owner_billing_name,
+    doctor_billing_company.id AS current_billing_company_id,
+    vob_billing_company.id AS stored_billing_company_id
     FROM dental_insurance_preauth preauth
-        JOIN dental_patients p ON preauth.patient_id = p.patientid
-        JOIN dental_users doctor ON preauth.doc_id = doctor.userid
-        LEFT JOIN dental_users staff ON preauth.userid = staff.userid
-        LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-        LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
-        LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
-        LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
-        LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
-        $joinByUserCompany
-    ";
+    JOIN dental_patients p ON preauth.patient_id = p.patientid
+    JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+    LEFT JOIN dental_users staff ON preauth.userid = staff.userid
+    LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+    LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+    LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+    LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+    LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+    $joinByUserCompany
+";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
@@ -240,31 +236,24 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
         $statuses = $db->escapeList($statuses);
         $conditionals[] = "preauth.status IN ($statuses)";
     }
-    
     if (!empty($fid)) {
         $conditionals[] = "doctor.userid = '$fid'";
     }
-    
     if (!empty($pid)) {
         $conditionals[] = "preauth.patient_id = '$pid'";
     }
-
     if (!empty($iid)) {
         $conditionals[] = "p.p_m_ins_co = '$iid'";
     }
 }
-
 $whereConditionals = '';
-
 if (count($conditionals)) {
     $conditionals = '(' . join(') AND (', $conditionals) . ')';
     $whereConditionals = "WHERE $conditionals";
 }
-
 $sql .= " $whereConditionals ORDER BY $sort_by_sql";
-
 $total_rec = $db->getNumberRows($sql);
-$no_pages = $total_rec/$rec_disp;
+$no_pages = $total_rec / $rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
@@ -272,37 +261,42 @@ $my = $db->getResults($sql);
 $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : '';
 $preauth_selected = ($status == DSS_PREAUTH_PREAUTH_PENDING) ? 'selected' : '';
 $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
-
 ?>
 <link rel="stylesheet" type="text/css" media="screen" href="popup/popup.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="/manage/css/search-hints.css" />
 <script type="text/javascript" src="popup/popup.js"></script>
 <script type="text/javascript" src="/manage/admin/js/manage_vobs.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-    if ($('#patient_hints').length) {
-        setup_autocomplete(
-            'patient_name', 'patient_hints', 'pid', '',
-            'list_patients_search.php?fid=<?php echo $fid; ?>', 'patient',
-            getParameterByName('pid')
-        );
-
-        setup_autocomplete(
-            'insurance_name', 'insurance_hints', 'iid', '',
-            'list_insurance_search.php?fid=<?= $fid ?>', 'insurance',
-            getParameterByName('pid')
-        );
-    }
-});
+    $(document).ready(function () {
+        if ($('#patient_hints').length) {
+            setup_autocomplete(
+                'patient_name',
+                'patient_hints',
+                'pid',
+                '',
+                'list_patients_search.php?fid=<?php echo $fid; ?>',
+                'patient',
+                getParameterByName('pid')
+            );
+            setup_autocomplete(
+                'insurance_name',
+                'insurance_hints',
+                'iid',
+                '',
+                'list_insurance_search.php?fid=<?= $fid ?>',
+                'insurance',
+                getParameterByName('pid')
+            );
+        }
+    });
 </script>
 
 <div class="page-header">
-	Manage Verification of Benefits
+    Manage Verification of Benefits
 </div>
 <div align="center" class="red">
-	<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 <div style="width:98%;margin:auto;">
     <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
         Status:
@@ -320,8 +314,7 @@ $(document).ready(function(){
         </select>
         &nbsp;&nbsp;&nbsp;
         Account:
-        <input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name"
-             value="<?= ($fid != '') ? $account_name : 'Type contact name' ?>" />
+        <input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?= ($fid != '') ? $account_name : 'Type contact name' ?>" />
         <div id="account_hints" class="search_hints" style="display:none;">
             <ul id="account_list" class="search_list">
                 <li class="template" style="display:none">Doe, John S</li>
@@ -329,8 +322,7 @@ $(document).ready(function(){
         </div>
         <?php if (!empty($fid)) { ?>
             Patients:
-            <input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name"
-                 value="<?= ($pid != '') ? $patient_name : 'Type patient name' ?>" />
+            <input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name" value="<?= ($pid != '') ? $patient_name : 'Type patient name' ?>" />
             <div id="patient_hints" class="search_hints" style="display:none;">
                 <ul id="patient_list" class="search_list">
                     <li class="template" style="display:none">Doe, John S</li>
@@ -339,8 +331,7 @@ $(document).ready(function(){
             <input type="hidden" name="pid" id="pid" value="<?= $pid ?>" />
             &nbsp;&nbsp;&nbsp;
             Insurance:
-            <input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name"
-                 value="<?= ($iid != '') ? $insurance_name : 'Type contact name' ?>" />
+            <input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name" value="<?= ($iid != '') ? $insurance_name : 'Type contact name' ?>" />
             <div id="insurance_hints" class="search_hints" style="display:none;">
                 <ul id="insurance_list" class="search_list">
                     <li class="template" style="display:none">Doe, John S</li>
@@ -352,139 +343,134 @@ $(document).ready(function(){
         <input type="hidden" name="sort_by" value="<?= $sort_by ?>" />
         <input type="hidden" name="sort_dir" value="<?= $sort_dir ?> "/>
         <input type="submit" value="Filter List" class="btn btn-primary">
-        <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'"
-             class="btn btn-primary">
+        <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'" class="btn btn-primary">
     </form>
 </div>
 
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered table-hover">
-	<?php if ($total_rec > $rec_disp) { ?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?php 
-				 paging($no_pages,$index_val,"fid=".$_GET['fid']."&pid=". $_GET['pid']."&status=". $_GET['status']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
-			?>
-		</TD>
-	</TR>
-	<?php  }?>
-	<?php     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
-             . "&status=" . (!empty($_REQUEST['status']) ? $_REQUEST['status'] : '') . "&sort_by=%s&sort_dir=%s";
-    ?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
-			<a href="<?php echo sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
-		</td>
-                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_EDIT, $sort_dir) ?>" width="15%">
-                        <a href="<?php echo sprintf($sort_qs, SORT_BY_EDIT, get_sort_dir($sort_by, SORT_BY_EDIT, $sort_dir))?>">Last Edit</a>
+    <table class="table table-bordered table-hover">
+        <?php if ($total_rec > $rec_disp) { ?>
+            <tr bgcolor="#ffffff">
+                <td align="right" colspan="15" class="bp">
+                    Pages:
+                    <?php
+                    paging($no_pages, $index_val, "fid=".$_GET['fid']."&pid=". $_GET['pid']."&status=". $_GET['status']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+                    ?>
                 </td>
-		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
-			<a href="<?php echo sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
-		</td>
-		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
-			<a href="<?php echo sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
-		</td>
-                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
+            </tr>
+        <?php } ?>
+        <?php
+        $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid . "&status=" . (!empty($_REQUEST['status']) ? $_REQUEST['status'] : '') . "&sort_by=%s&sort_dir=%s";
+        ?>
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_EDIT, $sort_dir) ?>" width="15%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_EDIT, get_sort_dir($sort_by, SORT_BY_EDIT, $sort_dir))?>">Last Edit</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
+            </td>
+            <td valign="top" class="col_head <?php echo get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
+                <a href="<?php echo sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
+            </td>
+            <td valign="top" class="col_head" width="15%">
+                Action
+            </td>
+        </tr>
+        <?php
+        if (!count($my)) { ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="6" align="center">
+                    No Records
                 </td>
-		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
-			<a href="<?php echo sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
-		</td>
-		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
-			<a href="<?php echo sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
-		</td>
-                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
-                </td>
+            </tr>
+            <?php
+        } else {
+            foreach ($my as $myarray) {
+                $status = (int)$myarray['status'];
+                $isAnyPendingStatus = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
+                $canEdit = preAuthEditPermission($myarray, $adminCompanyId, $isSuperAdmin);
 
-		<td valign="top" class="col_head" width="15%">
-			Action
-		</td>
-	</tr>
-	<?php if (!count($my)) { ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="6" align="center">
-				No Records
-			</td>
-		</tr>
-	<?php } else {
-		foreach ($my as $myarray) {
-		    $status = (int)$myarray['status'];
-		    $isAnyPendingStatus = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
-            $canEdit = preAuthEditPermission($myarray, $adminCompanyId, $isSuperAdmin);
+                $status_color = 'success';
+                $link_label = 'View';
+                $clientClass = 'former-client';
 
-            $status_color = 'success';
-            $link_label = 'View';
-            $clientClass = 'former-client';
-
-            if ($isAnyPendingStatus) {
-                $status_color = 'warning';
-
-                if ((int)$myarray['days_pending'] > 7) {
-                    $status_color = 'danger';
+                if ($isAnyPendingStatus) {
+                    $status_color = 'warning';
+                    if ((int)$myarray['days_pending'] > 7) {
+                        $status_color = 'danger';
+                    }
                 }
-            }
 
-            if ($canEdit) {
-                $link_label = 'Edit';
-            }
+                if ($canEdit) {
+                    $link_label = 'Edit';
+                }
 
-            if ($isSuperAdmin || (int)$myarray['current_billing_company_id'] === $adminCompanyId) {
-                $clientClass = 'current-client';
-            }
-
-            ?>
-			<tr class="<?= (isset($tr_class) ? $tr_class : '') ?> <?= $clientClass ?>">
-				<td valign="top">
-					<?php echo st($myarray["front_office_request_date"]);?>&nbsp;
-				</td>
+                if ($isSuperAdmin || (int)$myarray['current_billing_company_id'] === $adminCompanyId) {
+                    $clientClass = 'current-client';
+                }
+                ?>
+                <tr class="<?= (isset($tr_class) ? $tr_class : '') ?> <?= $clientClass ?>">
+                    <td valign="top">
+                        <?php echo st($myarray["front_office_request_date"]);?>&nbsp;
+                    </td>
                     <td valign="top">
                         <?php echo st($myarray["updated_at"]);?>&nbsp;
                     </td>
-				<td valign="top" class="<?php echo  $status_color; ?>">
-					<?php echo st($dss_preauth_status_labels[$status]);?>&nbsp;
-				</td>
-				<td valign="top">
-                    <a href="view_patient.php?pid=<?= e($myarray['patient_id']) ?>">
-                        <?= e("{$myarray['patient_lastname']}, {$myarray['patient_firstname']}") ?> (View Chart)
-                    </a>
-                </td>
-				<td valign="top">
-					<?php echo st($myarray["ins_co"]);?>&nbsp;
-				</td>
-				<td valign="top">
-                    <a href="view_user.php?ed=<?= $myarray['doc_id'] ?>"><?= e($myarray["doc_name"]) ?></a>
-                    &nbsp;
-                </td>
-				<td valign="top">
-					<?php echo st($myarray["user_name"]);?>&nbsp;
-				</td>
-                <td valign="top">
-                    <?= e($myarray['owner_billing_name']) ?>
-                    &nbsp;
-                </td>
-				<td valign="top">
-					<a class="btn btn-primary btn-sm" title="<?= $link_label ?>"
-                       href="process_vob_page.php?ed=<?= $myarray["id"] ?>">
-						<?= $link_label ?>
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    
-                    <a class="btn btn-primary btn-sm" title="<?= $link_label ?>"
-                       href="manage_vobs.php?fid=<?= $myarray['doc_id'] ?>&pid=<?= $myarray["patient_id"] ?>">
-                        History
-                        <?php if ($myarray['total_vob'] > 1) { ?>
-                            (<?= $myarray['total_vob'] ?>)
-                        <?php } ?>
-                    </a>
-				</td>
-			</tr>
-	<?php  	}
-	}?>
-</table>
+                    <td valign="top" class="<?php echo $status_color; ?>">
+                        <?php echo st($dss_preauth_status_labels[$status]);?>&nbsp;
+                    </td>
+                    <td valign="top">
+                        <a href="view_patient.php?pid=<?= e($myarray['patient_id']) ?>">
+                            <?= e("{$myarray['patient_lastname']}, {$myarray['patient_firstname']}") ?> (View Chart)
+                        </a>
+                    </td>
+                    <td valign="top">
+                        <?php echo st($myarray["ins_co"]);?>&nbsp;
+                    </td>
+                    <td valign="top">
+                        <a href="view_user.php?ed=<?= $myarray['doc_id'] ?>"><?= e($myarray["doc_name"]) ?></a>
+                        &nbsp;
+                    </td>
+                    <td valign="top">
+                        <?php echo st($myarray["user_name"]);?>&nbsp;
+                    </td>
+                    <td valign="top">
+                        <?= e($myarray['owner_billing_name']) ?>
+                        &nbsp;
+                    </td>
+                    <td valign="top">
+                        <a class="btn btn-primary btn-sm" title="<?= $link_label ?>" href="process_vob_page.php?ed=<?= $myarray["id"] ?>">
+                            <?= $link_label ?>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a class="btn btn-primary btn-sm" title="<?= $link_label ?>" href="manage_vobs.php?fid=<?= $myarray['doc_id'] ?>&pid=<?= $myarray["patient_id"] ?>">
+                            History
+                            <?php if ($myarray['total_vob'] > 1) { ?>
+                                (<?= $myarray['total_vob'] ?>)
+                            <?php } ?>
+                        </a>
+                    </td>
+                </tr>
+                <?php
+            }
+        } ?>
+    </table>
 </form>
-
 
 <div id="popupContact" style="width:750px;height:500px;">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
@@ -503,17 +489,18 @@ include __DIR__ . '/includes/bottom.htm';
  * @param int $initialStatus
  * @return array
  */
-function preAuthStatusSequence ($initialStatus) {
+function preAuthStatusSequence($initialStatus)
+{
     $initialStatus = (int)$initialStatus;
     
     if ($initialStatus === DSS_PREAUTH_PENDING) {
         return [$initialStatus, DSS_PREAUTH_PREAUTH_PENDING];
     }
-    
+
     if ($initialStatus === DSS_PREAUTH_COMPLETE) {
         return [$initialStatus, DSS_PREAUTH_REJECTED];
     }
-    
+
     return [$initialStatus];
 }
 
@@ -525,7 +512,8 @@ function preAuthStatusSequence ($initialStatus) {
  * @param bool  $isSuperAdmin
  * @return bool
  */
-function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin) {
+function preAuthEditPermission(array $preAuthData, $adminCompanyId, $isSuperAdmin)
+{
     $status = (int)$preAuthData['status'];
     $isStatusPending = $status === DSS_PREAUTH_PENDING;
     $isStatusPreAuth = $status === DSS_PREAUTH_PREAUTH_PENDING;

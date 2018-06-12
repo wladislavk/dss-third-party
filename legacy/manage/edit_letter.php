@@ -5,7 +5,8 @@ if ($_GET['backoffice'] == '1') {
     include 'admin/includes/top.htm'; ?>
     <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
     <script src="admin/popup/popup.js" type="text/javascript"></script>
-<?php } else {
+    <?php
+} else {
     include 'includes/top.htm';
     include 'admin/includes/invoice_functions.php';
 }
@@ -15,10 +16,10 @@ $docId = intval($_SESSION['docid']);
 $userId = intval($_SESSION['userid']);
 
 $margins = $db->getRow("SELECT
-        letter_margin_top AS 'top',
-        letter_margin_bottom AS 'bottom',
-        letter_margin_left AS 'left',
-        letter_margin_right AS 'right'
+    letter_margin_top AS 'top',
+    letter_margin_bottom AS 'bottom',
+    letter_margin_left AS 'left',
+    letter_margin_right AS 'right'
     FROM dental_users
     WHERE userid = '$docId'");
 
@@ -82,7 +83,7 @@ $todays_date = date('F d, Y');
 $itype = $db->getRow("SELECT *
     FROM dental_q_image
     WHERE imagetypeid = 4
-        AND patientid = '$patientId'
+    AND patientid = '$patientId'
     ORDER BY adddate DESC
     LIMIT 1");
 $patient_photo = $itype['image_file'];
@@ -101,7 +102,7 @@ $source = $patient_info['referred_source'];
 $consult_date = $db->getColumn("SELECT date_completed
     FROM dental_flow_pg2_info
     WHERE patientid = '$patientId'
-        AND segmentid = 2
+    AND segmentid = 2
     ORDER BY stepid DESC
     LIMIT 1", 'date_completed');
 $consult_date = date('F d, Y', strtotime($consult_date));
@@ -109,32 +110,32 @@ $consult_date = date('F d, Y', strtotime($consult_date));
 $impressions_date = $db->getColumn("SELECT date_completed
     FROM dental_flow_pg2_info
     WHERE patientid = '$patientId'
-        AND segmentid = 4
+    AND segmentid = 4
     ORDER BY stepid DESC
     LIMIT 1", 'date_completed');
 $impressions_date = date('F d, Y', strtotime($impressions_date));
 
 $q3_myarray = $db->getRow("SELECT other_history, other_medications, medicationscheck
-    FROM dental_q_page3_view
+    FROM dental_q_page3_pivot
     WHERE patientid = '$patientId'");
 $history_disp = ($q3_myarray['other_history']) ? $q3_myarray['other_history'] : "none provided";
 $medications_disp = $q3_myarray['other_medications'] ?: 'none provided';
 
 // Oldest Sleepstudy Results
 $q1_myarray = $db->getRow("SELECT
-        s.date,
-        s.sleeptesttype,
-        s.ahi,
-        s.rdi,
-        s.t9002,
-        s.o2nadir,
-        s.diagnosis,
-        s.place,
-        s.dentaldevice,
-        d.ins_diagnosis,
-        d.description
+    s.date,
+    s.sleeptesttype,
+    s.ahi,
+    s.rdi,
+    s.t9002,
+    s.o2nadir,
+    s.diagnosis,
+    s.place,
+    s.dentaldevice,
+    d.ins_diagnosis,
+    d.description
     FROM dental_summ_sleeplab s
-        LEFT JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
+    LEFT JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
     WHERE patiendid = '$patientId'
     ORDER BY COALESCE(
         STR_TO_DATE(s.date, '%m/%d/%Y'),
@@ -157,39 +158,39 @@ $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 $first_center_name = st($q1_myarray['place']);
 
 $q2_myarray = $db->getRow("SELECT
-        s.date,
-        s.sleeptesttype,
-        s.ahi,
-        s.rdi,
-        s.t9002,
-        s.o2nadir,
-        d.ins_diagnosis,
-        d.description,
-        s.place,
-        s.dentaldevice,
-        sl.company,
-        CASE s.sleeptesttype
-            WHEN 'PSG Baseline' THEN '1'
-            WHEN 'HST Baseline' THEN '2'
-            WHEN 'PSG' THEN '3'
-            WHEN 'HST' THEN '4'
-            ELSE '5'
-        END AS sort_order
+    s.date,
+    s.sleeptesttype,
+    s.ahi,
+    s.rdi,
+    s.t9002,
+    s.o2nadir,
+    d.ins_diagnosis,
+    d.description,
+    s.place,
+    s.dentaldevice,
+    sl.company,
+    CASE s.sleeptesttype
+        WHEN 'PSG Baseline' THEN '1'
+        WHEN 'HST Baseline' THEN '2'
+        WHEN 'PSG' THEN '3'
+        WHEN 'HST' THEN '4'
+        ELSE '5'
+    END AS sort_order
     FROM dental_summ_sleeplab s
-        JOIN dental_patients p ON p.patientid = s.patiendid
-        JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
-        LEFT JOIN dental_sleeplab sl ON s.place = sl.sleeplabid
+    JOIN dental_patients p ON p.patientid = s.patiendid
+    JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
+    LEFT JOIN dental_sleeplab sl ON s.place = sl.sleeplabid
     WHERE (
-            p.p_m_ins_type != '1'
-            OR (
-                COALESCE(s.diagnosising_doc, '') != ''
-                AND COALESCE(s.diagnosising_npi, '') != ''
-            )
+        p.p_m_ins_type != '1'
+        OR (
+            COALESCE(s.diagnosising_doc, '') != ''
+            AND COALESCE(s.diagnosising_npi, '') != ''
         )
-        AND COALESCE(s.diagnosis, '') != ''
-        AND s.filename IS NOT NULL
-        AND s.patiendid = '$patientId'
-        AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST')
+    )
+    AND COALESCE(s.diagnosis, '') != ''
+    AND s.filename IS NOT NULL
+    AND s.patiendid = '$patientId'
+    AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST')
     ORDER BY sort_order ASC, COALESCE(
         STR_TO_DATE(s.date, '%m/%d/%Y'),
         STR_TO_DATE(s.date, '%m/%d/%y'),
@@ -221,25 +222,25 @@ if ($first_center_name == '0') {
     $first_sleeplab_name = $db->getColumn("SELECT company
         FROM dental_sleeplab
         WHERE status = 1
-            AND sleeplabid = '" . $db->escape($first_center_name) . "'", 'company');
+        AND sleeplabid = '" . $db->escape($first_center_name) . "'", 'company');
 }
 
 $q2_myarray = $db->getRow("SELECT
-        date,
-        sleeptesttype,
-        ahi,
-        ahisupine,
-        rdi,
-        t9002,
-        o2nadir,
-        diagnosis,
-        place,
-        dd.device,
-        d.ins_diagnosis,
-        d.description
+    date,
+    sleeptesttype,
+    ahi,
+    ahisupine,
+    rdi,
+    t9002,
+    o2nadir,
+    diagnosis,
+    place,
+    dd.device,
+    d.ins_diagnosis,
+    d.description
     FROM dental_summ_sleeplab dss
-        LEFT JOIN dental_ins_diagnosis d ON dss.diagnosis = d.ins_diagnosisid
-        LEFT JOIN dental_device dd ON dd.deviceid = dss.dentaldevice
+    LEFT JOIN dental_ins_diagnosis d ON dss.diagnosis = d.ins_diagnosisid
+    LEFT JOIN dental_device dd ON dd.deviceid = dss.dentaldevice
     WHERE patiendid = '$patientId'
     ORDER BY COALESCE(
         STR_TO_DATE(dss.date, '%m/%d/%Y'),
@@ -263,8 +264,8 @@ $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
 
 $dd_r = $db->getRow("SELECT dd.device, ex.dentaldevice_date
-    FROM dental_ex_page5_view ex
-        LEFT JOIN dental_device dd ON dd.deviceid = ex.dentaldevice
+    FROM dental_ex_page5_pivot ex
+    LEFT JOIN dental_device dd ON dd.deviceid = ex.dentaldevice
     WHERE ex.patientid = '$patientId'");
 
 $dentaldevice = $dd_r['device'];
@@ -273,11 +274,11 @@ $delivery_date = ($dd_r['dentaldevice_date'] != '') ? date('F d, Y', strtotime($
 $sleeplab_name = $db->getColumn("SELECT company
     FROM dental_sleeplab
     WHERE status = 1
-        AND sleeplabid = '" . $db->escape($sleep_center_name) . "'", 'company');
+    AND sleeplabid = '" . $db->escape($sleep_center_name) . "'", 'company');
 
 // Oldest Subjective results
 $subj1 = $db->getRow("SELECT ess AS ep_eadd, snoring_sound AS ep_sadd, energy_level AS ep_eladd, sleep_qual AS sleep_qualadd
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'");
 
 // Newest Subjective Results
@@ -292,7 +293,7 @@ $subj2 = $db->getRow("SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd
 $delay = $db->getRow("SELECT delay_reason AS reason, description
     FROM dental_flow_pg2_info
     WHERE patientid = '$patientId'
-        AND segmentid = 5
+    AND segmentid = 5
     ORDER BY date_completed DESC, id DESC
     LIMIT 1");
 
@@ -303,27 +304,26 @@ $bmi = $db->getColumn("SELECT bmi
 
 // Reason seeking treatment
 $reason_seeking_tx = $db->getColumn("SELECT reason_seeking_tx
-    FROM dental_summary_view
+    FROM dental_summary_pivot
     WHERE patientid = '$patientId'", 'reason_seeking_tx');
 
 $reason_seeking_tx = $db->getColumn("SELECT chief_complaint_text
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'", 'chief_complaint_text');
 
 $q1_myarray = $db->getRow("SELECT *
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'");
 
 $main_reason = st($q1_myarray['main_reason']);
 $main_reason_other = st($q1_myarray['main_reason_other']);
 $complaintid = st($q1_myarray['complaintid']);
 
-if ($complaintid <> '') {
+if ($complaintid != '') {
     $chief_arr = explode('~', $complaintid);
 
-    if (count($chief_arr) <> 0) {
+    if (count($chief_arr) != 0) {
         $c_count = 0;
-
         foreach ($chief_arr as $c_val) {
             if (trim($c_val) != '') {
                 $c_s = explode('|', $c_val);
@@ -341,7 +341,7 @@ if ($complaintid <> '') {
         $comp_value = $db->getColumn("SELECT complaint
             FROM dental_complaint
             WHERE status = 1
-                AND complaintid = '$eachId'", 'complaint');
+            AND complaintid = '$eachId'", 'complaint');
 
         if (trim($comp_value) != '') {
             $reason_seeking_tx .= ", " . $comp_value;
@@ -351,7 +351,7 @@ if ($complaintid <> '') {
 
 // Symptoms
 $complaintid = $db->getColumn("SELECT complaintid
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'
     LIMIT 1", 'complaintid');
 $complaint = explode('~', rtrim($complaintid, '~'));
@@ -359,7 +359,7 @@ $compid = [];
 
 foreach ($complaint as $pair) {
     $idscore = explode('|', $pair);
-    $compid []= $idscore[0];
+    $compid[] = $idscore[0];
 }
 
 foreach ($compid as $id) {
@@ -368,7 +368,7 @@ foreach ($compid as $id) {
         WHERE complaintid = '" . $db->escape($id) . "'");
 
     foreach ($result as $row) {
-        $symptoms []= $row['complaint'];
+        $symptoms[] = $row['complaint'];
     }
 }
 
@@ -397,7 +397,7 @@ $followup = $db->getRow("SELECT nightsperweek, ep_eadd, ep_tsadd
 
 // Nights per Week and Current ESS TSS
 $initesstss_query = $db->getRow("SELECT ess, tss
-    FROM dental_q_page1_view
+    FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'
     LIMIT 1");
 
@@ -408,7 +408,7 @@ $inittss = $initesstss_query['tss'];
 $noncomp = $db->getRow("SELECT noncomp_reason AS reason, description
     FROM dental_flow_pg2_info
     WHERE patientid = '$patientId'
-        AND segmentid = 9
+    AND segmentid = 9
     ORDER BY date_completed DESC, id DESC
     LIMIT 1");
 
@@ -425,15 +425,15 @@ $signature_file = "signature_{$userId}_{$sign['id']}.png";
 $companyId = $db->getColumn("SELECT companyid FROM dental_user_company WHERE userid = '$docId'", 'companyid');
 
 $franchisee_info = $db->getRow("SELECT
-        user_type,
-        mailing_name AS name,
-        mailing_practice AS practice,
-        mailing_address AS address,
-        mailing_city AS city,
-        mailing_state AS state,
-        mailing_zip AS zip,
-        email, use_digital_fax, use_letter_header,
-        fax, indent_address, header_space
+    user_type,
+    mailing_name AS name,
+    mailing_practice AS practice,
+    mailing_address AS address,
+    mailing_city AS city,
+    mailing_state AS state,
+    mailing_zip AS zip,
+    email, use_digital_fax, use_letter_header,
+    fax, indent_address, header_space
     FROM dental_users
     WHERE userid = '$docId'");
 
@@ -448,25 +448,25 @@ if ($franchisee_info['user_type'] == DSS_USER_TYPE_SOFTWARE) {
 }
 
 $loc_r = $db->getColumn("SELECT location
-    FROM dental_summary_view
+    FROM dental_summary_pivot
     WHERE patientid = '$patientId'", 'location');
 
 if ($patientId && !empty($loc_r)) {
     $location_query = "SELECT *
         FROM dental_locations
         WHERE id = '$loc_r'
-            AND docid = '$docId'";
+        AND docid = '$docId'";
 } else {
     $location_query = "SELECT *
         FROM dental_locations
         WHERE default_location = 1
-            AND docid = '$docId'";
+        AND docid = '$docId'";
 }
 
 $location_info = $db->getRow($location_query);
 $company_info = $db->getRow("SELECT c.*
     FROM companies c
-        JOIN dental_user_company uc ON c.id = uc.companyid
+    JOIN dental_user_company uc ON c.id = uc.companyid
     WHERE uc.userid = '$docId'");
 
 /**
@@ -475,11 +475,11 @@ $company_info = $db->getRow("SELECT c.*
 $master_c = $db->getResults("SELECT *
     FROM dental_letters l
     WHERE (
-            l.letterid = '$parentLetterId'
-            OR l.parentid = '$parentLetterId'
-        )
-        AND status = '$parent_status'
-        AND deleted = 0
+        l.letterid = '$parentLetterId'
+        OR l.parentid = '$parentLetterId'
+    )
+    AND status = '$parent_status'
+    AND deleted = 0
     ORDER BY edit_date DESC");
 $master_q = $master_c;
 
@@ -495,8 +495,8 @@ foreach ($master_c as $master_r) {
         FROM dental_letters
         WHERE letterid = '$letterid'
         ORDER BY letterid ASC";
-
     $othermd_result = $db->getResults($othermd_query);
+
     $md_array = [];
     $md_referral_array = [];
     $pat_referral_array = [];
@@ -527,7 +527,6 @@ foreach ($master_c as $master_r) {
         $master_num++;
     }
 }
-
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=20170428"></script>
@@ -563,21 +562,19 @@ foreach ($master_c as $master_r) {
 </style>
 <p>&nbsp;</p>
 <?php
-
 /**
  * START Letter loop
  */
 foreach ($master_q as $master_r) {
     $letterid = $master_r['letterid'];
-
     // Select Letter
     $letter_query = "SELECT
-            l.templateid, l.patientid, l.topatient, l.cc_topatient,
-            l.md_list, l.md_referral_list, l.pat_referral_list, l.cc_pat_referral_list,
-            l.template, l.send_method, l.status, l.docid, u.username,
-            l.edit_date, l.template_type, l.font_size, l.font_family
+        l.templateid, l.patientid, l.topatient, l.cc_topatient,
+        l.md_list, l.md_referral_list, l.pat_referral_list, l.cc_pat_referral_list,
+        l.template, l.send_method, l.status, l.docid, u.username,
+        l.edit_date, l.template_type, l.font_size, l.font_family
         FROM dental_letters l
-            LEFT JOIN dental_users u ON u.userid = l.edit_userid
+        LEFT JOIN dental_users u ON u.userid = l.edit_userid
         WHERE l.letterid = '$letterid'";
 
     $row = $db->getRow($letter_query);
@@ -606,8 +603,8 @@ foreach ($master_q as $master_r) {
 
     // Pending and Sent Contacts
     $othermd_query = "SELECT
-            md_list, md_referral_list, cc_md_list,
-            cc_md_referral_list, pat_referral_list, cc_pat_referral_list
+        md_list, md_referral_list, cc_md_list,
+        cc_md_referral_list, pat_referral_list, cc_pat_referral_list
         FROM dental_letters
         WHERE letterid = '$letterid'
         ORDER BY letterid ASC";
@@ -675,18 +672,20 @@ foreach ($master_q as $master_r) {
             WHERE letterid = '$letterid'";
 
         $f_q = $db->getResults($f_sql);
-        if ($f_q) foreach ($f_q as $f_r) {
-            ?>
-            <div class="warning" id="fax_alert_<?php echo $f_r['id']; ?>">
-                This letter failed to send via digital fax to <a href="#"
-                                                                 onclick="loadPopup('add_contact.php?ed=<?php echo $f_r['contactid']; ?>');return false;"><?php echo $f_r['to_name']; ?></a>
-                at <a href="#"
-                      onclick="loadPopup('add_contact.php?ed=<?php echo $f_r['contactid']; ?>');return false;"><?php echo format_phone($f_r['to_number']); ?></a>
-                Please check fax number and retry, or change delivery method. Click <a
-                    href="manage_faxes.php?status=3&viewed=0#fax">here</a> to view full failure details.
-            </div>
-            <br/><br/>
-        <?php }
+        if ($f_q) {
+            foreach ($f_q as $f_r) { ?>
+                <div class="warning" id="fax_alert_<?php echo $f_r['id']; ?>">
+                    This letter failed to send via digital fax to
+                    <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $f_r['contactid']; ?>');return false;"><?php echo $f_r['to_name']; ?></a>
+                    at
+                    <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $f_r['contactid']; ?>');return false;"><?php echo format_phone($f_r['to_number']); ?></a>
+                    Please check fax number and retry, or change delivery method. Click
+                    <a href="manage_faxes.php?status=3&viewed=0#fax">here</a> to view full failure details.
+                </div>
+                <br/><br/>
+                <?php
+            }
+        }
     }
 
     if ($topatient) {
@@ -732,27 +731,37 @@ foreach ($master_q as $master_r) {
 
     $letter_contacts = [];
 
-    if (!empty($contact_info['patient'])) foreach ($contact_info['patient'] as $contact) {
-        $letter_contacts[] = array_merge(['type' => 'patient'], $contact);
+    if (!empty($contact_info['patient'])) {
+        foreach ($contact_info['patient'] as $contact) {
+            $letter_contacts[] = array_merge(['type' => 'patient'], $contact);
+        }
     }
 
-    if (!empty($contact_info['md_referrals'])) foreach ($contact_info['md_referrals'] as $contact) {
-        $letter_contacts[] = array_merge(['type' => 'md_referral'], $contact);
+    if (!empty($contact_info['md_referrals'])) {
+        foreach ($contact_info['md_referrals'] as $contact) {
+            $letter_contacts[] = array_merge(['type' => 'md_referral'], $contact);
+        }
     }
 
-    if (!empty($contact_info['pat_referrals'])) foreach ($contact_info['pat_referrals'] as $contact) {
-        $letter_contacts[] = array_merge(['type' => 'pat_referral'], $contact);
+    if (!empty($contact_info['pat_referrals'])) {
+        foreach ($contact_info['pat_referrals'] as $contact) {
+            $letter_contacts[] = array_merge(['type' => 'pat_referral'], $contact);
+        }
     }
 
-    if (!empty($contact_info['mds'])) foreach ($contact_info['mds'] as $contact) {
-        $letter_contacts[] = array_merge(['type' => 'md'], $contact);
+    if (!empty($contact_info['mds'])) {
+        foreach ($contact_info['mds'] as $contact) {
+            $letter_contacts[] = array_merge(['type' => 'md'], $contact);
+        }
     }
 
     $numletters = count($letter_contacts);
 
-    if (!empty($contact_info['mds'])) foreach ($contact_info['mds'] as $contact) {
-        if ($contact['id'] == $docpcp) {
-            $pcp = $contact;
+    if (!empty($contact_info['mds'])) {
+        foreach ($contact_info['mds'] as $contact) {
+            if ($contact['id'] == $docpcp) {
+                $pcp = $contact;
+            }
         }
     }
 
@@ -761,7 +770,7 @@ foreach ($master_q as $master_r) {
         $letter_sql = "SELECT body
             FROM dental_letter_templates
             WHERE companyid = '$companyId'
-                AND triggerid = '" . $db->escape($templateid) . "'";
+            AND triggerid = '" . $db->escape($templateid) . "'";
     } else {
         $letter_sql = "SELECT body
             FROM dental_letter_templates_custom
@@ -1318,11 +1327,12 @@ foreach ($master_q as $master_r) {
     ?>
     <form
         action="?pid=<?= $patientId ?>&lid=<?= $parentLetterId ?>&goto=<?= urlencode(array_get($_REQUEST, 'goto')) ?><?= empty($isBackOffice) ? '' : '&backoffice=1' ?>"
-        method="post" class="letter">
+        method="post"
+        class="letter"
+    >
         <input type="hidden" name="numletters" value="<?= $numletters ?>"/>
 
         <?php
-
         /**
          * START Contact loop
          */
@@ -1828,7 +1838,8 @@ foreach ($master_q as $master_r) {
                         <script type="text/javascript">
                             window.location = window.location;
                         </script>
-                    <?php }
+                        <?php
+                    }
                 }
             }
 
@@ -1850,10 +1861,8 @@ foreach ($master_q as $master_r) {
                     $parent = false;
                 }
 
-                $type = !empty($_POST['contacts'][$cur_letter_num]['type']) ?
-                    $_POST['contacts'][$cur_letter_num]['type'] : $contact['type'];
-                $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ?
-                    $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
+                $type = !empty($_POST['contacts'][$cur_letter_num]['type']) ? $_POST['contacts'][$cur_letter_num]['type'] : $contact['type'];
+                $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ? $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
                 $message = $new_template[$cur_letter_num];
 
                 if (isset($_POST['font_size'][$cur_letter_num])) {
@@ -1921,21 +1930,23 @@ foreach ($master_q as $master_r) {
                         } elseif ($_REQUEST['goto'] == 'faxes') {
                             $page = 'manage_faxes.php';
                         }
-
                         ?>
                         <script type="text/javascript">
                             window.location = '<?= $page ?>';
                         </script>
-                    <?php } else { ?>
+                        <?php
+                    } else { ?>
                         <script type="text/javascript">
                             window.location = '<?= $_GET['backoffice'] == '1' ? '/manage/admin/manage_letters.php?status=pending' : '/manage/letters.php?status=pending' ?>';
                         </script>
-                    <?php }
+                        <?php
+                    }
                 } else { ?>
                     <script type="text/javascript">
                         window.location = window.location;
                     </script>
-                <?php }
+                    <?php
+                }
 
                 trigger_error('Die called', E_USER_ERROR);
                 continue;
@@ -1950,21 +1961,21 @@ foreach ($master_q as $master_r) {
                     } elseif ($_REQUEST['goto'] == 'faxes') {
                         $page = 'manage_faxes.php';
                     }
-
                     ?>
                     <script type="text/javascript">
                         window.location = '<?= $page ?>';
                     </script>
-                <?php } else { ?>
+                    <?php
+                } else { ?>
                     <script type="text/javascript">
                         window.location = '<?= $_GET['backoffice'] == '1' ? '/manage/admin/manage_letters.php?status=pending' : '/manage/letters.php?status=pending' ?>';
                     </script>
-                <?php }
+                    <?php
+                }
             }
 
             // Print Letter Body
             ?>
-
             <div style="margin: auto; width: 95%; padding: 3px;" class="single-letter">
                 <div>
                     <span class="admin_head" style="float: none; display: inline-block; margin-top: -5px;">
@@ -1972,7 +1983,6 @@ foreach ($master_q as $master_r) {
                     </span>
                     &nbsp;&nbsp;
                     <?php
-
                     if (!empty($_REQUEST['goto'])) {
                         if ($_REQUEST['goto'] == 'flowsheet') {
                             $page = 'manage_flowsheet3.php?pid=' . $_GET['pid'] . '&addtopat=1';
@@ -1983,14 +1993,12 @@ foreach ($master_q as $master_r) {
                         } elseif ($_REQUEST['goto'] == 'faxes') {
                             $page = 'manage_faxes.php';
                         }
-
                         ?>
                         <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
                             <b>&lt;&lt;Back</b>
                         </a>
                     <?php } else { ?>
-                        <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>"
-                           class="editlink" title="Pending Letters">
+                        <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
                             <b>&lt;&lt;Back</b>
                         </a>
                     <?php } ?>
@@ -2012,110 +2020,72 @@ foreach ($master_q as $master_r) {
                         <?php $send_meth = $method ?: $contact['preferredcontact']; ?>
 
                         <?php if ($send_meth == 'fax') { ?>
-                            <input type="button" class="addButton" value="Fax"
-                                   onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;"/>
+                            <input type="button" class="addButton" value="Fax" onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;"/>
                         <?php } elseif ($contact['fax'] != '') { ?>
-                            <input type="submit" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton"
-                                   value="Fax"/>
+                            <input type="submit" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton" value="Fax"/>
                         <?php } else { ?>
-                            <input type="button" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton grayButton"
-                                   value="Fax"
-                                   onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;"/>
+                            <input type="button" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton grayButton" value="Fax" onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;"/>
                         <?php } ?>
 
                         <?php if ($send_meth == 'paper') { ?>
-                            <input type="button" class="addButton" value="Paper"
-                                   onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;"/>
+                            <input type="button" class="addButton" value="Paper" onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;"/>
                         <?php } else { ?>
-                            <input type="submit" name="paper_letter[<?= $cur_letter_num ?>]" class="addButton"
-                                   value="Paper"/>
+                            <input type="submit" name="paper_letter[<?= $cur_letter_num ?>]" class="addButton" value="Paper"/>
                         <?php } ?>
 
-                        <input type="button" class="addButton" value="Cancel"
-                               onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline'); return false;"/>
+                        <input type="button" class="addButton" value="Cancel" onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline'); return false;"/>
                     </div>
                     &nbsp;&nbsp;
                     <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-                        <select name="font_size[<?php echo $cur_letter_num ?>]" style="display:none;"
-                                class="edit_letter<?php echo $cur_letter_num ?>" onchange="javascript:return false;">
+                        <select name="font_size[<?php echo $cur_letter_num ?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num ?>" onchange="return false;">
                             <option <?php echo ($font_size == 8) ? 'selected="selected"' : ''; ?> value="8">8</option>
-                            <option <?php echo ($font_size == 10) ? 'selected="selected"' : ''; ?> value="10">10
-                            </option>
-                            <option <?php echo ($font_size == 12) ? 'selected="selected"' : ''; ?> value="12">12
-                            </option>
-                            <option <?php echo ($font_size == 14 || empty($font_size)) ? 'selected="selected"' : ''; ?>
-                                value="14">14
-                            </option>
-                            <option <?php echo ($font_size == 16) ? 'selected="selected"' : ''; ?> value="16">16
-                            </option>
-                            <option <?php echo ($font_size == 20) ? 'selected="selected"' : ''; ?> value="20">20
-                            </option>
+                            <option <?php echo ($font_size == 10) ? 'selected="selected"' : ''; ?> value="10">10</option>
+                            <option <?php echo ($font_size == 12) ? 'selected="selected"' : ''; ?> value="12">12</option>
+                            <option <?php echo ($font_size == 14 || empty($font_size)) ? 'selected="selected"' : ''; ?> value="14">14</option>
+                            <option <?php echo ($font_size == 16) ? 'selected="selected"' : ''; ?> value="16">16</option>
+                            <option <?php echo ($font_size == 20) ? 'selected="selected"' : ''; ?> value="20">20</option>
                         </select>
-                        <select name="font_family[<?php echo $cur_letter_num ?>]" style="display:none;"
-                                class="edit_letter<?php echo $cur_letter_num ?>" onchange="javascript:return false;">
-                            <option <?php echo ($font_family == 'dejavusans' || empty($font_family)) ? 'selected="selected"' : ''; ?>
-                                value="dejavusans">Dejavu Sans
-                            </option>
-                            <option <?php echo ($font_family == 'times') ? 'selected="selected"' : ''; ?> value="times">
-                                Times New Roman
-                            </option>
-                            <option <?php echo ($font_family == 'courier') ? 'selected="selected"' : ''; ?>
-                                value="courier">Courier
-                            </option>
-                            <option <?php echo ($font_family == 'helvetica') ? 'selected="selected"' : ''; ?>
-                                value="helvetica">Helvetica
-                            </option>
+                        <select name="font_family[<?php echo $cur_letter_num ?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num ?>" onchange="return false;">
+                            <option <?php echo ($font_family == 'dejavusans' || empty($font_family)) ? 'selected="selected"' : ''; ?> value="dejavusans">Dejavu Sans</option>
+                            <option <?php echo ($font_family == 'times') ? 'selected="selected"' : ''; ?> value="times">Times New Roman</option>
+                            <option <?php echo ($font_family == 'courier') ? 'selected="selected"' : ''; ?> value="courier">Courier</option>
+                            <option <?php echo ($font_family == 'helvetica') ? 'selected="selected"' : ''; ?> value="helvetica">Helvetica</option>
                         </select>
 
-                        <input type="submit" name="font_submit[<?php echo $cur_letter_num ?>]"
-                               id="font_submit_<?php echo $cur_letter_num ?>" style="display:none;"/>
+                        <input type="submit" name="font_submit[<?php echo $cur_letter_num ?>]" id="font_submit_<?php echo $cur_letter_num ?>" style="display:none;"/>
                     <?php } ?>
                     <span id="preview-tools-letter<?= $cur_letter_num ?>" class="preview-tools">
-                        <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
-                                onclick="return false;" title="Show/hide line breaks">
+                        <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton" onclick="return false;" title="Show/hide line breaks">
                             &#xb6;
                         </button>
                         &nbsp;&nbsp;
-                        <button id="toggle-placeholders-letter<?= $cur_letter_num ?>"
-                                class="preview-toggle-placeholders addButton"
-                                onclick="return false;" title="Show/hide placeholder hints">
-                          Hide variables
+                        <button id="toggle-placeholders-letter<?= $cur_letter_num ?>" class="preview-toggle-placeholders addButton" onclick="return false;" title="Show/hide placeholder hints">
+                            Hide variables
                         </button>
                     </span>
                     &nbsp;&nbsp;
-                    <button id="edit_but_letter<?php echo $cur_letter_num; ?>" class="addButton"
-                            onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num ?>', '<?php echo $font_size; ?>','<?php echo $font_family; ?>');return false;">
+                    <button id="edit_but_letter<?php echo $cur_letter_num; ?>" class="addButton" onclick="edit_letter('letter<?php echo $cur_letter_num ?>', '<?php echo $font_size; ?>','<?php echo $font_family; ?>');return false;">
                         Edit Letter
                     </button>
-                    <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num; ?>"
-                            class="addButton"
-                            onclick="Javascript: hide_edit_letter('letter<?= $cur_letter_num ?>');return false;">
+                    <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num; ?>" class="addButton" onclick="hide_edit_letter('letter<?= $cur_letter_num ?>');return false;">
                         Cancel Edits
                     </button>
                     &nbsp;&nbsp;
-
                     <?php if (($method ? $method : $contact['preferredcontact']) == 'fax' && $franchisee_info['use_digital_fax'] != 1 && $_GET['backoffice'] != '1') { ?>
-                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton"
-                               onclick="return confirm('Warning! Digital fax is not enabled in your account. Click OK to send the letter via standard printing. To enable digital faxing for your account please contact the DSS corporate office.');"
-                               value="Send Letter"/>
+                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton" onclick="return confirm('Warning! Digital fax is not enabled in your account. Click OK to send the letter via standard printing. To enable digital faxing for your account please contact the DSS corporate office.');" value="Send Letter"/>
                     <?php } elseif (($method ? $method : $contact['preferredcontact']) == 'fax' && $location_info['fax'] == "" && $_GET['backoffice'] != '1') { ?>
-                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton"
-                               onclick="return confirm('Warning! You have not specified a return fax number for your location, and no return fax number will appear on this correspondence. Please set your fax number in Admin -> Profile. Click OK to send this fax without your return fax number, or Cancel to add your fax number and retry.');"
-                               value="Send Letter"/>
+                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton" onclick="return confirm('Warning! You have not specified a return fax number for your location, and no return fax number will appear on this correspondence. Please set your fax number in Admin -> Profile. Click OK to send this fax without your return fax number, or Cancel to add your fax number and retry.');" value="Send Letter"/>
                     <?php } else { ?>
-                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton"
-                               value="Send Letter"/>
+                        <input type="submit" name="send_letter[<?php echo $cur_letter_num ?>]" class="addButton" value="Send Letter"/>
                     <?php } ?>
                     &nbsp;&nbsp;
                 </div>
                 <div style="width: 100%; text-align: center; clear: both;">
                     <?php if ($status == DSS_LETTER_SEND_FAILED) { ?>
                         Sending of letter failed. Letter was attempted to be sent to
-                        <a href="#"
-                           onclick="loadPopup('add_contact.php?ed=<?php echo $contact['id']; ?>'); return false;"><?php echo $contact['firstname'] . " " . $contact['lastname']; ?></a>
+                        <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $contact['id']; ?>'); return false;"><?php echo $contact['firstname'] . " " . $contact['lastname']; ?></a>
                     <?php } ?>
                 </div>
-
                 <table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
                     <tr>
                         <td valign="top">
@@ -2126,9 +2096,7 @@ foreach ($master_q as $master_r) {
                                     Double-click <mark class="preview-letter preview-placeholder hover">variables</mark> to edit
                                 </span>
                             </span>
-                            <div id="letter<?= $cur_letter_num ?>"
-                                 class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders"
-                                 data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">
+                            <div id="letter<?= $cur_letter_num ?>" class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders" data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">
                                 <div class="preview-wrapper">
                                     <div class="preview-inner-wrapper">
                                         <?= html_entity_decode(
@@ -2143,29 +2111,26 @@ foreach ($master_q as $master_r) {
                                     </div>
                                 </div>
                                 <?php for ($n = 1; $n <= 0; $n++) { ?>
-                                    <div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div><?php } ?>
+                                    <div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div>
+                                <?php } ?>
                                 <div class="preview-bottom-margin"></div>
                             </div>
-                            <input type="hidden" name="new_template[<?php echo $cur_letter_num ?>]"
-                                   value="<?php echo preg_replace('/(&Acirc;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, "UTF-8")) ?>"/>
+                            <input type="hidden" name="new_template[<?php echo $cur_letter_num ?>]" value="<?php echo preg_replace('/(&Acirc;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, "UTF-8")) ?>"/>
                         </td>
                     </tr>
                 </table>
 
                 <div style="float:left;">
-                    <input type="submit" style="display:none;" name="reset_letter[<?php echo $cur_letter_num ?>]"
-                           class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Reset"/>
+                    <input type="submit" style="display:none;" name="reset_letter[<?php echo $cur_letter_num ?>]" class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Reset"/>
                     &nbsp;&nbsp;&nbsp;&nbsp;
 
                     <?php if (!(!empty($_GET['backoffice']) && $_GET['backoffice'] == "1" && $_SESSION['admin_access'] != 1)) { ?>
-                        <input type="submit" name="delete_letter[<?php echo $cur_letter_num ?>]" class="addButton"
-                               value="Delete"/>
+                        <input type="submit" name="delete_letter[<?php echo $cur_letter_num ?>]" class="addButton" value="Delete"/>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                     <? } ?>
                 </div>
                 <div style="float:right;">
-                    <input type="submit" style="display:none;" name="save_letter[<?php echo $cur_letter_num ?>]"
-                           class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Save Changes"/>
+                    <input type="submit" style="display:none;" name="save_letter[<?php echo $cur_letter_num ?>]" class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Save Changes"/>
                 </div>
 
                 <?php if ($username) { ?>
@@ -2184,25 +2149,21 @@ foreach ($master_q as $master_r) {
         /**
          * END Contact loop
          */
-
         ?>
     </form>
 <?php }
 /**
  * END Letter loop
  */
-
 ?>
 
 <?php foreach ($googleFonts as $localName => $remoteName) { ?>
     <link href="https://fonts.googleapis.com/css?family=<?= urlencode($remoteName) ?>" rel="stylesheet">
 <?php } ?>
-    <?php
-
+<?php
 if (!empty($isBackOffice)) {
     include 'admin/includes/bottom.htm';
     ?>
-
     <div id="popupContact" style="width:750px;">
         <a id="popupContactClose">
             <button>X</button>
@@ -2242,12 +2203,12 @@ function contactType($patientId, $contactId, $contactType)
         $patientId = intval($patientId);
 
         $contactTypeList = $db->getRow("SELECT
-        docsleep AS 'Sleep MD',
-        docpcp AS 'Primary Care MD',
-        docdentist AS 'Dentist',
-        docent AS 'ENT'
-    FROM dental_patients
-    WHERE patientid = '$patientId'");
+            docsleep AS 'Sleep MD',
+            docpcp AS 'Primary Care MD',
+            docdentist AS 'Dentist',
+            docent AS 'ENT'
+            FROM dental_patients
+            WHERE patientid = '$patientId'");
 
         $contactTypeList = $contactTypeList ?: [];
     }
@@ -2320,7 +2281,6 @@ function preProcessReplacements($replacements)
                     'align' => current(array_filter(array_get($matches, 'align'))),
                 ];
                 break;
-            /** @noinspection PhpMissingBreakStatementInspection */
             case substr($each, 0, 3) === '<p>':
                 $each = preg_replace('@^<p>([\s\S]*)</p>$@i', '$1', $each);
                 $paragraph = true;
@@ -2374,9 +2334,9 @@ function processReplacements($replacements)
 
             array_walk($each, function ($value, $attribute) use (&$replacement, $requiredImgAttributes) {
                 if ($attribute === 'title') {
-                    $replacement []= $attribute . '="' . templateEscape($value) . '"';
+                    $replacement[] = $attribute . '="' . templateEscape($value) . '"';
                 } elseif (in_array($attribute, $requiredImgAttributes) || strlen($value)) {
-                    $replacement []= $attribute . '="' . e($value) . '"';
+                    $replacement[] = $attribute . '="' . e($value) . '"';
                 }
             });
 

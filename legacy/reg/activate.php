@@ -18,7 +18,7 @@ if (!empty($r['mailing_practice'])) {
   $practice = '';
 }
 
-$loc_sql = "SELECT location FROM dental_summary_view where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
 $loc_q = mysqli_query($con, $loc_sql);
 $loc_r = mysqli_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){

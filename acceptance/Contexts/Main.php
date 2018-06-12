@@ -8,6 +8,7 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use PHPUnit\Framework\Assert;
+use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Main extends BaseContext
 {
@@ -58,17 +59,7 @@ class Main extends BaseContext
      */
     public function browserConfirm()
     {
-        switch (BROWSER) {
-            case 'phantomjs':
-                break;
-            case 'chrome':
-                /** @var CoreDriver $driver */
-                $driver = $this->getSession()->getDriver();
-                if ($driver instanceof Selenium2Driver) {
-                    $driver->getWebDriverSession()->accept_alert();
-                }
-                break;
-        }
+        $this->acceptPrompt();
     }
 
     /**
@@ -77,7 +68,23 @@ class Main extends BaseContext
     public function browserConfirmWithDelay()
     {
         $this->wait(SHORT_WAIT_TIME);
-        $this->browserConfirm();
+        $this->acceptPrompt();
+    }
+
+    /**
+     * @When I confirm browser alert by entering :input
+     *
+     * @param string $input
+     */
+    public function browserConfirmWithText(string $input)
+    {
+        try {
+            $this->wait(SHORT_WAIT_TIME);
+        } catch (UnexpectedAlertOpen $e) {
+            $this->acceptPrompt($input);
+            return;
+        }
+        $this->acceptPrompt($input);
     }
 
     /**
@@ -220,6 +227,22 @@ class Main extends BaseContext
     public function clickLogo()
     {
         $this->clickLink('Dashboard');
+    }
+
+    /**
+     * @When I attach the file :file to :field
+     *
+     * @param string file
+     * @param string field
+     */
+    public function attachFileToField(string $file, string $field)
+    {
+        $encodedFile = $this->base64EncodeFile($file);
+        /** @var Selenium2Driver $driver */
+        $driver = $this->getSession()->getDriver();
+        $remotePath = $driver->getWebDriverSession()->file(['file' => $encodedFile]);
+        $input = $this->findCss("input[type='file'][name='$field']");
+        $input->attachFile($remotePath);
     }
 
     /**
@@ -449,5 +472,51 @@ class Main extends BaseContext
         }
         $tableHeading = $this->findCss('td.cat_head');
         Assert::assertEquals($heading, trim($tableHeading->getText()));
+    }
+
+    /**
+     * @param string|null $input
+     */
+    private function acceptPrompt(string $input = null)
+    {
+        switch (BROWSER) {
+            case 'phantomjs':
+                break;
+            case 'chrome':
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    if (!is_null($input)) {
+                        $driver->getWebDriverSession()->postAlert_text(['text' => $input]);
+                    }
+                    $driver->getWebDriverSession()->accept_alert();
+                }
+                break;
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     * @see https://stackoverflow.com/a/42117423/208067
+     */
+    private function base64EncodeFile(string $file)
+    {
+        if ($this->getMinkParameter('files_path')) {
+            $rawMinkPath = $this->getMinkParameter('files_path');
+            $minkPath = realpath($rawMinkPath);
+            $fullPath = rtrim($minkPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+            if (is_file($fullPath)) {
+                $file = $fullPath;
+            }
+        }
+        $tempZip = tempnam('', 'WebDriverZip');
+        $zip = new \ZipArchive();
+        $zip->open($tempZip, \ZipArchive::CREATE);
+        $zip->addFile($file, basename($file));
+        $zip->close();
+        $encodedFile = base64_encode(file_get_contents($tempZip));
+        unlink($tempZip);
+        return $encodedFile;
     }
 }

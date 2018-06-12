@@ -57,7 +57,7 @@ class CompaniesApiTest extends ApiTestCase
             'adddate' => '2013-04-03 12:36:19',
             'ip_address' => '128.12.179.156',
             'eligible_api_key' => 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx',
-            'logo' => 'company_logo_3.png',
+            'logo' => 'resources/company_logo_3.png',
             'stripe_secret_key' => 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk',
             'stripe_publishable_key' => 'pk_test_AwG89We9HPlSSaFDI1TZgnie',
             'monthly_fee' => '149.00',

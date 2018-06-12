@@ -9,26 +9,6 @@ if($_GET['backoffice'] == '1') {
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
-
-/*
-$pat_sql = "select * from dental_patients where patientid='".s_for($['pid'])."'";
-$pat_my = mysqli_query($con, $pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-
-$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-
-if($pat_myarray['patientid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?
-	trigger_error("Die called", E_USER_ERROR);
-}*/
-
 $letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 // Select Letter
@@ -85,7 +65,7 @@ if ($patient_result) {
 }
 
 // Get Medical Information
-$q3_sql = "SELECT history, medications from dental_q_page3_view WHERE patientid = '".$patientid."';";
+$q3_sql = "SELECT history, medications from dental_q_page3_pivot WHERE patientid = '".$patientid."';";
 $q3_myarray = $db->getRow($q3_sql);
 
 $history = $q3_myarray['history'];
@@ -480,7 +460,6 @@ foreach ($letter_contacts as $key => $contact) {
 	    if (count($letter_contacts) == 1) {
 	  		$parent = true;
 	    }
-	    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
@@ -517,17 +496,17 @@ foreach ($letter_contacts as $key => $contact) {
 	}?>
 	<?php // loop through letters ?>
 	<div align="right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?php echo $key?>');return false;" >
+		<button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

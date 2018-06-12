@@ -43,6 +43,7 @@ default:
                 - Contexts\PatientUploadDw
                 - Contexts\Profile
                 - Contexts\ProgressNotes
+                - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
 chrome:

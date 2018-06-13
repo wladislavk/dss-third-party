@@ -54,7 +54,7 @@ if (isset($my)) {
                 $tr_class = "tr_active";
 
                 try {
-                    $soapNote = json_decode($myarray['notes'], true);
+                    $soapNote = json_decode($dentalNote['notes'], true);
                 } catch (\Exception $e) {
                     $soapNote = null;
                 }

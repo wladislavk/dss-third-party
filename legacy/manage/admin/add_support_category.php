@@ -17,7 +17,6 @@ if(!empty($_POST["catsub"]) && $_POST["catsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_support_categories.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -37,7 +36,6 @@ if(!empty($_POST["catsub"]) && $_POST["catsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_support_categories.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

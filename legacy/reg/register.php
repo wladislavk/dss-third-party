@@ -285,13 +285,11 @@ $c_r = $db->getRow($c_sql);
                                         if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
                                         {
                                                 var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-                                                //alert(inc);
-                                                
+
                                                 var inc_sqr = parseInt(inc) * parseInt(inc);
                                                 var wei = parseInt(fa.weight.value) * 703;
                                                 var bmi = parseInt(wei) / parseInt(inc_sqr);
                                                 
-                                                //alert("BMI " + bmi.toFixed(2));
                                                 fa.bmi.value = bmi.toFixed(1);
                                         }
                                         else

@@ -206,52 +206,6 @@ $num_users=mysqli_num_rows($my);
 </table>
 </form>
 
-<?php /*
-<br /><br />
-<table class="table table-bordered table-hover">
-        <tr class="tr_bg_h">
-                <td valign="top" class="col_head" width="20%">
-                        Company
-                </td>
-                <td valign="top" class="col_head" width="15%">
-                        Monthly Fee
-                </td>
-                <td valign="top" class="col_head" width="15%">
-                        Fax Fee
-                </td>
-                <td valign="top" class="col_head" width="15%">
-                        Free Fax
-                </td>
-                <td valign="top" class="col_head" width="16%">
-                        Edit
-                </td>
-        </tr>
-<?php
-  $mf_sql = "SELECT id, name, monthly_fee, fax_fee, free_fax FROM companies ORDER BY name ASC";
-  $mf_q = mysqli_query($con, $mf_sql);
-  while($mf_r = mysqli_fetch_assoc($mf_q)){
-  ?>
-  <tr>
-    <td><?= $mf_r['name']; ?></td>
-    <td><?= $mf_r['monthly_fee']; ?></td>
-    <td><?= $mf_r['fax_fee']; ?></td>
-    <td><?= $mf_r['free_fax']; ?></td>
-    <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="btn btn-primary" style="padding:3px 5px;">Edit</a></td>
-  </tr>
-
-
-
-
-
-
-
-  <?php } ?>
-
-
-
-</table>
-
-*/ ?>
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

@@ -4,8 +4,6 @@ namespace Ds3\Libraries\Legacy;
 $patientId = intval($_GET['pid']);
 
 /**
- * @see DSS-348
- *
  * If the patient id is different, maybe the link is malformed
  */
 if (isset($_GET['pid']) && (string)$patientId !== (string)$_GET['pid']) {
@@ -58,10 +56,10 @@ if (!empty($_POST['from_tracker'])) {
     $docId = intval($_SESSION['docid']);
 
     $db->query("UPDATE dental_patient_summary summary
-            LEFT JOIN dental_patients patient ON patient.patientid = summary.pid
+        LEFT JOIN dental_patients patient ON patient.patientid = summary.pid
         SET summary.tracker_notes = '$notes'
         WHERE summary.pid = '$patientId'
-            AND patient.docid = '$docId'");
+        AND patient.docid = '$docId'");
 
     trigger_error('Die called', E_USER_ERROR);
 }
@@ -92,7 +90,7 @@ if ($b_r) {
   var billing_co = '<?= $billing_co; ?>';
 </script>
 <?php
-$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 $docr = $db->getRow($docsql);
 $doc_patient_portal = $docr['use_patient_portal'];
 
@@ -138,7 +136,7 @@ function trigger_letter1and2($pid)
     //prevent letters from being generated if letters or intro letters disabled
     $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $_SESSION['docid'])."'";
     $let_r = $db->getRow($let_sql);
-    if($let_r['use_letters'] && $let_r['intro_letters']){
+    if ($let_r['use_letters'] && $let_r['intro_letters']) {
         $letter1id = "1";
         $letter2id = "2";
         $mdcontacts = [];
@@ -386,7 +384,8 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST["ed"])."'");
 
         //Remove pending vobs if ins info has changed.
-        if ($old_p_m_ins_co != $_POST['p_m_ins_co']
+        if (
+            $old_p_m_ins_co != $_POST['p_m_ins_co']
             || $s_r['p_m_relation'] != $_POST['p_m_relation']
             || $s_r['p_m_partyfname'] != $_POST['p_m_partyfname']
             || $s_r['p_m_partylname'] != $_POST['p_m_partylname']
@@ -395,8 +394,8 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             || (!empty($s_r['p_m_ins_ass']) && $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'])
             || $s_r['p_m_ins_id'] != $_POST['p_m_ins_id']
             || $s_r['p_m_ins_grp'] != $_POST['p_m_ins_grp']
-            || $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan'])
-        {
+            || $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan']
+        ) {
             $vob_sql = "
                 UPDATE dental_insurance_preauth 
                 SET
@@ -414,12 +413,14 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary_view where patientid='$patientId'";
+            $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='$patientId'";
             $ds_q = $db->getRow($ds_sql);
+            $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
             if ($ds_q) {
-                $loc_query = "UPDATE dental_summary_view SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
+                $summaryId = $ds_q['summaryid'];
+                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
             } else {
-                $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
+                $loc_query = "INSERT INTO dental_summary SET location='$escapedLocation', patientid='$patientId'";
             }
             $db->query($loc_query);
         }
@@ -1144,7 +1145,7 @@ if (isset($msg) && $msg != '') {
     $referred_notes = st($themyarray["referred_notes"]);
     $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-  $loc_sql = "SELECT location from dental_summary_view WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+  $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
   $loc_r = $db->getRow($loc_sql);
   $location = $loc_r['location'];
 
@@ -1445,14 +1446,17 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                     <li id="foli8" class="complex">
                         <div id="endpoint-permissions-indicator" style="text-align: center;"
                              v-bind:doc-id="<?= (int)$_SESSION['docid'] ?>" v-bind:patient-id="<?= $patientId ?>">
-                            <span style="float: none;" v-for="group in groups"
-                                  v-if="group.authorize_per_patient && patientPermissions[group.id].enabled">
-                                {{ group.name }}: <span style="float: none;" class="red">Active</span>
-                            </span>
-                                                    <span style="float: none;" v-cloak v-for="group in groups"
-                                                          v-if="group.authorize_per_patient && !patientPermissions[group.id].enabled">
-                                {{ group.name }}: <span style="float: none;" class="red">Not Active</span>
-                            </span>
+                            <span
+                                style="float: none;"
+                                v-for="group in groups"
+                                v-if="group.authorize_per_patient && patientPermissions[group.id].enabled"
+                            >{{ group.name }}: <span style="float: none;" class="red">Active</span></span>
+                            <span
+                                style="float: none;"
+                                v-cloak
+                                v-for="group in groups"
+                                v-if="group.authorize_per_patient && !patientPermissions[group.id].enabled"
+                            >{{ group.name }}: <span style="float: none;" class="red">Not Active</span></span>
                         </div>
                         <div id="profile_image" style="float:right; width:270px;">
                             <?php
@@ -2513,7 +2517,7 @@ if (!isset($_GET['noheaders'])) { ?>
     <div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
     <?php
 } ?>
-  </td>
+</td>
 </tr>
 <!-- Stick Footer Section Here -->
 </table>

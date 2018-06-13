@@ -1,13 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "includes/top.htm";
 ?>
-<!--
-	<script type="text/javascript">
-		window.location = "manage_patient.php";
-	</script>
--->
 <?php
-	//trigger_error("Die called", E_USER_ERROR);
 	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_forms where formid='".$_REQUEST["delid"]."'";
 		

@@ -168,11 +168,6 @@ linkRequestData('dental_patients', $_SESSION['pid']);
 
    	}
        $q = mysqli_query($con, $sql);
-	if($q){
-		//echo "Successfully updated!";
-	}else{
-		//echo "Error";
-	}
 
 		$s_sql = "SELECT email FROM dental_patients
                         WHERE patientid=".mysqli_real_escape_string($con, $_SESSION['pid']);
@@ -180,7 +175,6 @@ linkRequestData('dental_patients', $_SESSION['pid']);
                 $s_r = mysqli_fetch_assoc($s_q);
                 sendUpdatedEmail($_SESSION['pid'], $_POST['email'], $s_r['email'], 'pat');
 		if(trim($_POST['email']) != trim($s_r['email'])){
-			//echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
 		}
 		
 		$s = "UPDATE dental_patients set email='".mysqli_real_escape_string($con, $_POST['email'])."' WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";	

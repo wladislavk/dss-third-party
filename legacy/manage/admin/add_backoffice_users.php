@@ -35,7 +35,7 @@ $canEdit = $isSuperAdmin ||
     ($isAdmin && $isSameCompany) ||
     ($isSoftwareAdmin && $isSelfManaged) ||
     ($isCompanyAdmin && $isSameCompany) ||
-    (/* $isCompanyBasic && */ $isSelfManaged);
+    $isSelfManaged;
 $canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
 $canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
 
@@ -66,7 +66,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         ($isAdmin && $isSameCompany) ||
         ($isSoftwareAdmin && $isSelfManaged) ||
         ($isCompanyAdmin && $isSameCompany) ||
-        (/* $isCompanyBasic && */ $isSelfManaged);
+        $isSelfManaged;
 
     if ($userId && !$canEdit) { ?>
         <script>
@@ -156,11 +156,9 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                           mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -209,7 +207,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

@@ -24,7 +24,6 @@ $(document).ready(function () {
                 });
             },
             failure: function (data) {
-              //alert('fail');
             }
         });
     });
@@ -49,14 +48,12 @@ function update_device(device, name) {
           data: {id: valId, device: device, pid: valPid},
           success: function(data){
             var r = $.parseJSON(data);
-            if (r.error) {
-            } else {
+            if (!r.error) {
                 parent.updateDentalDevice(valId, device);
                 parent.disablePopupClean();
             }
           },
           failure: function(data){
-            //alert('fail');
           }
         });
       }

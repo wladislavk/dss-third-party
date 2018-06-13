@@ -8,13 +8,8 @@ $('.mailed_chk').click( function(){
         data: {lid: lid, mailed: c, type:type},
         success: function(data){
                 var r = $.parseJSON(data);
-                if(r.error){
-                }else{
-                    //window.location.reload();
-                }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });
@@ -29,13 +24,8 @@ $('.sec_mailed_chk').click( function(){
         data: {lid: lid, mailed: c, type:type},
         success: function(data){
                 var r = $.parseJSON(data);
-                if(r.error){
-                }else{
-                    //window.location.reload();
-                }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });
@@ -67,7 +57,6 @@ $('document').ready( function(){
     }
 });
 
-//use "?filter="+v+"&sort1=<?php echo  $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=<?php echo  $_GET['sort2']; ?>&dir2=<?php echo  $_GET['dir2']; ?>" for variable page 
 function updateClaims(page)
 {
     window.location = page;

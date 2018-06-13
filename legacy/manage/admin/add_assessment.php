@@ -26,7 +26,6 @@ if(!empty($_POST["mult_assessmentsub"]) && $_POST["mult_assessmentsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

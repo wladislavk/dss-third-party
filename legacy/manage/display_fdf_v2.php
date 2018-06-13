@@ -83,6 +83,4 @@
   $pdf->AddPage();
 
   $pdf->Output('insurance_claim.pdf', 'D');
-
-  //echo $fdf;
 ?>

@@ -1,8 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-//include "includes/general_functions.php";
-//include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -46,20 +44,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     </script>
     <?php	
 }
-?>
-<?php /*
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-</head>
-<body width="98%"> */ ?>
-
-<?php
 $thesql = "select * from dental_patient_insurance where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
@@ -236,16 +221,5 @@ $but_text = "Add ";
     </table>
 </form>
 </div>
-<!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
-  </td>
-</tr>-->
-<!-- Stick Footer Section Here -->
-<!--</table>-->
-<!--<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
--->
 </body>
 </html>

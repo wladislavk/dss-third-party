@@ -79,36 +79,7 @@ ORDER BY a.Date";
         while($r = mysqli_fetch_assoc($q)){
           ?>paid.push({x: <?= date('U',strtotime($r['paid_date'])); ?>, y: <?= $r['num_paid']; ?>});<?php 
         }
-/*$sql = "SELECT count(*) num_activated, activation_date
-                FROM (SELECT 
-                        userid, username,
-                        case 
-                          WHEN registration_date IS NOT NULL AND registration_date != ''
-                            THEN registration_date
-                          ELSE adddate
-                        end as activation_date
-                        FROM dental_users
-                        WHERE status=1 AND (username!='' && username IS NOT NULL) and docid=0
-                        ) u
-	WHERE activation_date >= DATE_SUB(now(), INTERVAL 830 DAY)
-        group by activation_date";
-
-	$q = mysqli_query($con,$sql);
-	while($r = mysqli_fetch_assoc($q)){
-	  ?>activate.push({x: <?= date('U',strtotime($r['activation_date'])); ?>, y: <?= $r['num_activated']; ?>});<?php 
-	}
-$sql = "SELECT count(*) num_suspended, suspended_date
-                        FROM dental_users
-                        WHERE status=3 AND (username!='' && username IS NOT NULL) and docid=0
-        AND suspended_date >= DATE_SUB(now(), INTERVAL 830 DAY)
-        group by suspended_date";
-
-        $q = mysqli_query($con,$sql);
-        while($r = mysqli_fetch_assoc($q)){
-          ?>suspend.push({x: <?= date('U',strtotime($r['suspended_date'])); ?>, y: <?= $r['num_suspended']; ?>});<?php
-        }
-*/
- ?> 
+ ?>
    return [
      {
        values: paid,

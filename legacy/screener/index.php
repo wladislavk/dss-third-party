@@ -301,12 +301,6 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 <h3>Your Results</h3>
 
 <p id="result_body"></p>
-<!--
-<br />
-Epworth: <span id="ep_score"></span><br />
-<br />
-Survey: <span id="survey_score"></span>
-<br />-->
 <div class="risk_desc" id="risk_low">
 <!-- LOW RISK -->
 <span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at low risk for sleep apnea, indicating a normal amount of sleepiness. Should any of your symptoms change, please let us know so we can reassess your sleepiness and risk for sleep apnea.

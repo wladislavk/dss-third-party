@@ -28,7 +28,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
@@ -52,7 +51,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 		
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?

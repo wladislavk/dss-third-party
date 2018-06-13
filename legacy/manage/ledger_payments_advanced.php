@@ -151,7 +151,7 @@ $secondaryExists = $claim['primary_claim_id'] ||
             ?>
                   <tr>
                     <td><?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?></td>
-                    <td><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
+                    <td><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></td>
                     <td><?php echo  $p['description']; ?></td>
                     <td><?php echo  $dss_trxn_payer_labels[$p['payer']]; ?></td>
                     <td><?php echo  $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>

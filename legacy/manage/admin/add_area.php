@@ -34,11 +34,9 @@ if($_POST["areasub"] == 1)
 			$ed_sql = "update spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where areaid='".$_POST["ed"]."'";
 			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_area.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -52,7 +50,6 @@ if($_POST["areasub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_area.php?msg=<?=$msg;?>';
 			</script>
 			<?

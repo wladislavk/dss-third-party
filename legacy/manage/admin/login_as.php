@@ -1,7 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
     include_once('includes/main_include.php');
 	include_once('includes/sescheck.php');
-        //$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".$_POST['username']."'";
         $check_sql = "SELECT dental_users.userid, username, name, user_access, docid, user_type, uc.companyid FROM dental_users 
                         LEFT JOIN dental_user_company uc ON dental_users.userid=uc.userid
                         where username='".mysqli_real_escape_string($con,$_POST['username'])."'";
@@ -10,9 +9,6 @@
         {
 		echo('here');
                 $check_myarray = mysqli_fetch_array($check_my);
-
-                /*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-                mysqli_query($con,$ins_sql);*/
 
                 $_SESSION['userid']=$check_myarray['userid'];
                 $_SESSION['username']=$check_myarray['username'];

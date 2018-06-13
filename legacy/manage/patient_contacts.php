@@ -88,9 +88,6 @@ if(isset($_REQUEST['useid'])){
 	$d = "DELETE FROM dental_patient_contacts where id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
 	$db->query($d);
 ?>
-<script type="text/javascript">
-	//window.location = "add_contact.php?ed=<?php echo $pc_id; ?>";
-</script>
 <?php
 }elseif(isset($_REQUEST['delid'])){
 	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";

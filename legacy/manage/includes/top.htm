@@ -474,7 +474,7 @@ if ($r['homepage'] != '1') {
         </script>
         <?php
         $hideallblocks = 0;
-        if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php") {
+        if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
             $getstepqrysql = "
                 SELECT * FROM dental_flow_pg2 
                 WHERE patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' 
@@ -545,7 +545,7 @@ if ($r['homepage'] != '1') {
                 $title .= "Pre-medication: " . $myarray['premed']."\n";
             }
 
-            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_view WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
             $myq3array = $db->getRow($sqlq3);
             $allergen = $myq3array['allergenscheck'];

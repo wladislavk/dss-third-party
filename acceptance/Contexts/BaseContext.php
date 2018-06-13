@@ -155,7 +155,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$parentElement) {
             $parentElement = $this->page;
         }
-        $element = $parentElement->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
+        $element = $parentElement->find('xpath', '//' . $selector . '[normalize-space()="' . $text . '"]');
         if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }

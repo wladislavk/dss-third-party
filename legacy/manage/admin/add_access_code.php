@@ -8,7 +8,6 @@ if(isset($_POST['accesscodedelete'])){
   mysqli_query($con,$sql);
                         ?>
                         <script type="text/javascript">
-                                //alert("<?php echo $msg;?>");
                                 parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
                         </script>
                         <?

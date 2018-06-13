@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-   //Metronic.init(); // init metronic core componets
    Layout.init(); // init layout
 
    if (window.QuickSidebar) {
@@ -13,7 +12,6 @@ jQuery(document).ready(function() {
    Index.initCharts(); // init index page's custom scripts
    Index.initChat();
    Index.initMiniCharts();
-   //Index.initIntro();
    Tasks.initDashboardWidget();
 });
 
@@ -71,7 +69,6 @@ jQuery(document).ready(function(){
    var path = window.location.pathname;
    var query = window.location.search;
    var pathname = path + query;
-   //alert(pathname);
    $('.page-sidebar-menu').find('li a[href$="' + pathname + '"]').parents('li').addClass('active').each(function(){
       var $this = $(this);
       $this.parents('ul').parents('li').each(function() {     

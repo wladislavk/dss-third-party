@@ -401,7 +401,6 @@ function regabc(fa){
                 return false;
         }
 	return confirm('You are about to send the patient a registration email. The patient will receive a text message activation code by clicking a link contained in this email, and the patient can complete his/her forms online. Are you sure you want to continue?');
-	//return confirm('You are about to send the patient an email. Are you sure you want to continue?');
 }
 
 function remabc(fa){
@@ -963,37 +962,6 @@ function referredbyabc(fa)
 		fa.lastname.focus();
 		return false;
 	}
-	/*if(trim(fa.middlename.value) == "" )
-	{
-		alert("Middle Name is Required");
-		fa.middlename.focus();
-		return false;
-	}*/
-  /*
-	if(trim(fa.add1.value) == "" )
-	{
-		alert("Address1 is Required");
-		fa.add1.focus();
-		return false;
-	}
-	if(trim(fa.city.value) == "" )
-	{
-		alert("City is Required");
-		fa.city.focus();
-		return false;
-	}
-	if(trim(fa.state.value) == "" )
-	{
-		alert("State is Required");
-		fa.state.focus();
-		return false;
-	}
-	if(trim(fa.zip.value) == "" )
-	{
-		alert("Zip is Required");
-		fa.zip.focus();
-		return false;
-	}*/
 	if(trim(fa.email.value) != "" )
 	{
 		if(! is_email(trim(fa.email.value)))
@@ -1029,12 +997,6 @@ function sleeplababc(fa)
 		fa.company.focus();
 		return false;
 	}
-	/*if(trim(fa.middlename.value) == "" )
-	{
-		alert("Middle Name is Required");
-		fa.middlename.focus();
-		return false;
-	}*/
 	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
@@ -1127,54 +1089,6 @@ function ledgerabc(fa)
 		fa.entry_date.focus();
 		return false;
 	}
-/*	
-	if(trim(fa.transaction_type.value) == "")
-	{
-		alert("Transaction Type is Required");
-		fa.transaction_type.focus();
-		return false;
-	}
-	
-	
-	if(trim(fa.description.value) == "")
-	{
-		alert("Description is Required");
-		fa.description.focus();
-		return false;
-	}
-	if(trim(fa.transaction_type.value) == 'Entry')
-	{
-		if(trim(fa.amount.value) == "")
-		{
-			alert("Amount is Required");
-			fa.amount.focus();
-			return false;
-		}
-		
-		if(isNaN(trim(fa.amount.value)))
-		{
-			alert("Only Numbers for Amount.");
-			fa.amount.focus();
-			return false;
-		}
-	}
-	if(trim(fa.transaction_type.value) == 'Payment')
-	{
-		if(trim(fa.paid_amount.value) == "")
-		{
-			alert("Paid Amount is Required");
-			fa.paid_amount.focus();
-			return false;
-		}
-		
-		if(isNaN(trim(fa.paid_amount.value)))
-		{
-			alert("Only Numbers for Paid Amount.");
-			fa.paid_amount.focus();
-			return false;
-		}
-	}
-*/
 	if(fa.status.checked && fa.old_status.value==0){
 	    if(!confirm('An insurance claim will be generated and filed. Are you sure you want to do this?')){
         	return false;

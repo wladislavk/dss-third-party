@@ -2,7 +2,6 @@
 include "includes/top.htm";
 include_once "../includes/constants.inc";
 ?>
-<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
 <div class="page-header">
 	Manage Memos 
 </div>

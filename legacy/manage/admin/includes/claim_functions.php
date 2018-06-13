@@ -95,7 +95,6 @@ if($reuse_sec){
 }else{
 //INSURANCE FROM PATIENT INFO
         $insured_id_number = $pat_myarray['s_m_ins_id'];
-        //$insured_firstname = $pat_myarray['p_d_party'];
 	if($pat_myarray['p_m_same_address']=='1'){
           $other_insured_address = $pat_myarray['add1'];
           $other_insured_city = $pat_myarray['city'];
@@ -144,10 +143,6 @@ $other_insured_sex = $pat_myarray['p_m_gender'];
 ///////////////////////
 }
 
-
-
-        //$insured_policy_group_feca = $pat_myarray['group_number'];
-        //$insured_insurance_plan = $pat_myarray['plan_name'];
 //NEED SECONDARY?
   $p_m_eligible_payer_id = $pat_myarray['s_m_eligible_payer_id'];
   $p_m_eligible_payer_name = $pat_myarray['s_m_eligible_payer_name'];

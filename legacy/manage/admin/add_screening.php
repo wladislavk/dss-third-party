@@ -26,7 +26,6 @@ if($_POST["mult_screeningsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 	</script>
 	<?
@@ -64,11 +63,9 @@ if($_POST["screeningsub"] == 1)
 			$ed_sql = "update dental_screening set screening = '".s_for($_POST["screening"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where screeningid='".$_POST["ed"]."'";
 			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -82,7 +79,6 @@ if($_POST["screeningsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 			</script>
 			<?

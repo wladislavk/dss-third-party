@@ -9,7 +9,6 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
@@ -50,9 +49,8 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
-	</script>
+    </script>
 	<?
 	trigger_error("Die called", E_USER_ERROR);
 }

@@ -2,7 +2,6 @@
 if(!isset($_GET['print'])){
 	include "includes/top.htm";
 }else{
-	//include "includes/top.htm";
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 	include_once('includes/constants.inc');
@@ -45,16 +44,7 @@ $sql = "SELECT
     ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
 
-/*
-$sql .= " order by service_date";
-
-$total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-*/
-
 $num_users = count($my);
-
-//echo $sql; 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />

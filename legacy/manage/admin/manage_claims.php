@@ -89,7 +89,6 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&fid=<?php echo $_REQUEST['fid']?>&pid=<?php echo $_REQUEST['pid']?>";
 	</script>
 	<?php 
@@ -651,9 +650,7 @@ $statusDropdown = [
 						$status_color = "success";
 						break;
 				}
-		
-		//$status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
-				<?php //$status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+				?>
 				<td valign="top" class="claim_<?php echo  $myarray["status"]; ?> <?php echo  ($myarray['days_pending']>7)?'old':''; ?> <?php echo  $status_color;?>">
 					<?php echo st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
@@ -860,16 +857,6 @@ if(isset($_GET['checkstatus'])&&$_GET['checkstatus']==1){
   include '../insurance_check_status.php';
 }
 if(isset($_GET['showins'])&&$_GET['showins']==1){
-  /*
-  $api_sql = "SELECT u.use_eligible_api, p.p_m_eligible_id FROM dental_users u
-		JOIN dental_insurance i ON i.docid = u.userid
- 		JOIN dental_patients p ON p.patientid=i.patientid
-                WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
-  $api_q = mysqli_query($con,$api_sql);
-  $api_r = mysqli_fetch_assoc($api_q);
-  if($api_r['use_eligible_api']==1 && $api_r['p_m_eligible_id']!=''){
-    include '../insurance_electronic_file.php';
-  } */
   ?>
   <script type="text/javascript">
     window.location = "../insurance_fdf_v2.php?insid=<?php echo  $_GET['insid']; ?>&type=<?php echo $_GET['type'];?>&pid=<?php echo  $_GET['pid'];?>&bo=1";

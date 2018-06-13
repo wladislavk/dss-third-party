@@ -8,8 +8,6 @@ include_once '../includes/help_functions.php';
 
 require_once __DIR__ . '/includes/access.php';
 
-//<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-
 $isBillingAdmin = is_billing($_SESSION['admin_access']);
 $canEdit = !$isBillingAdmin;
 
@@ -108,7 +106,6 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_staff.php?msg=<?=$msg;?>&docid=<?=$_GET['docid'];?>';
 			</script>
 			<?

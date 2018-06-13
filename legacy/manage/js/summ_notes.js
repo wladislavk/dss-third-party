@@ -13,8 +13,7 @@ function sign_notes(){
         data: {ids: sign_arr.join(',')},
         success: function(data){
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
+            if(!r.error){
                 $('.sign_chbx:checked').each(function(){
                     id = $(this).val();
                     $('#note_'+id).css('backgroundColor', '');
@@ -23,7 +22,6 @@ function sign_notes(){
             }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 }

@@ -26,7 +26,6 @@ if(!empty($_POST["mult_exam_teethsub"]) && $_POST["mult_exam_teethsub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_exam_teeth.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["exam_teethsub"]) && $_POST["exam_teethsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_exam_teeth.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

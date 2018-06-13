@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy;
+
 	# This line will stream the file to the user rather than spray it across the screen
 	header("Content-type: application/octet-stream");
 
@@ -37,7 +38,7 @@
 		$age = 'N/A';
 	}
 
-	$q2_sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+	$q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);

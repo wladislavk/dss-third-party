@@ -1,14 +1,10 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-	//header("Content-type:application/pdf");
-
 	// It will be called downloaded.pdf
-	//header("Content-Disposition:attachment;filename='downloaded.pdf'");
 	include_once('3rdParty/tcpdf/config/lang/eng.php');
 	include_once('3rdParty/tcpdf/tcpdf.php');
 
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
-	//include "includes/general_functions.php";
 	include_once('includes/dental_patient_summary.php');
 	include_once('includes/patient_info.php');
 	include_once('includes/constants.inc');
@@ -248,15 +244,8 @@
 		$total_rec = $db->getNumberRows($sql);
 		$no_pages = $total_rec/$rec_disp;
 
-		//$sql .= " limit ".$i_val.",".$rec_disp;
 		$my = $db->getResults($sql);
 		$num_users = count($my);
-?>
-		<!--
-		<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-		<script src="admin/popup/popup.js" type="text/javascript"></script>
-		-->
-<?php
 		$html = '';
 ?>
 

@@ -104,7 +104,6 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_doc_insurance.php?msg=<?php echo $msg;?>';
 		</script>
 		<?

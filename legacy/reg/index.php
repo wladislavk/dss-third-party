@@ -9,7 +9,6 @@ include 'includes/completed.php';
 ?>
         <script type="text/javascript">
                 $(document).ready(function(){
-                                //lga_fusionCharts.chart_k();
                                 lga_flowTabs.tabs_b();
                         });
         </script>

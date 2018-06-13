@@ -77,8 +77,7 @@
 			ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
 		
 		$ledgerid = $db->getInsertId($ins_sql);
-		// ledger_history_update($ledger_id, $_SESSION['userid'],'');		
-		
+
 		$ins_sql_rec = " insert into dental_ledger_rec set 
 			userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
 	    	patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
@@ -246,12 +245,6 @@
 				$entry_date = date('m/d/Y',strtotime($entry_date));
 			}
 	
-			if($transaction_type == '')
-			{
-				//$transaction_type = 'Entry';
-			}
-	
-	
 			if($themyarray["userid"] != '') {
 				$but_text = "Edit ";
 			} else {
@@ -279,11 +272,6 @@
 			$transactionCodeStr = trim($transactionCodeStr, ',');
 			$descriptionStr = trim($descriptionStr, ',');
 		?>
-
-		<script>
-			//Example of use
-			//change_t_code("<?php echo $transactionCodeStr; ?>", "<?php echo $descriptionStr; ?>");
-		</script>
 
 	    <form name="ledgerfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" onSubmit="return addledgerabc(this)">
 		    <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

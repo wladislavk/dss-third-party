@@ -244,11 +244,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 		}
 
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -355,7 +353,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
                         mysqli_query($con,$loc_sql);
 			edx_user_update($userid);
-			//help_user_update($userid, $edx_con);
 		if(isset($_POST['save_but'])){
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];
@@ -437,7 +434,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

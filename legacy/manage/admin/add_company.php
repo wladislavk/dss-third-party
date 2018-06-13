@@ -41,11 +41,9 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
                         		where field_companyid_value='".$_POST["ed"]."'";
 			mysqli_query($con,$course_sql, $course_con);			
 
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -92,7 +90,6 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?

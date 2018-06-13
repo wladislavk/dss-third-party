@@ -599,14 +599,12 @@ $row[] = ""; //New Billing Taxonomy field for new cms 1500 form
 $data[] = $row;
 }
 }
-//print_r($data);
 
 
 header("Content-Type: text/plain");
 header("Content-Disposition: attachment;filename=OfficeAlly_HCFA_".date('Ymd-Hi').".txt");
 $f  =   fopen('php://output', 'a');
 foreach ($data as $fields) {
-    //fputcsv($f, $fields, "\t", " ");
     fputs($f, implode($fields, "\t")."\n");
 }
 fclose($f);

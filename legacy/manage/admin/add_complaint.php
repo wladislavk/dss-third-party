@@ -81,7 +81,6 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

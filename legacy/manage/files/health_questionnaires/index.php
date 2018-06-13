@@ -49,32 +49,6 @@ $ft["plugins"]["edit"] = array(
    "converttabs" => FALSE
  )
 );
-/*
-$ft["plugins"]["tinymce"] = array(
-  "settings" => array(
-    "path" => "tinymce/jscripts/tiny_mce/tiny_mce.js",
-    "list" => "html htm"
-  )
-);
-*/
-
-# Additional users - 
-
-/*
-$ft['users']['REPLACE_WITH_USERNAME'] = array(
-  'password' => 'REPLACE_WITH_PASSWORD', 
-  'group' => 'REPLACE_WITH_GROUPNAME'
-);
-*/
-
-# User groups for additional users 
-
-/*
-$ft['groups']['REPLACE_WITH_GROUPNAME'] = array(
-  'DIR' => 'REPLACE_WITH_CUSTOM_DIR', 
-);
-*/
-
 
 /**
  * Check if a login cookie is valid.
@@ -383,12 +357,6 @@ function ft_do_action() {
 					ft_redirect("dir=".$_REQUEST['dir']);
   			}
       } else {
-  			// Create directory.
-  			// Check input.
-        // if (strstr($_POST['newdir'], ".")) {
-  				// Throw error (redirect).
-          // ft_redirect("status=createddirfail&dir=".$_REQUEST['dir']);
-        // } else {
   				$_POST['newdir'] = ft_stripslashes($_POST['newdir']);
   				$newdir = ft_get_dir()."/{$_POST['newdir']}";
   				$oldumask = umask(0);
@@ -791,7 +759,6 @@ function ft_get_filelist($dir, $sort = 'name') {
 			if ($file != "." && $file != ".." && ((!is_dir("{$dir}/{$file}") && ft_check_file($file) && ft_check_filetype($file)) || is_dir("{$dir}/{$file}") && ft_check_dir("{$dir}/{$file}"))) { // Hide these two special cases and files and filetypes in blacklists.
 				$c = array();
 				$c['name'] = $file;
-        // $c['shortname'] = ft_get_nice_filename($file, 20);
         $c['shortname'] = $file;
 				$c['type'] = "file";
 				$c['ext'] = ft_get_ext($file);
@@ -1071,9 +1038,6 @@ function ft_make_body() {
     }
 		$files = ft_get_filelist(ft_get_dir(), $sort);
 		if (!is_array($files)) { 
-			// List couldn't be fetched. Throw error.
-      // ft_set_message(t("Could not open directory."), 'error');
-      // ft_redirect();
       $str .= '<p class="error">'.t("Could not open directory.").'</p>';
 		} else {			
 			// Show list of files in a table.
@@ -1343,16 +1307,6 @@ function ft_make_scripts_footer() {
  */
 function ft_make_sidebar() {
 	$str = '<div id="sidebar">';
-  // $status = '';
-  // if (ft_check_upload() === TRUE && is_writeable(ft_get_dir()) && (LIMIT > 0 && LIMIT < ROOTDIRSIZE)) {
-  //   $status = '<p class="alarm">' . t('Upload disabled. Total disk space use of !size exceeds the limit of !limit.', array('!limit' => ft_get_nice_filesize(LIMIT), '!size' => ft_get_nice_filesize(ROOTDIRSIZE))) . '</p>';
-  // }
-  // $status .= ft_make_messages();
-  // if (empty($status)) {
-  //     $str .= "<div id='status' class='hidden'></div>";
-  // } else {
-  //  $str .= "<div id='status' class='section'><h2>".t('Results')."</h2>{$status}</div>";
-  // }
 	if (ft_check_upload() === TRUE && is_writeable(ft_get_dir())) {
 	  if (LIMIT <= 0 || LIMIT > ROOTDIRSIZE) {
     	$str .= '
@@ -1676,9 +1630,6 @@ function ft_settings_load() {
     // Overwrite plugins
     if (is_array($json['plugins'])) {
       $ft['plugins'] = $json['plugins'];
-      // foreach ($json['plugins'] as $k => $v) {
-      //   $ft['plugins'][$k] = $v;
-      // }
     }
   }
   
@@ -1696,7 +1647,6 @@ function ft_settings_load() {
     isset($ft['groups'][$ft['users'][$_SESSION['ft_user_'.MUTEX]]['group']]) &&
     is_array($ft['groups'][$ft['users'][$_SESSION['ft_user_'.MUTEX]]['group']])) {
       $current_group = $ft['groups'][$ft['users'][$_SESSION['ft_user_'.MUTEX]]['group']];
-      // $current_group_name = $ft['users'][$_SESSION['ft_user_'.MUTEX]]['group'];
   }
 
   // Break out plugins in the group settings.
@@ -1706,16 +1656,11 @@ function ft_settings_load() {
   }
   
   // Loop through settings. Use group values if set.
-  // foreach ($constants as $k => $v) {
   foreach ($ft['settings'] as $k => $v) {
-    // $new_k = substr($k, 1);
     $new_k = $k;
     if (is_array($current_group) && array_key_exists($k, $current_group)) {
-      // define($new_k, $current_group[$k]);
       $settings[$new_k] = $current_group[$k];
     } else {
-      // Use original value.
-      // define($new_k, $v);
       $settings[$new_k] = $v;
     }
   }
@@ -1942,8 +1887,6 @@ function ft_edit_page($act) {
 				$lock = ft_edit_lock_get($_REQUEST["file"], ft_get_dir());
         if ($lock !== FALSE) {
           if ($lock === $_SESSION['ft_user_'.MUTEX]) {
-            // File is in use by current user. Quietly update lock.
-            // $str .= '<p class="ok">'.t('You are already editing this file.').'</p>';
             $lock = FALSE;
           }
         }
@@ -2132,10 +2075,6 @@ function ft_check_edit($file) {
  */
 function ft_edit_lock_clear($file, $dir) {
   global $ft;
-  // if (ft_plugin_exists('db')) {
-  //   $sql = "DELETE FROM edit WHERE dir = '".sqlite_escape_string($dir)."' AND file = '".sqlite_escape_string($file)."'";
-  //   sqlite_query($ft['db']['link'], $sql);
-  // }
 }
 
 /**
@@ -2149,27 +2088,6 @@ function ft_edit_lock_clear($file, $dir) {
  */
 function ft_edit_lock_get($file, $dir) {
   global $ft;
-  // if (ft_plugin_exists('db')) {
-  //   // See if file has been locked.
-  //   $sql = "SELECT user, timestamp FROM edit WHERE dir = '".sqlite_escape_string($dir)."' AND file = '".sqlite_escape_string($file)."' ORDER BY timestamp DESC";
-  //   $result = sqlite_query($ft['db']['link'], $sql);
-  //   if ($result) {
-  //     if (sqlite_num_rows($result) > 0) {
-  //       $user = sqlite_fetch_array($result);
-  //       // Check timestamp. Locks expire after 2 minutes.
-  //       if ($user['timestamp'] < time()-120) {
-  //         // Lock has expired. Clear it.
-  //         ft_edit_lock_clear($file, $dir);
-  //         return FALSE;
-  //       } else {
-  //         // Someone is already editing this.
-  //         return $user['user'];
-  //       }
-  //     } else {
-  //       return FALSE;
-  //     }
-  //   }
-  // }
   return FALSE;
 }
 
@@ -2185,13 +2103,6 @@ function ft_edit_lock_get($file, $dir) {
  */
 function ft_edit_lock_set($file, $dir, $user) {
   global $ft;
-  // if (ft_plugin_exists('db')) {
-  //   // Clear any locks.
-  //   ft_edit_lock_clear($file, $dir);
-  //   // Set new lock.
-  //   $sql = "INSERT INTO edit (dir, file, user, timestamp) VALUES ('" . sqlite_escape_string($dir) . "','" . sqlite_escape_string($file) . "','" . sqlite_escape_string($user) . "'," . time() . ")";
-  //   sqlite_query($ft['db']['link'], $sql);              
-  // }
 }
 
 
@@ -3156,7 +3067,6 @@ form#sort_form {
 }
 /* Edit form */
 form#edit, #main {
-/*  margin-left:265px;*/
 float:left;
 }
 form#edit textarea {

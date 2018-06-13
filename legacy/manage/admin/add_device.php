@@ -4,37 +4,6 @@ include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once "../includes/constants.inc";
 include_once "../includes/general_functions.php";
-/*
-if($_POST["mult_devicesub"] == 1)
-{
-	$op_arr = split("\n",trim($_POST['device']));
-				
-	foreach($op_arr as $i=>$val)
-	{
-		if($val <> '')
-		{
-			$sel_check = "select * from dental_device where device = '".s_for($val)."'";
-			$query_check=mysqli_query($con,$sel_check);
-			
-			if(mysqli_num_rows($query_check) == 0)
-			{
-				$ins_sql = "insert into dental_device set device = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
-			}
-			
-		}
-	}
-	
-	$msg = "Added Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		parent.window.location='manage_device.php?msg=<?=$msg;?>';
-	</script>
-	<?
-	trigger_error("Die called", E_USER_ERROR);
-}
-*/
 if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
 {
 	$sel_check = "select * from dental_device where device = '".s_for($_POST["device"])."' and deviceid <> '".s_for($_POST['ed'])."'";
@@ -158,7 +127,6 @@ if(!$uploaded){
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -314,42 +282,5 @@ if(!$uploaded){
     </table>
     </form>
     
-    <? 
-
-/*
-if($_GET['ed'] == '')
-	{?>
-    	<div class="alert alert-danger text-center">
-    		<b>--------------------------------- OR ---------------------------------</b>
-        </div>
-		<form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)">
-        <table class="table table-bordered table-hover">
-            <tr>
-                <td colspan="2" class="cat_head">
-                   Add Multiple Device 
-                   <span class="red">
-	                   (Type Each New Device on New Line)
-                   </span>
-                </td>
-            </tr>
-            <tr bgcolor="#FFFFFF">
-                <td valign="top" class="frmdata">
-                    <textarea class="form-control" name="device" style="width:100%; height:150px;"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td  colspan="2" align="center">
-                    <span class="red">
-                        * Required Fields					
-                    </span><br />
-                    <input type="hidden" name="mult_devicesub" value="1" />
-                    <input type="submit" value="Add Multiple Device" class="btn btn-primary">
-                </td>
-            </tr>
-        </table>
-        </form>
-    
-    <? }
-*/ ?>
 </body>
 </html>

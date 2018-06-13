@@ -81,7 +81,6 @@ if(!empty($_POST["cpt_codesub"]) && $_POST["cpt_codesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_cpt_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

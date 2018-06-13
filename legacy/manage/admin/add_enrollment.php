@@ -192,7 +192,6 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
 <?php
   $sql = "SELECT * FROM dental_users WHERE (docid='".$_GET['docid']."' OR userid='".$_GET['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
   $q = mysqli_query($con,$sql);
-  //$r = mysqli_fetch_assoc($q);
 
   $payer_id_post = (!empty($_POST['payer_id']) ? $_POST['payer_id'] : '');
 $payer_id = substr($payer_id_post,0,strpos($payer_id_post, '-'));

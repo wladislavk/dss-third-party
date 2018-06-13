@@ -20,11 +20,8 @@ if(isset($_POST["enrollsub"]))
 $data = array();
 $data['test'] = "true";
 $data['api_key'] = $api_key;
-//$data['enrollment_npi_id'] = $_REQUEST['ed'];
 $data['file'] = '@'.$_FILES['file']['tmp_name'];
 
-//$data_string = json_encode($data);
-//error_log($data_string);
 $ch = curl_init('https://gds.eligibleapi.com/v1.5/enrollment_npis/'.$_REQUEST['ed'].'/original_signature_pdf');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);

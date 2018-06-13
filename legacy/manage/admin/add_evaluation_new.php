@@ -26,7 +26,6 @@ if(!empty($_POST["mult_evaluation_newsub"]) && $_POST["mult_evaluation_newsub"] 
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_evaluation_new.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_evaluation_new.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

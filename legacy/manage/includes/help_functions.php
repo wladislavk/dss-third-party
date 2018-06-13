@@ -5,7 +5,6 @@
             return;
         }
 
-        //return true; //temp work around until fully setup
         $db = new Db();
 
         $sql = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $id)."'";

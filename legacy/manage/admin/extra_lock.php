@@ -9,8 +9,6 @@ Contact: support@keenthemes.com
 Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
 License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
 -->
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en" class="no-js">
 <!--<![endif]-->
@@ -55,7 +53,6 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <?php
 
-//session_start();
 include('includes/main_include.php');
 include_once('includes/password.php');
 
@@ -104,16 +101,13 @@ if (isset($_POST['lock_submit'])) {
 	
 	<div class="page-logo">
 		<a class="brand" href="index.php">
-			<!--<img src="admin/template/assets/img/logo-big.png" alt="logo"/>-->
-			 
-			
 		</a>
 	</div>
 	<div class="page-body">
 		<img class="page-lock-img" src="images/DSS_logo_notext_transparent_SQUARE_250x250.png" alt="">
 		<div class="page-lock-info" style="margin-top:20px;">
 			<h1><?php echo $check['first_name'];?> <?php echo $check['last_name']; ?></h1>
-			<span class="email"style="word-wrap:break-word;" >
+			<span class="email" style="word-wrap:break-word;" >
 				<?php  echo $check['email'];  ?>
 			</span>
 			<span class="locked">
@@ -126,7 +120,6 @@ if (isset($_POST['lock_submit'])) {
 						<button type="submit" name="lock_submit" class="btn blue icn-only"><i class="m-icon-swapright m-icon-white"></i></button>
 					</span>
 				</div>
-				<!-- /input-group -->
 				<div class="relogin">
 					<a href="index.php" style="color:#FFFFFF;">
 						 Not <?php echo $check['first_name'];  echo $check['last_name']; ?> ?
@@ -141,10 +134,6 @@ if (isset($_POST['lock_submit'])) {
 </div>
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
-<!--[if lt IE 9]>
-<script src="assets/plugins/respond.min.js"></script>
-<script src="assets/plugins/excanvas.min.js"></script> 
-<![endif]-->
 <script src="admin/template/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="admin/template/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
 <script src="admin/template/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>

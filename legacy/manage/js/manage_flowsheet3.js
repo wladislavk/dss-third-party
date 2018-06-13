@@ -6,10 +6,8 @@ $('.completed_today').click(function(){
         type: "post",
         data: {id: id, pid: pid},
         success: function(data){
-    //alert(data);
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
+            if(!r.error){
                 update_current_step();
                 $('#next_step').html(r.next_steps);
                 $('#'+id).val('');
@@ -100,14 +98,10 @@ $('.completed_today').click(function(){
                     }else{
                         $('#dentaldevice_'+r.id).val(r.impression);
                     }
-                }else if(id==1){
-
                 }
-    //$('#completed_'+id).removeClass('notCompletedButton').addClass('completedButton').text('Completed');
             }
         },
         failure: function(data){
-                //alert('fail');
         }
     });
 });
@@ -158,15 +152,12 @@ function update_next_sched(){
         type: "post",
         data: {id: id, sched: sched, pid: pid},
         success: function(data){
-  //alert(data);
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
+            if(!r.error){
               update_current_step();
             }
         },
         failure: function(data){
-                //alert('fail');
         }
     });
 }

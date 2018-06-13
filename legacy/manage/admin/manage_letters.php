@@ -128,8 +128,6 @@ $column = 'letterid';
 $filter = "%";
 if (isset($_GET['status'])) { $status = $_GET['status']; }
 if (isset($_GET['page'])) { $page = $_GET['page']; }
-//if (isset($_GET['sort'])) { $sort = mysqli_real_escape_string($con,$_GET['sort']); }
-//if (isset($_GET['column'])) { $column = mysqli_real_escape_string($con,$_GET['column']); }
 if (isset($_GET['filter'])) { $filter = mysqli_real_escape_string($con,$_GET['filter']); }
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $doc_filter = '';
@@ -323,7 +321,6 @@ if (count($dental_letters) % $page_limit) {
 
 foreach ($dental_letters as $key => $letter) {
   // Get Franchisee Name
-  //$franchisee_query = "SELECT dental_users.name FROM dental_users JOIN dental_patients ON dental_patients.docid=dental_users.userid WHERE dental_patients.patientid = '".$letter['patientid']."';";
   $dental_letters[$key]['id'] = $letter['letterid'];
   $dental_letters[$key]['mailed'] = $letter['mailed_date'];
   $dental_letters[$key]['status'] = $letter['status'];
@@ -469,10 +466,6 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "ASC") {
 if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   usort($dental_letters, 'Ds3\Libraries\Legacy\send_method_desc');
 }
-
-
-//print_r($dental_letters);
-
 ?>
 
 <link href="/manage/admin/css/manage_letters.css" rel="stylesheet" type="text/css" />
@@ -533,8 +526,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   </form>
 </div>
 <div class="letters-tryptych2">
-  <h2>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</h1>
-  <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
+  <h2>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</h2>
+  <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h2>
 </div>
 <div class="letters-tryptych3">
 <?php if ($status == "pending"): ?>
@@ -570,7 +563,6 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 <?php   $i = $page_limit * $page;
   $end = $i + $page_limit;
   while ($i < count($dental_letters) && $i < $end) {
-    //print $dental_letters[$i]['templateid']; print "<br />";
     $franchisee = $dental_letters[$i]['franchisee'];
 		$username = $dental_letters[$i]['username'];
     $received = (isset( $dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
@@ -590,8 +582,17 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     } else {
       $bgcolor = null;
     }
-    
-    print "<tr><td>$franchisee</td><td>$username</td>"."<td$bgcolor>$received</td><td$bgcolor>$delivered</td><td>$name</td><td><a href=\"$url\" target=\"$url_target\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>";
+    ?>
+    <tr>
+        <td><?=$franchisee?></td>
+        <td><?=$username?></td>
+        <td<?=$bgcolor?>><?=$received?></td>
+        <td<?=$bgcolor?>><?=$delivered?></td>
+        <td><?=$name?></td>
+        <td><a href="<?=$url?>" target="<?=$url_target?>"><?=$subject?></a></td>
+        <td><?=$sentto?></td>
+        <td><?=$method?></td>
+        <td><?=$generated?></td>";
 ?><td><?php     if($delivered || $mailed != ''){ ?>
       <input type="checkbox" class="mailed_chk" value="<?php echo  $id; ?>" <?php echo  ($mailed !='')?'checked="checked"':''; ?> />
     <?php } ?> 

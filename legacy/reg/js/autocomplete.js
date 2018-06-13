@@ -49,7 +49,6 @@ function setup_autocomplete(in_field, hint, id_field, source, file, cid){
         var listSize = $('#'+hint+' ul li').size();
         var val = $this.val();
         var lowerVal = val.toLowerCase();
-        //var trimVal = lowerVal.trim();
         var trimVal = $.trim(lowerVal);
         if(trimVal.indexOf('dr. ')==0 || trimVal.indexOf('dr ')==0){ val = val.substr(val.indexOf(' ', lowerVal.indexOf('Dr'))); }
         var stringSize = val.length;
@@ -58,9 +57,6 @@ function setup_autocomplete(in_field, hint, id_field, source, file, cid){
         } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || (val == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
             $('#'+hint).css("display", "inline");
             sendValueRef(val, in_field, hint, id_field, source, file, cid);
-            if (val > 2) {
-                //window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
-            }
         }
     }, { onTick: cancelAutoCompleteRequest }));
 }
@@ -174,41 +170,3 @@ function updateval(t){
         t.value = '';
     }
 }
-/*
- $(document).keyup(function(e) {
- switch (e.which) {
- case 38:
- move_selectionref('up');
- break;
- case 40:
- move_selectionref('down');
- break;
- case 13:
- break;
- }
- });
-
- function move_selectionref(direction) {
- if ($('#referredby_list > li.list_hover').size() == 0) {
- window.selectionref = 0;
- }
- if (direction == 'up' && window.selectionref != 0) {
- if (window.selectionref != 1) {
- window.selectionref--;
- }
- } else if (direction == 'down') {
- if (window.selectionref != ($("#referredby_list li").size() -1)) {
- window.selectionref++;
- }
- }
- set_selectedref(window.selectionref);
- }
- function set_selectedref(menuitem) {
- $('#referredby_list li').removeClass('list_hover');
- $('#referredby_list li').eq(menuitem).addClass('list_hover');
- var rowid = $('#referred_list li').eq(menuitem).data("rowid");
- var rowsource = $('#referred_list li').eq(menuitem).data("rowsource");
- var rowname = $('#referred_list li').eq(menuitem).data("rowname");
- $('#referred_name').val(rowname);
- }
- */

@@ -32,7 +32,6 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -75,11 +74,9 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>';
 			</script>
 			<?

@@ -81,7 +81,6 @@ if(!empty($_POST["jointsub"]) && $_POST["jointsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_joint.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

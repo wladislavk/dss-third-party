@@ -8,13 +8,8 @@ $('.mailed_chk').click( function(){
         data: {lid: lid, mailed: c},
         success: function(data){
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
-                //window.location.reload();
-            }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });

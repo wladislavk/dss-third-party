@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $pat_myarray = $db->getRow($pat_sql);
@@ -31,7 +34,7 @@ if(st($pat_myarray['dob']) <> '' ){
 	$age = 'N/A';
 }
 
-$q3_sql = "select * from dental_q_page3_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$q3_sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q3_myarray = $db->getRow($q3_sql);
 
 $history = st($q3_myarray['history']);
@@ -67,7 +70,7 @@ foreach($medications_arr as $val){
 	}
 }
 
-$q2_sql = "select * from dental_q_page2_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q2_myarray = $db->getRow($q2_sql);
 
 $polysomnographic = st($q2_myarray['polysomnographic']);
@@ -84,7 +87,7 @@ $sleeplab_myarray = $db->getRow($sleeplab_sql);
 
 $sleeplab_name = st($sleeplab_myarray['company']);
 
-$sum_sql = "select * from dental_summary_view where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sum_sql = "select * from dental_summary_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $sum_myarray = $db->getRow($sum_sql);
 
 $sti_o2_1 = st($sum_myarray['sti_o2_1']);

@@ -418,9 +418,6 @@ if ($f_num > 0) { ?>
 
 <table id="letters-table" class="table table-bordered table-hover">
     <tr class="tr_bg_h">
-        <!--<th class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a>
-        </th>-->
         <th class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
             <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondence</a>
         </th>
@@ -437,8 +434,6 @@ if ($f_num > 0) { ?>
     $end = $i + $page_limit;
     
     while ($i < count($pending_letters) && $i < $end) {
-        //print $pending_letters[$i]['templateid']; print "<br />";
-        //$name = $pending_letters[$i]['lastname'] . " " . $pending_letters[$i]['middlename'] . ", " . $pending_letters[$i]['firstname'];
         $userid = $pending_letters[$i]['userid'];
         $url = $pending_letters[$i]['url'];
         $id = $pending_letters[$i]['id'];

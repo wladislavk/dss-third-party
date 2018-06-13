@@ -15,7 +15,6 @@ if(!empty($_POST["update"]))
 	$msg= "Updated Successfully";
         ?>
         <script type="text/javascript">
-                //alert("Deleted Successfully");
                 window.location="manage_support_categories.php?msg=<?php echo $msg?>";
         </script>
         <?

@@ -2,9 +2,6 @@
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
-//OLD DSS ELIGIBLE CHECK
-//require 'eligible_api.php';
-
 $api_sql = "SELECT use_eligible_api FROM dental_users
               WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 $api_r = $db->getRow($api_sql);

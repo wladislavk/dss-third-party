@@ -26,7 +26,6 @@ if(!empty($_POST["mult_maxillasub"]) && $_POST["mult_maxillasub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_maxilla.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -81,7 +80,6 @@ if(!empty($_POST["maxillasub"]) && $_POST["maxillasub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_maxilla.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

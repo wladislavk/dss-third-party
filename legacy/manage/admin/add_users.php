@@ -110,7 +110,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			$old_sql = "SELECT status, username, recover_hash FROM dental_users WHERE userid='".$db->escape($_POST["ed"])."'";
                         $old_q = mysqli_query($con,$old_sql);
 			$old_r = mysqli_fetch_assoc($old_q);
-			$old_username = $old_r['username'];
 			$old_status = $old_r['status'];
 
 			$ed_sql = "update dental_users set 

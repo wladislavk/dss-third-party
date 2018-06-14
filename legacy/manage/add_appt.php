@@ -38,7 +38,6 @@
 	            $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_POST["ed"])."'";
 	            
 	            $old_r = $db->getRow($old_sql);
-	            $old_name = $old_r['name'];
 				$old_class = $old_r['classname'];
 
 				$ed_sql = "update dental_appt_types set name = '".s_for($_POST["name"])."', ";
@@ -151,7 +150,7 @@
 								  
 								  $logins = $db->getNumberRows($l_sql);
 								?>
-                    			<a style="float:right;" href="manage_appts.php?delid=<?php echo $themyarray["id"];?>" onclick="javascript: return confirm_delete(<?php echo  $logins; ?>);" class="dellink" title="DELETE" target="_parent">
+                    			<a style="float:right;" href="manage_appts.php?delid=<?php echo $themyarray["id"];?>" onclick="return confirm_delete(<?php echo  $logins; ?>);" class="dellink" title="DELETE" target="_parent">
                                     Delete 
                                 </a>
 							<?php } ?>

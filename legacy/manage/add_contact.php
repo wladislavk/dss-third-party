@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-include_once('admin/includes/main_include.php');
-include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once 'admin/includes/main_include.php';
+include "includes/sescheck.php";
 include_once "admin/includes/general.htm";
 include_once "includes/constants.inc";
 ?>
@@ -20,210 +22,196 @@ include_once "includes/constants.inc";
 </head>
 <body>
 <?php
-if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
-	if(!empty($_POST["ed"])){
-		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
-		$db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
-		//echo $ed_sql.mysqli_error($con);
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
-			parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
-		</script>
-		<?
-		trigger_error("Die called", E_USER_ERROR);
-	} else {
-		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$_POST['preferredcontact']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		$rid = $db->getInsertId($ins_sql);
-		$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-		error_log($let_sql);
-		$let_r = $db->getRow($let_sql);
-		if($let_r['use_letters'] && $let_r['intro_letters']){
-			$dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysqli_real_escape_string($con, $_POST["contacttypeid"]);
-			$dct_r = $db->getRow($dct_sql);
-	        if($dct_r['physician']==1){	
-				//DO NOT CREATE LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
-				if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE){
-					create_welcome_letter('1', $rid, $_SESSION['docid']);
-				}	
-				create_welcome_letter('2', $rid, $_SESSION['docid']);?>
-				<script type="text/javascript">
-					alert('This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.');
-				</script>
-				<?php
-			}
-		}
-		$c_sql = "SELECT contacttype from dental_contacttype where contacttypeid='".$_POST["contacttypeid"]."'";
-		$c_r = $db->getRow($c_sql);
-		$contact = $c_r['contacttype'];
-		$name = $_POST['lastname'].", ".$_POST['firstname']." - ".$contact;
-		$npi_name = $_POST['firstname']." ".$_POST['lastname'];
-		$npi = $_POST['national_provider_id'];
-		$msg = "Added Successfully";
-	  	if($_GET['from']=='add_patient'){	
-			if($_GET['from_id']!=''){?>
-			<script type="text/javascript">
-				<?php 
-				if($_POST['contacttypeid']==11){ ?>
-					parent.updateReferredBy('<option value="<?php echo $rid; ?>" selected="selected"><?php echo $_POST["company"]; ?></option>', '<?php echo $_GET['from_id']; ?>');
-				<?php 
-				} ?>
-			</script>
-			<?php
-			}elseif($_GET['in_field']!='' && $_GET['id_field']!=''){	
-			if(substr($_GET['in_field'],0,16)=='diagnosising_doc'){?>
+if (!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
+    if (!empty($_POST["ed"])) {
+        $ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
+        $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+
+        $msg = "Edited Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    } else {
+        $ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$_POST['preferredcontact']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+        $rid = $db->getInsertId($ins_sql);
+        $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+        error_log($let_sql);
+        $let_r = $db->getRow($let_sql);
+        if ($let_r['use_letters'] && $let_r['intro_letters']) {
+            $dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysqli_real_escape_string($con, $_POST["contacttypeid"]);
+            $dct_r = $db->getRow($dct_sql);
+            if ($dct_r['physician'] == 1) {
+                //DO NOT CREATE LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+                if ($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE) {
+                    create_welcome_letter('1', $rid, $_SESSION['docid']);
+                }
+                create_welcome_letter('2', $rid, $_SESSION['docid']);?>
                 <script type="text/javascript">
-                   parent.updateContactField('<?php echo $_GET['in_field']; ?>', '<?php echo addslashes($npi_name); ?>', '<?php echo $_GET['id_field']; ?>', '<?php echo $npi; ?>');
+                    alert('This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.');
                 </script>
-			<?php
-			}else{ ?>
-			<script type="text/javascript">
-			   parent.updateContactField('<?php echo $_GET['in_field']; ?>', '<?php echo addslashes($name); ?>', '<?php echo $_GET['id_field']; ?>', '<?php echo $rid; ?>');
-			</script>
-			<?php
-			}	
-		} ?>
-		<script type="text/javascript">
-			parent.disablePopupRefClean();
-		</script>
-		<?php
-		}elseif($_GET['activePat']!=''){?>
-		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
-			window.location.href= 'add_patient.php?ed=' + getParameterByName('activePat') + "&preview=1&addtopat=1&pid=" + getParameterByName('activePat');
-		      // -->
-		</script>
-		<?php
-    }else{?>
-		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
-			parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
-		</script>
-		<?php
-		}
-		trigger_error("Die called", E_USER_ERROR);
-	}
+                <?php
+            }
+        }
+        $c_sql = "SELECT contacttype from dental_contacttype where contacttypeid='".$_POST["contacttypeid"]."'";
+        $c_r = $db->getRow($c_sql);
+        $contact = $c_r['contacttype'];
+        $name = $_POST['lastname'].", ".$_POST['firstname']." - ".$contact;
+        $npi_name = $_POST['firstname']." ".$_POST['lastname'];
+        $npi = $_POST['national_provider_id'];
+        $msg = "Added Successfully";
+        if ($_GET['from'] == 'add_patient') {
+            if ($_GET['from_id'] != '') { ?>
+                <script type="text/javascript">
+                    <?php
+                    if ($_POST['contacttypeid'] == 11) { ?>
+                        parent.updateReferredBy('<option value="<?php echo $rid; ?>" selected="selected"><?php echo $_POST["company"]; ?></option>', '<?php echo $_GET['from_id']; ?>');
+                        <?php
+                    } ?>
+                </script>
+                <?php
+            } elseif ($_GET['in_field'] != '' && $_GET['id_field'] != '') {
+                if (substr($_GET['in_field'], 0, 16) == 'diagnosising_doc') { ?>
+                    <script type="text/javascript">
+                        parent.updateContactField('<?php echo $_GET['in_field']; ?>', '<?php echo addslashes($npi_name); ?>', '<?php echo $_GET['id_field']; ?>', '<?php echo $npi; ?>');
+                    </script>
+                    <?php
+                } else { ?>
+                    <script type="text/javascript">
+                        parent.updateContactField('<?php echo $_GET['in_field']; ?>', '<?php echo addslashes($name); ?>', '<?php echo $_GET['id_field']; ?>', '<?php echo $rid; ?>');
+                    </script>
+                    <?php
+                }
+            } ?>
+            <script type="text/javascript">
+                parent.disablePopupRefClean();
+            </script>
+            <?php
+        } elseif ($_GET['activePat'] != '') { ?>
+            <script type="text/javascript">
+                window.location.href= 'add_patient.php?ed=' + getParameterByName('activePat') + "&preview=1&addtopat=1&pid=" + getParameterByName('activePat');
+            </script>
+            <?php
+        } else { ?>
+            <script type="text/javascript">
+                parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
+            </script>
+            <?php
+        }
+        trigger_error("Die called", E_USER_ERROR);
+    }
 }
 
 $psql = "select * from dental_contacttype WHERE physician=1";
 $pq = $db->getResults($psql);
 $physician_array = array();
-if ($pq) foreach ($pq as $pr) {
-  array_push($physician_array, $pr['contacttypeid']);
+if ($pq) {
+    foreach ($pq as $pr) {
+        array_push($physician_array, $pr['contacttypeid']);
+    }
 }
 $physician_types = implode(',', $physician_array);
 
 $thesql = "select * from dental_contact where contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-if(!empty($msg)){
-	$salutation = $_POST['salutation'];
-	$firstname = $_POST['firstname'];
-	$middlename = $_POST['middlename'];
-	$lastname = $_POST['lastname'];
-	$company = $_POST['company'];
-	$add1 = $_POST['add1'];
-	$add2= $_POST['add2'];
-	$city = $_POST['city'];
-	$state = $_POST['state'];
-	$zip = $_POST['zip'];
-	$phone1 = $_POST['phone1'];
-	$phone2 = $_POST['phone2'];
-	$fax = $_POST['fax'];
-	$email = $_POST['email'];
-	$national_provider_id = $_POST['national_provider_id'];
-	$qualifier = $_POST['qualifier'];
-	$qualifierid = $_POST['qualifierid'];
-	$greeting = $_POST['greeting'];
-	$sincerely = $_POST['sincerely'];
-	$contacttypeid = $_POST['contacttypeid'];
-	$notes = $_POST['notes'];
-	$preferredcontact = $_POST['preferredcontact'];
-	$status = $_POST['status'];
+if (!empty($msg)) {
+    $salutation = $_POST['salutation'];
+    $firstname = $_POST['firstname'];
+    $middlename = $_POST['middlename'];
+    $lastname = $_POST['lastname'];
+    $company = $_POST['company'];
+    $add1 = $_POST['add1'];
+    $add2= $_POST['add2'];
+    $city = $_POST['city'];
+    $state = $_POST['state'];
+    $zip = $_POST['zip'];
+    $phone1 = $_POST['phone1'];
+    $phone2 = $_POST['phone2'];
+    $fax = $_POST['fax'];
+    $email = $_POST['email'];
+    $national_provider_id = $_POST['national_provider_id'];
+    $qualifierid = $_POST['qualifierid'];
+    $notes = $_POST['notes'];
+    $preferredcontact = $_POST['preferredcontact'];
+    $status = $_POST['status'];
 } else {
-	$salutation = st($themyarray['salutation']);
-	$firstname = st($themyarray['firstname']);
-	$middlename = st($themyarray['middlename']);
-	$lastname = st($themyarray['lastname']);
-	$company = st($themyarray['company']);
-	$add1 = st($themyarray['add1']);
-	$add2 = st($themyarray['add2']);
-	$city = st($themyarray['city']);
-	$state = st($themyarray['state']);
-	$zip = st($themyarray['zip']);
-	$phone1 = st($themyarray['phone1']);
-	$phone2 = st($themyarray['phone2']);
-	$fax = st($themyarray['fax']);
-	$email = st($themyarray['email']);
-	$national_provider_id = st($themyarray['national_provider_id']);
-	$qualifier = st($themyarray['qualifier']);
-	$qualifierid = st($themyarray['qualifierid']);
-	$greeting = st($themyarray['greeting']);
-	$sincerely = st($themyarray['sincerely']);
-	$contacttypeid = st($themyarray['contacttypeid']);
-	$notes = st($themyarray['notes']);
-	$preferredcontact = st($themyarray['preferredcontact']);
-	$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-	$status = st($themyarray['status']);
-	$but_text = "Add ";
+    $salutation = st($themyarray['salutation']);
+    $firstname = st($themyarray['firstname']);
+    $middlename = st($themyarray['middlename']);
+    $lastname = st($themyarray['lastname']);
+    $company = st($themyarray['company']);
+    $add1 = st($themyarray['add1']);
+    $add2 = st($themyarray['add2']);
+    $city = st($themyarray['city']);
+    $state = st($themyarray['state']);
+    $zip = st($themyarray['zip']);
+    $phone1 = st($themyarray['phone1']);
+    $phone2 = st($themyarray['phone2']);
+    $fax = st($themyarray['fax']);
+    $email = st($themyarray['email']);
+    $national_provider_id = st($themyarray['national_provider_id']);
+    $qualifierid = st($themyarray['qualifierid']);
+    $notes = st($themyarray['notes']);
+    $preferredcontact = st($themyarray['preferredcontact']);
+    $name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
+    $status = st($themyarray['status']);
 }
 
-if($themyarray["contactid"] != '') {
-	$but_text = "Edit ";
+if ($themyarray["contactid"] != '') {
+    $but_text = "Edit ";
 } else {
-	$but_text = "Add ";
-} ?>
-	
-	<? if(!empty($msg)) {?>
+    $but_text = "Add ";
+}
+if (!empty($msg)) { ?>
     <div align="center" class="red">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-<?php
-        if(!empty($_GET['search'])){
-          if(strpos($_GET['search'], ' ')){
-            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
-            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
-          }else{
-            $firstname = $_GET['search'];
-          }
-        }
-
-if(!empty($msg)) {?>
-<div align="center" class="red">
-    <?php echo $msg;?>
-</div>
-<?php 
+    <?php
 }
-if(!empty($_GET['search'])){
-	if(strpos($_GET['search'], ' ')){
-		$firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
-		$lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
-	}else{
-		$firstname = ucfirst($_GET['search']);
-	}
+if (!empty($_GET['search'])) {
+    if (strpos($_GET['search'], ' ')) {
+        $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
+        $lastname = substr($_GET['search'], strpos($_GET['search'], ' ') + 1);
+    } else {
+        $firstname = $_GET['search'];
+    }
+}
+
+if (!empty($msg)) { ?>
+    <div align="center" class="red">
+        <?php echo $msg;?>
+    </div>
+    <?php
+}
+if (!empty($_GET['search'])) {
+    if (strpos($_GET['search'], ' ')) {
+        $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
+        $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'], ' ') + 1));
+    } else {
+        $firstname = ucfirst($_GET['search']);
+    }
 }
 ?>
-
 <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo (!empty($_GET['activePat']) ? $_GET['activePat'] : ''); ?>&from=<?php echo (!empty($_GET['from']) ? $_GET['from'] : ''); ?>&from_id=<?php echo (!empty($_GET['from_id']) ? $_GET['from_id'] : ''); ?>&in_field=<?php echo (!empty($_GET['in_field']) ? $_GET['in_field'] : ''); ?>&id_field=<?php echo (!empty($_GET['id_field']) ? $_GET['id_field'] : ''); ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
     <input type="hidden" id="physician_types" value="<?php echo $physician_types; ?>" />
     <input type="hidden" name="contact_type" value="<?php echo (!empty($_GET['ctype']) ? $_GET['ctype'] : ''); ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
-<?php 
-if(!empty($_GET['ctype']) && $_GET['ctype']=='ins'){ ?>
-			Add Insurance Company
-<?php 
-}else{
-	echo $but_text . (!empty($_GET['heading']) ? $_GET['heading'] : '') . 'Contact';
-	if($name <> "") {?>
-       		&quot;<?php echo $name;?>&quot;
-<?php 
-	}
-} ?>
+                <?php
+                if (!empty($_GET['ctype']) && $_GET['ctype'] == 'ins') { ?>
+                    Add Insurance Company
+                    <?php
+                } else {
+                    echo $but_text . (!empty($_GET['heading']) ? $_GET['heading'] : '') . 'Contact';
+                    if ($name != "") { ?>
+                        &quot;<?php echo $name;?>&quot;
+                        <?php
+                    }
+                } ?>
             </td>
         </tr>
         <tr>
@@ -232,24 +220,25 @@ if(!empty($_GET['ctype']) && $_GET['ctype']=='ins'){ ?>
 	                <li id="foli8" class="complex">
 	                    <div>
 	                        <span>
-<?php
-if(isset($_GET['ed'])){
-	$ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
-	$ctid = $db->getRow($ctype_sqlmy);
-}
-$ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
-$ctype_my = $db->getResults($ctype_sql);?>
+                                <?php
+                                if (isset($_GET['ed'])) {
+                                    $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
+                                    $ctid = $db->getRow($ctype_sqlmy);
+                                }
+                                $ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
+                                $ctype_my = $db->getResults($ctype_sql);?>
 		                        <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
 			                        <option value="">Select a contact type</option>
-<?php 
-if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
-									<option <?php if(!empty($ctid['contacttypeid']) && $ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if(!empty($_GET['type']) && $ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?php echo st($ctype_myarray['contacttypeid']);?>">
-<?php 
-										echo st($ctype_myarray['contacttype']);?>
-							        </option>
-<?php 
-}?>
-                            </select>
+                                    <?php
+                                    if ($ctype_my) {
+                                        foreach ($ctype_my as $ctype_myarray) {?>
+                                            <option <?php if (!empty($ctid['contacttypeid']) && $ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if(!empty($_GET['type']) && $ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11') { echo " selected='selected'";} ?> value="<?php echo st($ctype_myarray['contacttypeid']);?>">
+                                                <?php echo st($ctype_myarray['contacttype']);?>
+                                            </option>
+                                            <?php
+                                        }
+                                    } ?>
+                                </select>
 	                            <label for="contacttype">Contact Type</label>
 	                        </span>
 	                    </div>
@@ -263,16 +252,16 @@ if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
                     <li id="foli8" class="complex">	
                         <label class="desc" id="title0" for="Field0">
                             Name
-                            <?php echo (!empty($_GET['ctype']) && $_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
+                            <?php echo (!empty($_GET['ctype']) && $_GET['ctype'] != 'ins') ? '<span id="req_0" class="req">*</span>' : ''; ?>
                         </label>
                         <div>
                         	<span>
                             	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
                                 	<option value=""></option>
-                                    <option value="Dr." <?php if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
-                                    <option value="Mr." <?php if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
-                                    <option value="Mrs." <?php if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
-                                    <option value="Ms." <?php if($salutation == 'Miss.'||$salutation == 'Ms.') echo " selected";?>>Ms.</option>
+                                    <option value="Dr." <?php if ($salutation == 'Dr.') echo " selected";?>>Dr.</option>
+                                    <option value="Mr." <?php if ($salutation == 'Mr.') echo " selected";?>>Mr.</option>
+                                    <option value="Mrs." <?php if ($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
+                                    <option value="Ms." <?php if ($salutation == 'Miss.' || $salutation == 'Ms.') echo " selected";?>>Ms.</option>
                                 </select>
                                 <label for="salutation">Salutation</label>
                             </span>
@@ -387,21 +376,22 @@ if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
                         <label class="desc" id="title0" for="Field0">
                             Other ID For Claim Forms
                         </label>
-                        
                         <div>
                             <span>
-<?php 
-$qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
-$qualifier_my = $db->getResults($qualifier_sql);?>
+                                <?php
+                                $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
+                                $qualifier_my = $db->getResults($qualifier_sql);?>
 	                        	<select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
-                                	<option value="0"></option>
-<?php 
-if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
-                                	<option value="<?php echo st($qualifier_myarray['qualifierid']);?>">
-                                    	<?php echo st($qualifier_myarray['qualifier']);?>
-                                    </option>
-<?php 
-}?>
+                                    <option value="0"></option>
+                                    <?php
+                                    if ($qualifier_my) {
+                                        foreach ($qualifier_my as $qualifier_myarray) { ?>
+                                            <option value="<?php echo st($qualifier_myarray['qualifierid']);?>">
+                                                <?php echo st($qualifier_myarray['qualifier']);?>
+                                            </option>
+                                            <?php
+                                        }
+                                    } ?>
                                 </select>
                                 <label for="qualifier">Qualifier</label>
                             </span>
@@ -430,29 +420,27 @@ if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
 				</ul>
             </td>
         </tr>
-        
         <tr bgcolor="#FFFFFF" class="content physician insurance other">
             <td valign="top" class="frmhead">
                 Preferred Contact Method
             </td>
             <td valign="top" class="frmdata">
             	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
-					<option value="fax" <?php if($preferredcontact == 'fax') echo " selected";?>>Fax</option>
-                	<option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                	<option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
+					<option value="fax" <?php if ($preferredcontact == 'fax') echo " selected";?>>Fax</option>
+                	<option value="paper" <?php if ($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                	<option value="email" <?php if ($preferredcontact == 'email') echo " selected";?>>Email</option>
                 </select>
                 <br />&nbsp;
             </td>
         </tr>
-        
         <tr bgcolor="#FFFFFF" class="content physician insurance other">
             <td valign="top" class="frmhead">
                 Status
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if ($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if ($status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -468,67 +456,60 @@ if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
 					Google
 				</a>
                 <input type="submit" value=" <?php echo $but_text?> Contact" class="button" />
-<?php 
-if($themyarray["contactid"] != ''){ ?>
-                <a style="float:right;" href="duplicate_contact.php?winner=<?php echo $themyarray["contactid"];?>" title="Duplicate">
-		             Is This a Duplicate? 
-	            </a>
-				<br />
                 <?php
-
-                //Check if user has pending VOB
-                $vob_sql = "SELECT "
-                    . "  ip.* "
-                    . "FROM "
-                    . "  dental_insurance_preauth ip "
-                    . " JOIN dental_patients p on p.patientid = ip.patient_id "
-                    . "WHERE "
-                    . "  (p.p_m_ins_co = '" . $themyarray["contactid"] . "' "
-                    . "  OR p.s_m_ins_co = '" . $themyarray["contactid"] . "') "
-                    . "  AND (ip.status=" . DSS_PREAUTH_PENDING . " "
-                    . "  OR ip.status=" . DSS_PREAUTH_PREAUTH_PENDING . ") "
-                    . "ORDER BY "
-                    . "  ip.front_office_request_date DESC "
-                    . "LIMIT 1";
-                $vob_my = mysqli_query($con, $vob_sql);
-                $vob_myarray = mysqli_fetch_assoc($vob_my);
-                $pending_vob = mysqli_num_rows($vob_my);
-                $pending_vob_status = $vob_myarray['status'];
-
-                if ($pending_vob){
-                    ?>
-                    <a style="float:right;" href="manage_contact.php?delid=<?= $themyarray["contactid"]; ?>"
-                       onclick="javascript: return confirm('Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?');"
-                       class="dellink" target="_parent" title="DELETE">
-                        Delete
+                if ($themyarray["contactid"] != '') { ?>
+                    <a style="float:right;" href="duplicate_contact.php?winner=<?php echo $themyarray["contactid"];?>" title="Duplicate">
+                        Is This a Duplicate?
                     </a>
+                    <br />
+                    <?php
+                    //Check if user has pending VOB
+                    $vob_sql = "SELECT ip.* 
+                        FROM dental_insurance_preauth ip
+                        JOIN dental_patients p on p.patientid = ip.patient_id
+                        WHERE 
+                            (
+                                p.p_m_ins_co = '" . $themyarray["contactid"] . "'
+                                OR p.s_m_ins_co = '" . $themyarray["contactid"] . "'
+                            ) AND (
+                                ip.status=" . DSS_PREAUTH_PENDING . " 
+                                OR ip.status=" . DSS_PREAUTH_PREAUTH_PENDING . "
+                            )
+                        ORDER BY ip.front_office_request_date DESC 
+                        LIMIT 1";
+                    $vob_my = mysqli_query($con, $vob_sql);
+                    $pending_vob = mysqli_num_rows($vob_my);
 
-                <?php }elseif (get_contact_sent_letters($themyarray["contactid"]) > 0){ ?>
-		<?php if($themyarray["contactid"] != ''){ ?>
-		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
-                                                 Delete 
-                                        </a>
-<?php 
-	}elseif(get_contact_pending_letters($themyarray["contactid"])> 0){ ?>
-                                    <a style="float:right;" href="manage_contact.php?delid=<?php echo $themyarray["contactid"];?>" onclick="javascript: return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');" class="dellink" target="_parent" title="DELETE">
-                                                 Delete 
-                                        </a>
-<?php 
-	}else{ ?>
-                                	<a style="float:right;" href="manage_contact.php?delid=<?php echo $themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
-                                                 Delete
-                                    </a>
- <?php 
-	} ?>
-<?php 
-}
-} ?>
+                    if ($pending_vob) { ?>
+                        <a
+                            style="float:right;" href="manage_contact.php?delid=<?= $themyarray["contactid"]; ?>"
+                            onclick="return confirm('Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?');"
+                            class="dellink" target="_parent" title="DELETE"
+                        >Delete</a>
+                        <?php
+                    } elseif (get_contact_sent_letters($themyarray["contactid"]) > 0) {
+                        if ($themyarray["contactid"] != '') { ?>
+                            <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+                                Delete
+                            </a>
+                            <?php
+                        } elseif (get_contact_pending_letters($themyarray["contactid"]) > 0) { ?>
+                            <a style="float:right;" href="manage_contact.php?delid=<?php echo $themyarray["contactid"];?>" onclick="return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');" class="dellink" target="_parent" title="DELETE">
+                                Delete
+                            </a>
+                            <?php
+                        } else { ?>
+                            <a style="float:right;" href="manage_contact.php?delid=<?php echo $themyarray["contactid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+                                Delete
+                            </a>
+                            <?php
+                        }
+                    }
+                } ?>
             </td>
         </tr>
     </table>
 </form>
-
-</div>
 
 <script type="text/javascript" src="script/contact.js"></script>
 <script type="text/javascript" src="js/add_contact.js?v=20160328"></script>

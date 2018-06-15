@@ -60,10 +60,10 @@ class Db
 		if( $query_string ) {
 			$result = $this->query($query_string);
 			if ($result) {
-				$return = mysqli_fetch_assoc($result);
+				return mysqli_fetch_assoc($result);
 			}
-			return $return;
 		}
+		return null;
 	}
 
     /**

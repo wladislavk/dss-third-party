@@ -80,10 +80,9 @@ $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
 
-$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-$sum_myarray = $db->getRow($sum_sql);
+include_once 'includes/get_sti_o2.php';
+$sti_o2_1 = getStiO2($db, $_GET['pid']);
 
-$sti_o2_1 = st($sum_myarray['sti_o2_1']);
 if (st($pat_myarray['gender']) == 'Female') {
     $h_h = "her";
     $s_h = "she";

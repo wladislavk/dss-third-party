@@ -70,7 +70,14 @@ if (mysqli_num_rows($imp_q) > 0) {
     $dentaldevice_date = st(($myarrayex['dentaldevice_date'] != '') ? date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])) : '');
 }
 
-$sqls = "select * from dental_summary_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$db = new Db();
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : '');
+$maxIdRow = $db->getRow($maxIdSql);
+$maxId = 0;
+if ($maxIdRow) {
+    $maxId = $maxIdRow['max_summaryid'];
+}
+$sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from `dental_summary` where `summaryid`=$maxId";
 $mys = mysqli_query($con, $sqls);
 $myarrays = mysqli_fetch_array($mys);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];

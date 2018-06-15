@@ -18,7 +18,11 @@ if (!empty($r['mailing_practice'])) {
   $practice = '';
 }
 
-$loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$db = new Db();
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".mysqli_real_escape_string($con, $_GET['id']);
+$maxIdRow = $db->getRow($maxIdSql);
+$maxId = $maxIdRow['max_summaryid'];
+$loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
 $loc_q = mysqli_query($con, $loc_sql);
 $loc_r = mysqli_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){

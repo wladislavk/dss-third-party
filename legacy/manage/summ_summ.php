@@ -90,7 +90,7 @@ if(isset($_POST['device_submit'])){
     $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
     $maxIdRow = $db->getRow($maxIdSql);
     $maxId = 0;
-    if ($maxIdRow) {
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
         $maxId = $maxIdRow['max_summaryid'];
     }
     $initialTitration1Escaped = $db->escape($_POST['initial_device_titration_1']);

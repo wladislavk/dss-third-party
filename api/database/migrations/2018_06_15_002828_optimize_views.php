@@ -16,7 +16,6 @@ class OptimizeViews extends Migration
         DB::unprepared("ALTER TABLE `dental_summary` ADD KEY `location` (`location`);");
         DB::unprepared("ALTER TABLE `dental_summary` ADD KEY `titration_and_echovision` (`initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor`);");
         DB::unprepared("ALTER TABLE `dental_summary` ADD KEY `sti_o2_1` (`sti_o2_1`);");
-        DB::unprepared("ALTER TABLE `dental_summary` ADD KEY `reason_seeking_tx` (`reason_seeking_tx`);");
         DB::unprepared("DROP VIEW IF EXISTS `dental_summary_pivot`;");
     }
 

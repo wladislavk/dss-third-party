@@ -444,7 +444,7 @@ if ($franchisee_info['user_type'] == DSS_USER_TYPE_SOFTWARE) {
 $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$patientId";
 $maxIdRow = $db->getRow($maxIdSql);
 $locationId = 0;
-if ($maxIdRow) {
+if ($maxIdRow && $maxIdRow['max_summaryid']) {
     $maxId = $maxIdRow['max_summaryid'];
     $locationSql = "SELECT `location` FROM `dental_summary` WHERE `summaryid`=$maxId";
     $locationRow = $db->getRow($locationSql);

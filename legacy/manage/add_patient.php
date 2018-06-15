@@ -416,7 +416,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
             $maxIdRow = $db->getRow($maxIdSql);
             $maxId = 0;
-            if ($maxIdRow) {
+            if ($maxIdRow && $maxIdRow['max_summaryid']) {
                 $maxId = $maxIdRow['max_summaryid'];
             }
             $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
@@ -1147,15 +1147,15 @@ if (isset($msg) && $msg != '') {
     $preferredcontact = st($themyarray["preferredcontact"]);
     $referred_notes = st($themyarray["referred_notes"]);
 
-    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : '');
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
     $maxIdRow = $db->getRow($maxIdSql);
-    $maxId = 0;
-    if ($maxIdRow) {
+    $location = -1;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
         $maxId = $maxIdRow['max_summaryid'];
+        $loc_sql = "SELECT `location` from `dental_summary` WHERE `summaryid`=$maxId";
+        $loc_r = $db->getRow($loc_sql);
+        $location = $loc_r['location'];
     }
-    $loc_sql = "SELECT `location` from `dental_summary` WHERE `summaryid`=$maxId";
-    $loc_r = $db->getRow($loc_sql);
-    $location = $loc_r['location'];
 }
 
 $salutationDefault = '';

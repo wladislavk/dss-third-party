@@ -71,10 +71,10 @@ if (mysqli_num_rows($imp_q) > 0) {
 }
 
 $db = new Db();
-$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : '');
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
 $maxIdRow = $db->getRow($maxIdSql);
 $maxId = 0;
-if ($maxIdRow) {
+if ($maxIdRow && $maxIdRow['max_summaryid']) {
     $maxId = $maxIdRow['max_summaryid'];
 }
 $sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from `dental_summary` where `summaryid`=$maxId";

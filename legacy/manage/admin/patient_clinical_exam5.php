@@ -98,7 +98,7 @@ if (!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
     $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
     $maxIdRow = $db->getRow($maxIdSql);
     $maxId = 0;
-    if ($maxIdRow) {
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
         $maxId = $maxIdRow['max_summaryid'];
     }
 

@@ -110,10 +110,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
     $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
 
-    /**
-     * @see CS-73
-     * @see DSS-258
-     */
     $filedByBackOfficeMarker = $filedByBackOffice && $needsBackOfficeMarkerUpdate ? 3 : 0;
 
     /**

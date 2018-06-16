@@ -1,31 +1,33 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
-include_once('includes/constants.inc');
+include_once 'includes/constants.inc';
 include "includes/similar.php";
 ?>
 <link rel="stylesheet" href="css/manage_display_similar.css" type="text/css" media="screen" />
 <?php
  
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND 
+$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
 		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
 		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
 		)";
 
 
-if(isset($_REQUEST['deleteid'])){
-	$dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['deleteid'])."'";
-	$db->query($dsql);?>  
-	<script type="text/javascript">
-	    alert("Duplicate patient removed.");
+if (isset($_REQUEST['deleteid'])) {
+    $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['deleteid'])."'";
+    $db->query($dsql);?>
+    <script type="text/javascript">
+        alert("Duplicate patient removed.");
         window.location = "add_patient.php?ed=<?php echo $_REQUEST['useid']; ?>&preview=1&addtopat=1&pid=<?php echo $_REQUEST['useid']; ?>";
-	</script>
+    </script>
 <?php
-}elseif(isset($_REQUEST['createid'])){?>
-	<script type="text/javascript">
+} elseif (isset($_REQUEST['createid'])) { ?>
+    <script type="text/javascript">
         window.location = "add_patient.php?pid=<?php echo $_REQUEST['createid']; ?>&ed=<?php echo $_REQUEST['createid']; ?>";
-	</script>
-<?php
+    </script>
+    <?php
 }
 
 $sql = "SELECT p.* FROM dental_patients p WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND ".$simsql."!=0 ";
@@ -66,27 +68,27 @@ $myarray = $db->getRow($sql);?>
 	</tr>
 <?php
 $sim = similar_patients($myarray['patientid']);
-if(count($sim) > 0){ 
-	foreach($sim as $s){ ?>
-	<tr>
-		<td valign="top">
-			<?php echo st($s["name"]);?>
-		</td>
-		<td valign="top">
-			<?php echo st($s["address"]); ?>
-		</td>
-		<td valign="top">
-			<?php echo st($s["phone"]); ?>
-		</td>
-		<td valign="top">
-			<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?php echo $s['id']; ?>&ed=<?php echo $s['id']; ?>'); return false;" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >View</a>
-		</td>
-		<td valign="top">
-			<a href="<?php echo $_SERVER['PHP_SELF']; ?>?useid=<?php echo $s['id']; ?>&deleteid=<?php echo $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
-		</td>
-	</tr>
-<?php
+if (count($sim) > 0) {
+    foreach ($sim as $s) { ?>
+        <tr>
+            <td valign="top">
+                <?php echo st($s["name"]);?>
+            </td>
+            <td valign="top">
+                <?php echo st($s["address"]); ?>
+            </td>
+            <td valign="top">
+                <?php echo st($s["phone"]); ?>
+            </td>
+            <td valign="top">
+                <a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?php echo $s['id']; ?>&ed=<?php echo $s['id']; ?>'); return false;" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >View</a>
+            </td>
+            <td valign="top">
+                <a href="<?php echo $_SERVER['PHP_SELF']; ?>?useid=<?php echo $s['id']; ?>&deleteid=<?php echo $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
+            </td>
+        </tr>
+        <?php
 	}
-}?>
+} ?>
 </table>
 <?php include "includes/bottom.htm";?>

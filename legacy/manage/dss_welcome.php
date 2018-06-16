@@ -1,27 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	if($_GET['backoffice'] == '1') {
-	  include 'admin/includes/top.htm';
-	} else {
-	  include 'includes/top.htm';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm';
+} else {
+    include 'includes/top.htm';
+}
 ?>
-	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
 	$letterid = mysqli_real_escape_string($con, $_GET['lid']);
 	// Select Letter
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 	
 	$letter_result = $db->getResults($letter_query);
-	if ($letter_result) foreach ($letter_result as $row) {
-		$templateid = $row['templateid'];
-		$patientid = $row['patientid'];
-		$topatient = $row['topatient'];
-		$md_list = $row['md_list'];
-		$md_referral_list = $row['md_referral_list'];
-		$mds = explode(",", $md_list);
-		$md_referrals = explode(",", $md_referral_list);
-	}
+	if ($letter_result) {
+	    foreach ($letter_result as $row) {
+            $templateid = $row['templateid'];
+            $patientid = $row['patientid'];
+            $topatient = $row['topatient'];
+            $md_list = $row['md_list'];
+            $md_referral_list = $row['md_referral_list'];
+        }
+    }
 
 	// Get Letter Subject
 	$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
@@ -41,10 +43,12 @@
 	$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob, email FROM dental_patients WHERE patientid = '".$patientid."';";
 	
 	$patient_result = $db->getResults($patient_query);
-	$patient_info = array();
-	if ($patient_result) foreach ($patient_result as $row) {
-		$patient_info = $row;
-	}
+	$patient_info = [];
+	if ($patient_result) {
+	    foreach ($patient_result as $row) {
+            $patient_info = $row;
+        }
+    }
 	// Appointment Date
 	$appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
 	
@@ -54,11 +58,11 @@
 
 	<br />
 	<span class="admin_head">
-		<?php print $title; ?>
+		<?php echo $title; ?>
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+	<a href="<?php echo ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
@@ -69,16 +73,16 @@
 	  $contact_info = get_contact_info('', $md_list, $md_referral_list);
 	}
 
-	$letter_contacts = array();
+	$letter_contacts = [];
 	if ($contact_info) {
 		foreach ($contact_info['patient'] as $contact) {
-		  $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
+		    $letter_contacts[] = array_merge(['type' => 'patient'], $contact);
 		}
 		foreach ($contact_info['mds'] as $contact) {
-		  $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
+		    $letter_contacts[] = array_merge(['type' => 'md'], $contact);
 		}
 		foreach ($contact_info['md_referrals'] as $contact) {
-		  $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
+		    $letter_contacts[] = array_merge(['type' => 'md_referral'], $contact);
 		}
 	}
 
@@ -135,8 +139,8 @@
 	  	}
 		// Check for updated templates
 		foreach ($letter_contacts as $key => $contact) {
-			$search = array();
-			$replace = array();
+			$search = [];
+			$replace = [];
 			$search[] = '%todays_date%';
 			$replace[] = "<strong>" . $todays_date . "</strong>";
 			$search[] = '%addr1%';
@@ -184,7 +188,6 @@
 		    foreach ($letter_contacts as $key => $contact) {
 		      $new_template[$key] = $dupe_template;
 		    }
-			$duplicated = true;
 		}
 		// Reset Letter
 		if (isset($_POST['reset_letter'])) {
@@ -197,8 +200,8 @@
 
 	foreach ($letter_contacts as $key => $contact) {
 		// Token search and replace arrays
-		$search = array();
-		$replace = array();
+		$search = [];
+		$replace = [];
 		$search[] = '%todays_date%';
 		$replace[] = "<strong>" . $todays_date . "</strong>";
 		$search[] = '%addr1%';
@@ -242,7 +245,6 @@
 			if (count($letter_contacts) == 1) {
 				$parent = true;
 			}
-			$letterid = $letterid;
 			$type = $contact['type'];
 			$recipientid = $contact['id'];
 			if ($_GET['backoffice'] == '1') {
@@ -251,7 +253,7 @@
 				$message = str_replace($search, "", $message);	
 				deliver_letter($letterid, $message);
 			} else {
-		    	$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		    	send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 			}
 			if ($parent) {
 ?>
@@ -282,17 +284,17 @@
 ?>
 <?php // loop through letters ?>
 		<div align="right">
-			<button class="addButton" onclick="Javascript: edit_letter('letter<?php echo $key?>');return false;" >
+			<button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
 				Edit Letter
 			</button>
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+			<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 				Print Letter 
 			</button>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+			<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 				Word Document
 			</button>
 			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -304,7 +306,7 @@
 			<tr>
 				<td valign="top">
 					<div id="letter<?php echo $key?>">
-					<?php print $letter[$key]; ?>
+					<?php echo $letter[$key]; ?>
 					</div>
 					<input type="hidden" name="new_template[<?php echo $key?>]" value="<?php echo $new_template[$key]?>" />
 				</td>

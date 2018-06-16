@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
-include_once('includes/constants.inc');
-include_once('admin/includes/main_include.php');
-include_once('admin/includes/invoice_functions.php');
+include_once 'includes/constants.inc';
+include_once 'admin/includes/main_include.php';
+include_once 'admin/includes/invoice_functions.php';
 
 require_once __DIR__ . '/admin/includes/claim_functions.php';
 
@@ -14,6 +15,8 @@ $secondaryIdTypes = [
 
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
+
+$db = new Db();
 
 $claimData = ClaimFormData::storedDataForClaim($claimId, $patientId);
 $patientData = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '$patientId'");
@@ -42,7 +45,7 @@ $patient_relation_insured = strtoupper($claimData['patient_relation_insured']);
 $patient_status = strtoupper($claimData['patient_status']);
 $patient_status_array = split('~', $patient_status);
 
-$insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $claimData['insured_id_number']);
+$insured_id_number = preg_replace("/[^A-Za-z0-9 ]/", '', $claimData['insured_id_number']);
 $insured_firstname = strtoupper($claimData['insured_firstname']);
 $insured_middle = strtoupper($claimData['insured_middle']);
 $insured_lastname = strtoupper($claimData['insured_lastname']);
@@ -61,7 +64,7 @@ $insured_policy_group_feca = strtoupper($claimData['insured_policy_group_feca'])
 $other_insured_firstname = strtoupper($claimData['other_insured_firstname']);
 $other_insured_lastname = strtoupper($claimData['other_insured_lastname']);
 $other_insured_middle = strtoupper($claimData['other_insured_middle']);
-$other_insured_dob =str_replace('-', '/', $claimData['other_insured_dob']);
+$other_insured_dob = str_replace('-', '/', $claimData['other_insured_dob']);
 $other_insured_sex = strtoupper($claimData['other_insured_sex']);
 $other_insured_employer_school_name = strtoupper(st($claimData['other_insured_employer_school_name']));
 $other_insured_insurance_plan = strtoupper($claimData['other_insured_insurance_plan']);
@@ -85,7 +88,6 @@ $date_same_illness = str_replace('-','/',st($claimData['date_same_illness']));
 $unable_date_from = str_replace('-','/',st($claimData['unable_date_from']));
 $unable_date_to = str_replace('-','/',st($claimData['unable_date_to']));
 $referring_provider = strtoupper(st($claimData['referring_provider']));
-$field_17a_dd = strtoupper($claimData['field_17a_dd']);
 $field_17a = strtoupper($claimData['field_17a']);
 $field_17b = strtoupper($claimData['field_17b']);
 $hospitalization_date_from = str_replace('-','/',st($claimData['hospitalization_date_from']));
@@ -93,10 +95,6 @@ $hospitalization_date_to = str_replace('-','/',st($claimData['hospitalization_da
 $reserved_local_use1 = strtoupper(st($claimData['reserved_local_use1']));
 $outside_lab = strtoupper(st($claimData['outside_lab']));
 $s_charges = strtoupper($claimData['s_charges']);
-$diagnosis_1 = strtoupper($claimData['diagnosis_1']);
-$diagnosis_2 = strtoupper($claimData['diagnosis_2']);
-$diagnosis_3 = strtoupper($claimData['diagnosis_3']);
-$diagnosis_4 = strtoupper($claimData['diagnosis_4']);
 $diagnosis_a = strtoupper($claimData['diagnosis_a']);
 $diagnosis_b = strtoupper($claimData['diagnosis_b']);
 $diagnosis_c = strtoupper($claimData['diagnosis_c']);
@@ -110,7 +108,6 @@ $diagnosis_j = strtoupper($claimData['diagnosis_j']);
 $diagnosis_k = strtoupper($claimData['diagnosis_k']);
 $diagnosis_l = strtoupper($claimData['diagnosis_l']);
 
-$medicaid_resubmission_code = strtoupper($claimData['medicaid_resubmission_code']);
 $original_ref_no = strtoupper($claimData['original_ref_no']);
 $prior_authorization_number = strtoupper($claimData['prior_authorization_number']);
 
@@ -141,10 +138,7 @@ $billing_provider_dd = strtoupper(st($claimData['billing_provider_dd']));
 $billing_provider_b_other = strtoupper(st($claimData['billing_provider_b_other']));
 
 $nucc_8a = strtoupper($claimData['nucc_8a']);
-$nucc_8b = strtoupper($claimData['nucc_8b']);
-$nucc_9a = strtoupper($claimData['nucc_9a']);
 $nucc_9b = strtoupper($claimData['nucc_9b']);
-$nucc_30 = strtoupper($claimData['nucc_30']);
 $claim_codes = strtoupper($claimData['claim_codes']);
 $other_claim_id = strtoupper($claimData['other_claim_id']);
 $nucc_9c = strtoupper($claimData['nucc_9c']);
@@ -187,10 +181,8 @@ $fdfData = [];
 $fdfData['carrier_name_fill'] = strtoupper($insuranceCompanyData['company']);
 $fdfData['carrier_address1_fill'] = strtoupper($insuranceCompanyData['add1']);
 $fdfData['carrier_address2_fill'] = strtoupper($insuranceCompanyData['add2']);
-$fdfData['carrier_citystatezip_fill'] =
-    $insuranceCompanyData['city'] . " " . $insuranceCompanyData['state'] . ", " . $insuranceCompanyData['zip'];
-$fdfData['pica_right_side_fill'] =
-    (!empty($pica1) ? $pica1 : '').(!empty($pica2) ? $pica2 : '').(!empty($pica3) ? $pica3 : '');
+$fdfData['carrier_citystatezip_fill'] = $insuranceCompanyData['city'] . " " . $insuranceCompanyData['state'] . ", " . $insuranceCompanyData['zip'];
+$fdfData['pica_right_side_fill'] = (!empty($pica1) ? $pica1 : '').(!empty($pica2) ? $pica2 : '').(!empty($pica3) ? $pica3 : '');
 
 $fdfData['medicare_chkbox'] = $insurancetype == '1' ? 1 : '';
 $fdfData['medicaid_chkbox'] = $insurancetype == '2' ? 1 : '';
@@ -207,8 +199,7 @@ $fdfData['insured_id_number_fill'] = $insured_id_number;
 $fdfData['insured_id_number_fill'] = $insured_id_number;
 
 $fdfData['insured_id_number_fill'] = $insured_id_number;
-$fdfData['pt_name_fill'] = $patient_lastname . ", " . $patient_firstname .
-    (trim($patient_middle) != '' ? ", " . $patient_middle : '');
+$fdfData['pt_name_fill'] = $patient_lastname . ", " . $patient_firstname . (trim($patient_middle) != '' ? ", " . $patient_middle : '');
 
 if ($patient_dob != '') {
     $fdfData['pt_birth_date_mm_fill'] = date('m', $patient_dob);
@@ -234,12 +225,9 @@ $fdfData['pt_address_fill'] = $patient_address;
 $fdfData['pt_city_fill'] = $patient_city;
 $fdfData['pt_state_fill'] = $patient_state;
 
-$fdfData['pt_status_single_chkbox'] =
-    isset($patient_status_array) && in_array('Single', $patient_status_array) ? 1 : '';
-$fdfData['pt_status_married_chkbox'] =
-    isset($patient_status_array) && in_array('Married', $patient_status_array) ? 1 : '';
-$fdfData['pt_status_other_chkbox'] =
-    isset($patient_status_array) && in_array('Others', $patient_status_array) ? 1 : '';
+$fdfData['pt_status_single_chkbox'] = isset($patient_status_array) && in_array('Single', $patient_status_array) ? 1 : '';
+$fdfData['pt_status_married_chkbox'] = isset($patient_status_array) && in_array('Married', $patient_status_array) ? 1 : '';
+$fdfData['pt_status_other_chkbox'] = isset($patient_status_array) && in_array('Others', $patient_status_array) ? 1 : '';
 
 $fdfData['insured_city_fill'] = $insured_city;
 $fdfData['insured_state_fill'] = $insured_state;
@@ -247,12 +235,9 @@ $fdfData['pt_zipcode_fill'] = $insured_zip;
 $fdfData['pt_phone_areacode_fill'] = $patient_phone_code;
 $fdfData['pt_phone_number_fill'] = $patient_phone;
 
-$fdfData['pt_status_employed_chkbox'] =
-    isset($patient_status_array) && in_array('Employed', $patient_status_array) ? 1 : '';
-$fdfData['pt_status_ftstudent_chkbox'] =
-    isset($patient_status_array) && in_array("Full Time Student", $patient_status_array) ? 1 : '';
-$fdfData['pt_status_ptstudent_chkbox'] =
-    isset($patient_status_array) && in_array("Part Time Student", $patient_status_array) ? 1 : '';
+$fdfData['pt_status_employed_chkbox'] = isset($patient_status_array) && in_array('Employed', $patient_status_array) ? 1 : '';
+$fdfData['pt_status_ftstudent_chkbox'] = isset($patient_status_array) && in_array("Full Time Student", $patient_status_array) ? 1 : '';
+$fdfData['pt_status_ptstudent_chkbox'] = isset($patient_status_array) && in_array("Part Time Student", $patient_status_array) ? 1 : '';
 
 $fdfData['insured_zipcode_fill'] = $insured_zip;
 $fdfData['insured_phone_areacode_fill'] = $insured_phone_code;
@@ -289,13 +274,10 @@ if ($other_insured_dob != '') {
     $fdfData['other_insured_dob_yy_fill'] = date('Y', $other_insured_dob);
 }
 
-$fdfData['other_insured_sex_m_chkbox'] =
-    !empty($other_insured_sex) && ($other_insured_sex == 'M' || $other_insured_sex == 'Male') ? 1 : '';
-$fdfData['other_insured_sex_f_chkbox'] =
-    !empty($other_insured_sex) && ($other_insured_sex == 'F' || $other_insured_sex == 'Female') ? 1 : '';
+$fdfData['other_insured_sex_m_chkbox'] = !empty($other_insured_sex) && ($other_insured_sex == 'M' || $other_insured_sex == 'Male') ? 1 : '';
+$fdfData['other_insured_sex_f_chkbox'] = !empty($other_insured_sex) && ($other_insured_sex == 'F' || $other_insured_sex == 'Female') ? 1 : '';
 $fdfData['insured_employers_name_fill'] = $insured_employer_school_name;
-$fdfData['employers_name_fill'] =
-    !empty($other_insured_employer_school_name) ? $other_insured_employer_school_name : '';
+$fdfData['employers_name_fill'] = !empty($other_insured_employer_school_name) ? $other_insured_employer_school_name : '';
 
 $fdfData['insured_ins_plan_name_fill'] = $insured_insurance_plan;
 $fdfData['box11b_nucc'] = $other_claim_id;
@@ -460,10 +442,8 @@ $fdfData['service_facility_location_info_fill'] =
     (!empty($service_facility_info_address) ? $service_facility_info_address : '') . "\n" .
     (!empty($service_facility_info_city) ? $service_facility_info_city : '');
 
-$fdfData['billing_provider_phone_areacode_fill'] =
-    !empty($billing_provider_phone_code) ? $billing_provider_phone_code : '';
-$fdfData['billing_provider_phone_number_fill'] =
-    !empty($billing_provider_phone) ? $billing_provider_phone : '';
+$fdfData['billing_provider_phone_areacode_fill'] = !empty($billing_provider_phone_code) ? $billing_provider_phone_code : '';
+$fdfData['billing_provider_phone_number_fill'] = !empty($billing_provider_phone) ? $billing_provider_phone : '';
 $fdfData['billing_provider_info_fill'] =
     (!empty($billing_provider_name) ? $billing_provider_name : '') . "\n" .
     (!empty($billing_provider_address) ? $billing_provider_address : '') . "\n" .
@@ -472,20 +452,16 @@ $fdfData['signature_of_physician-supplier_signed_fill'] = !empty($signature_phys
 $fdfData['signature_of_physician-supplier_date_fill'] = $physician_signed_date;
 $fdfData['service_facility_NPI_a_fill'] = !empty($service_info_a) ? $service_info_a : '';
 $fdfData['billing_provider_a'] = !empty($billing_provider_a) ? $billing_provider_a : '';
-$fdfData['service_facility_other_id_b_fill'] =
-    array_get($qualifierCodes, $service_info_dd) . $service_info_b_other;
+$fdfData['service_facility_other_id_b_fill'] = array_get($qualifierCodes, $service_info_dd) . $service_info_b_other;
 $fdfData['billing_provider_NPI_a_fill'] = !empty($billing_provider_a) ? $billing_provider_a : '';
-$fdfData['billing_provider_other_id_b_fill'] =
-    array_get($qualifierCodes, $billing_provider_dd) . $billing_provider_b_other;
+$fdfData['billing_provider_other_id_b_fill'] = array_get($qualifierCodes, $billing_provider_dd) . $billing_provider_b_other;
 
 $fdfData['fed_tax_id_number_fill'] = $federal_tax_id_number;
 $fdfData['fed_tax_id_SSN_chkbox'] = $ssn == 1 ? 1 : '';
 $fdfData['fed_tax_id_EIN_chkbox'] = $ein == 1 ? 1 : '';
 $fdfData['pt_account_number_fill'] = $patient_account_no;
-$fdfData['accept_assignment_yes_chkbox'] =
-    isOptionSelected($accept_assignment) || $accept_assignment == 'A' ? 1 : '';
-$fdfData['accept_assignment_no_chkbox'] =
-    !isOptionSelected($accept_assignment) || $accept_assignment == 'C' ? 1 : '';
+$fdfData['accept_assignment_yes_chkbox'] = isOptionSelected($accept_assignment) || $accept_assignment == 'A' ? 1 : '';
+$fdfData['accept_assignment_no_chkbox'] = !isOptionSelected($accept_assignment) || $accept_assignment == 'C' ? 1 : '';
 
 $fdfData['total_charge_dollars_fill'] = number_format(floor($total_charge),0,'.','');
 $fdfData['total_charge_cents_fill'] = fill_cents(roundToCents($total_charge));
@@ -520,7 +496,6 @@ $fdf_field = $isSecondary ? 'secondary_fdf' : 'primary_fdf';
 // This invoice add, should be added to the patient's docid? or the current logged-in user?
 invoice_add_claim('1', $docId, $claimId);
 
-$db->query("UPDATE dental_insurance SET $fdf_field = '$file'
-    WHERE insuranceid = '$claimId'");
+$db->query("UPDATE dental_insurance SET $fdf_field = '$file' WHERE insuranceid = '$claimId'");
 
 outputPdf($file, $fdfData);

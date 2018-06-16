@@ -87,7 +87,7 @@ if ($b_r) {
 
 ?>
 <script type="text/javascript">
-  var billing_co = '<?= $billing_co; ?>';
+    var billing_co = '<?= $billing_co; ?>';
 </script>
 <?php
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
@@ -98,7 +98,6 @@ include 'includes/similar.php';
 function trigger_letter20($pid)
 {
     $letterid = '20';
-    $md_list = get_mdcontactids($pid);
     $pt_referral_list = get_ptreferralids($pid);
     $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
     if (is_numeric($letter)) {
@@ -131,7 +130,6 @@ TRIGGERING LETTERS
 // Trigger Letter 1 and 2 if New MD was added
 function trigger_letter1and2($pid)
 {
-    $con = $GLOBALS['con'];
     $db = new Db();
     //prevent letters from being generated if letters or intro letters disabled
     $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $_SESSION['docid'])."'";
@@ -237,7 +235,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $old_p_m_ins_co = $s_r['p_m_ins_co'];
         if ($s_r['registration_status'] == 2 && $_POST['email'] != $s_r['email']) { // if registered attempt to send update email
             sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
-        } elseif(isset($_POST['sendRem'])) {
+        } elseif (isset($_POST['sendRem'])) {
             sendRemEmail($_POST['ed'], $_POST['email']); // send reminder email
         } elseif (!isset($_POST['sendReg']) && $s_r['registration_status'] == 1 && trim($_POST['email']) != trim($s_r['email'])) {
             if ($doc_patient_portal && $use_patient_portal) {
@@ -736,8 +734,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $flowinsert = $db->query($flowinsertqry);
         if ($flowinsert) {
             if (!empty($referredbyqry)) {
-                $referred_result = $db->query($referredbyqry);
-                $message = "Successfully updated flowsheet!2";
+                $db->query($referredbyqry);
             }
         }
 
@@ -751,11 +748,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
-        $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
-
-        if (!$flow_pg2_info_insert) {
-            $message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
-        }
+        $db->query($flow_pg2_info_query);
 
         $sim = similar_patients($pid);
         if (count($sim) > 0) { ?>
@@ -830,36 +823,19 @@ if (isset($msg) && $msg != '') {
     $patient_notes = $_POST['patient_notes'];
     $display_alert = $_POST['display_alert'];
     $alert_text = $_POST['alert_text'];
-    $p_d_party = $_POST["p_d_party"];
-    $p_d_relation = $_POST["p_d_relation"];
-    $p_d_other = $_POST["p_d_other"];
-    $p_d_employer = $_POST["p_d_employer"];
-    $p_d_ins_co = $_POST["p_d_ins_co"];
-    $p_d_ins_id = $_POST["p_d_ins_id"];
-    $s_d_party = $_POST["s_d_party"];
-    $s_d_relation = $_POST["s_d_relation"];
-    $s_d_other = $_POST["s_d_other"];
-    $s_d_employer = $_POST["s_d_employer"];
-    $s_d_ins_co = $_POST["s_d_ins_co"];
-    $s_d_ins_id = $_POST["s_d_ins_id"];
     $p_m_partyfname = $_POST["p_m_partyfname"];
     $p_m_partymname = $_POST["p_m_partymname"];
     $p_m_partylname = $_POST["p_m_partylname"];
     $p_m_gender = $_POST['p_m_gender'];
     $p_m_relation = $_POST["p_m_relation"];
-    $p_m_other = $_POST["p_m_other"];
-    $p_m_employer = $_POST["p_m_employer"];
     $p_m_ins_co = $_POST["p_m_ins_co"];
     $p_m_ins_id = $_POST["p_m_ins_id"];
-    $p_m_ins_payer_id = $_POST['p_m_ins_payer_id'];
     $has_s_m_ins = $_POST["s_m_ins"];
     $s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
     $s_m_partylname = $_POST["s_m_partylname"];
     $s_m_gender = $_POST['s_m_gender'];
     $s_m_relation = $_POST["s_m_relation"];
-    $s_m_other = $_POST["s_m_other"];
-    $s_m_employer = $_POST["s_m_employer"];
     $s_m_ins_co = $_POST["s_m_ins_co"];
     $s_m_ins_id = $_POST["s_m_ins_id"];
     $p_m_ins_grp = $_POST["p_m_ins_grp"];
@@ -899,16 +875,8 @@ if (isset($msg) && $msg != '') {
     $docmdother2 = $_POST["docmdother2"];
     $docmdother3 = $_POST["docmdother3"];
     $emp_fax = $_POST["emp_fax"];
-    $plan_name = $_POST["plan_name"];
-    $group_number = $_POST["group_number"];
-    $ins_type = $_POST["ins_type"];
     $status = $_POST["status"];
     $use_patient_portal = $_POST["use_patient_portal"];
-    $accept_assignment = $_POST["accept_assignment"];
-    $print_signature = $_POST["print_signature"];
-    $medical_insurance = $_POST["medical_insurance"];
-    $mark_yes = $_POST["mark_yes"];
-    $inactive = $_POST["inactive"];
     $partner_name = $_POST["partner_name"];
     $emergency_name = $_POST["emergency_name"];
     $emergency_relationship = $_POST["emergency_relationship"];
@@ -925,10 +893,6 @@ if (isset($msg) && $msg != '') {
     $lastname = st($themyarray['lastname']);
     $preferred_name = st($themyarray['preferred_name']);
     $salutation = st($themyarray['salutation']);
-    $login = st($themyarray['login']);
-    $member_no = st($themyarray['member_no']);
-    $group_no = st($themyarray['group_no']);
-    $plan_no = st($themyarray['plan_no']);
     $dob = st($themyarray['dob']);
     $add1 = st($themyarray['add1']);
     $add2 = st($themyarray['add2']);
@@ -951,25 +915,11 @@ if (isset($msg) && $msg != '') {
     $patient_notes = st($themyarray['patient_notes']);
     $alert_text = st($themyarray['alert_text']);
     $display_alert = st($themyarray['display_alert']);
-    $p_d_party = st($themyarray["p_d_party"]);
-    $p_d_relation = st($themyarray["p_d_relation"]);
-    $p_d_other = st($themyarray["p_d_other"]);
-    $p_d_employer = st($themyarray["p_d_employer"]);
-    $p_d_ins_co = st($themyarray["p_d_ins_co"]);
-    $p_d_ins_id = st($themyarray["p_d_ins_id"]);
-    $s_d_party = st($themyarray["s_d_party"]);
-    $s_d_relation = st($themyarray["s_d_relation"]);
-    $s_d_other = st($themyarray["s_d_other"]);
-    $s_d_employer = st($themyarray["s_d_employer"]);
-    $s_d_ins_co = st($themyarray["s_d_ins_co"]);
-    $s_d_ins_id = st($themyarray["s_d_ins_id"]);
     $p_m_partyfname = st($themyarray["p_m_partyfname"]);
     $p_m_partymname = st($themyarray["p_m_partymname"]);
     $p_m_partylname = st($themyarray["p_m_partylname"]);
     $p_m_relation = st($themyarray["p_m_relation"]);
     $p_m_gender = st($themyarray["p_m_gender"]);
-    $p_m_other = st($themyarray["p_m_other"]);
-    $p_m_employer = st($themyarray["p_m_employer"]);
     $p_m_ins_co = st($themyarray["p_m_ins_co"]);
     $p_m_ins_id = st($themyarray["p_m_ins_id"]);
     $p_m_eligible_payer_id = st($themyarray["p_m_eligible_payer_id"]);
@@ -982,8 +932,6 @@ if (isset($msg) && $msg != '') {
     $s_m_partylname = st($themyarray["s_m_partylname"]);
     $s_m_gender = st($themyarray["s_m_gender"]);
     $s_m_relation = st($themyarray["s_m_relation"]);
-    $s_m_other = st($themyarray["s_m_other"]);
-    $s_m_employer = st($themyarray["s_m_employer"]);
     $s_m_ins_co = st($themyarray["s_m_ins_co"]);
     $s_m_ins_id = st($themyarray["s_m_ins_id"]);
     $p_m_ins_grp = st($themyarray["p_m_ins_grp"]);
@@ -1016,15 +964,8 @@ if (isset($msg) && $msg != '') {
     $emp_zip = st($themyarray["emp_zip"]);
     $emp_phone = st($themyarray["emp_phone"]);
     $emp_fax = st($themyarray["emp_fax"]);
-    $plan_name = st($themyarray["plan_name"]);
-    $group_number = st($themyarray["group_number"]);
-    $ins_type = st($themyarray["ins_type"]);
     $status = st($themyarray["status"]);
     $use_patient_portal = st($themyarray["use_patient_portal"]);
-    $accept_assignment = st($themyarray["accept_assignment"]);
-    $print_signature = st($themyarray["print_signature"]);
-    $medical_insurance = st($themyarray["medical_insurance"]);
-    $mark_yes = st($themyarray["mark_yes"]);
     $docsleep = st($themyarray["docsleep"]);
     if ($docsleep && $docsleep != 'Not Set') {
         $dsql = "
@@ -1115,14 +1056,12 @@ if (isset($msg) && $msg != '') {
         $docmdother3_name = "";
     }
 
-    $inactive = st($themyarray["inactive"]);
     $partner_name = st($themyarray["partner_name"]);
     $emergency_name = st($themyarray["emergency_name"]);
     $emergency_relationship = st($themyarray["emergency_relationship"]);
     $emergency_number = st($themyarray["emergency_number"]);
     $referred_source = st($themyarray["referred_source"]);
     $referred_by = st($themyarray["referred_by"]);
-    $referred_notes = st($themyarray["referred_notes"]);
     if ($referred_source == DSS_REFERRED_PATIENT) {
         $rsql = "SELECT lastname, firstname, middlename FROM dental_patients WHERE patientid=".$referred_by;
         $r = $db->getRow($rsql);
@@ -1143,13 +1082,10 @@ if (isset($msg) && $msg != '') {
     $copyreqdate = st($themyarray["copyreqdate"]);
     $preferredcontact = st($themyarray["preferredcontact"]);
     $referred_notes = st($themyarray["referred_notes"]);
-    $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-  $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
-  $loc_r = $db->getRow($loc_sql);
-  $location = $loc_r['location'];
-
-    $but_text = "Add ";
+    $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+    $loc_r = $db->getRow($loc_sql);
+    $location = $loc_r['location'];
 }
 
 $salutationDefault = '';
@@ -1177,14 +1113,11 @@ if ((!empty($patientemail) || !empty($patientphone)) && !empty($add1) && !empty(
 }
 // Determine Whether Patient Info has been set
 update_patient_summary((!empty($_GET['ed']) ? $_GET['ed'] : ''), 'patient_info', $complete_info);
-?>
 
-<?php
 if (isset($msg) && $msg != '') { ?>
     <div align="center" class="red"><?= $msg; ?></div>
     <?php
 } ?>
-
 <script type="text/javascript">
     function validate_add_patient (fa) {
         if (clickedBut === 'sendPin') {
@@ -1381,7 +1314,6 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         $firstname = ucfirst($_GET['search']);
     }
 } ?>
-
 <form name="patientfrm" id="patientfrm" action="<?= $_SERVER['PHP_SELF']; ?>?pid=<?= $patientId ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
     <script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
     <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
@@ -1884,7 +1816,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <?php
         $api_sql = "
             SELECT use_eligible_api FROM dental_users
-            WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+            WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
         ";
         $api_r = $db->getRow($api_sql);
         if ($api_r['use_eligible_api'] == 1) { ?>

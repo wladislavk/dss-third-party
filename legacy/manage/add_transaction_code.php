@@ -130,7 +130,6 @@
                     $modifier_code_2 = $themyarray['modifier_code_2'];
                     $days_units = $themyarray['days_units'];
                     $amount_adjust = $themyarray['amount_adjust'];
-                    $but_text = "Add ";
     	        }
     	
             	if($themyarray["transaction_codeid"] != '') {

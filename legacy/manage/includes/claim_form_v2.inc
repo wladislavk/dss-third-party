@@ -2702,17 +2702,14 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $other_accident = !empty($claimData['other_accident']) ? $claimData['other_accident'] : '';
     $insured_policy_group_feca = $claimData['insured_policy_group_feca'];
     $other_insured_policy_group_feca = $claimData['other_insured_policy_group_feca'];
-    $responsibility_sequence =
-        !empty($claimData['responsibility_sequence']) ? $claimData['responsibility_sequence'] : '';
+    $responsibility_sequence = !empty($claimData['responsibility_sequence']) ? $claimData['responsibility_sequence'] : '';
     //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
     $insured_dob = dateFormat($claimData['insured_dob'], false);
     $insured_sex = $claimData['insured_sex'];
     $other_insured_dob = dateFormat($claimData['other_insured_dob'], false);
     $other_insured_sex = !empty($claimData['other_insured_sex']) ? $claimData['other_insured_sex'] : '';
-    $insured_employer_school_name =
-        !empty($claimData['insured_employer_school_name']) ? $claimData['insured_employer_school_name'] : '';
-    $other_insured_employer_school_name =
-        !empty($claimData['other_insured_employer_school_name']) ? $claimData['other_insured_employer_school_name'] : '';
+    $insured_employer_school_name = !empty($claimData['insured_employer_school_name']) ? $claimData['insured_employer_school_name'] : '';
+    $other_insured_employer_school_name = !empty($claimData['other_insured_employer_school_name']) ? $claimData['other_insured_employer_school_name'] : '';
     $insured_insurance_plan = $claimData['insured_insurance_plan'];
     $other_insured_insurance_plan = $claimData['other_insured_insurance_plan'];
     $reserved_local_use = !empty($claimData['reserved_local_use']) ? $claimData['reserved_local_use'] : '';
@@ -3404,6 +3401,5 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             SET s_m_eligible_id = '$payerId'
             WHERE patientid = '$patientId'");
     }
-
     return $claimId;
 }

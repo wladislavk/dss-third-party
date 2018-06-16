@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="admin/css/support.css" />
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<link rel="stylesheet" href="admin/css/support.css" />
 
 <?php
   $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
@@ -14,9 +17,6 @@
           left join admin a ON n.creator_id = a.adminid where n.claim_id='".mysqli_real_escape_string($con,(!empty($_GET['claimid']) ? $_GET['claimid'] : ''))."'";
 
   $my = $db->getResults($sql);
-  $total_rec = count($my);
-
-  $num_users = $total_rec
 ?>
 
 <div class="fullwidth">
@@ -26,23 +26,26 @@
   <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?php echo (!empty($_GET['claimid']) ? $_GET['claimid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>');return false;" class="button" style="float:right;">Add Note</a>
   <br /><br />
 
-  <?php if ($my) foreach ($my as $r) { ?>
+  <?php if ($my) {
+      foreach ($my as $r) { ?>
           <div class="response_type_<?php echo  $r['create_type']; ?>" >
-            <?php echo $r['note']; ?>
-            <?php
-            $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysqli_real_escape_string($con,$r['id'])."'";
-            $a_q = mysqli_query($con,$a_sql);
-            while($a=mysqli_fetch_assoc($a_q)){
-              ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php
-            }
-            ?>
-            <div class="sub"><?php echo  $r['creator_name']; ?> on <?php echo  $r['adddate']; ?></div>
-            <?php if($r['create_type'] == '1' && $r['creator_id'] == $_SESSION['userid']) { ?>
-              <br />
-              <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?php echo (!empty($_GET['claimid']) ? $_GET['claimid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&nid=<?php echo $r['id'];?>');return false;" class="button">Edit Note</a>
-      	    <?php } ?>
+              <?php echo $r['note']; ?>
+              <?php
+              $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysqli_real_escape_string($con,$r['id'])."'";
+              $a_q = mysqli_query($con,$a_sql);
+              while($a=mysqli_fetch_assoc($a_q)) { ?>
+                  | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a>
+                  <?php
+                }
+              ?>
+              <div class="sub"><?php echo  $r['creator_name']; ?> on <?php echo  $r['adddate']; ?></div>
+              <?php if($r['create_type'] == '1' && $r['creator_id'] == $_SESSION['userid']) { ?>
+                  <br />
+                  <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?php echo (!empty($_GET['claimid']) ? $_GET['claimid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&nid=<?php echo $r['id'];?>');return false;" class="button">Edit Note</a>
+              <?php } ?>
           </div>
-  <?php } ?>
+      <?php }
+  } ?>
 
   <div style="clear:both;"></div>
 </div>

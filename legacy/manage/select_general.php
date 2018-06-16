@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "admin/includes/main_include.php";
 
-if(!empty($_POST['selsub']) && $_POST['selsub'] == 1)
-{
+if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
 	$t_text = $_POST['general'];
 	?>
 	<script type="text/javascript">
@@ -16,11 +17,9 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1)
 			parent.reloadPerio("<?php echo $t_text; ?>");
 		}
 	</script>
-	<?
+	<?php
 }
-
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -62,7 +61,5 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1)
 			</td>
 		</tr>
 	</table>
-    
-
 </body>
 </html>

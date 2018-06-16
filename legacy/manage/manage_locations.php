@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]))
-{
+if(!empty($_REQUEST["delid"])) {
 	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$db->query($del_sql);
 	
@@ -24,11 +25,12 @@ if(isset($_REQUEST['did'])){
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_locations where docid='".$_SESSION['docid']."' order by location";
 $total_rec = $db->getNumberRows($sql);
@@ -50,7 +52,7 @@ $num_contact = count($my);
 &nbsp;
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_location.php');" class="addButton">
+	<button onclick="loadPopup('add_location.php');" class="addButton">
 		Add New Location
 	</button>
 	&nbsp;&nbsp;
@@ -64,14 +66,14 @@ $num_contact = count($my);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<?php if($total_rec > $rec_disp) {?>
-		<TR bgColor="#ffffff">
-			<TD  align="right" colspan="15" class="bp">
+		<tr bgColor="#ffffff">
+			<td align="right" colspan="15" class="bp">
 				Pages:
 				<?php
-					 paging($no_pages,$index_val,"");
+                paging($no_pages,$index_val,"");
 				?>
-			</TD>
-		</TR>
+			</td>
+		</tr>
 		<?php }?>
 		<tr class="tr_bg_h">
 			<td valign="top" class="col_head" width="60%">
@@ -88,17 +90,11 @@ $num_contact = count($my);
 			</td>
 		</tr>
 		<?php 
-		}
-		else
-		{
+		} else {
 			foreach ($my as $myarray) {
-
-				if(!empty($myarray["status"]) && $myarray["status"] == 1)
-				{
+				if(!empty($myarray["status"]) && $myarray["status"] == 1) {
 					$tr_class = "tr_active";
-				}
-				else
-				{
+				} else {
 					$tr_class = "tr_inactive";
 				}
 			?>
@@ -107,7 +103,7 @@ $num_contact = count($my);
 				<?php echo st($myarray["location"]);?>
 			</td>
 			<td valign="top">
-				<a href="Javascript:;"  onclick="Javascript: loadPopup('add_location.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">
+				<a href="Javascript:;"  onclick="loadPopup('add_location.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">
 					Edit
 				</a>
 				|

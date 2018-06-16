@@ -1,13 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 require_once('includes/constants.inc');
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 
 if(isset($_REQUEST['sort'])){
 	switch($_REQUEST['sort']){
@@ -63,14 +66,14 @@ $my = $db->getResults($sql);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
+            paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
-		</TD>
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
@@ -87,9 +90,7 @@ $my = $db->getResults($sql);
 		</td>
 	</tr>
 	<?php
-	}
-	else
-	{
+	} else {
 		foreach ($my as $myarray) {?>
 	<tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> <?php echo (!empty($myarray['viewed']))?'':'unviewed'; ?>">
 		<td valign="top">

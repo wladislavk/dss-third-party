@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 $s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $myarray = $db->getRow($s_sql);
 if ($myarray) { ?>
@@ -50,7 +52,6 @@ if ($myarray) { ?>
     </tr>
 </table>
 <!--
-        hideshow2section2
         The wrapper div keeps everything in a scrollable area
 -->
 <div id="hideshow2section2" style="width: 100%; margin: 0 auto; display: table;">

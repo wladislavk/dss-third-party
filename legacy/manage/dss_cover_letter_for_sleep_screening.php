@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy;
+
 if($_GET['backoffice'] == '1') {
 	include 'admin/includes/top.htm';
 } else {
@@ -19,8 +20,6 @@ if ($letter_result) {
   $topatient = $letter_result['topatient'];
   $md_list = $letter_result['md_list'];
   $md_referral_list = $letter_result['md_referral_list'];
-  $mds = explode(",", $md_list);
-  $md_referrals = explode(",", $md_referral_list);
 }
 
 // Get Letter Subject
@@ -137,7 +136,6 @@ if ($_POST != array()) {
 	    foreach ($letter_contacts as $key => $contact) {
 			$new_template[$key] = $dupe_template;
 	    }
-		$duplicated = true;
 	}
 	// Reset Letter
 	if (isset($_POST['reset_letter'])) {
@@ -187,7 +185,6 @@ foreach ($letter_contacts as $key => $contact) {
 	    if (count($letter_contacts) == 1) {
 	  		$parent = true;
 	    }
-	    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
@@ -196,7 +193,7 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = str_replace($search, "", $message);	
 			deliver_letter($letterid, $message);
 		} else {
-		    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		    send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
 		if ($parent) {?>
 			<script type="text/javascript">
@@ -224,17 +221,17 @@ foreach ($letter_contacts as $key => $contact) {
 	}?>
 	<?php // loop through letters ?>
 	<div align="right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?php echo $key?>');return false;" >
+		<button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

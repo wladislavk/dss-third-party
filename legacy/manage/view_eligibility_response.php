@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-    include_once('admin/includes/password.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+include_once('admin/includes/password.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -39,7 +41,7 @@
         <section class="coverage-section"></section>
         <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
 
-        <script>
+<script>
     var response = <?php echo $themyarray['response']; ?>;
 </script>
 

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once __DIR__ . '/includes/dual_app.php';
 dualAppRedirect('main/videos');
 

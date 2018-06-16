@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><link href="3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<link href="3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
 
 <script src="3rdParty/novus-nvd3/lib/d3.v3.js"></script>
 
@@ -39,12 +42,8 @@ $(document).ready(function(){
  
  function treatmentCount() {
    var consult = [];
-   var impressions = []
+   var impressions = [];
    <?php
-
-  	$sql1 = "select DATE(generated_date) as letter_date, count(letterid) num_letter FROM dental_letters 
-  		       WHERE generated_date BETWEEN '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."'
-  		       group by letter_date ORDER BY letter_date";
 
     $sql = "select a.Date as treatment_date,
             COALESCE((SELECT count(i.id) 
@@ -83,10 +82,4 @@ $(document).ready(function(){
      }
    ];
  }
-
-
 </script>
-
-
-
-

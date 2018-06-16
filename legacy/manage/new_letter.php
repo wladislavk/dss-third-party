@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
 
 function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_method) {
 	$letterid = '1';
@@ -683,10 +686,10 @@ if (isset($_POST['submit'])) {
   }
 </script>
 <div style="padding-left:25px;">
-	<H1 class="blue">Create New Letter</H1>
+	<h1 class="blue">Create New Letter</h1>
 </div>
-<form name="create_letter" action="/manage/new_letter.php?pid=<?php print $_GET['pid']; ?>" method="post">
-  <input name="patient" type="hidden" value="<?php print $_GET['pid']; ?>" />
+<form name="create_letter" action="/manage/new_letter.php?pid=<?php echo $_GET['pid']; ?>" method="post">
+  <input name="patient" type="hidden" value="<?php echo $_GET['pid']; ?>" />
 	<table style="margin-left:25px; width=100%;">
 		<tr>
 			<td>Select a letter template: <select id="template" name="template">
@@ -716,7 +719,7 @@ if (isset($_POST['submit'])) {
 				while ($row = mysqli_fetch_assoc($result)) {
 					//DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
       					if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
-					  print "<option value=\"" . (($row['template_type']=='custom')?'C':'').$row['id'] . "\">" . (($row['template_type']=='custom')?'C':'').$row['id'] . " - " . $row['name'] . "</option>";
+					  echo "<option value=\"" . (($row['template_type']=='custom')?'C':'').$row['id'] . "\">" . (($row['template_type']=='custom')?'C':'').$row['id'] . " - " . $row['name'] . "</option>";
 					}
 				}
 				?>
@@ -747,7 +750,4 @@ if (isset($_POST['submit'])) {
 		</tr>
 	<table>
 </form>
-
-
-
 <?php include 'includes/bottom.htm'; ?>

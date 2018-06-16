@@ -1,14 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once('admin/includes/main_include.php');
-	include_once('includes/constants.inc');
-	include_once('includes/general_functions.php');
-	include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include_once('includes/constants.inc');
+include_once('includes/general_functions.php');
+include("includes/sescheck.php");
 ?>
 
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 	
 <?php
-	include("includes/calendarinc.php");
+include("includes/calendarinc.php");
 ?>
 
 <html>
@@ -455,6 +457,5 @@
 				}
 	 		}
  		?>
-
 	</body>
 </html>

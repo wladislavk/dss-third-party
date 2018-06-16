@@ -181,7 +181,6 @@ if ($patient_info) { ?>
     $pat_sql = "select * from dental_patients where patientid = '$patientId'";
    
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -257,7 +256,6 @@ if ($patient_info) { ?>
                                     <?php
                                     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                     $epworth_my = $db->getResults($epworth_sql);
-                                    $epworth_number = count($epworth_my);
                                     foreach ($epworth_my as $epworth_myarray) {
                                         if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
                                             $chk = '';

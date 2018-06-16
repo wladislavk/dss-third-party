@@ -104,7 +104,7 @@ if ($patient_info) {
         if ($gag_reflex_arr != '') {
             $gag_reflex_arr = '~'.$gag_reflex_arr;
         }
-				
+
         $nasal_passages_arr = '';
         if (is_array($nasal_passages)) {
             foreach ($nasal_passages as $val) {
@@ -204,7 +204,6 @@ if ($patient_info) {
         $andNullConditional";
 
     $myarray = $db->getRow($sql);
-    $ex_page3id = st($myarray['ex_page3id']);
     $maxilla = st($myarray['maxilla']);
     $other_maxilla = st($myarray['other_maxilla']);
     $mandible = st($myarray['mandible']);

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 if($_GET['backoffice'] == '1') {
 	include 'admin/includes/top.htm';
 } else {
@@ -14,13 +16,11 @@ $letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] 
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = $db->getRow($letter_query);
 if ($letter_result) {
-  $templateid = $letter_result['templateid'];
-  $patientid = $letter_result['patientid'];
-  $topatient = $letter_result['topatient'];
-  $md_list = $letter_result['md_list'];
-  $md_referral_list = $letter_result['md_referral_list'];
-  $mds = explode(",", $md_list);
-  $md_referrals = explode(",", $md_referral_list);
+    $templateid = $letter_result['templateid'];
+    $patientid = $letter_result['patientid'];
+    $topatient = $letter_result['topatient'];
+    $md_list = $letter_result['md_list'];
+    $md_referral_list = $letter_result['md_referral_list'];
 }
 
 // Pending and Sent Contacts
@@ -72,7 +72,6 @@ $history = $q3_myarray['history'];
 $medications = $q3_myarray['medications'];
 
 $history_arr = explode('~',$history);
-$history_arr = explode('~',$history);
 $history_disp = '';
 foreach($history_arr as $val){
 	if(trim($val) <> ""){
@@ -116,7 +115,6 @@ foreach($medications_arr as $key => $val){
 
 $q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, place FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_myarray = $db->getRow($q2_sql);
-$sleep_study_date = st($q2_myarray['date']);
 $diagnosis = st($q2_myarray['diagnosis']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
@@ -321,7 +319,6 @@ if ($_POST != array()) {
 		foreach ($letter_contacts as $key => $contact) {
 			$new_template[$key] = $dupe_template;
 		}
-		$duplicated = true;
 	}
 	// Reset Letter
 	if (isset($_POST['reset_letter'])) {
@@ -445,7 +442,7 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = str_replace($search, "", $message);	
 			deliver_letter($letterid, $message);
 		} else {
-			$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+			send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
 		if ($parent) {?>
 			<script type="text/javascript">

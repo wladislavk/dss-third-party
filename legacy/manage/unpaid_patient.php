@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-if(!isset($_GET['print'])){
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if (!isset($_GET['print'])) {
 	include "includes/top.htm";
-}else{
+} else {
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 	include_once('includes/constants.inc');
@@ -14,12 +16,11 @@ if(!isset($_GET['print'])){
 
 $rec_disp = 200;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 
 $docId = intval($_SESSION['docid']);
 $dbType = mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ);
@@ -56,7 +57,7 @@ $num_users = count($my);
    (<i><?php echo date('m/d/Y'); ?></i>)
 </span>
 <div align="right">
-	<button onclick="Javascript:window.location='ledger_reportfull.php';" class="addButton">
+	<button onclick="window.location='ledger_reportfull.php';" class="addButton">
        Daily Ledger
     </button>
     &nbsp;&nbsp;
@@ -76,12 +77,12 @@ $num_users = count($my);
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php paging($no_pages,$index_val,""); ?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head">
@@ -115,7 +116,7 @@ $num_users = count($my);
 			Pt. Balance	
 		</td>
 	</tr>
-	<?php if($num_users == 0){ ?>
+	<?php if ($num_users == 0) { ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="10" align="center">
 			No Records
@@ -123,14 +124,14 @@ $num_users = count($my);
 	</tr>
 	<?php 
 	} else {
-		$tot_charges = 0;
-		$tot_credit = 0;
-		$tot_adjusted = 0;
-		$charges_cur = 0;
-		$charges_30 = 0;
-		$charges_60 = 0;
-		$charges_90 = 0;
-    $charges_120 = 0;
+        $tot_charges = 0;
+        $tot_credit = 0;
+        $tot_adjusted = 0;
+        $charges_cur = 0;
+        $charges_30 = 0;
+        $charges_60 = 0;
+        $charges_90 = 0;
+        $charges_120 = 0;
 
     if (count($my)) {
       foreach ($my as $myarray) {
@@ -144,11 +145,7 @@ $num_users = count($my);
        . "GROUP BY dl.patientid";
         $pay_r = $db->getRow($pay_sql);
   $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
-  if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
-    $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-    $pat_my = mysqli_query($con, $pat_sql);
-    $pat_myarray = mysqli_fetch_array($pat_my);
-
+  if (round($myarray['amount'], 2) != round($paid_amount + $myarray['adjusted_amount'], 2)) {
     $pat_credits_total = $paid_amount+$myarray['adjusted_amount'];
 
     $seg_sql = "SELECT "
@@ -220,7 +217,6 @@ $num_users = count($my);
     $pat_120_owed = $seq_r['amount'];
 
     $pat_credits = $pat_credits_total;
-    $pat_120 = $pat_120_owed;
     $pat_90 = $pat_90_owed;
     $pat_60 = $pat_60_owed;
     $pat_30 = $pat_30_owed;
@@ -275,17 +271,6 @@ $num_users = count($my);
     $charges_90 += $pat_90;
     $charges_120 += $pat_120;
 
-
-        $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-        
-        if($myarray["status"] == 1)
-        {
-          $tr_class = "tr_active";
-        }
-        else
-        {
-          $tr_class = "tr_inactive";
-        }
         $tr_class = "tr_active";
       ?>
         <tr class="<?=$tr_class;?>">
@@ -322,11 +307,10 @@ $num_users = count($my);
             echo "$".number_format($myarray["amount"],2);
       $tot_charges += $myarray["amount"];
             ?>
-
             &nbsp;
           </td>
           <td align="right">
-            <? if(st($paid_amount) <> 0) {?>
+            <? if(st($paid_amount) != 0) {?>
                       <?=number_format(st($paid_amount),2);?>
             <? 
               $tot_credit += st($paid_amount);
@@ -352,16 +336,12 @@ $num_users = count($my);
     <?  } }
     }
    }
-  ?> 
-    
+  ?>
     <tr>
       <td valign="top" align="left">
         <b>Totals</b>
       </td>
                         <td valign="top" align="left">
-
-
-
                                 <b>
                                 <?php echo "$".number_format($charges_cur,2); ?>
                                 &nbsp;
@@ -374,9 +354,6 @@ $num_users = count($my);
                                 </b>
                         </td>
                         <td valign="top" align="left">
-
-
-
                                 <b>
                                 <?php echo "$".number_format($charges_60,2); ?>
                                 &nbsp;
@@ -395,9 +372,6 @@ $num_users = count($my);
                                 </b>
                         </td>
       <td valign="top" align="right">
-      
-                    
-                    
         <b>
 				<?php echo "$".number_format($tot_charges,2); ?>
 				&nbsp;
@@ -441,6 +415,6 @@ $num_users = count($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<?php if(!isset($_GET['print'])){
+<?php if (!isset($_GET['print'])) {
 	include "includes/bottom.htm";
 } ?>

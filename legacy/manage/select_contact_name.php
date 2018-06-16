@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
+
+$db = new Db();
 
 	$rec_disp = 40;
 
@@ -108,10 +112,8 @@
 							?>
 						</table>
 					</form>
-
 					<script type="text/javascript" src="/manage/js/select_contact_name.js"></script>
-
-					<br /><br />	
+					<br /><br />
 				</td>
 			</tr>
 		</table>

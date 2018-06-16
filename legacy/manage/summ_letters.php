@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'includes/patient_info.php';
 include_once 'admin/includes/general.htm';
 ?>
@@ -107,7 +109,6 @@ if (isset($patient_info) && $patient_info) {
 
     $page = '0';
     $page_limit = '10';
-    $column = 'letterid';
     $filter = "%";
 
     if (isset($_GET['filter'])) {
@@ -231,10 +232,6 @@ if (isset($patient_info) && $patient_info) {
     	    if ($letter['templateid'] == 99) {
     		    $dental_letters[$key]['subject'] = "User Generated";
     	    }
-    	    // Get Recipients for Sent to Column
-            if (isset($referredSources[$letter['patientid']])) {
-                $source = $referredSources[$letter['patientid']];
-            }
     	    $contacts = get_contact_info(
                 (($letter['topatient'] == "1") ? $letter['patientid'] : ''),
                 $letter['md_list'],
@@ -475,7 +472,6 @@ if (isset($patient_info) && $patient_info) {
         $i = $page_limit * $page1;
         $end = $i + $page_limit;
         while ($i < count($pending_letters) && $i < $end) {
-            $userid = $pending_letters[$i]['userid'];
             $url = $pending_letters[$i]['url'];
             $id = $pending_letters[$i]['id'];
             $subject = $pending_letters[$i]['subject'];
@@ -574,9 +570,7 @@ if (isset($patient_info) && $patient_info) {
                 $id = $sent_letters[$i]['id'];
                 $mailed = $sent_letters[$i]['mailed'];
                 $alert = null;
-                if (!empty($sent_letters[$i]['old'])) {
-                    $alert = " bgcolor=\"#FF9696\"";
-                } ?>
+                ?>
                 <tr>
                     <td><?= $userid ?></td>
                     <td><a href="<?= $url ?>"><?= $subject ?></a></td>

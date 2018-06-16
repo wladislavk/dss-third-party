@@ -6,7 +6,7 @@
 <br />
 <br />
 
-<form name="patientreportfrm" action="patient_report_res.php" method="post" onsubmit="Javascript: return patientreportabc(this);">
+<form name="patientreportfrm" action="patient_report_res.php" method="post" onsubmit="return patientreportabc(this);">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td valign="top" class="frmhead" width="20%">
@@ -109,4 +109,4 @@
 </table>
 </form>
 
-<?php  include 'includes/bottom.htm';?>
+<?php include 'includes/bottom.htm';?>

@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include 'admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'admin/includes/main_include.php';
 
 	if($_SESSION['userid'] == '') {
 ?>

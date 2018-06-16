@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include 'admin/includes/main_include.php';
-	include 'includes/sescheck.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'admin/includes/main_include.php';
+include 'includes/sescheck.php';
 
 	$username = $_SESSION['username'];
 	$key = sha1(rand().'*&Tuvt7X'.$_SESSION['username'].rand());

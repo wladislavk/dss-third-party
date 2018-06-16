@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php
+namespace Ds3\Libraries\Legacy;
 
 	# This line will stream the file to the user rather than spray it across the screen
 	header("Content-type: application/octet-stream");
@@ -29,8 +30,7 @@
 
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
-	$a_arr = explode('
-	',$referring_physician);
+	$a_arr = explode(' ',$referring_physician);
 
 	if(st($pat_myarray['dob']) <> '' ) {
 		$dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
@@ -45,6 +45,8 @@
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
 	$medications = st($q3_myarray['medications']);
+    $confirmed_diagnosis = st($q3_myarray['confirmed_diagnosis']);
+    $custom_diagnosis = st($q3_myarray['custom_diagnosis']);
 	$history_arr = explode('~',$history);
 	$history_disp = '';
 	foreach($history_arr as $val) {
@@ -76,25 +78,19 @@
 	$q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
-	$polysomnographic = st($q2_myarray['polysomnographic']);
-	$sleep_center_name = st($q2_myarray['sleep_center_name']);
 	$sleep_study_on = st($q2_myarray['sleep_study_on']);
-	$confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
 	$rdi = st($q2_myarray['rdi']);
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['type_study']);
-	$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
 	$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
 
 	$sum_myarray = $db->getRow($sum_sql);
 	$sti_o2_1 = st($sum_myarray['sti_o2_1']);
 	if(st($pat_myarray['gender']) == 'Female') {
-		$h_h =  "her";
 		$s_h =  "she";
 		$h_h1 =  "her";
 		$m_m = "Mrs.";
 	} else {
-		$h_h =  "his";
 		$s_h =  "he";
 		$h_h1 =  "him";
 		$m_m = "Mr.";
@@ -133,8 +129,8 @@
 				</strong> year old <strong>
 				<?php echo $pat_myarray['gender']?>
 				</strong> who was diagnosed with <strong>
-				<?php echo confirmed_diagnosis;?> 
-				<?php echo custom_diagnosis;?>
+				<?php echo $confirmed_diagnosis;?>
+				<?php echo $custom_diagnosis;?>
 				</strong> after undergoing <strong>
 				<?php echo $type_study;?>
 				</strong> on <strong>

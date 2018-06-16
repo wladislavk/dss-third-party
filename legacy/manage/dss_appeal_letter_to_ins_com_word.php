@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 	# This line will stream the file to the user rather than spray it across the screen
 	header("Content-type: application/octet-stream");
 

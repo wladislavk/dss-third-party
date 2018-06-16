@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
-<?php include 'includes/top.htm'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
+?>
 <br />
 <span class="admin_head">Ledger</span>
 <br /><br />
@@ -69,7 +72,6 @@ if (isset($_GET['pid'])) { ?>
         </tr>
     </table>
 </form>
-
 <form name="weeklyfrm" action="ledger_report.php<?= (isset($_GET['pid'])) ? "?pid=".$_GET['pid'] : ''; ?>" method="get">
     <?php
     if (isset($_GET['pid'])) { ?>

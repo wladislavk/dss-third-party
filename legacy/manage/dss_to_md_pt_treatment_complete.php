@@ -21,8 +21,6 @@ if ($letter_result) {
         $topatient = $row['topatient'];
         $md_list = $row['md_list'];
         $md_referral_list = $row['md_referral_list'];
-        $mds = explode(",", $md_list);
-        $md_referrals = explode(",", $md_referral_list);
     }
 }
 
@@ -32,12 +30,14 @@ $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where let
 $othermd_result = $db->getResults($othermd_query);
 $md_array = [];
 $md_referral_array = [];
-if ($othermd_result) foreach ($othermd_result as $row) {
-    if ($row['md_list'] != null) {
-        $md_array = array_merge($md_array, explode(",", $row['md_list']));
-    }
-    if ($row['md_referral_list'] != null) {
-        $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+if ($othermd_result) {
+    foreach ($othermd_result as $row) {
+        if ($row['md_list'] != null) {
+            $md_array = array_merge($md_array, explode(",", $row['md_list']));
+        }
+        if ($row['md_referral_list'] != null) {
+            $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+        }
     }
 }
 $full_md_list = implode(",", $md_array);
@@ -80,7 +80,6 @@ $q3_sql = "SELECT history, medications from dental_q_page3_pivot WHERE patientid
 $q3_myarray = $db->getRow($q3_sql);
 $history = $q3_myarray['history'];
 $medications = $q3_myarray['medications'];
-$history_arr = explode('~',$history);
 $history_arr = explode('~',$history);
 $history_disp = '';
 foreach ($history_arr as $val) {
@@ -126,12 +125,10 @@ $q1_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, plac
 
 $q1_myarray = $db->getRow($q1_sql);
 $first_study_date = st($q1_myarray['date']);
-$first_diagnosis = st($q1_myarray['diagnosis']);
 $first_ahi = st($q1_myarray['ahi']);
 $first_rdi = st($q1_myarray['rdi']);
 $first_o2sat90 = st($q1_myarray['t9002']);
 $first_o2nadir = st($q1_myarray['o2nadir']);
-$first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 $q2_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 	
 $q2_myarray = $db->getRow($q2_sql);
@@ -445,7 +442,6 @@ $template = "<p>%todays_date%</p>
             foreach ($letter_contacts as $key => $contact) {
               $new_template[$key] = $dupe_template;
             }
-            $duplicated = true;
         }
         // Reset Letter
         if (isset($_POST['reset_letter'])) {
@@ -590,7 +586,7 @@ $template = "<p>%todays_date%</p>
                 $message = str_replace($search, "", $message);
                 deliver_letter($letterid, $message);
             } else {
-                $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+                send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
             }
 
             if ($parent) { ?>

@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
@@ -33,11 +35,11 @@
 <br /><br>
 
 <div align="right">
-	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="window.open('dss_appeal_letter_to_ins_com_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 		Print Letter 
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="window.open('dss_appeal_letter_to_ins_com_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 		Word Document
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
@@ -77,6 +79,5 @@
 		</td>
 	</tr>
 </table>
-
 
 <?php include 'includes/bottom.htm';?>

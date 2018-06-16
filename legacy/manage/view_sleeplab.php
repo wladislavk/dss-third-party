@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once "admin/includes/general.htm";
@@ -14,7 +16,7 @@ include_once "admin/includes/general.htm";
 	<script type="text/javascript" src="script/validation.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="js/masks.js"></script>
-<link rel="stylesheet" href="css/form.css" type="text/css" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" />
 </head>
 <body>
 
@@ -30,7 +32,6 @@ $firstname = st($themyarray['firstname']);
 $middlename = st($themyarray['middlename']);
 $lastname = st($themyarray['lastname']);
 $company = st($themyarray['company']);
-$contacttype = st((!empty($themyarray['contacttype']) ? $themyarray['contacttype'] : ''));
 $add1 = st($themyarray['add1']);
 $add2 = st($themyarray['add2']);
 $city = st($themyarray['city']);
@@ -40,17 +41,7 @@ $phone1 = st($themyarray['phone1']);
 $phone2 = st($themyarray['phone2']);
 $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
-$national_provider_id = st((!empty($themyarray['national_provider_id']) ? $themyarray['national_provider_id'] : ''));
-$qualifier = st((!empty($themyarray['qualifier']) ? $themyarray['qualifier'] : ''));
-$qualifierid = st((!empty($themyarray['qualifierid']) ? $themyarray['qualifierid'] : ''));
-$greeting = st($themyarray['greeting']);
-$sincerely = st($themyarray['sincerely']);
-$contacttypeid = st((!empty($themyarray['contacttypeid']) ? $themyarray['contacttypeid'] : ''));
 $notes = st($themyarray['notes']);
-$preferredcontact = st((!empty($themyarray['preferredcontact']) ? $themyarray['preferredcontact'] : ''));
-$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-$status = st($themyarray['status']);
-
 ?>
 
 <link rel="stylesheet" href="css/quick_view.css" type="text/css" media="screen" />

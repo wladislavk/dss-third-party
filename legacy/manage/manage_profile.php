@@ -6,6 +6,8 @@ set_time_limit(0);
 include "includes/top.htm";
 include_once "admin/includes/form_updates.php";
 
+$db = new Db();
+
 if(isset($_POST["profile_submit"])) {
 
     $sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_SESSION['userid'])."'";
@@ -38,7 +40,7 @@ if(isset($_POST["profile_submit"])) {
       ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
       practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
       first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
-            last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
+      last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
       name='".mysqli_real_escape_string($con,$_POST['first_name'])." ".mysqli_real_escape_string($con,$_POST['last_name'])."',
       email='".mysqli_real_escape_string($con,$_POST['email'])."',
       address='".mysqli_real_escape_string($con,$_POST['address'])."',
@@ -59,8 +61,7 @@ if(isset($_POST["profile_submit"])) {
     }
 }
 
-if(isset($_POST["practice_submit"]))
-{
+if(isset($_POST["practice_submit"])) {
     $in_sql = "UPDATE dental_users SET
       username='".mysqli_real_escape_string($con,$_POST['username'])."',
       npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
@@ -351,7 +352,7 @@ Aliquam aliquam eleifend vestibulum. Curabitur vitae feugiat dui. Vivamus interd
     }
 }
 
-if(isset($_POST["margins_reset"])) {
+if (isset($_POST["margins_reset"])) {
     $in_sql = "UPDATE dental_users SET
       letter_margin_header = '48',
       letter_margin_footer = '26',
@@ -363,23 +364,6 @@ if(isset($_POST["margins_reset"])) {
 
     $db->query($in_sql);
 }
-
-$rec_disp = 20;
-
-if(!empty($_REQUEST["page"])) {
-    $index_val = $_REQUEST["page"];
-} else {
-    $index_val = 0;
-}
-
-$i_val = $index_val * $rec_disp;
-$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by title";
-
-$total_rec = $db->getNumberRows($sql);
-$no_pages = $total_rec/$rec_disp;
-
-$sql .= " limit ".$i_val.",".$rec_disp;
-$num_custom = $db->getNumberRows($sql);
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -411,21 +395,20 @@ $num_custom = $db->getNumberRows($sql);
 </style>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <script>
-  $(document).ready(function(){
-    var $templates = $('img.letter-template');
+    $(document).ready(function () {
+        var $templates = $('img.letter-template');
 
-    $templates.click(function(){
-      var $this = $(this);
-
-      $templates.removeClass('selected');
-      $this.addClass('selected');
+        $templates.click(function () {
+            var $this = $(this);
+            $templates.removeClass('selected');
+            $this.addClass('selected');
+        });
     });
-  });
 </script>
 
 <span class="admin_head">
     Manage Profile
-  </span>
+</span>
 <br />
 <br />
 &nbsp;
@@ -440,7 +423,6 @@ $u_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($
 
 $user = $db->getRow($u_sql);
 
-$p_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $p_sql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
                   LEFT JOIN dental_user_company c ON u.userid = c.userid
                   LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
@@ -541,7 +523,7 @@ $practice = $db->getRow($p_sql);
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
     $r = $db->getRow($sql);
-    if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1){
+    if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
         $check_profile_value = 1;
     } else {
         $check_profile_value = 0;
@@ -902,11 +884,3 @@ $practice = $db->getRow($p_sql);
 
     <br /><br />
     <?php include "includes/bottom.htm";?>
-
-
-    <script type="text/javascript">
-
-
-
-    </script>
-

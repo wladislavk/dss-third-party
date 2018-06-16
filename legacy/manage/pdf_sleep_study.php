@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
@@ -6,9 +8,6 @@ if(isset($_FILES['pdf_file'])){
     $pdf = $_FILES['pdf_file']['tmp_name'];
     exec('pdftotext '.$pdf. ' -', $out); 
     $out = implode($out, ' ');
-    if (preg_match_all('/DIAGNOSIS\s+([^;]+)/m', $out, $matches)) {
-        $diagnosis = $matches[1][0];
-    }
 
     if (preg_match_all('/DIAG_PHYS:\s+([^;]+)/m', $out, $matches)) {
         $diagnosing_doc = $matches[1][0];
@@ -50,7 +49,7 @@ if(isset($_FILES['pdf_file'])){
         $banner1 = str_replace("&","amp",$banner1);
         $banner1 .= ".".$extension;
 
-        $uploaded = uploadImage($_FILES['pdf_file'], "../../../shared/q_file/".$banner1);
+        uploadImage($_FILES['pdf_file'], "../../../shared/q_file/".$banner1);
     } else {
         $banner1 = '';
     }

@@ -1,11 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 	if($pat_myarray['patientid'] == '') {
 ?>
 		<script type="text/javascript">
@@ -21,25 +22,7 @@
 	$referring_physician = st($ref_myarray['referring_physician']);
 	$a_arr = explode('
 	',$referring_physician);
-	if(st($pat_myarray['dob']) <> '' ) {
-		$dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
-		$cur_y = date('Y');
-		$age = $cur_y - $dob_y;
-	} else {
-		$age = 'N/A';
-	}
 
-	if(st($pat_myarray['gender']) == 'Female') {
-		$h_h =  "Her";
-		$s_h =  "She";
-		$h_h1 =  "her";
-		$m_s = "Mrs.";
-	} else {
-		$h_h =  "His";
-		$s_h =  "He";
-		$h_h1 =  "him";
-		$m_s = "Mr.";
-	}
 ?>
 	<br />
 	<span class="admin_head">
@@ -52,11 +35,11 @@
 	<br /><br>
 
 	<div align="right">
-		<button class="addButton" onclick="Javascript: window.open('dss_request_lomn_and_rx_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_request_lomn_and_rx_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_request_lomn_and_rx_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="window.open('dss_request_lomn_and_rx_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

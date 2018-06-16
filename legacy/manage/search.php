@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
+?>
 
     <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
     <script src="admin/popup/popup2.js?v=20170326" type="text/javascript"></script>
@@ -74,11 +78,6 @@
                 trigger_error("Exit called", E_USER_ERROR);
             }
 
-            $sql = "select * from dental_patients where docid='".$_SESSION['docid']."'";
-            if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
-	           $sql .= " and status = 1";
-            }
-            $sql .= " order by lastname, firstname";
             $query = "select * from dental_patients where docid='".$_SESSION['docid']."' AND lastname like \"%$trimmed%\" order by lastname,firstname";
 
             $numrows = $db->getNumberRows($query);
@@ -113,15 +112,12 @@
                 $count++ ;
             }
 
-            $currPage = (($s/$limit) + 1);
-
-            //break before paging
             echo "<br />";
 
             // next we need to do the links to other results
             if ($s >= 1) { // bypass PREV link if s is 0
                 $prevs = ($s-$limit);
-                print "<div style=\"padding-left:40px;\">&nbsp;<a href=\"" . (isset($PHP_SELF) ? $PHP_SELF : '') . "?s=$prevs&q=$var\">&lt;&lt; 
+                echo "<div style=\"padding-left:40px;\">&nbsp;<a href=\"" . (isset($PHP_SELF) ? $PHP_SELF : '') . "?s=$prevs&q=$var\">&lt;&lt; 
                 Prev 10</a>&nbsp&nbsp;</div>";
             }
 

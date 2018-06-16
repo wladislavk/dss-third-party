@@ -1,9 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	if($_GET['backoffice'] == '1') {
-		include 'admin/includes/top.htm';
-	} else {
-		include 'includes/top.htm';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm';
+} else {
+    include 'includes/top.htm';
+}
 ?>
 	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
@@ -19,8 +21,6 @@
 		$topatient = $row['topatient'];
 		$md_list = $row['md_list'];
 		$md_referral_list = $row['md_referral_list'];
-		$mds = explode(",", $md_list);
-		$md_referrals = explode(",", $md_referral_list);
 	}
 	// Pending and Sent Contacts
 	$othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
@@ -75,7 +75,6 @@
 	$history = $q3_myarray['history'];
 	$medications = $q3_myarray['medications'];
 	$history_arr = explode('~',$history);
-	$history_arr = explode('~',$history);
 	$history_disp = '';
 	foreach($history_arr as $val) {
 		if(trim($val) <> "") {
@@ -118,7 +117,6 @@
 	$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, place FROM dental_summ_sleeplab WHERE patiendid='".(!empty($patientid) ? $patientid : '')."' ORDER BY id DESC LIMIT 1;";
 	
 	$q2_myarray = $db->getRow($q2_sql);
-	$sleep_study_date = st($q2_myarray['date']);
 	$diagnosis = st($q2_myarray['diagnosis']);
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
@@ -295,7 +293,6 @@
 				foreach ($letter_contacts as $key => $contact) {
 				  $new_template[$key] = $dupe_template;
 				}
-				$duplicated = true;
 			}
 			// Reset Letter
 			if (isset($_POST['reset_letter'])) {
@@ -397,7 +394,7 @@
 					$message = str_replace($search, "", $message);	
 					deliver_letter($letterid, $message);
 				} else {
-			    	$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+			    	send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 				}
 				if ($parent) {
 ?>

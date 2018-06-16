@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 if($_GET['backoffice'] == '1') {
 	include 'admin/includes/top.htm';
 } else {
@@ -154,7 +156,6 @@ if ($_POST != array()) {
 		foreach ($letter_contacts as $key => $contact) {
 			$new_template[$key] = $dupe_template;
 		}
-		$duplicated = true;
 	}
 	// Reset Letter
 	if (isset($_POST['reset_letter'])) {
@@ -202,7 +203,6 @@ foreach ($letter_contacts as $key => $contact) {
 		if (count($letter_contacts) == 1) {
 			$parent = true;
 		}
-		$letterid = $letterid;
 		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {

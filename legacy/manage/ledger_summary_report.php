@@ -119,8 +119,6 @@ array_walk($creditNamedItems, function (&$item) {
 });
 
 /**
- * @see DSS-246
- *
  * Merge credit arrays, "type" items precede named items
  */
 $creditItems = [];

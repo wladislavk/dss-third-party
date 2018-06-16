@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 include_once 'includes/help_functions.php';
@@ -13,9 +15,6 @@ if(!empty($_REQUEST["delid"]))
   	$logins = $db->getNumberRows($l_sql);
 
 	if($logins == 0){
-		$u_sql = "SELECT username FROM dental_users where userid='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
-		$u_q = mysqli_query($con, $u_sql);
-		$user = mysqli_fetch_assoc($u_q);
 		edx_user_delete($_REQUEST['delid'], $edx_con);
 		$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	}else{
@@ -34,11 +33,12 @@ if(!empty($_REQUEST["delid"]))
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_users where user_access=1 and docid='".$_SESSION['docid']."' order by username";
 $total_rec = $db->getNumberRows($sql);
@@ -63,7 +63,7 @@ $num_users = count($my);
 
 if ($isMainAccount || $isStaff) { ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_staff.php');" class="addButton">
+	<button onclick="loadPopup('add_staff.php');" class="addButton">
 		Add New Staff
 	</button>
 	&nbsp;&nbsp;
@@ -136,7 +136,7 @@ if ($isMainAccount || $isStaff) { ?>
 		<?php
 
 		if ($isMainAccount || $isStaff || ($_SESSION['userid'] == $myarray['userid'])) { ?>
-			<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?php echo $myarray["userid"];?>');" class="editlink" title="EDIT">
+			<a href="Javascript:;"  onclick="loadPopup('add_staff.php?ed=<?php echo $myarray["userid"];?>');" class="editlink" title="EDIT">
 				Edit 
 			</a>
 		<?php } ?>
@@ -146,7 +146,6 @@ if ($isMainAccount || $isStaff) { ?>
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>

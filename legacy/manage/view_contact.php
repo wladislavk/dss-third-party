@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once "admin/includes/general.htm";
@@ -23,14 +25,6 @@ include_once "admin/includes/general.htm";
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-$psql = "select * from dental_contacttype WHERE physician=1";
-$pq = $db->getResults($psql);
-$physician_array = array();
-if ($pq) foreach ($pq as $pr) {
-  array_push($physician_array, $pr['contacttypeid']);
-}
-$physician_types = implode(',', $physician_array);
-
 $thesql = "select c.*, ct.contacttype from dental_contact c 
 			LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
 			where c.contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
@@ -51,16 +45,7 @@ $phone1 = st($themyarray['phone1']);
 $phone2 = st($themyarray['phone2']);
 $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
-$national_provider_id = st($themyarray['national_provider_id']);
-$qualifier = st($themyarray['qualifier']);
-$qualifierid = st($themyarray['qualifierid']);
-$greeting = st($themyarray['greeting']);
-$sincerely = st($themyarray['sincerely']);
-$contacttypeid = st($themyarray['contacttypeid']);
 $notes = st($themyarray['notes']);
-$preferredcontact = st($themyarray['preferredcontact']);
-$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-$status = st($themyarray['status']);
 ?>
 
 <link rel="stylesheet" href="css/quick_view.css" type="text/css" media="screen" />

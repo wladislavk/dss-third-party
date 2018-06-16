@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 if(!empty($_GET['rx']) && $_GET['rx']==1){?>
 
 <div id="loader" style="position:absolute;width:100%; height:98%;">
@@ -94,15 +96,12 @@ if(!$flow){
 <div style="width:48%; float:left;">
 
 <?php 
-//include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
 require_once('includes/patient_info.php');
 ?>
-
 <link rel="stylesheet" href="css/vob.css" />
-
 <?php
 if ($patient_info) {
 
@@ -393,7 +392,7 @@ $api_r = $db->getRow($api_sql);
 
 
 } else {  // end pt info check
-  print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+  echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
 ?>
 

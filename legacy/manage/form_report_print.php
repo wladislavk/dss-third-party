@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
 
 	$rec_disp = 200;
 	if(!empty($_REQUEST["page"])) {
@@ -98,16 +100,10 @@
 					<?php
 						} else {
 							foreach ($my as $myarray) {
-								$name = st(!empty($myarray['lastname']) ? $myarray['lastname'] : '') . " " . st(!empty($myarray['middlename']) ? $myarray['middlename'] : '') . " " . st(!empty($myarray['firstname']) ? $myarray['firstname'] : '');
 								$patient_sql = "select * from dental_patients where patientid='" . $myarray['patientid'] . "'";
 								
 								$patient_myarray = $db->getRow($patient_sql);
 								$pat_name = st($patient_myarray['lastname']) . " " . st($patient_myarray['middlename']) . " " . st($patient_myarray['firstname']);
-								if(!empty($myarray["status"]) && $myarray["status"] == 1) {
-									$tr_class = "tr_active";
-								} else {
-									$tr_class = "tr_inactive";
-								}
 								$tr_class = "tr_active";
 					?>
 								<tr class="<?php echo $tr_class;?>">

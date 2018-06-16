@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once('includes/constants.inc');
-  include_once('admin/includes/main_include.php');
-  include_once('admin/includes/invoice_functions.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('includes/constants.inc');
+include_once('admin/includes/main_include.php');
+include_once('admin/includes/invoice_functions.php');
 
   $file = (!empty($_GET['f']) ? $_GET['f'] : '');
   // this is where you'd do any custom handling of the data
@@ -35,13 +37,14 @@
     /**
      * "Remembers" the template id of the imported page
      */
-    var $_tplIdx;
-    var $_template;
+    public $_tplIdx;
+    public $_template;
     
     /**
      * include a background template for every page
      */
-    function Header() {
+    function Header()
+    {
       $db = new Db();
 
       if (is_null($this->_tplIdx)) {
@@ -62,14 +65,17 @@
         $claim_margin_left = $d_r['claim_margin_left'];
         $claim_margin_top = $d_r['claim_margin_top'];
       }else{
-        $claim_margin_left = 0;
+        $claim_margin_top = 0;
         $claim_margin_left = 0;
       }
 
       $this->useTemplate($this->_tplIdx, $claim_margin_left, $claim_margin_top);
     }
     
-    function Footer() {}
+    function Footer()
+    {
+        // nothing here
+    }
   }
 
   // initiate PDF
@@ -83,4 +89,3 @@
   $pdf->AddPage();
 
   $pdf->Output('insurance_claim.pdf', 'D');
-?>

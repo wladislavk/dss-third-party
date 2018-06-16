@@ -1,23 +1,24 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 set_time_limit(300);
 session_start();
 
 // It will be called downloaded.pdf
 require_once('3rdParty/tcpdf/config/lang/eng.php');
 require_once('3rdParty/tcpdf/tcpdf.php');
-
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/dental_patient_summary.php');
 include_once 'includes/constants.inc';
+
 $docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 $docq = mysqli_query($con, $docsql);
 $docr = mysqli_fetch_assoc($docq); 
 
-
 //START PDF
 $title = "test";
-                $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -91,15 +92,6 @@ $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my); 
 
 $name = st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-
-$rec_disp = 200;
-
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
 
 $sql = "select 
                 'ledger',
@@ -213,8 +205,7 @@ $sql = "select
 ";
 
 
-$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 
 $html = '';
 
@@ -252,25 +243,14 @@ $html .=' <table width="98%">
 	else
 	{
 		$cur_bal = $cur_cha = $cur_pay = 0;
-		$last_sd = '';
-		$last_ed = '';
 		while($myarray = mysqli_fetch_array($my))
 		{
-			if($myarray["status"] == 1)
-			{
-				$tr_class = "tr_active";
-			}
-			else
-			{
-				$tr_class = "tr_inactive";
-			}
 			$tr_class = "tr_active";
                         if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row'; }
 			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
 			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }
 			$html .= '<tr class="'.$tr_class.' '. $myarray[0].'">';
 				$html .= '<td valign="top">';
-						$last_sd = $myarray["service_date"];
        					      	$html .= date('m-d-Y',strtotime(st($myarray["service_date"])));
 				$html .= '</td>
 				<td valign="top">';
@@ -311,8 +291,6 @@ $html .=' <table width="98%">
 			</tr>';
 	 	}
 	}
-
-
 $html .= '<tr>
 	<td colspan="5" align="right">Balance Due</td>
 	<td colspan="2" align="right">'.number_format(st($cur_bal),2).'</td></tr>';
@@ -365,41 +343,34 @@ $head .= '<br />
 </table>';
 $head .= '</td></tr></table>';
 $html = $head.$html;
-
         // add new page for each user
         $pdf->AddPage();
-
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 }
 }
-
-
 //finish pdf
 	$filename = '/manage/letterpdfs/unpaid_statement_'.date('YmdHis').'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 
 ?>
 <script type="text/javascript">
-  window.location = "<?= $filename; ?>";
+    window.location = "<?= $filename; ?>";
 </script>
 <script type="text/javascript">
-function concat_checked(ids){
-var s = '';
-var first = true;
-for(var i = 0; i < ids.length; i++){
-if(ids[i].checked) {
-if(first){
-first=false;
-}else{
-s+=',';
-}
-s += ids[i].value;
-}
-}
-return s;
-}
-
+    function concat_checked(ids) {
+        var s = '';
+        var first = true;
+        for (var i = 0; i < ids.length; i++) {
+            if (ids[i].checked) {
+                if (first) {
+                    first = false;
+                } else {
+                    s += ',';
+                }
+                s += ids[i].value;
+            }
+        }
+        return s;
+    }
 </script>
-
-

@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
 
     if(!$use_letters){
 ?>
@@ -124,7 +126,6 @@
 
         $page = '0';
         $page_limit = '10';
-        $column = 'letterid';
         $filter = "%";
 
         if (isset($_GET['filter'])) {
@@ -154,7 +155,7 @@
         
         $letters_res = $db->getResults($letters_query);
         if (!$letters_res) {
-        	print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting letters from the database.";
+        	echo "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting letters from the database.";
         } else {
         	foreach ($letters_res as $row) {
         		$dental_letters[] = $row;
@@ -165,7 +166,6 @@
             // Get Correspondence Column
         	$template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
         	
-        	$correspondence = array();
         	$correspondence = $db->getRow($template_sql);
         	$dental_letters[$key]['id'] = $letter['letterid'];
             $dental_letters[$key]['status'] == $letter['status'];
@@ -190,26 +190,28 @@
 			               WHERE status=0 AND deleted=0 AND parentid='".$letter['letterid']."'";
 	        
             $master_q = $db->getResults($master_sql);
-	        if ($master_q) foreach ($master_q as $master_r){
-                $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $source, $master_r['letterid']);
-                if(isset($contacts['patient']) && isset($master_contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
-                    //
-                }elseif(isset($master_contacts['patient']) && count($master_contacts['patient'])){
-                    $contacts['patient'] = $master_contacts['patient'];
-                }
+	        if ($master_q) {
+	            foreach ($master_q as $master_r){
+                    $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $source, $master_r['letterid']);
+                    if(isset($contacts['patient']) && isset($master_contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
+                        //
+                    }elseif(isset($master_contacts['patient']) && count($master_contacts['patient'])){
+                        $contacts['patient'] = $master_contacts['patient'];
+                    }
 
-                if(isset($contacts['mds']) && isset($master_contacts['mds']) && count($contacts['mds']) && count($master_contacts['mds'])){
-                    $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
-                }elseif(isset($master_contacts['mds']) && count($master_contacts['mds'])){
-                    $contacts['mds'] = $master_contacts['mds'];
-                }
+                    if(isset($contacts['mds']) && isset($master_contacts['mds']) && count($contacts['mds']) && count($master_contacts['mds'])){
+                        $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
+                    }elseif(isset($master_contacts['mds']) && count($master_contacts['mds'])){
+                        $contacts['mds'] = $master_contacts['mds'];
+                    }
 
-                if(isset($contacts['md_referrals']) && isset($master_contacts['md_referrals']) && count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
-                    $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
-                }elseif(isset($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])){
-                    $contacts['md_referrals'] = $master_contacts['md_referrals'];
+                    if(isset($contacts['md_referrals']) && isset($master_contacts['md_referrals']) && count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
+                        $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
+                    }elseif(isset($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])){
+                        $contacts['md_referrals'] = $master_contacts['md_referrals'];
+                    }
                 }
-	        }
+            }
 
             $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null));
             $dental_letters[$key]['total_contacts'] = $total_contacts;
@@ -369,12 +371,10 @@
                     $i = $page_limit * $page1;
                     $end = $i + $page_limit;
                     while ($i < count($pending_letters) && $i < $end) {
-                        $userid = $pending_letters[$i]['userid'];
                         $url = $pending_letters[$i]['url'];
                         $id = $pending_letters[$i]['id'];
                         $subject = $pending_letters[$i]['subject'];
                         $sentto = $pending_letters[$i]['sentto'];
-                        $status = $pending_letters[$i]['status'];
                         $total_contacts = $pending_letters[$i]['total_contacts'];
                         $generated = date('m/d/Y', $pending_letters[$i]['generated_date']);
                         
@@ -401,7 +401,7 @@
                                             foreach($pending_letters[$i]['patient'] as $pat) { ?>
                                                 <br />
                                                 <?php echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
-                                                <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                                <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter">Delete</a>
                                         <?php }
                                             }
                                             if (!empty($pending_letters[$i]['mds'])) {
@@ -409,7 +409,7 @@
 					                    ?>
                                                     <br />
                                                     <?php echo $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
-                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter">Delete</a>
                                         <?php   }
                                             }
                                             if (!empty($pending_letters[$i]['md_referrals'])) {
@@ -417,7 +417,7 @@
                                         ?>
                                                 <br />
                                                     <?php echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
-                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter">Delete</a>
                                         <?php }
                                         } ?>
                                     </div>
@@ -445,12 +445,12 @@
             <div style="clear:both;">
                 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
                     <tr class="tr_bg_h">
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondence</a></th>
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=method&sortdir=<?php echo ($_REQUEST['sort']=='method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
-                        <td class="col_head <?php echo  ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondence</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=method&sortdir=<?php echo ($_REQUEST['sort']=='method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
+                        <td class="col_head <?php echo ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
                     </tr>
                     <?php
                         $i = $page_limit * $page2;
@@ -465,11 +465,6 @@
                             $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
                             $total_contacts = $sent_letters[$i]['total_contacts'];
                             $id = $sent_letters[$i]['id'];
-                            if ($sent_letters[$i]['old']) {
-                                $alert = " bgcolor=\"#FF9696\"";
-                            } else {
-                                $alert = null;
-                            }
 	                ?>
 		                    <tr>
                                 <td><?php echo  $userid; ?></td>
@@ -480,18 +475,18 @@
                                     <?php if($total_contacts > 1) { ?>
                                         <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle();return false;"><?php echo  $sentto; ?></a>
                                         <div style="display:none;" id="contacts_<?php echo  $id; ?>">
-                                            <?php foreach($sent_letters[$i]['patient'] as $pat) { ?>
+                                            <?php foreach ($sent_letters[$i]['patient'] as $pat) { ?>
                                                     <br />
                                             <?php
                                                     echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
                                                 }
-                                                foreach($sent_letters[$i]['mds'] as $md) {
+                                                foreach ($sent_letters[$i]['mds'] as $md) {
                                             ?>
                                                     <br />
                                             <?php
                                                     echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
                                                 }
-                                                foreach($sent_letters[$i]['md_referrals'] as $md_referral){
+                                                foreach ($sent_letters[$i]['md_referrals'] as $md_referral) {
                                             ?>
                                                     <br />
                                             <?php
@@ -499,14 +494,14 @@
                                                 }
                                             ?>
                                         </div>
-                                    <?php }else{
+                                    <?php } else {
                                         echo $sentto;
                                     }
                                     ?>
 		                        </td>
-                        		<td><?php echo  $method; ?></td>
-                        		<td><?php echo  $generated; ?></td>
-                        		<td><?php echo  $delivered; ?></td>
+                        		<td><?php echo $method; ?></td>
+                        		<td><?php echo $generated; ?></td>
+                        		<td><?php echo $delivered; ?></td>
                             </tr>
 	                <?php
 		                $i++;
@@ -514,10 +509,9 @@
                     ?>
                 </table>
             </div>
-<?php
-    } else {  // end pt info check
-    	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
-    }
+    <?php
+} else {  // end pt info check
+    echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
 ?>
-
 <?php include 'includes/bottom.htm'; ?>

@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include_once('admin/includes/main_include.php');
-	include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
@@ -11,7 +13,7 @@
 		<script type="text/javascript">
 			window.location = 'manage_patient.php';
 		</script>
-<?
+<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 
@@ -50,7 +52,7 @@
 		<?php if (isset($_GET['ed']) && $_GET['ed'] == '') { ?>
 			<br />
 			<div align="right">
-				<button onClick="Javascript: window.open('print_notes.php?pid=<?php echo $_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton">
+				<button onClick="window.open('print_notes.php?pid=<?php echo $_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton">
 					Print Progress Note
 				</button>
 				&nbsp;&nbsp;
@@ -80,11 +82,6 @@
 				</tr>
 			<?php } else {
 				foreach ($my as $myarray) {
-					if($myarray["status"] == 1) {
-						$tr_class = "tr_active";
-					} else {
-						$tr_class = "tr_inactive";
-					}
 					$tr_class = "tr_active";
 					$user_sql = "SELECT * FROM dental_users where userid='".st($myarray["userid"])."'";
 

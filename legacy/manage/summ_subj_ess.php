@@ -7,7 +7,6 @@ include_once 'admin/includes/general.htm';
 if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = $db->getResults($epworth_sql);
-    $epworth_arr = '';
     foreach ($epworth_my as $epworth_myarray) {
         if ($_POST['epworth_'.$epworth_myarray['epworthid']] != '') { ?>
             <script type="text/javascript">
@@ -28,14 +27,11 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
         parent.update_ess_total('<?php echo $_REQUEST['id']; ?>', '<?php echo $ess_score; ?>');
     </script>
     <?php
-    $msg = " Edited Successfully";
     trigger_error("Die called", E_USER_ERROR);
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if (empty($pat_myarray['patientid'])) { ?>
     <script type="text/javascript">
@@ -48,9 +44,7 @@ if (empty($pat_myarray['patientid'])) { ?>
 $sql = "select * from dental_q_sleep_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
-$q_sleepid = st($myarray['q_sleepid']);
 $epworthid = st($myarray['epworthid']);
-$analysis = st($myarray['analysis']);
 
 if ($epworthid != '') {
     $epworth_arr1 = explode('~', $epworthid);
@@ -99,7 +93,6 @@ if ($epworthid != '') {
                                 <?php
                                 $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                 $epworth_my = $db->getResults($epworth_sql);
-                                $epworth_number = count($epworth_my);
                                 foreach ($epworth_my as $epworth_myarray) {
                                     $a_sql = "SELECT answer 
                                         FROM dentalsummfu_ess

@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include_once('includes/constants.inc');
-    include_once('admin/includes/main_include.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('includes/constants.inc');
+include_once('admin/includes/main_include.php');
 
     $xfdf_file_path = "fdf_test.fdf";
     $pdf_template_path = __DIR__ . '/claim_v2.pdf';
@@ -23,8 +25,8 @@
         /**
          * "Remembers" the template id of the imported page
          */
-        var $_tplIdx;
-        var $_template;
+        public $_tplIdx;
+        public $_template;
         
         /**
          * include a background template for every page

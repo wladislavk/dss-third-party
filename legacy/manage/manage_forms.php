@@ -1,8 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include "includes/top.htm";
-?>
 <?php
-	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+
+$db = new Db();
+
+if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_forms where formid='".$_REQUEST["delid"]."'";
 		
 		$db->query($del_sql);
@@ -63,7 +66,7 @@
 
 	<?php if($num_users == 0) { ?>
 		<div align="right">
-			<button onclick="Javascript: window.location = 'add_form.php?pid=<?php echo $_GET['pid'];?>';" class="addButton">
+			<button onclick="window.location = 'add_form.php?pid=<?php echo $_GET['pid'];?>';" class="addButton">
 				Add New Exam
 			</button>
 			&nbsp;&nbsp;
@@ -114,11 +117,6 @@
 				</tr>
 			<?php } else {
 				foreach ($my as $myarray) {
-					if(isset($myarray["status"]) && $myarray["status"] == 1) {
-						$tr_class = "tr_active";
-					} else {
-						$tr_class = "tr_inactive";
-					}
 					$tr_class = "tr_active";
 			?>
 					<tr class="<?php echo $tr_class;?>">
@@ -146,7 +144,7 @@
 								Edit 
 							</a>
 		                    
-		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["formid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["formid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 								 Delete 
 							</a>
 						</td>

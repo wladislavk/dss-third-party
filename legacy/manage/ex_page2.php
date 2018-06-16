@@ -97,7 +97,6 @@ if ($patient_info) {
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     $pat_myarray = $db->getRow($pat_sql);
 
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -113,7 +112,6 @@ if ($patient_info) {
         $andNullConditional";
     $myarray = $db->getRow($sql);
 
-    $ex_page2id = st($myarray['ex_page2id']);
     $mallampati = st($myarray['mallampati']);
     $additional_notes = $myarray['additional_notes'];
     $tonsils = st($myarray['tonsils']);

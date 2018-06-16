@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php"; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -74,7 +78,7 @@
 	</span>
 	<br /><br />
 	<div align="right">
-		<button onclick="Javascript: loadPopup('add_palpation.php');" class="addButton">
+		<button onclick="loadPopup('add_palpation.php');" class="addButton">
 			Add New Palpation
 		</button>
 		&nbsp;&nbsp;
@@ -131,10 +135,10 @@
 							<input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
 						</td>			
 						<td valign="top">
-							<a href="Javascript:;"  onclick="Javascript: loadPopup('add_palpation.php?ed=<?php echo $myarray["palpationid"];?>');" class="editlink" title="EDIT">
+							<a href="Javascript:;"  onclick="loadPopup('add_palpation.php?ed=<?php echo $myarray["palpationid"];?>');" class="editlink" title="EDIT">
 								Edit 
 							</a>	                    
-		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["palpationid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["palpationid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 								Delete 
 							</a>
 						</td>

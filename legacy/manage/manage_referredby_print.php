@@ -1,6 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once "admin/includes/main_include.php";
 include_once 'includes/constants.inc';
+
+$db = new Db();
+
 $sql = "select 
 		dc.contactid,
 		dc.salutation,
@@ -71,7 +76,7 @@ if (!empty($_GET['sort'])) {
 
 $my = $db->getResults($sql);
 $total_rec = count($my);
-$num_referredby = count($my);?>
+?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
@@ -125,9 +130,6 @@ if($total_rec == 0){ ?>
 <?php 
 } else {
 	foreach ($my as $myarray) {
-		$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".(!empty($myarray["referredbyid"]) ? $myarray["referredbyid"] : '')."'";
-		$pat_my = $db->getRow($pat_sql);
-		
 		if(!empty($myarray["status"]) && $myarray["status"] == 1){
 			$tr_class = "tr_active";
 		} else {
@@ -227,5 +229,3 @@ if($total_rec == 0){ ?>
 }?>
 	</table>
 </form>
-
-

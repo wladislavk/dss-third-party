@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
@@ -17,20 +19,20 @@ if(!empty($_REQUEST["delid"]))
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_transaction_code WHERE docid='".$_SESSION['docid']."' order by sortby";
 $total_rec = $db->getNumberRows($sql);
@@ -40,10 +42,8 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 $num_users = count($my);
 
-if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
-{
-	foreach($_POST['sortby'] as $key => $val)
-	{
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
+	foreach($_POST['sortby'] as $key => $val) {
 		$smyarray = $my[$key];
 		if($val == '' || is_numeric($val) === false)
 		{
@@ -56,10 +56,9 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -75,7 +74,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_transaction_code.php');" class="addButton">
+	<button onclick="loadPopup('add_transaction_code.php');" class="addButton">
 		Add New Transaction Code
 	</button>
 	&nbsp;&nbsp;
@@ -120,25 +119,18 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 			Action
 		</td>
 	</tr>
-	<?php if($num_users == 0)
-	{ ?>
+	<?php if ($num_users == 0) { ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="10" align="center">
 			No Records
 		</td>
 	</tr>
 	<?php 
-	}
-	else
-	{
+	} else {
 		foreach ($my as $myarray) {
-
-			if($myarray["status"] == 1)
-			{
+			if($myarray["status"] == 1) {
 				$tr_class = "tr_active";
-			}
-			else
-			{
+			} else {
 				$tr_class = "tr_inactive";
 			}
 		?>
@@ -150,9 +142,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 			<?php echo st(substr($myarray["description"], 0, 25));?>
 		</td>
 		<td valign="top">
-          
         <?php
-        
          if($myarray["type"] == "1"){
 	         echo "Medical Code";
          }elseif($myarray["type"] == "2"){
@@ -166,9 +156,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
          }elseif($myarray["type"] == "6"){
 	         echo "Adjustment Code";
          }
-        
-        ?>                  
-
+        ?>
 		</td>
 		<td valign="top" align="center">
 			<input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
@@ -197,7 +185,6 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>

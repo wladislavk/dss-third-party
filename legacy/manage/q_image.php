@@ -1,7 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm"; 
-	require_once('includes/patient_info.php');
-	
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+require_once('includes/patient_info.php');
+
+$db = new Db();
+
 	if ($patient_info) {
 		if(!empty($_POST['q_recipientssub']) && $_POST['q_recipientssub'] == 1) {
 ?>
@@ -15,8 +19,6 @@
 		if(!empty($_REQUEST["delid"])) {
 			$del_sql = "delete from dental_q_image where imageid='".$_REQUEST["delid"]."'";
 			$db->query($del_sql);
-			
-			$msg = "Deleted Successfully";
 ?>
 			<script type="text/javascript">
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>";
@@ -28,8 +30,6 @@
 		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 		$pat_myarray = $db->getRow($pat_sql);
 
-		$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 		if($pat_myarray['patientid'] == '') {
 ?>
 			<script type="text/javascript">
@@ -39,22 +39,6 @@
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
-		$sql = "select i.*,
-				CASE 
-					WHEN i.userid!=''
-					THEN CONCAT(u.first_name, ' ',u.last_name)" .
-					// WHEN i.adminid!=''
-					// THEN CONCAT(a.first_name, ' ',a.last_name)
-				"END added_by
-					from dental_q_image i
-					LEFT join dental_users u ON u.userid=i.userid" .
-					// LEFT join admin a ON a.adminid=i.adminid
-				"	where i.patientid='".$_GET['pid']."'";
-
-		if (!empty($_GET['sh'])) {
-			$sql .= " and imagetypeid='".$_GET['sh']."' ";
-		}
-
 		if (!isset($_REQUEST['sort'])) {
 			$_REQUEST['sort'] = 'adddate';
 		}
@@ -62,11 +46,7 @@
 		if (!isset($_REQUEST['sortdir'])) {
 			$_REQUEST['sortdir'] = 'DESC';
 		}
-
-		$sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
-		$my = $db->getResults($sql);
 ?>
-
 		<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 		<script src="admin/popup/popup2.js?v=20170326" type="text/javascript"></script>
 
@@ -78,10 +58,10 @@
 		<b>Show Image Type</b>
 		&nbsp;&nbsp;
 <?php 
-		$itype_sql = "select * from dental_imagetype where status=1 order by sortby";
-		$itype_my = $db->getResults($itype_sql); 
+    $itype_sql = "select * from dental_imagetype where status=1 order by sortby";
+    $itype_my = $db->getResults($itype_sql);
 ?>
-		<select name="imagetypeid" class="field text addr tbox" onchange="Javascript: window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&sh='+this.value;">
+		<select name="imagetypeid" class="field text addr tbox" onchange="window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&sh='+this.value;">
 			<option value="">All</option>
 			<?php foreach ($itype_my as $itype_myarray) { ?>
 				<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <?php if(!empty($_GET['sh']) && $_GET['sh'] == st($itype_myarray['imagetypeid'])) echo " selected";?>>
@@ -91,7 +71,7 @@
 		</select>
 		<br />
 		<div align="right">
-			<button onclick="Javascript: loadPopupRefer('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&flow=<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>');" class="addButton">
+			<button onclick="loadPopupRefer('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&flow=<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>');" class="addButton">
 				Add New Image
 			</button>
 			&nbsp;&nbsp;
@@ -128,11 +108,9 @@
 		<div id="backgroundPopupRef"></div>
 
 		<br /><br />	
-
 <?php
-	} else {  // end pt info check
-		print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
-	}
+} else {  // end pt info check
+    echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
 ?>
-
 <?php include "includes/bottom.htm";?>

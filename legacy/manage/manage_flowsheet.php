@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+
+$db = new Db();
 
 	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
         deleteClaim($_REQUEST['delid']);
@@ -28,7 +32,6 @@
 		$ss_received_apt = $_POST['ss_received_apt'];
 		$ss_received_comp = $_POST['ss_received_comp'];
 		$consultation_apt = $_POST['consultation_apt'];
-		$consultation_comp = $_POST['consultation_comp'];
 		$m_insurance_date = $_POST['m_insurance_date'];
 		$select_type = $_POST['select_type'];
 		$exam_impressions_apt = $_POST['exam_impressions_apt'];
@@ -299,17 +302,8 @@
 	$inquiry_call_comp = st($myarray['inquiry_call_comp']);
 	$send_np = st($myarray['send_np']);
 	$send_np_comp = st($myarray['send_np_comp']);
-	$acquire_ss_apt = st($myarray['acquire_ss_apt']);
-	$acquire_ss_comp = st($myarray['acquire_ss_comp']);
-	$pt_not_ss = st($myarray['pt_not_ss']);
-	$ss_date_requested = st($myarray['ss_date_requested']);
-	$ss_date_received = st($myarray['ss_date_received']);
 	$date_referred = st($myarray['date_referred']);
 	$dss_dentists = st($myarray['dss_dentists']);
-	$ss_requested_apt = st($myarray['ss_requested_apt']);
-	$ss_requested_comp = st($myarray['ss_requested_comp']);
-	$ss_received_apt = st($myarray['ss_received_apt']);
-	$ss_received_comp = st($myarray['ss_received_comp']);
 	$consultation_apt = st($myarray['consultation_apt']);
 	$consultation_comp = st($myarray['consultation_comp']);
 	$m_insurance_date = st($myarray['m_insurance_date']);
@@ -331,9 +325,6 @@
 	$home_sleep_comp = st($myarray['home_sleep_comp']);
 	$further_checks_apt = st($myarray['further_checks_apt']);
 	$further_checks_comp = st($myarray['further_checks_comp']);
-	$comp_treatment_comp = isset($myarray['comp_treatment_comp']) ? st($myarray['comp_treatment_comp']) : '';
-	$portable_date_comp = st($myarray['portable_date_comp']);
-	$treatment_success = st($myarray['treatment_success']);
 	$ltr_doc_ss_date_prepared = st($myarray['ltr_doc_ss_date_prepared']);
 	$ltr_doc_ss_date_sent = st($myarray['ltr_doc_ss_date_sent']);
 	$annual_exam_apt = st($myarray['annual_exam_apt']);
@@ -356,7 +347,6 @@
 	$pt_not_ds_other = st($myarray['pt_not_ds_other']);
 	$ltr_pp_date_prepared = st($myarray['ltr_pp_date_prepared']);
 	$ltr_pp_date_sent = st($myarray['ltr_pp_date_sent']);
-	$but_text = "Add ";
 	$fstep = $myarray['step'];
 	$sstep = $myarray['sstep'];
 
@@ -391,7 +381,7 @@
 
 	<div style="width:620px;float:left;">
 		<form name="flowsheetfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" style="width:620px;">
-			<table width="100%" cellspacing="1" cellpadding="5" bgcolor="#ffffff" float="left" style="margin-left: 20px;">
+			<table width="100%" cellspacing="1" cellpadding="5" bgcolor="#ffffff" style="margin-left: 20px;">
 				<tr>
 					<td colspan="2" class="cat_head">
 					   <?php echo $but_text?> Flow Sheet
@@ -413,7 +403,7 @@
 							<ul>
 								<li id="foli8" class="complex">	
 									<label class="desc" id="title0" for="Field0">
-										<?php if($fstep == 5){echo "<font style=\"color:#FF0000;\">";} ?>Consultation Appointment<?php if($fstep == 5){echo "</font>";} ?>
+										<?php if($fstep == 5){echo "<span style=\"color:#FF0000;\">";} ?>Consultation Appointment<?php if($fstep == 5){echo "</span>";} ?>
 									</label>
 									<div>
 										<span class="left">
@@ -977,12 +967,6 @@
 			<script language="JavaScript">
 				var cal3 = new calendar2(document.forms['flowsheetfrm'].elements['send_np_comp']);
 	  		</script>
-		<?php } ?>
-
-		<?php if($fstep >= 2) { ?>
-		<?php } ?>
-
-  		<?php if($fstep >= 3) { ?>
 		<?php } ?>
 
   		<?php if($fstep >= 4) { ?>

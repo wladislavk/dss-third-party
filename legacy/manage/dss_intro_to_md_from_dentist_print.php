@@ -1,11 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 	if($pat_myarray['patientid'] == '') {
 ?>
 		<script type="text/javascript">

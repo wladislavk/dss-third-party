@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include_once('admin/includes/main_include.php');
-	include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
 
 	$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' ";
 	$sql .= " and parentid = '".(!empty($_GET['nid']) ? $_GET['nid'] : '')."' ";
@@ -54,12 +56,6 @@
 				</tr>
 			<?php } else {
 				foreach ($my as $myarray) {
-					if($myarray["status"] == 1) {
-						$tr_class = "tr_active";
-					} else {
-						$tr_class = "tr_inactive";
-					}
-
 					$tr_class = "tr_active";
 					$user_sql = "SELECT * FROM dental_users where userid='".st($myarray["userid"])."'";
 					

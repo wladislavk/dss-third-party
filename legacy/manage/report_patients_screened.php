@@ -1,38 +1,34 @@
-<?php namespace Ds3\Libraries\Legacy; ?><div id="screened">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<div id="screened">
   <svg style='height:300px; width: 450px;'/>
 </div>
 
 <script type="text/javascript">
-$(document).ready(function(){
-  nv.addGraph(function() {
-    var chart = nv.models.multiBarChart().width(450).height(300);
+    $(document).ready(function () {
+        nv.addGraph(function () {
+            var chart = nv.models.multiBarChart().width(450).height(300);
+            chart.xAxis
+                .axisLabel('Date')
+                .showMaxMin(false)
+                .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));});
+            chart.yAxis
+                .tickFormat(d3.format(',f'));
+            chart.stacked(true);
+            d3.select('#screened svg')
+                .datum(screened_data())
+                .transition().duration(500).call(chart);
+            nv.utils.windowResize(function() { d3.select('#screened svg').call(chart) });
+            return chart;
+        });
+    });
 
-    chart.xAxis
-       .axisLabel('Date')
-        .showMaxMin(false)      
-        .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));});
-
-    chart.yAxis
-        .tickFormat(d3.format(',f'));
-
-    chart.stacked(true);
-
-    d3.select('#screened svg')
-        .datum(screened_data())
-      .transition().duration(500).call(chart);
-
-    nv.utils.windowResize(function() { d3.select('#screened svg').call(chart) });
-    return chart;
-  });
-});
- 
- 
-function screened_data(){
-  series = [];
-  s = "";
-
-  <?php
-    $u_sql = "SELECT u.userid, u.name FROM dental_users u
+    function screened_data() {
+        series = [];
+        s = "";
+        <?php
+        $u_sql = "SELECT u.userid, u.name FROM dental_users u
     		      JOIN dental_screener s ON u.userid = s.userid
     		      WHERE 
     		      (u.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
@@ -75,7 +71,3 @@ function screened_data(){
 }
 
 </script>
-
-
-
-

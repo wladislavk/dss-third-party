@@ -1,9 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	if($_GET['backoffice'] == '1') {
-	  include 'admin/includes/top.htm';
-	} else {
-	  include 'includes/top.htm';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm';
+} else {
+    include 'includes/top.htm';
+}
 ?>
 	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
@@ -14,15 +16,15 @@
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 	
 	$letter_result = $db->getResults($letter_query);
-	if ($letter_result) foreach ($letter_result as $row) {
-	  $templateid = $row['templateid'];
-	  $patientid = $row['patientid'];
-	  $topatient = $row['topatient'];
-	  $md_list = $row['md_list'];
-	  $md_referral_list = $row['md_referral_list'];
-	  $mds = explode(",", $md_list);
-	  $md_referrals = explode(",", $md_referral_list);
-	}
+	if ($letter_result) {
+	    foreach ($letter_result as $row) {
+            $templateid = $row['templateid'];
+            $patientid = $row['patientid'];
+            $topatient = $row['topatient'];
+            $md_list = $row['md_list'];
+            $md_referral_list = $row['md_referral_list'];
+        }
+    }
 
 	// Get Letter Subject
 	$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
@@ -53,10 +55,9 @@
 	$history = $q3_myarray['history'];
 	$medications = $q3_myarray['medications'];
 	$history_arr = explode('~',$history);
-	$history_arr = explode('~',$history);
 	$history_disp = '';
 	foreach($history_arr as $val) {
-		if(trim($val) <> "") {
+		if (trim($val) != "") {
 			$his_sql = "select history from dental_history where historyid='".trim($val)."' and status=1;";
 
 			$his_myarray = $db->getRow($his_sql);	
@@ -77,12 +78,12 @@
 	}
 
 	foreach($medications_arr as $key => $val) {
-		if(trim($val) <> "") {
+		if(trim($val) != "") {
 			$medications_sql = "select medications from dental_medications where medicationsid='".trim($val)."' and status=1;";
 			
 			$medications_myarray = $db->getRow($medications_sql);
-			if($medications_myarray['medications'] <> '') {
-				if($medications_disp <> '') {
+			if($medications_myarray['medications'] != '') {
+				if($medications_disp != '') {
 					if ($medcount == $key) {
 						$medications_disp .= ', and ';
 					} else {
@@ -97,15 +98,10 @@
 	$q2_sql = "SELECT date, sleeptesttype, ahi, dentaldevice, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 	
 	$q2_myarray = $db->getRow($q2_sql);
-	$sleep_study_date = st($q2_myarray['date']);
 	$diagnosis = st($q2_myarray['diagnosis']);
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 	$dentaldevice = st($q2_myarray['dentaldevice']);
-	$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".(!empty($sleep_center_name) ? $sleep_center_name : '')."';";
-	
-	$sleeplab_myarray = $db->getRow($sleeplab_sql);
-	$sleeplab_name = st($sleeplab_myarray['company']);
 
 	// Appointment Date
 	$appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
@@ -259,7 +255,6 @@
 				foreach ($letter_contacts as $key => $contact) {
 				  $new_template[$key] = $dupe_template;
 				}
-				$duplicated = true;
 			}
 			// Reset Letter
 			if (isset($_POST['reset_letter'])) {
@@ -272,8 +267,8 @@
 
 		foreach ($letter_contacts as $key => $contact) {
 			// Token search and replace arrays
-			$search = array();
-			$replace = array();
+			$search = [];
+			$replace = [];
 			$search[] = '%todays_date%';
 			$replace[] = "<strong>" . $todays_date . "</strong>";
 			$search[] = '%md_fullname%';
@@ -357,7 +352,7 @@
 					$message = str_replace($search, "", $message);	
 					deliver_letter($letterid, $message);
 				} else {
-			    	$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+			    	send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 				}
 
 				if ($parent) {
@@ -387,7 +382,6 @@
     			continue;
   			}
 ?>
-<?php // loop through letters ?>
 			<div align="right">
 				<button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
 					Edit Letter
@@ -411,7 +405,7 @@
 				<tr>
 					<td valign="top">
 						<div id="letter<?php echo $key?>">
-							<?php print $letter[$key]; ?>
+							<?php echo $letter[$key]; ?>
 						</div>
 						<input type="hidden" name="new_template[<?php echo $key?>]" value="<?php echo (!empty($new_template[$key]) ? $new_template[$key] : '')?>" />
 					</td>
@@ -436,9 +430,9 @@
 </table>
 
 <?php
-	if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
-	  	include 'admin/includes/bottom.htm';
-	} else {
-		include 'includes/bottom.htm';
-	} 
+if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
+    include 'admin/includes/bottom.htm';
+} else {
+    include 'includes/bottom.htm';
+}
 ?>

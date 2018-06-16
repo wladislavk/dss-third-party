@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include 'includes/top.htm';
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);
@@ -147,8 +149,5 @@ if($pat_myarray['patientid'] == ''){?>
 		</td>
 	</tr>
 </table>
-
-
-
 
 <?php include 'includes/bottom.htm';?>

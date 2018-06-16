@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include __DIR__ . '/includes/top.htm';
 include __DIR__ . '/includes/similar.php';
 include_once __DIR__ . '/includes/constants.inc';
@@ -6,7 +8,6 @@ require_once __DIR__ . '/includes/screener-functions.php';
 require_once __DIR__ . '/includes/hst_functions.php';
 
 $coMorbidityLabels = coMorbidityLabels();
-$coMorbidityWeights = coMorbidityWeights();
 
 $docId = intval($_SESSION['docid']);
 $userId = intval($_SESSION['userid']);

@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
+?>
 
   <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
   <script src="admin/popup/popup2.js?v=20170326" type="text/javascript"></script>
@@ -52,21 +56,11 @@
                       }
                     }
                   ?>
-                  <a href="Javascript: ;" target="_blank" class="viewtable" title="EDIT" onclick="Javascript: loadPopup('memo.php'); getElementById('popupMemo').style.top = '200px'; return false;">Edit Memo</a>
+                  <a href="Javascript: ;" target="_blank" class="viewtable" title="EDIT" onclick="loadPopup('memo.php'); getElementById('popupMemo').style.top = '200px'; return false;">Edit Memo</a>
                 </td>
               </tr>
             </table>
             <br /><br /><br />
-        
-            <?php
-              $sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-              if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
-              	$sqlddlist .= " and status = 1";
-              }
-              $sqlddlist .= " order by lastname, firstname";
-              
-              $myddlist = $db->query($sqlddlist);
-            ?>
             <script language="javascript" src="js/directory.js"></script>
 
             <font style="font-size:16px; font-weight:bold;">View Patient Elements:</font><br />
@@ -94,11 +88,11 @@
 
             <div style="margin-top:25px;  width:100%;">&nbsp;</div> 
             <hr />
-            <div style="margin-top:0px; width:100%;">&nbsp;</div> 
+            <div style="margin-top:0; width:100%;">&nbsp;</div>
 
-            <font style="font-size:16px; font-weight:bold;">View Patient Flowsheet:</font><br />
-            <form NAME="DropDown">
-              <SELECT id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
+            <span style="font-size:16px; font-weight:bold;">View Patient Flowsheet:</span><br />
+            <form name="DropDown">
+              <select id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
                 <?php
                   $sqlddlist3 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
                   if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
@@ -121,9 +115,9 @@
             
             <div style="margin-top:25px;  width:100%;">&nbsp;</div> 
               <hr />
-            <div style="margin-top:0px; width:100%;">&nbsp;</div>  
+            <div style="margin-top:0; width:100%;">&nbsp;</div>
 
-            <font style="font-size:16px; font-weight:bold;">View Patient Summary Sheet:</font><br />
+            <span style="font-size:16px; font-weight:bold;">View Patient Summary Sheet:</span><br />
             <form NAME="DropDown">
               <select id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
                 <?php
@@ -148,7 +142,7 @@
             
             <div style="margin-top:25px;  width:100%;">&nbsp;</div> 
               <hr />
-            <div style="margin-top:0px; width:100%;">&nbsp;</div>  
+            <div style="margin-top:0; width:100%;">&nbsp;</div>
           </div>
         </td>
         <td valign="top">

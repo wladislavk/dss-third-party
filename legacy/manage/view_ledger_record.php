@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
@@ -20,22 +22,24 @@ include("includes/sescheck.php");
 $rec_qry = "SELECT `ledgerid`,`patientid`,`service_date` ,`entry_date`,`description` ,`producer` ,`amount` ,`transaction_type` ,`paid_amount` ,`userid` ,`docid` ,`status` ,`adddate` ,`ip_address`,`transaction_code` FROM dental_ledger_rec WHERE patientid='". (!empty($_GET['pid']) ? $_GET['pid'] : '') ."' ORDER BY service_date ASC";
 $row = $db->getRow($rec_qry);
 
-print '<table style="margin:20px;" border="1" width="95%"><tr>';
+echo '<table style="margin:20px;" border="1" width="95%"><tr>';
 if (!empty($row)) foreach($row as $name => $value) {
-	print "<th>$name</th>";
+	echo "<th>$name</th>";
 }
-print '</tr>';
+echo '</tr>';
 unset($row);
 
 $rows = $db->getResults($rec_qry);
-if (!empty($rows)) foreach($rows as $row) {
-	print '<tr>';
-	foreach ($row as $value) {
-		print "<td style=\"color:#FFFFFF;\">$value</td>";
-	}
-	print '</tr>';
+if (!empty($rows)) {
+    foreach($rows as $row) {
+        echo '<tr>';
+        foreach ($row as $value) {
+            echo "<td style=\"color:#FFFFFF;\">$value</td>";
+        }
+        echo '</tr>';
+    }
 }
-print '</table>';
+echo '</table>';
 ?>	
 	
 </body>

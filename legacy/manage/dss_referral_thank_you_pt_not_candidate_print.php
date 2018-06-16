@@ -72,7 +72,6 @@ foreach($medications_arr as $val){
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q2_myarray = $db->getRow($q2_sql);
 
-$polysomnographic = st($q2_myarray['polysomnographic']);
 $sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
@@ -95,12 +94,10 @@ if(st($pat_myarray['gender']) == 'Female'){
 	$h_h =  "Her";
 	$s_h =  "She";
 	$h_h1 =  "her";
-	$m_s = "Mrs.";
 }else{
 	$h_h =  "His";
 	$s_h =  "He";
 	$h_h1 =  "him";
-	$m_s = "Mr.";
 }?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

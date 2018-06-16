@@ -1,13 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "admin/includes/main_include.php";
 
 $rec_disp = 40;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_contact where docid='".$_SESSION['docid']."' order by lastname";
 $total_rec = $db->getNumberRows($sql);
@@ -43,12 +46,12 @@ $num_contact = count($my);?>
 <form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td  align="right" colspan="15" class="bp">
 			Pages:
 			<?php paging($no_pages,$index_val,"");?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
@@ -85,26 +88,26 @@ if($num_contact == 0){ ?>
 		$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 			
 		$sel_val = st($name);
-		if(st($myarray['company']) <> ''){
+		if(st($myarray['company']) != ''){
 			$sel_val .= "
 		".st($myarray['company']);
 		}
-		if(st($myarray['add1']) <> ''){
+		if(st($myarray['add1']) != ''){
 			$sel_val .= "
 		".st($myarray['add1']);
 		}
-		if(st($myarray['add2']) <> ''){
+		if(st($myarray['add2']) != ''){
 			$sel_val .= "
 		".st($myarray['add2']);
 		}
-		if(st($myarray['city']) <> ''){
+		if(st($myarray['city']) != ''){
 			$sel_val .= "
 		".st($myarray['city']);
 		}
-		if(st($myarray['state']) <> ''){
+		if(st($myarray['state']) != ''){
 			$sel_val .= " ".st($myarray['state']);
 		}
-		if(st($myarray['zip']) <> ''){
+		if(st($myarray['zip']) != ''){
 			$sel_val .= " ".st($myarray['zip']);
 		}?>
 	<tr class="<?php echo $tr_class;?>">
@@ -126,19 +129,15 @@ if($num_contact == 0){ ?>
 }?>
 </table>
 </form>
-<script type="text/javascript">
-function fill_up(fa){
-	parent.document.q_recipientsfrm.<?php echo $_GET['tx']?>.value = fa;
-	parent.disablePopup1();
-}
-</script>
-
-<br /><br />	
-
+                <script type="text/javascript">
+                    function fill_up(fa) {
+                        parent.document.q_recipientsfrm.<?php echo $_GET['tx']?>.value = fa;
+                        parent.disablePopup1();
+                    }
+                </script>
+                <br /><br />
 			</td>
 		</tr>
 	</table>
-    
-
 </body>
 </html>

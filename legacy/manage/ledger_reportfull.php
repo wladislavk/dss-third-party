@@ -1,14 +1,15 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $rec_disp = 200;
 
-if(!empty($_REQUEST["page"]))
+if (!empty($_REQUEST["page"])) {
     $index_val = $_REQUEST["page"];
-else
+} else {
     $index_val = 0;
-    
-$i_val = $index_val * $rec_disp;
+}
 
 $tot_charges = 0;
 $tot_credit = 0;
@@ -116,13 +117,6 @@ if(isset($_REQUEST['sort'])){
 }
 $my = $db->getResults($sql);
 
-/*
-$sql .= " order by service_date";
-
-$total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-*/
-
 $num_users = count($my);
 
 ?>
@@ -162,11 +156,11 @@ $num_users = count($my);
         Print Ledger
     </a>
         &nbsp;&nbsp;&nbsp;&nbsp;
-    <button onclick="Javascript:window.location='ledger.php';" class="addButton"> 
+    <button onclick="window.location='ledger.php';" class="addButton">
         Other Reports
     </button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-    <button onclick="Javascript:window.location='unpaid_patient.php';" class="addButton">
+    <button onclick="window.location='unpaid_patient.php';" class="addButton">
            Unpaid Pt. 
     </button>
         &nbsp;&nbsp;
@@ -216,32 +210,18 @@ $num_users = count($my);
             <a href="ledger_reportfull.php?sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
         </td>
     </tr>
-    <?php if($num_users == 0)
-    { ?>
+    <?php if($num_users == 0) { ?>
     <tr class="tr_bg">
         <td valign="top" class="col_head" colspan="10" align="center">
             No Records
         </td>
     </tr>
     <?php
-    }
-    else
-    {
+    } else {
         foreach ($my as $myarray) {
-
             $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
             $pat_myarray = $db->getRow($pat_sql);
             
-            $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-            
-            if($myarray["status"] == 1)
-            {
-                $tr_class = "tr_active";
-            }
-            else
-            {
-                $tr_class = "tr_inactive";
-            }
             $tr_class = "tr_active";
         ?>
     <tr class="<?php echo $tr_class;?>">

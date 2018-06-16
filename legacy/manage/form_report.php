@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
+?>
 
 <br />
 	<span class="admin_head">
@@ -6,7 +10,7 @@
 	</span>
 <br /><br />
 
-<form name="formreportfrm" action="form_report_res.php" method="post" onsubmit="Javascript: return formreportabc(this);">
+<form name="formreportfrm" action="form_report_res.php" method="post" onsubmit="return formreportabc(this);">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td valign="top" class="frmhead" width="20%">

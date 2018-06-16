@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include "includes/constants.inc";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/constants.inc";
 
     if($_GET['dailysub']) {
         $file = 'Ledger_Report_'.date('m-d-Y', strtotime($_GET['start_date']));
@@ -21,42 +23,12 @@
 
     $start_date = $_GET['start_date'];
     $end_date = $_GET['end_date']; 
-
-    $rec_disp = 200;
-
-    if($_REQUEST["page"] != "") {
-    	$index_val = $_REQUEST["page"];
-    } else {
-    	$index_val = 0;
-    }
-	
-    $i_val = $index_val * $rec_disp;
-
-    if(isset($_GET['pid'])) {
-        $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
-    }else {
-        $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
-    }
-
-    $sql .= " order by service_date";
-
-    $total_rec = $db->getNumberRows($sql);
-    $no_pages = $total_rec/$rec_disp;
-
-    $sql .= " limit ".$i_val.",".$rec_disp.";";
-    $num_users = $db->getNumberRows($sql);
-?>
+    ?>
     Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Adjustments,Ins
 
 <?php	
-    $tot_charges = 0;
 	$tot_credit = 0;
     $tot_adj = 0;
-	if(isset($_GET['pid'])) {
-        $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-	} else {
-        $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
-    }
     $newquery = "
         select 
         'ledger',
@@ -105,11 +77,6 @@
             AND dlp.amount != 0
             AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."' 
         ";
-        
-        /*
-        if($start_date)
-            //$newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-        */
 
         $runquery = $db->getResults($newquery);
 		if ($runquery) foreach ($runquery as $myarray) {

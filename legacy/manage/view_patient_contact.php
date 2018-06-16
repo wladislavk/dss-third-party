@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -84,11 +86,7 @@
     		$fax = st($themyarray['fax']);
     		$email = st($themyarray['email']);
     		$national_provider_id = st($themyarray['national_provider_id']);
-    		$qualifier = st($themyarray['qualifier']);
     		$qualifierid = st($themyarray['qualifierid']);
-    		$greeting = st($themyarray['greeting']);
-    		$sincerely = st($themyarray['sincerely']);
-    		$contacttypeid = st($themyarray['contacttype']);
 
             switch($themyarray['contacttype']){
                 case '1':
@@ -109,7 +107,6 @@
     	    }
     		$notes = st($themyarray['notes']);
     		$preferredcontact = st($themyarray['preferredcontact']);
-    		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
     		$but_text = "Add ";
 	    ?>
 	    <br /><br />
@@ -264,7 +261,6 @@
                                     <span>
                                     	<?php 
             								$qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
-            								
                                             $qualifier_my = $db->getResults($qualifier_sql);
         								?>
                                     	<select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
@@ -294,7 +290,6 @@
                                     <span>
                                     	<?php		
                                             $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                                            
                                             $ctype_my = $db->getResults($ctype_sql);
                                         ?>
                                     	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">

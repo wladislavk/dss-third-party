@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if (!empty($_REQUEST["delid"])) {
@@ -72,7 +74,7 @@ $num_sleeplab = count($my);
 <br /><br />&nbsp;
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_sleeplab.php');" class="addButton">
+	<button onclick="loadPopup('add_sleeplab.php');" class="addButton">
 		Add New Sleep Lab
 	</button>
 	&nbsp;&nbsp;
@@ -170,7 +172,7 @@ $num_sleeplab = count($my);
                         Quick View
                     </a>	
 					|
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_sleeplab.php?ed=<?php echo $myarray["sleeplabid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="loadPopup('add_sleeplab.php?ed=<?php echo $myarray["sleeplabid"];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
 				</td>
@@ -201,4 +203,4 @@ $num_sleeplab = count($my);
 
 <br /><br />
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

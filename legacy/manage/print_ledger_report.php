@@ -1,9 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
+
+$db = new Db();
+
 if(isset($_GET['pid'])){
     $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
     $my = $db->getResults($sql);
@@ -17,15 +21,6 @@ if(isset($_GET['pid'])){
 $start_date = (!empty($_GET['start_date']) ? $_GET['start_date'] : '');
 $end_date = (!empty($_GET['end_date']) ? $_GET['end_date'] : ''); 
 
-$rec_disp = 200;
-
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
-
 if(isset($_GET['pid'])){
     $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
 }else{
@@ -33,8 +28,6 @@ if(isset($_GET['pid'])){
 }
 
 $sql .= " order by service_date";
-$total_rec = $db->getNumberRows($sql);
-$no_pages = $total_rec/$rec_disp;
 
 $my = $db->getResults($sql);
 
@@ -45,37 +38,35 @@ if (!$my) {
 
 $num_users = count($my);
 ?>
-
 <html>
 <head>
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/popup.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+    <script src="admin/popup/popup.js" type="text/javascript"></script>
 </head>
 <body onload="window.print()">
 <span class="admin_head">
 	Ledger Report
-<?php 
-if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){?>
-    (<i><?php echo date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
-<?php 
-}
-if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1){?>
-    (<i><?php echo date('m-d-Y', strtotime($start_date))?> - <?php echo date('m-d-Y', strtotime($end_date))?></i>)
-<?php 
-}
-if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1){?>
-    (<i><?php echo date('m-Y', strtotime($_REQUEST['start_date'])) ?></i>)
-<?php 
-}
-if($_GET['pid'] <> ''){?>
-    (<i><?php echo $thename;?></i>)
-	<br />
-	<?php echo $theaddress; ?>
-	<br />
-	<?php echo $thephone;
-}?>
+    <?php
+    if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){?>
+        (<i><?php echo date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
+    <?php
+    }
+    if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1){?>
+        (<i><?php echo date('m-d-Y', strtotime($start_date))?> - <?php echo date('m-d-Y', strtotime($end_date))?></i>)
+    <?php
+    }
+    if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1){?>
+        (<i><?php echo date('m-Y', strtotime($_REQUEST['start_date'])) ?></i>)
+    <?php
+    }
+    if($_GET['pid'] <> ''){?>
+        (<i><?php echo $thename;?></i>)
+        <br />
+        <?php echo $theaddress; ?>
+        <br />
+        <?php echo $thephone;
+    }?>
 </span>
-
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
@@ -131,17 +122,9 @@ if($num_users == 0){ ?>
         $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
         $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'"; 
         $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-        $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
     }else{
         $p_date = $i_date = $n_date = $l_date = '';
     }
-    if(isset($_GET['pid'])){
-        $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
-    }else{
-        $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
-    }
-    if($start_date)
-        $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 
     $newquery = "
                 select 
@@ -199,11 +182,6 @@ if($num_users == 0){ ?>
     	
     	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
     	
-    	if($myarray["status"] == 1){
-    		$tr_class = "tr_active";
-    	}else{
-    		$tr_class = "tr_inactive";
-    	}
     	$tr_class = "tr_active";?>
     <tr class="<?php echo $tr_class;?>">
         <td valign="top" width="10%">
@@ -275,39 +253,6 @@ if($num_users == 0){ ?>
     		<b>Total</b>
     	</td>
     	<td valign="top" align="right">
-<?php
-if(isset($_GET['pid'])){
-    $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." AND `transaction_type` = 'Charge'";
-}else{
-    $ledgerquery = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." AND `transaction_type` = 'Charge'";
-}
-$myarray = $db->getRow($ledgerquery);
-
-if(isset($_GET['pid'])){
-    $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." and `transaction_type`='Credit'";
-}else{
-    $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." and `transaction_type`='Credit'";
-}
-$myarray2 = $db->getRow($ledgerquery2);
-
-if (!isset($cur_bal)) {
-    $cur_bal = 0;
-}
-
-if(st($myarray["amount"]) <> 0) {
-    $cur_bal += st($myarray["amount"]);
-}
-
-if(!empty($ledgerres2)){
-    $cur_bal2 = $myarray2['paid_amount'];
-}
-
-if (!isset($cur_bal2)) {
-    $cur_bal2 = 0;
-}
-
-$cur_balfinal = $cur_bal - $cur_bal2;?>
-
             <b>
             <?php echo "$".number_format($tot_charge,2); ?>
             </b>
@@ -332,10 +277,8 @@ $cur_balfinal = $cur_bal - $cur_bal2;?>
                 <?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2); ?>
             </b>
         </td>
-        <td valign="top" align="right">
-        </td>
-        <td valign="top">
-        </td>
+        <td valign="top" align="right"> </td>
+        <td valign="top"> </td>
     </tr>
 </table>
 

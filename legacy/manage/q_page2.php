@@ -104,7 +104,6 @@ if ($patient_info) {
         $dd_who = $_POST['dd_who'];
         $dd_experience = $_POST['dd_experience'];
         $surgery = $_POST['surgery'];
-        $num_surgery = $_POST['num_surgery'];
         $int_arr = '';
 
         if (is_array($intolerance)) {
@@ -242,7 +241,6 @@ if ($patient_info) {
     $pat_sql = "select * from dental_patients where patientid='$patientId'";
     $pat_myarray = $db->getRow($pat_sql);
 
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -280,27 +278,16 @@ if ($patient_info) {
             $andNullConditional";
         $myarray = $db->getRow($sql);
 
-        $q_page2id = st($myarray['q_page2id']);
         $polysomnographic = st($myarray['polysomnographic']);
         $sleep_center_name_text = st($myarray['sleep_center_name_text']);
         $sleep_study_on = st($myarray['sleep_study_on']);
-        $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-        $rdi = st($myarray['rdi']);
-        $ahi = st($myarray['ahi']);
         $cpap = st($myarray['cpap']);
         $cur_cpap = st($myarray['cur_cpap']);
         $intolerance = st($myarray['intolerance']);
         $other_intolerance = st($myarray['other_intolerance']);
         $other_therapy = st($myarray['other_therapy']);
-        $other = st($myarray['other']);
-        $affidavit = st($myarray['affidavit']);
-        $type_study = st($myarray['type_study']);
         $nights_wear_cpap = st($myarray['nights_wear_cpap']);
         $percent_night_cpap = st($myarray['percent_night_cpap']);
-        $custom_diagnosis = st($myarray['custom_diagnosis']);
-        $sleep_study_by = st($myarray['sleep_study_by']);
-        $triedquittried = st($myarray['triedquittried']);
-        $timesovertime = st($myarray['timesovertime']);
         $dd_wearing = st($myarray['dd_wearing']);
         $dd_prev = st($myarray['dd_prev']);
         $dd_otc = st($myarray['dd_otc']);

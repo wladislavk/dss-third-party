@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
-	include_once "includes/constants.inc";
-	include_once('includes/patient_info.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+include_once "includes/constants.inc";
+include_once('includes/patient_info.php');
 
 	if(isset($_REQUEST['yes_but']) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_ledger where primary_claim_id='".$_REQUEST["delid"]."'";

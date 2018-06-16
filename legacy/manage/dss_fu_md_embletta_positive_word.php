@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 	# This line will stream the file to the user rather than spray it across the screen
 	header("Content-type: application/octet-stream");
 
@@ -27,8 +29,7 @@
 	
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
-	$a_arr = explode('
-	',$referring_physician);
+	$a_arr = explode(' ',$referring_physician);
 	if(st($pat_myarray['dob']) <> '' ) {
 		$dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
 		$cur_y = date('Y');
@@ -73,8 +74,6 @@
 	$q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
-	$polysomnographic = st($q2_myarray['polysomnographic']);
-	$sleep_center_name = st($q2_myarray['sleep_center_name']);
 	$sleep_study_on = st($q2_myarray['sleep_study_on']);
 	$confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
 	$rdi = st($q2_myarray['rdi']);
@@ -86,15 +85,9 @@
 	$sum_myarray = $db->getRow($sum_sql);
 	$sti_o2_1 = st($sum_myarray['sti_o2_1']);
 	if(st($pat_myarray['gender']) == 'Female') {
-		$h_h =  "her";
 		$s_h =  "she";
-		$h_h1 =  "her";
-		$m_m = "Mrs.";
 	} else {
-		$h_h =  "his";
 		$s_h =  "he";
-		$h_h1 =  "him";
-		$m_m = "Mr.";
 	}
 ?>
 	<br />

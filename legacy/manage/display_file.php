@@ -5,14 +5,10 @@ $filename = !empty($_GET['f']) ? $_GET['f'] : '';
 $isLetter = array_get($_GET, 'type') === 'letter';
 
 /**
- * @see DSS-337
- *
  * Don't check for session info if the file is a logo
  */
 if (!preg_match('/^user_logo_\d+\.(gif|jpg|jpeg|png)$/', $filename)) {
     /**
-     * @see DSS-534
-     *
      * Letters should allow BO users to access this script
      */
     session_start();

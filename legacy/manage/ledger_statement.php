@@ -1,57 +1,58 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	// It will be called downloaded.pdf
-	include_once('3rdParty/tcpdf/config/lang/eng.php');
-	include_once('3rdParty/tcpdf/tcpdf.php');
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	include_once('admin/includes/main_include.php');
-	include("includes/sescheck.php");
-	include_once('includes/dental_patient_summary.php');
-	include_once('includes/patient_info.php');
-	include_once('includes/constants.inc');
+// It will be called downloaded.pdf
+include_once('3rdParty/tcpdf/config/lang/eng.php');
+include_once('3rdParty/tcpdf/tcpdf.php');
 
-    $sql = "SELECT  "
-         . "  dl.amount, sum(pay.amount) as paid_amount "
-         . "FROM dental_ledger dl  "
-         . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
-         . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
-         . "GROUP BY dl.ledgerid";
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+include_once('includes/dental_patient_summary.php');
+include_once('includes/patient_info.php');
+include_once('includes/constants.inc');
 
-    $result = $db->getResults($sql);
+$sql = "SELECT  "
+     . "  dl.amount, sum(pay.amount) as paid_amount "
+     . "FROM dental_ledger dl  "
+     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+     . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
+     . "GROUP BY dl.ledgerid";
 
-	$docr = array();
-	if ($patient_info || count($result)) {
-		$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-		
-		$docr = $db->getRow($docsql);
-		$ledger_balance = 0;
-		if ($result) foreach ($result as $row) {
-			$ledger_balance -= $row['amount'];
-			$ledger_balance += $row['paid_amount'];
-		}
+$result = $db->getResults($sql);
 
-		update_patient_summary($_GET['pid'], 'ledger', $ledger_balance);
+$docr = [];
+if ($patient_info || count($result)) {
+    $docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+
+    $docr = $db->getRow($docsql);
+    $ledger_balance = 0;
+    if ($result) foreach ($result as $row) {
+        $ledger_balance -= $row['amount'];
+        $ledger_balance += $row['paid_amount'];
+    }
+    update_patient_summary($_GET['pid'], 'ledger', $ledger_balance);
 ?>
 <?php
-		if(!isset($_REQUEST['sort'])){
-			$_REQUEST['sort'] = 'service_date';
-			$_REQUEST['sortdir'] = 'desc';
-		}
+    if(!isset($_REQUEST['sort'])){
+        $_REQUEST['sort'] = 'service_date';
+        $_REQUEST['sortdir'] = 'desc';
+    }
 
-		if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
-			$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-			
-			$pat_my2 = $db->getResults($pat_sql2);
-			if ($pat_my2) foreach ($pat_my2 as $pat_myarray2){ 
-				$pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
-				if(!$pat_sql3){
-					echo "There was an error updating the ledger record.  Please contact your system administrator.";
-				}
-  			}  
+    if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
+        $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
-			$del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
-			
-			$db->query($del_sql);
-			$msg = "Deleted Successfully";
+        $pat_my2 = $db->getResults($pat_sql2);
+        if ($pat_my2) foreach ($pat_my2 as $pat_myarray2){
+            $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+            if(!$pat_sql3){
+                echo "There was an error updating the ledger record.  Please contact your system administrator.";
+            }
+        }
+
+        $del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
+
+        $db->query($del_sql);
+        $msg = "Deleted Successfully";
 ?>			
 			<?php if($_GET['popup']==1) { ?>
 				<script type="text/javascript">
@@ -98,13 +99,7 @@
 		}
 
 		$rec_disp = 200;
-		if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
-			$index_val = $_REQUEST["page"];
-		} else {
-			$index_val = 0;
-		}
-	
-		$i_val = $index_val * $rec_disp;
+
 		if(isset($_GET['openclaims']) && $_GET['openclaims']==1){
 			$sql = "select
                 'claim',
@@ -241,9 +236,6 @@
 			}
 		}
 
-		$total_rec = $db->getNumberRows($sql);
-		$no_pages = $total_rec/$rec_disp;
-
 		$my = $db->getResults($sql);
 		$num_users = count($my);
 		$html = '';
@@ -297,16 +289,8 @@
 			$orig_bal = $cur_bal;
 		}
 
-		$last_sd = '';
-		$last_ed = '';
 		foreach ($my as $myarray)
 		{
-			if($myarray["status"] == 1) {
-				$tr_class = "tr_active";
-			} else {
-				$tr_class = "tr_inactive";
-			}
-
 			$tr_class = "tr_active";
             if($myarray['ledger']  == 'claim'){
             	$tr_class .= ' clickable_row';
@@ -322,7 +306,6 @@
 
 			$html .= '<tr class="'.$tr_class.' '. $myarray['ledger'] .'">';
 			$html .= '<td valign="top">';
-			$last_sd = $myarray["service_date"];
        		$html .= date('m-d-Y',strtotime(st($myarray["service_date"])));
 			$html .= '</td>
 				<td valign="top">';
@@ -454,9 +437,6 @@
 
     //set image scale factor
     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-    //set some language-dependent strings
-    //$pdf->setLanguageArray($l);
 
     // set font
     $pdf->SetFont('dejavusans', '', 10);

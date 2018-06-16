@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if($_POST['q_recipientssub'] == 1){
@@ -71,26 +73,26 @@ $patient_info = st($myarray['patient_info']);
 if($patient_info == ''){
 	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);			
 	$sel_val = st($name);
-	if(st($pat_myarray['company']) <> ''){
+	if(st($pat_myarray['company']) != ''){
 		$sel_val .= "
 		".st($pat_myarray['company']);
 	}
-	if(st($pat_myarray['add1']) <> ''){
+	if(st($pat_myarray['add1']) != ''){
 		$sel_val .= "
 		".st($pat_myarray['add1']);
 	}
-	if(st($pat_myarray['add2']) <> ''){
+	if(st($pat_myarray['add2']) != ''){
 	$sel_val .= "
 	".st($pat_myarray['add2']);
 	}
-	if(st($pat_myarray['city']) <> ''){
+	if(st($pat_myarray['city']) != ''){
 	$sel_val .= "
 	".st($pat_myarray['city']);
 	}
-	if(st($pat_myarray['state']) <> ''){
+	if(st($pat_myarray['state']) != ''){
 	$sel_val .= " ".st($pat_myarray['state']);
 	}
-	if(st($pat_myarray['zip']) <> ''){
+	if(st($pat_myarray['zip']) != ''){
 	$sel_val .= " ".st($pat_myarray['zip']);
 	}
 
@@ -135,7 +137,7 @@ if($patient_info == ''){
                     <label class="desc" id="title0" for="Field0">
                         Referring Physician
                         &nbsp;&nbsp;&nbsp;
-                        <button onclick="Javascript: loadPopup('select_contact_rec.php?tx=referring_physician'); return false;">Use Contact List</button>
+                        <button onclick="loadPopup('select_contact_rec.php?tx=referring_physician'); return false;">Use Contact List</button>
                     </label>
                     <div>
                         <span>
@@ -143,12 +145,10 @@ if($patient_info == ''){
                         </span>
                     </div>
                     <br />
-                    
                 </li>
             </ul>
         </td>
     </tr>
-    
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -156,7 +156,7 @@ if($patient_info == ''){
                     <label class="desc" id="title0" for="Field0">
                         Dentist
                         &nbsp;&nbsp;&nbsp;
-                        <button onclick="Javascript: loadPopup('select_contact_rec.php?tx=dentist'); return false;">Use Contact List</button>
+                        <button onclick="loadPopup('select_contact_rec.php?tx=dentist'); return false;">Use Contact List</button>
                     </label>
                     <div>
                         <span>
@@ -164,12 +164,10 @@ if($patient_info == ''){
                         </span>
                     </div>
                     <br />
-                    
                 </li>
             </ul>
         </td>
     </tr>
-    
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -177,7 +175,7 @@ if($patient_info == ''){
                     <label class="desc" id="title0" for="Field0">
                         Physicians (other)
                         &nbsp;&nbsp;&nbsp;
-                        <button onclick="Javascript: loadPopup('select_contact_rec.php?tx=physicians_other'); return false;">Use Contact List</button>
+                        <button onclick="loadPopup('select_contact_rec.php?tx=physicians_other'); return false;">Use Contact List</button>
                     </label>
                     <div>
                         <span>
@@ -185,12 +183,10 @@ if($patient_info == ''){
                         </span>
                     </div>
                     <br />
-                    
                 </li>
             </ul>
         </td>
     </tr>
-    
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -204,12 +200,10 @@ if($patient_info == ''){
                         </span>
                     </div>
                     <br />
-                    
                 </li>
             </ul>
         </td>
     </tr>
-    
 </table>
 
 <div align="right">

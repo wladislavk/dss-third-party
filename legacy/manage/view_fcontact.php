@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
@@ -10,7 +12,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
@@ -91,8 +92,6 @@ if(!empty($msg)){
     $notes = st($themyarray['notes']);
 
     $name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-
-    $but_text = "Add ";
 }
 
 if($themyarray["contactid"] != ''){
@@ -264,11 +263,13 @@ $ctype_my = $db->getResults($ctype_sql);
 
                                 	<option value="0"></option>
 <?php 
-if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
-                                	<option value="<?php echo st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
+if ($ctype_my) {
+    foreach ($ctype_my as $ctype_myarray) {?>
+        <option value="<?php echo st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
                                     	<?php echo st($ctype_myarray['contacttype']);?>
-                                    </option>        
-<?php 
+                                    </option>
+        <?php
+    }
 }?>
                                 </select>
                                 <label for="contacttype">Contact Type</label>

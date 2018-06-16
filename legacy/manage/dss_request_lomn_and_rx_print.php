@@ -1,11 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include "admin/includes/main_include.php";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 	if(empty($pat_myarray['patientid'])) {
 ?>
 		<script type="text/javascript">
@@ -21,26 +22,7 @@
 	$referring_physician = st($ref_myarray['referring_physician']);
 	$a_arr = explode('
 	',$referring_physician);
-	if(st($pat_myarray['dob']) <> '' ) {
-		$dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
-		$cur_y = date('Y');
-		$age = $cur_y - $dob_y;
-	} else {
-		$age = 'N/A';
-	}
-
-if(st($pat_myarray['gender']) == 'Female') {
-	$h_h =  "Her";
-	$s_h =  "She";
-	$h_h1 =  "her";
-	$m_s = "Mrs.";
-} else {
-	$h_h =  "His";
-	$s_h =  "He";
-	$h_h1 =  "him";
-	$m_s = "Mr.";
-}
-?>
+	?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

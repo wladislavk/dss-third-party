@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once('includes/constants.inc');
 include "includes/similar.php";
@@ -7,7 +9,7 @@ include "includes/similar.php";
 <link rel="stylesheet" href="css/manage_display_similar.css" type="text/css" media="screen" />
 
 <?php
-if(isset($_REQUEST['useid'])){
+if (isset($_REQUEST['useid'])) {
 	$u = $_REQUEST['useid'];
 	$pc = $_REQUEST['pcid'];
 
@@ -40,7 +42,7 @@ if(isset($_REQUEST['useid'])){
 		window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
 	</script>
 <?php
-}elseif(isset($_REQUEST['createid'])){
+} elseif(isset($_REQUEST['createid'])) {
 
   $s = "INSERT INTO dental_contact (
 		firstname,
@@ -90,11 +92,7 @@ if(isset($_REQUEST['useid'])){
 	$psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
 	$db->query($psql);
 	$d = "DELETE FROM dental_patient_contacts where id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
-	$db->query($d);?>
-	<script type="text/javascript">
-		//window.location = "add_contact.php?ed=<?php echo $pc_id; ?>";
-	</script>
- <?php
+	$db->query($d);
 }elseif(isset($_REQUEST['delid'])){
 	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";
 	$pcr = $db->getRow($pcsql);

@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include_once 'admin/includes/main_include.php'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once 'admin/includes/main_include.php';
+?>
 
 <?php
     if(isset($_POST['sign_but'])){
@@ -28,7 +32,7 @@
             }
             
             $file = "signature_" . $_SESSION['userid'] . "_" . $signature_id . ".png";
-            $s = imagepng($img, '../../../shared/q_file/'.$file);
+            imagepng($img, '../../../shared/q_file/'.$file);
             imagedestroy($img);
         }
     }

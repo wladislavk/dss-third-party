@@ -1,29 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	if($_GET['backoffice'] == '1') {
-		include 'admin/includes/top.htm';
-	} else {
-		include 'includes/top.htm';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm';
+} else {
+    include 'includes/top.htm';
+}
 ?>
-
-	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
-
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
 	$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 	// Select Letter
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 	
 	$letter_result = $db->getResults($letter_query);
-	if ($letter_result) foreach ($letter_result as $row) {
-		$templateid = $row['templateid'];
-		$patientid = $row['patientid'];
-		$topatient = $row['topatient'];
-		$md_list = $row['md_list'];
-		$md_referral_list = $row['md_referral_list'];
-		$mds = explode(",", $md_list);
-		$md_referrals = explode(",", $md_referral_list);
-	}
+	if ($letter_result) {
+	    foreach ($letter_result as $row) {
+            $templateid = $row['templateid'];
+            $patientid = $row['patientid'];
+            $topatient = $row['topatient'];
+            $md_list = $row['md_list'];
+            $md_referral_list = $row['md_referral_list'];
+        }
+    }
 	// Get Letter Subject
 	$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
 	
@@ -145,7 +145,6 @@
 			    foreach ($letter_contacts as $key => $contact) {
 			      $new_template[$key] = $dupe_template;
 			    }
-				$duplicated = true;
 			}
 			// Reset Letter
 			if (isset($_POST['reset_letter'])) {
@@ -209,7 +208,7 @@
 					$message = str_replace($search, "", $message);	
 					deliver_letter($letterid, $message);
 				} else {
-			    	$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+			    	send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 				}
 
 				if ($parent) {
@@ -241,17 +240,17 @@
 ?>
 <?php // loop through letters ?>
 			<div align="right">
-				<button class="addButton" onclick="Javascript: edit_letter('letter<?php echo $key?>');return false;" >
+				<button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
 					Edit Letter
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 					Print Letter 
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 					Word Document
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;

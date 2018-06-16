@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
 <h3 class="sect_header">Treatment Summary</h3>
 <div class="box">
     <?php include 'appointment_summary.php'; ?>

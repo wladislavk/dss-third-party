@@ -1,9 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	if($_GET['backoffice'] == '1') {
-		include 'admin/includes/top.htm';
-	} else {
-		include 'includes/top.htm';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm';
+} else {
+    include 'includes/top.htm';
+}
 ?>
 
 	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -21,8 +23,6 @@
 		$topatient = $row['topatient'];
 		$md_list = $row['md_list'];
 		$md_referral_list = $row['md_referral_list'];
-		$mds = explode(",", $md_list);
-		$md_referrals = explode(",", $md_referral_list);
 	}
 
 	// Get Letter Subject
@@ -188,7 +188,6 @@
 					if (count($letter_contacts) == 1) {
 						$parent = true;
 					}
-			    	$letterid = $letterid;
 			 		$type = $contact['type'];
 					$recipientid = $contact['id'];
 					if ($_GET['backoffice'] == '1') {
@@ -197,7 +196,7 @@
 						$message = str_replace($search, "", $message);	
 						deliver_letter($letterid, $message);
 					} else {
-				    	$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+				    	send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 					}
 					if ($parent) {
 ?>

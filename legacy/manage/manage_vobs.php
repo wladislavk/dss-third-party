@@ -76,7 +76,7 @@ function insert_preauth_row($patient_id)
         '" . date('Y-m-d H:i:s') . "', "
         . DSS_PREAUTH_PENDING . "
         )";
-    $my = $db->query($sql);
+    $db->query($sql);
 }
 
 $rec_disp = 20;

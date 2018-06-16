@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
@@ -35,7 +37,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
             break;
     }
     $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
-    //echo $psql;
     $db->query($psql);
     $d = "DELETE FROM dental_patient_insurance where id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
     $db->query($d);?>
@@ -48,7 +49,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 $thesql = "select * from dental_patient_insurance where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
-$lastname = st(!empty($themyarray['lastname']) ? $themyarray['lastname'] : '');
 $company = st($themyarray['company']);
 $add1 = st($themyarray['address1']);
 $add2 = st($themyarray['address2']);
@@ -59,15 +59,8 @@ $phone1 = st($themyarray['phone']);
 $phone2 = st(!empty($themyarray['phone2']) ? $themyarray['phone2'] : '');
 $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
-$national_provider_id = st(!empty($themyarray['national_provider_id']) ? $themyarray['national_provider_id'] : '');
-$qualifier = st(!empty($themyarray['qualifier']) ? $themyarray['qualifier'] : '');
-$qualifierid = st(!empty($themyarray['qualifierid']) ? $themyarray['qualifierid'] : '');
-$greeting = st(!empty($themyarray['greeting']) ? $themyarray['greeting'] : '');
-$sincerely = st(!empty($themyarray['sincerely']) ? $themyarray['sincerely'] : '');
-$contacttypeid = st(!empty($themyarray['contacttypeid']) ? $themyarray['contacttypeid'] : '');
 $notes = st(!empty($themyarray['notes']) ? $themyarray['notes'] : '');
 $preferredcontact = st(!empty($themyarray['preferredcontact']) ? $themyarray['preferredcontact'] : '');
-$name = st(!empty($themyarray['firstname']) ? $themyarray['firstname'] : '')." ".st(!empty($themyarray['middlename']) ? $themyarray['middlename'] : '')." ".st(!empty($themyarray['lastname']) ? $themyarray['lastname'] : '');
 
 $but_text = "Add ";
 ?>

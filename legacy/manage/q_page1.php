@@ -61,7 +61,6 @@ if ($patient_info) {
     <script type="text/javascript" src="js/q_page1.js?v=20171219"></script>
     <script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
     <?php
-	$todaysdate = date("m/d/Y");
 	if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
         $exam_date = ($_POST['exam_date'] != '') ? date('Y-m-d', strtotime($_POST['exam_date'])) : '';
         $ess = $_POST['ess'];
@@ -198,7 +197,6 @@ if ($patient_info) {
 
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -245,7 +243,6 @@ if ($patient_info) {
             $andNullConditional";
         $myarray = $db->getRow($sql);
 
-        $q_page1id = st($myarray['q_page1id']);
         $exam_date = st($myarray['exam_date']);
         $ess = st($myarray['ess']);
         $tss = st($myarray['tss']);
@@ -253,19 +250,15 @@ if ($patient_info) {
         $chief_complaint_text = st($myarray['chief_complaint_text']);
         $complaintid = st($myarray['complaintid']);
         $other_complaint = st($myarray['other_complaint']);
-        $additional_paragraph = st($myarray['additional_paragraph']);
         $energy_level = st($myarray['energy_level']);
         $snoring_sound = st($myarray['snoring_sound']);
         $wake_night = st($myarray['wake_night']);
-        $breathing_night = st($myarray['breathing_night']);
         $morning_headaches = st($myarray['morning_headaches']);
         $hours_sleep = st($myarray['hours_sleep']);
         $quit_breathing = st($myarray['quit_breathing']);
         $bed_time_partner = st($myarray['bed_time_partner']);
         $sleep_same_room = st($myarray['sleep_same_room']);
         $told_you_snore = st($myarray['told_you_snore']);
-        $main_reason = st($myarray['main_reason']);
-        $main_reason_other = st($myarray['main_reason_other']);
         $sleep_qual = st($myarray['sleep_qual']);
 
         if ($complaintid != '') {
@@ -406,9 +399,7 @@ if ($patient_info) {
                                         $andNullConditional";
                                     $myarray = $db->getRow($sql);
 
-                                    $q_sleepid = st($myarray['q_sleepid']);
                                     $epworthid = st($myarray['epworthid']);
-                                    $analysis = st($myarray['analysis']);
 
                                     if ($epworthid != '') {
                                         $epworth_arr1 = explode('~', $epworthid);
@@ -421,7 +412,6 @@ if ($patient_info) {
 
                                     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                     $epworth_my = $db->getResults($epworth_sql);
-                                    $epworth_number = count($epworth_my);
 
                                     foreach ($epworth_my as $epworth_myarray) {
                                         if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
@@ -447,7 +437,6 @@ if ($patient_info) {
                                         $andNullConditional";
                                     $myarray = $db->getRow($sql);
 
-                                    $thortonid = st($myarray['thortonid']);
                                     $snore_1 = st($myarray['snore_1']);
                                     $snore_2 = st($myarray['snore_2']);
                                     $snore_3 = st($myarray['snore_3']);
@@ -490,7 +479,6 @@ if ($patient_info) {
                                 <?php
                                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                                 $complaint_my = $db->getResults($complaint_sql);
-                                $complaint_number = count($complaint_my);
                                 ?>
                                 <span class="form_info">
                                     Please check any other complaints below.

@@ -76,7 +76,7 @@ if (!empty($_GET['msg'])) {
 <body>
 <div id="login_container">
     <div id="form-container">
-    <FORM name="loginfrm" method="post">
+    <form name="loginfrm" method="post">
         <input type="hidden" name="recoversub" value="1">
         <input type="hidden" name="hash" value="<?= e($_GET['rh']) ?>" />
         <input type="hidden" name="userid" value="<?= e($check_myarray ? $check_myarray['userid'] : '') ?>" />
@@ -120,6 +120,6 @@ if (!empty($_GET['msg'])) {
                 </td>
             </tr>
         </table>
-    </FORM>
+    </form>
     </div>
 </div>

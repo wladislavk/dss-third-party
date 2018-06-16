@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "admin/includes/main_include.php";
 
 if(isset($_POST['dailysub']) && $_POST['dailysub'] != 1 && isset($_POST['monthlysub']) && $_POST['monthlysub'] != 1)
@@ -110,11 +112,6 @@ $my = $db->getResults($sql);
 			$referredby_myarray = $db->getRow($referredby_sql);
 			$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 			
-			if($myarray["status"] == 1){
-				$tr_class = "tr_active";
-			} else {
-				$tr_class = "tr_inactive";
-			}
 			$tr_class = "tr_active";
 		?>
 			<tr class="<?php echo $tr_class;?>">

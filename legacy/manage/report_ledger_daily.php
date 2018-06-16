@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><div id="ledger_daily">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<div id="ledger_daily">
   <svg style='height:300px; width: 450px;'/>
 </div>
 
@@ -56,10 +59,6 @@
               ORDER BY a.Date";
 
       $q = $db->getResults($sql);
-	    $i = 0;
-      $total_charge = 0;
-	    $total_credits = 0;
-
       foreach ($q as $r) {
   ?>
         charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $r['charge']; ?>]);
@@ -67,7 +66,6 @@
   <?php
       }
   ?>
-
   return [
      {
 	     "key": "Daily Charges",
@@ -79,8 +77,4 @@
      }
    ];
  }
-
 </script>
-
-
-

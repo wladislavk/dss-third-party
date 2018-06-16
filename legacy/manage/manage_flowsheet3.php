@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once __DIR__ . '/includes/dual_app.php';
+
 $patientId = !empty($_GET['pid']) ? $_GET['pid'] : '';
 dualAppRedirect('main/patients/tracker?pid=' . $patientId);
 
@@ -44,7 +46,6 @@ $trackerNotes = $db->getColumn("
 );
 
 $final = $db->getRow($final_sql);
-$final_segment = $final['segmentid'];
 $final_rank = 0;
 $db->query("SET @rank=0");
 $rank_sql = "SELECT @rank:=@rank+1 as rank, id from dental_flowsheet_steps ORDER BY section ASC, sort_by ASC";

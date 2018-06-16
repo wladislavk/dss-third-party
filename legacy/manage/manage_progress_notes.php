@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 	include "includes/top.htm";
 	include_once('includes/patient_info.php');
 
@@ -20,12 +22,11 @@
 		
 		$pat_myarray = $db->getRow($pat_sql);
 		$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-		if($pat_myarray['patientid'] == '') {
-?>
+		if ($pat_myarray['patientid'] == '') { ?>
 			<script type="text/javascript">
 				window.location = 'manage_patient.php';
 			</script>
-<?php
+            <?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
@@ -54,11 +55,9 @@
 		$sql .= " limit ".$i_val.",".$rec_disp;
 		$my = $db->getResults($sql);
 		$num_users = count($my);
-?>
-
+		?>
 		<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 		<script src="admin/popup/popup.js" type="text/javascript"></script>
-
 		<span class="admin_head">
 			Progress Notes
 			-
@@ -66,21 +65,18 @@
 				<?php echo $name;?>
 		    </i>
 		</span>
-
 		<div align="left">
 			&nbsp;&nbsp;&nbsp;
 			<a href="manage_patient.php" class="editlink" title="EDIT">
 				<b>&lt;&lt;Back</b>
 			</a>
 		</div>
-
 		<div align="right">
-			<button onclick="Javascript: loadPopupClean('view_notes.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
+			<button onclick="loadPopupClean('view_notes.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
 				View All Notes
 			</button>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			
-			<button onclick="Javascript: loadPopup('add_notes.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
+			<button onclick="loadPopup('add_notes.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
 				Add New Progress Note
 			</button>
 			&nbsp;&nbsp;
@@ -89,7 +85,6 @@
 		<div align="center" class="red">
 			<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 		</div>
-
 		<table width="15%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="right" >
 			<tr>
 				<td valign="top" bgcolor="#FF9999">
@@ -101,7 +96,6 @@
 				</td>
 			</tr>
 		</table>
-
 		<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 			<?php if($total_rec > $rec_disp) {?>
 				<tr bgColor="#ffffff">
@@ -160,15 +154,15 @@
 		                	<?php echo st($user_myarray["name"]);?>
 						</td>
 						<td valign="top">
-							<a href="Javascript:;" onclick="Javascript: loadPopup('view_notes.php?ed=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="View Detail">
+							<a href="Javascript:;" onclick="loadPopup('view_notes.php?ed=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="View Detail">
 								<img src="admin/images/b_browse.png" alt="EDIT" width="16" height="16" border="0" align="View Detail"/>
 							</a>
 							<?php if(date('m-d-Y') == date('m-d-Y',strtotime(st($myarray["adddate"])))) { ?>
-								<a href="Javascript:;" onclick="Javascript: loadPopup('add_notes.php?ed=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="EDIT">
+								<a href="Javascript:;" onclick="loadPopup('add_notes.php?ed=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="EDIT">
 									Edit 
 								</a>
 							<?php } ?>
-		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["notesid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 								Delete 
 							</a>
 						</td>
@@ -176,7 +170,7 @@
 							<?php echo ($myarray['status'])?"Open":"Closed"; ?>
 						</td>
 					</tr>
-			<?php
+                    <?php
 				}
 			}
 			?>
@@ -201,7 +195,7 @@
 		<br /><br />
 <?php
 	} else {  // end pt info check
-		print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+		echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 	}
 ?>
 

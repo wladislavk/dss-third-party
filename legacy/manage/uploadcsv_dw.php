@@ -16,12 +16,9 @@ include 'includes/dental_patient_summary.php';
 $db = new Db();
 
 if(isset($_POST['submitbut'])){
-    $csv = array();
     // check there are no errors
     if($_FILES['csv']['error'] == 0){
-        $name = $_FILES['csv']['name'];
         $ext = strtolower(preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['csv']['name'])));
-        $type = $_FILES['csv']['type'];
         $tmpName = $_FILES['csv']['tmp_name'];
 
         // check the file is a csv
@@ -119,7 +116,6 @@ if(isset($_POST['submitbut'])){
                         }
                         $row++;
                     }else{
-            			$copyreqdate = '';
             			$patientphone = $patientemail = $patientdob = $patientadd = $patientcity = $patientstate = $patientzip = $patientgender = false;
             			$s = "INSERT INTO dental_patients SET ";
                         foreach($fields AS $id => $field){
@@ -220,22 +216,19 @@ if(isset($_POST['submitbut'])){
               				$stepid = '1';
               				$segmentid = '1';
               				$scheduled = date('Y-m-d', strtotime($copyreqdate));
-              				$gen_date = date('Y-m-d H:i:s');
               				$steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
               				$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
-              				$steparray_insert = $db->query($steparray_query);
-              				$flow_pg2_info_insert = $db->query($flow_pg2_info_query);
+              				$db->query($steparray_query);
+              				$db->query($flow_pg2_info_query);
 
             				if(!empty($last_visit)){
             					$visit_date = date('Y-m-d', strtotime($last_visit));
             					$steparray_query = "UPDATE dental_flow_pg2 SET steparray = '1,2' WHERE patientid='".$pid."'";
             					$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '2', '2', '".$visit_date."', '".$visit_date."');";
-                            	$steparray_insert = $db->query($steparray_query);
-                            	$flow_pg2_info_insert = $db->query($flow_pg2_info_query);
+                            	$db->query($steparray_query);
+                            	$db->query($flow_pg2_info_query);
             				}
             			}
-
-                                // inc the row
                    		$row++;
             		}
                 }
@@ -273,4 +266,3 @@ if(isset($_POST['submitbut'])){
 </div>
 <br /><br />
 <?php include "includes/bottom.htm";?>
-

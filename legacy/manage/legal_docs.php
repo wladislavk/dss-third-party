@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -16,8 +18,10 @@ include "includes/top.htm";
 </div>
 
 <div class="fullwidth">
-<?php include 'legal_hipaa.php';
-include 'legal_user.php'; ?>
+<?php
+include 'legal_hipaa.php';
+include 'legal_user.php';
+?>
 </div>
 
 <div id="popupContact" style="width:750px;height:460px">
@@ -28,6 +32,3 @@ include 'legal_user.php'; ?>
 
 <br /><br />	
 <? include "includes/bottom.htm";?>
-
-
-

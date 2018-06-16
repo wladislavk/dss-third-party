@@ -1,15 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once 'includes/constants.inc';
 include "includes/similar.php";
 
 $isSelectPatient = !empty($_GET['pid']);
 $selectedPatient = intval($_GET['pid']);
-
 ?>
-
 <link rel="stylesheet" href="css/pending.css?v=20170516<?= time() ?>" type="text/css" media="screen" />
-
 <?php
 
 //SQL to search for possible duplicates
@@ -171,7 +170,6 @@ if (!empty($_GET['msg'])) {
         }
     }
 }
-
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
@@ -224,9 +222,7 @@ if (!empty($_GET['msg'])) {
 		</td>
 	</tr>
 	<?php 
-	}
-	else
-	{
+	} else {
         foreach ($my as $myarray) {
 			$sim = similar_patients($myarray['patientid']); ?>
 	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
@@ -332,11 +328,8 @@ $my = $db->getResults($sql);
             </td>
         </tr>
         <?php
-        }
-        else
-        {
-            foreach ($my as $myarray) {
-                $sim = similar_doctors($myarray['patientid']); ?>
+        } else {
+            foreach ($my as $myarray) { ?>
     <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
         <td valign="top" <?= $isSelectPatient ? 'id="external-patient"' : '' ?>>
             <?php echo st($myarray["firstname"]);?>&nbsp;

@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'admin/includes/main_include.php'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'admin/includes/main_include.php';
+?>
 
 <html>
   <head>
@@ -48,7 +52,7 @@
 
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" style="width:600px; margin:40px" name="memofrm">
       <textarea name="memobox" cols=60 rows=6><?php echo $memo ?></textarea><br />
-      <input type="text" onclick="javascript:cal72.popup();" maxlength="255" style="width: 150px;" class="field text addr tbox" name="show_until" id="show_until" value="<?php echo $date; ?>">
+      <input type="text" onclick="cal72.popup();" maxlength="255" style="width: 150px;" class="field text addr tbox" name="show_until" id="show_until" value="<?php echo $date; ?>">
 			<a href="javascript:cal72.popup();">
         <img width="16" height="16" border="0" alt="Click Here to Pick up the date" src="img/cal.gif">
       </a>

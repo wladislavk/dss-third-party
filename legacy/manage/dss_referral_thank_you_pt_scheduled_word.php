@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
 
 # This line will stream the file to the user rather than spray it across the screen
 header("Content-type: application/octet-stream");
@@ -78,7 +79,6 @@ foreach ($medications_arr as $val) {
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q2_myarray = $db->getRow($q2_sql);
 
-$polysomnographic = st($q2_myarray['polysomnographic']);
 $sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);

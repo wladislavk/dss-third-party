@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]))
-{
+if (!empty($_REQUEST["delid"])) {
 	$del_sql = "delete from dental_fcontact where contactid='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
 	
@@ -17,11 +18,12 @@ if(!empty($_REQUEST["delid"]))
 
 $rec_disp = 10;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select c.*, ct.contacttype from dental_contact c
 	LEFT JOIN dental_contacttype ct ON ct.contacttypeid=c.contacttypeid
@@ -70,15 +72,15 @@ $num_contact = count($my);
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if ($total_rec > $rec_disp) { ?>
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php
-				 paging($no_pages,$index_val,"");
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
         <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
@@ -102,20 +104,13 @@ $num_contact = count($my);
 		</td>
 	</tr>
 	<?php
-	}
-	else
-	{
+	} else {
 		foreach ($my as $myarray) {
-
-			if($myarray["status"] == 1)
-			{
+			if ($myarray["status"] == 1) {
 				$tr_class = "tr_active";
-			}
-			else
-			{
+			} else {
 				$tr_class = "tr_inactive";
 			}
-			
 			$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 		?>
 	<tr class="<?php echo $tr_class;?>">
@@ -129,11 +124,11 @@ $num_contact = count($my);
 			<?php echo $name;?>
 		</td>
 		<td valign="top">
-			<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>&corp=1');" class="editlink" title="EDIT">
+			<a href="Javascript:;"  onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>&corp=1');" class="editlink" title="EDIT">
 				Quick View 
 			</a>
 			|
-			<a href="Javascript:;"  onclick="Javascript: loadPopup('view_fcontact.php?ed=<?php echo $myarray["contactid"];?>');" class="editlink" title="EDIT">
+			<a href="Javascript:;"  onclick="loadPopup('view_fcontact.php?ed=<?php echo $myarray["contactid"];?>');" class="editlink" title="EDIT">
 				View Full 
 			</a>
 		</td>
@@ -151,4 +146,4 @@ $num_contact = count($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

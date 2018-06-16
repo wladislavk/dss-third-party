@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 $sql = "select i.*,
          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,
@@ -10,14 +11,14 @@ $my = $db->getResults($sql);
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php 
 if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-    <TR bgColor="#ffffff">
-        <TD  align="right" colspan="15" class="bp">
+    <tr bgColor="#ffffff">
+        <td align="right" colspan="15" class="bp">
             Pages:
             <?php paging($no_pages,$index_val,"");?>
-        </TD>
-    </TR>
-<?php 
-}?>
+        </td>
+    </tr>
+    <?php
+} ?>
     <tr class="tr_bg_h">
         <td valign="top" class="col_head" width="60%">
             Date
@@ -30,7 +31,7 @@ if(!empty($total_rec) && $total_rec > $rec_disp) {?>
         </td>
     </tr>
 <?php 
-if(count($my) == 0){ ?>
+if (count($my) == 0) { ?>
     <tr class="tr_bg">
         <td valign="top" class="col_head" colspan="10" align="center">
             No Records
@@ -39,12 +40,7 @@ if(count($my) == 0){ ?>
 <?php
 }else{
     foreach ($my as $myarray) {
-        if($myarray["status"] == 1){
-            $tr_class = "tr_active";
-        }else{
-            $tr_class = "tr_inactive";
-        }
-    $tr_class = "tr_active";?>
+        $tr_class = "tr_active"; ?>
     <tr class="<?php echo $tr_class;?>">
         <td valign="top">
             <?php echo date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
@@ -71,12 +67,12 @@ $my = $db->getResults($sql);
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php 
 if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-    <TR bgColor="#ffffff">
-        <TD  align="right" colspan="15" class="bp">
+    <tr bgColor="#ffffff">
+        <td align="right" colspan="15" class="bp">
           Pages:
           <?php paging($no_pages,$index_val,"");?>
-        </TD>
-    </TR>
+        </td>
+    </tr>
 <?php 
 }?>
     <tr class="tr_bg_h">
@@ -100,11 +96,6 @@ if(count($my) == 0){ ?>
 <?php
 }else{
     foreach ($my as $myarray) {
-        if($myarray["status"] == 1){
-            $tr_class = "tr_active";
-        }else{
-            $tr_class = "tr_inactive";
-        }
         $tr_class = "tr_active";?>
     <tr class="<?php echo $tr_class;?>">
         <td valign="top">

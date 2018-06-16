@@ -182,7 +182,6 @@ if (!empty($_GET['msg'])) {
         }
     }
 }
-
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
@@ -387,7 +386,6 @@ $my = $db->getResults($sql);
 <?php
 
 include "includes/bottom.htm";
-
 
 function similarContacts ($id) {
     $db = new Db();

@@ -7,10 +7,10 @@ require_once __DIR__ . '/admin/includes/claim-status-switcher.inc';
 ?>
   <link rel="stylesheet" href="css/ledger.css" />
 <?php
-  if(!isset($_REQUEST['sort'])){
+if (!isset($_REQUEST['sort'])) {
     $_REQUEST['sort'] = 'service_date';
     $_REQUEST['sortdir'] = 'desc';
-  }
+}
 
   if(isset($_REQUEST['file']) && $_REQUEST['file']==1){
     $id = claim_create_sec($_GET['pid'], $_GET['claimid'], '0', false);
@@ -244,7 +244,7 @@ Claim <?= $claimId ?>
             $pat['s_m_dss_file'] == 2
         )
     ) { ?>
-              <button onclick="Javascript: window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
+              <button onclick="window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
                 <?php if($claim['status'] == DSS_CLAIM_REJECTED || $claim['status'] == DSS_CLAIM_SEC_REJECTED) { ?>
                   Refile Paper
                 <?php } else { ?>
@@ -257,7 +257,7 @@ Claim <?= $claimId ?>
 
       if ($api_r['use_eligible_api'] == 1) {
     ?>
-        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
+        <button onclick="window.location='insurance_eligible.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
 		<?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
             Refile E-File
 		<?php } else { ?>
@@ -267,14 +267,14 @@ Claim <?= $claimId ?>
 
     <?php } ?>
   	<?php } else { ?>
-          <button onclick="Javascript: window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
+          <button onclick="window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
   		      View CMS 1500
           </button>
   	<?php } ?>
   </div>
 
   <div align="right" style="clear: right;">
-    <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
+    <button onclick="window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
       Make Payment
     </button>
     &nbsp;&nbsp;
@@ -288,7 +288,7 @@ Claim <?= $claimId ?>
       	$s_sql = "SELECT * FROM dental_insurance WHERE primary_claim_id='".$claim['insuranceid']."'";
       	if($db->getNumberRows($s_sql)==0){
     ?>
-          <button onclick="Javascript: window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>&file=1';" class="addButton">
+          <button onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>&file=1';" class="addButton">
             File Secondary
           </button>
           &nbsp;&nbsp;
@@ -302,18 +302,16 @@ Claim <?= $claimId ?>
 
       if ($api_r['use_eligible_api']==1) {
     ?>
-        <button onclick="Javascript: window.location='claim_history.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
+        <button onclick="window.location='claim_history.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
           View History
         </button>
         &nbsp;&nbsp;
     <?php } ?>
-
-      <button onclick="Javascript: window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?>';" class="addButton">
+      <button onclick="window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?>';" class="addButton">
         Print Ledger
       </button>
   	  &nbsp;&nbsp;&nbsp;&nbsp;
-  	
-      <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?= $patientId ?>');" class="addButton">
+      <button onclick="loadPopup('add_ledger_note.php?pid=<?= $patientId ?>');" class="addButton">
         Add Note 
       </button>
       &nbsp;&nbsp;
@@ -399,12 +397,6 @@ Claim <?= $claimId ?>
             		$last_ed = '';
 
             		foreach ($my as $myarray) {
-            			if($myarray["status"] == 1) {
-            				$tr_class = "tr_active";
-            			}	else {
-            				$tr_class = "tr_inactive";
-            			}
-
             			$tr_class = "tr_active";
             			if($myarray['status']==DSS_CLAIM_REJECTED && !empty($myarray[0]) && $myarray[0]=='ledger'){
             			  $style='style="background:#f46;"';
@@ -473,7 +465,7 @@ Claim <?= $claimId ?>
   				</td>
   				<td valign="top">
   					<?php if($myarray['ledger']=='ledger_payment'){ ?>
-              <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
+              <a href="Javascript:;" onclick="loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
                 Edit 
               </a>
   					<?php } ?>
@@ -482,11 +474,10 @@ Claim <?= $claimId ?>
     	<?php	}
     	  }
       ?>
-      
       <tr>
         <td colspan="8">
         	<center>
-        		<button onclick="Javascript: window.location='manage_ledger.php?pid=<?= $patientId ?>';return false;" class="addButton">
+        		<button onclick="window.location='manage_ledger.php?pid=<?= $patientId ?>';return false;" class="addButton">
               Return to Patient Ledger
             </button>
           </center>

@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><div id="ledger">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<div id="ledger">
   <svg style='height:300px; width: 450px;'/>
 </div>
 
@@ -75,8 +78,8 @@
 		    $i++;
 	    }
   ?>
-      charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_charge; ?>]);
-      credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_credits; ?>]);
+      charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo $total_charge; ?>]);
+      credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo $total_credits; ?>]);
   <?php
     }
   ?>
@@ -94,7 +97,3 @@
  }
 
 </script>
-<?php $total_charge_sum = $total_charge; ?>
-<?php $total_credits_sum = $total_credits; ?>
-
-

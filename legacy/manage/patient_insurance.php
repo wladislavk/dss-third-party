@@ -1,5 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
 <?php
+namespace Ds3\Libraries\Legacy;
+?>
+<link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
+<?php
+$db = new Db();
+
 if(isset($_REQUEST['useid'])){
 	$u = $_REQUEST['useid'];
 	$pc = $_REQUEST['pcid'];

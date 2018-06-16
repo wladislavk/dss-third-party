@@ -1,8 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(isset($_POST['dailysub']) && isset($_POST['monthlysub']) && $_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1)
-{?>
+$db = new Db();
+
+if(isset($_POST['dailysub']) && isset($_POST['monthlysub']) && $_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1) { ?>
 	<script type="text/javascript">
 		window.location = 'patient_report.php';
 	</script>
@@ -12,11 +15,12 @@ if(isset($_POST['dailysub']) && isset($_POST['monthlysub']) && $_POST['dailysub'
 
 $rec_disp = 200;
 
-if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
 
@@ -26,15 +30,13 @@ if($_POST['d_mm'] != '')
 	$sql .= " and adddate >= '".s_for($from_date)."' ";
 }
 
-if($_POST['d_mm1'] != '')
-{
-	$to_date = $_POST['d_yy1']."-".$_POST['d_mm1']."-".$_POST['d_dd1'];
-	$sql .= " and adddate <= '".s_for($to_date)."' ";
+if($_POST['d_mm1'] != '') {
+    $to_date = $_POST['d_yy1']."-".$_POST['d_mm1']."-".$_POST['d_dd1'];
+    $sql .= " and adddate <= '".s_for($to_date)."' ";
 }
 
-if($_POST['referred_by'] != '')
-{
-	$sql .= " and referred_by = '".s_for($_POST['referred_by'])."' ";
+if($_POST['referred_by'] != '') {
+    $sql .= " and referred_by = '".s_for($_POST['referred_by'])."' ";
 }
 
 $sql .= " order by lastname";
@@ -45,8 +47,6 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 $num_users = count($my);
-
-//echo $sql; 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -84,41 +84,41 @@ $num_users = count($my);
 </div>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="cat_head">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="cat_head">
 			<?php echo $total_rec;?> Patient(s) found for 
 			<?php  
-			if($_POST['d_mm'] <> '') {?>
+			if($_POST['d_mm'] != '') {?>
 				&nbsp;&nbsp;
 				<i>Date From :</i>
 			<?php 
 				echo $_POST['d_mm'] . ' - ' . $_POST['d_dd'] . ' - ' . $_POST['d_yy'];
 			}
-			if($_POST['d_mm1'] <> '') {?>
+			if($_POST['d_mm1'] != '') {?>
 				&nbsp;&nbsp;
 				<i>Date To :</i>
 			<?php 
 				echo $_POST['d_mm1'] . ' - ' . $_POST['d_dd1'] . ' - ' . $_POST['d_yy1'];
 			}
-			if($_POST['referred_by'] <> '') {
+			if($_POST['referred_by'] != '') {
 				$referredby_sql = "select * from dental_contact where contactid='".$_POST['referred_by']."'";
-				$referredby_myarray = $DB->getRow($referredby_sql);
+				$referredby_myarray = $db->getRow($referredby_sql);
 				$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 			?>
 				&nbsp;&nbsp;
 				<i>Referred By :</i>
 				<?php echo $ref_name;
 			}?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php paging($no_pages,$index_val,"");?>
-		</TD>        
-	</TR>
-	<?php  }?>
+		</td>
+	</tr>
+	<?php } ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
 			Name
@@ -131,7 +131,7 @@ $num_users = count($my);
 		</td>
 	</tr>
 	<?php  
-	if($num_users == 0){ ?>
+	if ($num_users == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
@@ -146,11 +146,6 @@ $num_users = count($my);
 			$referredby_myarray = $db->getRow($referredby_sql);
 			$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 			
-			if($myarray["status"] == 1){
-				$tr_class = "tr_active";
-			} else {
-				$tr_class = "tr_inactive";
-			}
 			$tr_class = "tr_active";
 		?>
 			<tr class="<?php echo $tr_class;?>">

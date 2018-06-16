@@ -155,7 +155,6 @@ if ($patient_info) { ?>
         $andNullConditional";
     $myarray = $db->getRow($sql);
 
-    $ex_page4id = st($myarray['ex_page4id']);
     $exam_teeth = st($myarray['exam_teeth']);
     $other_exam_teeth = st($myarray['other_exam_teeth']);
     $caries = st($myarray['caries']);

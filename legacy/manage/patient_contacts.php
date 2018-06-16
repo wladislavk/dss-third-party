@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once "includes/similar.php";
 ?>
 <link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
@@ -295,7 +297,5 @@ if($total_rec > 0){
 	}?>
 </table>
 </form>
-
-
-<br /><br />	
+<br /><br />
 <?php } //END check for rows > 0 ?> 

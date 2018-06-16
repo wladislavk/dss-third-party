@@ -1,13 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
 ?>
-
 <link rel="stylesheet" type="text/css" href="css/performance.css">
 
 <div style="clear:both;"></div>
-
 <?php
 
 if (isset($_REQUEST['start_date'])) {
@@ -18,9 +18,6 @@ if (isset($_REQUEST['start_date'])) {
   $end_date = date('Y-m-d');
 }
 
-$sql = "SELECT du.* FROM dental_users du 
-        JOIN dental_user_company uc ON uc.userid = du.userid
-        WHERE du.userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "' AND uc.companyid='" . mysqli_real_escape_string($con, $_SESSION['companyid']) . "'";
 $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
         LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '" . $start_date . "' AND '" . $end_date . "'
         WHERE du.userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "' 
@@ -149,13 +146,6 @@ $myarray = $db->getRow($sql);
               AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 
   $vob = $db->getRow($vob_sql);
-
-  $ins_sent_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
-                   WHERE 
-                   p.doc_id='".mysqli_real_escape_string($con, $myarray['userid'])."'
-                   AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
-
-  $ins_sent = $db->getRow($ins_sent_sql);
 ?>
 
 <div class="data">
@@ -222,16 +212,12 @@ $myarray = $db->getRow($sql);
 <?php
                 if($start_date){
                    $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                   $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                   $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
                    $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                }else{
+                } else {
                   $p_date = $i_date = $n_date = $l_date = '';
                 }
 ?>
 <?php include 'ledger_summary_report.php'; ?>
-
 
 <div style="clear:both;">&nbsp;</div>
 <?php

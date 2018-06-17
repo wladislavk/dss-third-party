@@ -1,13 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-	if(is_billing($_SESSION['admin_access'])){
-?>
-		<h2>You are not authorized to view this page.</h2>
-<?php
-  		trigger_error("Die called", E_USER_ERROR);
-	}
-
+if (is_billing($_SESSION['admin_access'])) { ?>
+    <h2>You are not authorized to view this page.</h2>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
 
 if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
@@ -17,7 +17,6 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("Deleted Successfully");
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
@@ -26,14 +25,8 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
-if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT du.*, c.name AS company_name 
+if (is_super($_SESSION['admin_access'])) {
+    $sql = "SELECT du.*, c.name AS company_name 
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
@@ -47,11 +40,6 @@ if(is_super($_SESSION['admin_access'])){
 }
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-
-$my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -98,26 +86,22 @@ $num_users = mysqli_num_rows($my);
 	</tr>
 </thead>
 <tbody>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if ($total_rec == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-		$fax_sql = "SELECT COUNT(*) AS num_faxes, SUM(pages) AS pages FROM dental_faxes df 
-        WHERE 
-                df.docid='".$myarray['userid']."' AND
-                df.status = '0'
-";
-$fax_q = mysqli_query($con,$fax_sql);
-		$fax = mysqli_fetch_assoc($fax_q);
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+		    $fax_sql = "SELECT COUNT(*) AS num_faxes, SUM(pages) AS pages 
+                FROM dental_faxes df 
+                WHERE df.docid='".$myarray['userid']."' 
+                AND df.status = '0'
+            ";
+		    $fax_q = mysqli_query($con,$fax_sql);
+		    $fax = mysqli_fetch_assoc($fax_q);
                 $fax30_sql = "SELECT COUNT(*) AS num_faxes, SUM(pages) AS pages FROM dental_faxes df 
         WHERE 
                 df.docid='".$myarray['userid']."' AND
@@ -130,32 +114,28 @@ $fax30_q = mysqli_query($con,$fax30_sql);
 				<td valign="top">
 					<?php echo st($myarray["username"]);?>
 				</td>
-                                <td valign="top">
-                                        <?php echo st($myarray["company_name"]);?>
-                                </td>
-                                <td valign="top">
-                                        <?php echo st($myarray["name"]);?>
-                                </td>
+                <td valign="top">
+                    <?php echo st($myarray["company_name"]);?>
+                </td>
+                <td valign="top">
+                    <?php echo st($myarray["name"]);?>
+                </td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php echo st($fax30["num_faxes"]);?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
-					<?php
-         				    echo st($fax["num_faxes"]); ?>
+					<?php echo st($fax["num_faxes"]); ?>
 				</td>
 				<td valign="top" align="center">
-					<?php
-					    echo st($fax30["pages"]); ?>
+					<?php echo st($fax30["pages"]); ?>
 				</td>	
-						
 				<td valign="top">
-					<?php
-					    echo st($fax["pages"]); ?>
+					<?php echo st($fax["pages"]); ?>
 				</td>
 			</tr>
-	<?php 	}
-
-	}?>
+	        <?php
+		}
+	} ?>
 </tbody>
 </table>
 </form>
@@ -167,11 +147,5 @@ $fax30_q = mysqli_query($con,$fax30_sql);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<script type="text/javascript">
-$(document).ready(function() 
-    { 
-    } 
-); 
-</script>
 
 <?php include "includes/bottom.htm";?>

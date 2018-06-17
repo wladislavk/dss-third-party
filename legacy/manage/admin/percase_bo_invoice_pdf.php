@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once('../3rdParty/tcpdf/config/lang/eng.php');
 require_once('../3rdParty/tcpdf/tcpdf.php');
 require_once('includes/main_include.php');
@@ -54,7 +56,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 					
 					<!-- START module / three column content texts -->
 					<tr>
-					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
+					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0;">
 						<table width="630" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 							<!-- start left table column -->

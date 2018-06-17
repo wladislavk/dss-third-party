@@ -91,8 +91,6 @@ $my = mysqli_fetch_array($result);
 $email_header_imgname = $my['email_header'];
 $email_footer_imgname = $my['email_footer'];
 $fax_header_imgname = $my['fax_header'];
-$fax_footer_imgname = $my['fax_footer'];
-
 ?>
 
 <script type="text/javascript">

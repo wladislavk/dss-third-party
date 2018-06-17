@@ -5,10 +5,8 @@ include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
-{
-		if($_POST["ed"] != "")
-		{
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
+		if($_POST["ed"] != "") {
 			$ed_sql = "update companies set 
 				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
                                 add1 = '".mysqli_real_escape_string($con,$_POST["add1"])."', 
@@ -33,7 +31,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				exclusive = '".mysqli_real_escape_string($con,$_POST["exclusive"])."',
 				company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
 				vob_require_test = '".mysqli_real_escape_string($con,$_POST['vob_require_test'])."'
-			where id='".$_POST["ed"]."'";
+			    where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
 			$course_sql = "update content_type_profile SET
@@ -48,34 +46,30 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
-
-
+		} else {
 			$ins_sql = "insert into companies set 
 				name = '".mysqli_real_escape_string($con,$_POST["name"])."', 
-                                add1 = '".mysqli_real_escape_string($con,$_POST["add1"])."', 
-                                add2 = '".mysqli_real_escape_string($con,$_POST["add2"])."', 
-                                city = '".mysqli_real_escape_string($con,$_POST["city"])."', 
-                                state = '".mysqli_real_escape_string($con,$_POST["state"])."', 
-                                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."', 
-                                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."', 
-                                fax = '".mysqli_real_escape_string($con,($_POST["fax"]))."', 
-                                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
+                add1 = '".mysqli_real_escape_string($con,$_POST["add1"])."', 
+                add2 = '".mysqli_real_escape_string($con,$_POST["add2"])."', 
+                city = '".mysqli_real_escape_string($con,$_POST["city"])."', 
+                state = '".mysqli_real_escape_string($con,$_POST["state"])."', 
+                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."', 
+                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."', 
+                fax = '".mysqli_real_escape_string($con,($_POST["fax"]))."', 
+                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
 				eligible_api_key= '".mysqli_real_escape_string($con,$_POST['eligible_api_key'])."',
-                                stripe_secret_key = '".mysqli_real_escape_string($con,$_POST['stripe_secret_key'])."',
-                                stripe_publishable_key = '".mysqli_real_escape_string($con,$_POST['stripe_publishable_key'])."',
+                stripe_secret_key = '".mysqli_real_escape_string($con,$_POST['stripe_secret_key'])."',
+                stripe_publishable_key = '".mysqli_real_escape_string($con,$_POST['stripe_publishable_key'])."',
 				sfax_security_context = '".mysqli_real_escape_string($con,$_POST['sfax_security_context'])."',
-                                sfax_app_id = '".mysqli_real_escape_string($con,$_POST['sfax_app_id'])."',
-                                sfax_app_key = '".mysqli_real_escape_string($con,$_POST['sfax_app_key'])."',
-                                sfax_encryption_key = '".mysqli_real_escape_string($con,$_POST['sfax_encryption_key'])."',
-                                sfax_init_vector = '".mysqli_real_escape_string($con,$_POST['sfax_init_vector'])."',
+                sfax_app_id = '".mysqli_real_escape_string($con,$_POST['sfax_app_id'])."',
+                sfax_app_key = '".mysqli_real_escape_string($con,$_POST['sfax_app_key'])."',
+                sfax_encryption_key = '".mysqli_real_escape_string($con,$_POST['sfax_encryption_key'])."',
+                sfax_init_vector = '".mysqli_real_escape_string($con,$_POST['sfax_init_vector'])."',
 				plan_id = '".mysqli_real_escape_string($con,(!empty($_POST['plan_id']) ? $_POST['plan_id'] : ''))."',
 				status = '".mysqli_real_escape_string($con,$_POST['status'])."',
 				use_support = '".mysqli_real_escape_string($con,(!empty($_POST["use_support"]) ? $_POST["use_support"] : ''))."',
 				exclusive = '".mysqli_real_escape_string($con,(!empty($_POST["exclusive"]) ? $_POST["exclusive"] : ''))."',
-                                company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
+                company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
 				vob_require_test = '".mysqli_real_escape_string($con,(!empty($_POST['vob_require_test']) ? $_POST['vob_require_test'] : ''))."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -92,22 +86,19 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 }
-
 ?>
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from companies where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
-	if(!empty($msg))
-	{
+	if(!empty($msg)) {
 		$name = $_POST['name'];
 		$add1 = $_POST['add1'];
 		$add2 = $_POST['add2'];
@@ -118,63 +109,55 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 		$fax = $_POST['fax'];
 		$email = $_POST['email'];
 		$eligible_api_key = $_POST['eligible_api_key'];
-                $stripe_secret_key = $_POST['stripe_secret_key'];
-                $stripe_publishable_key = $_POST['stripe_publishable_key'];
+		$stripe_secret_key = $_POST['stripe_secret_key'];
+		$stripe_publishable_key = $_POST['stripe_publishable_key'];
 		$sfax_securty_context = $_POST['sfax_security_context'];
-                $sfax_app_id = $_POST['sfax_app_id'];
-                $sfax_app_key = $_POST['sfax_app_key'];
-                $sfax_encryption_key = $_POST['sfax_encryption_key'];
-                $sfax_init_vector = $_POST['sfax_init_vector'];
+		$sfax_app_id = $_POST['sfax_app_id'];
+		$sfax_app_key = $_POST['sfax_app_key'];
+		$sfax_encryption_key = $_POST['sfax_encryption_key'];
+		$sfax_init_vector = $_POST['sfax_init_vector'];
 		$plan_id = $_POST['plan_id'];
 		$status = $_POST['status'];
 		$use_support = $_POST['use_support'];
 		$exclusive = $_POST['exclusive'];
 		$company_type = $_POST['company_type'];
 		$vob_require_test = $_POST['vob_require_test'];
-	}
-	else
-	{
+	} else {
 		$name = st($themyarray['name']);
 		$add1 = st($themyarray['add1']);
-                $add2 = st($themyarray['add2']);
-                $city = st($themyarray['city']);
-                $state = st($themyarray['state']);
-                $zip = st($themyarray['zip']);
-                $phone = st($themyarray['phone']);
-                $fax = st($themyarray['fax']);
-                $email = st($themyarray['email']);
+		$add2 = st($themyarray['add2']);
+		$city = st($themyarray['city']);
+		$state = st($themyarray['state']);
+		$zip = st($themyarray['zip']);
+		$phone = st($themyarray['phone']);
+		$fax = st($themyarray['fax']);
+		$email = st($themyarray['email']);
 		$eligible_api_key = st($themyarray['eligible_api_key']);
-                $stripe_secret_key = st($themyarray['stripe_secret_key']);
-                $stripe_publishable_key = st($themyarray['stripe_publishable_key']);
+		$stripe_secret_key = st($themyarray['stripe_secret_key']);
+		$stripe_publishable_key = st($themyarray['stripe_publishable_key']);
 		$sfax_security_context = st($themyarray['sfax_security_context']);
-                $sfax_app_id = st($themyarray['sfax_app_id']);
-                $sfax_app_key = st($themyarray['sfax_app_key']);
-                $sfax_encryption_key = st($themyarray['sfax_encryption_key']);
-                $sfax_init_vector = st($themyarray['sfax_init_vector']);
+		$sfax_app_id = st($themyarray['sfax_app_id']);
+		$sfax_app_key = st($themyarray['sfax_app_key']);
+		$sfax_encryption_key = st($themyarray['sfax_encryption_key']);
+		$sfax_init_vector = st($themyarray['sfax_init_vector']);
 		$plan_id = st($themyarray['plan_id']);
 		$status = st($themyarray['status']);
 		$use_support = st($themyarray['use_support']);
 		$exclusive = st($themyarray['exclusive']);
 		$company_type = st($themyarray['company_type']);
 		$vob_require_test = $themyarray['vob_require_test'];
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["id"] != '')
-	{
+	if($themyarray["id"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
@@ -182,9 +165,9 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Company 
-               <? if($name <> "") {?>
+               <?php if($name != "") {?>
                		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -395,7 +378,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
         </tr>
 
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <span class="red">
                     * Required Fields					
                 </span><br />
@@ -404,26 +387,27 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
                 <input type="submit" value="<?=$but_text?> Company" class="btn btn-primary">
                 <?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_companies.php?delid=<?=$themyarray["id"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>
     </table>
     </form>
 <script type="text/javascript">
-
-  function check_add(){
-    if($('#name').val()=="" ||
-	$('#add1').val() == "" ||
-	$('#city').val() == "" ||
-	$('#state').val() == "" ||
-	$('#zip').val() == ""){
-	alert('Please enter all required fields.');
-	return false;
-     }
-    return true;
-  }
+    function check_add() {
+        if (
+            $('#name').val()=="" ||
+            $('#add1').val() == "" ||
+            $('#city').val() == "" ||
+            $('#state').val() == "" ||
+            $('#zip').val() == ""
+        ) {
+            alert('Please enter all required fields.');
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>

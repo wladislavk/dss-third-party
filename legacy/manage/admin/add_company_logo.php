@@ -1,19 +1,19 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
 
-if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
-{
-
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
   $image = $_FILES['logo'];
   $uploadedfile = $image['tmp_name'];
   $fname = $image["name"];
   $lastdot = strrpos($fname,".");
-  $name = substr($fname,0,$lastdot);
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   $file_name = "company_logo_".$_POST["ed"].".".$extension; 
@@ -26,16 +26,11 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 
   if((!empty($width) && $width>$max_width || !empty($height) && $height>$max_height) || $filesize > DSS_IMAGE_MAX_SIZE ){
 
-    if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
-    {
+    if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" ) {
       $src = imagecreatefromjpeg($uploadedfile);
-    }
-    elseif(strtolower($extension)=="png")
-    {
+    } elseif(strtolower($extension)=="png") {
       $src = imagecreatefrompng($uploadedfile);
-    }
-    else
-    {
+    } else {
       $src = imagecreatefromgif($uploadedfile);
     }
     if(($width>$max_width || $height>$max_height) ){
@@ -59,16 +54,11 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
     }
     $tmp=imagecreatetruecolor($newwidth,$newheight);
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
-    if($extension=="jpg" || $extension=="jpeg" )
-    {
+    if($extension=="jpg" || $extension=="jpeg" ) {
     imagejpeg($tmp,$file_path,60);
-    }
-    elseif($extension=="png")
-    {
+    } elseif($extension=="png") {
       imagepng($tmp,$file_path,6);
-    }
-    else
-    {
+    } else {
       imagegif($tmp,$file_path,60);
     }
     $uploaded = true;
@@ -78,32 +68,25 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
     }
     imagedestroy($src);
     imagedestroy($tmp);
-
   }else{
     if($image['size'] <= DSS_FILE_MAX_SIZE){
-
       @move_uploaded_file($image["tmp_name"],$file_path);
       $uploaded = true;
-
     }else{
       $uploaded =false;
     }
   }
-                        @chmod($file_path,0777);
-
-
-
+  @chmod($file_path,0777);
 			$ed_sql = "update companies set 
 				logo = '".mysqli_real_escape_string($con,$file_name)."'
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
-
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -115,23 +98,16 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
     $thesql = "select * from companies where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
- 	 $name = st($themyarray['name']);	
-	if(!empty($msg))
-	{
+	$name = st($themyarray['name']);
+	if(!empty($msg)) {
 		$logo = $_POST['logo'];
-	}
-	else
-	{
+	} else {
 		$logo = st($themyarray['logo']);
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["id"] != '')
-	{
+	if($themyarray["id"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
@@ -144,7 +120,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
     </div>
     <? }?>
                <? if($logo <> "") {?>
-                        <img src="display_file.php?f=<?=$logo;?>" />
+                   <img src="display_file.php?f=<?=$logo;?>" />
                <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">

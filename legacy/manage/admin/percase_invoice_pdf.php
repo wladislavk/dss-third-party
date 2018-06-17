@@ -384,124 +384,119 @@ Please SIGN AND RETURN this Verification page. DO NOT send a check or payment.
 </span>
 <br />
 <br />
- <table width="630" border="0" cellspacing="0" cellpadding="0">
-                                                        <tr>
-                                                        <!-- start left table column -->
-                                                        <td width="196" align="left" valign="top" >
-                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
-                                                                        <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bott
+<table width="630" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <!-- start left table column -->
+        <td width="196" align="left" valign="top" >
+            <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                <tr>
+                    <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bott
 om: 10px;">
-Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
-                                                                        Invoice Date: '.date('m/d/Y').'<br />
-                                                                        Payment Charged: '.date('m/d/Y', strtotime(date('m/d/Y') . " +7 day")).'
-                                                                        </td>
-                                                                        </tr>                                                   
-                                                                </table>                                                        </td>
-                                                        <td width="21">
-                                                        <!-- this is BLANK table column DO NOT DELETE -->
-                                                        </td>
-                                                        <!-- start center table column -->
-                                                        <td width="196" align="left" valign="top" >
-                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
-                                                                        <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-Mail this page to:
-                                                                        </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-Dental Sleep Solutions<br />
-                                                                        402 43rd St. West, Ste A<br />
-                                                                        Bradenton, FL 34209
-                                                                        </td>
-                                                                        </tr>
-                                                                </table>
-                                                        </td>
-                                                       <!-- start right table column -->
-                                                        <td width="196" align="left" valign="top" >
-                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
-                                                                        <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-Billed to:
-                                                                        </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bott
+                        Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
+                        Invoice Date: '.date('m/d/Y').'<br />
+                        Payment Charged: '.date('m/d/Y', strtotime(date('m/d/Y') . " +7 day")).'
+                    </td>
+                </tr>                                                   
+            </table>
+        </td>
+        <td width="21">
+            <!-- this is BLANK table column DO NOT DELETE -->
+        </td>
+        <!-- start center table column -->
+        <td width="196" align="left" valign="top" >
+            <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                <tr>
+                    <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
+                        Mail this page to:
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
+                        Dental Sleep Solutions<br />
+                        402 43rd St. West, Ste A<br />
+                        Bradenton, FL 34209
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- start right table column -->
+        <td width="196" align="left" valign="top" >
+            <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                <tr>
+                    <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
+                        Billed to:
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bott
 om: 20px;">
-'.$invoice['name'].'<br />
-                                                                        '.$invoice['address'].'<br />
-                                                                        '.$invoice['city'].', '.$invoice['state'].' '.$invoice['zip'].'<br />
-                                                                        Phone: '.$invoice['phone'].'<br />
-                                                                        <br />
-                                                                        <span style="color:#000; font-size:43px;">
-                                                                                Total: $'.number_format($total_charge,2).' 
-                                                                        </span>
-                                                                        </td>
-                                                                        </tr>
-                                                                </table>
-                                                        </td>
-                                                        </tr>
-
-
-                                                </table>
-
-
-
+                        '.$invoice['name'].'<br />
+                        '.$invoice['address'].'<br />
+                        '.$invoice['city'].', '.$invoice['state'].' '.$invoice['zip'].'<br />
+                        Phone: '.$invoice['phone'].'<br />
+                        <br />
+                        <span style="color:#000; font-size:43px;">
+                            Total: $'.number_format($total_charge,2).' 
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 <div style="display:block;">
 <table border="1" style="font-size:30px;" cellpadding="10">
-<tr>
-<td>
-
-Additional Cases?&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;No<br />
-If YES, please list all cases performed to-date that have not been previously invoiced:
-<br />
-<br />
-<table>
-<tr>
-<td>
-<table style="width: 400px;">
-	<tr>
-		<td>Name</td>
-		<td>Date</td>
-	</tr>
-	<tr>
-		<td>______________________________</td>
-		<td>____________</td>
-	</tr>	
-        <tr>
-                <td>______________________________</td>
-                <td>____________</td>
-        </tr>   
-        <tr>
-                <td>______________________________</td>
-                <td>____________</td>
-        </tr>   
-        <tr>
-                <td>______________________________</td>
-                <td>____________</td>
-        </tr>   
-        <tr>
-                <td>______________________________</td>
-                <td>____________</td>
-        </tr>   
-</table>
-</td>
-<td align="right">
-Number of Additional Cases=__________<br />
-No Cases * $195=__________<br />
-<b>Total:</b>__________
-</td>
-</tr>
-</table>
-</td>
-</tr>
+    <tr>
+        <td>
+            Additional Cases?&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;No<br />
+            If YES, please list all cases performed to-date that have not been previously invoiced:
+            <br />
+            <br />
+            <table>
+                <tr>
+                    <td>
+                        <table style="width: 400px;">
+	                        <tr>
+		                        <td>Name</td>
+		                        <td>Date</td>
+	                        </tr>
+	                        <tr>
+		                        <td>______________________________</td>
+		                        <td>____________</td>
+	                        </tr>	
+                            <tr>
+                                <td>______________________________</td>
+                                <td>____________</td>
+                            </tr>   
+                            <tr>
+                                <td>______________________________</td>
+                                <td>____________</td>
+                            </tr>   
+                            <tr>
+                                <td>______________________________</td>
+                                <td>____________</td>
+                            </tr>   
+                            <tr>
+                                <td>______________________________</td>
+                                <td>____________</td>
+                            </tr>   
+                        </table>
+                    </td>
+                    <td align="right">
+                        Number of Additional Cases=__________<br />
+                        No Cases * $195=__________<br />
+                        <b>Total:</b>__________
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </table>
 <div style="font-size:30px;">
-I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office up to and including invoice date, and have noted any cases not listed on this or previous invoices performed to-date and adjusted payment accordingly.<br />
-<br />
-__________________________________________________(signature) '.$invoice['name'].'
-</div>
+    I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office up to and including invoice date, and have noted any cases not listed on this or previous invoices performed to-date and adjusted payment accordingly.<br />
+    <br />
+    __________________________________________________(signature) '.$invoice['name'].'
+    </div>
 </div>
 ';
 }
@@ -511,52 +506,44 @@ $html .= '<!-- END main table -->
 
 
 $title = "test";
-                $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Dental Sleep Solutions');
-        $pdf->SetTitle($title);
-        $pdf->SetSubject($title);
-        $pdf->SetKeywords('DSS Per-case Invoice');
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Dental Sleep Solutions');
+$pdf->SetTitle($title);
+$pdf->SetSubject($title);
+$pdf->SetKeywords('DSS Per-case Invoice');
 
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-        //set margins
-        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+//set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
-        //set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-        //set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-        //set some language-dependent strings
-        //$pdf->setLanguageArray($l);
+// add a page
+$pdf->AddPage();
 
-        // set font
-        //$pdf->SetFont('dejavusans', '', 10);
+// output the HTML content
 
-        // add a page
-        $pdf->AddPage();
+$pdf->writeHTML($html, true, false, true, false, '');
 
-        // output the HTML content
+$filename = 'percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
 
-        $pdf->writeHTML($html, true, false, true, false, '');
-	
-        $filename = 'percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
-		
-		$pdf->Output('../../../../shared/q_file/'.$filename, 'F');
-//$pdf->Output('example_001.pdf', 'I');
-if(!isset($redirect) || $redirect){
-?>
+$pdf->Output('../../../../shared/q_file/'.$filename, 'F');
 
-<script type="text/javascript">
-  window.open("display_file.php?f=<?= $filename; ?>");
-  window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
-</script>
-<?php
+if(!isset($redirect) || $redirect) { ?>
+    <script type="text/javascript">
+      window.open("display_file.php?f=<?= $filename; ?>");
+      window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
+    </script>
+    <?php
 } ?>

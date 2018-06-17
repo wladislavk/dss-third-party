@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -6,16 +7,14 @@ include_once('includes/password.php');
 include_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
 
-if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
-{
-		if($_POST["ed"] != "")
-		{
+if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1) {
+		if($_POST["ed"] != "") {
 			$ed_sql = "update dental_device_guide_settings set 
 				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
-                                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
-                                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
-                                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
-                                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
+                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
+                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
+                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
+                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
 				range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
 				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
 				options = '".mysqli_real_escape_string($con,$_POST['options'])."'
@@ -30,27 +29,23 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
                                         label='".$_POST['option_'.$i]."'";
                           mysqli_query($con,$o_sql);
                         }
-
-
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
-
-
 			$ins_sql = "insert into dental_device_guide_settings set 
-                                name = '".mysqli_real_escape_string($con,$_POST["name"])."',
-                                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
-                                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
-                                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
-                                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
-                                range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
+                name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
+                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
+                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
+                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
+                range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
 				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
 				options = '".mysqli_real_escape_string($con,$_POST['options'])."',
 				adddate=now(),
@@ -72,16 +67,13 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 }
-
 ?>
-
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_device_guide_settings where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -107,7 +99,6 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
                 $range_end_label = st($themyarray['range_end_label']);
 		$rank = st($themyarray['rank']);
 		$options = st($themyarray['options']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["id"] != '')
@@ -119,9 +110,7 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
 	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
@@ -216,7 +205,6 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 						AND setting_id='".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
 			$o_q = mysqli_query($con,$o_sql);
 			$o_r = mysqli_fetch_assoc($o_q);
-			
 		?>
         <tr bgcolor="#FFFFFF" id="option_row_<?php echo $i;?>" style="display:none;" class="option_row">
             <td valign="top" class="frmhead">

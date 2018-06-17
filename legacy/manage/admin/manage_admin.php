@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
-{
+if($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	mysqli_query($con, $del_sql);
 	
@@ -11,17 +12,17 @@ if($_REQUEST["delid"] != "")
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from admin order by username";
 $my = mysqli_query($con, $sql);
@@ -29,8 +30,7 @@ $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -44,7 +44,7 @@ $num_users=mysqli_num_rows($my);
 
 <?php if($_SESSION["admin_access"]==1){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_admin.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_admin.php');" class="btn btn-success">
 		Add New Admin 
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -58,16 +58,16 @@ $num_users=mysqli_num_rows($my);
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
-	<? }?>
+		</td>
+	</tr>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
 			Username	
@@ -82,25 +82,18 @@ $num_users=mysqli_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if(mysqli_num_rows($my) == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if($myarray["status"] == 1)
-			{
+	<?php
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+			if($myarray["status"] == 1) {
 				$tr_class = "tr_active";
-			}
-			else
-			{
+			} else {
 				$tr_class = "tr_inactive";
 			}
 		?>
@@ -118,13 +111,13 @@ $num_users=mysqli_num_rows($my);
 				
 				<td valign="top">
 					<?php if($_SESSION["admin_access"]==1){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_admin.php?ed=<?=$myarray["adminid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_admin.php?ed=<?=$myarray["adminid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php }
 	}?>
 </table>
 

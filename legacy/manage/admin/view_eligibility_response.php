@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -40,15 +41,14 @@ include_once('includes/password.php');
     <a href="patient_eligibility.php?pid=<?=$themyarray['patientid'];?>" class="btn btn-primary" style="margin-bottom:10px;">Return to chart</a>
 
 <script type="text/javascript">
-$(document).ready(function(){
-  var coverage = new Coverage(<?php echo  $themyarray['response']; ?>);
-  if (coverage.hasError()) {
-    buildError(coverage.parseError());
-  } else {
-    buildCoverageHTML(coverage);
-  }
-});
+    $(document).ready(function(){
+        var coverage = new Coverage(<?php echo $themyarray['response']; ?>);
+        if (coverage.hasError()) {
+            buildError(coverage.parseError());
+        } else {
+            buildCoverageHTML(coverage);
+        }
+    });
 </script>
-        
 </body>
 </html>

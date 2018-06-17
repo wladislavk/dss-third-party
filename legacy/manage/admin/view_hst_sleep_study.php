@@ -31,8 +31,6 @@ $dentalDevices = $db->getResults("SELECT deviceid, device
     ORDER BY sortby");
 
 /**
- * @see DSS-365
- *
  * Copy/paste here and in /manage/admin/view_hst.php
  */
 if (!isset($sleepStudies)) {

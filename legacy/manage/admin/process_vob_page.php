@@ -9,9 +9,6 @@ include_once('../includes/dental_patient_summary.php');
 include_once('../includes/general_functions.php');
 include_once('includes/invoice_functions.php');
 
-/**
- * @see DSS-568
- */
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $adminCompanyId = (int)$_SESSION['admincompanyid'];
 $preAuthId = (int)$_GET['ed'];
@@ -27,8 +24,6 @@ $conditionals = ["preauth.id = '$preAuthId'"];
 if ($isSuperAdmin) {
 } elseif (is_billing($_SESSION['admin_access'])) {
     /**
-     * @see DSS-568
-     *
      * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
      * are DSS_PREAUTH_PENDING.
      */
@@ -79,9 +74,6 @@ $preauth = $db->getRow($sql);
 
 $pid = $preauth['patient_id'];
 
-/**
- * @see DSS-568
- */
 $canEdit = preAuthEditPermission($preauth, $adminCompanyId, $isSuperAdmin);
 
 if (!$preauth) {
@@ -187,7 +179,6 @@ $disabled = $canEdit ? '' : 'disabled';
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <?php
-
 require_once dirname(__FILE__) . '/includes/top.htm';
 
 if ($disabled) { ?>
@@ -902,7 +893,7 @@ if ($disabled) { ?>
 
                 <?php if ($isSuperAdmin) { ?>
                     <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>"
-                       onclick="javascript: return confirm('Do Your Really want to Delete?.');"
+                       onclick="return confirm('Do Your Really want to Delete?.');"
                        class="editdel btn btn-danger pull-right" title="DELETE">
                         Delete
                     </a>
@@ -928,17 +919,16 @@ if ($disabled) { ?>
 //setting pid to work with eligible check
 $_GET['pid'] = $pid;
 require 'eligible_check/eligible_check.php';
-
 ?>
 
 
 <script language="JavaScript">
 <!--
-function autoResize(id){
+function autoResize(id) {
     var newheight;
     var newwidth;
 
-    if(document.getElementById){
+    if (document.getElementById) {
         newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
         newwidth=document.getElementById(id).contentWindow.document .body.scrollWidth;
     }
@@ -967,7 +957,8 @@ require_once __DIR__ . '/includes/bottom.htm';
  * @param bool  $isSuperAdmin
  * @return bool
  */
-function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin) {
+function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin)
+{
     $status = (int)$preAuthData['status'];
     $isStatusPending = $status === DSS_PREAUTH_PENDING;
     $isStatusPreAuth = $status === DSS_PREAUTH_PREAUTH_PENDING;
@@ -1011,7 +1002,8 @@ function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdm
  * @param int   $adminId
  * @return mixed
  */
-function processVobInput (Array $input, $adminId) {
+function processVobInput(array $input, $adminId)
+{
     $vobData = array_only($input, [
         'ins_co',
         'ins_rank',

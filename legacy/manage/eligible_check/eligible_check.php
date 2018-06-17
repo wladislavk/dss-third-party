@@ -554,5 +554,3 @@ include_once '../includes/calendarinc.php';
 <script src="js/eligible_check.js"></script>
 
 <link rel="stylesheet" href="css/eligible_check.css" type="text/css" media="screen" />
-
-<?php //include 'new.php'; ?> 

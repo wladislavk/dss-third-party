@@ -90,23 +90,6 @@ if (is_super($_SESSION['admin_access'])) {
 }
 
 $my = $db->getResults($sql);
-$total_rec = count($my);
-
-$claimChargesQuery = "SELECT
-        insuranceid,
-        COALESCE(
-            CONVERT(
-                REPLACE(IF(primary_claim_id, 0, total_charge), ',', ''),
-                DECIMAL(11, 2)
-            ), 0
-        ) AS total_charge
-    FROM dental_insurance
-    ";
-
-$ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
-    FROM dental_ledger dl
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-    ";
 
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
@@ -186,12 +169,10 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
     </thead>
     <tbody>
         <?php
-
         $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
 
         foreach ($my as $r) {
             $pat_total = 0;
-
             ?>
             <tr>
                 <td valign="top">
@@ -215,23 +196,18 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];
                     }
-
                     if ($claimCharges) {
                         $p_total = getLedgerPaymentAmount($claimCharges['insuranceid']);
                     }
-
                     $pat_total += $c_total - $p_total;
                     ${"total_{$lowerLimit}{$upperLimit}"} += $c_total - $p_total;
-
                     ?>
                     <td valign="top">
                         $<?= number_format($c_total - $p_total, 2) ?>
                     </td>
                 <?php
                 }
-
                 $grand_total += $pat_total;
-
                 ?>
                 <td valign="top">
                     $<?= number_format($pat_total, 2) ?>
@@ -266,9 +242,6 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
         </tr>
     </tfoot>
 </table>
-
 <?php include '../report_claim_aging_breakdown.php'; ?>
-
 <br /><br />
-
 <?php  include "includes/bottom.htm"; ?>

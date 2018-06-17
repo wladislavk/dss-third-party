@@ -124,5 +124,3 @@ if (!$result) {
 }
 
 echo json_encode($patients);
-
-?>

@@ -219,8 +219,8 @@ $total_amount = 0;
 
 
   if(isset($_POST['free_fax_desc'])){
-    $fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
-    $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+    $free_fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
+    $free_fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
     $in_sql = "INSERT into dental_fax_invoice SET
 		invoice_id = '".$invoice_id."', 
@@ -231,7 +231,6 @@ $total_amount = 0;
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysqli_query($con, $in_sql);
-    $fax_invoice_id = mysqli_insert_id($con);
 	$total_amount += $_POST['free_fax_amount'];
     $up_sql = "UPDATE dental_faxes SET
                 status = '1'
@@ -250,7 +249,6 @@ $total_amount = 0;
                 amount = '".mysqli_real_escape_string($con, $_POST['fax_amount'])."'
 		WHERE invoice_id = '".$invoice_id."'";
     mysqli_query($con, $in_sql);
-    $fax_invoice_id = mysqli_insert_id($con);
     $total_amount += $_POST['fax_amount'];
 
     $up_sql = "UPDATE dental_faxes SET
@@ -260,8 +258,8 @@ $total_amount = 0;
   }
 
   if(isset($_POST['free_ec_desc'])){
-    $ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
-    $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+    $free_ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+    $free_ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con, $invoice_id)."',
@@ -292,19 +290,11 @@ $total_amount = 0;
 		WHERE invoice_id ='".$invoice_id."'";
     mysqli_query($con, $in_sql);
     $ec_invoice_id = mysqli_insert_id($con);
-    $up_sql = "UPDATE dental_eligibility SET
-                eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
-    //mysqli_query($con, $up_sql);
   }
 
-
-
-
-
   if(isset($_POST['free_enrollment_desc'])){
-    $enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
-    $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
+    $free_enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
+    $free_enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_enrollment_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con, $invoice_id)."',
@@ -672,11 +662,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-
-
-
 			<?php } ?>
-
                 <tr id="claim_row_<?= $claim['id'] ?>">
                     <td>
                         <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
@@ -730,13 +716,8 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
             <?php } ?>
-            
-
-
-
-
                 <tr id="total_row">
                     <td>
                         <a href="#" class="btn btn-success" title="Add Entry">
@@ -839,8 +820,8 @@ function check_billed () {
 
 
 <?php
-
-function bill_card ($customerID, $amount, $userid, $invoiceid) {
+function bill_card($customerID, $amount, $userid, $invoiceid)
+{
   $con = $GLOBALS['con'];
 
   if($amount==0){

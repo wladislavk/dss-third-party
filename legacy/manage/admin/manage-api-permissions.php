@@ -7,8 +7,10 @@ require_once __DIR__ . '/../includes/constants.inc';
 ?>
 <input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
 
-<?php require_once __DIR__ . '/manage-api-permission-resource-groups.php'; ?>
-<?php require_once __DIR__ . '/manage-api-permission-resources.php'; ?>
+<?php
+require_once __DIR__ . '/manage-api-permission-resource-groups.php';
+require_once __DIR__ . '/manage-api-permission-resources.php';
+?>
 
 <div style="display: none;">
     <div class="page-header">
@@ -129,8 +131,8 @@ require_once __DIR__ . '/../includes/constants.inc';
 <script src="/assets/app/utils/events.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-1.0.26.min.js"></script>
 <script src="/assets/vendor/vue/vue-resource-0.9.3.min.js"></script>
-<script src="/assets/app/mixins/api-permissions-form.js?v=20180502"text/javascript"></script>
-<script src="/assets/app/api-permission-resource-groups.js?v=20180502"text/javascript"></script>
-<script src="/assets/app/api-permission-resources.js?v=20180502"text/javascript"></script>
-<script src="/assets/app/api-permissions.js?v=20180502"text/javascript"></script>
+<script src="/assets/app/mixins/api-permissions-form.js?v=20180502" type="text/javascript"></script>
+<script src="/assets/app/api-permission-resource-groups.js?v=20180502" type="text/javascript"></script>
+<script src="/assets/app/api-permission-resources.js?v=20180502" type="text/javascript"></script>
+<script src="/assets/app/api-permissions.js?v=20180502" type="text/javascript"></script>
 <?php include "includes/bottom.htm";?>

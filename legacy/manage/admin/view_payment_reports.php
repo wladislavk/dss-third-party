@@ -48,7 +48,9 @@ $reports = $db->getResults("SELECT payment_id, adddate
             <th>Date</th>
             <th>Report</th>
         </tr>
-        <?php foreach ($reports as $each) { $reportId = intval($each['payment_id']); ?>
+        <?php
+        foreach ($reports as $each) {
+            $reportId = intval($each['payment_id']); ?>
             <tr>
                 <td>
                     <?= e($each['adddate']) ?>

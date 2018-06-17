@@ -14,7 +14,8 @@ if (!is_super($_SESSION['admin_access'])) {
  * @param int $number
  * @return string
  */
-function toOrdinal ($number) {
+function toOrdinal ($number)
+{
     $ends = ['th', 'st', 'nd', 'rd'];
     $lastDigit = $number%10;
 
@@ -28,7 +29,8 @@ function toOrdinal ($number) {
 /**
  * @return array
  */
-function defaultClaimFields () {
+function defaultClaimFields ()
+{
     return [
         'insuranceid',
         'docid',
@@ -47,7 +49,8 @@ function defaultClaimFields () {
 /**
  * @return array
  */
-function specialClaimFields () {
+function specialClaimFields ()
+{
     return [
         'status_label' => "CASE status
                 WHEN 0 THEN 'PENDING'
@@ -89,14 +92,14 @@ function specialClaimFields () {
  * @return array
  */
 function retrieveClaimRelatedData (
-        $claimId,
-        Array $fieldList=[],
-        $overrideFields=false,
-        Array $specialList=[],
-        $overrideSpecial=false,
-        $targetTable='dental_insurance',
-        $orderBy=['id' => 'DESC']
-    ) {
+    $claimId,
+    array $fieldList = [],
+    $overrideFields = false,
+    array $specialList = [],
+    $overrideSpecial = false,
+    $targetTable = 'dental_insurance',
+    $orderBy = ['id' => 'DESC']
+) {
     $db = new Db();
 
     $claimId = intval($claimId);
@@ -136,7 +139,8 @@ function retrieveClaimRelatedData (
  * @param array $specialList
  * @return array
  */
-function retrieveClaimHistory ($claimId, Array $fieldList=[], Array $specialList=[]) {
+function retrieveClaimHistory($claimId, array $fieldList = [], array $specialList = [])
+{
     array_unshift($fieldList, 'updated_at');
     return retrieveClaimRelatedData($claimId, $fieldList, false, $specialList, false, 'dental_insurance_history');
 }
@@ -145,7 +149,8 @@ function retrieveClaimHistory ($claimId, Array $fieldList=[], Array $specialList
  * @param $claimId
  * @return array
  */
-function retrieveClaimStatusHistory ($claimId) {
+function retrieveClaimStatusHistory($claimId)
+{
     $fields = ['id', 'insuranceid', 'status', 'status_label', 'userid', 'adddate', 'ip_address', 'adminid'];
     return retrieveClaimRelatedData($claimId, $fields, true, [], false, 'dental_insurance_status_history');
 }
@@ -156,7 +161,8 @@ function retrieveClaimStatusHistory ($claimId) {
  * @param array $specialList
  * @return array
  */
-function retrieveClaimData ($claimId, Array $fieldList=[], Array $specialList=[]) {
+function retrieveClaimData($claimId, array $fieldList = [], array $specialList = [])
+{
     return retrieveClaimRelatedData(
         $claimId, $fieldList, false, $specialList, false, 'dental_insurance', ['insuranceid' => 'DESC']
     );
@@ -168,7 +174,8 @@ function retrieveClaimData ($claimId, Array $fieldList=[], Array $specialList=[]
  * @param array $eligibleResponses
  * @return array
  */
-function retrieveEligibleReferences (Array $eligibleResponses) {
+function retrieveEligibleReferences(array $eligibleResponses)
+{
     $references = array_pluck($eligibleResponses, 'reference_id');
     $references = array_unique($references);
     $references = array_filter($references);
@@ -183,7 +190,8 @@ function retrieveEligibleReferences (Array $eligibleResponses) {
  * @param int $claimId
  * @return array
  */
-function retrieveEligibleResponses ($claimId) {
+function retrieveEligibleResponses($claimId)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -200,7 +208,8 @@ function retrieveEligibleResponses ($claimId) {
  * @param array $eligibleReferences
  * @return array
  */
-function retrieveEligibleEvents (Array $eligibleReferences) {
+function retrieveEligibleEvents(array $eligibleReferences)
+{
     if (!$eligibleReferences) {
         return [];
     }
@@ -221,7 +230,8 @@ function retrieveEligibleEvents (Array $eligibleReferences) {
  * @param int $claimId
  * @return array
  */
-function retrieveBOFlagHistory ($claimId) {
+function retrieveBOFlagHistory($claimId)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -237,7 +247,8 @@ function retrieveBOFlagHistory ($claimId) {
  * @param int $claimId
  * @return array
  */
-function retrieveWebhookPolicyHistory ($claimId) {
+function retrieveWebhookPolicyHistory($claimId)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -251,7 +262,8 @@ function retrieveWebhookPolicyHistory ($claimId) {
  * @param array  $rows
  * @param string $title
  */
-function renderTableFromArray (Array $rows, $title='Unnamed data') {
+function renderTableFromArray(array $rows, $title='Unnamed data')
+{
     ?>
     <h2><?= e($title) ?></h2>
     <?php
@@ -461,8 +473,7 @@ if ($isTimeLine) {
             } elseif (isset($each['event_data']['status_label'])) {
                 $each['event_data'] = $each['event_data']['status_label'];
             } elseif (isset($each['event_data']['rejected_status'])) {
-                $each['event_data'] = "Status <code>{$each['event_data']['rejected_status']}</code> rejected, " .
-                    "status <code>{$each['event_data']['current_status']}</code> kept";
+                $each['event_data'] = "Status <code>{$each['event_data']['rejected_status']}</code> rejected, " . "status <code>{$each['event_data']['current_status']}</code> kept";
             } else {
                 $each['event_data'] = json_encode($each['event_data']);
             }

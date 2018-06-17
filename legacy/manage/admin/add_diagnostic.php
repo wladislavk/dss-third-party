@@ -1,25 +1,20 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1)
-{
+if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1) {
 	$op_arr = explode("\n",trim($_POST['diagnostic']));
 				
-	foreach($op_arr as $i=>$val)
-	{
-		if($val <> '')
-		{
+	foreach($op_arr as $i=>$val) {
+		if($val <> '') {
 			$sel_check = "select * from dental_diagnostic where diagnostic = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
-			
-			if(mysqli_num_rows($query_check) == 0)
-			{
+			if(mysqli_num_rows($query_check) == 0) {
 				$ins_sql = "insert into dental_diagnostic set diagnostic = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 				mysqli_query($con,$ins_sql);
 			}
-			
 		}
 	}
 	
@@ -28,7 +23,7 @@ if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1)
 	<script type="text/javascript">
 		parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -45,10 +40,8 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 			alert("<?=$msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	else
-	{
+		<?php
+	} else {
 		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
 		{
 			$sby = 999;
@@ -68,11 +61,9 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
+		} else {
 			$ins_sql = "insert into dental_diagnostic set diagnostic = '".s_for($_POST["diagnostic"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);
 			
@@ -81,54 +72,42 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
-
 ?>
-
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_diagnostic where diagnosticid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
-	if(!empty($msg))
-	{
+	if(!empty($msg)) {
 		$diagnostic = $_POST['diagnostic'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
-	}
-	else
-	{
+	} else {
 		$diagnostic = st($themyarray['diagnostic']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["diagnosticid"] != '')
-	{
+	if($themyarray["diagnosticid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="diagnosticfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return diagnosticabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
@@ -184,17 +163,16 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["diagnosticid"]?>" />
                 <input type="submit" value="<?=$but_text?> Diagnostic Test" class="btn btn-primary">
 		<?php if($themyarray["diagnosticid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_diagnostic.php?delid=<?=$themyarray["diagnosticid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                    <a href="manage_diagnostic.php?delid=<?=$themyarray["diagnosticid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>
     </table>
     </form>
     
-    <? if(empty($_GET['ed']))
-	{?>
+    <?php if(empty($_GET['ed'])) { ?>
     	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
@@ -224,7 +202,6 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
             </tr>
         </table>
         </form>
-    
-    <? }?>
+    <?php } ?>
 </body>
 </html>

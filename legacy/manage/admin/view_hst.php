@@ -6,13 +6,15 @@ require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
 require_once __DIR__ . '/includes/access.php';
 
+$db = new Db();
+
 $isSaveStudy = !empty($_POST['hst_id']);
 $errorMessages = [];
 
 // If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
-if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024 * 1024) && !$_FILES) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
-    $errorMessages []= $maxFileSizeExceeded;
+    $errorMessages[] = $maxFileSizeExceeded;
 
     // Abort any action
     $isSaveStudy = false;
@@ -109,8 +111,6 @@ if ($isSaveStudy) {
             }
 
             /**
-             * @see DSS-365
-             *
              * This column name has a typo
              */
             $study['patiendid'] = $patientId;

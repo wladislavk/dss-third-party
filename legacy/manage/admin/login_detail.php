@@ -1,17 +1,18 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $log_sql = "select * from dental_login where loginid='".s_for($_GET['logid'])."'";
 $log_my = mysqli_query($con, $log_sql);
 $log_myarray = mysqli_fetch_array($log_my);
 
-if(st($log_myarray['userid']) == '')
-{
+if (st($log_myarray['userid']) == '') {
 	?>
 	<script type="text/javascript">
 		window.location = "manage_login.php?msg=Invalid Information.";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -21,11 +22,11 @@ $user_myarray = mysqli_fetch_array($user_my);
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if ($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_login_detail where loginid='".$log_myarray['loginid']."' order by adddate";
 $my = mysqli_query($con, $sql);
@@ -33,8 +34,7 @@ $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 
 <div class="page-header">
@@ -56,16 +56,16 @@ $num_users=mysqli_num_rows($my);
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?
 				 paging($no_pages,$index_val,"&logid=".$_GET['logid']);
 			?>
-		</TD>        
-	</TR>
-	<? }?>
+		</td>
+	</tr>
+	<?php } ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="30%">
 			Visit Date
@@ -74,20 +74,16 @@ $num_users=mysqli_num_rows($my);
 			Visited Page
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if(mysqli_num_rows($my) == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{			
-			$tr_class = "tr_active";	
+	<?php
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+			$tr_class = "tr_active";
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
@@ -97,7 +93,7 @@ $num_users=mysqli_num_rows($my);
 					http://<?=$_SERVER['HTTP_HOST'];?><?=st($myarray["cur_page"]);?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 

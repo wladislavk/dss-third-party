@@ -3,11 +3,9 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 
-$isSuperAdmin = is_super($_SESSION['admin_access']);
 $logs = $db->getResults('SELECT *
     FROM dental_api_logs
     ORDER BY id DESC');
-
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <style type="text/css">

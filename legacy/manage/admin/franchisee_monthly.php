@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
-{
+if (!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
 	
@@ -17,12 +18,6 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
 if(isset($_REQUEST['start_date'])){
   $start_date = date('Y-m-d', strtotime($_REQUEST['start_date']));
   $end_date = date('Y-m-d', strtotime($_REQUEST['end_date']));
@@ -55,11 +50,6 @@ if(is_super($_SESSION['admin_access'])){
 }
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-
-$my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -147,27 +137,21 @@ $num_users = mysqli_num_rows($my);
 	</tr>
 </thead>
 <tbody>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if ($total_rec == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-
-
-		$co_sql = "SELECT c.name FROM companies c 
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+		    $co_sql = "SELECT c.name FROM companies c 
 				JOIN dental_user_company uc ON uc.companyid = c.id
 				WHERE uc.userid='".$myarray['userid']."'";
-		$co_q = mysqli_query($con,$co_sql);
-		$co_r = mysqli_fetch_assoc($co_q);
-		$company = $co_r['name'];
+		    $co_q = mysqli_query($con,$co_sql);
+		    $co_r = mysqli_fetch_assoc($co_q);
+		    $company = $co_r['name'];
 
 		$screen_sql = "SELECT u.username, COUNT(s.id) AS num_screened FROM dental_screener s 
                 JOIN dental_users u ON u.userid=s.userid
@@ -287,31 +271,30 @@ $ins_paid = mysqli_fetch_assoc($ins_paid_q);
 				<td valign="top" align="center">
 				  <?php echo  $ss['num_ss']; ?>
 				</td>	
-			        <td valign="top" align="center">
-                                  <?php echo  $consult['num_consult']; ?>
-                                </td>	
+                <td valign="top" align="center">
+                  <?php echo $consult['num_consult']; ?>
+                </td>
 				<td valign="top" align="center">
-				  <?php echo  $imp['num_imp']; ?>
+				  <?php echo $imp['num_imp']; ?>
 				</td>
 				<td valign="top" align="center">
-				  <?php echo  $dd['num_dd']; ?>
+				  <?php echo $dd['num_dd']; ?>
 				</td>
-                                <td valign="top" align="center">
-                                  <?php echo  $letters['num_sent']; ?>
-                                </td>
-                                <td valign="top" align="center">
-                                  <?php echo  $vob['num_completed']; ?>
-                                </td>
+                <td valign="top" align="center">
+                  <?php echo $letters['num_sent']; ?>
+                </td>
+                <td valign="top" align="center">
+                  <?php echo $vob['num_completed']; ?>
+                </td>
 				<td valign="top" align="center">
 				  <?php echo  $ins_sent['num_sent']; ?>
 				</td>
-                                <td valign="top" align="center">
-                                  <?php echo  $ins_paid['num_paid']; ?>
-                                </td>
+                <td valign="top" align="center">
+                  <?php echo  $ins_paid['num_paid']; ?>
+                </td>
 			</tr>
 	<?php 	}
-
-	}?>
+	} ?>
 </tbody>
 </table>
 

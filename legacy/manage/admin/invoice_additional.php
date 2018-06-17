@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include '../includes/calendarinc.php';

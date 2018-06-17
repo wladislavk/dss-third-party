@@ -11,7 +11,8 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function getPaymentAmountFromEligibleResponse (\stdClass $event) {
+function getPaymentAmountFromEligibleResponse(\stdClass $event)
+{
     if (!is_object($event)) {
         return null;
     }
@@ -43,7 +44,8 @@ function getPaymentAmountFromEligibleResponse (\stdClass $event) {
     return $report;
 }
 
-function getPaymentsArray ($limit=50) {
+function getPaymentsArray($limit = 50)
+{
     $db = new Db();
     $limit = intval($limit);
     $limit = $limit > 5 ? $limit : 50;
@@ -64,7 +66,8 @@ function getPaymentsArray ($limit=50) {
     return $results;
 }
 
-function getReferencedClaims (Array $referenceIds) {
+function getReferencedClaims(array $referenceIds)
+{
     $db = new Db();
 
     $referenceIds = $db->escapeList($referenceIds);

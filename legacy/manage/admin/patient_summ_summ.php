@@ -22,27 +22,13 @@ $sql = "select * from dental_q_page1_pivot where patientid='".(!empty($_GET['pid
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$energy_level = st($myarray['energy_level']);
-$snoring_sound = st($myarray['snoring_sound']);
-$wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
-$morning_headaches = st($myarray['morning_headaches']);
-$hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
-$told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
-$sleep_qual = st($myarray['sleep_qual']);
 
 $sqlex = "select * from dental_ex_page5_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myex = mysqli_query($con,$sqlex);
@@ -163,7 +149,6 @@ $imp_r = mysqli_fetch_assoc($imp_q);
     <?php
 }
 
-$last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
 $last_q = mysqli_query($con, $last_sql);
 $last_r = mysqli_fetch_assoc($last_q);
@@ -222,12 +207,9 @@ $last_r = mysqli_fetch_assoc($last_q);
                 if ($complaintid != '') {
                     $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                     $complaint_my = mysqli_query($con,$complaint_sql);
-                    $complaint_number = mysqli_num_rows($complaint_my);
-                    
+
                     while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
-                        if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
-                            $chk = '';
-                        } else { ?>
+                        if (@array_search($complaint_myarray['complaintid'], $compid) !== false) { ?>
                             <li class="list-group-item"><?php echo $complaint_myarray['complaint']; ?></li>
                             <?php
                         }
@@ -439,7 +421,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 ORDER BY ss.id ASC;";
             
             $result = mysqli_query($con,$sleepstudies);
-            $numsleepstudy = mysqli_num_rows($result);
             $baseline_sleepstudy = mysqli_fetch_assoc($result);
         }
         ?>
@@ -512,7 +493,6 @@ $last_r = mysqli_fetch_assoc($last_q);
             ) DESC, ss.id DESC";
         
         $result = mysqli_query($con,$sleepstudies);
-        $numsleepstudy = mysqli_num_rows($result);
         $sleepstudy = mysqli_fetch_assoc($result);
         ?>
         <h4>Recent Titration</h4>
@@ -562,27 +542,16 @@ $last_r = mysqli_fetch_assoc($last_q);
         $my = mysqli_query($con, $sql);
         $myarray = mysqli_fetch_array($my);
         
-        $q_page2id = st($myarray['q_page2id']);
         $polysomnographic = st($myarray['polysomnographic']);
         $sleep_center_name_text = st($myarray['sleep_center_name_text']);
         $sleep_study_on = st($myarray['sleep_study_on']);
-        $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-        $rdi = st($myarray['rdi']);
-        $ahi = st($myarray['ahi']);
         $cpap = st($myarray['cpap']);
         $cur_cpap = st($myarray['cur_cpap']);
         $intolerance = st($myarray['intolerance']);
         $other_intolerance = st($myarray['other_intolerance']);
-        $other = st($myarray['other']);
-        $affidavit = st($myarray['affidavit']);
-        $type_study = st($myarray['type_study']);
         $nights_wear_cpap = st($myarray['nights_wear_cpap']);
         $percent_night_cpap = st($myarray['percent_night_cpap']);
-        $custom_diagnosis = st($myarray['custom_diagnosis']);
-        $sleep_study_by = st($myarray['sleep_study_by']);
-        $triedquittried = st($myarray['triedquittried']);
-        $timesovertime = st($myarray['timesovertime']);
-        
+
         if ($cpap == '') {
             $cpap = 'No';
         }

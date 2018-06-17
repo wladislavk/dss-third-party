@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
 <?php
+namespace Ds3\Libraries\Legacy;
+
+$db = new Db();
+
 $thesql = "select * from dental_patients where patientid='".mysqli_real_escape_string($con, (!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 

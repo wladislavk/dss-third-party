@@ -21,7 +21,8 @@ function jsonOutput ($output) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function retrieveClaim ($claimId) {
+function retrieveClaim ($claimId)
+{
     $db = new Db();
 
     $docData = $db->getRow("SELECT userid, username, password
@@ -71,7 +72,8 @@ function retrieveClaim ($claimId) {
     ]);
 }
 
-function setReference ($claimId, $referenceId) {
+function setReference ($claimId, $referenceId)
+{
     $db = new Db();
 
     $claimId = intval($claimId);

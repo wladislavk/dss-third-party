@@ -1,46 +1,36 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include "fckeditor/fckeditor.php";
 
-if($_POST["doc_dvdub"] == 1)
-{
-	if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
-	{
+if($_POST["doc_dvdub"] == 1) {
+	if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
 		$sby = 999;
-	}
-	else
-	{
+	} else {
 		$sby = s_for($_POST["sortby"]);
 	}
 	
 	$doc_id = '';
-	if(count($_POST['docid']) <> 0)
-	{
+	if(count($_POST['docid']) <> 0) {
 		$doc_arr = '~';
-		foreach($_POST['docid'] as $doc_val)
-		{
-			if($doc_val <> '')
-			{
+		foreach($_POST['docid'] as $doc_val) {
+			if($doc_val <> '') {
 				$doc_arr .= $doc_val.'~';
 			}
 		}
 	}
-	if($doc_arr != '~')
-		$doc_id = $doc_arr;
-		
-		
-	
-	if($_POST['remove_video'] == 1)
-	{
+	if($doc_arr != '~') {
+        $doc_id = $doc_arr;
+    }
+	if($_POST['remove_video'] == 1) {
 		$banner1 = '';
 		@unlink("../video_file/".$_POST['video_file_old']);
-	}
-	else
-	{
-		if($_FILES["video_file"]["name"] <> '')
-		{
+	} else {
+		if($_FILES["video_file"]["name"] <> '') {
 			$fname = $_FILES["video_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -53,26 +43,19 @@ if($_POST["doc_dvdub"] == 1)
 			@move_uploaded_file($_FILES["video_file"]["tmp_name"],"../video_file/".$banner1);
 			@chmod("../video_file/".$banner1,0777);
 			
-			if($_POST['video_file_old'] <> '')
-			{
+			if($_POST['video_file_old'] <> '') {
 				@unlink("../video_file/".$_POST['video_file_old']);
 			}
-		}
-		else
-		{
+		} else {
 			$banner1 = $_POST['video_file_old'];
 		}
 	}
 	
-	if($_POST['remove_doc'] == 1)
-	{
+	if($_POST['remove_doc'] == 1) {
 		$banner2 = '';
 		@unlink("../doc_file/".$_POST['doc_file_old']);
-	}
-	else
-	{
-		if($_FILES["doc_file"]["name"] <> '')
-		{
+	} else {
+		if($_FILES["doc_file"]["name"] <> '') {
 			$fname = $_FILES["doc_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -85,19 +68,15 @@ if($_POST["doc_dvdub"] == 1)
 			@move_uploaded_file($_FILES["doc_file"]["tmp_name"],"../doc_file/".$banner2);
 			@chmod("../doc_file/".$banner2,0777);
 			
-			if($_POST['doc_file_old'] <> '')
-			{
+			if($_POST['doc_file_old'] <> '') {
 				@unlink("../doc_file/".$_POST['doc_file_old']);
 			}
-		}
-		else
-		{
+		} else {
 			$banner2 = $_POST['doc_file_old'];
 		}
 	}
 	
-	if($_POST["ed"] != "")
-	{
+	if($_POST["ed"] != "") {
 		$ed_sql = "update dental_doc_dvd set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where doc_dvdid='".$_POST["ed"]."'";
 		mysqli_query($con, $ed_sql);
 		
@@ -106,30 +85,24 @@ if($_POST["doc_dvdub"] == 1)
 		<script type="text/javascript">
 			parent.window.location='manage_doc_dvd.php?msg=<?=$msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
-	}
-	else
-	{
+	} else {
 		$ins_sql = "insert into dental_doc_dvd set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
 			parent.window.location='manage_doc_dvd.php?msg=<?=$msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_doc_dvd where doc_dvdid='".$_REQUEST["ed"]."'";
 	$themy = mysqli_query($con, $thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -140,44 +113,34 @@ if($_POST["doc_dvdub"] == 1)
 	$doc_file = $themyarray['doc_file'];
 	$status = st($themyarray['status']);
 	$sortby = st($themyarray['sortby']);
-	$but_text = "Add ";
 	$docid = st($themyarray['docid']);
 	
-	if($show_to == '' && $docid == '')
-	{
+	if($show_to == '' && $docid == '') {
 		$show_to = 0;
-	}
-	else
-	{
+	} else {
 		$show_to = 1;
 	}
-	
-	
-	if($themyarray["doc_dvdid"] != '')
-	{
+
+	if($themyarray["doc_dvdid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-    
-	<? if($msg != '') {?>
+	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="doc_dvdfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_dvdabc(this)" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> DVD's
-               <? if($title <> "") {?>
+               <?php if($title <> "") {?>
                		&quot;<?=$title;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -248,27 +211,26 @@ if($_POST["doc_dvdub"] == 1)
                 Show to 
             </td>
             <td valign="top" class="frmdata">
-            	<? 
+            	<?php
 				$doc_sql = "select * from dental_users where status=1 and docid=0 order by username";
 				$doc_my = mysqli_query($con, $doc_sql);
 				?>
-            	<input type="radio" name="show_to" value="0" <? if($show_to == 0) echo " checked";?> />
+            	<input type="radio" name="show_to" value="0" <?php if($show_to == 0) echo " checked";?> />
                 <b>ALL Doctors</b>
                 
                 <br />
                 ------------ <b>OR</b> -----------
                 <br />
-                <input type="radio" name="show_to" value="1" <? if($show_to == 1) echo " checked";?> />
+                <input type="radio" name="show_to" value="1" <?php if($show_to == 1) echo " checked";?> />
                 <b>Select Doctor from the List</b>
                 <br />
                 
                 <select name="docid[]" multiple="multiple" size="5" class="form-control">
-                	<? while($doc_myarray = mysqli_fetch_array($doc_my))
-					{?>
+                	<?php while($doc_myarray = mysqli_fetch_array($doc_my)) { ?>
                     	<option value="<?=st($doc_myarray['userid'])?>"  <? if(strpos($docid,'~'.st($doc_myarray['userid']).'~') === false){ } else { echo " selected";}?>>
                         	<?=st($doc_myarray['username'])?>
                         </option>
-                    <? }?>
+                    <?php }?>
                 </select>
                 <br />
                 (Press Ctrl for Multiple Selection)

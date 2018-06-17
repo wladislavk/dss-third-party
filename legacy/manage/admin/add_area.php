@@ -1,36 +1,31 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["areasub"] == 1)
-{
+if($_POST["areasub"] == 1) {
 	$sel_check = "select * from spine_area where area = '".s_for($_POST["area"])."' and areaid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysqli_num_rows($query_check)>0)
-	{
+	if(mysqli_num_rows($query_check)>0) {
 		$msg="Area already exist. So please give another Area.";
 		?>
 		<script type="text/javascript">
 			alert("<?=$msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	else
-	{
-		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
-		{
+		<?php
+	} else {
+		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
 			$sby = 999;
-		}
-		else
-		{
+		} else {
 			$sby = s_for($_POST["sortby"]);
 		}
 		
-		if($_POST["ed"] != "")
-		{
+		if($_POST["ed"] != "") {
 			$ed_sql = "update spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where areaid='".$_POST["ed"]."'";
 			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
@@ -41,9 +36,7 @@ if($_POST["areasub"] == 1)
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
+		} else {
 			$ins_sql = "insert into spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
@@ -57,46 +50,34 @@ if($_POST["areasub"] == 1)
 		}
 	}
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <br />
-    <?
+<br />
+<?php
     $thesql = "select * from spine_area where areaid='".$_REQUEST["ed"]."'";
 	$themy = mysqli_query($con, $thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
-	{
+	if ($msg != '') {
 		$area = $_POST['area'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
-	}
-	else
-	{
+	} else {
 		$area = st($themyarray['area']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["areaid"] != '')
-	{
+	if($themyarray["areaid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
-	<? if($msg != '') {?>
+	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
@@ -134,8 +115,8 @@ if($_POST["areasub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if ($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if ($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

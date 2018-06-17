@@ -64,7 +64,6 @@ if(mysqli_num_rows($doc_q) == 0){
 
 	$in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
                 " VALUES (".$_SESSION['adminuserid'].", ".$r['userid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($monthly_date)))."', '".mysqli_real_escape_string($con,$doc['monthly_fee'])."')";
-	//echo($in_sql."<br /><br />");
 	mysqli_query($con,$in_sql);
 	$invoiceid = mysqli_insert_id($con);
 
@@ -92,30 +91,24 @@ $redirect = false;
 include 'percase_invoice_pdf.php';
   }
 $msg = mysqli_num_rows($q) . " invoices created.";
-	if(count($no_card)==1){
-                  ?>
-                    <script type="text/javascript">
-                      alert('<?php echo  implode($no_card); ?> does not have a credit card on record.');
-                    </script>
-                  <?php
-	}elseif(count($no_card)>0){
-                  ?>
-                    <script type="text/javascript">
-                      alert('<?php echo  implode($no_card, ', '); ?> do not have credit cards on record.');
-                    </script>
-                  <?php
-	}
-		?>
-
-
+	if (count($no_card)==1) { ?>
+        <script type="text/javascript">
+            alert('<?php echo  implode($no_card); ?> does not have a credit card on record.');
+        </script>
+        <?php
+	} elseif(count($no_card)>0) {
+	    ?>
+        <script type="text/javascript">
+            alert('<?php echo  implode($no_card, ', '); ?> do not have credit cards on record.');
+        </script>
+        <?php
+	} ?>
 <script type="text/javascript">
   window.location = "manage_monthly_invoice.php?msg=<?php echo  $msg; ?>";
 </script>
-
-
 <?php
-
-function bill_card($customerID, $amount, $userid, $invoiceid){
+function bill_card($customerID, $amount, $userid, $invoiceid)
+{
   if($amount==0){
     ?>
     <script type="text/javascript">

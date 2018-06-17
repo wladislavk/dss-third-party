@@ -1,39 +1,36 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
-if($_POST["adminsub"] == 1)
-{
+
+if($_POST["adminsub"] == 1) {
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con, $sel_check);
         $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
         $query_check2=mysqli_query($con, $sel_check2);
 
-	if(mysqli_num_rows($query_check)>0)
-	{
+	if(mysqli_num_rows($query_check)>0) {
 		$msg="Username already exist. So please give another Username.";
 		?>
 		<script type="text/javascript">
 			alert("<?=$msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	elseif(mysqli_num_rows($query_check2)>0)
-        {
-                $msg="Email already exist. So please give another Email.";
-                ?>
-                <script type="text/javascript">
-                        alert("<?=$msg;?>");
-                        window.location="#add";
-                </script>
-                <?
-        }
-        else
-	{
-		if($_POST["ed"] != "")
-		{
+		<?php
+	} elseif (mysqli_num_rows($query_check2) > 0) {
+        $msg="Email already exist. So please give another Email.";
+        ?>
+        <script type="text/javascript">
+                alert("<?=$msg;?>");
+                window.location="#add";
+        </script>
+        <?php
+    } else {
+		if ($_POST["ed"] != "") {
 			$ed_sql = "update admin set 
 				username = '".s_for($_POST["username"])."',
 				admin_access='".s_for($_POST['admin_access'])."',
@@ -49,10 +46,7 @@ if($_POST["adminsub"] == 1)
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
-
+		} else {
 			$salt = create_salt();
 			$password = gen_password($_POST['password'], $salt);
 
@@ -70,7 +64,6 @@ if($_POST["adminsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -78,51 +71,39 @@ if($_POST["adminsub"] == 1)
 		}
 	}
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from admin where adminid='".$_REQUEST["ed"]."'";
 	$themy = mysqli_query($con, $thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
-	{
+	if ($msg != '') {
 		$username = $_POST['username'];
 		$admin_access = $_POST['admin_access'];
 		$password = $_POST['password'];
 		$name = $_POST['name'];
 		$email = $_POST['email'];
-	}
-	else
-	{
+	} else {
 		$username = st($themyarray['username']);
 		$admin_access = st($themyarray['admin_access']);
 		$password = st($themyarray['password']);
 		$name = st($themyarray['name']);
 		$email = st($themyarray['email']);
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["userid"] != '')
-	{
+	if($themyarray["userid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
-	<? if($msg != '') {?>
+	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
-    <? }?>
+    <?php } ?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
     <table class="table table-bordered table-hover">
         <tr>

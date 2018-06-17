@@ -1,42 +1,44 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include '../includes/calendarinc.php';
 include 'includes/invoice_functions.php';
 
-  if(isset($_GET['show']) && $_GET['show']=='1'){
-  $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
-                plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
-                FROM companies c
-                JOIN dental_plans plan ON plan.id = c.plan_id
-                WHERE c.status=1
-			AND c.id='".mysqli_real_escape_string($con,$_GET['coid'])."'";
-  }else{
-  $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
-		plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
-                FROM companies c
+if (isset($_GET['show']) && $_GET['show']=='1') {
+    $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
+        plan.trial_period, 
+        (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+        FROM companies c
+        JOIN dental_plans plan ON plan.id = c.plan_id
+        WHERE c.status=1
+        AND c.id='".mysqli_real_escape_string($con,$_GET['coid'])."'";
+} else {
+    $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
+        plan.trial_period, 
+        (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+        FROM companies c
 		JOIN dental_plans plan ON plan.id = c.plan_id
-                WHERE c.status=1
-AND 
-                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(c.adddate, INTERVAL plan.trial_period DAY) < now()))
- ";
-  if(isset($_GET['cid']) && $_GET['cid'] != ""){
+        WHERE c.status=1
+        AND 
+            ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+            ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(c.adddate, INTERVAL plan.trial_period DAY) < now()))
+    ";
+    if (isset($_GET['cid']) && $_GET['cid'] != "") {
         $sql .= " AND c.id > '".mysqli_real_escape_string($con,$_GET['cid'])."' ";
-  }
-  if(isset($_GET['show']) && $_GET['show']=='all'){
-   	$sql .= " ORDER BY c.id ASC ";
-  }else{
-	$sql .= " AND 
-		(SELECT COUNT(*) as num_inv FROM dental_percase_invoice
+    }
+    if (isset($_GET['show']) && $_GET['show']=='all') {
+        $sql .= " ORDER BY c.id ASC ";
+    } else {
+        $sql .= " AND 
+	    (SELECT COUNT(*) as num_inv FROM dental_percase_invoice
 			WHERE companyid=c.id AND 
 				status = '".DSS_INVOICE_PENDING."')
 		!= 0
 		ORDER BY c.id ASC
 		";
-  }
+    }
 }
 $count_q = mysqli_query($con,$sql);
 $num_docs = mysqli_num_rows($count_q);
@@ -45,55 +47,51 @@ $sql .= " limit 1";
 $q = mysqli_query($con,$sql);
 $count_invoices = (isset($_GET['ci']) && $_GET['ci']!='')?$_GET['ci']:$num_docs;
 $count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
-if($num_docs == 0){
-  ?>
+if ($num_docs == 0) { ?>
     <script type="text/javascript">
-      window.location = "manage_monthly_bo_invoice.php";
+        window.location = "manage_monthly_bo_invoice.php";
     </script>
-  <?php
+    <?php
 }
 $user = mysqli_fetch_assoc($q);
 
 $s = "SELECT id FROM dental_percase_invoice WHERE companyid='".$user['id']."' AND status='".DSS_INVOICE_PENDING."'";
 $q = mysqli_query($con,$s);
-if(mysqli_num_rows($q) > 0){
-$r = mysqli_fetch_assoc($q);
-$invoice_id = $r['id'];
-$efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate FROM 
-                dental_claim_electronic e
-                JOIN dental_insurance i ON i.insuranceid=e.claimid
-                JOIN dental_patients dp ON i.patientid=dp.patientid
-        WHERE 
-		e.percase_invoice = '".$invoice_id."'
-";
-$efile_q = mysqli_query($con,$efile_sql);
-
-	
-$fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(sent_date) as end_date, f.fax_invoice_id FROM dental_faxes f
-		JOIN dental_fax_invoice fi ON fi.id = f.fax_invoice_id
-        WHERE 
-                f.docid='".$user['userid']."' AND
-                fi.invoice_id = '".$invoice_id."'
-";
-$fax_q = mysqli_query($con,$fax_sql);
-$fax = mysqli_fetch_assoc($fax_q);
+if (mysqli_num_rows($q) > 0) {
+    $r = mysqli_fetch_assoc($q);
+    $invoice_id = $r['id'];
+    $efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate 
+        FROM dental_claim_electronic e
+        JOIN dental_insurance i ON i.insuranceid=e.claimid
+        JOIN dental_patients dp ON i.patientid=dp.patientid
+        WHERE e.percase_invoice = '".$invoice_id."'
+    ";
+    $efile_q = mysqli_query($con,$efile_sql);
+    $fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(sent_date) as end_date, f.fax_invoice_id 
+        FROM dental_faxes f
+        JOIN dental_fax_invoice fi ON fi.id = f.fax_invoice_id
+        WHERE f.docid='".$user['userid']."' 
+        AND fi.invoice_id = '".$invoice_id."'
+    ";
+    $fax_q = mysqli_query($con,$fax_sql);
+    $fax = mysqli_fetch_assoc($fax_q);
 
 
-$ec_sql = "SELECT count(*) as total_ec, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date FROM dental_eligibility e
-	JOIN dental_eligibility_invoice ei ON ei.id = e.eligibility_invoice_id
-        WHERE 
-		ei.invoice_id = '".$invoice_id."'
-";
-$ec_q = mysqli_query($con,$ec_sql);
-$ec = mysqli_fetch_assoc($ec_q);
+    $ec_sql = "SELECT count(*) as total_ec, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date 
+        FROM dental_eligibility e
+        JOIN dental_eligibility_invoice ei ON ei.id = e.eligibility_invoice_id
+        WHERE ei.invoice_id = '".$invoice_id."'
+    ";
+    $ec_q = mysqli_query($con,$ec_sql);
+    $ec = mysqli_fetch_assoc($ec_q);
 
-$enroll_sql = "SELECT count(*) as total_enrollments, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date FROM dental_eligible_enrollment e
-		JOIN dental_enrollment_invoice ei on ei.id = e.enrollment_invoice_id
-        WHERE 
-		ei.invoice_id = '".$invoice_id."'
-";
-$enroll_q = mysqli_query($con,$enroll_sql);
-$enroll = mysqli_fetch_assoc($enroll_q);
+    $enroll_sql = "SELECT count(*) as total_enrollments, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date 
+        FROM dental_eligible_enrollment e
+        JOIN dental_enrollment_invoice ei on ei.id = e.enrollment_invoice_id
+        WHERE ei.invoice_id = '".$invoice_id."'
+    ";
+    $enroll_q = mysqli_query($con,$enroll_sql);
+    $enroll = mysqli_fetch_assoc($enroll_q);
 }
 
 $users_sql = "SELECT count(*) as total_users FROM dental_users u
@@ -101,112 +99,98 @@ $users_sql = "SELECT count(*) as total_users FROM dental_users u
                         and u.status = 1";
 $users_q = mysqli_query($con,$users_sql);
 
-
-if(isset($_POST['submit'])){
-
-  if(mysqli_num_rows($q) > 0){
-
-      $in_sql = "update dental_percase_invoice SET
+if (isset($_POST['submit'])) {
+    if (mysqli_num_rows($q) > 0) {
+        $in_sql = "update dental_percase_invoice SET
 			adminid = '".$_SESSION['adminuserid']."',
                         due_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['due_date'])))."',
 			status = '0' ";
-	if(isset($_POST['amount_monthly'])){
+        if (isset($_POST['amount_monthly'])) {
 			$in_sql .= ", monthly_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['monthly_date'])))."',
-			monthly_fee_amount = '".mysqli_real_escape_string($con,$_POST['amount_monthly'])."' "; 
-	  $total_amount = $_POST['amount_monthly'];
+			monthly_fee_amount = '".mysqli_real_escape_string($con,$_POST['amount_monthly'])."' ";
+			$total_amount = $_POST['amount_monthly'];
         }
-        if(isset($_POST['user_amount'])){
-                        $in_sql .= ", user_fee_desc = '".mysqli_real_escape_string($con,$_POST['user_desc'])."', user_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['user_date'])))."',
+        if (isset($_POST['user_amount'])) {
+            $in_sql .= ", user_fee_desc = '".mysqli_real_escape_string($con,$_POST['user_desc'])."', user_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['user_date'])))."',
                         user_fee_amount = '".mysqli_real_escape_string($con,$_POST['user_amount'])."' ";
-          $total_amount += $_POST['user_amount'];
+            $total_amount += $_POST['user_amount'];
         }
- 	$in_sql .= " WHERE id = '".$invoice_id."'";
-    mysqli_query($con,$in_sql);
+        $in_sql .= " WHERE id = '".$invoice_id."'";
+        mysqli_query($con,$in_sql);
 
-  while($efile = mysqli_fetch_assoc($efile_q)){
-    $id = $efile['id'];
-    if(isset($_POST['adddate_'.$id])){
-      $up_sql = "UPDATE dental_claim_electronic SET " .
+        while ($efile = mysqli_fetch_assoc($efile_q)) {
+            $id = $efile['id'];
+            if (isset($_POST['adddate_'.$id])) {
+                $up_sql = "UPDATE dental_claim_electronic SET " .
         " percase_date = '".date('Y-m-d', strtotime($_POST['adddate_'.$id]))."', " .
         " percase_name = '".mysqli_real_escape_string($con,$_POST['name_'.$id])."', " .
         " percase_amount = '".mysqli_real_escape_string($con,$_POST['amount_'.$id])."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."' " .
         " WHERE id = '".$id."'";
-      mysqli_query($con,$up_sql);
-    }else{
-      invoice_add_efile('2',$user['userid'],$id, DSS_INVOICE_TYPE_SU_BC);
-    }
+                mysqli_query($con,$up_sql);
+            } else {
+                invoice_add_efile('2',$user['userid'],$id, DSS_INVOICE_TYPE_SU_BC);
+            }
+        }
 
-  }
-
-  if(isset($_POST['free_fax_desc'])){
-    $fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
-    $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
-
-    $in_sql = "INSERT into dental_fax_invoice SET
-		invoice_id = '".$invoice_id."', 
+        if (isset($_POST['free_fax_desc'])) {
+            $free_fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
+            $free_fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+            $in_sql = "INSERT into dental_fax_invoice SET
+	            invoice_id = '".$invoice_id."', 
                 description = '".mysqli_real_escape_string($con,$_POST['free_fax_desc'])."',
                 start_date = '".mysqli_real_escape_string($con,$free_fax_start_date)."',
                 end_date = '".mysqli_real_escape_string($con,$free_fax_end_date)."',
                 amount = '".mysqli_real_escape_string($con,$_POST['free_fax_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-    mysqli_query($con,$in_sql);
-    $fax_invoice_id = mysqli_insert_id($con);
-	$total_amount += $_POST['free_fax_amount'];
-    $up_sql = "UPDATE dental_faxes SET
+            mysqli_query($con,$in_sql);
+            $total_amount += $_POST['free_fax_amount'];
+            $up_sql = "UPDATE dental_faxes SET
                 status = '1'
                 WHERE status='0' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
-    mysqli_query($con,$up_sql);
-  }
+            mysqli_query($con,$up_sql);
+        }
 
-  if(isset($_POST['fax_desc'])){
-    $fax_start_date = ($_POST['fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):''; 
-    $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+        if (isset($_POST['fax_desc'])) {
+            $fax_start_date = ($_POST['fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
+            $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
-    $in_sql = "UPDATE dental_fax_invoice SET
-		description = '".mysqli_real_escape_string($con,$_POST['fax_desc'])."',
+            $in_sql = "UPDATE dental_fax_invoice SET
+	            description = '".mysqli_real_escape_string($con,$_POST['fax_desc'])."',
                 start_date = '".mysqli_real_escape_string($con,$fax_start_date)."',
                 end_date = '".mysqli_real_escape_string($con,$fax_end_date)."',
                 amount = '".mysqli_real_escape_string($con,$_POST['fax_amount'])."'
-		WHERE invoice_id = '".$invoice_id."'";
-    mysqli_query($con,$in_sql);
-    $fax_invoice_id = mysqli_insert_id($con);
-    $total_amount += $_POST['fax_amount'];
-
-    $up_sql = "UPDATE dental_faxes SET
-		status = '1'
-		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
-    mysqli_query($con,$up_sql);
-  }else{
-    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BC);
-    $up_sql = "UPDATE dental_fax_invoice SET
+		        WHERE invoice_id = '".$invoice_id."'";
+            mysqli_query($con,$in_sql);
+            $total_amount += $_POST['fax_amount'];
+            $up_sql = "UPDATE dental_faxes SET
+                status = '1'
+                WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+            mysqli_query($con,$up_sql);
+        } else {
+            $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BC);
+            $up_sql = "UPDATE dental_fax_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
-    mysqli_query($con,$up_sql);
-  }
+            mysqli_query($con,$up_sql);
+        }
 
-  if(isset($_POST['ec_desc'])){
-    $ec_start_date = ($_POST['ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
-    $ec_end_date = ($_POST['ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
-
-    $in_sql = "update dental_eligibility_invoice SET
+        if (isset($_POST['ec_desc'])) {
+            $ec_start_date = ($_POST['ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+            $ec_end_date = ($_POST['ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+            $in_sql = "update dental_eligibility_invoice SET
                 description = '".mysqli_real_escape_string($con,$_POST['ec_desc'])."',
                 start_date = '".mysqli_real_escape_string($con,$ec_start_date)."',
                 end_date = '".mysqli_real_escape_string($con,$ec_end_date)."',
                 amount = '".mysqli_real_escape_string($con,$_POST['ec_amount'])."'
-		WHERE invoice_id ='".$invoice_id."'";
-    mysqli_query($con,$in_sql);
-    $ec_invoice_id = mysqli_insert_id($con);
-    $up_sql = "UPDATE dental_eligibility SET
-                eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
-    //mysqli_query($con,$up_sql);
-  }
+		        WHERE invoice_id ='".$invoice_id."'";
+            mysqli_query($con,$in_sql);
+        }
 
   if(isset($_POST['free_ec_desc'])){
-    $ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
-    $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+    $free_ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+    $free_ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con,$invoice_id)."',
@@ -229,16 +213,10 @@ if(isset($_POST['submit'])){
                 invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
     mysqli_query($con,$up_sql);
-
   }
-
-
-
-
-
   if(isset($_POST['free_enrollment_desc'])){
-    $enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
-    $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
+    $free_enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
+    $free_enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
 
   if(isset($_POST['enrollment_desc'])){
     $enrollment_start_date = ($_POST['enrollment_start_date'])?date('Y-m-d', strtotime($_POST['enrollment_start_date'])):'';
@@ -308,10 +286,10 @@ if(isset($_POST['submit'])){
 }
 
   $num_extra = $_POST['extra_total'];
-  for($i=1;$i<=$num_extra;$i++){
-    if(isset($_POST['extra_name_'.$i])){
+  for ($i = 1; $i <= $num_extra; $i++) {
+    if (isset($_POST['extra_name_'.$i])) {
 	$name = $_POST['extra_name_'.$i];
-        $service_date = $_POST['extra_service_date_'.$i];
+	$service_date = $_POST['extra_service_date_'.$i];
 	$service_date = ($service_date!='')?date('Y-m-d', strtotime($service_date)):'';
 	$amount = $_POST['extra_amount_'.$i];
 	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
@@ -326,7 +304,6 @@ if(isset($_POST['submit'])){
       $total_amount += $amount;
     }
   }
-
 
         if(isset($_GET['bill']) && $_GET['bill']=="1"){
                 if($user['cc_id']!=''){
@@ -356,7 +333,7 @@ if(isset($_POST['submit'])){
   $_GET['invoice_id'] = $invoice_id;
   $redirect = false;
   include 'percase_bo_invoice_pdf.php';
- 
+
   if(isset($_GET['show']) && $_GET['show']=='1'){
   ?>
   <script type="text/javascript">
@@ -616,16 +593,13 @@ Invoice Due Date:
             
             <?php if ($fax['total_faxes'] > 0) { ?>
                 <?php
-                
                 $bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
                 
                 if ($doc['free_fax'] > $fax['total_faxes']) {
                     $free_fax = $fax['total_faxes'];
-                }
-                else {
+                } else {
                     $free_fax = $doc['free_fax'];
                 }
-                
                 ?>
                 <tr id="free_fax_row" class="fax">
                     <td>
@@ -676,10 +650,6 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
             <?php if ($ec['total_ec'] > 0) { ?>
                 <?php
 
@@ -691,7 +661,6 @@ Invoice Due Date:
                 else {
                     $free_ec = $doc['free_eligibility'];
                 }
-
                 ?>
                 <tr id="free_ec_row" class="eligibility">
                     <td>
@@ -742,15 +711,6 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
-
-
-
-
-
             <?php if ($enroll['total_enrollments'] > 0) { ?>
                 <?php
 
@@ -813,18 +773,6 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
-
-
-
-
-
-
-
-
                 <tr id="total_row">
                     <td>
                         <a href="#" class="btn btn-success" title="Add Entry">
@@ -940,13 +888,8 @@ function check_billed () {
         success: function(data){
             alert(data);
             var r = $.parseJSON(data);
-            
-            if (r.error) {}
-            else {}
         },
-        error: function(data){
-            //alert('fail');
-        }
+        error: function(data){}
     });
     
     return false;
@@ -956,27 +899,24 @@ function check_billed () {
 
 
 <?php
-
-function bill_card ($customerID, $amount, $userid, $invoiceid) {
-  $con = $GLOBALS['con'];
-
-  if($amount==0){
-    ?>
-    <script type="text/javascript">
-      alert('Cannot post $0.00 charge to Stripe.');
-    </script>
-    <?php
-  }else{
-    $key_r = getStripeRelatedUserData($userid);
-    setupStripeConnection($key_r['stripe_secret_key']);
-    $status = 1;
-    
-    try{
-        $charge = \Stripe\Charge::create(array(
-            "amount" => ($amount*100), # $15.00 this time
-            "currency" => "usd",
-            "customer" => $customerID
-        ));
+function bill_card($customerID, $amount, $userid, $invoiceid)
+{
+    $con = $GLOBALS['con'];
+    if ($amount==0) { ?>
+        <script type="text/javascript">
+            alert('Cannot post $0.00 charge to Stripe.');
+        </script>
+        <?php
+    } else {
+        $key_r = getStripeRelatedUserData($userid);
+        setupStripeConnection($key_r['stripe_secret_key']);
+        $status = 1;
+        try {
+            $charge = \Stripe\Charge::create([
+                "amount" => ($amount*100), # $15.00 this time
+                "currency" => "usd",
+                "customer" => $customerID,
+            ]);
     }
     catch (\Stripe\Error\Card $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET

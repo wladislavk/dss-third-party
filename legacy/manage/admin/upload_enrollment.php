@@ -1,12 +1,13 @@
 <?php 
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once "includes/general.htm";
 include_once "../includes/constants.inc";
 include_once "includes/invoice_functions.php";
-if(isset($_POST["enrollsub"]))
-{
+
+if (isset($_POST["enrollsub"])) {
 
   $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
   $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['userid'])."'";

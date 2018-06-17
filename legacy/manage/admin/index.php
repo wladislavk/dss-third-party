@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include 'includes/main_include.php';
-	include_once 'includes/password.php';
-	include_once '../includes/constants.inc';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/main_include.php';
+include_once 'includes/password.php';
+include_once '../includes/constants.inc';
 
 	if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1) {
         $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysqli_real_escape_string($con,$_POST['email'])."'";
@@ -26,7 +28,7 @@
 						</a>";
 			$message .= "<br /><br />";
 			$message .= DSS_EMAIL_FOOTER;
-            $msg = mail($check_myarray['email'], $subject, $message, $headers);
+            mail($check_myarray['email'], $subject, $message, $headers);
 ?>
             <script type="text/javascript">
                 window.location.replace('index.php?msg=Email sent');

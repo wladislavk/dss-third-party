@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -17,11 +19,11 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_allergens order by sortby";
 $my = mysqli_query($con,$sql);
@@ -30,16 +32,12 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
-if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
-{
-	foreach($_POST['sortby'] as $val)
-	{
+if (!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
+	foreach ($_POST['sortby'] as $val) {
 		$smyarray = mysqli_fetch_array($my);
 		
-		if($val == '' || is_numeric($val) === false)
-		{
+		if ($val == '' || is_numeric($val) === false) {
 			$val = 999;
 		}
 		
@@ -51,7 +49,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -67,7 +65,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_allergens.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_allergens.php');" class="btn btn-success">
 		Add New Allergens
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -84,14 +82,14 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?
 				 paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
@@ -104,25 +102,18 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 			Action
 		</td>
 	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if(mysqli_num_rows($my) == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if($myarray["status"] == 1)
-			{
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+			if($myarray["status"] == 1) {
 				$tr_class = "tr_active";
-			}
-			else
-			{
+			} else {
 				$tr_class = "tr_inactive";
 			}
 		?>
@@ -141,7 +132,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_allergens.php?ed=<?php echo $myarray["allergensid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_allergens.php?ed=<?php echo $myarray["allergensid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
@@ -160,11 +151,10 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 				<?php } ?>
 			</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

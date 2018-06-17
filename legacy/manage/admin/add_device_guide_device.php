@@ -1,10 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
+
 if($_POST["devsub"] == 1)
 {
 		if($_POST["ed"] != "")
@@ -37,13 +41,9 @@ if($_POST["devsub"] == 1)
       mysqli_query($con, $s);
     }
   }
-
-
-			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -51,8 +51,6 @@ if($_POST["devsub"] == 1)
 		}
 		else
 		{
-
-
 			$ins_sql = "insert into dental_device_guide_devices set 
                                 name = '".mysqli_real_escape_string($con, $_POST["name"])."',
 				adddate=now(),
@@ -76,7 +74,6 @@ if($_POST["devsub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -100,7 +97,6 @@ if($_POST["devsub"] == 1)
 	else
 	{
 		$name = st($themyarray['name']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["id"] != '')
@@ -159,10 +155,8 @@ if($_POST["devsub"] == 1)
 		<?php } ?>
             </td>
         </tr>
-
-    <?
+    <?php
   }
-
 ?>
         <tr>
             <td  colspan="2" align="center">

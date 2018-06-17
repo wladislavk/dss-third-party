@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -238,9 +240,5 @@ $total_charge += $case_r['percase_amount'];
 					log('Event on decimals entered: ' + errorMsg);
 				}
 			});
-
-	
-
 });
-
 </script>

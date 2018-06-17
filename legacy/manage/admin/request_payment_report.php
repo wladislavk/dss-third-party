@@ -1,17 +1,17 @@
 <?php
-  require_once('../includes/constants.inc');
-  require_once('includes/main_include.php');
-  require_once "includes/general.htm";
-  include_once 'includes/claim_functions.php';
-  include_once 'includes/invoice_functions.php';
-  include_once '../includes/claim_functions.php';
+require_once('../includes/constants.inc');
+require_once('includes/main_include.php');
+require_once "includes/general.htm";
+include_once 'includes/claim_functions.php';
+include_once 'includes/invoice_functions.php';
+include_once '../includes/claim_functions.php';
 
 $redirect = !empty($_GET['redirect']) || empty($_GET['embed']);
 
-  $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con, $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1"; 
-  $reference_id_query = mysqli_query($con, $reference_id_sql);
-  $reference_id_result = mysqli_fetch_assoc($reference_id_query);
-  if($reference_id_result){
+$reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con, $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
+$reference_id_query = mysqli_query($con, $reference_id_sql);
+$reference_id_result = mysqli_fetch_assoc($reference_id_query);
+if ($reference_id_result) {
     $reference_id = $reference_id_result['reference_id'];
     if($reference_id != ""){
       $data = array();

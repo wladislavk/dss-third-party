@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
@@ -66,11 +68,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         $fax = $_POST['fax'];
         $email = $_POST['email'];
         $national_provider_id = $_POST['national_provider_id'];
-        $qualifier = $_POST['qualifier'];
-        $qualifierid = $_POST['qualifierid'];
-        $greeting = $_POST['greeting'];
-        $sincerely = $_POST['sincerely'];
-        $contacttypeid = $_POST['contacttypeid'];
         $notes = $_POST['notes'];
     }
     else
@@ -90,24 +87,14 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         $fax = st($themyarray['fax']);
         $email = st($themyarray['email']);
         $national_provider_id = st($themyarray['national_provider_id']);
-        $qualifier = st($themyarray['qualifier']);
-        $qualifierid = st($themyarray['qualifierid']);
-        $greeting = st($themyarray['greeting']);
-        $sincerely = st($themyarray['sincerely']);
-        $contacttypeid = st($themyarray['contacttypeid']);
         $notes = st($themyarray['notes']);
         
         $name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-        
-        $but_text = "Add ";
     }
     
-    if($themyarray["contactid"] != '')
-    {
+    if($themyarray["contactid"] != '') {
         $but_text = "Edit ";
-    }
-    else
-    {
+    } else {
         $but_text = "Add ";
     }
     ?>

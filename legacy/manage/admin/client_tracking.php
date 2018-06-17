@@ -1,28 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once '../includes/constants.inc';
 
-if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
-{
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
-	
 	$msg = "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 if(isset($_REQUEST['start_date'])){
   $start_date = date('Y-m-d', strtotime($_REQUEST['start_date']));
@@ -315,20 +316,16 @@ Total CC + Invoice Last 30 days: $<?php echo  $total_charge + $count_r['cc_paid'
 	</tr>
 </thead>
 <tbody>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php
+    if(mysqli_num_rows($my) == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-
+	} else {
+		while ($myarray = mysqli_fetch_array($my)) {
 		?>
 			<tr class="status_<?php echo  $myarray['status']; ?>">
 				<td valign="top">
@@ -401,10 +398,8 @@ Total CC + Invoice Last 30 days: $<?php echo  $total_charge + $count_r['cc_paid'
 
 <br /><br />	
 <script type="text/javascript">
-$(document).ready(function() 
-    { 
-        $('#monthly_table').tablesorter(); 
-    } 
-); 
+    $(document).ready(function () {
+        $('#monthly_table').tablesorter();
+    });
 </script>
 <?php include "includes/bottom.htm";?>

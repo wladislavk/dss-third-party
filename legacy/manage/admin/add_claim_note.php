@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once "includes/general.htm";
@@ -8,12 +11,8 @@ require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
-{
-  if($_POST['nid']==''){
-
-
-
+if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
+    if($_POST['nid']=='') {
 		$ins_sql = "insert into dental_claim_notes set 
 				claim_id = '".mysqli_real_escape_string($con, $_POST['claim_id'])."',
 				note = '".mysqli_real_escape_string($con, $_POST['note'])."',
@@ -22,21 +21,18 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		$n_id = mysqli_insert_id($con);
+		for ($i = 0; $i < count($_FILES['attachment']['name']); $i++) {
+		    if($_FILES['attachment']['tmp_name'][$i]!=''){
+		        $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
+		        $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
+		        move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
-                for($i=0;$i < count($_FILES['attachment']['name']); $i++){
-                if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
-                  $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
-                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
-
-                  $a_sql = "INSERT INTO dental_claim_note_attachment SET
+		        $a_sql = "INSERT INTO dental_claim_note_attachment SET
                                 filename = '".mysqli_real_escape_string($con, $attachment)."',
                                 note_id=".mysqli_real_escape_string($con, $n_id);
-                  mysqli_query($con,$a_sql);
-                }
-                }
-
-
+		        mysqli_query($con,$a_sql);
+		    }
+		}
 		?>
 		<script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
@@ -45,9 +41,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 			  parent.window.location='claim_notes.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&msg=<?php echo $msg;?>';
 			<?php } ?>
 		</script>
-		<?
-		
-		trigger_error("Die called", E_USER_ERROR);
+		<?php
+        trigger_error("Die called", E_USER_ERROR);
   }else{
                 $up_sql = "update dental_claim_notes set 
                                 note = '".mysqli_real_escape_string($con, $_POST['note'])."'
@@ -55,18 +50,17 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                 mysqli_query($con,$up_sql) or trigger_error($up_sql.mysqli_error($con), E_USER_ERROR);
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
-                if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
-                  $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
-                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
+                    if($_FILES['attachment']['tmp_name'][$i]!=''){
+                      $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
+                      $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
+                      move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
-                  $a_sql = "INSERT INTO dental_claim_note_attachment SET
-                                filename = '".mysqli_real_escape_string($con, $attachment)."',
-                                note_id=".mysqli_real_escape_string($con, $n_id);
-                  mysqli_query($con,$a_sql);
+                      $a_sql = "INSERT INTO dental_claim_note_attachment SET
+                                    filename = '".mysqli_real_escape_string($con, $attachment)."',
+                                    note_id=".mysqli_real_escape_string($con, $n_id);
+                      mysqli_query($con,$a_sql);
+                    }
                 }
-                }
-
                 ?>
                 <script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
@@ -75,22 +69,18 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                           parent.window.location='claim_notes.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&msg=<?php echo $msg;?>';
 			<?php } ?>
                 </script>
-                <?
-
+                <?php
                 trigger_error("Die called", E_USER_ERROR);
   }
 }
-
 
 $sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' order by Title";
 $my = mysqli_query($con,$sql);
 
 ?>
 <script type="text/javascript">
-        function change_desc(fa)
-        {
-                if(fa != '')
-                {
+        function change_desc(fa) {
+                if(fa != '') {
                         var title_arr = new Array();
                         var desc_arr = new Array();
                         
@@ -102,26 +92,22 @@ $my = mysqli_query($con,$sql);
                         <?
                                 $i++;                        }?>
                         document.getElementById("note").value = desc_arr[fa].replace(/\%n\%/g,'\r\n').replace(/&amp;/g,'&');;
-                }
-                else                {
+                } else {
                         document.getElementById("note").value = "";
                 }
         }
-        
 </script>
+<?php
+if(isset($_GET['nid'])) {
+        $s = "SELECT * FROM dental_claim_notes WHERE id='".$_GET['nid']."'";
+        $q = mysqli_query($con,$s);
+        $r = mysqli_fetch_assoc($q);
+        $note = $r['note'];
+} else {
+        $note = '';
+}
 
-    <?
-
-        if(isset($_GET['nid'])){
-                $s = "SELECT * FROM dental_claim_notes WHERE id='".$_GET['nid']."'";
-                $q = mysqli_query($con,$s);
-                $r = mysqli_fetch_assoc($q);
-                $note = $r['note'];
-        }else{
-                $note = '';
-        }
-
-		$but_text = "Add ";
+$but_text = "Add ";
 	
 	 if(!empty($msg)) {?>
     <div align="center" class="red">
@@ -141,15 +127,14 @@ $my = mysqli_query($con,$sql);
                 <div class="col-md-9">
             <select name="title" class="form-control" onChange="change_desc(this.value)">
                 <option value="">Select</option>
-                <?
+                <?php
                                 $j=0;
                                 $my = mysqli_query($con,$sql);
-                                while($myarray = mysqli_fetch_array($my))
-                                { ?>
+                                while($myarray = mysqli_fetch_array($my)) { ?>
                                         <option value="<?php echo $j;?>">
                         <?php echo st($myarray['title']);?>
                     </option>
-                                <?
+                                <?php
                                         $j++;
                                 }?>
             </select>

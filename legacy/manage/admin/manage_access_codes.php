@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	if(is_billing($_SESSION['admin_access'])){
+include "includes/top.htm";
+
+if(is_billing($_SESSION['admin_access'])){
 ?>
 		<h2>You are not authorized to view this page.</h2>
 <?php
@@ -11,11 +13,11 @@
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select ac.*, p.name, (SELECT count(u.userid) FROM dental_users u WHERE u.access_code_id=ac.id) as num_users from dental_access_codes ac 
 	LEFT JOIN dental_plans p ON p.id=ac.plan_id";
@@ -25,8 +27,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -40,7 +40,7 @@ $num_users = mysqli_num_rows($my);
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_access_code.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_access_code.php');" class="btn btn-success">
 		Add New Access Code
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -91,17 +91,11 @@ $num_users = mysqli_num_rows($my);
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if($myarray["status"] == 1)
-			{
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+			if($myarray["status"] == 1) {
 				$tr_class = "";
-			}
-			else
-			{
+			} else {
 				$tr_class = "warning";
 			}
 		?>
@@ -119,7 +113,7 @@ $num_users = mysqli_num_rows($my);
                                         <?php echo  $myarray['name']; ?>
                                 </td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_access_code.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_access_code.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>
@@ -140,7 +134,6 @@ $num_users = mysqli_num_rows($my);
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

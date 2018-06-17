@@ -1,25 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if(!empty($_POST["mult_assessmentsub"]) && $_POST["mult_assessmentsub"] == 1)
-{
+if(!empty($_POST["mult_assessmentsub"]) && $_POST["mult_assessmentsub"] == 1) {
 	$op_arr = explode("\n",trim($_POST['assessment']));
 				
-	foreach($op_arr as $i=>$val)
-	{
-		if($val <> '')
-		{
+	foreach($op_arr as $i=>$val) {
+		if($val <> '') {
 			$sel_check = "select * from dental_assessment where assessment = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
 			
-			if(mysqli_num_rows($query_check) == 0)
-			{
+			if(mysqli_num_rows($query_check) == 0) {
 				$ins_sql = "insert into dental_assessment set assessment = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 				mysqli_query($con,$ins_sql);
 			}
-			
 		}
 	}
 	
@@ -28,52 +24,41 @@ if(!empty($_POST["mult_assessmentsub"]) && $_POST["mult_assessmentsub"] == 1)
 	<script type="text/javascript">
 		parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
-{
+if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1) {
 	$sel_check = "select * from dental_assessment where assessment = '".s_for($_POST["assessment"])."' and assessmentid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysqli_query($con,$sel_check);
+	$query_check = mysqli_query($con,$sel_check);
 	
-	if(mysqli_num_rows($query_check)>0)
-	{
+	if(mysqli_num_rows($query_check)>0) {
 		$msg="Assessment already exist. So please give another Assessment.";
 		?>
 		<script type="text/javascript">
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	else
-	{
-		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
-		{
+		<?php
+	} else {
+		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
 			$sby = 999;
-		}
-		else
-		{
+		} else {
 			$sby = s_for($_POST["sortby"]);
 		}
 		
-		if($_POST["ed"] != "")
-		{
+		if($_POST["ed"] != "") {
 			$ed_sql = "update dental_assessment set assessment = '".s_for($_POST["assessment"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where assessmentid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
+		} else {
 			$ins_sql = "insert into dental_assessment set assessment = '".s_for($_POST["assessment"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);
 			
@@ -87,25 +72,19 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
 		}
 	}
 }
-
 ?>
-
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_assessment where assessmentid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
-	if(!empty($msg))
-	{
+	if(!empty($msg)) {
 		$assessment = $_POST['assessment'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
-	}
-	else
-	{
+	} else {
 		$assessment = st($themyarray['assessment']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
@@ -113,18 +92,13 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
 		$but_text = "Add ";
 	}
 	
-	if($themyarray["assessmentid"] != '')
-	{
+	if($themyarray["assessmentid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
-	
 	<br /><br />
-	
 	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
@@ -186,16 +160,15 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
                 <input type="submit" value="<?php echo $but_text?> Assessment" class="btn btn-primary">
 		<?php if($themyarray["assessmentid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_assessment.php?delid=<?php echo $themyarray["assessmentid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>
     </table>
     </form>
     
-    <?php if(empty($_GET['ed']))
-	{?>
+    <?php if(empty($_GET['ed'])) { ?>
     	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
@@ -225,7 +198,6 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
             </tr>
         </table>
         </form>
-    
     <?php }?>
 </body>
 </html>

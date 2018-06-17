@@ -36,8 +36,6 @@ Sleep Tests:
   .even{ background: #e4ffcf; }
 </style>
 <table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
-
-
         <tr>
                 <td valign="top" class="odd">
                 Date

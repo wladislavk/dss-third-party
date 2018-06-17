@@ -147,7 +147,8 @@ require_once __DIR__ . '/includes/top.htm';
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($orderedProducerList as $docId=>$producerList) {
+        <?php
+        foreach ($orderedProducerList as $docId => $producerList) {
             $doctor = $producerList[0];
             $producerCount = count($producerList);
             $rowSpan = $producerCount + 1;

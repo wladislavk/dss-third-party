@@ -1,46 +1,35 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include "fckeditor/fckeditor.php";
 
-if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
-{
-	if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
-	{
+if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1) {
+	if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
 		$sby = 999;
-	}
-	else
-	{
+	} else {
 		$sby = s_for($_POST["sortby"]);
 	}
 	
 	$doc_id = '';
-	if(!empty($_POST['docid']) && count($_POST['docid']) <> 0)
-	{
+	if(!empty($_POST['docid']) && count($_POST['docid']) <> 0) {
 		$doc_arr = '~';
-		foreach($_POST['docid'] as $doc_val)
-		{
-			if($doc_val <> '')
-			{
+		foreach($_POST['docid'] as $doc_val) {
+			if($doc_val <> '') {
 				$doc_arr .= $doc_val.'~';
 			}
 		}
 	}
-	if(!empty($doc_arr) && $doc_arr != '~')
-		$doc_id = $doc_arr;
-		
-		
-	
-	if(!empty($_POST['remove_video']) && $_POST['remove_video'] == 1)
-	{
+	if(!empty($doc_arr) && $doc_arr != '~') {
+        $doc_id = $doc_arr;
+    }
+
+	if(!empty($_POST['remove_video']) && $_POST['remove_video'] == 1) {
 		$banner1 = '';
 		@unlink("../video_file/".$_POST['video_file_old']);
-	}
-	else
-	{
-		if($_FILES["video_file"]["name"] <> '')
-		{
+	} else {
+		if($_FILES["video_file"]["name"] <> '') {
 			$fname = $_FILES["video_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -53,26 +42,19 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 			@move_uploaded_file($_FILES["video_file"]["tmp_name"],"../video_file/".$banner1);
 			@chmod("../video_file/".$banner1,0777);
 			
-			if($_POST['video_file_old'] <> '')
-			{
+			if($_POST['video_file_old'] <> '') {
 				@unlink("../video_file/".$_POST['video_file_old']);
 			}
-		}
-		else
-		{
+		} else {
 			$banner1 = $_POST['video_file_old'];
 		}
 	}
 	
-	if(!empty($_POST['remove_doc']) && $_POST['remove_doc'] == 1)
-	{
+	if(!empty($_POST['remove_doc']) && $_POST['remove_doc'] == 1) {
 		$banner2 = '';
 		@unlink("../doc_file/".$_POST['doc_file_old']);
-	}
-	else
-	{
-		if($_FILES["doc_file"]["name"] <> '')
-		{
+	} else {
+		if($_FILES["doc_file"]["name"] <> '') {
 			$fname = $_FILES["doc_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -85,19 +67,15 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 			@move_uploaded_file($_FILES["doc_file"]["tmp_name"],"../doc_file/".$banner2);
 			@chmod("../doc_file/".$banner2,0777);
 			
-			if($_POST['doc_file_old'] <> '')
-			{
+			if($_POST['doc_file_old'] <> '') {
 				@unlink("../doc_file/".$_POST['doc_file_old']);
 			}
-		}
-		else
-		{
+		} else {
 			$banner2 = $_POST['doc_file_old'];
 		}
 	}
 	
-	if($_POST["ed"] != "")
-	{
+	if($_POST["ed"] != "") {
 		$ed_sql = "update dental_doc_insurance set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where doc_insuranceid='".$_POST["ed"]."'";
 		mysqli_query($con,$ed_sql);
 
@@ -106,30 +84,24 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 		<script type="text/javascript">
 			parent.window.location='manage_doc_insurance.php?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
-	}
-	else
-	{
+	} else {
 		$ins_sql = "insert into dental_doc_insurance set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql);
 		
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_doc_insurance.php?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 }
-
 ?>
-
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_doc_insurance where doc_insuranceid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -140,25 +112,18 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 	$doc_file = $themyarray['doc_file'];
 	$status = st($themyarray['status']);
 	$sortby = st($themyarray['sortby']);
-	$but_text = "Add ";
 	$docid = st($themyarray['docid']);
 	
-	if(empty($show_to) && empty($docid))
-	{
+	if(empty($show_to) && empty($docid)) {
 		$show_to = 0;
-	}
-	else
-	{
+	} else {
 		$show_to = 1;
 	}
 	
 	
-	if($themyarray["doc_insuranceid"] != '')
-	{
+	if($themyarray["doc_insuranceid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>
@@ -229,7 +194,6 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmdata" colspan="2">
                 <?php
-                    
                     $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
@@ -303,8 +267,8 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
                 <input type="submit" value="<?php echo $but_text?> Insurance Information " class="btn btn-primary">
 		<?php if($themyarray["doc_insuranceid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_doc_insurance.php?delid=<?php echo $themyarray["doc_insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>

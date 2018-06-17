@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -24,9 +25,9 @@ $result = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_E
 $patients = array();
 $i = 0;
 while ($row = mysqli_fetch_assoc($result)) {
-  $patients[$i]['id'] = $row['contactid'];
-  $patients[$i]['name'] = $row['company'];
-  $i++;
+    $patients[$i]['id'] = $row['contactid'];
+    $patients[$i]['name'] = $row['company'];
+    $i++;
 }
 
 if (!$result) {
@@ -34,5 +35,3 @@ if (!$result) {
 }
 
 echo json_encode($patients);
-
-?>

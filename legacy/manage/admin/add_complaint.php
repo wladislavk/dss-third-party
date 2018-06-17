@@ -1,80 +1,63 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if(!empty($_POST["mult_complaintsub"]) && $_POST["mult_complaintsub"] == 1)
-{
+if(!empty($_POST["mult_complaintsub"]) && $_POST["mult_complaintsub"] == 1) {
 	$op_arr = explode("\n",trim($_POST['complaint']));
 				
-	foreach($op_arr as $i=>$val)
-	{
-		if($val <> '')
-		{
+	foreach($op_arr as $i=>$val) {
+		if($val <> '') {
 			$sel_check = "select * from dental_complaint where complaint = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
-			
-			if(mysqli_num_rows($query_check) == 0)
-			{
+			if(mysqli_num_rows($query_check) == 0) {
 				$ins_sql = "insert into dental_complaint set complaint = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 				mysqli_query($con,$ins_sql);
 			}
-			
 		}
 	}
 	
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
-{
+if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1) {
 	$sel_check = "select * from dental_complaint where complaint = '".s_for($_POST["complaint"])."' and complaintid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
-	if(mysqli_num_rows($query_check)>0)
-	{
+	if(mysqli_num_rows($query_check)>0) {
 		$msg="Complaint already exist. So please give another Complaint.";
 		?>
 		<script type="text/javascript">
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	else
-	{
-		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false)
-		{
+		<?php
+	} else {
+		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
 			$sby = 999;
-		}
-		else
-		{
+		} else {
 			$sby = s_for($_POST["sortby"]);
 		}
 		
-		if($_POST["ed"] != "")
-		{
+		if($_POST["ed"] != "") {
 			$ed_sql = "update dental_complaint set complaint = '".s_for($_POST["complaint"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where complaintid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
+		} else {
 			$ins_sql = "insert into dental_complaint set complaint = '".s_for($_POST["complaint"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);
 			
@@ -83,17 +66,14 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+    <?php
     $thesql = "select * from dental_complaint where complaintid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -111,7 +91,6 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["complaintid"] != '')
@@ -187,8 +166,8 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
                 <input type="submit" value="<?php echo $but_text?> Complaint" class="btn btn-primary">
 		<?php if($themyarray["complaintid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_complaint.php?delid=<?php echo $themyarray["complaintid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>

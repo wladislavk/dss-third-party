@@ -66,7 +66,6 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -80,7 +79,6 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -115,7 +113,6 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["contacttypeid"] != '')

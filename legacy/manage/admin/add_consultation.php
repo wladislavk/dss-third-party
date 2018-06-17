@@ -1,10 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if(!empty($_POST["mult_consultationsub"]) && $_POST["mult_consultationsub"] == 1)
-{
+if(!empty($_POST["mult_consultationsub"]) && $_POST["mult_consultationsub"] == 1) {
 	$op_arr = explode("\n",trim($_POST['consultation']));
 				
 	foreach($op_arr as $i=>$val)
@@ -110,7 +110,6 @@ if(!empty($_POST["consultationsub"]) && $_POST["consultationsub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["consultationid"] != '')

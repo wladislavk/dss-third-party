@@ -1,11 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><div class="clear"></div>
-
 <?php
-
-$sql = "select n.*, u.name signed_name from dental_notes n
-        LEFT JOIN dental_users u on u.userid=n.signed_id
-where n.patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ";
-$sql .= " order by n.adddate DESC";
+namespace Ds3\Libraries\Legacy;
+?>
+<div class="clear"></div>
+<?php
 $sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where status!=0 and patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."' order by adddate desc

@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
 
     $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
@@ -16,7 +18,6 @@
 		$ssn = st($themyarray['ssn']);
 		$ein = st($themyarray['ein']);
 		$practice = st($themyarray['practice']);
-		$password = st($themyarray['password']);
 		$first_name = st($themyarray['first_name']);
 		$last_name = st($themyarray['last_name']);
 		$email = st($themyarray['email']);
@@ -26,15 +27,14 @@
 		$zip = st($themyarray['zip']);
 		$phone = st($themyarray['phone']);
 		$fax = st($themyarray['fax']);
-
-                $mailing_practice = st($themyarray['mailing_practice']);
-                $mailing_name = st($themyarray['mailing_name']);
-                $mailing_address = st($themyarray['mailing_address']);
-                $mailing_city = st($themyarray['mailing_city']);
-                $mailing_state = st($themyarray['mailing_state']);
-                $mailing_zip = st($themyarray['mailing_zip']);
+        $mailing_practice = st($themyarray['mailing_practice']);
+        $mailing_name = st($themyarray['mailing_name']);
+        $mailing_address = st($themyarray['mailing_address']);
+        $mailing_city = st($themyarray['mailing_city']);
+        $mailing_state = st($themyarray['mailing_state']);
+        $mailing_zip = st($themyarray['mailing_zip']);
 		$mailing_email = st($themyarray['mailing_email']);
-                $mailing_phone = st($themyarray['mailing_phone']);
+        $mailing_phone = st($themyarray['mailing_phone']);
 		$mailing_fax = st($themyarray['mailing_fax']);
 
 		$status = st($themyarray['status']);
@@ -47,38 +47,32 @@
 		$intro_letters = st($themyarray['intro_letters']);
 		$use_eligible_api = st($themyarray['use_eligible_api']);
 		$eligible_test = st($themyarray['eligible_test']);
-                $use_course = st($themyarray['use_course']);
-                $use_course_staff = st($themyarray['use_course_staff']);
+        $use_course = st($themyarray['use_course']);
+        $use_course_staff = st($themyarray['use_course_staff']);
 		$use_letter_header = st($themyarray['use_letter_header']);
 		$homepage = st($themyarray['homepage']);
 		$companyid = st($themyarray['companyid']);
-                $user_type = st($themyarray['user_type']);
+        $user_type = st($themyarray['user_type']);
 		$billing_company_id = $themyarray['billing_company_id'];
-		$hst_company_id = (!empty($themyarray['hst_company_id']) ? $themyarray['hst_company_id'] : '');
 		$plan_id = $themyarray['plan_id'];
 		$billing_plan_id = $themyarray['billing_plan_id'];
 		$access_code_id = $themyarray['access_code_id'];
-
-                $use_service_npi = $themyarray['use_service_npi'];
-                $service_name = $themyarray['service_name'];
-                $service_address = $themyarray['service_address'];
-                $service_city = $themyarray['service_city'];
-                $service_state = $themyarray['service_state'];
-                $service_zip = $themyarray['service_zip'];
-                $service_phone = $themyarray['service_phone'];
-                $service_fax = $themyarray['service_fax'];
-                $service_npi = $themyarray['service_npi'];
-                $service_medicare_npi = $themyarray['service_medicare_npi'];
-                $service_medicare_ptan = $themyarray['service_medicare_ptan'];
-                $service_tax_id_or_ssn = $themyarray['service_tax_id_or_ssn'];
-                $service_ein = $themyarray['service_ein'];
-                $service_ssn = $themyarray['service_ssn'];
-
-
+        $use_service_npi = $themyarray['use_service_npi'];
+        $service_name = $themyarray['service_name'];
+        $service_address = $themyarray['service_address'];
+        $service_city = $themyarray['service_city'];
+        $service_state = $themyarray['service_state'];
+        $service_zip = $themyarray['service_zip'];
+        $service_phone = $themyarray['service_phone'];
+        $service_fax = $themyarray['service_fax'];
+        $service_npi = $themyarray['service_npi'];
+        $service_medicare_npi = $themyarray['service_medicare_npi'];
+        $service_medicare_ptan = $themyarray['service_medicare_ptan'];
+        $service_tax_id_or_ssn = $themyarray['service_tax_id_or_ssn'];
+        $service_ein = $themyarray['service_ein'];
+        $service_ssn = $themyarray['service_ssn'];
 	?>
-
     <script type="text/javascript" src="/manage/admin/js/view_user.js"></script>
-	
     <div class="col-md-12">
         <?php if (isset($_GET['msg'])) { ?>
         <div class="alert alert-danger text-center">
@@ -331,33 +325,33 @@
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
                 <div class="col-md-9">
-                <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?php echo $service_fax;?>" class="tbox" />
+                <input id="service_fax" class="form-control phonemask tbox" type="text" name="service_fax" value="<?php echo $service_fax;?>"/>
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service NPI</label>
                 <div class="col-md-9">
-                <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?php echo $service_npi;?>" class="tbox" />
+                <input id="service_npi" class="form-control tbox" type="text" name="service_npi" value="<?php echo $service_npi;?>" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare NPI</label>
                 <div class="col-md-9">
-                <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?php echo $service_medicare_npi;?>" class="tbox" />
+                <input id="service_medicare_npi" class="form-control tbox" type="text" name="service_medicare_npi" value="<?php echo $service_medicare_npi;?>" />
                 </div>
 		<div class="clearfix"></div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare PTAN</label>
                 <div class="col-md-9">
-                <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?php echo $service_medicare_ptan;?>" class="tbox" />
+                <input id="service_medicare_ptan" class="form-control tbox" type="text" name="service_medicare_ptan" value="<?php echo $service_medicare_ptan;?>" />
                 </div>
 		<div class="clearfix"></div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Tax ID or SSN</label>
                 <div class="col-md-9">
-                <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?php echo $service_tax_id_or_ssn;?>" class="tbox" />
+                <input id="service_tax_id_or_ssn" class="form-control tbox" type="text" name="service_tax_id_or_ssn" value="<?php echo $service_tax_id_or_ssn;?>" />
                 </div>
 		<div class="clearfix"></div>
             </div>

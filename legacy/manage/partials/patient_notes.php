@@ -33,19 +33,15 @@ if (isset($my)) {
             }
             foreach ($my as $dentalNote) {
                 if ($dentalNote["signed_id"] != '') {
-                    $tr_class = "tr_active";
                     $bg_color = "";
                     $status = "Signed";
                 } elseif ($dentalNote["status"] == 2) {
-                    $tr_class = "tr_draft";
                     $bg_color = "#FFFF99";
                     $status = 'Draft';
                 } else {
-                    $tr_class = "tr_inactive";
                     $bg_color = "#FF9999";
                     $status = "Unsigned";
                 }
-                $tr_class = "tr_active";
                 $theUser = [];
                 foreach ($users as $user) {
                     if ($user['userid'] == $dentalNote['userid']) {

@@ -255,7 +255,8 @@ if ($customDateRange && $validCustomDates) {
                 </td>
             </tr>
         <?php } ?>
-        <?php foreach ($results as $each) {
+        <?php
+        foreach ($results as $each) {
             $alternate = [];
 
             if (isset($completedResults[$each['company_id']])) {
@@ -445,9 +446,7 @@ function hstDayDiff($stringDate, \DateTime $referenceDate)
 
     try {
         $date = \DateTime::createFromFormat('m/d/Y', $stringDate);
-        return +$date->diff($referenceDate)
-            ->format('%a')
-        ;
+        return +$date->diff($referenceDate)->format('%a');
     } catch (\Exception $e) {
         return null;
     }

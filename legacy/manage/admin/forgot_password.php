@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 include('includes/main_include.php');
 include_once('includes/password.php');
 include_once '../includes/constants.inc';
@@ -38,13 +41,13 @@ if ($_POST["emailsub"] == 1) {
         <script type="text/javascript">
                 window.location.replace('index.php?msg=Email sent');
         </script>
-    <? } else {
+    <?php } else {
         $msg='Email address not found';
         ?>
         <script type="text/javascript">
                 window.location.replace('forgot_password.php?msg=<?=$msg;?>');
         </script>
-    <? }
+    <?php }
 
     trigger_error("Die called", E_USER_ERROR);
 }

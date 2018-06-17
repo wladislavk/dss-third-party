@@ -1,10 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?>    <link href="../3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<link href="../3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
+<script src="../3rdParty/novus-nvd3/lib/d3.v3.js"></script>
+<script src="../3rdParty/novus-nvd3/nv.d3.js"></script>
 
-    <script src="../3rdParty/novus-nvd3/lib/d3.v3.js"></script>
-
-    <script src="../3rdParty/novus-nvd3/nv.d3.js"></script>
 <div id="user_paid">
-<svg style='height:300px; width: 450px;'/>
+    <svg style='height:300px; width: 450px;'/>
 </div>
 <script type="text/javascript">
  nv.addGraph(function() {  
@@ -38,11 +40,7 @@
    <?php
   $start_date = date('Y-m-d', mktime(0,0,0,date('m'), date('d')-30, date('Y')));
   $end_date = date('Y-m-d');
-	$sql1 = "select DATE(generated_date) as letter_date, count(letterid) num_letter FROM dental_letters 
-		WHERE generated_date BETWEEN '".$start_date."' AND '".$end_date."'
-		group by letter_date ORDER BY letter_date";
-
-$sql = "select a.Date as paid_date,
+    $sql = "select a.Date as paid_date,
        COALESCE( 
 	(
 SELECT count(du.userid) num_paid from dental_users du
@@ -89,10 +87,4 @@ ORDER BY a.Date";
 
    ];
  }
-
-
 </script>
-
-
-
-

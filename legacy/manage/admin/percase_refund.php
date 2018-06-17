@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -8,18 +10,16 @@ include_once '../includes/constants.inc';
 include_once 'includes/access.php';
 
 include_once dirname(__FILE__) . '/includes/popup_top.htm';
-
 ?>
 <script type="text/javascript" src="/manage/3rdParty/jquery.formatCurrency-1.4.0.pack.js"></script>
 <?php
-
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
 	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
   $charge_sql = "SELECT * FROM dental_charge
-                        WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'
+                WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'
 				AND id='".mysqli_real_escape_string($con,$_GET['cid'])."'";
 $charge_q = mysqli_query($con,$charge_sql);
 $charge_r = mysqli_fetch_assoc($charge_q);
@@ -207,9 +207,5 @@ try{
 					log('Event on decimals entered: ' + errorMsg);
 				}
 			});
-
-	
-
 });
-
 </script>

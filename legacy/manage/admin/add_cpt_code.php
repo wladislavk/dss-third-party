@@ -26,7 +26,6 @@ if(!empty($_POST["mult_cpt_codesub"]) && $_POST["mult_cpt_codesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_cpt_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
@@ -67,7 +66,6 @@ if(!empty($_POST["cpt_codesub"]) && $_POST["cpt_codesub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_cpt_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -111,7 +109,6 @@ if(!empty($_POST["cpt_codesub"]) && $_POST["cpt_codesub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["cpt_codeid"] != '')
@@ -186,9 +183,9 @@ if(!empty($_POST["cpt_codesub"]) && $_POST["cpt_codesub"] == 1)
                 <input type="hidden" name="ed" value="<?php echo $themyarray["cpt_codeid"]?>" />
                 <input type="submit" value="<?php echo $but_text?> CPT Code" class="btn btn-primary">
 		<?php if($themyarray["cpt_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_cpt_code.php?delid=<?php echo $themyarray["cpt_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                    <a href="manage_cpt_code.php?delid=<?php echo $themyarray["cpt_codeid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>

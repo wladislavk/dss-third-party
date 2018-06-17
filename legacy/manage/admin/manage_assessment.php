@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -30,7 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
@@ -49,7 +50,6 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
 	<?
@@ -68,7 +68,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_assessment.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_assessment.php');" class="btn btn-success">
 		Add New Assessment
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -88,8 +88,8 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
 		</TD>        
 	</TR>
@@ -142,7 +142,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_assessment.php?ed=<?php echo $myarray["assessmentid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_assessment.php?ed=<?php echo $myarray["assessmentid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>

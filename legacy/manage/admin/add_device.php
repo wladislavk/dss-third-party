@@ -1,9 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once "../includes/constants.inc";
 include_once "../includes/general_functions.php";
+
 if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
 {
 	$sel_check = "select * from dental_device where device = '".s_for($_POST["device"])."' and deviceid <> '".s_for($_POST['ed'])."'";
@@ -32,16 +34,12 @@ if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-
-
-
              $filesize = $_FILES["image"]["size"];
              if($filesize <= DSS_IMAGE_MAX_SIZE){
                 if($_FILES["image"]["name"] <> '')
                 {
                         $fname = $_FILES["image"]["name"];
                         $lastdot = strrpos($fname,".");
-                        $name = substr($fname,0,$lastdot);
                         $extension = substr($fname,$lastdot+1);
                         $banner1 = 'dental_device_'.$_POST['ed'];
                         $banner1 .= ".".$extension;
@@ -59,17 +57,11 @@ if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
                 <?php
                 $uploaded = false;
              }
-
 if(!$uploaded){
   $banner1 = '';
 }
-
-
-
 			$ed_sql = "update dental_device set device = '".s_for($_POST["device"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', image_path='".mysqli_real_escape_string($con,$banner1)."' where deviceid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
-
-
   $set_sql = "SELECT * FROM dental_device_guide_settings";
   $set_q = mysqli_query($con,$set_sql);
   while($set_r = mysqli_fetch_assoc($set_q)){
@@ -93,13 +85,9 @@ if(!$uploaded){
       mysqli_query($con,$s);
     }
   }
-
-
-			
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
 			<?
@@ -123,7 +111,6 @@ if(!$uploaded){
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
     mysqli_query($con,$s);
   }
-			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
@@ -134,12 +121,9 @@ if(!$uploaded){
 		}
 	}
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
+<?php
     $thesql = "select * from dental_device where deviceid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -246,10 +230,8 @@ if(!$uploaded){
                 <?php } ?>
             </td>
         </tr>
-
-    <?
+    <?php
   }
-
 ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -262,8 +244,6 @@ if(!$uploaded){
 		  <?php } ?>
             </td>
         </tr>
-
-
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
@@ -273,9 +253,9 @@ if(!$uploaded){
                 <input type="hidden" name="ed" value="<?=$themyarray["deviceid"]?>" />
                 <input type="submit" value="<?=$but_text?> Device" class="btn btn-primary">
 		<?php if($themyarray["deviceid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_device.php?delid=<?=$themyarray["deviceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+                    <a href="manage_device.php?delid=<?=$themyarray["deviceid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
 		<?php } ?>
             </td>
         </tr>

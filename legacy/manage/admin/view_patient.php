@@ -62,10 +62,8 @@ function trigger_letter1and2($pid)
 
 function trigger_letter3($pid)
 {
-    $letterid = '3';
-    $topatient = '1';
     if (!is_numeric($letter)) {
-        print $letter;
+        echo $letter;
         trigger_error("Die called", E_USER_ERROR);
     } else {
         return $letter;
@@ -244,7 +242,6 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $l = $db->getRow($lsql);
 
         $login = $l['login'];
-        $pass = $l['password'];
         if ($login == '') {
             $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
             $clogin = ereg_replace("[^A-Za-z]", "", $clogin);
@@ -512,10 +509,6 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
         $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
         $flowinsert = $db->query($flowinsertqry);
-        if(!empty($flowinsert)){
-            $referred_result = $db->query($referredbyqry);
-            $message = "Successfully updated flowsheet!2";
-        }
 
         $stepid = '1';
         $segmentid = '1';
@@ -531,7 +524,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) 
             VALUES 
             ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
-        $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
+        $db->query($flow_pg2_info_query);
 
         $sim = similar_patients($pid);
         if (count($sim) > 0) { ?>
@@ -567,8 +560,6 @@ if (isset($msg) && $msg != '') {
     $lastname = $_POST['lastname'];
     $preferred_name = $_POST['preferred_name'];
     $salutation = $_POST['salutation'];
-    $login = $_POST['login'];
-    $member_no = $_POST['member_no'];
     $group_no = $_POST['group_no'];
     $plan_no = $_POST['plan_no'];
     $dob = $_POST['dob'];
@@ -689,7 +680,6 @@ if (isset($msg) && $msg != '') {
     $preferred_name = st($themyarray['preferred_name']);
     $salutation = st($themyarray['salutation']);
     $login = st($themyarray['login']);
-    $member_no = st($themyarray['member_no']);
     $group_no = st($themyarray['group_no']);
     $plan_no = st($themyarray['plan_no']);
     $dob = st($themyarray['dob']);
@@ -1722,7 +1712,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <tr>
             <td class="frmhead" colspan="2">
                 <table id="contactmds" style="float:left;">
-                    <tr height="35">
+                    <tr>
                         <td>
                             <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
                             <ul>
@@ -1743,7 +1733,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1763,7 +1753,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1783,7 +1773,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1803,7 +1793,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1823,7 +1813,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35" id="docmdother2_tr" <?php echo ($docmdother2 == '') ? 'style="display:none;"' : ''; ?>>
+                    <tr id="docmdother2_tr" <?php echo ($docmdother2 == '') ? 'style="display:none;"' : ''; ?>>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1843,7 +1833,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35" id="docmdother3_tr" <?php echo ($docmdother3 == '') ? 'style="display:none;"' : ''; ?>>
+                    <tr id="docmdother3_tr" <?php echo ($docmdother3 == '') ? 'style="display:none;"' : ''; ?>>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">

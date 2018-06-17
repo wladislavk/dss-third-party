@@ -13,8 +13,6 @@ $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
     LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
 
 /**
- * @see DSS-272
- *
  * BO users can be edited by:
  *
  * 1: Super admin - No restrictions
@@ -40,8 +38,6 @@ $canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
 $canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
 
 /**
- * @see DSS-272
- *
  * View FO users: super admin, or within company scope.
  * Add logic to allow authorized users to see the "new user" form
  */
@@ -73,46 +69,38 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
             alert('You are not authorized to edit this user.');
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
-
     if (!$userId && !$canCreate) { ?>
         <script>
             alert('You are not authorized to create new users.');
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
 
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysqli_query($con,$sel_check);
-        $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysqli_query($con,$sel_check2);
+	$query_check = mysqli_query($con,$sel_check);
+	$sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
+	$query_check2 = mysqli_query($con,$sel_check2);
 
-	if(mysqli_num_rows($query_check)>0)
-	{
+	if(mysqli_num_rows($query_check)>0) {
 		$msg="Username already exist. So please give another Username.";
 		?>
 		<script type="text/javascript">
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
-	} 
-	elseif(mysqli_num_rows($query_check2)>0)
-        {
-                $msg="Email already exist. So please give another Email.";
-                ?>
-                <script type="text/javascript">
-                        alert("<?php echo $msg;?>");
-                        window.location="#add";
-                </script>
-                <?
-        }
-        else
-	{
+		<?php
+	} elseif (mysqli_num_rows($query_check2)>0) {
+	    $msg="Email already exist. So please give another Email.";
+	    ?>
+        <script type="text/javascript">
+                alert("<?php echo $msg;?>");
+                window.location="#add";
+        </script>
+        <?php
+    } else {
         if (
             empty($_POST['username']) ||
             empty($_POST['first_name']) ||
@@ -127,7 +115,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                 window.history.back();
             </script>
             <?php
-
             trigger_error('Die called', E_USER_ERROR);
         }
 
@@ -135,9 +122,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         $admin_access = $_POST['admin_access'] < $_SESSION['admin_access'] ?
             $_SESSION['admin_access'] : $_POST['admin_access'];
 
-		if($_POST["ed"] != "")
-		{
-
+		if($_POST["ed"] != "") {
 			$ed_sql = "update admin set 
 				first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
 				last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
@@ -147,13 +132,13 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 				status = '".mysqli_real_escape_string($con,$_POST["status"])."' 
 			where adminid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
-		
+
 			if(is_super($_SESSION['admin_access'])){
-                          mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
-                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
-                        }else{
-                          mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
-                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
+			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
+			} else {
+			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}
 			
 			$msg = "Edited Successfully";
@@ -163,9 +148,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			</script>
 			<?
 			trigger_error("Die called", E_USER_ERROR);
-		}
-		else
-		{
+		} else {
             if (
                 !strlen($_POST['password']) ||
                 !strlen($_POST['password2']) ||
@@ -176,7 +159,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                     window.history.back();
                 </script>
                 <?php
-
                 trigger_error('Die called', E_USER_ERROR);
             }
 
@@ -195,21 +177,19 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql); 
-                        $adminid = mysqli_insert_id($con);			
+			$adminid = mysqli_insert_id($con);
 
-                        if(is_super($_SESSION['admin_access'])){
-                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
-                        }else{
-                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_SESSION["admincompanyid"])."'");
-                        }
-
-
+			if(is_super($_SESSION['admin_access'])){
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
+			} else {
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_SESSION["admincompanyid"])."'");
+			}
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -217,42 +197,35 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 
 include_once dirname(__FILE__) . '/includes/popup_top.htm';
 
-    $thesql = "select a.*, ac.companyid from admin  a
-		LEFT JOIN admin_company ac ON a.adminid = ac.adminid
-		where a.adminid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-	$themy = mysqli_query($con,$thesql);
-	$themyarray = mysqli_fetch_array($themy);
+$thesql = "select a.*, ac.companyid from admin  a
+    LEFT JOIN admin_company ac ON a.adminid = ac.adminid
+    where a.adminid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
 	
-	if(!empty($msg))
-	{
+	if(!empty($msg)) {
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		$first_name = $_POST['first_name'];
-                $last_name = $_POST['last_name'];
+		$last_name = $_POST['last_name'];
 		$email = $_POST['email'];
 		$admin_access = $_POST['admin_access'];
 		$status = $_POST['status'];
 		$companyid = $_POST['companyid'];
-	}
-	else
-	{
+	} else {
 		$username = st($themyarray['username']);
 		$password = st($themyarray['password']);
 		$first_name = st($themyarray['first_name']);
-                $last_name = st($themyarray['last_name']);
+		$last_name = st($themyarray['last_name']);
 		$email = st($themyarray['email']);
 		$status = st($themyarray['status']);
 		$companyid = st($themyarray['companyid']);
 		$admin_access = $themyarray['admin_access'];
-		$but_text = "Add ";
 	}
 	
-	if($themyarray["adminid"] != '')
-	{
+	if($themyarray["adminid"] != '') {
 		$but_text = "Edit ";
-	}
-	else
-	{
+	} else {
 		$but_text = "Add ";
 	}
 	?>

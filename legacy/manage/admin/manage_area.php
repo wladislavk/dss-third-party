@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
@@ -11,7 +13,7 @@ if($_REQUEST["delid"] != "")
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -30,16 +32,12 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
 
-if($_POST['sortsub'] == 1)
-{
-	foreach($_POST['sortby'] as $val)
-	{
+if($_POST['sortsub'] == 1) {
+	foreach($_POST['sortby'] as $val) {
 		$smyarray = mysqli_fetch_array($my);
 		
-		if($val == '' || is_numeric($val) === false)
-		{
+		if($val == '' || is_numeric($val) === false) {
 			$val = 999;
 		}
 		
@@ -51,7 +49,7 @@ if($_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -67,7 +65,7 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_area.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_area.php');" class="btn btn-success">
 		Add New Area
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -81,16 +79,16 @@ if($_POST['sortsub'] == 1)
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?
 				 paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
-	<? }?>
+		</td>
+	</tr>
+	<?php } ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
 			Area		
@@ -109,18 +107,12 @@ if($_POST['sortsub'] == 1)
 				No Records
 			</td>
 		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if($myarray["status"] == 1)
-			{
+	<?php
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
+			if($myarray["status"] == 1) {
 				$tr_class = "tr_active";
-			}
-			else
-			{
+			} else {
 				$tr_class = "tr_inactive";
 			}
 		?>
@@ -134,21 +126,19 @@ if($_POST['sortsub'] == 1)
 				</td>	
 						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_area.php?ed=<?=$myarray["areaid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_area.php?ed=<?=$myarray["areaid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["areaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["areaid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
 						Delete
 					</a>
 				</td>
 			</tr>
-	<? 	}
+	<?php }
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="1">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="1">&nbsp;</td>
 			<td valign="top" class="col_head" colspan="4">
 				<input type="hidden" name="sortsub" value="1" />
 				<input type="submit" value=" Change " class="btn btn-warning">
@@ -159,7 +149,6 @@ if($_POST['sortsub'] == 1)
 </table>
 </form>
 
-
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
@@ -167,4 +156,4 @@ if($_POST['sortsub'] == 1)
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

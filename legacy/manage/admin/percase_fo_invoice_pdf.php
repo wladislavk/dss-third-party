@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once('../3rdParty/tcpdf/config/lang/eng.php');
 require_once('../3rdParty/tcpdf/tcpdf.php');
 require_once('includes/main_include.php');
@@ -40,7 +42,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 						<table width="630" border="0" cellspacing="0" cellpadding="0" >
 							<tr>
 							<!-- table column with logo -->
-							<td height="133" align="center" valign="middle" style="padding: 0px;">';
+							<td height="133" align="center" valign="middle" style="padding: 0;">';
 							if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
 								$html .= '<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo_ds3.png" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>';
 							}else{
@@ -53,14 +55,14 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 					</tr>
 					<tr>
 					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 20px;">
-					<!-- divider goes here --><img src="images/invoice/splitted-header.jpg" alt="" border="no" style="margin: 0px; padding: 0px; display: block;"/>	
+					<!-- divider goes here --><img src="images/invoice/splitted-header.jpg" alt="" border="no" style="margin: 0; padding: 0; display: block;"/>	
 					</td>
 					</tr>
 					<!-- END module -->
 					
 					<!-- START module / three column content texts -->
 					<tr>
-					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
+					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0;">
 						<table width="630" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 							<!-- start left table column -->
@@ -70,7 +72,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bottom: 10px;">
 									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
 									Invoice Date: '.date('m/d/Y').'<br />';
-                                                                          $html .= 'Payment Charged: '.date('m/d/Y', strtotime($invoice['due_date']));
+							$html .= 'Payment Charged: '.date('m/d/Y', strtotime($invoice['due_date']));
 									$html .= '</td>
 									</tr>							
 								</table>
@@ -134,23 +136,22 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<!-- table row no1.-->
 									<tr>
 									<!-- table column with item quantity-->
-                                                                        <td height="30" width="100" bgcolor="#54A9D0" align="center" valign="middle" style="font-weight: bold; font-size: 40px; text-align: center; color: #54a9d0;">Quantity</td>
+									<td height="30" width="100" bgcolor="#54A9D0" align="center" valign="middle" style="font-weight: bold; font-size: 40px; text-align: center; color: #54a9d0;">Quantity</td>
 									<!-- table column with item text -->
 									<td height="30" width="220" bgcolor="#54A9D0" align="left" valign="middle" style="font-weight: bold; font-size: 40px; text-align: left; color: #54a9d0; padding-left: 10px;">Item</td>
-                                                                        <!-- table column with item price per pc -->
-                                                                        <td height="30" width="100" bgcolor="#54A9D0" align="left" valign="middle" style="font-weight: bold; font-size: 40px; text-align: right; color: #54a9d0;">Date</td>
+                                    <!-- table column with item price per pc -->
+                                    <td height="30" width="100" bgcolor="#54A9D0" align="left" valign="middle" style="font-weight: bold; font-size: 40px; text-align: right; color: #54a9d0;">Date</td>
 									<!-- table column with item number-->
 									<td height="30" width="100" bgcolor="#54A9D0" align="left" valign="middle" style="font-weight: bold; font-size: 40px; text-align: left; color: #54a9d0;">Case No.</td>
 									<!-- table column with item price -->
 									<td height="30" width="90" bgcolor="#54A9D0" align="right" valign="middle" style="font-weight: bold; font-size: 40px; text-align: right; color: #54a9d0; padding-right: 10px;">Price</td>
 									</tr>';
 $total_charge = 0;
-if($invoice['monthly_fee_amount']!=''){
+if ($invoice['monthly_fee_amount']!='') {
 $total_charge += $invoice['monthly_fee_amount'];
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">1</td>
                                                                         <td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">MONTHLY FEE</td>
-
                                                                         <!-- table column with item number-->
                                                                         <td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">'.date('m/d/Y', strtotime($invoice['monthly_fee_date'])).'</td>
                                                                         <!-- table column with item price per pc -->
@@ -318,7 +319,7 @@ $html .= '
 					
 					<!-- START module / one column text-->
 					<tr>
-					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
+					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0;">
 						<table border="0" cellspacing="0" cellpadding="0" >
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
@@ -343,7 +344,7 @@ $html .= '
 					<!-- START module / footer -->
 					<tr>
 					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 20px;">
-					<!-- divider goes here --><img src="images/invoice/splitted-footer.jpg" alt="" border="no" style="margin: 0px; padding: 0px; display: block;"/>	
+					<!-- divider goes here --><img src="images/invoice/splitted-footer.jpg" alt="" border="no" style="margin: 0; padding: 0; display: block;"/>	
 					</td>
 					</tr>
 				
@@ -357,7 +358,7 @@ $html .= '
 	</tr>
 </table>';
 if($invoice['user_type']!=DSS_USER_TYPE_SOFTWARE){
-$html .= '<br pagebreak="true"/>
+$html .= '<br />
  <span style="font-size:45px">
 INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - VERIFICATION 
 </span>
@@ -525,7 +526,7 @@ $title = "test";
 	
         $filename = 'percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
         $pdf->Output('../../../../shared/q_file/'.$filename, 'F');
-if(!isset($redirect) || $redirect){
+if (!isset($redirect) || $redirect) {
 ?>
 
 <script type="text/javascript">

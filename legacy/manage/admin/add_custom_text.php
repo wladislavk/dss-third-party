@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -16,7 +17,6 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_custom_text.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
@@ -59,7 +59,6 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 	{
 		$title = st($themyarray['title']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["customid"] != '')

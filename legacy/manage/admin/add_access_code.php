@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -63,7 +64,6 @@ if(isset($_POST["accesscodesub"]))
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
 			</script>
 			<?

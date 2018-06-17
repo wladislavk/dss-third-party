@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 require_once 'includes/main_include.php';
 require_once '../includes/constants.inc';
@@ -73,38 +74,9 @@ $result = mysqli_query($con, $sql);
 $patients = array();
 $i = 0;
 while ($row = mysqli_fetch_assoc($result)) {
-	$rxlomn = '';
-                          if($row['rxreq'] != null && $row['rxrec'] == null){
-        $day = (24 * 60 * 60);
-  $diff = ceil((time() - strtotime($row['rxreq'])) / $day);
-                                if($diff > 7){
-                                  $rxlomn .= '<span class="red">Pending</span>';
-                                }else{
-                                  $rxlomn .= 'Pending';
-                                }
-                          }elseif($row['rxrec'] != null){
-                                $rxlomn .= 'Yes';
-                          }else{
-                                $rxlomn .= 'N/A';
-                          }
-                $rxlomn .= ' / ';
-                          if($row['lomnreq'] != null && $row['lomnrec'] == null){
-        $day = (24 * 60 * 60);
-  $diff = ceil((time() - strtotime($row['lomnreq'])) / $day);
-                                if($diff > 7){
-                                  $rxlomn .= '<span class="red">Pending</span>';
-                                }else{
-                                  $rxlomn .= 'Pending';
-                                }
-
-                          }elseif($row['lomnrec'] != null){
-                                $rxlomn .= 'Yes';
-                          }else{
-                                $rxlomn .= 'N/A';
-                          }
 	$patients[$i]['id'] = $row['patientid'];
-  $patients[$i]['name'] = $row['lastname'].", ".$row['firstname'];
-  $i++;
+	$patients[$i]['name'] = $row['lastname'].", ".$row['firstname'];
+	$i++;
 }
 
 if (!$result) {
@@ -112,5 +84,3 @@ if (!$result) {
 }
 
 echo json_encode($patients);
-
-?>

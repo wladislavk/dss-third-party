@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../admin/includes/main_include.php';
 require_once 'checkemail.php';
 $id = $_REQUEST['id'];
@@ -12,5 +14,3 @@ if(checkUsername($u, $id)){
 }else{
   echo '{"success":true}';
 }
-
-?>

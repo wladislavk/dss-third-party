@@ -21,15 +21,7 @@ if (!empty($r['segmentid']) && $r['segmentid'] == 7){ //Update dental device dat
 
         $compDateEscaped = mysqli_real_escape_string($con, $comp_date);
         $compDateString = date('Y-m-d', strtotime($compDateEscaped));
-        if ($db->getNumberRows($sql) == 0) {
-            $s = "INSERT INTO dental_ex_page5 set 
-                dentaldevice_date='$compDateString', 
-                patientid='".$pid."',
-                userid = '".s_for($_SESSION['userid'])."',
-                docid = '".s_for($_SESSION['docid'])."',
-                adddate = now(),
-                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        } else {
+        if ($db->getNumberRows($sql) != 0) {
             $exPage5Row = $db->getRow($sql);
             $exPage5Id = $exPage5Row['ex_page5id'];
             $db->query("UPDATE dental_ex_page5 SET dentaldevice_date='$compDateString' where ex_page5id=$exPage5Id");

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 	session_start();
 
 	$docid = $_SESSION['docid'];
@@ -26,8 +28,6 @@
 		$sql2 = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.event_id='".$id."' order by dc.id desc";
 
 		if($r = $db->getRow($sql2)) {
-			$fn = $r['firstname'];
-			$ln = $r['lastname'];
 			echo '{"success":true, "eventid":"' . $id .'"}';
 		} else {
 			echo '{"success":true, "eventid":"' . $id . '"}';
@@ -35,4 +35,3 @@
 	} else {
 	  echo '{"error":true}';
 	}
-?>

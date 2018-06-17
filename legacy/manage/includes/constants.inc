@@ -10,17 +10,11 @@ define('DSS_TRXN_REJECTED', 5);   // trxn's associated claim was received by fro
 // A convenience array to get trxn labels
 $dss_trxn_status_labels = array();
 $dss_trxn_status_labels[DSS_TRXN_NA] = 'N/A';
-// $dss_trxn_status_labels[DSS_TRXN_NA]['short'] = 'N/A';
 $dss_trxn_status_labels[DSS_TRXN_PENDING] = 'Pending';
-// $dss_trxn_status_labels[DSS_TRXN_PENDING]['short'] = 'Pend.';
 $dss_trxn_status_labels[DSS_TRXN_PROCESSING] = 'Processing';
-// $dss_trxn_status_labels[DSS_TRXN_PROCESSING]['short'] = 'Proc.';
 $dss_trxn_status_labels[DSS_TRXN_SENT] = 'Sent';
-// $dss_trxn_status_labels[DSS_TRXN_SENT]['short'] = 'Sent';
 $dss_trxn_status_labels[DSS_TRXN_PAID] = 'Paid';
-// $dss_trxn_status_labels[DSS_TRXN_PAID]['short'] = 'Paid';
 $dss_trxn_status_labels[DSS_TRXN_REJECTED] = 'Rejected';
-// $dss_trxn_status_labels[DSS_TRXN_REJECTED]['short'] = 'Rej.';
 
 // Transaction types (ledger)
 define('DSS_TRXN_TYPE_MED', 1);

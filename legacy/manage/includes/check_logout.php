@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once '../admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once '../admin/includes/main_include.php';
 
 	$id = $_SESSION['userid'];
 	$logout_time = 60*60;
@@ -15,4 +17,3 @@
 	} else {
 	  echo '{"logout":true}';
 	}
-?>

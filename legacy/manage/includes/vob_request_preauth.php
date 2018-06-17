@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once '../admin/includes/main_include.php';
-	include_once '../includes/constants.inc';
-	include_once '../includes/preauth_functions.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once '../admin/includes/main_include.php';
+include_once '../includes/constants.inc';
+include_once '../includes/preauth_functions.php';
 
 	$pid = (!empty($_POST['pid']) ? $_POST['pid'] : '');
 	$c = create_vob( $pid );
@@ -13,4 +15,3 @@
 	}else{
 	  echo '{"error":true, "code":"'.$c.'"}';
 	}
-?>

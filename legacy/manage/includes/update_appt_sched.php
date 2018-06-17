@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once '../admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once '../admin/includes/main_include.php';
 
   $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
   $sched = (!empty($_REQUEST['sched'])) ? date('Y-m-d', strtotime((!empty($_REQUEST['sched']) ? $_REQUEST['sched'] : ''))) : '';
@@ -61,6 +63,7 @@
     } else {
       return $letter;
     }
+    return null;
   }
 
   function trigger_letter9($pid, $info_id)
@@ -74,6 +77,5 @@
     } else {
       return $letter;
     }
+      return null;
   }
-
-?>

@@ -24,8 +24,8 @@ if (isset($_REQUEST['submit'])) {
         $exPage5Id = $exPageId5Row['ex_page5id'];
         $sqlex = "update dental_ex_page5 set dentaldevice='$escapedDentalDevice' where ex_page5id=$exPage5Id";
     }
+    $db->query($sqlex);
 
-    $qex = $db->query($sqlex);
     $flow_sql = "UPDATE dental_flow_pg2_info SET
         device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
         WHERE id='".mysqli_real_escape_string($con,$_GET['id'])."'";

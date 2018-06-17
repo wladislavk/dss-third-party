@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once '../admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once '../admin/includes/main_include.php';
 
 	$id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
 	$r = (!empty($_REQUEST['reason']) ? $_REQUEST['reason'] : '');
@@ -17,4 +19,3 @@
 	}else{
 	  echo '{"error":true}';
 	}
-?>

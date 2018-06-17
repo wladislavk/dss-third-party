@@ -1,8 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 /* $date should be in format year-month-day
    $past can be set to true if the date is supposed to be in the past
 */
-function format_date($date = null, $past = false) {
+function format_date($date = null, $past = false)
+{
   if (empty($date) || $date == '0000-00-00') {
     return "N/A";
   }
@@ -47,14 +50,14 @@ function format_date($date = null, $past = false) {
   if (isset($value)) {
 		return $value;
   }
+  return null;
 }
 
-function format_ledger($balance) {
+function format_ledger($balance)
+{
   if ($balance > 0) {
     return "<span class=\"red\">($$balance)</span>";
   } else{ 
     return "<span class=\"green\">$$balance</span>";
   }
 }
-
-?>

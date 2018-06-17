@@ -1,14 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include_once('../admin/includes/main_include.php');
-	include_once('../includes/constants.inc');
-	include("../includes/sescheck.php");
-	include_once('../includes/general_functions.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('../admin/includes/main_include.php');
+include_once('../includes/constants.inc');
+include("../includes/sescheck.php");
+include_once('../includes/general_functions.php');
 ?>
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php
 	if(isset($_REQUEST['submit'])) {
-		$sqlex = "update dental_flow_pg2_info set delay_reason='".mysqli_real_escape_string($con,$_REQUEST['delay_reason'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-		$qex = $db->query($sqlex);
 ?>
 		<script type="text/javascript">
 			parent.updateDelayReason('<?php echo  $_GET['id']; ?>', '<?php echo  $_REQUEST['delay_reason']; ?>');
@@ -39,13 +39,6 @@
 		?>
 
 		<h2 style="margin-top:20px;">What is the reason for delaying treatment for <?php echo  $r['firstname']." ".$r['lastname']; ?>?</h2>
-
-		<?php
-			$sql = "select * from dental_flow_pg2_info where id='".(!empty($_GET['id']) ? $_GET['id'] : '')."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-
-			$r = $db->getRow($sql);
-			$sid = st($r['segmentid']);
-		?>
 		<form action="#" method="post">
 		    Reason
 			<select name="delay_reason" width="250px">

@@ -44,7 +44,7 @@ $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
             $exPage5Id = $db->getRow($sql)['ex_page5id'];
             $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where ex_page5id=$exPage5Id";
         }
-        $qex = $db->query($sqlex);
+        $db->query($sqlex);
     }
 
     if (!empty($create)) {

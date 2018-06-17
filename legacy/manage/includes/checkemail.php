@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
   function checkEmail($e, $i){
     $db = new Db();
 
@@ -46,4 +48,3 @@
     }
     return $n;
   }
-?>

@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once '../admin/includes/main_include.php';
-  include_once 'constants.inc';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once '../admin/includes/main_include.php';
+include_once 'constants.inc';
 
   $npi = (!empty($_REQUEST['npi']) ? $_REQUEST['npi'] : '');
   $payer = (!empty($_REQUEST['payer']) ? $_REQUEST['payer'] : '');
@@ -26,5 +28,3 @@
   }elseif($r['status'] == DSS_ENROLLMENT_REJECTED){
     echo '{"enrolled":"no", "message":"Enrollment has be rejected. Please resubmit.", "userid":"'.$u_r['userid'].'"}';
   }
-
-?>

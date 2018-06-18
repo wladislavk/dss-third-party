@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
 
     if(is_billing($_SESSION['admin_access'])){
 ?>
@@ -11,11 +13,11 @@
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT du.*, c.name AS company_name, p.name AS plan_name,
@@ -59,11 +61,10 @@ if(is_super($_SESSION['admin_access'])){
 		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
 }
 
-$sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
+$sort_dir = (isset($_REQUEST['sort_dir'])) ? strtolower($_REQUEST['sort_dir']) : '';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
-$sort_by_sql = '';
 switch ($sort_by) {
   case "company":
     $sort_by_sql = "company_name $sort_dir";
@@ -90,15 +91,12 @@ switch ($sort_by) {
 }
 
 $sql .= " ORDER BY ".$sort_by_sql;
-
 $my = mysqli_query($con, $sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con, $sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -107,25 +105,22 @@ $num_users = mysqli_num_rows($my);
 	Invoicing	
 </div>
 <br />
-
-
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
+			<?php
+            paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
                 <td class="col_head <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="14%">
@@ -256,17 +251,7 @@ $num_users = mysqli_num_rows($my);
     <td><?php echo  $mf_r['free_fax']; ?></td>
     <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?php echo $mf_r['id']; ?>'); return false;" class="btn btn-primary" style="padding:3px 5px;">Edit</a></td>
   </tr>
-
-
-
-
-
-
-
   <?php } ?>
-
-
-
 </table>
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

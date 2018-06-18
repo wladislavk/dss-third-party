@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
@@ -30,7 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
@@ -69,7 +70,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 if(is_super($_SESSION['admin_access'])){
 ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_transaction_code.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_transaction_code.php');" class="btn btn-success">
 		Add New Transaction Code
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -172,7 +173,7 @@ if(is_super($_SESSION['admin_access'])){
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?php echo $myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_transaction_code.php?ed=<?php echo $myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>

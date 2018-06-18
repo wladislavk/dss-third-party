@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -118,8 +119,6 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">

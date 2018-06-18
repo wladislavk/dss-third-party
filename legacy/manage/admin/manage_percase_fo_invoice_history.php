@@ -1,16 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
+
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.docid=".mysqli_real_escape_string($con, $_GET['docid'])." 
 		AND pi.status!=".DSS_INVOICE_PENDING."
 	ORDER BY adddate DESC";
-$my = mysqli_query($con, $sql);
-$total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
 
 $doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_GET['docid']);
 $doc_q = mysqli_query($con, $doc_sql);
@@ -23,17 +21,11 @@ setupStripeConnection($key_r['stripe_secret_key']);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-
-
-
-
 <div class="page-header">
         <h2>Invoice History <small> - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
-
-
 <div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
@@ -81,14 +73,14 @@ $myarray = mysqli_fetch_assoc($q);
 			Action	
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -171,21 +163,16 @@ $case_q = mysqli_query($con, $case_sql);
                     
 				</td>
 			</tr>
-	<? 	}
-
+	<?php }
 	}?>
 </table>
 </form>
-
 <br><br>
-
 <div class="page-header">
         <h2>Credit Card Billing History <small>- <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
-
-
 <div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
@@ -196,8 +183,6 @@ $case_q = mysqli_query($con, $case_sql);
                         ";
   $charge_q = mysqli_query($con, $charge_sql);
 ?>
-
-
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
         <tr class="tr_bg_h">
@@ -217,14 +202,14 @@ $case_q = mysqli_query($con, $case_sql);
 			Card
 		</td>
         </tr>
-        <? if(mysqli_num_rows($charge_q) == 0)
+        <?php if(mysqli_num_rows($charge_q) == 0)
         { ?>
                 <tr class="tr_bg">
                         <td valign="top" class="col_head" colspan="10" align="center">
                                 No Records
                         </td>
                 </tr>
-        <?
+        <?php
         }
         else
         {
@@ -257,7 +242,6 @@ $case_q = mysqli_query($con, $case_sql);
                                 </td>
 				<td valign="top">
 	                                <?php
-
 try{
   $charge = \Stripe\Charge::retrieve($charge_r["stripe_charge"]);
 } catch (\Exception $e) {
@@ -282,4 +266,4 @@ echo $charge->source->last4;
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

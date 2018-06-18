@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(is_billing($_SESSION['admin_access'])){
@@ -14,11 +16,11 @@ if(isset($_GET['did']) && $_GET['did']!=''){
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT i.*, du.username, du.first_name, du.last_name, c.name as company_name, du.cc_id,
@@ -54,8 +56,7 @@ if(is_super($_SESSION['admin_access'])){
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
-$sort_by_sql = '';
+$sort_by = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
 switch ($sort_by) {
   case "company":
     $sort_by_sql = "company_name $sort_dir";
@@ -86,8 +87,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -99,20 +98,19 @@ $num_users = mysqli_num_rows($my);
 <div align="center" class="red" style="clear:both;">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class=" sort_table table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
+			<?php
+            paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 <thead>
 	<tr class="tr_bg_h">

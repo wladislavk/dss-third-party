@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -16,7 +18,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -29,8 +31,6 @@ $doc_sql = "select * from dental_users where user_access=2 order by username";
                 ORDER BY username";
 }
 
-$doc_my = mysqli_query($con,$doc_sql);
-
 $doc_my1 = mysqli_query($con,$doc_sql);
 $doc_myarray1 = mysqli_fetch_array($doc_my1);
 
@@ -41,11 +41,12 @@ if(empty($_GET['docid']))
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "select * from dental_patients order by lastname, firstname";
@@ -70,8 +71,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con,$sql);
-$num_users=mysqli_num_rows($my);
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -327,9 +326,6 @@ $num_users=mysqli_num_rows($my);
         return row;
     }
 </script>
-                                                                                                          
-
-
 
 <form>
   <div id="patient_search_div">
@@ -342,20 +338,9 @@ $num_users=mysqli_num_rows($my);
         </div>
    </div>
 </form>
-
-
-
-
-
-
-
-
-
-
-&nbsp;
 <?php if(!is_billing($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?php echo $_GET['docid']?>');" class="btn btn-success">
+	<button onclick="loadPopup('add_patient.php?docid=<?php echo $_GET['docid']?>');" class="btn btn-success">
 		Add New Patient
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -370,14 +355,14 @@ $num_users=mysqli_num_rows($my);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"docid=".$_GET['docid']);
+			<?php
+            paging($no_pages,$index_val,"docid=".$_GET['docid']);
 			?>
-		</TD>
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="90%">
@@ -426,7 +411,6 @@ $num_users=mysqli_num_rows($my);
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

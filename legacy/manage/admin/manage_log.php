@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 	if(is_billing($_SESSION['admin_access'])){
@@ -27,12 +29,10 @@ $sql = "select u.*,
         where uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ";
 }
 
-
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
-$sort_by_sql = '';
 switch ($sort_by) {
   case "name":
     $sort_by_sql = "u.first_name $sort_dir, u.last_name $sort_dir";
@@ -50,17 +50,12 @@ switch ($sort_by) {
 
 $sql .= " ORDER BY ".$sort_by_sql;
 
-
-
-
-
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -82,14 +77,14 @@ $num_users = mysqli_num_rows($my);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
@@ -144,7 +139,7 @@ $num_users = mysqli_num_rows($my);
                                         <?php echo ($myarray["last_login"])?date('m/d/Y h:i:s', strtotime($myarray["last_login"])):'';?>
                                 </td>	
 				<td valign="top">
-				<a href="Javascript:;"  onclick="Javascript: loadPopup('log.php?led=<?php echo $myarray["userid"];?>');" class="btn btn-info" title="View Logs">
+				<a href="Javascript:;"  onclick="loadPopup('log.php?led=<?php echo $myarray["userid"];?>');" class="btn btn-info" title="View Logs">
 					View Logs
 					</a>
                     
@@ -154,7 +149,6 @@ $num_users = mysqli_num_rows($my);
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

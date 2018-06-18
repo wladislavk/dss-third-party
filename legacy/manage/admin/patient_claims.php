@@ -1,6 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include "includes/top.htm";
 include 'includes/patient_nav.php';
 
 $isSuperAdmin = is_super($_SESSION['admin_access']);
@@ -44,8 +45,6 @@ if ($sort_by == SORT_BY_FILED && !$isSuperAdmin) {
     $sort_by = SORT_BY_STATUS;
 }
 
-$sort_by_sql = '';
-
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "claim.adddate $sort_dir";
@@ -70,8 +69,6 @@ switch ($sort_by) {
     $sort_by_sql = "status_order $sort_dir, claim.adddate $sort_dir";
     break;
 }
-
-$status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
 if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
     deleteClaim($_REQUEST['delid']);
@@ -160,11 +157,12 @@ if(isset($_REQUEST['cancelid'])){
 
 $rec_disp = 20;
 
-if(isset($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(isset($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 $patientId = intval($_REQUEST['pid']);
 
@@ -185,8 +183,6 @@ switch ($specialFilter) {
 $filedByBackOfficeConditional = filedByBackOfficeConditional();
 
 /**
- * @see DSS-568
- *
  * BO companies can now be owners of claims. Claims will rely on billing_company_id to determine BO ownership,
  * with the previous method as fallback.
  */
@@ -324,9 +320,6 @@ if (is_super($_SESSION['admin_access'])) {
 }
 
 /**
- * @see DSS-142
- * @see CS-73
- *
  * Filter BO claims by actionable claims.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  *
@@ -376,14 +369,14 @@ if(isset($_GET['msg'])){
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
+            paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
 			?>
-		</TD>
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
@@ -566,7 +559,7 @@ if(isset($_GET['msg'])){
               $update_claim_url = "request_claim_update.php?insid=".$myarray['insuranceid'];
               ?>
                 <a href="<?= $update_claim_url ?>"
-                    onclick="Javascript: loadPopup('<?= $update_claim_url ?>&amp;embed=1'); return false;"
+                    onclick="loadPopup('<?= $update_claim_url ?>&amp;embed=1'); return false;"
                     class="btn btn-primary btn-sm" >Check Status</a>
 
               <?php
@@ -574,7 +567,7 @@ if(isset($_GET['msg'])){
               $payment_status_url = "request_payment_report.php?insid=".$myarray['insuranceid'];
               ?>
                 <a href="<?= $payment_status_url ?>"
-                   onclick="Javascript: loadPopup('<?= $payment_status_url ?>&amp;embed=1'); return false;"
+                   onclick="loadPopup('<?= $payment_status_url ?>&amp;embed=1'); return false;"
                     class="btn btn-primary btn-sm" >Check Payment Status</a>
 
               <?php

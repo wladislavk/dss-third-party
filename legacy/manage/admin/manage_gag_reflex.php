@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -17,11 +19,11 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_gag_reflex order by sortby";
 $my = mysqli_query($con,$sql);
@@ -30,7 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
@@ -51,7 +52,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -67,7 +68,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_gag_reflex.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_gag_reflex.php');" class="btn btn-success">
 		Add New Gag Reflex
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -78,7 +79,6 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -141,7 +141,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_gag_reflex.php?ed=<?php echo $myarray["gag_reflexid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_gag_reflex.php?ed=<?php echo $myarray["gag_reflexid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 					<?php } ?>
@@ -161,11 +161,10 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 				<?php } ?>
 			</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

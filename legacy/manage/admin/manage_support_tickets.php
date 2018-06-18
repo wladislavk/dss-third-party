@@ -37,7 +37,6 @@ $currentOffset = $currentPage * $showPerPage;
 
 $queryString = [];
 $searchConditionals = [];
-$andSearchConditional = '';
 
 if ($showClosed) {
     $queryString['closed'] = 1;

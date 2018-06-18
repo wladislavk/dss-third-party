@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
@@ -22,10 +24,7 @@ $sql = "select c.*,
 	WHERE c.status=0
 	 order by c.title ASC";
 $my = mysqli_query($con,$sql);
-$total_rec = mysqli_num_rows($my);
-
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -34,10 +33,8 @@ $total_rec = mysqli_num_rows($my);
 </div>
 <br />
 <br />
-
-
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_support_category.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_support_category.php');" class="btn btn-success">
 		Add New Category
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -64,20 +61,15 @@ $total_rec = mysqli_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if(mysqli_num_rows($my) == 0) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="3" align="center">
 				No Records
 			</td>
 		</tr>
 	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-
+	} else {
+		while($myarray = mysqli_fetch_array($my)) {
 		?>
 			<tr>
 				<td valign="top">
@@ -90,7 +82,7 @@ $total_rec = mysqli_num_rows($my);
                                         <a href="manage_support_category_admins.php?catid=<?php echo  $myarray['id'];?>"><?php echo  st($myarray["num_admins"]); ?></a>
                                 </td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_support_category.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_support_category.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
@@ -99,7 +91,6 @@ $total_rec = mysqli_num_rows($my);
 	<?php 	}
 	}?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

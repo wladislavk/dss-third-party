@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -17,11 +19,11 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_mandible order by sortby";
 $my = mysqli_query($con,$sql);
@@ -30,7 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
@@ -49,10 +50,9 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?php echo $msg;?>");
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -68,7 +68,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_mandible.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_mandible.php');" class="btn btn-success">
 		Add New Mandible
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -85,14 +85,14 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
@@ -142,7 +142,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_mandible.php?ed=<?php echo $myarray["mandibleid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_mandible.php?ed=<?php echo $myarray["mandibleid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 					<?php } ?>
@@ -152,9 +152,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<?php 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="1">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="1">&nbsp;</td>
 			<td valign="top" class="col_head" colspan="4">
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />
@@ -166,7 +164,6 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

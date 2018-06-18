@@ -1,12 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
-{
+
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 			$ed_sql = "update companies set 
 				monthly_fee = '".mysqli_real_escape_string($con,$_POST["monthly_fee"])."',
 				fax_fee = '".mysqli_real_escape_string($con,$_POST["fax_fee"])."',
@@ -17,18 +18,16 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_percase_invoice.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 }
-
 ?>
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+<?php
     $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

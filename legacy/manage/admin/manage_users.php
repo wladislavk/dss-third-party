@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
@@ -175,7 +177,7 @@ if ($showPerPage != $countDefault) {
 
 <?php if ($canCreate) { ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_users.php');" class="btn btn-success">
 		Add New User
 		<span class="glyphicon glyphicon-plus">
 	</button>

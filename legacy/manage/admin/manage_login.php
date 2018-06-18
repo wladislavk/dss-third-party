@@ -1,13 +1,15 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_login order by login_date desc";
 $my = mysqli_query($con, $sql);
@@ -16,7 +18,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -29,20 +30,20 @@ $num_users=mysqli_num_rows($my);
 <br />
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
-	<? }?>
+		</td>
+	</tr>
+	<?php } ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="30%">
 			Username	
@@ -57,14 +58,14 @@ $num_users=mysqli_num_rows($my);
 			View Detail
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -85,9 +86,9 @@ $num_users=mysqli_num_rows($my);
 					<?=date('M d, Y H:i',strtotime(st($myarray["login_date"])));?>
 				</td>
 				<td valign="top">
-					<? if(st($myarray["logout_date"]) <> '') {?>
+					<?php if(st($myarray["logout_date"]) != '') {?>
 						<?=date('M d, Y H:i',strtotime(st($myarray["logout_date"])));?>
-					<? }?>
+					<?php } ?>
 				</td>
 				
 				<td valign="top" align="center">
@@ -95,9 +96,9 @@ $num_users=mysqli_num_rows($my);
                     	View Detail</a>
 				</td>	
 			</tr>
-	<? 	}
+	<?php }
 	}?>
 </table>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

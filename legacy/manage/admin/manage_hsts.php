@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -23,7 +25,6 @@ $sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-$sort_by_sql = '';
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "order_date $sort_dir";
@@ -71,11 +72,11 @@ if (!empty($_REQUEST['delid']) && is_super($_SESSION['admin_access'])) {
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 
 $adminCompanyId = intval($_SESSION['admincompanyid']);
@@ -202,7 +203,7 @@ if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $t
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -225,7 +226,6 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     Status:
     <select name="status">
       <?php
-
       $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : '';
       $pending_selected = ($status == DSS_HST_PENDING) ? 'selected' : '';
       $contacted_selected = ($status == DSS_HST_CONTACTED) ? 'selected' : '';
@@ -233,7 +233,6 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
       $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : '';
       $rejected_selected = ($status == DSS_HST_REJECTED) ? 'selected' : '';
       $canceled_selected = ($status == DSS_HST_CANCELED) ? 'selected' : '';
-
       ?>
       <option value="" <?= $status == -99 ? 'selected' : '' ?>>Any</option>
       <option value="<?php echo DSS_HST_REQUESTED?>" <?php echo $requested_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
@@ -268,7 +267,6 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
-
     <?php if (!empty($fid)) { ?>
       Patients:
       <select name="pid">
@@ -290,18 +288,17 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
       <a class="btn btn-success pull-right" href="/manage/admin/hst-report.php">HST Report</a>
   </form>
 </div>
-
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php  if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
 			<?php 
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+            paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
-		</TD>
-	</TR>
+		</td>
+	</tr>
 	<?php  }?>
 	<?php     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
@@ -338,7 +335,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 			Action
 		</td>
 	</tr>
-	<?php  if(mysqli_num_rows($my) == 0)
+	<?php if (mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">
@@ -384,7 +381,6 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 				</td>
                 <td>
                     <?php
-
                     switch ($myarray['hst_type']) {
                         case 1:
                             echo intval($myarray['hst_nights']) . '-night';
@@ -396,7 +392,6 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                             echo 'PAP';
                             break;
                     }
-
                     ?>
                 </td>
                                 <td valign="top">
@@ -428,14 +423,12 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 					<a href="view_hst.php?ed=<?php echo $myarray["id"];?><?php echo  (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-
 				</td>
 			</tr>
 	<?php  	}
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact" style="width:750px;height:500px;">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

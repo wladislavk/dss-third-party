@@ -1,22 +1,15 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
+
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE 
 		pi.status != '".DSS_INVOICE_PENDING."'
 		AND
 		pi.docid=".mysqli_real_escape_string($con,$_GET['docid'])." ORDER BY pi.due_date DESC";
 $my = mysqli_query($con,$sql);
-$total_rec = mysqli_num_rows($my);
-
-if (!isset($rec_disp)) {
-    $rec_disp = 1;
-}
-
-$no_pages = $total_rec/$rec_disp;
-
-$my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 $doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con,$_GET['docid']);
 $doc_q = mysqli_query($con,$doc_sql);
@@ -35,10 +28,6 @@ if ($card) {
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-
-
-
-
 <div class="page-header">
         <h2>Invoice History <small> - <?php echo  $doc['first_name']; ?> <?php echo  $doc['last_name']; ?>
 	<?php if(!empty($last4)){
@@ -48,7 +37,6 @@ if ($card) {
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
-
 
 <div align="center" class="red" style="clear:both;">
         <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
@@ -191,16 +179,12 @@ $case_q = mysqli_query($con,$case_sql);
 	}?>
 </table>
 </form>
-
 <br><br>
-
 <div class="page-header">
         <h2>Credit Card Billing History <small>- <?php echo  $doc['first_name']; ?> <?php echo  $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
-
-
 <div align="center" class="red" style="clear:both;">
         <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
@@ -243,7 +227,7 @@ $case_q = mysqli_query($con,$case_sql);
                                 No Records
                         </td>
                 </tr>
-        <?
+        <?php
         }
         else
         {

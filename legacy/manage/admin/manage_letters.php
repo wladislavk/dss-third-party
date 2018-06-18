@@ -1,39 +1,50 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; 
+<?php
+namespace Ds3\Libraries\Legacy;
 
-function franchisee_asc($a, $b) {
-  return strcmp ($a['franchisee'], $b['franchisee']);
+include 'includes/top.htm';
+
+function franchisee_asc($a, $b)
+{
+  return strcmp($a['franchisee'], $b['franchisee']);
 }
 
-function franchisee_desc($a, $b) {
-  return strcmp ($b['franchisee'], $a['franchisee']);
+function franchisee_desc($a, $b)
+{
+  return strcmp($b['franchisee'], $a['franchisee']);
 }
 
-function user_asc($a, $b) {
-  return strcmp ($a['username'], $b['username']);
+function user_asc($a, $b)
+{
+  return strcmp($a['username'], $b['username']);
 }
 
-function user_desc($a, $b) {
-  return strcmp ($b['username'], $a['username']);
+function user_desc($a, $b)
+{
+  return strcmp($b['username'], $a['username']);
 }
 
-
-function name_asc($a, $b) {
+function name_asc($a, $b)
+{
   return strcmp ($a['lastname'] . $a['middlename'] . $a['firstname'], $b['lastname'] . $b['middlename'] . $b['firstname']);
 }
 
-function name_desc($a, $b) {
+function name_desc($a, $b)
+{
   return strcmp ($b['lastname'] . $b['middlename'] . $b['firstname'], $a['lastname'] . $a['middlename'] . $a['firstname']);
 }
 
-function subject_asc($a, $b) {
+function subject_asc($a, $b)
+{
   return strcmp ($a['subject'], $b['subject']);
 }
 
-function subject_desc($a, $b) {
+function subject_desc($a, $b)
+{
   return strcmp ($b['subject'], $a['subject']);
 }
 
-function sentto_asc($a, $b) {
+function sentto_asc($a, $b)
+{
   $word_lista = explode(" ", $a['sentto']);
   $word_listb = explode(" ", $b['sentto']);
   if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
@@ -52,7 +63,8 @@ function sentto_asc($a, $b) {
   return strcmp ($a['sentto'], $b['sentto']);
 }
 
-function sentto_desc($a, $b) {
+function sentto_desc($a, $b)
+{
   $word_lista = explode(" ", $a['sentto']);
   $word_listb = explode(" ", $b['sentto']);
   if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
@@ -71,64 +83,77 @@ function sentto_desc($a, $b) {
   return strcmp ($b['sentto'], $a['sentto']);
 }
 
-function generated_date_asc($a, $b) {
+function generated_date_asc($a, $b)
+{
   if ($a['generated_date'] == $b['generated_date']) {
 		return 0;
 	}
 	return ($a['generated_date'] < $b['generated_date']) ? -1 : 1;
 }
 
-function generated_date_desc($a, $b) {
+function generated_date_desc($a, $b)
+{
   if ($a['generated_date'] == $b['generated_date']) {
 		return 0;
 	}
 	return ($a['generated_date'] > $b['generated_date']) ? -1 : 1;
 }
 
-function date_sent_asc($a, $b) {
+function date_sent_asc($a, $b)
+{
   if ($a['date_sent'] == $b['date_sent']) {
 		return 0;
 	}
 	return ($a['date_sent'] < $b['date_sent']) ? -1 : 1;
 }
 
-function date_sent_desc($a, $b) {
+function date_sent_desc($a, $b)
+{
   if ($a['date_sent'] == $b['date_sent']) {
 		return 0;
 	}
 	return ($a['date_sent'] > $b['date_sent']) ? -1 : 1;
 }
 
-function delivery_date_asc($a, $b) {
+function delivery_date_asc($a, $b)
+{
   if ($a['delivery_date'] == $b['delivery_date']) {
 		return 0;
 	}
 	return ($a['delivery_date'] < $b['delivery_date']) ? -1 : 1;
 }
 
-function delivery_date_desc($a, $b) {
+function delivery_date_desc($a, $b)
+{
   if ($a['delivery_date'] == $b['delivery_date']) {
 		return 0;
 	}
 	return ($a['delivery_date'] > $b['delivery_date']) ? -1 : 1;
 }
 
-function send_method_asc($a, $b) {
-  return strcmp ($a['send_method'], $b['send_method']);
+function send_method_asc($a, $b)
+{
+  return strcmp($a['send_method'], $b['send_method']);
 }
 
-function send_method_desc($a, $b) {
-  return strcmp ($b['send_method'], $a['send_method']);
+function send_method_desc($a, $b)
+{
+  return strcmp($b['send_method'], $a['send_method']);
 }
 
 $status = 'pending';
 $page = '0';
 $page_limit = '20';
-$column = 'letterid';
 $filter = "%";
-if (isset($_GET['status'])) { $status = $_GET['status']; }
-if (isset($_GET['page'])) { $page = $_GET['page']; }
-if (isset($_GET['filter'])) { $filter = mysqli_real_escape_string($con,$_GET['filter']); }
+if (isset($_GET['status'])) {
+    $status = $_GET['status'];
+}
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+}
+if (isset($_GET['filter'])) {
+    $filter = mysqli_real_escape_string($con,$_GET['filter']);
+}
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $doc_filter = '';
 if(!empty($_REQUEST['fid'])) {
@@ -148,7 +173,6 @@ if(!isset($_REQUEST['sort'])){
 }
 $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
-
 
 // Select Letters into Array
 if ($status == 'pending') {
@@ -251,10 +275,12 @@ if ($status == 'pending') {
   }
 
   $letters_res = $db->getResults($letters_query);
-  if (!empty($letters_res)) foreach ($letters_res as $row) {
-    $dental_letters[] = $row;
+  if (!empty($letters_res)) {
+      foreach ($letters_res as $row) {
+          $dental_letters[] = $row;
+      }
   } else {
-    $dental_letters = array();
+    $dental_letters = [];
   }
 }
 
@@ -284,15 +310,15 @@ dental_letters.template_type
 JOIN dental_users u ON dental_letters.docid = u.userid
 LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
 	WHERE dental_letters.mailed_date IS NOT NULL AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." AND u.user_type = '".DSS_USER_TYPE_FRANCHISEE."' ORDER BY dental_letters.letterid ASC;";
-  }else{
-
   }
 
   $letters_res = $db->getResults($letters_query); 
-  if (!empty($letters_res)) foreach ($letters_res as $row) {
-    $dental_letters[] = $row;
+  if (!empty($letters_res)) {
+      foreach ($letters_res as $row) {
+          $dental_letters[] = $row;
+      }
   } else {
-    $dental_letters = array();
+    $dental_letters = [];
   }
 }
 
@@ -341,7 +367,6 @@ foreach ($dental_letters as $key => $letter) {
     $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
   }
 
-  $correspondence = array();
   $correspondence = $db->getRow($template_sql);
 	if (!empty($letter['pdf_path'])) {
     $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
@@ -356,7 +381,6 @@ foreach ($dental_letters as $key => $letter) {
   }
   // Get Recipients for Sent to Column
   $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
-  //print_r($contacts); print "<br />";
   $total_contacts = 0;
     $total_contacts += (isset($contacts['patient'])) ? count($contacts['patient']):0;
     $total_contacts += (isset($contacts['mds'])) ? count($contacts['mds']):0;
@@ -380,19 +404,19 @@ foreach ($dental_letters as $key => $letter) {
 	if ($letter['send_method'] == '') {
 		$method = array();
 		if(isset($contacts['patient'])){
-		foreach($contacts['patient'] as $contact) {
-			$method[] = $contact['preferredcontact'];
+            foreach($contacts['patient'] as $contact) {
+                $method[] = $contact['preferredcontact'];
+            }
 		}
+        if(isset($contacts['mds'])){
+            foreach($contacts['mds'] as $contact) {
+                $method[] = $contact['preferredcontact'];
+            }
 		}
-                if(isset($contacts['mds'])){
-		foreach($contacts['mds'] as $contact) {
-			$method[] = $contact['preferredcontact'];
-		}
-		}
-                if(isset($contacts['md_referrals'])){
-		foreach($contacts['md_referrals'] as $contact) {
-			$method[] = $contact['preferredcontact'];
-		}
+        if(isset($contacts['md_referrals'])){
+            foreach($contacts['md_referrals'] as $contact) {
+                $method[] = $contact['preferredcontact'];
+            }
 		}
 		$result = array_unique($method);
 		if (count($result) == 1) {
@@ -474,7 +498,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   <form name="filter_letters" action="/manage/admin/manage_letters.php" method="get">
 		<input type="hidden" name="status" value="<?php echo $status?>" />
-  Filter by type: <select name="filter"> <!-- onchange="document.filter_letters.submit();">-->
+  Filter by type: <select name="filter">
     <option value="%"></option>
     <?php     $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
     $result = $db->getResults($templates);
@@ -500,13 +524,14 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
           $franchisees = [];
       }
 
-      if ($franchisees) foreach ($franchisees as $row) {
-          $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name'] ?> <?php echo  $row['last_name'] ?></option>
-      <?php } ?>
+      if ($franchisees) {
+          foreach ($franchisees as $row) {
+              $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+              <option value="<?php echo $row['userid'] ?>" <?php echo $selected ?>>[<?php echo $row['userid'] ?>] <?php echo $row['first_name'] ?> <?php echo $row['last_name'] ?></option>
+          <?php }
+      } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
-
     <?php if (!empty($_REQUEST['fid'])) { ?>
       Patients:
       <select name="pid">
@@ -560,11 +585,12 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     <td class="col_head <?php echo  ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
     <td class="col_head <?php echo  ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></td>
   </tr>
-<?php   $i = $page_limit * $page;
+<?php
+$i = $page_limit * $page;
   $end = $i + $page_limit;
   while ($i < count($dental_letters) && $i < $end) {
     $franchisee = $dental_letters[$i]['franchisee'];
-		$username = $dental_letters[$i]['username'];
+    $username = $dental_letters[$i]['username'];
     $received = (isset( $dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $url = $dental_letters[$i]['url'];
@@ -572,9 +598,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     $subject = $dental_letters[$i]['subject'];
     $sentto = $dental_letters[$i]['sentto'];
     $id = $dental_letters[$i]['id'];
-    $letter_status = $dental_letters[$i]['status'];
     $mailed = $dental_letters[$i]['mailed'];
-		$method = $dental_letters[$i]['send_method'];
+    $method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
 		$delivered = (isset($dental_letters[$i]['delivery_date']))?date('m/d/Y', $dental_letters[$i]['delivery_date']):'';
     if (isset($dental_letters[$i]['bg'])) {
@@ -592,13 +617,14 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
         <td><a href="<?=$url?>" target="<?=$url_target?>"><?=$subject?></a></td>
         <td><?=$sentto?></td>
         <td><?=$method?></td>
-        <td><?=$generated?></td>";
-?><td><?php     if($delivered || $mailed != ''){ ?>
+        <td><?=$generated?></td>
+        <td><?php  if($delivered || $mailed != ''){ ?>
       <input type="checkbox" class="mailed_chk" value="<?php echo  $id; ?>" <?php echo  ($mailed !='')?'checked="checked"':''; ?> />
     <?php } ?> 
 	</td>
     </tr>
-    <?php     $i++;
+    <?php
+      $i++;
   }
 ?>
 </table>

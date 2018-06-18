@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_POST["update"]))
@@ -27,8 +29,6 @@ $sql = "select a.*,
 	WHERE a.status=1
 	 order by a.name ASC";
 $my = mysqli_query($con,$sql);
-$total_rec = mysqli_num_rows($my);
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

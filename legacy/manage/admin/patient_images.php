@@ -1,13 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
-include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include "includes/top.htm";
 include 'includes/patient_nav.php';
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con,$pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if($pat_myarray['patientid'] == '')
 {
@@ -19,7 +18,6 @@ if($pat_myarray['patientid'] == '')
         trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select * from dental_q_image where patientid='".$_GET['pid']."'";
 $sql = "select i.*,
         CASE 
                 WHEN i.userid!=''
@@ -46,7 +44,7 @@ $my = mysqli_query($con,$sql);
 
 ?>
  <div align="right">
-        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>');" class="btn btn-success">
+        <button onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>');" class="btn btn-success">
                 Add Image
                 <span class="glyphicon glyphicon-plus">
         </button>

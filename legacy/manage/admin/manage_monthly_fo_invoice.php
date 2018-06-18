@@ -1,13 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
   $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
 		(SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
@@ -46,7 +49,6 @@ $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
-$sort_by_sql = '';
 switch ($sort_by) {
   case "company":
     $sort_by_sql = "company_name $sort_dir";
@@ -80,8 +82,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -105,21 +105,20 @@ $num_users=mysqli_num_rows($my);
 <div align="center" class="red" style="clear:both;">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
+			<?php
+            paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
 			?>
-		</TD>        
-	</TR>
-	<? }?>
+		</td>
+	</tr>
+	<?php } ?>
 	<tr class="tr_bg_h">
                 <td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="14%">
 			<a href="manage_percase_invoice.php?sort=username&sort_dir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Username</a>		
@@ -152,14 +151,14 @@ $num_users=mysqli_num_rows($my);
                         Last Monthly Bill Date
                 </td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -200,8 +199,7 @@ $num_users=mysqli_num_rows($my);
                                         <?= ($myarray['last_monthly_fee_date'])?date('m/d/y', strtotime($myarray['last_monthly_fee_date'])):''; ?>
                                 </td>
 			</tr>
-	<? 	}
-
+	<?php }
 	}?>
 </table>
 </form>
@@ -213,4 +211,4 @@ $num_users=mysqli_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

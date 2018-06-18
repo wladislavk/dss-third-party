@@ -25,7 +25,6 @@ include "includes/patient_nav.php";
 <?php
 if (!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
     $additional_paragraph_pal = $_POST['additional_paragraph_pal'];
-    $caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
     $joint_exam = $_POST['joint_exam'];
     $i_opening_from = $_POST['i_opening_from'];
     $i_opening_to = (!empty($_POST['i_opening_to']) ? $_POST['i_opening_to'] : '');
@@ -81,7 +80,7 @@ if (!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
         }
     }
 
-    $join_exam_arr = '';
+    $joint_exam_arr = '';
     if (is_array($joint_exam)) {
         foreach ($joint_exam as $val) {
             if (trim($val) != '') {
@@ -232,7 +231,6 @@ $sqls = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
 $mys = mysqli_query($con, $sqls);
 $myarrays = mysqli_fetch_array($mys);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
-$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
 $initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
 $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
 $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
@@ -240,8 +238,6 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') {?>
     <script type="text/javascript">
@@ -262,26 +258,14 @@ $additional_paragraph_pal = st($myarray['additional_paragraph_pal']);
 $joint_exam = st($myarray['joint_exam']);
 $jointid = st($myarray['jointid']);
 $i_opening_from = st($myarray['i_opening_from']);
-$i_opening_to = st($myarray['i_opening_to']);
-$i_opening_equal = st($myarray['i_opening_equal']);
 $protrusion_from = st($myarray['protrusion_from']);
 $protrusion_to = st($myarray['protrusion_to']);
 $protrusion_equal = st($myarray['protrusion_equal']);
 $l_lateral_from = st($myarray['l_lateral_from']);
-$l_lateral_to = st($myarray['l_lateral_to']);
-$l_lateral_equal = st($myarray['l_lateral_equal']);
 $r_lateral_from = st($myarray['r_lateral_from']);
-$r_lateral_to = st($myarray['r_lateral_to']);
-$r_lateral_equal = st($myarray['r_lateral_equal']);
 $deviation_from = st($myarray['deviation_from']);
-$deviation_to = st($myarray['deviation_to']);
-$deviation_equal = st($myarray['deviation_equal']);
 $deflection_from = st($myarray['deflection_from']);
-$deflection_to = st($myarray['deflection_to']);
-$deflection_equal = st($myarray['deflection_equal']);
 $range_normal = st($myarray['range_normal']);
-$normal = st($myarray['normal']);
-$other_range_motion = st($myarray['other_range_motion']);
 $additional_paragraph_rm = st($myarray['additional_paragraph_rm']);
 $deviation_r_l = st($myarray['deviation_r_l']);
 $deflection_r_l = st($myarray['deflection_r_l']);

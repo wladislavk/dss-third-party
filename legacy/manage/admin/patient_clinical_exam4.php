@@ -52,7 +52,7 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
 	$mandible_arr = '';
     if (is_array($mandible)) {
         foreach ($mandible as $val) {
-            if (trim($val) <> '') {
+            if (trim($val) != '') {
                 $mandible_arr .= trim($val) . '~';
             }
         }
@@ -179,8 +179,6 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con,$pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">

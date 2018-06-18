@@ -1,33 +1,23 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
+
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.companyid='".mysqli_real_escape_string($con, $_GET['companyid'])."' AND pi.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
-$my = mysqli_query($con, $sql);
-$total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
 
 $c_sql = "SELECT * from companies WHERE id=".mysqli_real_escape_string($con, $_GET['companyid']);
 $c_q = mysqli_query($con, $c_sql);
 $company = mysqli_fetch_assoc($c_q);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
-
-
-
-
 
 <div class="page-header">
         <h2>Invoice History <small> - <?= $company['name']; ?> 
         <a href="manage_percase_bo_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
-
-
 <div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
@@ -75,14 +65,14 @@ $myarray = mysqli_fetch_assoc($q);
 			Action	
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -156,8 +146,7 @@ $case_q = mysqli_query($con, $case_sql);
                     
 				</td>
 			</tr>
-	<? 	}
-
+	<?php 	}
 	}?>
 </table>
 </form>
@@ -170,4 +159,4 @@ $case_q = mysqli_query($con, $case_sql);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

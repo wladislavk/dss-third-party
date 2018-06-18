@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
+
 if(is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
   trigger_error("Die called", E_USER_ERROR);
@@ -15,17 +18,17 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_pages order by title";
 $my = mysqli_query($con,$sql);
@@ -34,9 +37,7 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_pages = mysqli_num_rows($my);
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -47,7 +48,7 @@ $num_pages = mysqli_num_rows($my);
 <br />
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_page.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_page.php');" class="btn btn-success">
 		Add New Pages
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -62,14 +63,14 @@ $num_pages = mysqli_num_rows($my);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="90%">
@@ -106,7 +107,7 @@ $num_pages = mysqli_num_rows($my);
 					<?php echo st($myarray["title"]);?>
 				</td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_page.php?ed=<?php echo $myarray["pageid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_page.php?ed=<?php echo $myarray["pageid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
@@ -121,7 +122,6 @@ $num_pages = mysqli_num_rows($my);
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

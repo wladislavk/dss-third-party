@@ -198,8 +198,6 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 $sql = "select p1.*, s.analysis from dental_q_page1_pivot p1 
     LEFT JOIN dental_q_sleep_pivot s ON s.patientid=p1.patientid
     where p1.patientid='".$_GET['pid']."'";
@@ -214,19 +212,15 @@ $analysis = $myarray['analysis'];
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
 $energy_level = st($myarray['energy_level']);
 $snoring_sound = st($myarray['snoring_sound']);
 $wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
 $morning_headaches = st($myarray['morning_headaches']);
 $hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
 $told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
 if ($complaintid != '') {
@@ -417,8 +411,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                     </label>
                     <?php 
                     $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-                    $complaint_my = mysqli_query($con,$complaint_sql);
-                    $complaint_number = mysqli_num_rows($complaint_my);
+                    $complaint_my = mysqli_query($con, $complaint_sql);
                     ?>
                     <span class="form_info">
                         Please check any other complaints below.

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))
@@ -11,7 +13,7 @@ if(!empty($_REQUEST["delid"]))
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -24,11 +26,11 @@ if(isset($_REQUEST['did'])){
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_locations where docid='".$_GET['docid']."' order by location";
 $my = mysqli_query($con,$sql);
@@ -37,7 +39,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_contact = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -53,7 +54,7 @@ $num_contact = mysqli_num_rows($my);
 	<b>&lt;&lt; Back</b></a>
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_location.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
+	<button onclick="loadPopup('add_location.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
 		Add New Location
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -68,14 +69,14 @@ $num_contact = mysqli_num_rows($my);
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
@@ -92,7 +93,7 @@ $num_contact = mysqli_num_rows($my);
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -112,7 +113,7 @@ $num_contact = mysqli_num_rows($my);
 					<?=st($myarray["location"]);?>
 				</td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_location.php?ed=<?=$myarray["id"];?>&docid=<?=$_GET['docid']?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_location.php?ed=<?=$myarray["id"];?>&docid=<?=$_GET['docid']?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 					|
@@ -125,7 +126,7 @@ $num_contact = mysqli_num_rows($my);
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php }
 	}?>
 </table>
 </form>
@@ -138,4 +139,4 @@ $num_contact = mysqli_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

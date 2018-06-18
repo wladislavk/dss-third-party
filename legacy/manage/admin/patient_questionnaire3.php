@@ -92,11 +92,9 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
     $no_medications = $_POST['no_medications'];
     $no_history = $_POST['no_history'];
     $orthodontics = $_POST['orthodontics'];
-    $premedcheck = $_POST["premedcheck"];
     $allergenscheck = $_POST["allergenscheck"];
     $medicationscheck = $_POST["medicationscheck"];
     $historycheck = $_POST["historycheck"];
-    $premed = $_POST["premeddet"];
     $family_hd = $_POST['family_hd'];
     $family_bp = $_POST['family_bp'];
     $family_dia = $_POST['family_dia'];
@@ -350,8 +348,6 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 $sqldpp = "select * from dental_patients where parent_patientid='".$_GET['pid']."'";
 $mydpp = mysqli_query($con,$sqldpp);
 $dpp_row = mysqli_fetch_array($mydpp);
@@ -361,32 +357,16 @@ $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
 $q_page3id = st($myarray['q_page3id']);
-$allergens = st($myarray['allergens']);
 $other_allergens = st($myarray['other_allergens']);
-$medications = st($myarray['medications']);
 $other_medications = st($myarray['other_medications']);
-$history = st($myarray['history']);
 $other_history = st($myarray['other_history']);
 $dental_health = st($myarray['dental_health']);
-$injurytohead = st($myarray['injurytohead']);
-$injurytoface = st($myarray['injurytoface']);
-$injurytoneck = st($myarray['injurytoneck']);
-$injurytoteeth = st($myarray['injurytoteeth']);
-$injurytomouth = st($myarray['injurytomouth']);
 $drymouth = st($myarray['drymouth']);
 $removable = st($myarray['removable']);
 $year_completed = st($myarray['year_completed']);
-$tmj = st($myarray['tmj']);
-$gum_problems = st($myarray['gum_problems']);
-$dental_pain = st($myarray['dental_pain']);
-$dental_pain_describe = st($myarray['dental_pain_describe']);
 $completed_future = st($myarray['completed_future']);
 $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
-$jawjointsurgery = st($myarray['jawjointsurgery']);
-$no_allergens = st($myarray['no_allergens']);
-$no_medications = st($myarray['no_medications']);
-$no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
 
 $psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
@@ -395,7 +375,6 @@ $pmyarray = mysqli_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
-$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 $family_bp = st($myarray["family_bp"]);

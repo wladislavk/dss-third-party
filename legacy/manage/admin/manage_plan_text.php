@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
@@ -45,7 +47,6 @@ $myarray = mysqli_fetch_array($my);
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <br />
-
 &nbsp;&nbsp;
 Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 <form name="planfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -65,7 +66,6 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
                                 <?php echo  $myarray['plan_text']; ?>
 			</td>
                         <?php } ?>
-
 	</tr>
 	<tr>
 		<td valign="top" align="center">
@@ -78,7 +78,6 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 	</tr>
 </table>
 </form>
-
 
 <br /><br />	
 <?php include "includes/bottom.htm";?>

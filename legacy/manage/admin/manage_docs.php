@@ -1,14 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
-$del = "DELETE FROM dental_document WHERE documentid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
-mysqli_query($con,$del);
-
-
+    $del = "DELETE FROM dental_document WHERE documentid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    mysqli_query($con,$del);
 }
-
 
 if(isset($_POST['add_doc'])){
                         $fname = $_FILES["attachment"]["name"];
@@ -22,7 +21,6 @@ if(isset($_POST['add_doc'])){
 
                         @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../../shared/q_file/".$banner1);
                         @chmod("../../../../shared/q_file/".$banner1,0777);
-
 
   $ins = "INSERT INTO dental_document (
         name,
@@ -43,11 +41,8 @@ if(isset($_POST['add_doc'])){
   window.location = 'manage_docs.php<?php echo  (isset($_GET['cat']))?'?cat='.$_GET['cat']:''; ?>';
 </script>
 <?php
-
 }
-
 ?>
-
 <div class="page-header">Documents</div>
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
@@ -81,7 +76,6 @@ if(isset($_POST['add_doc'])){
   }
 </script>
 
-
 <?php } ?>
 
 <table class="table table-bordered table-hover">
@@ -97,9 +91,7 @@ if(isset($_POST['add_doc'])){
                 <td valign="top" class="col_head" width="20%">
                         Action
                 </td>
-                
         </tr>
-
 <?php
   $sql = "SELECT d.*, c.name as categoryname FROM dental_document d INNER JOIN dental_document_category c ON d.categoryid=c.categoryid";
   if(isset($_GET['cat'])){
@@ -131,11 +123,8 @@ if(isset($_POST['add_doc'])){
                         </a>
                 </td>
         </tr>
-
-
 <?php
 } ?>
-
 </table>
 
 <?php include "includes/bottom.htm";?>

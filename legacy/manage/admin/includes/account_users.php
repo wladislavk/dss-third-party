@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 session_start();
+
 require_once 'main_include.php';
 require_once '../../includes/constants.inc';
 require 'access.php';

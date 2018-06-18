@@ -57,14 +57,14 @@ $my = mysqli_query($con,$sql);
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
@@ -124,9 +124,9 @@ $my = mysqli_query($con,$sql);
 				while($u_r = mysqli_fetch_assoc($u_q)){
 			?>
 			<tr class="users_<?php echo $myarray['id'];?>" style="display:none;">
-			  <td><?php echo  $u_r['first_name']." ".$u_r['last_name']; ?></td>
-			  <td><?php echo  $u_r['username']; ?></td>
-			  <td><?php echo  ($u_r['adddate'])?date('m/d/Y h:m a', strtotime($u_r['adddate'])):""; ?></td>
+			  <td><?php echo $u_r['first_name']." ".$u_r['last_name']; ?></td>
+			  <td><?php echo $u_r['username']; ?></td>
+			  <td><?php echo ($u_r['adddate'])?date('m/d/Y h:m a', strtotime($u_r['adddate'])):""; ?></td>
 			  <td></td>
 			</tr>
 			<?php } ?>

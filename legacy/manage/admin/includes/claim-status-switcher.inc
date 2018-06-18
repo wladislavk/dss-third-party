@@ -4,7 +4,8 @@ namespace Ds3\Libraries\Legacy;
 require_once __DIR__ . '/claim_functions.php';
 require_once __DIR__ . '/access.php';
 
-function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
+function claimStatusSwitcher($targetClaimId, $displayCurrentStatus = true)
+{
     require __DIR__ . '/../../includes/constants.inc';
 
     $db = new Db();
@@ -20,14 +21,11 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
         $allowBO = is_super($_SESSION['admin_access']) ||
             is_admin($_SESSION['admin_access']) ||
             is_billing_admin($_SESSION['admin_access']);
-
     } else {
         $userId = intval($_SESSION['userid']);
-
         $permissions = $db->getRow("SELECT docid, edit_ledger_entries
             FROM dental_users
             WHERE userid = '$userId'");
-
         $allowFO = $permissions['docid'] == 0 || $permissions['edit_ledger_entries'] == 1;
     }
 
@@ -40,9 +38,7 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
         FROM dental_insurance
         WHERE insuranceid = '$targetClaimId'", 'status');
     $currentStatusName = ClaimFormData::statusName($currentStatus);
-
     $selectorId = rand();
-
     ?>
     <div id="status-switch-<?= $selectorId ?>" class="right text-center" style="padding:1em;"
         title="Super Admin: change the status of the claim. Set 'pending' to allow re-filing the claim">
@@ -55,7 +51,6 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
                 if (preg_match('/secondary/i', $label)) {
                     continue;
                 }
-
                 ?>
                 <option value="<?= $value ?>"><?= e($label) ?></option>
             <?php } ?>
@@ -108,7 +103,6 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
                         }
                     });
                 });
-
                 $div.show();
             });
         }

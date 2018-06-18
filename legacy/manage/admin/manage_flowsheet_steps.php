@@ -1,6 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include "includes/top.htm";
 
 if(isset($_REQUEST['order_submit'])){
   $parent_id = $_REQUEST['parent_id'];
@@ -18,7 +19,6 @@ if(isset($_REQUEST['order_submit'])){
     }
   }
 }
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -29,11 +29,9 @@ if(isset($_REQUEST['order_submit'])){
 <br />
 <br />
 
-
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <?php
   $sql = "SELECT * FROM dental_flowsheet_steps ORDER BY section ASC, sort_by ASC";
@@ -44,14 +42,14 @@ if(isset($_REQUEST['order_submit'])){
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if(!empty($rec_disp) && $total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
@@ -117,14 +115,12 @@ if(isset($_REQUEST['order_submit'])){
 							View Next
 						<?php } ?>
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                    
 				</td>
 			</tr>
 	<?php 	}
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

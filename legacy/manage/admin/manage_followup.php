@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
@@ -11,17 +13,17 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_followup order by sortby";
 $my = mysqli_query($con, $sql);
@@ -30,7 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-$num_users=mysqli_num_rows($my);
 
 if($_POST['sortsub'] == 1)
 {
@@ -49,10 +50,9 @@ if($_POST['sortsub'] == 1)
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -68,7 +68,7 @@ if($_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_followup.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_followup.php');" class="btn btn-success">
 		Add New Follow Up
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -79,20 +79,19 @@ if($_POST['sortsub'] == 1)
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if($total_rec > $rec_disp) {?>
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
@@ -105,14 +104,14 @@ if($_POST['sortsub'] == 1)
 			Action
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php
 	}
 	else
 	{
@@ -142,18 +141,16 @@ if($_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_followup.php?ed=<?=$myarray["followupid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_followup.php?ed=<?=$myarray["followupid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php }
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="1">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="1">&nbsp;</td>
 			<td valign="top" class="col_head" colspan="4">
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />
@@ -161,8 +158,8 @@ if($_POST['sortsub'] == 1)
 				<?php } ?>
 			</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
 
@@ -174,4 +171,4 @@ if($_POST['sortsub'] == 1)
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

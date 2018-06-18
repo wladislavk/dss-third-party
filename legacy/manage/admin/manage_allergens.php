@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -76,7 +76,6 @@ if (!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -85,8 +84,8 @@ if (!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
 		</td>
 	</tr>
@@ -121,15 +120,13 @@ if (!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 				<td valign="top">
 					<?php echo st($myarray["allergens"]);?>
 				</td>
-				
 				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
 					<input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
 					  <?php echo  $myarray['sortby']; ?>
 					<?php } ?>
-				</td>	
-						
+				</td>
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
 					<a href="Javascript:;"  onclick="loadPopup('add_allergens.php?ed=<?php echo $myarray["allergensid"];?>');" title="Edit" class="btn btn-primary btn-sm">
@@ -141,9 +138,7 @@ if (!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 	<?php 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="1">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="1">&nbsp;</td>
 			<td valign="top" class="col_head" colspan="4">
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />

@@ -1,10 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../../3rdParty/tcpdf/tcpdf.php';
 require_once __DIR__ . '/../../3rdParty/fpdi/fpdi.php';
 require_once __DIR__ . '/../../includes/constants.inc';
 
-function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid=''){
+function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid = '')
+{
 
   $db = new Db();
   $con = $GLOBALS['con'];
@@ -22,9 +24,8 @@ function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid
   }
 }
 
-
-function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false){
-
+function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false)
+{
   $db = new Db();
   $con = $GLOBALS['con'];
 
@@ -90,9 +91,7 @@ if($reuse_sec){
   $insured_phone = st($p_r['insured_phone']);
   $insured_sex = st($p_r['other_insured_sex']);
   $patient_relation_insured = st($p_r['patient_relation_other_insured']);
-
-
-}else{
+} else {
 //INSURANCE FROM PATIENT INFO
         $insured_id_number = $pat_myarray['s_m_ins_id'];
 	if($pat_myarray['p_m_same_address']=='1'){
@@ -167,7 +166,6 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                         ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
-
   $d = $db->getRow($sleepstudies);
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
@@ -189,9 +187,7 @@ if (empty($prior_authorization_number)) {
          . "ORDER BY "
          . "  date_completed desc "
          . "LIMIT 1";
-
     $my = $db->getRow($sql);
-
     if (!empty($my)) {
         $prior_authorization_number = $my['pre_auth_num'];
     }
@@ -434,7 +430,8 @@ if (empty($prior_authorization_number)) {
  * @param int $claimId
  * @return array
  */
-function retrieveEClaimResponse ($claimId) {
+function retrieveEClaimResponse($claimId)
+{
     $db = new Db();
 
     $claimId = intval($claimId);
@@ -1817,7 +1814,8 @@ class ClaimFormData
      * @param int|null $patientId
      * @return array
      */
-    public static function storedDataForClaim ($claimId, $patientId=null) {
+    public static function storedDataForClaim ($claimId, $patientId = null)
+    {
         $db = new Db();
         $claimId = intval($claimId);
 
@@ -1837,26 +1835,22 @@ class ClaimFormData
 /**
  * Auxiliary function to centralize the query that filters FO claims
  *
- * @see DSS-142
- * @see DSS-258
- * @see CS-73
  * @param array $aliases List of table names for each related table in the conditional
  * @return string
  */
-function frontOfficeClaimsConditional ($aliases=[]) {
+function frontOfficeClaimsConditional ($aliases = [])
+{
     return '(NOT ' . backOfficeClaimsConditional($aliases) . ')';
 }
 
 /**
  * Auxiliary function to centralize the query that filters BO claims
  *
- * @see DSS-142
- * @see DSS-258
- * @see CS-73
  * @param array $aliases List of table names for each related table in the conditional
  * @return string
  */
-function backOfficeClaimsConditional ($aliases=[]) {
+function backOfficeClaimsConditional($aliases = [])
+{
     $db = new Db();
 
     $actionableStatusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
@@ -1889,7 +1883,8 @@ function backOfficeClaimsConditional ($aliases=[]) {
         )";
 }
 
-function filedByBackOfficeConditional ($claimAlias='claim') {
+function filedByBackOfficeConditional($claimAlias = 'claim')
+{
     return "(
                 -- Filed by back office, legacy logic
                 COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
@@ -1904,7 +1899,8 @@ function filedByBackOfficeConditional ($claimAlias='claim') {
  * @param int $claimId
  * @return string
  */
-function referenceIdFromClaimId ($claimId) {
+function referenceIdFromClaimId($claimId)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -1921,7 +1917,8 @@ function referenceIdFromClaimId ($claimId) {
  * @param string $referenceId
  * @return int
  */
-function claimIdFromReferenceId ($referenceId) {
+function claimIdFromReferenceId($referenceId)
+{
     $db = new Db();
     $referenceId = $db->escape($referenceId);
 
@@ -1938,7 +1935,8 @@ function claimIdFromReferenceId ($referenceId) {
  * @param string $referenceId
  * @return array
  */
-function minimalClaimDataFromReferenceId ($referenceId) {
+function minimalClaimDataFromReferenceId($referenceId)
+{
     $db = new Db();
 
     $claimId = claimIdFromReferenceId($referenceId);
@@ -1956,7 +1954,8 @@ function minimalClaimDataFromReferenceId ($referenceId) {
  * @param string $referenceId
  * @param string $newStatusName
  */
-function updateClaimStatusFromReferenceId ($referenceId, $newStatusName) {
+function updateClaimStatusFromReferenceId($referenceId, $newStatusName)
+{
     $db = new Db();
 
     $claimData = minimalClaimDataFromReferenceId($referenceId);
@@ -1990,7 +1989,8 @@ function updateClaimStatusFromReferenceId ($referenceId, $newStatusName) {
  *
  * @return array
  */
-function claimStatusChangePolicy () {
+function claimStatusChangePolicy()
+{
     return [
         'pending' => [
             'sent',
@@ -2015,7 +2015,8 @@ function claimStatusChangePolicy () {
  * @param string $newStatusName
  * @return bool
  */
-function isValidStatusChange ($currentStatusName, $newStatusName) {
+function isValidStatusChange($currentStatusName, $newStatusName)
+{
     $statusChangePolicy = array_get(claimStatusChangePolicy(), $currentStatusName, []);
     $isValid = in_array($newStatusName, $statusChangePolicy);
 
@@ -2029,7 +2030,8 @@ function isValidStatusChange ($currentStatusName, $newStatusName) {
  * @param bool   $saveResponse
  * @return object
  */
-function processEligibleResponse ($plainTextResponse, $saveResponse = true) {
+function processEligibleResponse($plainTextResponse, $saveResponse = true)
+{
     $db = new Db();
     $jsonResponse = json_decode($plainTextResponse);
 
@@ -2142,7 +2144,8 @@ function processEligibleResponse ($plainTextResponse, $saveResponse = true) {
  * @param object $jsonResponse
  * @return string
  */
-function detailsFromEligibleResponse ($jsonResponse) {
+function detailsFromEligibleResponse($jsonResponse)
+{
     if (isset($jsonResponse->details)) {
         return $jsonResponse->details;
     }
@@ -2190,7 +2193,6 @@ function detailsFromEligibleResponse ($jsonResponse) {
     if ($responseStatus === 'claim_denied') {
         $message []= 'Status: ' . $responseStatus;
 
-        // payment_reports[].details.claim.service_lines[].adjustments[].reason_label
         if ($serviceLines) {
             foreach ($serviceLines as $serviceLine) {
                 if (empty($serviceLine->adjustments)) {
@@ -2217,7 +2219,8 @@ function detailsFromEligibleResponse ($jsonResponse) {
  * @param int $claimId
  * @return array
  */
-function eligibleDetailsFromClaimId ($claimId) {
+function eligibleDetailsFromClaimId($claimId)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -2284,7 +2287,8 @@ function eligibleDetailsFromClaimId ($claimId) {
  * @param string $fileName
  * @param array $fdfData
  */
-function outputPdf ($fileName, $fdfData) {
+function outputPdf($fileName, $fdfData)
+{
     $filePath = ROOT_DIR . "/../../shared/q_file/{$fileName}";
     $fdfContents = prepareFdf($fdfData);
 
@@ -2325,7 +2329,8 @@ function outputPdf ($fileName, $fdfData) {
  * @param array $fdfFields
  * @return string
  */
-function prepareFdf ($fdfFields) {
+function prepareFdf($fdfFields)
+{
     $fieldPath = 'form1[0].#subform[0]';
     $pdfPath = ROOT_DIR . '/manage/claim_v2.pdf';
 
@@ -2369,18 +2374,21 @@ function prepareFdf ($fdfFields) {
     return $fdfData;
 }
 
-function roundToCents ($amount) {
-    $cents = floor($amount*100) - floor($amount)*100;
+function roundToCents($amount)
+{
+    $cents = floor($amount*100) - floor($amount) * 100;
     $cents = intval($cents);
 
     return $cents;
 }
 
-function fill_cents ($v) {
+function fill_cents($v)
+{
     return $v < 10 ? "0$v" : $v;
 }
 
-function escapeFdf ($value) {
+function escapeFdf($value)
+{
     return addcslashes($value, '\()');
 }
 

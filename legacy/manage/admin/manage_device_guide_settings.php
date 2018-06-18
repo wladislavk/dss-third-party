@@ -1,12 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include "includes/top.htm";
 
 $sql = "select s.*
 	 FROM dental_device_guide_settings s
 	 order by name ASC";
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -17,16 +17,13 @@ $num_users = mysqli_num_rows($my);
 </div>
 <br />
 <br />
-
-
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_device_guide_setting.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_device_guide_setting.php');" class="btn btn-success">
 		Add Setting
 		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>
-
 <br />
 <div align="center" class="red"> 
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
@@ -34,14 +31,14 @@ $num_users = mysqli_num_rows($my);
 
 <table class="table table-bordered table-hover">
 	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
@@ -67,7 +64,6 @@ $num_users = mysqli_num_rows($my);
 	{
 		while($myarray = mysqli_fetch_array($my))
 		{
-
 		?>
 			<tr>
 				<td valign="top">
@@ -80,16 +76,14 @@ $num_users = mysqli_num_rows($my);
 					<?php } ?>
 				</td>		
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_device_guide_setting.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_device_guide_setting.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                    
 				</td>
 			</tr>
 	<?php 	}
 	}?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

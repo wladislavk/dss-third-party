@@ -1,16 +1,18 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
-if(is_super($_SESSION['admin_access'])){
-$sql = "select * from companies order by name";
+if (is_super($_SESSION['admin_access'])){
+    $sql = "select * from companies order by name";
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid
@@ -23,7 +25,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -34,8 +35,6 @@ $num_users = mysqli_num_rows($my);
 </div>
 <br />
 <br />
-
-
 <br />
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
@@ -43,14 +42,14 @@ $num_users = mysqli_num_rows($my);
 
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
@@ -107,7 +106,6 @@ $num_users = mysqli_num_rows($my);
 	<?php 	}
 	}?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

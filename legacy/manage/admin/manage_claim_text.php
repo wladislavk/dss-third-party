@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
@@ -17,11 +19,11 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_claim_text WHERE default_text=1 ORDER BY description ASC";
 $my = mysqli_query($con,$sql);
@@ -30,8 +32,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -43,7 +43,7 @@ $num_users = mysqli_num_rows($my);
 <br />
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
-	<button onclick="Javascript: loadPopup('add_claim_text.php');" class="pull-right btn btn-primary">
+	<button onclick="loadPopup('add_claim_text.php');" class="pull-right btn btn-primary">
 		Add New Claim Text
 	</button>
 	&nbsp;&nbsp;
@@ -52,20 +52,19 @@ $num_users = mysqli_num_rows($my);
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover" >
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
@@ -107,10 +106,9 @@ $num_users = mysqli_num_rows($my);
 				<td valign="top">
 					<?php echo st(substr($myarray["description"], 0, 50));?>
 				</td>
-						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_claim_text.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="loadPopup('add_claim_text.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
                    			<?php } ?> 
@@ -119,15 +117,12 @@ $num_users = mysqli_num_rows($my);
 	<?php 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="3">&nbsp;</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -33,15 +35,12 @@ if(isset($_POST['edit_doc'])){
 	</script>
 
 <?php
-
 }
-
 
 $ds = "SELECT * FROM dental_document WHERE documentid=".mysqli_real_escape_string($con, $_GET['doc']);
 $dq = mysqli_query($con, $ds);
 $doc = mysqli_fetch_assoc($dq);
 ?>
-
 <div class="page-header">Edit Document</div>
 
 <form action="#" method="post" enctype="multipart/form-data">
@@ -63,10 +62,4 @@ $doc = mysqli_fetch_assoc($dq);
 
 </form>
 
-
-                
-
-<? include "includes/bottom.htm";?>
-
-
- 
+<?php include "includes/bottom.htm";?>

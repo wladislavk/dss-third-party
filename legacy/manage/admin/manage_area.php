@@ -19,11 +19,11 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if($_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from spine_area order by sortby";
 $my = mysqli_query($con, $sql);
@@ -83,8 +83,8 @@ if($_POST['sortsub'] == 1) {
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
 		</td>
 	</tr>
@@ -100,7 +100,7 @@ if($_POST['sortsub'] == 1) {
 			Action
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -144,8 +144,8 @@ if($_POST['sortsub'] == 1) {
 				<input type="submit" value=" Change " class="btn btn-warning">
 			</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
 

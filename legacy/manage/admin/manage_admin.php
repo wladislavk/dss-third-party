@@ -129,4 +129,4 @@ $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

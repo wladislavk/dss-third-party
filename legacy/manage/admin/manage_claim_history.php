@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '');
@@ -22,11 +24,11 @@ $lastActionColumnWithComma = $sort_by === 'last_action' ?
     '(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,' :
     '';
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 
 $sql = "SELECT e.*,
@@ -53,7 +55,6 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " ORDER BY $sort_by_sql LIMIT $i_val, $rec_disp";
 
 $my = $db->getResults($sql);
-$num_users = count($my);
 
 $references = array_pluck($my, 'reference_id');
 $references = array_filter(array_unique($references));
@@ -86,15 +87,15 @@ if ($references) {
 
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort_by=".$sort_by."&sort_dir=".$sort_dir);
+			<?php
+            paging($no_pages,$index_val,"sort_by=".$sort_by."&sort_dir=".$sort_dir);
 			?>
-		</TD>        
-	</TR>
-	<?php }?>
+		</td>
+	</tr>
+	<?php } ?>
 <?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?sort_by=%s&sort_dir=%s";
 ?>
@@ -163,33 +164,31 @@ if ($references) {
                     ) ?>
 				</td>
 				<td valign="top">
-					<?php echo  $dss_claim_status_labels[$myarray['status']]; ?>
+					<?php echo $dss_claim_status_labels[$myarray['status']]; ?>
 				</td>
 				
 				<td valign="top">
-					<?php echo  $myarray['pat_name']; ?>
+					<?php echo $myarray['pat_name']; ?>
 				</td>
                                 <td valign="top" align="center">
-                                        <?php echo  $myarray["account_name"]; ?>
+                                        <?php echo $myarray["account_name"]; ?>
                                 </td>
 			 	<td valign="top" align="center">
-                                        <?php echo  $myarray["company_name"]; ?>
+                                        <?php echo $myarray["company_name"]; ?>
 				</td>			
 				<td valign="top">
-					<a href="view_claim_history.php?id=<?php echo  $myarray['id']; ?>" title="Edit" class="btn btn-primary btn-sm">
+					<a href="view_claim_history.php?id=<?php echo $myarray['id']; ?>" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 
-					<a href="../insurance_check_status.php?id=<?php echo  $myarray['id']; ?>" class="btn btn-info" title="payment status">
+					<a href="../insurance_check_status.php?id=<?php echo $myarray['id']; ?>" class="btn btn-info" title="payment status">
 						Payment Status
 					</a>
-                    
 				</td>
 			</tr>
 	<?php 	}
 	}?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

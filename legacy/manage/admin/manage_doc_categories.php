@@ -1,16 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
-
-$del = "DELETE FROM dental_document_category WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
-mysqli_query($con,$del);
-$deldoc = "DELETE FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
-mysqli_query($con,$deldoc);
+    $del = "DELETE FROM dental_document_category WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    mysqli_query($con,$del);
+    $deldoc = "DELETE FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    mysqli_query($con,$deldoc);
 }
-
 
 if(isset($_POST['add_cat'])){
   $ins = "INSERT INTO dental_document_category (
@@ -30,11 +30,8 @@ if(isset($_POST['add_cat'])){
   window.location = 'manage_doc_categories.php';
 </script>
 <?php
-
 }
-
 ?>
-
 <div class="page-header">Categories</div>
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
@@ -47,7 +44,7 @@ if(isset($_POST['add_cat'])){
 
 <script type="text/javascript">
   function check_add(){
-    if($("#name").val()==""){
+    if ($("#name").val() == "") {
       alert("Name is required.");
       return false;
     }
@@ -57,23 +54,21 @@ if(isset($_POST['add_cat'])){
 <?php } ?>
 
 <table class="table table-bordered table-hover">
-        <tr class="tr_bg_h">
-                <td valign="top" class="col_head" width="60%">
-                       Name 
-                </td>
-		<td valign="top" class="col_head" width="20%">
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head" width="60%">
+            Name
+        </td>
+        <td valign="top" class="col_head" width="20%">
 			Status
 		</td>
-                <td valign="top" class="col_head" width="20%">
-                        Action
-                </td>
-		
-        </tr>
-
+        <td valign="top" class="col_head" width="20%">
+            Action
+        </td>
+    </tr>
 <?php
   $sql = "SELECT * FROM dental_document_category ORDER BY name ASC";
   $q = mysqli_query($con,$sql);
-  while($cat = mysqli_fetch_assoc($q)){
+  while($cat = mysqli_fetch_assoc($q)) {
 	?>
 	<tr class="<?php echo  ($cat['status'])?'tr_active':'tr_inactive'; ?>">
 		<td>
@@ -95,16 +90,9 @@ if(isset($_POST['add_cat'])){
             </a>
 		</td>
         </tr>
-
-
 <?php
-
-
-
   }
  ?>
-
 </table>
 
 <?php include "includes/bottom.htm";?>
-

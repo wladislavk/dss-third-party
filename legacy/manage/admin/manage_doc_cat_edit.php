@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
@@ -17,12 +19,9 @@ if(isset($_POST['edit_cat'])){
   <?php
 }
 
-?>
-<?php
   $sql = "SELECT * FROM dental_document_category WHERE categoryid=".$_GET['cat']." ORDER BY name ASC";
   $q = mysqli_query($con,$sql);
   $cat = mysqli_fetch_assoc($q);
-
  ?>
 
 <div class="page-header">Edit Category</div>
@@ -41,7 +40,4 @@ if(isset($_POST['edit_cat'])){
 <?php } ?>
 </form>
 
-
-
 <?php include "includes/bottom.htm";?>
-

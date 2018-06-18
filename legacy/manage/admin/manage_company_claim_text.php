@@ -11,17 +11,17 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo  $_GET['docid']; ?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 50;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_claim_text where companyid=".(!empty($_GET['companyid']) ? $_GET['companyid'] : '');
 $my = mysqli_query($con,$sql);
@@ -30,8 +30,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = (!empty($my) ? mysqli_num_rows($my) : '');
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -42,34 +40,30 @@ $num_users = (!empty($my) ? mysqli_num_rows($my) : '');
 </div>
 <br />
 <br />
-
-
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_company_claim_text.php?companyid=<?php echo  (!empty($_GET['companyid']) ? $_GET['companyid'] : ''); ?>');" class="btn btn-success">
+	<button onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo (!empty($_GET['companyid']) ? $_GET['companyid'] : ''); ?>');" class="btn btn-success">
 		Add New Claim Text
 		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>
-
 <br />
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>?docid=<?php echo  (!empty($_GET['docid']) ? $_GET['docid'] : ''); ?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="30%">
@@ -105,24 +99,20 @@ $num_users = (!empty($my) ? mysqli_num_rows($my) : '');
 					<?php echo st(substr($myarray["description"], 0, 50));?>
 				</td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_claim_text.php?companyid=<?php echo  $_GET['companyid']; ?>&ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo  $_GET['companyid']; ?>&ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                    
 				</td>
 			</tr>
 	<?php 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="3">&nbsp;</td>
 		</tr>
-		<?
-	}?>
+		<?php
+	} ?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

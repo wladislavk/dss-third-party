@@ -875,4 +875,4 @@ if (isset($_GET['showins']) && $_GET['showins'] == 1) { ?>
     });
 </script>
 
-<?php  include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 $isSuperAdmin = is_super($_SESSION['admin_access']);
@@ -7,8 +9,7 @@ $isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_
 
 $canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
 
-if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
-{
+if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access'])) {
 	$del_sql = "delete from admin where adminid='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
 
@@ -19,17 +20,17 @@ if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
   $sql = "select a.*, c.id as company_id, c.name as company_name
@@ -74,7 +75,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -100,7 +100,7 @@ $num_users = mysqli_num_rows($my);
 
 <?php if ($canCreate) { ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_backoffice_users.php');" class="btn btn-success">
 		Add New Backoffice User
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -115,14 +115,14 @@ $num_users = mysqli_num_rows($my);
 
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
@@ -156,21 +156,8 @@ $num_users = mysqli_num_rows($my);
 	{
 		while($myarray = mysqli_fetch_array($my))
 		{
-			if($myarray["admin_access"] == 1)
-			{
-				$tr_class = "tr_super";
-			}
-			elseif($myarray["admin_access"] == 2)
-			{
-				$tr_class = "tr_admin";
-			}
-                        else
-                        {
-                                $tr_class = "tr_basic";
-                        }
-
 		?>
-			<tr  <?php echo  ($myarray['status']==2)?'class="warning"':''; ?>> 
+			<tr <?php echo  ($myarray['status']==2)?'class="warning"':''; ?>>
 				<td valign="top">
 					<?php echo st($myarray["username"]);?>
 				</td>
@@ -186,7 +173,7 @@ $num_users = mysqli_num_rows($my);
 					<?php echo  (!empty($dss_admin_access_labels[$myarray["admin_access"]]) ? $dss_admin_access_labels[$myarray["admin_access"]] : ''); ?>
                                 </td>		
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_backoffice_users.php?ed=<?php echo $myarray["adminid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_backoffice_users.php?ed=<?php echo $myarray["adminid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
@@ -195,7 +182,6 @@ $num_users = mysqli_num_rows($my);
 	<?php 	}
 	}?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

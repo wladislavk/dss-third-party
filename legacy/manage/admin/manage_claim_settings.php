@@ -1,17 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
-
   $in_sql = "UPDATE admin SET
                 claim_margin_top = '".mysqli_real_escape_string($con,$_POST['claim_margin_top'])."',
                 claim_margin_left = '".mysqli_real_escape_string($con,$_POST['claim_margin_left'])."'
         WHERE adminid='".$_SESSION['adminuserid']."'";
   mysqli_query($con,$in_sql);
   if(isset($_POST['margins_test'])){
-
-
         ?>
         <script type="text/javascript">
                 window.open("claim_margin_test.php");
@@ -22,16 +21,13 @@ if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 
 if(isset($_POST["margins_reset"]))
 {
-
   $in_sql = "UPDATE admin SET
                 claim_margin_top = '0',
                 claim_margin_left = '0'
         WHERE adminid='".$_SESSION['adminuserid']."'";
   mysqli_query($con,$in_sql);
 }
-
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -40,21 +36,15 @@ if(isset($_POST["margins_reset"]))
 </div>
 <br />
 <br />
-
-
 <br />
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 <?php
   $p_sql = "SELECT * FROM admin where adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
   $p_q = mysqli_query($con,$p_sql);
   $practice = mysqli_fetch_assoc($p_q);
-
-
 ?>
-
 <div>
 <strong>Configuring your CMS 1500 form:</strong>
 <ol>

@@ -1,6 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
-<?
+include 'includes/top.htm';
 include_once('includes/password.php');
 
 if(!empty($_POST['clsub']) && $_POST['clsub'] == 1)
@@ -13,7 +14,7 @@ if(!empty($_POST['clsub']) && $_POST['clsub'] == 1)
 		<script type="text/javascript">
 			alert("<?php echo $msg;?>");
 		</script>
-		<?
+		<?php
 }
 ?>
 <span class="admin_head">
@@ -36,7 +37,6 @@ if(!empty($_POST['clsub']) && $_POST['clsub'] == 1)
 			<input type="hidden" name="clsub" value="1" />
 			<input type="submit" value=" Update Change List " class="btn btn-primary" />
 </form>
-
 
 <script type="text/javascript">
 $(document).ready(function(){

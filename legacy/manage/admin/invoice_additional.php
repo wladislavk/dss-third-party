@@ -177,8 +177,8 @@ if(mysqli_num_rows($doc_q) == 0){
   }
 
   if(isset($_POST['free_fax_desc'])){
-    $fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
-    $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+    $free_fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
+    $free_fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
     $in_sql = "INSERT into dental_fax_invoice SET
 		invoice_id = '".$invoice_id."', 
@@ -225,8 +225,8 @@ if(mysqli_num_rows($doc_q) == 0){
     
   }
   if(isset($_POST['free_ec_desc'])){
-    $ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
-    $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+    $free_ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+    $free_ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con,$invoice_id)."',
@@ -256,27 +256,17 @@ if(mysqli_num_rows($doc_q) == 0){
                 amount = '".mysqli_real_escape_string($con,$_POST['ec_amount'])."'
 		WHERE invoice_id ='".$invoice_id."'";
     mysqli_query($con,$in_sql);
-    $ec_invoice_id = mysqli_insert_id($con);
-    $up_sql = "UPDATE dental_eligibility SET
-                eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
   }else{
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_eligibility_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
     mysqli_query($con,$up_sql);
-    
   }
 
-
-
-
-
-
   if(isset($_POST['free_enrollment_desc'])){
-    $enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
-    $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
+    $free_enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
+    $free_enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_enrollment_invoice SET
                 invoice_id = '".mysqli_real_escape_string($con,$invoice_id)."',
@@ -294,7 +284,6 @@ if(mysqli_num_rows($doc_q) == 0){
                 WHERE enrollment_invoice_id IS NULL AND user_id='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
     mysqli_query($con,$up_sql);
   }
-
 
   if(isset($_POST['enrollment_desc'])){
     $enrollment_start_date = ($_POST['enrollment_start_date'])?date('Y-m-d', strtotime($_POST['enrollment_start_date'])):'';
@@ -319,9 +308,7 @@ if(mysqli_num_rows($doc_q) == 0){
                 invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
     mysqli_query($con,$up_sql);
-    
   }
-
   
 }else{
       $in_sql = "insert into dental_percase_invoice SET
@@ -366,8 +353,6 @@ if(mysqli_num_rows($doc_q) == 0){
       $total_amount += $amount;
     }
   }
-
-
         if(isset($_GET['bill']) && $_GET['bill']=="1"){
                 if($user['cc_id']!=''){
                   bill_card($user['cc_id'] ,$total_amount, $user['userid'], $invoice_id);
@@ -406,12 +391,10 @@ if(mysqli_num_rows($doc_q) == 0){
   ?>
   <script type="text/javascript">
     window.location = 'invoice_additional.php?show=<?php echo $_GET['show'];?>&bill=<?php echo  $_GET['bill']; ?><?php echo  (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?php echo  $user['userid']; ?>&cc=<?php echo  ($count_current+1); ?>&ci=<?php echo  $count_invoices; ?>';
-    //window.location = 'percase_invoice_pdf.php?invoice_id=<?php echo  $invoiceid; ?>';
   </script>
   <?php
   }
 }
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -431,9 +414,7 @@ if(mysqli_num_rows($doc_q) == 0){
                 JOIN companies c ON uc.companyid = c.id
                 WHERE u.userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
   $doc_q = mysqli_query($con,$doc_sql);
-
 }
-
   $doc = mysqli_fetch_assoc($doc_q);
 
         if($user['last_monthly_fee_date']){
@@ -545,8 +526,6 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-
-
                 <?php $producer_r = mysqli_fetch_assoc($producer_q); ?>
 		<?php if($producer_r['total_producers']>0){ ?>
                 <tr id="user_row">
@@ -600,8 +579,6 @@ Invoice Due Date:
                     </td>
                 </tr>
 	           <?php } ?>
-
-
 		<?php $free_efile = 1; ?>
                 <?php while ($efile = mysqli_fetch_array($efile_q)) { ?>
                 <tr id="efile_row_<?php echo  $efile['id'] ?>">
@@ -625,10 +602,10 @@ Invoice Due Date:
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
 			    <?php if($free_efile <= $doc['free_efile']){
-				$efile_fee = '0.00';
-				$free_efile++;
+                    $efile_fee = '0.00';
+                    $free_efile++;
 			    }else{
-				$efile_fee = $doc['efile_fee'];
+    				$efile_fee = $doc['efile_fee'];
 			    }
 			    ?>
                             <input type="text" class="amount form-control" name="amount_<?php echo  $efile['id'] ?>" value="<?php echo  $efile_fee; ?>">
@@ -636,9 +613,6 @@ Invoice Due Date:
                     </td>
                 </tr>
                    <?php } ?>
-
-
-
             <?php if ($doc['user_type']==DSS_USER_TYPE_SOFTWARE) { ?>
                 <?php if (!empty($vob_q)) while ($vob = mysqli_fetch_array($vob_q)) { ?>
                 <tr id="vob_row_<?php echo  $vob['id'] ?>">
@@ -667,10 +641,8 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-            
             <?php if ($fax['total_faxes'] > 0) { ?>
                 <?php
-                
                 $bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
                 
                 if ($doc['free_fax'] > $fax['total_faxes']) {
@@ -679,7 +651,6 @@ Invoice Due Date:
                 else {
                     $free_fax = $doc['free_fax'];
                 }
-                
                 ?>
                 <tr id="free_fax_row" class="fax">
                     <td>
@@ -730,13 +701,8 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
             <?php if ($ec['total_ec'] > 0) { ?>
                 <?php
-
                 $bill_ec = intval($ec['total_ec']) - intval($doc['free_eligibility']);
 
                 if ($doc['free_eligibility'] > $ec['total_ec']) {
@@ -745,7 +711,6 @@ Invoice Due Date:
                 else {
                     $free_ec = $doc['free_eligibility'];
                 }
-
                 ?>
                 <tr id="free_ec_row" class="eligibility">
                     <td>
@@ -796,18 +761,8 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
-
-
-
-
-
             <?php if ($enroll['total_enrollments'] > 0) { ?>
                 <?php
-
                 $bill_en = intval($enroll['total_enrollments']) - intval($doc['free_enrollment']);
 
                 if ($doc['free_enrollment'] > $enroll['total_enrollments']) {
@@ -816,7 +771,6 @@ Invoice Due Date:
                 else {
                     $free_en = $doc['free_enrollment'];
                 }
-
                 ?>
                 <tr id="free_enrollment_row" class="enrollment">
                     <td>
@@ -867,18 +821,6 @@ Invoice Due Date:
                 </tr>
                 <?php } ?>
             <?php } ?>
-
-
-
-
-
-
-
-
-
-
-
-
                 <tr id="total_row">
                     <td>
                         <a href="#" class="btn btn-success" title="Add Entry">
@@ -911,9 +853,8 @@ $(document).ready(function(){
     });
     $('#invoice_table').on('mouseleave', 'tr', function() {
         $(this).find('.btn.btn-danger').addClass('hidden');
-	//$(this).find('.btn.btn-danger').trigger('mouseleave');
     });
-    
+
     $('#invoice_table').on('click', '.btn.btn-danger.remove-single', function(e) {
         e.preventDefault();
         $(this).closest('tr').remove();
@@ -993,23 +934,16 @@ function check_billed () {
         success: function(data){
             alert(data);
             var r = $.parseJSON(data);
-            
-            if (r.error) {}
-            else {}
         },
-        error: function(data){
-        }
+        error: function(data){}
     });
-    
     return false;
 }
 </script>
 <?php include "includes/bottom.htm";?>
-
-
 <?php
-
-function bill_card ($customerID, $amount, $userid, $invoiceid) {
+function bill_card($customerID, $amount, $userid, $invoiceid)
+{
   $con = $GLOBALS['con'];
 
   if($amount==0){
@@ -1095,7 +1029,6 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         
         mysqli_query($con,$invoice_sql);
     }
-    
   }
-    return true;
+  return true;
 }

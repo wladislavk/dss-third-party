@@ -1,28 +1,25 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(isset($_POST['update_btn'])){
-
   $s = "UPDATE dental_letter_templates SET
 		body='".mysqli_real_escape_string($con,$_POST['body'])."'
 		WHERE id='".mysqli_real_escape_string($con,$_POST['letterid'])."'";
   mysqli_query($con,$s);
-
-
 }
 
-if(is_super($_SESSION['admin_access'])){ 
-$sql = "select * from dental_letter_templates WHERE default_letter=1 ORDER BY id ASC";
+if(is_super($_SESSION['admin_access'])){
+    $sql = "select * from dental_letter_templates WHERE default_letter=1 ORDER BY id ASC";
 }elseif(is_admin($_SESSION['admin_access'])){
-$sql = "select * from dental_letter_templates WHERE companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ORDER BY id ASC";
+    $sql = "select * from dental_letter_templates WHERE companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ORDER BY id ASC";
 }else{
 ?>
 You do not have permission to edit default letters.
 <?php 
 trigger_error("Die called", E_USER_ERROR);
-} 
-
-
+}
 $my = mysqli_query($con,$sql);
 ?>
 
@@ -44,7 +41,6 @@ $my = mysqli_query($con,$sql);
 </div>
 <div class="row">
     <?php
-    
     if (!empty($_GET['lid'])) {
         if (is_super($_SESSION['admin_access'])) {
             $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."'";
@@ -52,10 +48,8 @@ $my = mysqli_query($con,$sql);
         else {
             $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."' AND companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
         }
-        
         $q = mysqli_query($con,$sql);
         $row = mysqli_fetch_assoc($q);
-        
         ?>
     <form action="" method="post" class="form-horizontal">
         <div class="col-md-9">

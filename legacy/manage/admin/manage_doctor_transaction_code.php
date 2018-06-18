@@ -1,8 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
-{
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
 	
@@ -11,17 +12,17 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo  $_GET['docid']; ?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 50;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_transaction_code where docid=".$_GET['docid']." order by sortby";
 $my = mysqli_query($con,$sql);
@@ -30,7 +31,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
 
 if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
@@ -51,7 +51,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -65,9 +65,8 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 <br />
 <br />
 
-
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>');" class="btn btn-success">
+	<button onclick="loadPopup('add_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>');" class="btn btn-success">
 		Add New Transaction Code
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -78,20 +77,19 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>?docid=<?php echo  $_GET['docid']; ?>" method="post">
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
+			<?php
+            paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
@@ -106,9 +104,9 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 		<td valign="top" class="col_head" width="10%">
 			Sort By 
 		</td>
-                <td valign="top" class="col_head" width="10%">
-                        Amount
-                </td>
+        <td valign="top" class="col_head" width="10%">
+            Amount
+        </td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -159,9 +157,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
          }elseif($myarray["type"] == "6"){
          echo "Adjustment Code";
          }
-        
-        ?>                  
-
+        ?>
 				</td>
 				<td valign="top" align="center">
 					<input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
@@ -170,7 +166,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
                                        <?php echo st($myarray['amount'])?>
                                 </td>				
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&ed=<?php echo $myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&ed=<?php echo $myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
@@ -179,19 +175,16 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<?php 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;
-				
-			</td>
+			<td valign="top" class="col_head" colspan="3">&nbsp;</td>
 			<td valign="top" class="col_head" colspan="2">
 				<input type="hidden" name="sortsub" value="1" />
 				<input type="submit" value=" Change " class="btn btn-warning">
 			</td>
 		</tr>
-		<?
+		<?php
 	}?>
 </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

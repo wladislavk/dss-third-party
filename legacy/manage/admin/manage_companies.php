@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
@@ -11,17 +13,17 @@ if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]) ? $_REQUEST["page"] : '')
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"]) ? $_REQUEST["page"] : '') {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 $sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users, p.name as plan_name from companies c
 	 LEFT JOIN admin_company ac ON ac.companyid = c.id
@@ -36,7 +38,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysqli_query($con,$sql);
-$num_users=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -47,16 +48,13 @@ $num_users=mysqli_num_rows($my);
 </div>
 <br />
 <br />
-
-
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_company.php');" class="btn btn-success">
+	<button onclick="loadPopup('add_company.php');" class="btn btn-success">
 		Add New Company
 		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>
-
 <br />
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
@@ -64,14 +62,14 @@ $num_users=mysqli_num_rows($my);
 
 <table class="table table-bordered table-hover">
 	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<tr bgcolor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
-		</TD>        
-	</TR>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
@@ -89,7 +87,6 @@ $num_users=mysqli_num_rows($my);
                 <td valign="top" class="col_head">
                         Billing Plan
                 </td>
-
 		<td valign="top" class="col_head">
 		  	Type
 		</td>
@@ -113,7 +110,6 @@ $num_users=mysqli_num_rows($my);
 	{
 		while($myarray = mysqli_fetch_array($my))
 		{
-
 		?>
 			<tr <?php echo  ($myarray['status']==2)?'class="warning"':''; ?>>
 				<td valign="top">
@@ -123,8 +119,8 @@ $num_users=mysqli_num_rows($my);
 					<a href="manage_backoffice.php?cid=<?php echo $myarray['id'];?>"><?php echo  st($myarray["num_admin"]); ?></a>
 				</td>	
 				<td valign="top">
-                                        <a href="manage_backoffice.php?cid=<?php echo $myarray['id'];?>"><?php echo  st($myarray["num_users"]); ?></a>
-                                </td>	
+                    <a href="manage_backoffice.php?cid=<?php echo $myarray['id'];?>"><?php echo  st($myarray["num_users"]); ?></a>
+                </td>
 				<td valign="top">
 				  <?php 
 					if($myarray['company_type']==DSS_COMPANY_TYPE_BILLING){
@@ -156,16 +152,15 @@ $num_users=mysqli_num_rows($my);
 					<?php echo  $myarray["plan_name"];?>
 				</td>
 				<td valign="top">
-					<?php echo  $dss_company_type_labels[$myarray["company_type"]];?>
+					<?php echo $dss_company_type_labels[$myarray["company_type"]];?>
 				</td>
-                                <td valign="top">
-                                        <a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_logo.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
-                                                Edit
-                                         <span class="glyphicon glyphicon-pencil"></span></a>
-
-                                </td>
+                <td valign="top">
+                    <a href="Javascript:;"  onclick="loadPopup('add_company_logo.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+                        Edit
+                        <span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="loadPopup('add_company.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                                         <a href="invoice_bo_additional.php?show=1&coid=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
@@ -174,9 +169,8 @@ $num_users=mysqli_num_rows($my);
 				</td>
 			</tr>
 	<?php 	}
-	}?>
+	} ?>
 </table>
-
 
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

@@ -3,7 +3,6 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
-
 ?>
 <input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
 

@@ -33,7 +33,7 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, '".DSS_REFERR
      . " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
 
 $result = $db->getResults($sql);
-$patients = array();
+$patients = [];
 $i = 0;
 if ($result) {
     foreach ($result as $row) {

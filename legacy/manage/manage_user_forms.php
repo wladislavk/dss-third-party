@@ -2,6 +2,8 @@
 namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
+
+$db = new Db();
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
@@ -9,7 +11,7 @@ include "includes/top.htm";
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Forms
+    Manage Forms
 </span>
 <br/>
 <br/>
@@ -345,8 +347,8 @@ include "includes/top.htm";
                            class="editlink">
                             View <?= $loc_r['location']; ?><br/>
                         </a>
-                    <?php } ?>
-                <?php } else { ?>
+                    <?php }
+                } else { ?>
                     <a href="view_user_form.php?file=proof_of_delivery&did=<?= $_SESSION['docid']; ?>" class="editlink">
                         View
                     </a>
@@ -377,7 +379,6 @@ include "includes/top.htm";
         </tr>
     </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose">

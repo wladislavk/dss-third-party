@@ -1,10 +1,16 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $sql = "select i.*,
-         (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,
-         (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') num_fo_notes 
-      	 from dental_insurance i where (i.status=".DSS_CLAIM_PENDING." OR i.status=".DSS_CLAIM_SEC_PENDING.") AND i.docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' and i.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by i.adddate DESC";
+        (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,
+        (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') num_fo_notes 
+    from dental_insurance i 
+    where (i.status=".DSS_CLAIM_PENDING." OR i.status=".DSS_CLAIM_SEC_PENDING.") 
+    AND i.docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' 
+    and i.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
+    order by i.adddate DESC";
 $my = $db->getResults($sql);
 ?>
 
@@ -14,7 +20,7 @@ if(!empty($total_rec) && $total_rec > $rec_disp) {?>
     <tr bgColor="#ffffff">
         <td align="right" colspan="15" class="bp">
             Pages:
-            <?php paging($no_pages,$index_val,"");?>
+            <?php paging($no_pages, $index_val, "");?>
         </td>
     </tr>
     <?php
@@ -41,20 +47,20 @@ if (count($my) == 0) { ?>
 }else{
     foreach ($my as $myarray) {
         $tr_class = "tr_active"; ?>
-    <tr class="<?php echo $tr_class;?>">
-        <td valign="top">
-            <?php echo date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
-        </td>
-        <td valign="top">
-            <?php echo $dss_claim_status_labels[$myarray['status']];?>
-        </td>
-        <td valign="top">
-            <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
-                View <?php echo ($myarray['num_notes'] > 0)?"- Notes (".$myarray['num_notes'].")":''; ?>
-            </a>
-        </td>
-    </tr>
-<?php
+        <tr class="<?php echo $tr_class;?>">
+            <td valign="top">
+                <?php echo date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+            </td>
+            <td valign="top">
+                <?php echo $dss_claim_status_labels[$myarray['status']];?>
+            </td>
+            <td valign="top">
+                <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
+                    View <?php echo ($myarray['num_notes'] > 0)?"- Notes (".$myarray['num_notes'].")":''; ?>
+                </a>
+            </td>
+        </tr>
+    <?php
     }
 } ?>
 </table>
@@ -70,7 +76,7 @@ if(!empty($total_rec) && $total_rec > $rec_disp) {?>
     <tr bgColor="#ffffff">
         <td align="right" colspan="15" class="bp">
           Pages:
-          <?php paging($no_pages,$index_val,"");?>
+          <?php paging($no_pages, $index_val, "");?>
         </td>
     </tr>
 <?php 
@@ -97,20 +103,20 @@ if(count($my) == 0){ ?>
 }else{
     foreach ($my as $myarray) {
         $tr_class = "tr_active";?>
-    <tr class="<?php echo $tr_class;?>">
-        <td valign="top">
-            <?php echo date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
-        </td>
-        <td valign="top">
-            <?php echo $dss_claim_status_labels[$myarray['status']];?>
-        </td>
-        <td valign="top">
-            <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="editlink" title="View Claim and Notes">
-                View 
-            </a>
-        </td>
-    </tr>
-<?php 
+        <tr class="<?php echo $tr_class;?>">
+            <td valign="top">
+                <?php echo date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+            </td>
+            <td valign="top">
+                <?php echo $dss_claim_status_labels[$myarray['status']];?>
+            </td>
+            <td valign="top">
+                <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="editlink" title="View Claim and Notes">
+                    View
+                </a>
+            </td>
+        </tr>
+        <?php
     }
 } ?>
 </table>

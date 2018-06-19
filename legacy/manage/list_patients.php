@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'admin/includes/main_include.php';
 include 'includes/sescheck.php';
 include_once 'admin/includes/general.htm';

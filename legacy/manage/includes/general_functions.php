@@ -111,7 +111,7 @@ function isSharedFile ($name)
 
 function isFaultyUpload ($uploadError)
 {
-    return !in_array($uploadError, array(UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE));
+    return !in_array($uploadError, [UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE]);
 }
 
 function uploadImage($image, $file_path, $type = 'general')
@@ -285,7 +285,8 @@ function parseTemplate ($template, array $variables = [], $escapeHtml = true)
  * @param string $body
  * @param string $headers
  */
-function logEmailActivity ($from, $to, $subject, $body, $headers) {
+function logEmailActivity ($from, $to, $subject, $body, $headers)
+{
     $db = new Db();
     $emailData = [
         'from' => $from,
@@ -567,7 +568,7 @@ function sendUpdatedEmail($patientId, $newEmail, $oldEmail, $sentBy)
  * @param string $sid
  * @param string $message
  */
-function logSMSActivity ($from, $to, $text, $status, $sid, $message = '')
+function logSMSActivity($from, $to, $text, $status, $sid, $message = '')
 {
     $db = new Db();
     $smsData = [
@@ -878,7 +879,7 @@ function dateFormat($data, $defaultsNow = true)
  *
  * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
  */
-function parsePhoneNumber($areaCodeOrFullNumber, $phoneNumber='')
+function parsePhoneNumber($areaCodeOrFullNumber, $phoneNumber = '')
 {
     $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
     preg_match('/(?P<area>\d{3})(?P<number>\d{7})(?P<ext>\d*)/', $fullNumber, $matches);

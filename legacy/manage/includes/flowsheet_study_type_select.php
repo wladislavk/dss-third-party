@@ -9,7 +9,7 @@ include_once('../includes/general_functions.php');
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php if(isset($_REQUEST['submit'])) {
         $sqlex = "update dental_flow_pg2_info set study_type='".mysqli_real_escape_string($con,$_REQUEST['study_type'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-        $qex = $db->query($sqlex);
+        $db->query($sqlex);
 ?>
         <script type="text/javascript">
           parent.updateStudyType('<?php echo  $_GET['id']; ?>', '<?php echo  $_REQUEST['study_type']; ?>');
@@ -47,13 +47,13 @@ include_once('../includes/general_functions.php');
       Study Type    
       <select name="study_type" style="width:250px">
         <option value=""></option>
-      	<?php if($sid == 3) { ?>
-      	  <option value="HST Titration">HST Titration</option>
-      	  <option value="PSG Titration">PSG Titration</option>
+        <?php if($sid == 3) { ?>
+          <option value="HST Titration">HST Titration</option>
+          <option value="PSG Titration">PSG Titration</option>
         <?php } elseif($sid == 15) { ?>
           <option value="HST Baseline">HST Baseline</option>
           <option value="PSG Baseline">PSG Baseline</option>
-      	<?php } ?>
+        <?php } ?>
       </select>
       <input type="submit" name="submit" value="Submit" />
     </form>

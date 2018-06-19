@@ -8,7 +8,11 @@ include_once('../includes/general_functions.php');
 ?>
 <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php
+$db = new Db();
+
 if(isset($_REQUEST['submit'])) {
+    $sqlex = "update dental_flow_pg2_info set noncomp_reason='".mysqli_real_escape_string($con,$_REQUEST['noncomp_reason'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $db->query($sqlex);
     ?>
     <script type="text/javascript">
         parent.updateNoncompReason('<?php echo $_GET['id']; ?>', '<?php echo $_REQUEST['noncomp_reason']; ?>');

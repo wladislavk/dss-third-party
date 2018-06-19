@@ -11,7 +11,7 @@ require_once __DIR__ . '/general_functions.php';
  * @param int $hstId
  * @return int
  */
-function createPatientFromHSTRequest ($hstId)
+function createPatientFromHSTRequest($hstId)
 {
     $db = new Db();
 
@@ -61,7 +61,7 @@ function createPatientFromHSTRequest ($hstId)
  * @param $screenerId
  * @return int
  */
-function createPatientFromScreener ($screenerId)
+function createPatientFromScreener($screenerId)
 {
     $db = new Db();
 
@@ -105,7 +105,7 @@ function createPatientFromScreener ($screenerId)
  * @param int $userId
  * @return bool|int
  */
-function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId)
+function authorizeHSTRequest($hstId, $hstCompanyId, $userId, $docId)
 {
     $db = new Db();
 
@@ -212,7 +212,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId)
  * @param int $hstId
  * @param int $userId
  */
-function cancelHSTRequest ($hstId, $userId)
+function cancelHSTRequest($hstId, $userId)
 {
     $db = new Db();
     $hstId = intval($hstId);

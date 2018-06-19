@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 
+$db = new Db();
+
 if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     $referredby_notes = $_POST['referredby_notes'];
 
@@ -17,7 +19,7 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
         parent.window.location='manage_referredby.php?msg=<?php echo $msg;?>';
     </script>
     <?php
-	trigger_error("Die called", E_USER_ERROR);
+    trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -8,6 +8,8 @@ $q = (!empty($_GET["q"]) ? $_GET["q"] : '');
 $pco = (!empty($_GET["pco"]) ? $_GET["pco"] : '');
 $t = (!empty($_GET['t']) ? $_GET['t'] : '');
 
+$db = new Db();
+
 $sql = sprintf("SELECT transaction_code from dental_transaction_code WHERE transaction_codeid = '%s'", $db->escape( $q));
 $ro = $db->getRow($sql);
 

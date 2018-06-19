@@ -7,6 +7,8 @@ require_once __DIR__ . '/includes/calendarinc.php';
 
 $claimId = intval($_GET['cid']);
 
+$db = new Db();
+
 $csql = "SELECT *
     FROM dental_insurance i
     WHERE i.insuranceid = '$claimId'";

@@ -36,6 +36,8 @@ include "includes/sescheck.php";
             <td valign="top" class="frmdata">
                 <select id="producer" name="producer">
                     <?php
+                    $db = new Db();
+
                     $p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
                     $p_query = $db->getResults($p_sql);
                     foreach ($p_query as $p) {
@@ -64,9 +66,9 @@ include "includes/sescheck.php";
             </td>
         </tr>
         <tr>
-    		<td class="frmhead"></td>
-    		<td class="frmhead"><input type="submit" value="Add Note" /></td>
-    	</tr>
+            <td class="frmhead"></td>
+            <td class="frmhead"><input type="submit" value="Add Note" /></td>
+        </tr>
     </table>
     <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
     <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">

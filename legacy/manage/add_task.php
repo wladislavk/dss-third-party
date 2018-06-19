@@ -8,6 +8,8 @@ include "includes/sescheck.php";
 <?php
 include "includes/calendarinc.php";
 
+$db = new Db();
+
 if (!empty($_POST["taskadd"]) && $_POST["taskadd"] == 1) {
     $due_date = (!empty($_POST['due_date']))?date('Y-m-d', strtotime($_POST['due_date'])):'';
     $sql = "INSERT INTO dental_task SET
@@ -86,7 +88,7 @@ if (isset($_GET['id'])) {
                 <span class="red">*</span>
                 <input style="width:500px;" type="text" name="task" value="<?php echo (!empty($task['task']) ? $task['task'] : ''); ?>" />
             </td>
-       	</tr>
+        </tr>
         <tr>
             <td valign="top" class="frmhead">
                 <label>Due Date</label>
@@ -110,7 +112,7 @@ if (isset($_GET['id'])) {
                         <option value="<?php echo $responsible['userid']; ?>" <?php echo ($responsible['userid']==$responsibleid)?'selected="selected"':'';?>><?php echo $responsible['first_name']." ".$responsible['last_name']; ?></option>
                         <?php
                     } ?>
-				</select>
+                </select>
             </td>
         </tr>
         <tr>

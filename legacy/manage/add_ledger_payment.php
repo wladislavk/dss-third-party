@@ -5,6 +5,8 @@ include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 include_once 'includes/constants.inc';
 
+$db = new Db();
+
 $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
 $payments = $db->getResults($sql);
 ?>

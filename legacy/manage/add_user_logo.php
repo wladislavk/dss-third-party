@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include 'includes/sescheck.php';
 include_once 'admin/includes/main_include.php';
 include_once 'includes/constants.inc';
@@ -14,7 +15,6 @@ if (!empty($_POST['compsub']) && $_POST['compsub'] == 1) {
     $uploadedfile = $image['tmp_name'];
     $fname = $image['name'];
     $lastdot = strrpos($fname, '.');
-    $name = substr($fname, 0, $lastdot);
     $filesize = $image['size'];
     $extension = substr($fname, $lastdot + 1);
 
@@ -99,23 +99,19 @@ if (!empty($_POST['compsub']) && $_POST['compsub'] == 1) {
                 imagegif($tmp, $file_path, 60);
             }
 
-            $uploaded = true;
-
             if (filesize($file_path) > DSS_FILE_MAX_SIZE) {
                 @unlink($file_path);
-                $uploaded = false;
             }
             imagedestroy($src);
             imagedestroy($tmp);
         } else {
             if ($image['size'] <= DSS_FILE_MAX_SIZE) {
                 @move_uploaded_file($image['tmp_name'], $file_path);
-                $uploaded = true;
-            } else {
-                $uploaded = false;
             }
         }
         @chmod($file_path, 0777);
+
+        $db = new Db();
 
         $ed_sql = "
             update dental_users set 
@@ -161,9 +157,7 @@ if (!empty($theMyArray['logo'])) {
         <script type="text/javascript" src="script/validation.js"></script>
     </head>
     <body>
-
         <br /><br />
-	
         <div align="center" class="red">
             <?= e($message) ?>
             <?php if ($logo != '') {?>

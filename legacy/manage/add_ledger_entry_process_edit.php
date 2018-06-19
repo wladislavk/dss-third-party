@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 
+$db = new Db();
+
 $q = (!empty($_GET["q"]) ? $_GET["q"] : '');
 $sql = "SELECT * FROM dental_transaction_code WHERE type = '".$q."' and docid=".$_SESSION['docid'];
 $result = $db->getResults($sql);

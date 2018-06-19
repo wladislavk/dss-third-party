@@ -21,6 +21,8 @@ if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES)
     $errorMessage = $maxFileSizeExceeded;
 }
 
+$db = new Db();
+
 if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
@@ -442,14 +444,14 @@ if (!empty($themyarray["contactid"])) {
             <td colspan="2" class="cat_head">
                 <?php echo $but_text ?> Image
                 <?php if ($title != "") {?>
-               		&quot;<?php echo $title;?>&quot;
+                    &quot;<?php echo $title;?>&quot;
                 <?php } ?>
             </td>
         </tr>
         <tr>
-          	<td valign="top" colspan="2" class="frmhead">
+            <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                    <li id="foli8" class="complex">	
+                    <li id="foli8" class="complex">
                         <span>
                             Image Type
                             &nbsp;&nbsp;
@@ -517,7 +519,7 @@ if (!empty($themyarray["contactid"])) {
         <tr class="image_sect"> 
             <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                    <li id="foli8" class="complex">	
+                    <li id="foli8" class="complex">
                         <span>
                             Title
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -531,7 +533,7 @@ if (!empty($themyarray["contactid"])) {
         <tr id="orig_file" class="image_sect"> 
             <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                    <li id="foli8" class="complex">	
+                    <li id="foli8" class="complex">
                         <span>
                             Image
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -552,20 +554,20 @@ if (!empty($themyarray["contactid"])) {
             </td>
         </tr>
         <tr id="extra_files" style="display:none;" class="image_sect">
-          	<td colspan="2" class="frmhead">
+            <td colspan="2" class="frmhead">
                 <?php
                 $labels = ['', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower'];
                 for ($i = 1; $i <= 9; $i++) { ?>
-            		<label style="width:100px; float:left; display:block;"><?php echo $labels[$i]; ?></label>
-          			<input type="file" name="image_file_<?php echo $i; ?>" value="" size="26" /><br />
+                    <label style="width:100px; float:left; display:block;"><?php echo $labels[$i]; ?></label>
+                    <input type="file" name="image_file_<?php echo $i; ?>" value="" size="26" /><br />
                     <?php
                 } ?>
-          	</td>
+            </td>
         </tr>
         <tr class="image_sect">
             <td colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="imagesub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["imageid"]?>" />

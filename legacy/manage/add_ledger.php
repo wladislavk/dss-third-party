@@ -8,6 +8,8 @@ include_once 'admin/includes/claim_functions.php'; // To use cratePrimaryClaim f
 include "includes/sescheck.php";
 include "includes/preauth_functions.php";
 
+$db = new Db();
+
 if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
     $service_date = $_POST['service_date'];
     $entry_date = $_POST['entry_date'];

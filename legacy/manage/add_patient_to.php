@@ -9,6 +9,9 @@ if (isset($_GET['ed'])) {
 } else {
     $patid = (!empty($_POST['patid']) ? $_POST['patid'] : '');
 }
+
+$db = new Db();
+
 $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
 $pcont_array = $db->getResults($pcont_qry);
 ?>

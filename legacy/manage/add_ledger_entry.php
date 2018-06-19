@@ -6,6 +6,8 @@ include_once 'includes/constants.inc';
 include_once 'includes/preauth_functions.php';
 include "includes/sescheck.php";
 
+$db = new Db();
+
 $producer_options = '';
 $p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
 $p_query = $db->getResults($p_sql);

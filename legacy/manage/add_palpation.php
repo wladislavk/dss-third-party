@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include "admin/includes/sescheck.php";
 
+$db = new Db();
+
 if (!empty($_POST["palpationsub"]) && $_POST["palpationsub"] == 1) {
     $sel_check = "select * from dental_palpation where palpation = '".s_for($_POST["palpation"])."' and palpationid != '".s_for($_POST['ed'])."'";
 

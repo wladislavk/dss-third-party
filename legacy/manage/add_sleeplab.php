@@ -5,6 +5,8 @@ include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 include_once 'includes/general_functions.php';
 
+$db = new Db();
+
 if (!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1) {
     if ($_POST["ed"] != "") {
         $ed_sql = "update dental_sleeplab 
@@ -147,15 +149,15 @@ if ($themyarray["sleeplabid"] != '') {
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Sleep Lab
                <?php if ($name != "") { ?>
-               		&quot;<?php echo $name;?>&quot;
+                    &quot;<?php echo $name;?>&quot;
                <?php } ?>
             </td>
         </tr>
-		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             <span>
                             <span style="color:#000000">Lab Name</span>
                             <span id="req_0" class="req">*</span>
@@ -163,20 +165,20 @@ if ($themyarray["sleeplabid"] != '') {
                             </span>
                         </label>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
                             Name
                         </label>
                         <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
+                            <span>
+                                <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
+                                    <option value=""></option>
                                     <option value="Dr." <?php if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
                                     <option value="Mr." <?php if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                     <option value="Mrs." <?php if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
@@ -203,10 +205,10 @@ if ($themyarray["sleeplabid"] != '') {
         </tr>
         
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Address
                             <span id="req_0" class="req">*</span>
                         </label>
@@ -235,13 +237,13 @@ if ($themyarray["sleeplabid"] != '') {
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="<?php echo $phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
@@ -255,7 +257,7 @@ if ($themyarray["sleeplabid"] != '') {
                                 <input id="fax" name="fax" type="text" class="extphonemask field text addr tbox" value="<?php echo $fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
-						</div>
+                        </div>
                         <div>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>" tabindex="14" maxlength="255" style="width:325px;" />
@@ -263,23 +265,23 @@ if ($themyarray["sleeplabid"] != '') {
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
          <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                         <label class="desc" id="title0" for="Field0">
                             Notes:
                         </label>
                         <div>
                             <span class="full">
-                            	<textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
+                                <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -287,9 +289,9 @@ if ($themyarray["sleeplabid"] != '') {
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="tbox" tabindex="22">
+                    <option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -297,7 +299,7 @@ if ($themyarray["sleeplabid"] != '') {
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="sleeplabsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["sleeplabid"]?>" />

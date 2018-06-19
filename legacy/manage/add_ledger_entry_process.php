@@ -7,6 +7,8 @@ include "includes/sescheck.php";
 $q = (!empty($_GET["q"]) ? $_GET["q"] : '');
 $pco = (!empty($_GET["pco"]) ? $_GET["pco"] : '');
 
+$db = new Db();
+
 $sql = "SELECT * FROM dental_transaction_code WHERE type = '".$q."' and docid=".$_SESSION['docid']." ORDER BY sortby ASC";
 $result = $db->getResults($sql);
 

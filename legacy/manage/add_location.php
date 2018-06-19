@@ -8,6 +8,8 @@ include "includes/sescheck.php";
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <?php
+$db = new Db();
+
 if (!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     if ($_POST["ed"] != "") {
         $ed_sql = "update dental_locations set 

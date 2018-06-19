@@ -137,7 +137,7 @@ if (!empty($msg)) {
 if ($themyarray["referredbyid"] != '') {
     $but_text = "Edit ";
 } else {
-	$but_text = "Add ";
+    $but_text = "Add ";
 } ?>
 
 <br /><br />
@@ -152,26 +152,26 @@ if (!empty($msg)) { ?>
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
-				<?php echo $but_text?> Referred By
+                <?php echo $but_text?> Referred By
                 <?php
                 if ($name != "") { ?>
-				    &quot;<?php echo $name;?>&quot;
+                    &quot;<?php echo $name;?>&quot;
                     <?php
                 } ?>
             </td>
         </tr>
         <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
                             Name
                             <span id="req_0" class="req">*</span>
                         </label>
                         <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
+                            <span>
+                                <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
+                                    <option value=""></option>
                                     <option value="Dr." <?php if ($salutation == 'Dr.') echo " selected";?>>Dr.</option>
                                     <option value="Mr." <?php if ($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                     <option value="Mrs." <?php if ($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
@@ -197,24 +197,24 @@ if (!empty($msg)) { ?>
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             <span>
                                 <span style="color:#000000">Company</span>
                                 <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Address
                             <span id="req_0" class="req">*</span>
                         </label>
@@ -243,7 +243,7 @@ if (!empty($msg)) { ?>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr>
@@ -263,7 +263,7 @@ if (!empty($msg)) { ?>
                                 <input id="fax" name="fax" type="text" class="field text addr tbox" value="<?php echo $fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
-						</div>
+                        </div>
                         <div>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>" tabindex="14" maxlength="255" style="width:325px;" />
@@ -271,7 +271,7 @@ if (!empty($msg)) { ?>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -314,8 +314,8 @@ if (!empty($msg)) { ?>
                                     if ($qualifier_my) {
                                         foreach ($qualifier_my as $qualifier_myarray) { ?>
                                             <option value="<?php echo st($qualifier_myarray['qualifierid']);?>">
-										        <?php echo st($qualifier_myarray['qualifier']);?>
-										    </option>
+                                                <?php echo st($qualifier_myarray['qualifier']);?>
+                                            </option>
                                             <?php
                                         }
                                     } ?>

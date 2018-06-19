@@ -308,8 +308,6 @@ include "includes/calendarinc.php";
 
     $editor_initials = e($themyarray['editor_initials']);
     $procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
-    $but_unsigned_text = "Save and keep UNSIGNED";
-    $but_signed_text = "Save Progress Note and SIGN";
 
     if($themyarray["userid"] != '') {
         $but_unsigned_text = "Save changes and keep UNSIGNED";

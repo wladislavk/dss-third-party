@@ -378,7 +378,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 preferredcontact = '".s_for($_POST["preferredcontact"])."'
             where patientid='".intval($_POST["ed"])."'
         ";
-        $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
         $db->query("UPDATE dental_patients set email='".$db->escape($_POST['email'])."' WHERE parent_patientid='".$db->escape( $_POST["ed"])."'");
 
         //Remove pending vobs if ins info has changed.
@@ -404,9 +404,9 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 WHERE patient_id = '".$db->escape($_REQUEST['ed'])."'
                 AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")
             ";
-            $vob_update = $db->query($vob_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+            $db->query($vob_sql);
             if (mysqli_affected_rows($GLOBALS['con']) >= 1) {
-                $c = create_vob( $_POST['ed'] );
+                create_vob( $_POST['ed'] );
             }
         }
 
@@ -426,7 +426,6 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".$db->escape($_POST['ed'])."'";
         $l = $db->getRow($lsql);
         $login = $l['login'];
-        $pass = $l['password'];
         if ($login == '') {
             $clogin = strtolower(substr($_POST["firstname"], 0, 1).$_POST["lastname"]);
             $clogin = preg_replace("/[^A-Za-z]/", "", $clogin);
@@ -797,10 +796,6 @@ if (isset($msg) && $msg != '') {
     $lastname = $_POST['lastname'];
     $preferred_name = $_POST['preferred_name'];
     $salutation = $_POST['salutation'];
-    $login = $_POST['login'];
-    $member_no = $_POST['member_no'];
-    $group_no = $_POST['group_no'];
-    $plan_no = $_POST['plan_no'];
     $dob = $_POST['dob'];
     $add1 = $_POST['add1'];
     $add2= $_POST['add2'];

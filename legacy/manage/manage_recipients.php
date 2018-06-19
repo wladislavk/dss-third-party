@@ -22,7 +22,7 @@ if($_POST['q_recipientssub'] == 1){
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        $db->query($ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $msg = "Added Successfully";?>
         <script type="text/javascript">
@@ -37,7 +37,7 @@ if($_POST['q_recipientssub'] == 1){
             physicians_other = '".s_for($physicians_other)."',
             patient_info = '".s_for($patient_info)."'
             where q_recipientsid = '".s_for($_POST['ed'])."'";
-        $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";?>
         <script type="text/javascript">

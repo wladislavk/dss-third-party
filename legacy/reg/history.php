@@ -195,7 +195,7 @@ if ($_POST['q_page3sub'] == 1) {
             drymouth_text = '".s_for($drymouth_text)."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape($_SESSION['pid'])."'");
         mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
@@ -205,7 +205,7 @@ if ($_POST['q_page3sub'] == 1) {
             premed = '".s_for($_POST["premeddet"])."'
             where 
             patientid='".$_SESSION["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ped_sql);
         ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';
@@ -275,16 +275,16 @@ if ($_POST['q_page3sub'] == 1) {
             future_dental_det = '".s_for($future_dental_det)."',
             drymouth_text = '".s_for($drymouth_text)."'
             where q_page3id = $qPage3Id";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
-        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
+        $db->query($ed_sql);
+        $db->query("UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+        $db->query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
             set             
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."' 
             where 
             patientid='".$_SESSION["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ped_sql);
         ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';

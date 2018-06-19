@@ -107,8 +107,8 @@ if ($_POST['q_page2sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        $db->query($ins_sql);
 
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".$db->error(), E_USER_ERROR);
         for ($i = 0; $i < $num_surgery; $i++) {
             if ($_POST['surgery_id_'.$i] == 0) {
                 if (trim($_POST['surgery_date_'.$i]) != '' || trim($_POST['surgery_'.$i]) != '' || trim($_POST['surgeon_'.$i]) != '') {
@@ -169,8 +169,7 @@ if ($_POST['q_page2sub'] == 1) {
                 surgery = '" . s_for($surgery) . "'
                 where patientid = " . s_for($_SESSION['pid']) . "
                 AND q_page2id IN ($maxIds)";
-
-            mysqli_query($con, $ed_sql) or trigger_error($ed_sql . " | " . $db->error(), E_USER_ERROR);
+            $db->query($ed_sql);
         }
 
         for ($i = 0; $i < $num_surgery; $i++) {

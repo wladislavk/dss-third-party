@@ -603,7 +603,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
             }
             $update_result = $db->query($update_letters);
             if (!$update_result) {
-                return mysqli_error($con);
+                return $db->error();
             } else {
                 return $letter;
             }
@@ -701,7 +701,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
             }
             $update_result = $db->query($update_letters);
             if (!$update_result) {
-                return mysqli_error($con);
+                return $db->error();
             } else {
                 return $letter;
             }
@@ -1023,7 +1023,7 @@ function deliver_letter($letterid, $message)
         $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
         $result = $db->getResults($sql);
         if (!$result) {
-            return mysqli_error($con);
+            return $db->error();
         } else {
             foreach ($result as $row) {
                 if ($row['topatient']) {

@@ -1,28 +1,30 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php session_start();
-  if(!isset($_SESSION['pid'])){
-    ?><script type="text/javascript">window.location = "login.php";</script><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+session_start();
+if(!isset($_SESSION['pid'])){ ?>
+    <script type="text/javascript">window.location = "login.php";</script>
+    <?php
     trigger_error("Die called", E_USER_ERROR);
-  }
+}
 
 include 'includes/header.php';
 include 'includes/completed.php';
 ?>
 <link rel="stylesheet" href="css/register.css" />
-<!--[if IE]>
-        <link rel="stylesheet" type="text/css" href="css/register_ie.css" />
-<![endif]-->
 <script type="text/javascript" src="js/register.js?v=20160328"></script>
 <script type="text/javascript" src="js/patient_dob.js"></script>
 <script type="text/javascript" src="js/autocomplete.js?v=20160719"></script>
 <script type="text/javascript" src="js/register_masks.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         lga_wizard.init();
     });
 </script>
 <?php
+$db = new Db();
 
-  $sql = "SELECT * from dental_patients WHERE parent_patientid='".$db->escape( $_SESSION['pid'])."'";
+$sql = "SELECT * from dental_patients WHERE parent_patientid='".$db->escape( $_SESSION['pid'])."'";
   $q = mysqli_query($con, $sql);
   if(mysqli_num_rows($q) > 0){
       $p = mysqli_fetch_assoc($q);
@@ -510,13 +512,13 @@ $c_r = $db->getRow($c_sql);
                         <label class="lbl_a"><strong>10.</strong> Plan Name</label><input class="inpt_a validate" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
 <br />
                 </div>
-		<div class="sepH_b clear">
-			<label class="lbl_a"><strong>11.</strong> Do you have secondary medical insurance?</label>
-			<input class="validate" onclick="updateNext('Yes', 2);" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes 
-			<input onclick="updateNext('No', 2);" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
-		</div>
+        <div class="sepH_b clear">
+            <label class="lbl_a"><strong>11.</strong> Do you have secondary medical insurance?</label>
+            <input class="validate" onclick="updateNext('Yes', 2);" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes
+            <input onclick="updateNext('No', 2);" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
+        </div>
                                                                                                                 <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 <a href="javascript:void(0)" id="ins2Next1" class="fr next btn btn_d" <?=($p['has_s_m_ins']=="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
 <a href="javascript:void(0)" id="ins2Next2" class="fr next2 btn btn_d" <?=($p['has_s_m_ins']!="No")?'style="display:none;"':'';?> >Proceed &raquo;</a>
                                                                                                                 </div>
@@ -561,15 +563,15 @@ $c_r = $db->getRow($c_sql);
                 <div class="sepH_b clear half" id="ins2_dob_div">
                         <label class="lbl_a"><strong>5a.</strong> Insured Date of Birth:</label>
                                 <?php
-					if($p['ins2_dob']){
-                                        	$ins2_dob_month = date('m', strtotime($p['ins2_dob']));
-                                        	$ins2_dob_day = date('j', strtotime($p['ins2_dob']));
-                                        	$ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
-					}else{
-						$ins2_dob_month = '';
-                                                $ins2_dob_day = '';
-                                                $ins2_dob_year = '';
-					}
+                    if($p['ins2_dob']){
+                        $ins2_dob_month = date('m', strtotime($p['ins2_dob']));
+                        $ins2_dob_day = date('j', strtotime($p['ins2_dob']));
+                        $ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
+                    }else{
+                        $ins2_dob_month = '';
+                        $ins2_dob_day = '';
+                        $ins2_dob_year = '';
+                    }
                                 ?>
                                 <select name="ins2_dob_month" id="ins2_dob_month" class="validate">
                                         <option value=''>Month</option>
@@ -601,11 +603,11 @@ $c_r = $db->getRow($c_sql);
                                 $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".$db->escape( $_SESSION['pid'])."'";
                                 $s_m_q = mysqli_query($con, $s_m_sql);
                                 $s_m_r = mysqli_fetch_assoc($s_m_q);
-				if(mysqli_num_rows($s_m_q)=='0'){
-					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".$db->escape( $_SESSION['pid'])."'";
-					$s_m_q = mysqli_query($con, $s_m_sql);
-					$s_m_r = mysqli_fetch_assoc($s_m_q);
-				}
+                if(mysqli_num_rows($s_m_q)=='0'){
+                    $s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".$db->escape( $_SESSION['pid'])."'";
+                    $s_m_q = mysqli_query($con, $s_m_sql);
+                    $s_m_r = mysqli_fetch_assoc($s_m_q);
+                }
                         ?>
                         <input type="hidden" id="s_m_patient_insuranceid" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
                 <div class="sepH_b half">
@@ -614,7 +616,7 @@ $c_r = $db->getRow($c_sql);
                                 <option value="Male" <?= ($p['s_m_gender']=="Male")?'selected="selected"':'';?>>Male</option>
                                 <option value="Female" <?= ($p['s_m_gender']=="Female")?'selected="selected"':'';?>>Female</option>
                                 </select>
-		</div>
+                </div>
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
                         <input class="inpt_a validate" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />
@@ -661,7 +663,7 @@ $c_r = $db->getRow($c_sql);
                         <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a validate" id="s_m_ins_plan" name="s_m_ins_plan" type="text" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
                 </div>
                                                                                                                 <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                    <a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 
 <a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
@@ -698,9 +700,9 @@ $c_r = $db->getRow($c_sql);
                         <label class="lbl_a"><strong>4.</strong> City:</label><input class="inpt_a" id="emp_city" name="emp_city" type="text" value="<?=$p['emp_city']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-			<?php $s = $p['emp_state']; ?>
+            <?php $s = $p['emp_state']; ?>
                         <label class="lbl_a"><strong>5.</strong> State:</label>
-			<select  data-placeholder="Choose a state..." class="chzn-select" id="emp_state" name="emp_state">
+            <select  data-placeholder="Choose a state..." class="chzn-select" id="emp_state" name="emp_state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
                                 <option <?= ($s=='AL')?'selected="selected"':'' ?> value="AL">AL - Alabama</option>
@@ -754,7 +756,7 @@ $c_r = $db->getRow($c_sql);
                                 <option <?= ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                 <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
                                 <option <?= ($s=='PR')?'selected="selected"':'' ?> value="PR">PR - Puerto Rico</option>
-			</select>
+            </select>
 
 
                 </div>
@@ -766,20 +768,20 @@ $c_r = $db->getRow($c_sql);
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>8.</strong> Fax:</label><input class="inpt_a phonemask" id="emp_fax" name="emp_fax" type="text" value="<?=$p['emp_fax']?>"   maxlength="255" />
-		</div>
+        </div>
 
                                                                                                                 <div class="cf">
-	<? if($p['has_p_m_ins']=="No"){
-		$showPrev = "prev3";
-	}else{
-	  if($p['has_s_m_ins']=="No"){
-		$showPrev = "prev2";
-	  }else{
-		$showPrev = "prev1";
-	  }
-	}
-	?>
-			<a href="javascript:void(0)" id="insPrev1" class="fl prev btn btn_a" <?= ($showPrev!='prev1')?'style="display:none;"':''; ?>>&laquo; Back</a>
+    <?php if($p['has_p_m_ins']=="No"){
+        $showPrev = "prev3";
+    }else{
+      if($p['has_s_m_ins']=="No"){
+        $showPrev = "prev2";
+      }else{
+        $showPrev = "prev1";
+      }
+    }
+    ?>
+                        <a href="javascript:void(0)" id="insPrev1" class="fl prev btn btn_a" <?= ($showPrev!='prev1')?'style="display:none;"':''; ?>>&laquo; Back</a>
                         <a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($showPrev!='prev2')?'style="display:none;"':''; ?>>&laquo; Back</a>
                         <a href="javascript:void(0)" id="insPrev3" class="fl prev3 btn btn_a" <?= ($showPrev!='prev3')?'style="display:none;"':''; ?>>&laquo; Back</a>
 
@@ -819,28 +821,28 @@ foreach($types as $t){
                         case '5':
                                 $cid = $p['docmdother'];
                                 break;
-			default:
-				$cid = 0;
-				break;
+            default:
+                $cid = 0;
+                break;
 
                 }
-		$pcnum = 0;
-		if($cid == 0){
-			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".$db->escape( $_SESSION['pid'])."'";
-			$pcq = mysqli_query($con, $pcsql);
-			$pc = mysqli_fetch_assoc($pcq);
-			$pcnum = mysqli_num_rows($pcq);
-		}
+        $pcnum = 0;
+        if($cid == 0){
+            $pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".$db->escape( $_SESSION['pid'])."'";
+            $pcq = mysqli_query($con, $pcsql);
+            $pc = mysqli_fetch_assoc($pcq);
+            $pcnum = mysqli_num_rows($pcq);
+        }
 
                                 $csql = "SELECT firstname, lastname FROM dental_contact WHERE contactid='".$cid."'";
                                 $cq = mysqli_query($con, $csql);
-				$cr = mysqli_fetch_assoc($cq);
+                $cr = mysqli_fetch_assoc($cq);
                                 $cname = $cr['firstname']. " ".$cr['lastname'];
 ?>
-		<h5 class="clear"><?= $dss_patient_contact_labels[$t]; ?></h5>
+        <h5 class="clear"><?= $dss_patient_contact_labels[$t]; ?></h5>
                                         <div id="pc_<?= $t; ?>_person" <?= ($pcnum!=0)?'style="display:none;"':''; ?>>
-			<label class="lbl_a"><strong>1.</strong> Name:</label>
-			
+            <label class="lbl_a"><strong>1.</strong> Name:</label>
+
 
                                         <input type="text" class="inpt_a dr" id="pc_<?= $t; ?>_name" onclick="updateval(this)" autocomplete="off" name="pc_<?= $t; ?>_name" value="<?= ($cname!=' ')?$cname:'Type doctor name'; ?>" style="width:300px;" />
 <br />
@@ -852,13 +854,11 @@ foreach($types as $t){
 $(document).ready(function(){
   setup_autocomplete('pc_<?= $t; ?>_name', 'pc_<?= $t; ?>_hints', 'pc_<?= $t; ?>_referred_by', 'pc_<?= $t; ?>_referred_source', 'list_referrers.php', '<?= $t; ?>');
 });
-</script>
-
-                            </div>
+</script></div>
         <input type="hidden" id="pc_<?= $t; ?>_contactid" name="pc_<?= $t; ?>_contactid" value="<?= $cid; ?>" /> 
-	<input type="hidden" id="pc_<?= $t; ?>_patient_contactid" name="pc_<?= $t; ?>_patient_contactid" value="<?= $pc['id']; ?>" />
-	<div id="pc_<?= $t; ?>_input_div" <?= ($pcnum>0)?'':'style="display:none;"'; ?>>
-		<div class="sepHb half">
+    <input type="hidden" id="pc_<?= $t; ?>_patient_contactid" name="pc_<?= $t; ?>_patient_contactid" value="<?= $pc['id']; ?>" />
+    <div id="pc_<?= $t; ?>_input_div" <?= ($pcnum>0)?'':'style="display:none;"'; ?>>
+        <div class="sepHb half">
                         <label class="lbl_a"><strong>1.</strong> First Name:</label><input class="inpt_a" id="pc_<?= $t; ?>_firstname" name="pc_<?= $t; ?>_firstname" type="text" value="<?=$pc['firstname']?>"   maxlength="100" />
                 </div>
                 <div class="sepH_b half">
@@ -885,11 +885,11 @@ $(document).ready(function(){
                 <div class="sepH_b clear">
                         <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>
                 </div>
-	</div>
+    </div>
 
 <?php } ?>
                                                                                                                 <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                                        <a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
                                                                                                                         <button type="submit" name="update" class="fr next btn btn_d">Submit &raquo;</button>
                                                                                                                 </div>
                                                                                                         </div>
@@ -898,47 +898,45 @@ $(document).ready(function(){
                                                                                 </div>
                                                                         </div>
 <div class="page">
-										<div class="pageInside">
-											<div class="last sepH_c">
-												<h3 class="sepH_b">Congratulations!</h3>
-												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
+                                        <div class="pageInside">
+                                            <div class="last sepH_c">
+                                                <h3 class="sepH_b">Congratulations!</h3>
+                                                <p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
  <?php
                                                                                                 if(!$questionnaire_completed){
                                                                                                 ?>
 
-												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next visit!</p>
+                                                <p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next visit!</p>
 <?php } ?>
-											</div>
+                                            </div>
 
-											<div class="cf">
-												<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-												<?php
-												if(!$questionnaire_completed){
-												?>
-												<a href="symptoms.php" class="fr btn btn_d">Start Questionnaire</a>
-												<?php }else{
+                                            <div class="cf">
+                                                <a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                                <?php
+                                                if(!$questionnaire_completed){
+                                                ?>
+                                                <a href="symptoms.php" class="fr btn btn_d">Start Questionnaire</a>
+                                                <?php }else{
                                                                                                 ?>
                                                                                                 <a href="index.php" class="fr btn btn_d">View Dashboard</a>
                                                                                                 <?php } ?>
-											</div>
-										</div>
-									</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div style="clear:both;"></div>
-								</div>
-			</div></div>
-	</form>  
+                                </div>
+            </div>
+                    </div>
+    </form>
 <div style="clear:both;"></div>
 <script type="text/javascript">
-$(document).ready(function(){
-$(".chzn-select").chosen({no_results_text: "No results matched"});
-});
-
-function cancel(n){
-  $('#pc_'+n+'_input_div').hide();
-  $('#pc_'+n+'_person').show();
-  $('#pc_'+n+'_input_div input').val('');
-}
-
-
+    $(document).ready(function () {
+    $(".chzn-select").chosen({no_results_text: "No results matched"});
+    });
+    function cancel(n) {
+        $('#pc_'+n+'_input_div').hide();
+        $('#pc_'+n+'_person').show();
+        $('#pc_'+n+'_input_div input').val('');
+    }
 </script>
 <?php include 'includes/footer.php'; ?>

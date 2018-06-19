@@ -1,296 +1,277 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
+
 $docid = $_REQUEST['docid'];
-if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
-{
+
+$db = new Db();
+
+if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
     linkRequestData('dental_patients', $_POST['ed']);
 
-	if($_POST["ed"] != "")
-	{
-		$ed_sql = "update dental_patients 
-		set 
-		firstname = '".s_for($_POST["firstname"])."', 
-		lastname = '".s_for($_POST["lastname"])."', 
-		middlename = '".s_for($_POST["middlename"])."', 
-		salutation = '".s_for($_POST["salutation"])."',
-    member_no = '".s_for($_POST['member_no'])."',
-	  group_no = '".s_for($_POST['group_no'])."',
-	  plan_no = '".s_for($_POST["plan_no"])."', 
-		add1 = '".s_for($_POST["add1"])."', 
-		add2 = '".s_for($_POST["add2"])."', 
-		city = '".s_for($_POST["city"])."', 
-		state = '".s_for($_POST["state"])."', 
-		zip = '".s_for($_POST["zip"])."', 
-		dob = '".s_for($_POST["dob"])."', 
-		gender = '".s_for($_POST["gender"])."', 
-		marital_status = '".s_for($_POST["marital_status"])."', 
-		ssn = '".s_for(num($_POST["ssn"], false))."', 
-		home_phone = '".s_for(num($_POST["home_phone"]))."', 
-		work_phone = '".s_for(num($_POST["work_phone"]))."', 
-		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
-		email = '".s_for($_POST["email"])."', 
-		patient_notes = '".s_for($_POST["patient_notes"])."',
-    docid = '".s_for($_POST["docid"])."', 
-		p_d_party = '".s_for($_POST["p_d_party"])."', 
-		p_d_relation = '".s_for($_POST["p_d_relation"])."', 
-		p_d_other = '".s_for($_POST["p_d_other"])."', 
-		p_d_employer = '".s_for($_POST["p_d_employer"])."', 
-		p_d_ins_co = '".s_for($_POST["p_d_ins_co"])."', 
-		p_d_ins_id = '".s_for($_POST["p_d_ins_id"])."', 
-		s_d_party = '".s_for($_POST["s_d_party"])."', 
-		s_d_relation = '".s_for($_POST["s_d_relation"])."', 
-		s_d_other = '".s_for($_POST["s_d_other"])."', 
-		s_d_employer = '".s_for($_POST["s_d_employer"])."', 
-		s_d_ins_co = '".s_for($_POST["s_d_ins_co"])."', 
-		s_d_ins_id = '".s_for($_POST["s_d_ins_id"])."', 
-		p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
-		p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
-		p_m_partylname = '".s_for($_POST["p_m_partylname"])."',
-    p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
-    s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
-    p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
-    s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
-    p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
-    s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
-    p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
-    s_m_ins_ass = '".s_for($_POST["s_m_ins_ass"])."',
-    ins_dob = '".s_for($_POST["ins_dob"])."',
-    ins2_dob = '".s_for($_POST["ins2_dob"])."',
-    p_m_relation = '".s_for($_POST["p_m_relation"])."', 
-		p_m_other = '".s_for($_POST["p_m_other"])."', 
-		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
-		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
-		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
-		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
-    s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
-    s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
-		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
-		s_m_other = '".s_for($_POST["s_m_other"])."', 
-		s_m_employer = '".s_for($_POST["s_m_employer"])."', 
-		s_m_ins_co = '".s_for($_POST["s_m_ins_co"])."', 
-		s_m_ins_id = '".s_for($_POST["s_m_ins_id"])."',
-		p_m_ins_plan = '".s_for($_POST["p_m_ins_plan"])."',
-    s_m_ins_plan = '".s_for($_POST["s_m_ins_plan"])."', 
-		employer = '".s_for($_POST["employer"])."', 
-		emp_add1 = '".s_for($_POST["emp_add1"])."', 
-		emp_add2 = '".s_for($_POST["emp_add2"])."', 
-		emp_city = '".s_for($_POST["emp_city"])."', 
-		emp_state = '".s_for($_POST["emp_state"])."', 
-		emp_zip = '".s_for($_POST["emp_zip"])."', 
-		emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
-		emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
-		plan_name = '".s_for($_POST["plan_name"])."', 
-		group_number = '".s_for($_POST["group_number"])."', 
-		ins_type = '".s_for($_POST["ins_type"])."', 
-		accept_assignment = '".s_for($_POST["accept_assignment"])."', 
-		print_signature = '".s_for($_POST["print_signature"])."', 
-		medical_insurance = '".s_for($_POST["medical_insurance"])."', 
-		mark_yes = '".s_for($_POST["mark_yes"])."',
-    inactive = '".s_for($_POST["inactive"])."',
-    partner_name = '".s_for($_POST["partner_name"])."',
-    docsleep = '".s_for($_POST["docsleep"])."',
-    docpcp = '".s_for($_POST["docpcp"])."',
-    mark_yes = '".s_for($_POST["mark_yes"])."',
-    docdentist = '".s_for($_POST["docdentist"])."',
-    docent = '".s_for($_POST["docent"])."',
-    emergency_name = '".s_for($_POST["emergency_name"])."',
-    emergency_number = '".s_for(num($_POST["emergency_number"]))."',
-    docent = '".s_for($_POST["docent"])."',
-		emergency_name = '".s_for($_POST["emergency_name"])."',
-		emergency_number = '".s_for(num($_POST["emergency_number"]))."',
-		referred_source = '".s_for($_POST["referred_source"])."',
-		referred_by = '".s_for($_POST["referred_by"])."',
-    premedcheck = '".s_for($_POST["premedcheck"])."',
-		premed = '".s_for($_POST["premeddet"])."', 
-		status = '".s_for($_POST["status"])."' 
-		where 
-		patientid='".$_POST["ed"]."'";
-		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
-		</script>
-		<?
-		trigger_error("Die called", E_USER_ERROR);
-	}
-	else
-	{
-		$ins_sql = "insert 
-		into 
-		dental_patients 
-		set 
-		firstname = '".s_for($_POST["firstname"])."', 
-		lastname = '".s_for($_POST["lastname"])."', 
-		middlename = '".s_for($_POST["middlename"])."', 
-		salutation = '".s_for($_POST["salutation"])."',
-    member_no = '".s_for(!empty($_POST['member_no']) ? $_POST['member_no'] : '')."',
-	  group_no = '".s_for(!empty($_POST['group_no']) ? $_POST['group_no'] : '')."',
-	  plan_no = '".s_for(!empty($_POST["plan_no"]) ? $_POST["plan_no"] : '')."',  
-		add1 = '".s_for($_POST["add1"])."', 
-		add2 = '".s_for($_POST["add2"])."', 
-		city = '".s_for($_POST["city"])."', 
-		state = '".s_for($_POST["state"])."', 
-		zip = '".s_for($_POST["zip"])."', 
-		dob = '".s_for($_POST["dob"])."', 
-		gender = '".s_for($_POST["gender"])."', 
-		marital_status = '".s_for($_POST["marital_status"])."', 
-		ssn = '".s_for(num($_POST["ssn"], false))."', 
-		home_phone = '".s_for(num($_POST["home_phone"]))."', 
-		work_phone = '".s_for(num($_POST["work_phone"]))."', 
-		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
-		email = '".s_for($_POST["email"])."', 
-		patient_notes = '".s_for($_POST["patient_notes"])."',
-    docid = '".s_for($_POST["docid"])."', 
-		p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
-		p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
-		p_d_other = '".s_for(!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '')."', 
-		p_d_employer = '".s_for(!empty($_POST["p_d_employer"]) ? $_POST["p_d_employer"] : '')."', 
-		p_d_ins_co = '".s_for(!empty($_POST["p_d_ins_co"]) ? $_POST["p_d_ins_co"] : '')."', 
-		p_d_ins_id = '".s_for(!empty($_POST["p_d_ins_id"]) ? $_POST["p_d_ins_id"] : '')."', 
-		s_d_party = '".s_for(!empty($_POST["s_d_party"]) ? $_POST["s_d_party"] : '')."', 
-		s_d_relation = '".s_for(!empty($_POST["s_d_relation"]) ? $_POST["s_d_relation"] : '')."', 
-		s_d_other = '".s_for(!empty($_POST["s_d_other"]) ? $_POST["s_d_other"] : '')."', 
-		s_d_employer = '".s_for(!empty($_POST["s_d_employer"]) ? $_POST["s_d_employer"] : '')."', 
-		s_d_ins_co = '".s_for(!empty($_POST["s_d_ins_co"]) ? $_POST["s_d_ins_co"] : '')."', 
-		s_d_ins_id = '".s_for(!empty($_POST["s_d_ins_id"]) ? $_POST["s_d_ins_id"] : '')."', 
-		p_m_partyfname = '".s_for(!empty($_POST["p_m_partyfname"]) ? $_POST["p_m_partyfname"] : '')."',
-    p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
-    p_m_partylname = '".s_for($_POST["p_m_partylname"])."',  
-		p_m_relation = '".s_for($_POST["p_m_relation"])."', 
-		p_m_other = '".s_for(!empty($_POST["p_m_other"]) ? $_POST["p_m_other"] : '')."', 
-		p_m_employer = '".s_for(!empty($_POST["p_m_employer"]) ? $_POST["p_m_employer"] : '')."', 
-		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
-		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
-		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
-    s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
-    s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  
-		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
-		s_m_other = '".s_for(!empty($_POST["s_m_other"]) ? $_POST["s_m_other"] : '')."', 
-		s_m_employer = '".s_for(!empty($_POST["s_m_employer"]) ? $_POST["s_m_employer"] : '')."', 
-		s_m_ins_co = '".s_for($_POST["s_m_ins_co"])."', 
-		s_m_ins_id = '".s_for($_POST["s_m_ins_id"])."',
-    p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
-    s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
-    p_m_dss_file = '".s_for(!empty($_POST["p_m_dss_file"]) ? $_POST["p_m_dss_file"] : '')."',
-    s_m_dss_file = '".s_for(!empty($_POST["s_m_dss_file"]) ? $_POST["s_m_dss_file"] : '')."',
-    p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
-    s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
-    p_m_ins_ass = '".s_for(!empty($_POST["p_m_ins_ass"]) ? $_POST["p_m_ins_ass"] : '')."',
-    s_m_ins_ass = '".s_for(!empty($_POST["s_m_ins_ass"]) ? $_POST["s_m_ins_ass"] : '')."',
-    p_m_ins_plan = '".s_for($_POST["p_m_ins_plan"])."',
-    s_m_ins_plan = '".s_for($_POST["s_m_ins_plan"])."',
-    ins_dob = '".s_for($_POST["ins_dob"])."',
-    ins2_dob = '".s_for(!empty($_POST["ins2_dob"]) ? $_POST["ins2_dob"] : '')."', 
-		employer = '".s_for($_POST["employer"])."', 
-		emp_add1 = '".s_for($_POST["emp_add1"])."', 
-		emp_add2 = '".s_for($_POST["emp_add2"])."', 
-		emp_city = '".s_for($_POST["emp_city"])."', 
-		emp_state = '".s_for($_POST["emp_state"])."', 
-		emp_zip = '".s_for($_POST["emp_zip"])."', 
-		emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
-		emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
-		plan_name = '".s_for(!empty($_POST["plan_name"]) ? $_POST["plan_name"] : '')."', 
-		group_number = '".s_for(!empty($_POST["group_number"]) ? $_POST["group_number"] : '')."', 
-		ins_type = '".s_for(!empty($_POST["ins_type"]) ? $_POST["ins_type"] : '')."', 
-		accept_assignment = '".s_for(!empty($_POST["accept_assignment"]) ? $_POST["accept_assignment"] : '')."', 
-		print_signature = '".s_for(!empty($_POST["print_signature"]) ? $_POST["print_signature"] : '')."', 
-		medical_insurance = '".s_for(!empty($_POST["medical_insurance"]) ? $_POST["medical_insurance"] : '')."', 
-		mark_yes = '".s_for(!empty($_POST["mark_yes"]) ? $_POST["mark_yes"] : '')."', 
-		inactive = '".s_for(!empty($_POST["inactive"]) ? $_POST["inactive"] : '')."',
-    docsleep = '".s_for(!empty($_POST["docsleep"]) ? $_POST["docsleep"] : '')."',
-		docpcp = '".s_for(!empty($_POST["docpcp"]) ? $_POST["docpcp"] : '')."',
-		docdentist = '".s_for(!empty($_POST["docdentist"]) ? $_POST["docdentist"] : '')."',
-		docent = '".s_for(!empty($_POST["docent"]) ? $_POST["docent"] : '')."',
-		docmdother = '".s_for(!empty($_POST["docmdother"]) ? $_POST["docmdother"] : '')."', 
-		partner_name = '".s_for($_POST["partner_name"])."', 
-		emergency_name = '".s_for($_POST["emergency_name"])."',
-		emergency_number = '".s_for(num($_POST["emergency_number"]))."',
-		referred_source = '".s_for($_POST["referred_source"])."',
-		referred_by = '".s_for($_POST["referred_by"])."',
-		premedcheck = '".s_for((!empty($_POST["premedcheck"]) ? $_POST["premedcheck"] : ''))."',
-		premed = '".s_for((!empty($_POST["premeddet"]) ? $_POST["premeddet"] : ''))."',
-		userid='".(!empty($_SESSION['userid']) ? $_SESSION['userid'] : '')."',  
-		status = '".s_for($_POST["status"])."',
-		adddate=now(),
-		ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
-		
-		$msg = "Added Successfully";
-		?>
-		<script type="text/javascript">
-			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
-		</script>
-		<?
-		trigger_error("Die called", E_USER_ERROR);
-	}
+    if($_POST["ed"] != "") {
+        $ed_sql = "update dental_patients 
+            set 
+            firstname = '".s_for($_POST["firstname"])."', 
+            lastname = '".s_for($_POST["lastname"])."', 
+            middlename = '".s_for($_POST["middlename"])."', 
+            salutation = '".s_for($_POST["salutation"])."',
+            member_no = '".s_for($_POST['member_no'])."',
+            group_no = '".s_for($_POST['group_no'])."',
+            plan_no = '".s_for($_POST["plan_no"])."', 
+            add1 = '".s_for($_POST["add1"])."', 
+            add2 = '".s_for($_POST["add2"])."', 
+            city = '".s_for($_POST["city"])."', 
+            state = '".s_for($_POST["state"])."', 
+            zip = '".s_for($_POST["zip"])."', 
+            dob = '".s_for($_POST["dob"])."', 
+            gender = '".s_for($_POST["gender"])."', 
+            marital_status = '".s_for($_POST["marital_status"])."', 
+            ssn = '".s_for(num($_POST["ssn"], false))."', 
+            home_phone = '".s_for(num($_POST["home_phone"]))."', 
+            work_phone = '".s_for(num($_POST["work_phone"]))."', 
+            cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
+            email = '".s_for($_POST["email"])."', 
+            patient_notes = '".s_for($_POST["patient_notes"])."',
+            docid = '".s_for($_POST["docid"])."', 
+            p_d_party = '".s_for($_POST["p_d_party"])."', 
+            p_d_relation = '".s_for($_POST["p_d_relation"])."', 
+            p_d_other = '".s_for($_POST["p_d_other"])."', 
+            p_d_employer = '".s_for($_POST["p_d_employer"])."', 
+            p_d_ins_co = '".s_for($_POST["p_d_ins_co"])."', 
+            p_d_ins_id = '".s_for($_POST["p_d_ins_id"])."', 
+            s_d_party = '".s_for($_POST["s_d_party"])."', 
+            s_d_relation = '".s_for($_POST["s_d_relation"])."', 
+            s_d_other = '".s_for($_POST["s_d_other"])."', 
+            s_d_employer = '".s_for($_POST["s_d_employer"])."', 
+            s_d_ins_co = '".s_for($_POST["s_d_ins_co"])."', 
+            s_d_ins_id = '".s_for($_POST["s_d_ins_id"])."', 
+            p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
+            p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
+            p_m_partylname = '".s_for($_POST["p_m_partylname"])."',
+            p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
+            s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
+            p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
+            s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+            p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
+            s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
+            p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
+            s_m_ins_ass = '".s_for($_POST["s_m_ins_ass"])."',
+            ins_dob = '".s_for($_POST["ins_dob"])."',
+            ins2_dob = '".s_for($_POST["ins2_dob"])."',
+            p_m_relation = '".s_for($_POST["p_m_relation"])."', 
+            p_m_other = '".s_for($_POST["p_m_other"])."', 
+            p_m_employer = '".s_for($_POST["p_m_employer"])."', 
+            p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
+            p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+            s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
+            s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
+            s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
+            s_m_relation = '".s_for($_POST["s_m_relation"])."', 
+            s_m_other = '".s_for($_POST["s_m_other"])."', 
+            s_m_employer = '".s_for($_POST["s_m_employer"])."', 
+            s_m_ins_co = '".s_for($_POST["s_m_ins_co"])."', 
+            s_m_ins_id = '".s_for($_POST["s_m_ins_id"])."',
+            p_m_ins_plan = '".s_for($_POST["p_m_ins_plan"])."',
+            s_m_ins_plan = '".s_for($_POST["s_m_ins_plan"])."', 
+            employer = '".s_for($_POST["employer"])."', 
+            emp_add1 = '".s_for($_POST["emp_add1"])."', 
+            emp_add2 = '".s_for($_POST["emp_add2"])."', 
+            emp_city = '".s_for($_POST["emp_city"])."', 
+            emp_state = '".s_for($_POST["emp_state"])."', 
+            emp_zip = '".s_for($_POST["emp_zip"])."', 
+            emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
+            emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
+            plan_name = '".s_for($_POST["plan_name"])."', 
+            group_number = '".s_for($_POST["group_number"])."', 
+            ins_type = '".s_for($_POST["ins_type"])."', 
+            accept_assignment = '".s_for($_POST["accept_assignment"])."', 
+            print_signature = '".s_for($_POST["print_signature"])."', 
+            medical_insurance = '".s_for($_POST["medical_insurance"])."', 
+            mark_yes = '".s_for($_POST["mark_yes"])."',
+            inactive = '".s_for($_POST["inactive"])."',
+            partner_name = '".s_for($_POST["partner_name"])."',
+            docsleep = '".s_for($_POST["docsleep"])."',
+            docpcp = '".s_for($_POST["docpcp"])."',
+            mark_yes = '".s_for($_POST["mark_yes"])."',
+            docdentist = '".s_for($_POST["docdentist"])."',
+            docent = '".s_for($_POST["docent"])."',
+            emergency_name = '".s_for($_POST["emergency_name"])."',
+            emergency_number = '".s_for(num($_POST["emergency_number"]))."',
+            docent = '".s_for($_POST["docent"])."',
+            emergency_name = '".s_for($_POST["emergency_name"])."',
+            emergency_number = '".s_for(num($_POST["emergency_number"]))."',
+            referred_source = '".s_for($_POST["referred_source"])."',
+            referred_by = '".s_for($_POST["referred_by"])."',
+            premedcheck = '".s_for($_POST["premedcheck"])."',
+            premed = '".s_for($_POST["premeddet"])."', 
+            status = '".s_for($_POST["status"])."' 
+            where 
+            patientid='".$_POST["ed"]."'";
+        $db->query($ed_sql);
+
+        $msg = "Edited Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    } else {
+        $ins_sql = "insert into dental_patients 
+            set 
+            firstname = '".s_for($_POST["firstname"])."', 
+            lastname = '".s_for($_POST["lastname"])."', 
+            middlename = '".s_for($_POST["middlename"])."', 
+            salutation = '".s_for($_POST["salutation"])."',
+            member_no = '".s_for(!empty($_POST['member_no']) ? $_POST['member_no'] : '')."',
+            group_no = '".s_for(!empty($_POST['group_no']) ? $_POST['group_no'] : '')."',
+            plan_no = '".s_for(!empty($_POST["plan_no"]) ? $_POST["plan_no"] : '')."',  
+            add1 = '".s_for($_POST["add1"])."', 
+            add2 = '".s_for($_POST["add2"])."', 
+            city = '".s_for($_POST["city"])."', 
+            state = '".s_for($_POST["state"])."', 
+            zip = '".s_for($_POST["zip"])."', 
+            dob = '".s_for($_POST["dob"])."', 
+            gender = '".s_for($_POST["gender"])."', 
+            marital_status = '".s_for($_POST["marital_status"])."', 
+            ssn = '".s_for(num($_POST["ssn"], false))."', 
+            home_phone = '".s_for(num($_POST["home_phone"]))."', 
+            work_phone = '".s_for(num($_POST["work_phone"]))."', 
+            cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
+            email = '".s_for($_POST["email"])."', 
+            patient_notes = '".s_for($_POST["patient_notes"])."',
+            docid = '".s_for($_POST["docid"])."', 
+            p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
+            p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
+            p_d_other = '".s_for(!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '')."', 
+            p_d_employer = '".s_for(!empty($_POST["p_d_employer"]) ? $_POST["p_d_employer"] : '')."', 
+            p_d_ins_co = '".s_for(!empty($_POST["p_d_ins_co"]) ? $_POST["p_d_ins_co"] : '')."', 
+            p_d_ins_id = '".s_for(!empty($_POST["p_d_ins_id"]) ? $_POST["p_d_ins_id"] : '')."', 
+            s_d_party = '".s_for(!empty($_POST["s_d_party"]) ? $_POST["s_d_party"] : '')."', 
+            s_d_relation = '".s_for(!empty($_POST["s_d_relation"]) ? $_POST["s_d_relation"] : '')."', 
+            s_d_other = '".s_for(!empty($_POST["s_d_other"]) ? $_POST["s_d_other"] : '')."', 
+            s_d_employer = '".s_for(!empty($_POST["s_d_employer"]) ? $_POST["s_d_employer"] : '')."', 
+            s_d_ins_co = '".s_for(!empty($_POST["s_d_ins_co"]) ? $_POST["s_d_ins_co"] : '')."', 
+            s_d_ins_id = '".s_for(!empty($_POST["s_d_ins_id"]) ? $_POST["s_d_ins_id"] : '')."', 
+            p_m_partyfname = '".s_for(!empty($_POST["p_m_partyfname"]) ? $_POST["p_m_partyfname"] : '')."',
+            p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
+            p_m_partylname = '".s_for($_POST["p_m_partylname"])."',  
+            p_m_relation = '".s_for($_POST["p_m_relation"])."', 
+            p_m_other = '".s_for(!empty($_POST["p_m_other"]) ? $_POST["p_m_other"] : '')."', 
+            p_m_employer = '".s_for(!empty($_POST["p_m_employer"]) ? $_POST["p_m_employer"] : '')."', 
+            p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
+            p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+            s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
+            s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
+            s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  
+            s_m_relation = '".s_for($_POST["s_m_relation"])."', 
+            s_m_other = '".s_for(!empty($_POST["s_m_other"]) ? $_POST["s_m_other"] : '')."', 
+            s_m_employer = '".s_for(!empty($_POST["s_m_employer"]) ? $_POST["s_m_employer"] : '')."', 
+            s_m_ins_co = '".s_for($_POST["s_m_ins_co"])."', 
+            s_m_ins_id = '".s_for($_POST["s_m_ins_id"])."',
+            p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
+            s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
+            p_m_dss_file = '".s_for(!empty($_POST["p_m_dss_file"]) ? $_POST["p_m_dss_file"] : '')."',
+            s_m_dss_file = '".s_for(!empty($_POST["s_m_dss_file"]) ? $_POST["s_m_dss_file"] : '')."',
+            p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
+            s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
+            p_m_ins_ass = '".s_for(!empty($_POST["p_m_ins_ass"]) ? $_POST["p_m_ins_ass"] : '')."',
+            s_m_ins_ass = '".s_for(!empty($_POST["s_m_ins_ass"]) ? $_POST["s_m_ins_ass"] : '')."',
+            p_m_ins_plan = '".s_for($_POST["p_m_ins_plan"])."',
+            s_m_ins_plan = '".s_for($_POST["s_m_ins_plan"])."',
+            ins_dob = '".s_for($_POST["ins_dob"])."',
+            ins2_dob = '".s_for(!empty($_POST["ins2_dob"]) ? $_POST["ins2_dob"] : '')."', 
+            employer = '".s_for($_POST["employer"])."', 
+            emp_add1 = '".s_for($_POST["emp_add1"])."', 
+            emp_add2 = '".s_for($_POST["emp_add2"])."', 
+            emp_city = '".s_for($_POST["emp_city"])."', 
+            emp_state = '".s_for($_POST["emp_state"])."', 
+            emp_zip = '".s_for($_POST["emp_zip"])."', 
+            emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
+            emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
+            plan_name = '".s_for(!empty($_POST["plan_name"]) ? $_POST["plan_name"] : '')."', 
+            group_number = '".s_for(!empty($_POST["group_number"]) ? $_POST["group_number"] : '')."', 
+            ins_type = '".s_for(!empty($_POST["ins_type"]) ? $_POST["ins_type"] : '')."', 
+            accept_assignment = '".s_for(!empty($_POST["accept_assignment"]) ? $_POST["accept_assignment"] : '')."', 
+            print_signature = '".s_for(!empty($_POST["print_signature"]) ? $_POST["print_signature"] : '')."', 
+            medical_insurance = '".s_for(!empty($_POST["medical_insurance"]) ? $_POST["medical_insurance"] : '')."', 
+            mark_yes = '".s_for(!empty($_POST["mark_yes"]) ? $_POST["mark_yes"] : '')."', 
+            inactive = '".s_for(!empty($_POST["inactive"]) ? $_POST["inactive"] : '')."',
+            docsleep = '".s_for(!empty($_POST["docsleep"]) ? $_POST["docsleep"] : '')."',
+            docpcp = '".s_for(!empty($_POST["docpcp"]) ? $_POST["docpcp"] : '')."',
+            docdentist = '".s_for(!empty($_POST["docdentist"]) ? $_POST["docdentist"] : '')."',
+            docent = '".s_for(!empty($_POST["docent"]) ? $_POST["docent"] : '')."',
+            docmdother = '".s_for(!empty($_POST["docmdother"]) ? $_POST["docmdother"] : '')."', 
+            partner_name = '".s_for($_POST["partner_name"])."', 
+            emergency_name = '".s_for($_POST["emergency_name"])."',
+            emergency_number = '".s_for(num($_POST["emergency_number"]))."',
+            referred_source = '".s_for($_POST["referred_source"])."',
+            referred_by = '".s_for($_POST["referred_by"])."',
+            premedcheck = '".s_for((!empty($_POST["premedcheck"]) ? $_POST["premedcheck"] : ''))."',
+            premed = '".s_for((!empty($_POST["premeddet"]) ? $_POST["premeddet"] : ''))."',
+            userid='".(!empty($_SESSION['userid']) ? $_SESSION['userid'] : '')."',  
+            status = '".s_for($_POST["status"])."',
+            adddate=now(),
+            ip_address='".$_SERVER['REMOTE_ADDR']."'";
+        $db->query($ins_sql);
+
+        $msg = "Added Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }
 }
 
 ?>
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
-    $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-	$themy = mysqli_query($con,$thesql);
-	$themyarray = mysqli_fetch_array($themy);
+<?php
+$thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
 
-	if(!empty($msg) || !isset($_REQUEST["ed"]))
-	{
-		$firstname = (!empty($_POST['firstname']) ? $_POST['firstname'] : '');
-		$middlename = (!empty($_POST['middlename']) ? $_POST['middlename'] : '');
-		$lastname = (!empty($_POST['lastname']) ? $_POST['lastname'] : '');
-		$salutation = (!empty($_POST['salutation']) ? $_POST['salutation'] : '');
-		$member_no = (!empty($_POST['member_no']) ? $_POST['member_no'] : '');
-	  $group_no = (!empty($_POST['group_no']) ? $_POST['group_no'] : '');
-	  $plan_no = (!empty($_POST['plan_no']) ? $_POST['plan_no'] : '');
-		$dob = (!empty($_POST['dob']) ? $_POST['dob'] : '');
-		$add1 = (!empty($_POST['add1']) ? $_POST['add1'] : '');
-		$add2= (!empty($_POST['add2']) ? $_POST['add2'] : '');
-		$city = (!empty($_POST['city']) ? $_POST['city'] : '');
-		$state = (!empty($_POST['state']) ? $_POST['state'] : '');
-		$zip = (!empty($_POST['zip']) ? $_POST['zip'] : '');
-		$gender = (!empty($_POST['gender']) ? $_POST['gender'] : '');
-		$marital_status = (!empty($_POST['marital_status']) ? $_POST['marital_status'] : '');
-		$ssn = (!empty($_POST['ssn']) ? $_POST['ssn'] : '');
-		$home_phone = (!empty($_POST['home_phone']) ? $_POST['home_phone'] : '');
-		$work_phone = (!empty($_POST['work_phone']) ? $_POST['work_phone'] : '');
-		$cell_phone = (!empty($_POST['cell_phone']) ? $_POST['cell_phone'] : '');
-		$email = (!empty($_POST['email']) ? $_POST['email'] : '');
-		$patient_notes = (!empty($_POST['patient_notes']) ? $_POST['patient_notes'] : '');
-		$docid = (!empty($_REQUEST['docid']) ? $_REQUEST['docid'] : '');
-		$p_d_party = (!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : ''); 
-		$p_d_relation = (!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '');
-		$p_d_other = (!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '');
-		$p_d_employer = (!empty($_POST["p_d_employer"]) ? $_POST["p_d_employer"] : '');
-		$p_d_ins_co = (!empty($_POST["p_d_ins_co"]) ? $_POST["p_d_ins_co"] : '');
-		$p_d_ins_id = (!empty($_POST["p_d_ins_id"]) ? $_POST["p_d_ins_id"] : '');
-		$s_d_party = (!empty($_POST["s_d_party"]) ? $_POST["s_d_party"] : ''); 
-		$s_d_relation = (!empty($_POST["s_d_relation"]) ? $_POST["s_d_relation"] : '');
-		$s_d_other = (!empty($_POST["s_d_other"]) ? $_POST["s_d_other"] : '');
-		$s_d_employer = (!empty($_POST["s_d_employer"]) ? $_POST["s_d_employer"] : '');
-		$s_d_ins_co = (!empty($_POST["s_d_ins_co"]) ? $_POST["s_d_ins_co"] : '');
-		$s_d_ins_id = (!empty($_POST["s_d_ins_id"]) ? $_POST["s_d_ins_id"] : '');
-		$p_m_partyfname = (!empty($_POST["p_m_partyfname"]) ? $_POST["p_m_partyfname"] : '');
+if(!empty($msg) || !isset($_REQUEST["ed"])) {
+    $firstname = (!empty($_POST['firstname']) ? $_POST['firstname'] : '');
+    $middlename = (!empty($_POST['middlename']) ? $_POST['middlename'] : '');
+    $lastname = (!empty($_POST['lastname']) ? $_POST['lastname'] : '');
+    $salutation = (!empty($_POST['salutation']) ? $_POST['salutation'] : '');
+    $dob = (!empty($_POST['dob']) ? $_POST['dob'] : '');
+    $add1 = (!empty($_POST['add1']) ? $_POST['add1'] : '');
+    $add2= (!empty($_POST['add2']) ? $_POST['add2'] : '');
+    $city = (!empty($_POST['city']) ? $_POST['city'] : '');
+    $state = (!empty($_POST['state']) ? $_POST['state'] : '');
+    $zip = (!empty($_POST['zip']) ? $_POST['zip'] : '');
+    $gender = (!empty($_POST['gender']) ? $_POST['gender'] : '');
+    $marital_status = (!empty($_POST['marital_status']) ? $_POST['marital_status'] : '');
+    $ssn = (!empty($_POST['ssn']) ? $_POST['ssn'] : '');
+    $home_phone = (!empty($_POST['home_phone']) ? $_POST['home_phone'] : '');
+    $work_phone = (!empty($_POST['work_phone']) ? $_POST['work_phone'] : '');
+    $cell_phone = (!empty($_POST['cell_phone']) ? $_POST['cell_phone'] : '');
+    $email = (!empty($_POST['email']) ? $_POST['email'] : '');
+    $patient_notes = (!empty($_POST['patient_notes']) ? $_POST['patient_notes'] : '');
+    $docid = (!empty($_REQUEST['docid']) ? $_REQUEST['docid'] : '');
+    $p_m_partyfname = (!empty($_POST["p_m_partyfname"]) ? $_POST["p_m_partyfname"] : '');
     $p_m_partymname = (!empty($_POST["p_m_partymname"]) ? $_POST["p_m_partymname"] : '');
-		$p_m_partylname = (!empty($_POST["p_m_partylname"]) ? $_POST["p_m_partylname"] : ''); 
-		$p_m_relation = (!empty($_POST["p_m_relation"]) ? $_POST["p_m_relation"] : '');
-		$p_m_other = (!empty($_POST["p_m_other"]) ? $_POST["p_m_other"] : '');
-		$p_m_employer = (!empty($_POST["p_m_employer"]) ? $_POST["p_m_employer"] : '');
-		$p_m_ins_co = (!empty($_POST["p_m_ins_co"]) ? $_POST["p_m_ins_co"] : '');
-		$p_m_ins_id = (!empty($_POST["p_m_ins_id"]) ? $_POST["p_m_ins_id"] : '');
-		$s_m_partyfname = (!empty($_POST["s_m_partyfname"]) ? $_POST["s_m_partyfname"] : '');
+    $p_m_partylname = (!empty($_POST["p_m_partylname"]) ? $_POST["p_m_partylname"] : '');
+    $p_m_relation = (!empty($_POST["p_m_relation"]) ? $_POST["p_m_relation"] : '');
+    $p_m_ins_co = (!empty($_POST["p_m_ins_co"]) ? $_POST["p_m_ins_co"] : '');
+    $p_m_ins_id = (!empty($_POST["p_m_ins_id"]) ? $_POST["p_m_ins_id"] : '');
+    $s_m_partyfname = (!empty($_POST["s_m_partyfname"]) ? $_POST["s_m_partyfname"] : '');
     $s_m_partymname = (!empty($_POST["s_m_partymname"]) ? $_POST["s_m_partymname"] : '');
-		$s_m_partylname = (!empty($_POST["s_m_partylname"]) ? $_POST["s_m_partylname"] : '');  
-		$s_m_relation = (!empty($_POST["s_m_relation"]) ? $_POST["s_m_relation"] : '');
-		$s_m_other = (!empty($_POST["s_m_other"]) ? $_POST["s_m_other"] : '');
-		$s_m_employer = (!empty($_POST["s_m_employer"]) ? $_POST["s_m_employer"] : '');
-		$s_m_ins_co = (!empty($_POST["s_m_ins_co"]) ? $_POST["s_m_ins_co"] : '');
-		$s_m_ins_id = (!empty($_POST["s_m_ins_id"]) ? $_POST["s_m_ins_id"] : '');
-		$p_m_ins_grp = (!empty($_POST["p_m_ins_grp"]) ? $_POST["p_m_ins_grp"] : '');
+    $s_m_partylname = (!empty($_POST["s_m_partylname"]) ? $_POST["s_m_partylname"] : '');
+    $s_m_relation = (!empty($_POST["s_m_relation"]) ? $_POST["s_m_relation"] : '');
+    $s_m_ins_co = (!empty($_POST["s_m_ins_co"]) ? $_POST["s_m_ins_co"] : '');
+    $s_m_ins_id = (!empty($_POST["s_m_ins_id"]) ? $_POST["s_m_ins_id"] : '');
+    $p_m_ins_grp = (!empty($_POST["p_m_ins_grp"]) ? $_POST["p_m_ins_grp"] : '');
     $s_m_ins_grp = (!empty($_POST["s_m_ins_grp"]) ? $_POST["s_m_ins_grp"] : '');
     $p_m_dss_file = (!empty($_POST["p_m_dss_file"]) ? $_POST["p_m_dss_file"] : '');
     $s_m_dss_file = (!empty($_POST["s_m_dss_file"]) ? $_POST["s_m_dss_file"] : '');
@@ -301,90 +282,58 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
     $p_m_ins_plan = (!empty($_POST["p_m_ins_plan"]) ? $_POST["p_m_ins_plan"] : '');
     $s_m_ins_plan = (!empty($_POST["s_m_ins_plan"]) ? $_POST["s_m_ins_plan"] : '');
     $ins_dob = (!empty($_POST["ins_dob"]) ? $_POST["ins_dob"] : '');
-    $ins2_dob = (!empty($_POST["ins2_dob"]) ? $_POST["ins2_dob"] : '');
-		$employer = (!empty($_POST["employer"]) ? $_POST["employer"] : '');
-		$emp_add1 = (!empty($_POST["emp_add1"]) ? $_POST["emp_add1"] : '');
-		$emp_add2 = (!empty($_POST["emp_add2"]) ? $_POST["emp_add2"] : '');
-		$emp_city = (!empty($_POST["emp_city"]) ? $_POST["emp_city"] : '');
-		$emp_state = (!empty($_POST["emp_state"]) ? $_POST["emp_state"] : '');
-		$emp_zip = (!empty($_POST["emp_zip"]) ? $_POST["emp_zip"] : '');
-		$emp_phone = (!empty($_POST["emp_phone"]) ? $_POST["emp_phone"] : '');
-		$docsleep = (!empty($_POST["docsleep"]) ? $_POST["docsleep"] : '');
-		$docpcp = (!empty($_POST["docpcp"]) ? $_POST["docpcp"] : '');
-		$docdentist = (!empty($_POST["docdentist"]) ? $_POST["docdentist"] : '');
-		$docent = (!empty($_POST["docent"]) ? $_POST["docent"] : '');
-		$docmdother = (!empty($_POST["docmdother"]) ? $_POST["docmdother"] : '');
-		$emp_fax = (!empty($_POST["emp_fax"]) ? $_POST["emp_fax"] : '');
-		$plan_name = (!empty($_POST["plan_name"]) ? $_POST["plan_name"] : '');
-		$group_number = (!empty($_POST["group_number"]) ? $_POST["group_number"] : '');
-		$ins_type = (!empty($_POST["ins_type"]) ? $_POST["ins_type"] : '');
-		$accept_assignment = (!empty($_POST["accept_assignment"]) ? $_POST["accept_assignment"] : '');
-		$print_signature = (!empty($_POST["print_signature"]) ? $_POST["print_signature"] : '');
-		$medical_insurance = (!empty($_POST["medical_insurance"]) ? $_POST["medical_insurance"] : '');
-		$mark_yes = (!empty($_POST["mark_yes"]) ? $_POST["mark_yes"] : '');
-		$inactive = (!empty($_POST["inactive"]) ? $_POST["inactive"] : '');
-		$partner_name = (!empty($_POST["partner_name"]) ? $_POST["partner_name"] : '');
-		$emergency_name = (!empty($_POST["emergency_name"]) ? $_POST["emergency_name"] : '');
-		$emergency_number = (!empty($_POST["emergency_number"]) ? $_POST["emergency_number"] : '');
-		$referred_source = (!empty($_POST["referred_source"]) ? $_POST["referred_source"] : '');
-		$referred_by = (!empty($_POST["referred_by"]) ? $_POST["referred_by"] : '');
-		$premedcheck = (!empty($_POST["premedcheck"]) ? $_POST["premedcheck"] : '');
-		$premed = (!empty($_POST["premeddet"]) ? $_POST["premeddet"] : '');
-		
-	}
-	else
-	{
-		$firstname = st($themyarray['firstname']);
-		$middlename = st($themyarray['middlename']);
-		$lastname = st($themyarray['lastname']);
-		$salutation = st($themyarray['salutation']);
-			$member_no = st($themyarray['member_no']);
-	$group_no = st($themyarray['group_no']);
-	$plan_no = st($themyarray['plan_no']);
-		$dob = st($themyarray['dob']);
-		$add1 = st($themyarray['add1']);
-		$add2 = st($themyarray['add2']);
-		$city = st($themyarray['city']);
-		$state = st($themyarray['state']);
-		$zip = st($themyarray['zip']);
-		$gender = st($themyarray['gender']);
-		$marital_status = st($themyarray['marital_status']);
-		$ssn = st($themyarray['ssn']);
-		$home_phone = st($themyarray['home_phone']);
-		$work_phone = st($themyarray['work_phone']);
-		$cell_phone = st($themyarray['cell_phone']);
-		$email = st($themyarray['email']);
-		$patient_notes = st($themyarray['patient_notes']);
-		$docid = st($themyarray['docid']);
-		$p_d_party = st($themyarray["p_d_party"]); 
-		$p_d_relation = st($themyarray["p_d_relation"]);
-		$p_d_other = st($themyarray["p_d_other"]);
-		$p_d_employer = st($themyarray["p_d_employer"]);
-		$p_d_ins_co = st($themyarray["p_d_ins_co"]);
-		$p_d_ins_id = st($themyarray["p_d_ins_id"]);
-		$s_d_party = st($themyarray["s_d_party"]); 
-		$s_d_relation = st($themyarray["s_d_relation"]);
-		$s_d_other = st($themyarray["s_d_other"]);
-		$s_d_employer = st($themyarray["s_d_employer"]);
-		$s_d_ins_co = st($themyarray["s_d_ins_co"]);
-		$s_d_ins_id = st($themyarray["s_d_ins_id"]);
-		$p_m_partyfname = st($themyarray["p_m_partyfname"]);
+    $employer = (!empty($_POST["employer"]) ? $_POST["employer"] : '');
+    $emp_add1 = (!empty($_POST["emp_add1"]) ? $_POST["emp_add1"] : '');
+    $emp_add2 = (!empty($_POST["emp_add2"]) ? $_POST["emp_add2"] : '');
+    $emp_city = (!empty($_POST["emp_city"]) ? $_POST["emp_city"] : '');
+    $emp_state = (!empty($_POST["emp_state"]) ? $_POST["emp_state"] : '');
+    $emp_zip = (!empty($_POST["emp_zip"]) ? $_POST["emp_zip"] : '');
+    $emp_phone = (!empty($_POST["emp_phone"]) ? $_POST["emp_phone"] : '');
+    $docsleep = (!empty($_POST["docsleep"]) ? $_POST["docsleep"] : '');
+    $docpcp = (!empty($_POST["docpcp"]) ? $_POST["docpcp"] : '');
+    $docdentist = (!empty($_POST["docdentist"]) ? $_POST["docdentist"] : '');
+    $docent = (!empty($_POST["docent"]) ? $_POST["docent"] : '');
+    $docmdother = (!empty($_POST["docmdother"]) ? $_POST["docmdother"] : '');
+    $emp_fax = (!empty($_POST["emp_fax"]) ? $_POST["emp_fax"] : '');
+    $partner_name = (!empty($_POST["partner_name"]) ? $_POST["partner_name"] : '');
+    $emergency_name = (!empty($_POST["emergency_name"]) ? $_POST["emergency_name"] : '');
+    $emergency_number = (!empty($_POST["emergency_number"]) ? $_POST["emergency_number"] : '');
+    $referred_source = (!empty($_POST["referred_source"]) ? $_POST["referred_source"] : '');
+    $referred_by = (!empty($_POST["referred_by"]) ? $_POST["referred_by"] : '');
+    $premedcheck = (!empty($_POST["premedcheck"]) ? $_POST["premedcheck"] : '');
+} else {
+    $firstname = st($themyarray['firstname']);
+    $middlename = st($themyarray['middlename']);
+    $lastname = st($themyarray['lastname']);
+    $salutation = st($themyarray['salutation']);
+    $dob = st($themyarray['dob']);
+    $add1 = st($themyarray['add1']);
+    $add2 = st($themyarray['add2']);
+    $city = st($themyarray['city']);
+    $state = st($themyarray['state']);
+    $zip = st($themyarray['zip']);
+    $gender = st($themyarray['gender']);
+    $marital_status = st($themyarray['marital_status']);
+    $ssn = st($themyarray['ssn']);
+    $home_phone = st($themyarray['home_phone']);
+    $work_phone = st($themyarray['work_phone']);
+    $cell_phone = st($themyarray['cell_phone']);
+    $email = st($themyarray['email']);
+    $patient_notes = st($themyarray['patient_notes']);
+    $docid = st($themyarray['docid']);
+    $p_m_partyfname = st($themyarray["p_m_partyfname"]);
     $p_m_partymname = st($themyarray["p_m_partymname"]);
-		$p_m_partylname = st($themyarray["p_m_partylname"]);
-		$p_m_relation = st($themyarray["p_m_relation"]);
-		$p_m_other = st($themyarray["p_m_other"]);
-		$p_m_employer = st($themyarray["p_m_employer"]);
-		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
-		$p_m_ins_id = st($themyarray["p_m_ins_id"]);
-		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
+    $p_m_partylname = st($themyarray["p_m_partylname"]);
+    $p_m_relation = st($themyarray["p_m_relation"]);
+    $p_m_ins_co = st($themyarray["p_m_ins_co"]);
+    $p_m_ins_id = st($themyarray["p_m_ins_id"]);
+    $s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
-		$s_m_partylname = st($themyarray["s_m_partylname"]);
-		$s_m_relation = st($themyarray["s_m_relation"]);
-		$s_m_other = st($themyarray["s_m_other"]);
-		$s_m_employer = st($themyarray["s_m_employer"]);
-		$s_m_ins_co = st($themyarray["s_m_ins_co"]);
-		$s_m_ins_id = st($themyarray["s_m_ins_id"]);
-		$p_m_ins_grp = st($themyarray["p_m_ins_grp"]);
+    $s_m_partylname = st($themyarray["s_m_partylname"]);
+    $s_m_relation = st($themyarray["s_m_relation"]);
+    $s_m_ins_co = st($themyarray["s_m_ins_co"]);
+    $s_m_ins_id = st($themyarray["s_m_ins_id"]);
+    $p_m_ins_grp = st($themyarray["p_m_ins_grp"]);
     $s_m_ins_grp = st($themyarray["s_m_ins_grp"]);
     $p_m_dss_file = st($themyarray["p_m_dss_file"]);
     $s_m_dss_file = st($themyarray["s_m_dss_file"]);
@@ -395,50 +344,36 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
     $p_m_ins_plan = st($themyarray["p_m_ins_plan"]);
     $s_m_ins_plan = st($themyarray["s_m_ins_plan"]);
     $ins_dob = st($themyarray["ins_dob"]);
-    $ins2_dob = st($themyarray["ins2_dob"]);
-		$employer = st($themyarray["employer"]);
-		$emp_add1 = st($themyarray["emp_add1"]);
-		$emp_add2 = st($themyarray["emp_add2"]);
-		$emp_city = st($themyarray["emp_city"]);
-		$emp_state = st($themyarray["emp_state"]);
-		$emp_zip = st($themyarray["emp_zip"]);
-		$emp_phone = st($themyarray["emp_phone"]);
-		$emp_fax = st($themyarray["emp_fax"]);
-		$plan_name = st($themyarray["plan_name"]);
-		$group_number = st($themyarray["group_number"]);
-		$ins_type = st($themyarray["ins_type"]);
-		$accept_assignment = st($themyarray["accept_assignment"]);
-		$print_signature = st($themyarray["print_signature"]);
-		$medical_insurance = st($themyarray["medical_insurance"]);
-		$mark_yes = st($themyarray["mark_yes"]);
-		$docsleep = st($themyarray["docsleep"]);
-		$docpcp = st($themyarray["docpcp"]);
-		$docdentist = st($themyarray["docdentist"]);
-		$docent = st($themyarray["docent"]);
-		$docmdother = st($themyarray["docmdother"]);
-		$inactive = st($themyarray["inactive"]);
-		$partner_name = st($themyarray["partner_name"]);
-		$emergency_name = st($themyarray["emergency_name"]);
-		$emergency_number = st($themyarray["emergency_number"]);
-		$referred_source = st($themyarray["referred_source"]);
-		$referred_by = st($themyarray["referred_by"]);
-		$premedcheck = st($themyarray["premedcheck"]);
-		$premeddet = st($themyarray["premed"]);
-		
-		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
-		
-		$but_text = "Add ";
-	}
-	
-	if($themyarray["userid"] != '')
-	{
-		$but_text = "Edit ";
-	}
-	else
-	{
-		$but_text = "Add ";
-	}
-	?>
+    $employer = st($themyarray["employer"]);
+    $emp_add1 = st($themyarray["emp_add1"]);
+    $emp_add2 = st($themyarray["emp_add2"]);
+    $emp_city = st($themyarray["emp_city"]);
+    $emp_state = st($themyarray["emp_state"]);
+    $emp_zip = st($themyarray["emp_zip"]);
+    $emp_phone = st($themyarray["emp_phone"]);
+    $emp_fax = st($themyarray["emp_fax"]);
+    $docsleep = st($themyarray["docsleep"]);
+    $docpcp = st($themyarray["docpcp"]);
+    $docdentist = st($themyarray["docdentist"]);
+    $docent = st($themyarray["docent"]);
+    $docmdother = st($themyarray["docmdother"]);
+    $partner_name = st($themyarray["partner_name"]);
+    $emergency_name = st($themyarray["emergency_name"]);
+    $emergency_number = st($themyarray["emergency_number"]);
+    $referred_source = st($themyarray["referred_source"]);
+    $referred_by = st($themyarray["referred_by"]);
+    $premedcheck = st($themyarray["premedcheck"]);
+    $premeddet = st($themyarray["premed"]);
+
+    $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
+}
+
+if($themyarray["userid"] != '') {
+    $but_text = "Edit ";
+} else {
+    $but_text = "Add ";
+}
+?>
     <div class="col-md-6 col-md-offset-3">
         <?php if (isset($_GET['msg'])) { ?>
         <div class="alert alert-danger text-center">
@@ -456,7 +391,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
             <h1>
                 <?php echo $but_text?> Patient
                 <?php if(!empty($name)) {?>
-               		&quot;<?php echo $name;?>&quot;
+                    &quot;<?php echo $name;?>&quot;
                 <?php }?>
             </h1>
         </div>
@@ -501,8 +436,8 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
             </div>
             <div class="form-group">
                 <label for="premedcheck" class="col-md-4 control-label">
-                	Patient is Pre-Med
-                	 &nbsp;&nbsp;&nbsp;
+                    Patient is Pre-Med
+                    &nbsp;&nbsp;&nbsp;
                     <input type="checkbox" name="premedcheck" id="premedcheck" <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> class="pull-right" onclick="document.getElementById('premeddet').disabled=!(this.checked)">
                 </label>
                 <div class="col-md-8">
@@ -866,7 +801,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
                     </select>
                 </div>
                 <div class="col-md-4 text-center">
-                    <a onclick="Javascript: window.location.href='add_contact.php<?php if(isset($_GET['pid'])){echo "?pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)" class="btn btn-primary">
+                    <a onclick="window.location.href='add_contact.php<?php if(isset($_GET['pid'])){echo "?pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)" class="btn btn-primary">
                         Add Insurance Company
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
@@ -970,11 +905,9 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
                 (isset($_GET['pid']) && isset($_GET['addtopat']))
             ) {
                 $patid = $_GET['ed'];
-                $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
-                $pcont_array = mysqli_query($con,$pcont_qry);
                 $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
                 $pcont_array = mysqli_query($con,$pcont_qry);
-                $contact_list = array();
+                $contact_list = [];
                 
                 while ($pcont_l = mysqli_fetch_array($pcont_array)) {
                     if ($pcont_l['contacttypeid'] != '0') {
@@ -987,11 +920,11 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
                         $currentcontact_type = "Type Not Set";
                     }
                     
-                    $contact_list []= array(
+                    $contact_list []= [
                         'id' => $pcont_l['contactid'],
                         'name' => "$pcont_l[firstname] $pcont_l[lastname]",
-                        'type' => $currentcontact_type
-                    );
+                        'type' => $currentcontact_type,
+                    ];
                 }
                 
                 ?>

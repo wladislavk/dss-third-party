@@ -23,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
     $maxilla = $_POST['maxilla'];
     $other_maxilla = $_POST['other_maxilla'];
@@ -49,7 +51,7 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
         $maxilla_arr = '~' . $maxilla_arr;
     }
 
-	$mandible_arr = '';
+    $mandible_arr = '';
     if (is_array($mandible)) {
         foreach ($mandible as $val) {
             if (trim($val) != '') {
@@ -128,8 +130,7 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $msg = "Added Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -142,8 +143,8 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
                 window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
             </script>
             <?php
-		}
-		trigger_error("Die called", E_USER_ERROR);
+        }
+        trigger_error("Die called", E_USER_ERROR);
     } else {
         $ed_sql = "update dental_ex_page3 set 
             maxilla = '".s_for($maxilla_arr)."',
@@ -159,7 +160,8 @@ if (!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
             nasal_passages = '".s_for($nasal_passages_arr)."',
             other_nasal_passages = '".s_for($other_nasal_passages)."'
             where ex_page3id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
+
         $msg = "Edited Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
             <script type="text/javascript">

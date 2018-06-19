@@ -35,7 +35,7 @@ class Db
         if ($query_string) {
             $time = microtime(true);
 
-            $result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . mysqli_error($this->con), E_USER_ERROR);
+            $result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . $this->error(), E_USER_ERROR);
 
             $time = microtime(true) - $time;
             $this->totalTime += $time;

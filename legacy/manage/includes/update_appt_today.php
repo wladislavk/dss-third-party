@@ -7,11 +7,9 @@ include_once __DIR__ . '/letter_triggers.php';
 $id = intval(!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
 $pid = intval(!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 $docId = intval($_SESSION['docid']);
-$numsteps = null;
 $impression = true;
-$letterid = array();
+$letterid = [];
 $create = true;
-
 
 $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='$docId'";
 
@@ -51,7 +49,7 @@ $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
         $s = "INSERT INTO dental_flow_pg2_info SET
             patientid= '$pid',
             segmentid = '$id',
-		    appointment_type = 1,";
+            appointment_type = 1,";
 
         if(!empty($impression)){
             $s .= " device_id='".$impression."',";

@@ -132,7 +132,7 @@ if ($patient_info) {
                 }
             }
         }
-	
+
         if ($allergens_arr != '') {
             $allergens_arr = '~' . $allergens_arr;
         }
@@ -201,7 +201,7 @@ if ($patient_info) {
                 family_hd = '".s_for($family_hd)."',
                 family_bp = '".s_for($family_bp)."',
                 family_dia = '".s_for($family_dia)."',
-                family_sd = '".s_for($family_sd)."',	
+                family_sd = '".s_for($family_sd)."',
                 alcohol = '".s_for($alcohol)."',
                 sedative = '".s_for($sedative)."',
                 caffeine = '".s_for($caffeine)."',
@@ -255,40 +255,40 @@ if ($patient_info) {
             trigger_error("Die called", E_USER_ERROR);
         } else {
             $ed_sql = "update dental_q_page3 set 
-				allergens = '".$db->escape($allergens_arr)."',
-				other_allergens = '".$db->escape($other_allergens)."',
-				medications = '".$db->escape($medications_arr)."',
-				other_medications = '".$db->escape($other_medications)."',
-				history = '".$db->escape($history_arr)."',
-				other_history = '".$db->escape($other_history)."',
+                allergens = '".$db->escape($allergens_arr)."',
+                other_allergens = '".$db->escape($other_allergens)."',
+                medications = '".$db->escape($medications_arr)."',
+                other_medications = '".$db->escape($other_medications)."',
+                history = '".$db->escape($history_arr)."',
+                other_history = '".$db->escape($other_history)."',
                 allergenscheck = '".$db->escape($allergenscheck)."',
                 medicationscheck = '".$db->escape($medicationscheck)."',
                 historycheck = '".$db->escape($historycheck)."',
-				dental_health = '".$db->escape($dental_health)."',
-				injurytohead = '".$injurytohead."',
-				injurytoface = '".$db->escape($injurytoface)."',
-				injurytoneck = '".$db->escape($injurytoneck)."',
-				injurytoteeth = '".$db->escape($injurytoteeth)."',
-				injurytomouth = '".$db->escape($injurytomouth)."',
-				drymouth = '".$db->escape($drymouth)."',
-				removable = '".$db->escape($removable)."',
-				year_completed = '".$db->escape($year_completed)."',
-				tmj = '".$db->escape($tmj)."',
-				gum_problems = '".$db->escape($gum_problems)."',
-				dental_pain = '".$db->escape($dental_pain)."',
-				dental_pain_describe = '".$db->escape($dental_pain_describe)."',
-				completed_future = '".$db->escape($completed_future)."',
-				clinch_grind = '".$db->escape($clinch_grind)."',
-				wisdom_extraction = '".$db->escape($wisdom_extraction)."',
-				jawjointsurgery = '".$db->escape($jawjointsurgery)."',
-				no_allergens = '".$db->escape($no_allergens)."',
-				no_medications = '".$db->escape($no_medications)."',
-				no_history = '".$db->escape($no_history)."',
-				orthodontics = '".$db->escape($orthodontics)."',
+                dental_health = '".$db->escape($dental_health)."',
+                injurytohead = '".$injurytohead."',
+                injurytoface = '".$db->escape($injurytoface)."',
+                injurytoneck = '".$db->escape($injurytoneck)."',
+                injurytoteeth = '".$db->escape($injurytoteeth)."',
+                injurytomouth = '".$db->escape($injurytomouth)."',
+                drymouth = '".$db->escape($drymouth)."',
+                removable = '".$db->escape($removable)."',
+                year_completed = '".$db->escape($year_completed)."',
+                tmj = '".$db->escape($tmj)."',
+                gum_problems = '".$db->escape($gum_problems)."',
+                dental_pain = '".$db->escape($dental_pain)."',
+                dental_pain_describe = '".$db->escape($dental_pain_describe)."',
+                completed_future = '".$db->escape($completed_future)."',
+                clinch_grind = '".$db->escape($clinch_grind)."',
+                wisdom_extraction = '".$db->escape($wisdom_extraction)."',
+                jawjointsurgery = '".$db->escape($jawjointsurgery)."',
+                no_allergens = '".$db->escape($no_allergens)."',
+                no_medications = '".$db->escape($no_medications)."',
+                no_history = '".$db->escape($no_history)."',
+                orthodontics = '".$db->escape($orthodontics)."',
                 family_hd = '".$db->escape($family_hd)."',
                 family_bp = '".$db->escape($family_bp)."',
                 family_dia = '".$db->escape($family_dia)."',
-				family_sd = '".$db->escape($family_sd)."',
+                family_sd = '".$db->escape($family_sd)."',
                 alcohol = '".$db->escape($alcohol)."',
                 sedative = '".$db->escape($sedative)."',
                 caffeine = '".$db->escape($caffeine)."',
@@ -317,7 +317,7 @@ if ($patient_info) {
                 drymouth_text = '".$db->escape($drymouth_text)."',
                 premedcheck = '".$db->escape($_POST["premedcheck"])."',
                 premed = '".$db->escape($_POST["premeddet"])."'
-				where q_page3id = '".$db->escape($_POST['ed'])."'";
+                where q_page3id = '".$db->escape($_POST['ed'])."'";
             $db->query($ed_sql);
 
             $ped_sql = "update dental_patients set

@@ -35,7 +35,6 @@ for ($lowerLimit = 0; $lowerLimit <= 120; $lowerLimit += 30) {
 }
 
 $grandTotal = array_sum($totals);
-
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />

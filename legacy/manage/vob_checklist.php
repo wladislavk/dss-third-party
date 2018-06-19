@@ -1,13 +1,15 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 if(!empty($_GET['rx']) && $_GET['rx']==1){?>
 
 <div id="loader" style="position:absolute;width:100%; height:98%;">
   <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
 <?php
-  $file = (!empty($_FILES['rx_file']) ? $_FILES['rx_file'] : array());
+  $file = (!empty($_FILES['rx_file']) ? $_FILES['rx_file'] : []);
   if (!empty($file["name"])) {
     $rximgid = save_insurance_image($file, 6);
     $rxrec = date("m/d/Y");
@@ -43,9 +45,15 @@ function save_insurance_image($file, $imagetypeid) {
   $db = new Db();
 
 // Set title based on category
-  if ($imagetypeid == 6) $title = "RX Image";
-  if ($imagetypeid == 7) $title = "LOMN Image";
-  if ($imagetypeid == 8) $title = "Clinical Notes Image";
+  if ($imagetypeid == 6) {
+      $title = "RX Image";
+  }
+  if ($imagetypeid == 7) {
+      $title = "LOMN Image";
+  }
+  if ($imagetypeid == 8) {
+      $title = "Clinical Notes Image";
+  }
   if ((array_search($file["type"], $dss_file_types) !== false) && ($file["size"] < DSS_FILE_MAX_SIZE)) {
     if(!empty($file["name"])) {
       $fname = $file["name"];
@@ -77,6 +85,7 @@ alert("Invalid File Type or File too Large");
 </script>
   <?php
   }
+  return null;
 }
 
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
@@ -375,7 +384,6 @@ $api_r = $db->getRow($api_sql);
 </div>
 <?php
     if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){ ?>
-
 <span class="sub_note">*Insurance Claims can be filed after<br />the items above are completed</span>
 <div class="clear"></div>
 <br /><br />
@@ -389,10 +397,7 @@ $api_r = $db->getRow($api_sql);
 </div>
 <div class="clear"></div>
 <?php
-
-
 } else {  // end pt info check
   echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
 ?>
-

@@ -13,7 +13,9 @@ include 'admin/includes/main_include.php';
     <script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
     <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 
-    <?php      
+    <?php
+    $db = new Db();
+
       $memouserid = $_SESSION['userid'];
 
       if(isset($_POST['submit'])) {
@@ -53,11 +55,11 @@ include 'admin/includes/main_include.php';
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" style="width:600px; margin:40px" name="memofrm">
       <textarea name="memobox" cols=60 rows=6><?php echo $memo ?></textarea><br />
       <input type="text" onclick="cal72.popup();" maxlength="255" style="width: 150px;" class="field text addr tbox" name="show_until" id="show_until" value="<?php echo $date; ?>">
-			<a href="javascript:cal72.popup();">
-        <img width="16" height="16" border="0" alt="Click Here to Pick up the date" src="img/cal.gif">
-      </a>
-			<label for="add1">Show Until</label>
-      <br />							
+        <a href="javascript:cal72.popup();">
+            <img width="16" height="16" border="0" alt="Click Here to Pick up the date" src="img/cal.gif">
+        </a>
+        <label for="add1">Show Until</label>
+      <br />
       <input type="submit" name="submit" value="Update Memo" />
     </form>
 

@@ -4,32 +4,32 @@ namespace Ds3\Libraries\Legacy;
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
+$db = new Db();
+
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
-	if($_POST["ed"] != ""){
-		$ed_sql = "update dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."' where contactid='".$_POST["ed"]."'";
-		$db->query($ed_sql);
-		
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
-		</script>
-		<?php
-		trigger_error("Die called", E_USER_ERROR);
-	}
-	else
-	{
-		$ins_sql = "insert into dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		$db->query($ins_sql);
-		
-		$msg = "Added Successfully";
-		?>
-		<script type="text/javascript">
-			parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
-		</script>
-		<?php
-		trigger_error("Die called", E_USER_ERROR);
-	}
+    if($_POST["ed"] != ""){
+        $ed_sql = "update dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."' where contactid='".$_POST["ed"]."'";
+        $db->query($ed_sql);
+
+        $msg = "Edited Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    } else {
+        $ins_sql = "insert into dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+        $db->query($ins_sql);
+
+        $msg = "Added Successfully";
+        ?>
+        <script type="text/javascript">
+            parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }
 }
 
 ?>
@@ -115,24 +115,24 @@ if(!empty($msg)) {?>
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text . 'Contact';
-if($name <> "") {?>
-           		&quot;<?php echo $name;?>&quot;
-<?php 
-}?>
+               if($name != "") { ?>
+                   &quot;<?php echo $name;?>&quot;
+                   <?php
+               } ?>
             </td>
         </tr>
         <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
                             Name
                             <span id="req_0" class="req">*</span>
                         </label>
                         <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
+                            <span>
+                                <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
+                                    <option value=""></option>
                                     <option value="Dr." <?php if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
                                     <option value="Mr." <?php if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                     <option value="Mrs." <?php if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
@@ -158,24 +158,24 @@ if($name <> "") {?>
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             <span>
                             <span style="color:#000000">Company</span>
                             <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Address
                             <span id="req_0" class="req">*</span>
                         </label>
@@ -204,13 +204,13 @@ if($name <> "") {?>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <input id="phone1" name="phone1" type="text" class="field text addr tbox" value="<?php echo $phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
@@ -224,7 +224,7 @@ if($name <> "") {?>
                                 <input id="fax" name="fax" type="text" class="field text addr tbox" value="<?php echo $fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
-						</div>
+                        </div>
                         <div>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>" tabindex="14" maxlength="255" style="width:325px;" />
@@ -232,75 +232,68 @@ if($name <> "") {?>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-        <tr> 
-
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?php echo $greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
                                 <label for="greeting">Greeting</label>
                             </span>
-                    	</div>
+                        </div>
                         <div>
-                        	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?php echo $sincerely?></textarea>
+                            <span>
+                                <textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?php echo $sincerely?></textarea>
                                 <label for="sincerely">Sincerely</label>
                             </span>
-                            
                             <span>
-<?php 
-$ctype_sql = "select * from dental_contacttype order by sortby";
-$ctype_my = $db->getResults($ctype_sql);
-?>            
-                            	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-
-                                	<option value="0"></option>
-<?php 
-if ($ctype_my) {
-    foreach ($ctype_my as $ctype_myarray) {?>
-        <option value="<?php echo st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
-                                    	<?php echo st($ctype_myarray['contacttype']);?>
-                                    </option>
-        <?php
-    }
-}?>
+                                <?php
+                                $ctype_sql = "select * from dental_contacttype order by sortby";
+                                $ctype_my = $db->getResults($ctype_sql);
+                                ?>
+                                <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
+                                    <option value="0"></option>
+                                    <?php
+                                    if ($ctype_my) {
+                                        foreach ($ctype_my as $ctype_myarray) {?>
+                                            <option value="<?php echo st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
+                                                <?php echo st($ctype_myarray['contacttype']);?>
+                                            </option>
+                                            <?php
+                                        }
+                                    } ?>
                                 </select>
                                 <label for="contacttype">Contact Type</label>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-        
-         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Notes:
                         </label>
                         <div>
                             <span class="full">
-                            	<textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
+                                <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["contactid"]?>" />

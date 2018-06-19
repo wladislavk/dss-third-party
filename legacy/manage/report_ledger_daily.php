@@ -2,7 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 ?>
 <div id="ledger_daily">
-  <svg style='height:300px; width: 450px;'/>
+    <svg style='height:300px; width: 450px;'/>
 </div>
 
 <script type="text/javascript">
@@ -41,6 +41,8 @@ namespace Ds3\Libraries\Legacy;
    var charges = [];
    var credits = [];
    <?php
+         $db = new Db();
+
       $sql = "select a.Date as ledger_date,
               COALESCE((SELECT sum(l.amount) 
               FROM dental_ledger l
@@ -68,12 +70,12 @@ namespace Ds3\Libraries\Legacy;
   ?>
   return [
      {
-	     "key": "Daily Charges",
-       "values": charges
+         "key": "Daily Charges",
+         "values": charges
      },
      {
-       "key": "Daily Credits",
-       "values": credits
+         "key": "Daily Credits",
+         "values": credits
      }
    ];
  }

@@ -25,7 +25,7 @@ if ($last_r['id'] == $id) {
     $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$pid."'";
 
     if ($db->getNumberRows($sql) == 0) {
-        $s = "INSERT INTO dental_ex_page5 set 
+        $sql = "INSERT INTO dental_ex_page5 set 
             dentaldevice='".mysqli_real_escape_string($con,$d)."', 
             patientid='".$pid."',
             userid = '".s_for($_SESSION['userid'])."',

@@ -2,12 +2,12 @@
 namespace Ds3\Libraries\Legacy;
 
 if (!isset($_GET['print'])) {
-	include "includes/top.htm";
+    include "includes/top.htm";
 } else {
-	include_once('admin/includes/main_include.php');
-	include("includes/sescheck.php");
-	include_once('includes/constants.inc');
-	include_once('admin/includes/access.php');
+    include_once('admin/includes/main_include.php');
+    include("includes/sescheck.php");
+    include_once('includes/constants.inc');
+    include_once('admin/includes/access.php');
 ?>
 <html>
 <body>
@@ -24,6 +24,8 @@ if(!empty($_REQUEST["page"])) {
 
 $docId = intval($_SESSION['docid']);
 $dbType = mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ);
+
+$db = new Db();
 
 $sql = "SELECT
         SUM(dl.amount) AS amount, SUM(dl.paid_amount) AS paid_amount,
@@ -53,11 +55,11 @@ $num_users = count($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Unpaid Patient Report
-   (<i><?php echo date('m/d/Y'); ?></i>)
+    Unpaid Patient Report
+    (<i><?php echo date('m/d/Y'); ?></i>)
 </span>
 <div align="right">
-	<button onclick="window.location='ledger_reportfull.php';" class="addButton">
+    <button onclick="window.location='ledger_reportfull.php';" class="addButton">
        Daily Ledger
     </button>
     &nbsp;&nbsp;
@@ -73,57 +75,57 @@ $num_users = count($my);
 <br />
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-	<tr bgColor="#ffffff">
-		<td align="right" colspan="15" class="bp">
-			Pages:
-			<?php paging($no_pages,$index_val,""); ?>
-		</td>
-	</tr>
-	<?php }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head">
-			Patient
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			0 Days	
-		</td>	
-		<td valign="top" class="col_head" width="10%">
-			30 Days
-		</td>	
-		<td valign="top" class="col_head" width="10%">
-			60 Days	
-		</td>	
-		<td valign="top" class="col_head" width="10%">
-			90 Days	
-		</td>	
-    <td valign="top" class="col_head" width="10 %">
-      120+ Days 
-    </td> 
-		<td valign="top" class="col_head" width="10%">
-			Charges
-		</td>
-		<td valign="top" class="col_head"  width="10%">
-			Credits
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Adjustments	
-		</td>
-		<td valign="top" class="col_head"  width="10%">
-			Pt. Balance	
-		</td>
-	</tr>
-	<?php if ($num_users == 0) { ?>
-	<tr class="tr_bg">
-		<td valign="top" class="col_head" colspan="10" align="center">
-			No Records
-		</td>
-	</tr>
-	<?php 
-	} else {
+    <?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
+    <tr bgColor="#ffffff">
+        <td align="right" colspan="15" class="bp">
+            Pages:
+            <?php paging($no_pages,$index_val,""); ?>
+        </td>
+    </tr>
+    <?php }?>
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head">
+            Patient
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            0 Days
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            30 Days
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            60 Days
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            90 Days
+        </td>
+        <td valign="top" class="col_head" width="10 %">
+          120+ Days
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Charges
+        </td>
+        <td valign="top" class="col_head"  width="10%">
+            Credits
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Adjustments
+        </td>
+        <td valign="top" class="col_head"  width="10%">
+            Pt. Balance
+        </td>
+    </tr>
+    <?php if ($num_users == 0) { ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="10" align="center">
+                No Records
+            </td>
+        </tr>
+        <?php
+    } else {
         $tot_charges = 0;
         $tot_credit = 0;
         $tot_adjusted = 0;
@@ -319,9 +321,9 @@ $num_users = count($my);
     
           </td>
           <td  align="right">
-            <? if(st($myarray['adjusted_amount']) <> 0) {?>
+            <?php if(st($myarray['adjusted_amount']) <> 0) {?>
                       <?=number_format(st($myarray['adjusted_amount']),2);?>
-            <? 
+            <?php
               $tot_adjusted += st($myarray['adjusted_amount']);
             }?>
           </td>
@@ -333,7 +335,7 @@ $num_users = count($my);
             <?php }?>
           </td>
         </tr>
-    <?  } }
+    <?php  } }
     }
    }
   ?>
@@ -373,26 +375,26 @@ $num_users = count($my);
                         </td>
       <td valign="top" align="right">
         <b>
-				<?php echo "$".number_format($tot_charges,2); ?>
-				&nbsp;
-			</b>
-		</td>
-		<td valign="top" align="right">
-			<b>
-				<?php echo "$".number_format($tot_credit,2);?>
-				&nbsp;
-			</b>
-		</td>
-		<td valign="top" align="right">
-			<b>
-				<?php echo "$".number_format($tot_adjusted,2);?>
-				&nbsp;
-			</b>
-		</td>
-		<td valign="top">
-			&nbsp;
-		</td>
-	</tr>
+            <?php echo "$".number_format($tot_charges,2); ?>
+            &nbsp;
+        </b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+                <?php echo "$".number_format($tot_credit,2);?>
+                &nbsp;
+            </b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+                <?php echo "$".number_format($tot_adjusted,2);?>
+                &nbsp;
+            </b>
+        </td>
+        <td valign="top">
+            &nbsp;
+        </td>
+    </tr>
     <tr>
         <td valign="top" colspan="7" align="right">
             <b>Balance</b>
@@ -414,7 +416,7 @@ $num_users = count($my);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php if (!isset($_GET['print'])) {
-	include "includes/bottom.htm";
+    include "includes/bottom.htm";
 } ?>

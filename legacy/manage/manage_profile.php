@@ -31,25 +31,25 @@ if(isset($_POST["profile_submit"])) {
         <?php
     } else {
         $in_sql = "UPDATE dental_users SET
-      username='".mysqli_real_escape_string($con,$_POST['username'])."',
-      npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
-      medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
-      medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
-      tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
-      ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
-      ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
-      practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
-      first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
-      last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
-      name='".mysqli_real_escape_string($con,$_POST['first_name'])." ".mysqli_real_escape_string($con,$_POST['last_name'])."',
-      email='".mysqli_real_escape_string($con,$_POST['email'])."',
-      address='".mysqli_real_escape_string($con,$_POST['address'])."',
-      city='".mysqli_real_escape_string($con,$_POST['city'])."',
-      state='".mysqli_real_escape_string($con,$_POST['state'])."',
-      zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
-      phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
-      updated_at=now()
-      WHERE userid='".$_SESSION['userid']."'";
+          username='".mysqli_real_escape_string($con,$_POST['username'])."',
+          npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
+          medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
+          medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
+          tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
+          ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
+          ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
+          practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
+          first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
+          last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
+          name='".mysqli_real_escape_string($con,$_POST['first_name'])." ".mysqli_real_escape_string($con,$_POST['last_name'])."',
+          email='".mysqli_real_escape_string($con,$_POST['email'])."',
+          address='".mysqli_real_escape_string($con,$_POST['address'])."',
+          city='".mysqli_real_escape_string($con,$_POST['city'])."',
+          state='".mysqli_real_escape_string($con,$_POST['state'])."',
+          zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
+          phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
+          updated_at=now()
+          WHERE userid='".$_SESSION['userid']."'";
 
         $db->query($in_sql);
 

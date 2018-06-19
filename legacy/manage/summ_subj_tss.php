@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/config.php';
 include_once 'admin/includes/general.htm';
 
+$db = new Db();
+
 if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
     $snore_1 = $_POST['snore_1'];
     $snore_2 = $_POST['snore_2'];
@@ -41,10 +43,7 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
 
     $myarray = $db->getRow($sql);
 
-    $q_sleepid = st($myarray['q_sleepid']);
     $epworthid = st($myarray['epworthid']);
-    $analysis = st($myarray['analysis']);
-
     if ($epworthid != '') {
         $epworth_arr1 = split('~', $epworthid);
 

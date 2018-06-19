@@ -1,5 +1,6 @@
 <?php 
 session_start();
+
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once "includes/constants.inc";
@@ -35,7 +36,7 @@ if(isset($_POST["enrollsub"]))
       $api_key = $api_key_result['eligible_api_key'];
     }
   }
-$data = array();
+$data = [];
 $data['test'] = "true";
 $data['api_key'] = $api_key;
 $data['file'] = '@'.$_FILES['file']['tmp_name'];
@@ -68,8 +69,7 @@ if(isset($json_response->{"error"})){
 }
 }
 ?>
-
-	<? if($msg != '') {?>
+    <?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
@@ -98,6 +98,5 @@ if(isset($json_response->{"error"})){
         </tr>
     </table>
     </form>
-    
 </body>
 </html>

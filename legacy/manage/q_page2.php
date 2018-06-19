@@ -247,7 +247,7 @@ if ($patient_info) {
         </script>
         <?php
         trigger_error("Die called", E_USER_ERROR);
-	}
+    }
     $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='$patientId'";
     $exist_row = $db->getRow($exist_sql);
 

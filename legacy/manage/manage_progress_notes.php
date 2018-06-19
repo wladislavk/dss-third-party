@@ -4,17 +4,19 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 include_once('includes/patient_info.php');
 
+$db = new Db();
+
 if ($patient_info) {
     if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
         $del_sql = "delete from dental_notes where notesid='".$_REQUEST["delid"]."'";
 
         $db->query($del_sql);
         $msg = "Deleted Successfully";
-?>
+        ?>
         <script type="text/javascript">
             window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
         </script>
-<?php
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
 

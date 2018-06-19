@@ -93,7 +93,7 @@ if (isset($_POST['device_submit'])) {
             adddate = now(),
             ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         $db->query($ins_sql);
-  	} else {
+    } else {
         $ed_sql = "update dental_summary set 
             initial_device_titration_1 = '$initialTitration1Escaped',
             initial_device_titration_equal_h = '$initialTitrationHEscaped',
@@ -102,7 +102,7 @@ if (isset($_POST['device_submit'])) {
             optimum_echovision_hor = '$echovisionHorEscaped'
             where summaryid = {$row['summaryid']}";
         $db->query($ed_sql);
-  	}
+    }
 }
 
 $sqlex = "select * from dental_ex_page5_pivot where patientid='$pid'";
@@ -609,7 +609,7 @@ $myarray = $db->getRow($sql);
 <script src="js/summ_summ.js" type="text/javascript"></script>
 
 <form id="rom_form" action="" method="POST">
-    <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
+    <table width="100%" align="center" border="1" cellpadding="7" cellspacing="0">
         <tr valign="top">
             <td width="17%" height="4">
                 ROM:&nbsp;&nbsp;

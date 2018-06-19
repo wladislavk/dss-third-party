@@ -4,67 +4,67 @@ namespace Ds3\Libraries\Legacy;
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/constants.inc');
+
+$db = new Db();
 ?>
-
 <html>
-    <body>
-
-    <link rel="stylesheet" href="css/ledger.css" />
-
-<?php if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '') { ?>
-        <script type="text/javascript">
-            window.location = 'ledger.php';
-        </script>
+<body>
+<link rel="stylesheet" href="css/ledger.css" />
 <?php
-       trigger_error("Die called", E_USER_ERROR);
-    }
+if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '') { ?>
+    <script type="text/javascript">
+        window.location = 'ledger.php';
+    </script>
+<?php
+   trigger_error("Die called", E_USER_ERROR);
+}
 
-    if(!isset($_REQUEST['sort'])){
-        $_REQUEST['sort'] = 'service_date';
-        $_REQUEST['sortdir'] = 'asc';
-    }
+if(!isset($_REQUEST['sort'])){
+    $_REQUEST['sort'] = 'service_date';
+    $_REQUEST['sortdir'] = 'asc';
+}
 
-    if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
-        $start_date = $_REQUEST['start_date'];
-        $end_date = $_REQUEST['end_date'];
-    }elseif($_REQUEST['dailysub']){
-        $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy'])); 
-        $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-    }elseif($_REQUEST['weeklysub']){
-        $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-        $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
-    }elseif($_REQUEST['monthlysub']){
-        $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-        $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-    }elseif($_REQUEST['rangesub']){
-        $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
-        $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
-    }else{
-        $start_date = false;
-        $end_date = false;
-    }
+if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
+    $start_date = $_REQUEST['start_date'];
+    $end_date = $_REQUEST['end_date'];
+}elseif($_REQUEST['dailysub']){
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+}elseif($_REQUEST['weeklysub']){
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
+}elseif($_REQUEST['monthlysub']){
+    $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+    $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+}elseif($_REQUEST['rangesub']){
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
+}else{
+    $start_date = false;
+    $end_date = false;
+}
 
-    $rec_disp = 200;
+$rec_disp = 200;
 
-    if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
-        $index_val = $_REQUEST["page"];
-    } else {
-        $index_val = 0;
-    }
+if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
     
-    $i_val = $index_val * $rec_disp;
+$i_val = $index_val * $rec_disp;
 
-    if(isset($_GET['pid'])){
-        $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
-    }else{
-        $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
-    }
+if(isset($_GET['pid'])){
+    $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' ";
+}else{
+    $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
+}
 
-    $sql .= " order by service_date";
+$sql .= " order by service_date";
 
-    $sql .= " limit ".$i_val.",".$rec_disp.";";
-    $my = $db->getResults($sql);
-    $num_users = count($my);
+$sql .= " limit ".$i_val.",".$rec_disp.";";
+$my = $db->getResults($sql);
+$num_users = count($my);
 ?>
     <span class="admin_head">
         Ledger Report

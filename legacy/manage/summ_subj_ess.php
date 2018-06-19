@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include_once 'admin/includes/general.htm';
 
+$db = new Db();
+
 if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = $db->getResults($epworth_sql);
@@ -15,7 +17,7 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
             <?php
         }
     }
-	
+
     $ess_score = 0;
     foreach ($_POST as $index => $value) {
         if (preg_match('/^epworth_\d+$/', $index)) {

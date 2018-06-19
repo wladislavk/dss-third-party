@@ -4,7 +4,6 @@ namespace Ds3\Libraries\Legacy;
 <link href="3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
 
 <script src="3rdParty/novus-nvd3/lib/d3.v3.js"></script>
-
 <script src="3rdParty/novus-nvd3/nv.d3.js"></script>
 
 <div id="treatment">
@@ -48,7 +47,7 @@ $(document).ready(function(){
     $sql = "select a.Date as treatment_date,
             COALESCE((SELECT count(i.id) 
             FROM dental_flow_pg2_info i
-  	        JOIN dental_patients p ON i.patientid=p.patientid
+            JOIN dental_patients p ON i.patientid=p.patientid
             WHERE p.docid='".$_SESSION['docid']."' AND i.segmentid=2 AND DATE(i.date_completed) = a.Date), 0) as num_consult,
             COALESCE((SELECT count(i.id) 
             FROM dental_flow_pg2_info i
@@ -64,10 +63,11 @@ $(document).ready(function(){
             ORDER BY a.Date";
 
     $q = $db->getResults($sql);
-    foreach ($q as $r) {
-  	  ?>consult.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_consult']; ?>});<?php 
-  	  ?>impressions.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_impressions']; ?>});<?php
-  	}
+    foreach ($q as $r) { ?>
+     consult.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_consult']; ?>});
+     impressions.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_impressions']; ?>});
+     <?php
+    }
  ?> 
    return [
      {

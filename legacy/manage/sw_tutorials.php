@@ -21,8 +21,5 @@ Just signed up? Great! Start here with a general introduction to the DS3 softwar
 
 </div>
 <?php
-
 include "includes/bottom.htm";
-
 ?>
-

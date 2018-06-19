@@ -25,9 +25,12 @@ include_once "admin/includes/general.htm";
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-$thesql = "select c.*, ct.contacttype from dental_contact c 
-			LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
-			where c.contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$db = new Db();
+
+$thesql = "select c.*, ct.contacttype 
+    from dental_contact c 
+    LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
+    where c.contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
 $salutation = st($themyarray['salutation']);
@@ -51,47 +54,47 @@ $notes = st($themyarray['notes']);
 <link rel="stylesheet" href="css/quick_view.css" type="text/css" media="screen" />
 
 <div style="padding-top:10px;background: #fff; width: 98%; height:380px; margin-left: 1%;">
-	<div class="info">
-		<label>Name:</label> <span class="value"><?php echo $salutation." ".$firstname." ".$middlename." ".$lastname; ?></span>
-	</div>
-	<div class="info">
-		<label>Company:</label> <span class="value"><?php echo $company; ?> </span>
-	</div>
-	<div class="info">
+    <div class="info">
+        <label>Name:</label> <span class="value"><?php echo $salutation." ".$firstname." ".$middlename." ".$lastname; ?></span>
+    </div>
+    <div class="info">
+        <label>Company:</label> <span class="value"><?php echo $company; ?> </span>
+    </div>
+    <div class="info">
         <label>Contact Type:</label> <span class="value"><?php echo $contacttype; ?> </span>
-	</div>
-	<div class="info">
-		<label>Address:</label> <span class="value"><?php echo $add1; ?></span>
-	</div>
-	<div class="info">
-		<label>&nbsp;</label> <span class="value"><?php echo $add2; ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
+        <label>Address:</label> <span class="value"><?php echo $add1; ?></span>
+    </div>
+    <div class="info">
+        <label>&nbsp;</label> <span class="value"><?php echo $add2; ?></span>
+    </div>
+    <div class="info">
         <label>&nbsp;</label> <span class="value"><?php echo $city." ".$state." ".$zip; ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
         <label>Phone:</label> <span class="value"><?php echo format_phone($phone1); ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
         <label>Phone 2:</label> <span class="value"><?php echo format_phone($phone2); ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
         <label>Fax:</label> <span class="value"><?php echo format_phone($fax); ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
         <label>Email:</label> <span class="value"><?php echo $email; ?></span>
-	</div>
-	<div class="info">
+    </div>
+    <div class="info">
         <label>Notes:</label> <span class="value"><?php echo $notes; ?></span>
-	</div>
-	<?php
-if($themyarray['corporate']=='1'){ ?>
-	<a href="view_fcontact.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">View Full</a>
-<?php 
-}else{ ?>
-	<a href="add_contact.php?ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>" style="margin-right:10px;float:right;">Edit</a>
-<?php 
-} ?>
+    </div>
+    <?php
+    if($themyarray['corporate']=='1'){ ?>
+        <a href="view_fcontact.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">View Full</a>
+        <?php
+    }else{ ?>
+        <a href="add_contact.php?ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>" style="margin-right:10px;float:right;">Edit</a>
+        <?php
+    } ?>
 </div>
 
 </body>

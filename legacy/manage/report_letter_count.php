@@ -3,22 +3,21 @@ namespace Ds3\Libraries\Legacy;
 ?>
 <link href="3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
 
-  <script src="3rdParty/novus-nvd3/lib/d3.v3.js"></script>
+<script src="3rdParty/novus-nvd3/lib/d3.v3.js"></script>
+<script src="3rdParty/novus-nvd3/nv.d3.js"></script>
 
-  <script src="3rdParty/novus-nvd3/nv.d3.js"></script>
-
-  <div id="chart">
+<div id="chart">
     <svg style='height:300px; width: 450px;'/>
-  </div>
+</div>
 
-  <script type="text/javascript">
+<script type="text/javascript">
    nv.addGraph(function() {  
      var chart = nv.models.lineChart();
    
      chart.xAxis
          .axisLabel('Date')
-  	.showMaxMin(false)	
-  	.tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
+         .showMaxMin(false)
+         .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
    
      d3.select('#chart svg')
          .datum(letterCount())
@@ -42,6 +41,8 @@ namespace Ds3\Libraries\Legacy;
      var letters = [];
 
      <?php
+           $db = new Db();
+
         $sql = "select a.Date as letter_date,
                 COALESCE((SELECT count(letterid) 
                 FROM dental_letters t1
@@ -56,8 +57,7 @@ namespace Ds3\Libraries\Legacy;
                 ORDER BY a.Date";
 
         $q = $db->getResults($sql);
-      	foreach ($q as $r) {
-  	 ?>
+        foreach ($q as $r) { ?>
       letters.push({x: <?= date('U',strtotime($r['letter_date'])); ?>, y: <?= $r['num_letter']; ?>});
 
      <?php } ?> 

@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 
+$db = new Db();
+
 if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
     if (empty($_POST['password1'])) {
         $msg = 'The password cannot be empty';
@@ -33,8 +35,7 @@ if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
             NOW() <= $validInterval AS valid
         FROM dental_users
         WHERE username = '$username'
-            AND recover_hash = '$recoverHash'";
-
+        AND recover_hash = '$recoverHash'";
     $check_myarray = $db->getRow($check_sql);
 
     if (empty($check_myarray['valid'])) {

@@ -71,8 +71,7 @@ $(document).delegate('.delay_reason', "change", function(){
         success: function(data){
             var r = $.parseJSON(data);
             
-            if (r.error) {}
-            else {
+            if (!r.error) {
                 if (reason == "other") {
                     $(document).find('#reason_btn'+id).show();
                     loadPopup('flowsheet_other_reason.php?ed='+id+'&pid=112&sid=5');
@@ -109,14 +108,13 @@ $(document).delegate('.noncomp_reason', "change", function () {
         },
         success: function (data) {
             var r = $.parseJSON(data);
-            if (r.error) {} else {
+            if (!r.error) {
                 if (reason == "other") {
                     $(document).find('#reason_btn' + id).show();
                     loadPopup('flowsheet_other_reason.php?ed=' + id + '&pid=112&sid=5');
                 } else {
                     $(document).find('#reason_btn' + id).hide();
                 }
-
             }
         },
         failure: function (data) {

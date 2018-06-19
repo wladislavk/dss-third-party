@@ -3,25 +3,27 @@ namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
 require_once __DIR__ . '/admin/includes/claim-status-switcher.inc';
-
 ?>
-  <link rel="stylesheet" href="css/ledger.css" />
+<link rel="stylesheet" href="css/ledger.css" />
 <?php
 if (!isset($_REQUEST['sort'])) {
     $_REQUEST['sort'] = 'service_date';
     $_REQUEST['sortdir'] = 'desc';
 }
 
-  if(isset($_REQUEST['file']) && $_REQUEST['file']==1){
+if(isset($_REQUEST['file']) && $_REQUEST['file']==1){
     $id = claim_create_sec($_GET['pid'], $_GET['claimid'], '0', false);
 ?>
     <script type="text/javascript">
       window.location = "view_claim.php?claimid=<?php echo  $id; ?>&pid=<?php echo $_GET['pid'];?>";
     </script>
 <?php
-  }
+}
 
-  if(isset($_REQUEST['deleobid'])){
+$db = new Db();
+
+if(isset($_REQUEST['deleobid'])){
+
     $esql = "SELECT * FROM dental_insurance_file WHERE id=".mysqli_real_escape_string($con,$_GET['deleobid']);
     $eob = $db->getRow($esql);
 
@@ -258,19 +260,18 @@ Claim <?= $claimId ?>
       if ($api_r['use_eligible_api'] == 1) {
     ?>
         <button onclick="window.location='insurance_eligible.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
-		<?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
-            Refile E-File
-		<?php } else { ?>
-            E-File
-		<?php } ?>
+            <?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
+                Refile E-File
+            <?php } else { ?>
+                E-File
+            <?php } ?>
         </button>
-
-    <?php } ?>
-  	<?php } else { ?>
+      <?php } ?>
+    <?php } else { ?>
           <button onclick="window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
-  		      View CMS 1500
+              View CMS 1500
           </button>
-  	<?php } ?>
+    <?php } ?>
   </div>
 
   <div align="right" style="clear: right;">
@@ -281,19 +282,19 @@ Claim <?= $claimId ?>
 
     <?php
       if(($claim['status'] == DSS_CLAIM_PAID_INSURANCE || $claim['status']== DSS_CLAIM_PAID_PATIENT) &&
-    	    $pat['s_m_relation']!='' && $pat['s_m_partyfname'] != "" && $pat['s_m_partylname'] != "" &&
+          $pat['s_m_relation']!='' && $pat['s_m_partyfname'] != "" && $pat['s_m_partylname'] != "" &&
           $pat['s_m_relation'] != "" && $pat['ins2_dob'] != "" && $pat['s_m_gender'] != "" &&
           $pat['s_m_ins_co'] != "" && $pat['s_m_ins_grp'] != "" && $pat['s_m_ins_type'] != '')
       {
-      	$s_sql = "SELECT * FROM dental_insurance WHERE primary_claim_id='".$claim['insuranceid']."'";
-      	if($db->getNumberRows($s_sql)==0){
+          $s_sql = "SELECT * FROM dental_insurance WHERE primary_claim_id='".$claim['insuranceid']."'";
+          if($db->getNumberRows($s_sql)==0){
     ?>
           <button onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>&file=1';" class="addButton">
             File Secondary
           </button>
           &nbsp;&nbsp;
     <?php } 
-    	}
+    }
     ?>
 
     <?php
@@ -310,7 +311,7 @@ Claim <?= $claimId ?>
       <button onclick="window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?>';" class="addButton">
         Print Ledger
       </button>
-  	  &nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;
       <button onclick="loadPopup('add_ledger_note.php?pid=<?= $patientId ?>');" class="addButton">
         Add Note 
       </button>
@@ -342,142 +343,148 @@ Claim <?= $claimId ?>
 
   <br />
   <div align="center" class="red">
-  	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+      <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
   </div>
 
-  <form name="edit_mult_form" id="edit_mult_form" />
-    <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-    	<?php if($total_rec > $rec_disp) { ?>
-      	<tr bgColor="#ffffff">
-      		<td  align="right" colspan="15" class="bp">
-      			Pages: <?php paging($no_pages,$index_val,""); ?>
-      		</td>        
-      	</tr>
-    	<?php }?>
+  <form name="edit_mult_form" id="edit_mult_form">
+    <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <?php if($total_rec > $rec_disp) { ?>
+        <tr bgColor="#ffffff">
+            <td  align="right" colspan="15" class="bp">
+                Pages: <?php paging($no_pages,$index_val,""); ?>
+            </td>
+        </tr>
+        <?php }?>
 
-    	<tr class="tr_bg_h">
-    		<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
-    		</td>
-    		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
-    		</td>
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
+            </td>
+            <td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
+            </td>
         <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
           <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
         </td>
-    		<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
-    		</td>
-    		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
-    		</td>
-    		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
-    		</td>
-    		<td valign="top" class="col_head" width="10%">
-    			Balance
-    		</td>
-    		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
-    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
-    		</td>
+        <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+            <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Balance
+        </td>
+        <td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
+            <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
+        </td>
         <td valign="top" class="col_head" width="5%">
           Action 
         </td>
-    	</tr>
+    </tr>
 
-    	<?php if($num_users == 0) { ?>
-    		<tr class="tr_bg">
-    			<td valign="top" class="col_head" colspan="10" align="center">
-    				No Records
-    			</td>
-    		</tr>
-    	<?php } else {
-            		$cur_bal = 0;
-            		$last_sd = '';
-            		$last_ed = '';
+    <?php if($num_users == 0) { ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="10" align="center">
+                No Records
+            </td>
+        </tr>
+    <?php } else {
+                $cur_bal = 0;
+                $last_sd = '';
+                $last_ed = '';
 
-            		foreach ($my as $myarray) {
-            			$tr_class = "tr_active";
-            			if($myarray['status']==DSS_CLAIM_REJECTED && !empty($myarray[0]) && $myarray[0]=='ledger'){
-            			  $style='style="background:#f46;"';
-            			} else {
-            			  $style="";
-            			}
+                foreach ($my as $myarray) {
+                    $tr_class = "tr_active";
+                    if($myarray['status']==DSS_CLAIM_REJECTED && !empty($myarray[0]) && $myarray[0]=='ledger'){
+                      $style='style="background:#f46;"';
+                    } else {
+                      $style="";
+                    }
                   
-                  if($myarray['ledger'] == 'eob'){ $tr_class .= ' clickable_row'; }
-            			if($myarray['ledger'] == 'eob' && ($myarray['status']!=DSS_CLAIM_DISPUTE && $myarray['status']!=DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_text'; }
-                  if($myarray['ledger'] == 'eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_dispute_text'; }
-    	?>
-    		<tr	class="<?php echo $tr_class;?> <?php echo  $myarray['ledger']; ?>" <?php echo $style; ?>>
-  				<td <?php if($myarray['ledger'] == "eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
-  					<?php
+                  if($myarray['ledger'] == 'eob'){
+                        $tr_class .= ' clickable_row';
+                    }
+                  if($myarray['ledger'] == 'eob' && ($myarray['status']!=DSS_CLAIM_DISPUTE && $myarray['status']!=DSS_CLAIM_SEC_DISPUTE)){
+                        $tr_class .= ' eob_text';
+                    }
+                  if($myarray['ledger'] == 'eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){
+                        $tr_class .= ' eob_dispute_text';
+                    }
+        ?>
+            <tr class="<?php echo $tr_class;?> <?php echo  $myarray['ledger']; ?>" <?php echo $style; ?>>
+                <td <?php if($myarray['ledger'] == "eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
+                    <?php
               if($myarray["service_date"]!=$last_sd){
-  						  $last_sd = $myarray["service_date"];
-         				echo date('m-d-Y',strtotime(st($myarray["service_date"])));
+                          $last_sd = $myarray["service_date"];
+                        echo date('m-d-Y',strtotime(st($myarray["service_date"])));
               }
             ?>
-  				</td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
-  					<?php
+                </td>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
+                    <?php
               if($myarray["entry_date"]!=$last_ed){
                 $last_ed = $myarray["entry_date"];
                 echo date('m-d-Y',strtotime(st($myarray["entry_date"])));
               }
             ?>
-  				</td>
+            </td>
           <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
             <?php echo st($myarray["name"]);?>
             <?php
               if($myarray['ledger']=='eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){
-    				    echo " (".$dss_claim_status_labels[$myarray['status']].")";
-    			    }
+                    echo " (".$dss_claim_status_labels[$myarray['status']].")";
+            }
             ?>
           </td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
-            <?php echo st(ucWords($myarray["description"]));?>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
+            <?php echo st(ucwords($myarray["description"]));?>
             <?php echo  (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
             <?php echo  (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
-  				</td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
-  					<?php if(st($myarray["amount"]) <> 0) {?>
-      	            <?php echo number_format(st($myarray["amount"]),2);?>
-      					    <?php	$cur_bal += st($myarray["amount"]);
+                </td>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
+                    <?php if(st($myarray["amount"]) <> 0) {?>
+                    <?php echo number_format(st($myarray["amount"]),2);?>
+                            <?php $cur_bal += st($myarray["amount"]);
                   }
             ?>
-  					&nbsp;
-  				</td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
-  					<?php if(st($myarray["paid_amount"]) <> 0) { ?>
-  	          <?php echo number_format(st($myarray["paid_amount"]),2);?>
-  					<?php 
-  						$cur_bal -= st($myarray["paid_amount"]);
-  					}?>
-  					&nbsp;
-  				</td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
-  					<?php echo number_format(st($cur_bal),2);?>
+                    &nbsp;
+                </td>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
+                    <?php if(st($myarray["paid_amount"]) <> 0) { ?>
+              <?php echo number_format(st($myarray["paid_amount"]),2);?>
+                    <?php
+                        $cur_bal -= st($myarray["paid_amount"]);
+                    }?>
+                    &nbsp;
+                </td>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
+                    <?php echo number_format(st($cur_bal),2);?>
             &nbsp;
-  				</td>
-  				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
+                </td>
+                <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
             <?php
                echo (!empty($dss_claim_status_labels[$myarray["status"]]) ? $dss_claim_status_labels[$myarray["status"]] : ''); 
-            ?>       	
-  				</td>
-  				<td valign="top">
-  					<?php if($myarray['ledger']=='ledger_payment'){ ?>
+            ?>
+                </td>
+                <td valign="top">
+                    <?php if($myarray['ledger']=='ledger_payment'){ ?>
               <a href="Javascript:;" onclick="loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
                 Edit 
               </a>
-  					<?php } ?>
-  				</td>
-    		</tr>
-    	<?php	}
-    	  }
+                    <?php } ?>
+                </td>
+            </tr>
+        <?php }
+          }
       ?>
       <tr>
         <td colspan="8">
-        	<center>
-        		<button onclick="window.location='manage_ledger.php?pid=<?= $patientId ?>';return false;" class="addButton">
+            <center>
+                <button onclick="window.location='manage_ledger.php?pid=<?= $patientId ?>';return false;" class="addButton">
               Return to Patient Ledger
             </button>
           </center>
@@ -507,10 +514,10 @@ Claim <?= $claimId ?>
 <?php 
   if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
     <script type="text/javascript">
-    	window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';
+        window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';
     </script>
 <?php } ?>
 
-  <br /><br />	
+  <br /><br />
 
 <?php include "includes/bottom.htm";?>

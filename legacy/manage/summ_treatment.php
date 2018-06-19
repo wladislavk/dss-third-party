@@ -9,6 +9,8 @@ namespace Ds3\Libraries\Legacy;
 <h3 class="sect_header">Previous Treatments</h3>
 <div class="box">
     <?php
+    $db = new Db();
+
     $sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $myarray = $db->getRow($sql);
 

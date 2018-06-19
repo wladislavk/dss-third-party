@@ -28,30 +28,28 @@ if(isset($_POST['submitbut'])){
                 set_time_limit(0);
 
                 $row = 0;
-        		$error_count = 0;
-        		$error_array = array();
+                $error_count = 0;
+                $error_array = [];
                 while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
-                    // number of fields in the csv
-                    $num = count($data);
                     // get the values from the csv
                     if($row == 0){
                         for($i=0;$i<27;$i++){
                             switch(strtolower(trim($data[$i]))){
                                 case 'lastname':
-                                        $fields[] = 'lastname';
-                                        break;
+                                    $fields[] = 'lastname';
+                                    break;
                                 case 'firstname':
-                                        $fields[] = 'firstname';
-                                        break;
+                                    $fields[] = 'firstname';
+                                    break;
                                 case 'middleinit':
-                                        $fields[] = 'middlename';
-                                        break;
+                                    $fields[] = 'middlename';
+                                    break;
                                 case 'title':
-                                        $fields[] = 'salutation';
-                                        break;
+                                    $fields[] = 'salutation';
+                                    break;
                                 case 'patientid':
-        				                $fields[]='';
-                                        break;
+                                    $fields[]='';
+                                    break;
                                 case 'active':
                                         $fields[] = 'status';
                                         break;
@@ -59,65 +57,65 @@ if(isset($_POST['submitbut'])){
                                         $fields[] = 'add1';
                                         break;
                                 case 'address2':
-                                        $fields[] = 'add2';
-                                        break;
+                                    $fields[] = 'add2';
+                                    break;
                                 case 'city':
-                                        $fields[] = 'city';
-                                        break;
+                                    $fields[] = 'city';
+                                    break;
                                 case 'state':
-                                        $fields[] = 'state';
-                                        break;
+                                    $fields[] = 'state';
+                                    break;
                                 case 'postalcode':
-                                        $fields[] = 'zip';
-                                        break;
+                                    $fields[] = 'zip';
+                                    break;
                                 case 'gender':
-                                        $fields[] = 'gender';
-                                        break;
+                                    $fields[] = 'gender';
+                                    break;
                                 case 'birthday':
-                                        $fields[] = 'dob';
-                                        break;
+                                    $fields[] = 'dob';
+                                    break;
                                 case 'homephone':
-                                        $fields[] = 'home_phone';
-                                        break;
+                                    $fields[] = 'home_phone';
+                                    break;
                                 case 'workphone':
-                                        $fields[] = 'work_phone';
-                                        break;
+                                    $fields[] = 'work_phone';
+                                    break;
                                 case 'cellphone':
-                                        $fields[] = 'cell_phone';
-                                        break;
+                                    $fields[] = 'cell_phone';
+                                    break;
                                 case 'email':
-                                        $fields[] = 'email';
-                                        break;
+                                    $fields[] = 'email';
+                                    break;
                                 case 'marital':
-                                        $fields[] = 'marital_status';
-                                        break;
+                                    $fields[] = 'marital_status';
+                                    break;
                                 case 'ssn':
-                                        $fields[] = 'ssn';
-                                        break;
+                                    $fields[] = 'ssn';
+                                    break;
                                 case 'heightfeet':
-                                        $fields[] = 'feet';
-                                        break;
+                                    $fields[] = 'feet';
+                                    break;
                                 case 'heightinches':
-                                        $fields[] = 'inches';
-                                        break;
+                                    $fields[] = 'inches';
+                                    break;
                                 case 'spousename':
-        				                $fields[] = 'partner_name';
-                                        break;
+                                    $fields[] = 'partner_name';
+                                    break;
                                 case 'spousebirthday':
-        				                $fields[] = '';
-                                        break;
+                                    $fields[] = '';
+                                    break;
                                 case 'responsibleperson':
-        				                $fields[] = '';
-                                        break;
+                                    $fields[] = '';
+                                    break;
                                 case 'physicianname':
-        				                $fields[] = '';
-                                        break;
+                                    $fields[] = '';
+                                    break;
                             }
                         }
                         $row++;
                     }else{
-            			$patientphone = $patientemail = $patientdob = $patientadd = $patientcity = $patientstate = $patientzip = $patientgender = false;
-            			$s = "INSERT INTO dental_patients SET ";
+                        $patientphone = $patientemail = $patientdob = $patientadd = $patientcity = $patientstate = $patientzip = $patientgender = false;
+                        $s = "INSERT INTO dental_patients SET ";
                         foreach($fields AS $id => $field){
                             switch($field){
                                 case 'status':
@@ -127,8 +125,8 @@ if(isset($_POST['submitbut'])){
                                         $s .= $field . " = '4', ";
                                     }
                                     break;
-                    			case 'dob':
-                    				if($data[$id]!=''){
+                                case 'dob':
+                                    if($data[$id]!=''){
                                         $patientdob = true;
                                         $timestamp = strtotime($data[$id]);
 
@@ -139,14 +137,14 @@ if(isset($_POST['submitbut'])){
 
                                         $d = $timestamp ? date('m/d/Y', $timestamp) : $data[$id];
                                         $s .= $field . " = '" .$d."', ";
-                    				}
-                    				break;
+                                    }
+                                    break;
                                 case 'work_phone':
-                    			case 'home_phone':
-                    			case 'cell_phone':
+                                case 'home_phone':
+                                case 'cell_phone':
                                     if($field!='' && $data[$id] !=''){
-                    					$patientphone = true;
-                    					$s .= $field . " = '" .num($data[$id])."', ";
+                                        $patientphone = true;
+                                        $s .= $field . " = '" .num($data[$id])."', ";
                                     }
                                     break;
                                 case 'add1':
@@ -181,26 +179,25 @@ if(isset($_POST['submitbut'])){
                                     break;
                                 case 'email':
                                     if($field!=''){
-                    					$email = $data[$id];
-                				        if(checkEmail($email, 0)>0){
-                                			array_push($error_array, $data[1]." ".$data[0]." - ".$email);
-                                			$error_count++;
-                                		}else{
+                                        $email = $data[$id];
+                                        if(checkEmail($email, 0)>0){
+                                            array_push($error_array, $data[1]." ".$data[0]." - ".$email);
+                                            $error_count++;
+                                        }else{
                                             $patientemail = true;
                                             $s .= $field . " = '" .$db->escape($data[$id])."', ";
                                         }
                                     }
                                     break;
-
-                    			default:
-                    				if($field!=''){
-                    		  			$s .= $field . " = '" .$db->escape($data[$id])."', ";
-                    				}
-                    				break;
+                                default:
+                                    if($field!=''){
+                                        $s .= $field . " = '" .$db->escape($data[$id])."', ";
+                                    }
+                                    break;
                             }
                         }
-            			$s .= " docid = '".$_SESSION['docid']."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
-            			$pid = $db->getInsertId($s);
+                        $s .= " docid = '".$_SESSION['docid']."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
+                        $pid = $db->getInsertId($s);
 
                         $complete_info = 0;
                         if (($patientemail || $patientphone) && $patientadd && $patientcity && $patientstate && $patientzip && $patientdob && $patientgender) {
@@ -209,43 +206,43 @@ if(isset($_POST['submitbut'])){
                         // Determine Whether Patient Info has been set
                         update_patient_summary($pid, 'patient_info', $complete_info);
 
-                		$copyreqdate = date('m/d/Y');
-                			
-                		if($copyreqdate!=''){
-                			$db->query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");
-              				$stepid = '1';
-              				$segmentid = '1';
-              				$scheduled = date('Y-m-d', strtotime($copyreqdate));
-              				$steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
-              				$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
-              				$db->query($steparray_query);
-              				$db->query($flow_pg2_info_query);
+                        $copyreqdate = date('m/d/Y');
 
-            				if(!empty($last_visit)){
-            					$visit_date = date('Y-m-d', strtotime($last_visit));
-            					$steparray_query = "UPDATE dental_flow_pg2 SET steparray = '1,2' WHERE patientid='".$pid."'";
-            					$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '2', '2', '".$visit_date."', '".$visit_date."');";
-                            	$db->query($steparray_query);
-                            	$db->query($flow_pg2_info_query);
-            				}
-            			}
-                   		$row++;
-            		}
+                        if($copyreqdate!=''){
+                            $db->query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");
+                            $stepid = '1';
+                            $segmentid = '1';
+                            $scheduled = date('Y-m-d', strtotime($copyreqdate));
+                            $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
+                            $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
+                            $db->query($steparray_query);
+                            $db->query($flow_pg2_info_query);
+
+                            if(!empty($last_visit)){
+                                $visit_date = date('Y-m-d', strtotime($last_visit));
+                                $steparray_query = "UPDATE dental_flow_pg2 SET steparray = '1,2' WHERE patientid='".$pid."'";
+                                $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '2', '2', '".$visit_date."', '".$visit_date."');";
+                                $db->query($steparray_query);
+                                $db->query($flow_pg2_info_query);
+                            }
+                        }
+                        $row++;
+                    }
                 }
                 fclose($handle);
-        		$msg = "<h4>Inserted ".($row-1)." rows.</h4>";
-        		if($error_count){
+                $msg = "<h4>Inserted ".($row-1)." rows.</h4>";
+                if($error_count){
                     $msg .= "<p>".$error_count." errors. Imported emails already assigned to existing patients. The following email addresses will not be imported:</p><ul>";
                         foreach($error_array as $e){
                             $msg .= "<li>".$e."</li>";
                         }
                     $msg .= "</ul>";
-        		}
-    		?>
-    		<script type="text/javascript">
-    			window.location = "pending_patient.php?msg=<?php echo $msg; ?>";
-    		</script>
-    		<?php
+                }
+            ?>
+            <script type="text/javascript">
+                window.location = "pending_patient.php?msg=<?php echo $msg; ?>";
+            </script>
+            <?php
             }
         }
     }

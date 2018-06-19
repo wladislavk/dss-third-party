@@ -223,7 +223,6 @@ if ($patient_info) { ?>
         <input type="hidden" name="q_sleepsub" value="1" />
         <input type="hidden" name="ed" value="<?php echo $q_sleepid;?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-
         <div align="right">
             <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
             <input type="submit" name="q_sleepbtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />

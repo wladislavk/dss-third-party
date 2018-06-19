@@ -1,10 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 ?>
 
 <a href="support.php" style="float:right; margin-right:20px;" class="button">Return to support</a>
 
 <?php
+$db = new Db();
+
 $v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 0 && id = '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')) . "'";
 $db->query($v_sql);
 $v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')) . "'";
@@ -16,14 +20,14 @@ if(isset($_POST['respond'])){
     linkRequestData('dental_support_responses', 0);
     
     $s = "INSERT INTO dental_support_responses SET
-          	ticket_id = '".mysqli_real_escape_string($con,$_GET['ed'])."',
-          	responder_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-          	response_type=1,
-          	body = '".mysqli_real_escape_string($con,$_POST['body'])."',
-          	adddate = now(),
-          	ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
-        		";
-      $r_id = $db->getInsertId($s);
+        ticket_id = '".mysqli_real_escape_string($con,$_GET['ed'])."',
+        responder_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
+        response_type=1,
+        body = '".mysqli_real_escape_string($con,$_POST['body'])."',
+        adddate = now(),
+        ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
+    ";
+    $r_id = $db->getInsertId($s);
   }
 
   if(!empty($_POST['close']) && $_POST['close']==2){
@@ -45,10 +49,10 @@ if(isset($_POST['respond'])){
             status='1'
             WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
     $db->query($s);?>
-<script type="text/javascript">
-  alert("This ticket was closed and has now been reopened. We will respond promptly to your inquiry. Thank you!");
-</script>
-	<?php
+        <script type="text/javascript">
+          alert("This ticket was closed and has now been reopened. We will respond promptly to your inquiry. Thank you!");
+        </script>
+      <?php
   }
 
   for($i=0;$i < count($_FILES['attachment']['name']); $i++){
@@ -90,7 +94,7 @@ if (!empty($t['company_name'])){
 <div style="width:96%; margin:0 auto;">
   <div id="support_ticket">
     <span class="admin_head">
-    	<?php echo (!empty($t['title']) ? $t['title'] : '')." - ".$company_name; ?>
+        <?php echo (!empty($t['title']) ? $t['title'] : '')." - ".$company_name; ?>
     </span>
     <br />
     <br />
@@ -194,5 +198,5 @@ if(isset($t['status']) && ($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] 
 <script src="js/view_support_ticket.js" type="text/javascript"></script>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

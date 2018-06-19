@@ -3,42 +3,41 @@ namespace Ds3\Libraries\Legacy;
 
 include "admin/includes/main_include.php";
 
-	if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
-		$per_teeth = $_POST['per_teeth'];
-		$pri_teeth = $_POST['pri_teeth'];
-		
-		$t_text = '';
-		if(is_array($pri_teeth)) {
-			asort($pri_teeth);
-			$t_text .= implode(', ',$pri_teeth);
-		}
-	
-		if(is_array($per_teeth)) {
-			if($t_text <> '' ) {
-				$t_text .= ', ';
-			}
-			
-			asort($per_teeth);
-			$t_text .= implode(', ',$per_teeth);
-		}
-	
-?>
-		<script type="text/javascript">
-			var old = parent.document.ex_page4frm.<?php echo $_GET['tx']?>.value;
-			parent.document.ex_page4frm.<?php echo $_GET['tx']?>.value = '<?php echo $t_text;?>';
-			if(old != '<?php echo $t_text; ?>'){
-				parent.edited = true;
-			}
+if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
+    $per_teeth = $_POST['per_teeth'];
+    $pri_teeth = $_POST['pri_teeth'];
 
-			parent.disablePopupRefClean();
-			if("<?php echo $_GET['tx']; ?>" == "missing"){
-				parent.reloadPerio("<?php echo $t_text; ?>");
-			}
-		</script>
-<?php
-	}
+    $t_text = '';
+    if(is_array($pri_teeth)) {
+        asort($pri_teeth);
+        $t_text .= implode(', ',$pri_teeth);
+    }
 
-	$mt_arr = explode(',',(!empty($_GET['fval']) ? $_GET['fval'] : ''));
+    if(is_array($per_teeth)) {
+        if($t_text <> '' ) {
+            $t_text .= ', ';
+        }
+
+        asort($per_teeth);
+        $t_text .= implode(', ',$per_teeth);
+    }
+    ?>
+    <script type="text/javascript">
+        var old = parent.document.ex_page4frm.<?php echo $_GET['tx']?>.value;
+        parent.document.ex_page4frm.<?php echo $_GET['tx']?>.value = '<?php echo $t_text;?>';
+        if(old != '<?php echo $t_text; ?>'){
+            parent.edited = true;
+        }
+
+        parent.disablePopupRefClean();
+        if("<?php echo $_GET['tx']; ?>" == "missing"){
+            parent.reloadPerio("<?php echo $t_text; ?>");
+        }
+    </script>
+    <?php
+}
+
+$mt_arr = explode(',',(!empty($_GET['fval']) ? $_GET['fval'] : ''));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -68,7 +67,7 @@ include "admin/includes/main_include.php";
                         <td valign="top" colspan="2" width="50%" >
                             <table width="80%" cellpadding="1" cellspacing="1" border="0">
                                 <tr class="tr_bg_h">
-                                    <td valign="top" class="col_head" colspan="2" class="col_head">
+                                    <td valign="top" colspan="2" class="col_head">
                                         Permanent Teeth
                                     </td>
                                 </tr>
@@ -97,7 +96,7 @@ include "admin/includes/main_include.php";
                         <td valign="top" colspan="2" width="50%">
                             <table width="80%" cellpadding="3" cellspacing="1" border="0">
                                 <tr class="tr_bg_h">
-                                    <td valign="top" class="col_head" colspan="2" class="col_head">
+                                    <td valign="top" colspan="2" class="col_head">
                                         Primary Teeth
                                     </td>
                                 </tr>

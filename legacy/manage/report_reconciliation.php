@@ -206,7 +206,7 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        ".$p_date."";
+                        ".$p_date;
 
             
             if(isset($_REQUEST['sort'])){
@@ -245,7 +245,7 @@ $db = new Db();
                     </td>
                     <td valign="top" width="30%">
                         <?php if($myarray['ledger'] == 'ledger_payment') { ?>
-                            <?php echo  $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?php echo  $dss_trxn_pymt_type_labels[$myarray['payment_type']]; ?>
+                            <?php echo $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?php echo $dss_trxn_pymt_type_labels[$myarray['payment_type']]; ?>
                         <?php } else { ?>
                             <?php echo st($myarray["description"]);?>
                             <?php echo  ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';?>

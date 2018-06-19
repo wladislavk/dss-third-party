@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 

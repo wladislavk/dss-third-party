@@ -3,49 +3,49 @@ namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
 
+$db = new Db();
+
 if($_POST['q_recipientssub'] == 1){
-	$referring_physician = $_POST['referring_physician'];
-	$dentist = $_POST['dentist'];
-	$physicians_other = $_POST['physicians_other'];
-	$patient_info = $_POST['patient_info'];
-	
-	if($_POST['ed'] == ''){
-		$ins_sql = "insert into dental_q_recipients set 
-						patientid = '".s_for($_GET['pid'])."',
-						referring_physician = '".s_for($referring_physician)."',
-						dentist = '".s_for($dentist)."',
-						physicians_other = '".s_for($physicians_other)."',
-						patient_info = '".s_for($patient_info)."',
-						userid = '".s_for($_SESSION['userid'])."',
-						docid = '".s_for($_SESSION['docid'])."',
-						adddate = now(),
-						ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-		
-		$db->query($ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
-		$msg = "Added Successfully";?>
-		<script type="text/javascript">
-			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
-		</script>
-		<?php
-		trigger_error("Die called", E_USER_ERROR);
-	}else{
-		$ed_sql = "update dental_q_recipients set 
-					referring_physician = '".s_for($referring_physician)."',
-					dentist = '".s_for($dentist)."',
-					physicians_other = '".s_for($physicians_other)."',
-					patient_info = '".s_for($patient_info)."'
-					where q_recipientsid = '".s_for($_POST['ed'])."'";
-		
-		$db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-		
-		$msg = "Edited Successfully";?>
-		<script type="text/javascript">
-			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
-		</script>
-		<?php
-		trigger_error("Die called", E_USER_ERROR);
-	}
+    $referring_physician = $_POST['referring_physician'];
+    $dentist = $_POST['dentist'];
+    $physicians_other = $_POST['physicians_other'];
+    $patient_info = $_POST['patient_info'];
+
+    if($_POST['ed'] == ''){
+        $ins_sql = "insert into dental_q_recipients set 
+            patientid = '".s_for($_GET['pid'])."',
+            referring_physician = '".s_for($referring_physician)."',
+            dentist = '".s_for($dentist)."',
+            physicians_other = '".s_for($physicians_other)."',
+            patient_info = '".s_for($patient_info)."',
+            userid = '".s_for($_SESSION['userid'])."',
+            docid = '".s_for($_SESSION['docid'])."',
+            adddate = now(),
+            ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        $db->query($ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+
+        $msg = "Added Successfully";?>
+        <script type="text/javascript">
+            window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }else{
+        $ed_sql = "update dental_q_recipients set 
+            referring_physician = '".s_for($referring_physician)."',
+            dentist = '".s_for($dentist)."',
+            physicians_other = '".s_for($physicians_other)."',
+            patient_info = '".s_for($patient_info)."'
+            where q_recipientsid = '".s_for($_POST['ed'])."'";
+        $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+
+        $msg = "Edited Successfully";?>
+        <script type="text/javascript">
+            window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }
 }
 
 
@@ -55,11 +55,11 @@ $pat_myarray = $db->getRow($pat_sql);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if($pat_myarray['patientid'] == ''){?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+    <script type="text/javascript">
+        window.location = 'manage_patient.php';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $myarray = $db->getRow($sql);
@@ -71,32 +71,28 @@ $physicians_other = st($myarray['physicians_other']);
 $patient_info = st($myarray['patient_info']);
 
 if($patient_info == ''){
-	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);			
-	$sel_val = st($name);
-	if(st($pat_myarray['company']) != ''){
-		$sel_val .= "
-		".st($pat_myarray['company']);
-	}
-	if(st($pat_myarray['add1']) != ''){
-		$sel_val .= "
-		".st($pat_myarray['add1']);
-	}
-	if(st($pat_myarray['add2']) != ''){
-	$sel_val .= "
-	".st($pat_myarray['add2']);
-	}
-	if(st($pat_myarray['city']) != ''){
-	$sel_val .= "
-	".st($pat_myarray['city']);
-	}
-	if(st($pat_myarray['state']) != ''){
-	$sel_val .= " ".st($pat_myarray['state']);
-	}
-	if(st($pat_myarray['zip']) != ''){
-	$sel_val .= " ".st($pat_myarray['zip']);
-	}
+    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
+    $sel_val = st($name);
+    if(st($pat_myarray['company']) != ''){
+        $sel_val .= " ".st($pat_myarray['company']);
+    }
+    if(st($pat_myarray['add1']) != ''){
+        $sel_val .= " ".st($pat_myarray['add1']);
+    }
+    if(st($pat_myarray['add2']) != ''){
+        $sel_val .= " ".st($pat_myarray['add2']);
+    }
+    if(st($pat_myarray['city']) != ''){
+        $sel_val .= " ".st($pat_myarray['city']);
+    }
+    if(st($pat_myarray['state']) != ''){
+        $sel_val .= " ".st($pat_myarray['state']);
+    }
+    if(st($pat_myarray['zip']) != ''){
+        $sel_val .= " ".st($pat_myarray['zip']);
+    }
 
-	$patient_info = $sel_val;
+    $patient_info = $sel_val;
 }?>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
@@ -104,12 +100,13 @@ if($patient_info == ''){
 <a name="top"></a>
 &nbsp;&nbsp;
 <a href="dss_letters.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
+    <b>&lt;&lt;Back</b>
+</a>
 <br />
 
 <span class="admin_head">
-	Recipients
-	-
+    Recipients
+    -
     Patient <i><?=$name;?></i>
 </span>
 <br />
@@ -117,7 +114,7 @@ if($patient_info == ''){
 &nbsp;
 
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+    <b><?php echo $_GET['msg'];?></b>
 </div>
 
 <form name="q_recipientsfrm" action="<?=$_SERVER['PHP_SELF'];?>?ex=<?=$_GET['ex']?>&pid=<?=$_GET['pid']?>" method="post" enctype="multipart/form-data" >
@@ -125,15 +122,15 @@ if($patient_info == ''){
 <input type="hidden" name="ed" value="<?=$q_recipientsid;?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="q_pagebtn" value="Save" />
+    <input type="reset" value="Reset" />
+    <input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-				<li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Referring Physician
                         &nbsp;&nbsp;&nbsp;
@@ -151,8 +148,8 @@ if($patient_info == ''){
     </tr>
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-				<li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Dentist
                         &nbsp;&nbsp;&nbsp;
@@ -170,8 +167,8 @@ if($patient_info == ''){
     </tr>
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-				<li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Physicians (other)
                         &nbsp;&nbsp;&nbsp;
@@ -189,8 +186,8 @@ if($patient_info == ''){
     </tr>
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-				<li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Patient Info
                     </label>
@@ -207,11 +204,11 @@ if($patient_info == ''){
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
+    <input type="reset" value="Reset" />
     <input type="submit" name="q_pagebtn" value="Save" tabindex="12" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

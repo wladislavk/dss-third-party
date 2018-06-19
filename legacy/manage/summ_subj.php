@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $myarray = $db->getRow($s_sql);
 if ($myarray) { ?>
@@ -51,9 +53,7 @@ if ($myarray) { ?>
         <td style="background:#333; color:#FFFFFF; font-size: 14px; font-weight:bold; height:30px;" colspan="15">Subjective Tests:</td>
     </tr>
 </table>
-<!--
-        The wrapper div keeps everything in a scrollable area
--->
+<!-- The wrapper div keeps everything in a scrollable area -->
 <div id="hideshow2section2" style="width: 100%; margin: 0 auto; display: table;">
     <!--The sumadd script generates divs and tabular data from a db-->
     <?php include 'dss_summADD.php'; ?>

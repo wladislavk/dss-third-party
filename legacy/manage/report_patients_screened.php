@@ -1,5 +1,7 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
+$db = new Db();
 ?>
 <div id="screened">
   <svg style='height:300px; width: 450px;'/>
@@ -29,10 +31,10 @@ namespace Ds3\Libraries\Legacy;
         s = "";
         <?php
         $u_sql = "SELECT u.userid, u.name FROM dental_users u
-    		      JOIN dental_screener s ON u.userid = s.userid
-    		      WHERE 
-    		      (u.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
-    		      OR u.userid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."') GROUP BY u.userid";
+            JOIN dental_screener s ON u.userid = s.userid
+            WHERE 
+            (u.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+            OR u.userid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."') GROUP BY u.userid";
     $u_q = $db->getResults($u_sql);
     foreach ($u_q as $user) {
   ?>
@@ -60,10 +62,10 @@ namespace Ds3\Libraries\Legacy;
           s += '{"x": "<?php echo  date('U',strtotime($r['screened_date'])); ?>", "y": <?php echo  $r['num_screened']; ?>},';
       <?php } ?>
 
-      	s = s.slice(0, -1);
-      	s +=  "]}";
-      	s = $.parseJSON(s);
-       	series.push(s);
+        s = s.slice(0, -1);
+        s +=  "]}";
+        s = $.parseJSON(s);
+        series.push(s);
 
   <?php } ?>
 

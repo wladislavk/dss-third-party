@@ -3,9 +3,11 @@ namespace Ds3\Libraries\Legacy;
 
 include 'includes/top.htm';
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$db = new Db();
 
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);
+
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 if ($pat_myarray['patientid'] == '') {
 ?>
@@ -17,8 +19,8 @@ if ($pat_myarray['patientid'] == '') {
 }
 
 $q3_sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
-	
 $q3_myarray = $db->getRow($q3_sql);
+
 $history = st($q3_myarray['history']);
 $medications = st($q3_myarray['medications']);
 $history_arr = explode('~', $history);

@@ -19,6 +19,8 @@ include_once "admin/includes/general.htm";
 <body>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
+$db = new Db();
+
 if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     if ($_POST['nid'] == '') {
         $ins_sql = "insert into dental_claim_notes set 
@@ -45,7 +47,7 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     } else {
         $up_sql = "update dental_claim_notes set 
             note = '".$db->escape( $_POST['note'])."'
-		    WHERE id='".$db->escape( $_POST['nid'])."'";
+            WHERE id='".$db->escape( $_POST['nid'])."'";
         $db->query($up_sql);
 
         if ($_POST['close'] == 1) { ?>

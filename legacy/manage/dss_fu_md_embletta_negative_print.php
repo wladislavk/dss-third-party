@@ -83,12 +83,10 @@ $sum_myarray = $db->getRow($sum_sql);
 
 $sti_o2_1 = st($sum_myarray['sti_o2_1']);
 if (st($pat_myarray['gender']) == 'Female') {
-    $h_h = "her";
     $s_h = "she";
     $h_h1 = "her";
     $m_m = "Mrs.";
 } else {
-    $h_h = "his";
     $s_h = "he";
     $h_h1 = "him";
     $m_m = "Mr.";

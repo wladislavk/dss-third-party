@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 # This line will stream the file to the user rather than spray it across the screen
 header("Content-type: application/octet-stream");
 
@@ -10,9 +11,11 @@ header("Expires: 0");
 
 include "admin/includes/main_include.php";
 
-$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$db = new Db();
 
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
+
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 if ($pat_myarray['patientid'] == '') { ?>
@@ -24,8 +27,8 @@ if ($pat_myarray['patientid'] == '') { ?>
 }
 
 $ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
-	
 $ref_myarray = $db->getRow($ref_sql);
+
 $referring_physician = st($ref_myarray['referring_physician']);
 $a_arr = explode(' ', $referring_physician);
 if (st($pat_myarray['dob']) != '' ) {
@@ -37,8 +40,8 @@ if (st($pat_myarray['dob']) != '' ) {
 }
 
 $q3_sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
-	
 $q3_myarray = $db->getRow($q3_sql);
+
 $history = st($q3_myarray['history']);
 $medications = st($q3_myarray['medications']);
 $history_arr = explode('~', $history);
@@ -74,8 +77,8 @@ foreach ($medications_arr as $val) {
 }
 
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
-	
 $q2_myarray = $db->getRow($q2_sql);
+
 $sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);

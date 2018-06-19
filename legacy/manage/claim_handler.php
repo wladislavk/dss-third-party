@@ -138,11 +138,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     $docId = intval($patientData['docid']);
     $userId = $userId ?: $docId;
-    $producer = $userId;
-
-    // Put POST values into variables
-    $payer_id = !empty($claimData['payer']['id']) ? $claimData['payer']['id'] : '';
-    $payer_name = !empty($claimData['payer']['id']) ? $claimData['payer']['id'] : '';
 
     // Ensure the POST fields exist
     $payer = [
@@ -239,13 +234,10 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     $patient_signature = !empty($claimData['claim']['patient_signature_on_file']) ?
         $claimData['claim']['patient_signature_on_file'] : '';
-    // NO NAME ON FIELD $patient_signed_date = $claimData['patient_signed_date'];
     $insured_signature = !empty($claimData['claim']['direct_payment_authorized']) ?
         $claimData['claim']['direct_payment_authorized'] : '';
     $date_current = !empty($claimData['claim']['date']) ? $claimData['claim']['date'] : '';
     $current_qual = !empty($claimData['claim']['date_type']) ? $claimData['claim']['date_type'] : '';
-    // NO NAME ON FIELD $date_same_illness = $claimData['date_same_illness'];
-    // NO NAME ON FIELD $same_illness_qual = '';
     $unable_date_from = !empty($claimData['claim']['last_worked_date']) ? $claimData['claim']['last_worked_date'] : '';
     $unable_date_to = !empty($claimData['claim']['work_return_date']) ? $claimData['claim']['work_return_date'] : '';
 
@@ -343,7 +335,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][0]['charge_amount'] : '';
     $days_or_units1 = !empty($claimData['claim']['service_lines'][0]['units']) ?
         $claimData['claim']['service_lines'][0]['units'] : '';
-    // NO NAME  $epsdt_family_plan1 = $claimData['epsdt_family_plan1'];
     $id_qua1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id1 = !empty($claimData['claim']['service_lines'][0]['ledger_id']) ?
@@ -388,7 +379,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][1]['charge_amount'] : '';
     $days_or_units2 = !empty($claimData['claim']['service_lines'][1]['units']) ?
         $claimData['claim']['service_lines'][1]['units'] : '';
-    // NO NAME  $epsdt_family_plan2 = $claimData['epsdt_family_plan1'];
     $id_qua2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id2 = !empty($claimData['claim']['service_lines'][1]['ledger_id']) ?
@@ -432,7 +422,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][2]['charge_amount'] : '';
     $days_or_units3 = !empty($claimData['claim']['service_lines'][2]['units']) ?
         $claimData['claim']['service_lines'][2]['units'] : '';
-    // NO NAME  $epsdt_family_plan3 = $claimData['epsdt_family_plan1'];
     $id_qua3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id3 = !empty($claimData['claim']['service_lines'][2]['ledger_id']) ?
@@ -476,7 +465,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][3]['charge_amount'] : '';
     $days_or_units4 = !empty($claimData['claim']['service_lines'][3]['units']) ?
         $claimData['claim']['service_lines'][3]['units'] : '';
-    // NO NAME  $epsdt_family_plan4 = $claimData['epsdt_family_plan1'];
     $id_qua4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id4 = !empty($claimData['claim']['service_lines'][3]['ledger_id']) ?
@@ -520,7 +508,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][4]['charge_amount'] : '';
     $days_or_units5 = !empty($claimData['claim']['service_lines'][4]['units']) ?
         $claimData['claim']['service_lines'][4]['units'] : '';
-    // NO NAME  $epsdt_family_plan5 = $claimData['epsdt_family_plan1'];
     $id_qua5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id5 = !empty($claimData['claim']['service_lines'][4]['ledger_id']) ?
@@ -564,7 +551,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][5]['charge_amount'] : '';
     $days_or_units6 = !empty($claimData['claim']['service_lines'][5]['units']) ?
         $claimData['claim']['service_lines'][5]['units'] : '';
-    // NO NAME  $epsdt_family_plan6 = $claimData['epsdt_family_plan1'];
     $id_qua6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type'] : '';
     $rendering_provider_id6 = !empty($claimData['claim']['service_lines'][5]['ledger_id']) ?
@@ -590,7 +576,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['billing_provider']['tax_id_type'] == "SY" ? 1 : '';
     $ein = !empty($claimData['billing_provider']['tax_id_type']) &&
         $claimData['billing_provider']['tax_id_type'] == "EI" ? 1 : '';
-    // NO NAME $patient_account_no = $claimData['patient_account_no'];
     $accept_assignment = !empty($claimData['claim']['accept_assignment_code']) ?
         $claimData['claim']['accept_assignment_code'] : '';
     $total_charge = !empty($claimData['claim']['total_charge']) ? $claimData['claim']['total_charge'] : '0.00';
@@ -718,14 +703,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             insured_zip = '" . $db->escape($insured_zip) . "',
             insured_phone_code = '" . $db->escape(!empty($insured_phone_code) ? $insured_phone_code : '') . "',
             insured_phone = '" . $db->escape($insured_phone) . "',
-            other_insured_id_number = '" . $db->escape($other_insured_id_number) . "',
             other_insured_firstname = '" . $db->escape($other_insured_firstname) . "',
             other_insured_lastname = '" . $db->escape($other_insured_lastname) . "',
             other_insured_middle = '" . $db->escape($other_insured_middle) . "',
-            other_insured_address = '" . $db->escape($other_insured_address) . "',
-            other_insured_city = '" . $db->escape($other_insured_city) . "',
-            other_insured_state = '" . $db->escape($other_insured_state) . "',
-            other_insured_zip = '" . $db->escape($other_insured_zip) . "',
             insured_policy_group_feca = '" . $db->escape($insured_policy_group_feca) . "',
             other_insured_policy_group_feca = '" . $db->escape($other_insured_policy_group_feca) . "',
             insured_dob = '" . $db->escape($insured_dob) . "',
@@ -895,7 +875,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             ) . "
             balance_due = '" . $db->escape(!empty($balance_due) ? $balance_due : '') . "',
             claim_codes = '" . $db->escape($claim_codes) . "',
-            other_claim_id = '" . $db->escape($other_claim_id) . "',
             signature_physician = '" . $db->escape($signature_physician) . "',
             physician_signed_date = '" . $db->escape(!empty($physician_signed_date) ?
                 $physician_signed_date : '') . "',
@@ -918,8 +897,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             billing_provider_taxonomy_code = '".$db->escape($billing_provider_taxonomy_code)."',
             p_m_eligible_payer_id = '" . $p_m_eligible_payer_id . "',
             p_m_eligible_payer_name = '" . $db->escape($p_m_eligible_payer_name) . "',
-            s_m_eligible_payer_id = '" . $db->escape($s_m_eligible_payer_id) . "',
-            s_m_eligible_payer_name = '" . $db->escape($s_m_eligible_payer_name) . "',
             rendering_provider_entity_1  = '" . $db->escape($rendering_provider_entity_1) . "',
             rendering_provider_first_name_1  = '" . $db->escape($rendering_provider_first_name_1) . "',
             rendering_provider_last_name_1  = '" . $db->escape($rendering_provider_last_name_1) . "',

@@ -95,6 +95,7 @@ $docr = $db->getRow($docsql);
 $doc_patient_portal = $docr['use_patient_portal'];
 
 include 'includes/similar.php';
+
 function trigger_letter20($pid)
 {
     $letterid = '20';

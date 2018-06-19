@@ -11,6 +11,8 @@ header("Expires: 0");
 
 include "admin/includes/main_include.php";
 
+$db = new Db();
+
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 
@@ -19,11 +21,11 @@ $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st(
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 
 if($pat_myarray['patientid'] == ''){?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+    <script type="text/javascript">
+        window.location = 'manage_patient.php';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 $ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
@@ -35,22 +37,22 @@ $a_arr = explode('
 ',$referring_physician);
 
 if(st($pat_myarray['gender']) == 'Female'){
-	$h_h =  "Her";
-	$s_h =  "She";
+    $h_h =  "Her";
+    $s_h =  "She";
 } else {
-	$h_h =  "His";
-	$s_h =  "He";
+    $h_h =  "His";
+    $s_h =  "He";
 }
 ?>
 <br />
 <span class="admin_head">
-	DSS referral thank you pt did not come in
+    DSS referral thank you pt did not come in
 </span>
 <br /><br>
 
 <table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
-	<tr>
-		<td valign="top">
+    <tr>
+        <td valign="top">
 
 <?php echo date('F d, Y')?><br><br>
 
@@ -58,8 +60,8 @@ if(st($pat_myarray['gender']) == 'Female'){
 <?php echo nl2br($referring_physician);?>
 </strong><br><br>
 
-Re: 	<strong><?php echo $name?></strong> <br>
-DOB:	<strong><?php echo st($pat_myarray['dob'])?></strong><br><br>
+Re: <strong><?php echo $name?></strong> <br>
+DOB: <strong><?php echo st($pat_myarray['dob'])?></strong><br><br>
 
 Dear Dr. <strong><?php echo $a_arr[0];?></strong>,<br><br>
 
@@ -80,6 +82,6 @@ Sincerely,<br><br><br><br>
 CC:  <strong><?php echo $name?></strong>
 <br><br>
 
-		</td>
-	</tr>
+        </td>
+    </tr>
 </table>

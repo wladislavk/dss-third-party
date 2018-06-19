@@ -31,7 +31,7 @@ $exists = file_exists($basepath . '/' . $filename);
 
 if ($exists) {
     $filetype = mime_content_type($basepath . '/' . $filename);
-} else if (!empty($_GET['type']) && $_GET['type'] === 'image') {
+} elseif (!empty($_GET['type']) && $_GET['type'] === 'image') {
     $filetype = 'image/gif';
 }
 
@@ -50,8 +50,7 @@ switch ($filetype) {
 
         if ($exists) {
             readfile($basepath . '/' . $filename);
-        }
-        else {
+        } else {
             echo base64_decode('R0lGODlhAQABAAAAACw=');
         }
         break;

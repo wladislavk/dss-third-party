@@ -5,6 +5,8 @@ include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 include "includes/top.htm";
 
+$db = new Db();
+
 if ($_POST["contactsub"] == 1) {
     if ($_POST["ed"] != "") {
         $ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '11', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."' where contactid='".$_POST["ed"]."'";
@@ -301,7 +303,7 @@ if ($themyarray["contactid"] != '') {
             </td>
         </tr>
         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
+            <td valign="top" colspan="2" class="frmhead">
                 <ul>
                     <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
@@ -331,7 +333,7 @@ if ($themyarray["contactid"] != '') {
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["contactid"]?>" />

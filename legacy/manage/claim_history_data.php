@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 $claimId = isset($claimId) ? $claimId : intval($_GET['cid']);
 
+$db = new Db();
+
 $sql = "SELECT *
     FROM dental_claim_electronic
     WHERE claimid = '$claimId'

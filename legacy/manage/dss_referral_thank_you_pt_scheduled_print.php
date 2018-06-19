@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 include "admin/includes/main_include.php";
 
+$db = new Db();
+
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 

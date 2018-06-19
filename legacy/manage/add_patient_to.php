@@ -63,16 +63,18 @@ $pcont_array = $db->getResults($pcont_qry);
                         $newcont_qry = "SELECT * FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid WHERE docid=".$_SESSION['docid']." UNION SELECT * FROM dental_contact RIGHT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid WHERE docid=".$_SESSION['docid'];
                         $newcont_array = $db->getResults($newcont_qry);
 
-                        if ($newcont_array) foreach ($newcont_array as $newcont_list) {
-                            if ($newcont_list['contacttype'] == "") {
-                                $newcont_conttype = "Type Not Set";
-                            } else {
-                                $newcont_conttype = $newcont_list['contacttype'];
-                            } ?>
-                            <option value="<?php echo $newcont_list['contactid']; ?>">
-                                <?php echo $newcont_list['firstname']." ".$newcont_list['lastname']. " - ". $newcont_conttype; ?>
-                            </option>
-                            <?php
+                        if ($newcont_array) {
+                            foreach ($newcont_array as $newcont_list) {
+                                if ($newcont_list['contacttype'] == "") {
+                                    $newcont_conttype = "Type Not Set";
+                                } else {
+                                    $newcont_conttype = $newcont_list['contacttype'];
+                                } ?>
+                                <option value="<?php echo $newcont_list['contactid']; ?>">
+                                    <?php echo $newcont_list['firstname']." ".$newcont_list['lastname']. " - ". $newcont_conttype; ?>
+                                </option>
+                                <?php
+                            }
                         } ?>
                     </select>
                     <input type="hidden" value="<?php echo $patid; ?>" name="patid" />

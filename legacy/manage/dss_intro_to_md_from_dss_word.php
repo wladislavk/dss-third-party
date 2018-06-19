@@ -11,9 +11,11 @@ header("Expires: 0");
 
 include "admin/includes/main_include.php";
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$db = new Db();
 
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);
+
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
         window.location = 'manage_patient.php';

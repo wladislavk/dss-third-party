@@ -4,11 +4,13 @@ namespace Ds3\Libraries\Legacy;
 <link rel="stylesheet" href="admin/css/support.css" />
 
 <?php
-  $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
-        		FROM dental_insurance i
-        		JOIN dental_patients p ON i.patientid=p.patientid
-        		JOIN dental_users u ON u.userid=p.docid
-        		WHERE p.patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$db = new Db();
+
+    $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
+        FROM dental_insurance i
+        JOIN dental_patients p ON i.patientid=p.patientid
+        JOIN dental_users u ON u.userid=p.docid
+        WHERE p.patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   $c = $db->getRow($c_sql);
 
   $sql = "SELECT n.*, CASE WHEN n.create_type='0' THEN CONCAT(a.first_name, ' ', a.last_name)
@@ -21,7 +23,7 @@ namespace Ds3\Libraries\Legacy;
 
 <div class="fullwidth">
   <span class="admin_head" >
-  	Claim Notes <?php echo $c['pat_name']; ?>
+      Claim Notes <?php echo $c['pat_name']; ?>
   </span>
   <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?php echo (!empty($_GET['claimid']) ? $_GET['claimid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>');return false;" class="button" style="float:right;">Add Note</a>
   <br /><br />
@@ -58,4 +60,4 @@ namespace Ds3\Libraries\Legacy;
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />

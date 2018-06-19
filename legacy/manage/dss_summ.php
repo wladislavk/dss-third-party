@@ -4,18 +4,20 @@ namespace Ds3\Libraries\Legacy;
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 
+$db = new Db();
+
 if (isset($_REQUEST['del_note'])) {
     $s = "UPDATE dental_notes SET status=0 
           WHERE parentid='".$db->escape( $_REQUEST['del_note'])."'
-          	OR notesid='".$db->escape( $_REQUEST['del_note'])."'";
+          OR notesid='".$db->escape( $_REQUEST['del_note'])."'";
     $db->query($s);
 }
 
 if (isset($_REQUEST['sid'])) {
     $s = "UPDATE dental_notes SET signed_id='".$db->escape( $_SESSION['userid'])."', signed_on=now() 
           WHERE patientid='".$db->escape( $_REQUEST['pid'])."'
-          	AND notesid='".$db->escape( $_REQUEST['sid'])."'
-            AND docid='".$db->escape( $_SESSION['docid'])."'";
+          AND notesid='".$db->escape( $_REQUEST['sid'])."'
+          AND docid='".$db->escape( $_SESSION['docid'])."'";
     $db->query($s);
     if (isset($_REQUEST['return'])) {
         if ($_REQUEST['return']=='unsigned') {
@@ -98,7 +100,7 @@ if (!isset($patientId)) {
             <?php include 'summ_treatment.php'; ?>
         </div>
         <div id="sect_health" style="display: none">
-            <?php include 'summ_health.php'; ?>		
+            <?php include 'summ_health.php'; ?>
         </div>
         <div id="sect_letters" style="display: none">
             <?php include 'summ_letters.php'; ?>

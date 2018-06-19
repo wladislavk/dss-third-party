@@ -18,10 +18,6 @@ if ($pat_myarray['patientid'] == '') {
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-$ref_myarray = $db->getRow($ref_sql);
-
-$referring_physician = st($ref_myarray['referring_physician']);
 if (st($pat_myarray['dob']) != '') {
     $dob_y = date('Y', strtotime(st($pat_myarray['dob'])));
     $cur_y = date('Y');

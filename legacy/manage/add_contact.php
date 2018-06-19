@@ -22,10 +22,12 @@ include_once "includes/constants.inc";
 </head>
 <body>
 <?php
+$db = new Db();
+
 if (!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     if (!empty($_POST["ed"])) {
         $ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
-        $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";
         ?>
@@ -216,10 +218,10 @@ if (!empty($_GET['search'])) {
         </tr>
         <tr>
             <td valign="top" colspan="2" class="frmhead">
-	            <ul>
-	                <li id="foli8" class="complex">
-	                    <div>
-	                        <span>
+                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                            <span>
                                 <?php
                                 if (isset($_GET['ed'])) {
                                     $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
@@ -227,8 +229,8 @@ if (!empty($_GET['search'])) {
                                 }
                                 $ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
                                 $ctype_my = $db->getResults($ctype_sql);?>
-		                        <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-			                        <option value="">Select a contact type</option>
+                                <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
+                                    <option value="">Select a contact type</option>
                                     <?php
                                     if ($ctype_my) {
                                         foreach ($ctype_my as $ctype_myarray) {?>
@@ -239,25 +241,25 @@ if (!empty($_GET['search'])) {
                                         }
                                     } ?>
                                 </select>
-	                            <label for="contacttype">Contact Type</label>
-	                        </span>
-	                    </div>
-	                </li>
-	            </ul>
+                                <label for="contacttype">Contact Type</label>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
             </td>
         </tr>
         <tr class="content physician other">
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>        
-                    <li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
                             Name
                             <?php echo (!empty($_GET['ctype']) && $_GET['ctype'] != 'ins') ? '<span id="req_0" class="req">*</span>' : ''; ?>
                         </label>
                         <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
+                            <span>
+                                <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
+                                    <option value=""></option>
                                     <option value="Dr." <?php if ($salutation == 'Dr.') echo " selected";?>>Dr.</option>
                                     <option value="Mr." <?php if ($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                     <option value="Mrs." <?php if ($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
@@ -283,24 +285,24 @@ if (!empty($_GET['search'])) {
             </td>
         </tr>
         <tr class="content physician insurance other"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             <span>
-	                            <span style="color:#000000">Company <?php echo (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
-	                            <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
+                                <span style="color:#000000">Company <?php echo (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
+                                <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr class="content physician insurance other"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Address
                             <span id="req_0" class="req">*</span>
                         </label>
@@ -329,13 +331,13 @@ if (!empty($_GET['search'])) {
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr class="content physician insurance other"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="<?php echo $phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
@@ -349,7 +351,7 @@ if (!empty($_GET['search'])) {
                                 <input id="fax" name="fax" type="text" class="phonemask field text addr tbox" value="<?php echo $fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
-						</div>
+                        </div>
                         <div>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>" tabindex="14" maxlength="255" style="width:325px;" />
@@ -357,22 +359,22 @@ if (!empty($_GET['search'])) {
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr class="content physician"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
-						    <span style="font-size:10px;">These fields required for Medicare referring physicians.</span><br />
+                            <span style="font-size:10px;">These fields required for Medicare referring physicians.</span><br />
                             <span>
-                            	National Provider ID (NPI)
+                                National Provider ID (NPI)
                                 <input id="national_provider_id" name="national_provider_id" type="text" class="field text addr tbox" value="<?php echo $national_provider_id?>" tabindex="15" maxlength="255" style="width:200px;" />
                             </span>
                         </div>
                     </li>
-                    <li id="foli8" class="complex">	
+                    <li id="foli8" class="complex">
                         <label class="desc" id="title0" for="Field0">
                             Other ID For Claim Forms
                         </label>
@@ -381,7 +383,7 @@ if (!empty($_GET['search'])) {
                                 <?php
                                 $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
                                 $qualifier_my = $db->getResults($qualifier_sql);?>
-	                        	<select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
+                                <select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
                                     <option value="0"></option>
                                     <?php
                                     if ($qualifier_my) {
@@ -399,25 +401,25 @@ if (!empty($_GET['search'])) {
                                 <input id="qualifierid" name="qualifierid" type="text" class="field text addr tbox" value="<?php echo $qualifierid?>" tabindex="17" maxlength="255" style="width:200px;" />
                                 <label for="qualifierid">ID</label>
                             </span>
-						</div>
+                        </div>
                    </li>     
                 </ul>
             </td>
         </tr>
          <tr class="content physician insurance other"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                         <label class="desc" id="title0" for="Field0">
                             Notes:
                         </label>
                         <div>
                             <span class="full">
-                            	<textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
+                                <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="content physician insurance other">
@@ -425,10 +427,10 @@ if (!empty($_GET['search'])) {
                 Preferred Contact Method
             </td>
             <td valign="top" class="frmdata">
-            	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
-					<option value="fax" <?php if ($preferredcontact == 'fax') echo " selected";?>>Fax</option>
-                	<option value="paper" <?php if ($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                	<option value="email" <?php if ($preferredcontact == 'email') echo " selected";?>>Email</option>
+                <select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+                    <option value="fax" <?php if ($preferredcontact == 'fax') echo " selected";?>>Fax</option>
+                    <option value="paper" <?php if ($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                    <option value="email" <?php if ($preferredcontact == 'email') echo " selected";?>>Email</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -438,9 +440,9 @@ if (!empty($_GET['search'])) {
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if ($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if ($status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="tbox" tabindex="22">
+                    <option value="1" <?php if ($status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if ($status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -448,13 +450,13 @@ if (!empty($_GET['search'])) {
         <tr class="content physician insurance other">
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["contactid"]?>" />
-				<a href="#" id="google_link" target="_blank" style="float:left;" />
-					Google
-				</a>
+                <a href="#" id="google_link" target="_blank" style="float:left;" />
+                    Google
+                </a>
                 <input type="submit" value=" <?php echo $but_text?> Contact" class="button" />
                 <?php
                 if ($themyarray["contactid"] != '') { ?>

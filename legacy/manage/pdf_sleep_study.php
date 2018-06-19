@@ -56,15 +56,15 @@ if(isset($_FILES['pdf_file'])){
 
     $sql = "INSERT INTO dental_summ_sleeplab set
         date='".date('m/d/Y')."',
-        `diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosing_doc)."',
-        `diagnosising_npi` = '".mysqli_real_escape_string($con,$diagnosing_npi)."',
-        `ahi` = '".mysqli_real_escape_string($con,$ahi)."' ,
-        `ahisupine` = '".mysqli_real_escape_string($con,$ahi_supine)."',
-        `rdi` = '".mysqli_real_escape_string($con,$rdi)."',
-        `rdisupine` = '".mysqli_real_escape_string($con,$rdi_supine)."',
-        `o2nadir` = '".mysqli_real_escape_string($con,$o2_nadir)."',
-        `t9002` = '".mysqli_real_escape_string($con,$t_90)."',
-        `patiendid` = '".mysqli_real_escape_string($con,$_GET['pid'])."',
+        `diagnosising_doc` = '".$db->escape($diagnosing_doc)."',
+        `diagnosising_npi` = '".$db->escape($diagnosing_npi)."',
+        `ahi` = '".$db->escape($ahi)."' ,
+        `ahisupine` = '".$db->escape($ahi_supine)."',
+        `rdi` = '".$db->escape($rdi)."',
+        `rdisupine` = '".$db->escape($rdi_supine)."',
+        `o2nadir` = '".$db->escape($o2_nadir)."',
+        `t9002` = '".$db->escape($t_90)."',
+        `patiendid` = '".$db->escape($_GET['pid'])."',
         `filename` = '".$banner1."'";
     $db->query($sql);
 

@@ -40,27 +40,27 @@ if (!empty($_GET['create_for'])) {
 
 	if (isset($_REQUEST['delid'])) {
         if (isset($con)) {
-            $deleteScreenerSql = "DELETE FROM dental_screener where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
+            $deleteScreenerSql = "DELETE FROM dental_screener where docid='".$db->escape( $_SESSION['docid'])."' AND id='".$db->escape($_REQUEST['delid'])."'";
         }
 	  $db->query($deleteScreenerSql);
 	}
 
 	if (isset($_REQUEST['hst'])) {
-        $screenerSql = "SELECT * FROM dental_screener WHERE id='".mysqli_real_escape_string($con, $_REQUEST['hst'])."'";
+        $screenerSql = "SELECT * FROM dental_screener WHERE id='".$db->escape( $_REQUEST['hst'])."'";
         $screenerResult = $db->getRow($screenerSql);
 
-        $hstSql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con, $screenerResult['id'])."'";
+        $hstSql = "SELECT * FROM dental_hst WHERE screener_id='".$db->escape( $screenerResult['id'])."'";
         $hstResult = $db->getRow($hstSql);
 
         $dateOfBirth = ($hstResult['patient_dob'] != '') ? date('m/d/Y', strtotime($hstResult['patient_dob'])) : '';
 
         $patientSql = "INSERT INTO dental_patients SET
-                  docid='".mysqli_real_escape_string($con, $screenerResult['docid'])."',
-                  firstname = '".mysqli_real_escape_string($con, $screenerResult['first_name'])."',
-                  lastname = '".mysqli_real_escape_string($con, $screenerResult['last_name'])."',
-                  cell_phone = '".mysqli_real_escape_string($con, $screenerResult['phone'])."',
-                  email = '".mysqli_real_escape_string($con, $hstResult['patient_email'])."',
-                  dob = '".mysqli_real_escape_string($con, $dateOfBirth)."',
+                  docid='".$db->escape( $screenerResult['docid'])."',
+                  firstname = '".$db->escape( $screenerResult['first_name'])."',
+                  lastname = '".$db->escape( $screenerResult['last_name'])."',
+                  cell_phone = '".$db->escape( $screenerResult['phone'])."',
+                  email = '".$db->escape( $hstResult['patient_email'])."',
+                  dob = '".$db->escape( $dateOfBirth)."',
                   status='1',
                   adddate = now(),
                   ip_address = '".$_SERVER['REMOTE_ADDR']."'";
@@ -71,14 +71,14 @@ if (!empty($_GET['create_for'])) {
         $updateHstSql = "UPDATE dental_hst SET
                   patient_id = '".$newPatientId."',
                   status='".DSS_HST_PENDING."'
-                  WHERE screener_id=".mysqli_real_escape_string($con, $screenerResult['id']);
+                  WHERE screener_id=".$db->escape( $screenerResult['id']);
 
         $db->query($updateHstSql);
 
         $screener_sql = "UPDATE dental_screener SET
                        patient_id = '".$newPatientId."',
                        contacted = '1'
-                       WHERE id=".mysqli_real_escape_string($con, $screenerResult['id']);
+                       WHERE id=".$db->escape( $screenerResult['id']);
 
         $db->query($screener_sql);
         ?>
@@ -150,15 +150,15 @@ if (!empty($_GET['create_for'])) {
     }
 
     if ($risk !== '') {
-        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $risk)." ";
+        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".$db->escape( $risk)." ";
     }
 
     if ($contacted !== '') {
-        $mainScreenerSql .= " AND contacted = ".mysqli_real_escape_string($con, $contacted)." ";
+        $mainScreenerSql .= " AND contacted = ".$db->escape( $contacted)." ";
 	}
 
 	if ($contactedRisk !== '') {
-        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $contactedRisk)." ";
+        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".$db->escape( $contactedRisk)." ";
         $mainScreenerSql .= " AND contacted = 0 ";
     }
 

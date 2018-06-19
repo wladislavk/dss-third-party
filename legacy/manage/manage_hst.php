@@ -78,11 +78,11 @@ $sql = "select hst.*, p.firstname, p.lastname,
 		    ";
 
 if(isset($_GET['status']) && $_GET['status']!=''){
-  $sql .= " AND hst.status = '".mysqli_real_escape_string($con,$_GET['status'])."' ";
+  $sql .= " AND hst.status = '".$db->escape($_GET['status'])."' ";
 }
 if(isset($_GET['viewed'])){
   if($_GET['viewed']==1){
-  	$sql .= " AND hst.viewed = '".mysqli_real_escape_string($con,$_GET['viewed'])."' ";
+  	$sql .= " AND hst.viewed = '".$db->escape($_GET['viewed'])."' ";
   }else{
 	$sql .= " AND (hst.viewed = '0' OR hst.viewed IS NULL) ";
   }
@@ -279,7 +279,7 @@ $my = $db->getResults($sql);
         </td>
         <td valign="top">
           <?php
-          $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+          $sign_sql = "SELECT sign_notes FROM dental_users where userid='".$db->escape($_SESSION['userid'])."'";
           $sign_r = $db->getRow($sign_sql);
           $user_sign = $sign_r['sign_notes'];
 

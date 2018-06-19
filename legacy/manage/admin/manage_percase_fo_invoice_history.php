@@ -5,12 +5,12 @@ require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.docid=".mysqli_real_escape_string($con, $_GET['docid'])." 
+	WHERE pi.docid=".$db->escape( $_GET['docid'])." 
 		AND pi.status!=".DSS_INVOICE_PENDING."
 	ORDER BY adddate DESC";
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_GET['docid']);
+$doc_sql = "SELECT * from dental_users WHERE userid=".$db->escape( $_GET['docid']);
 $doc_q = mysqli_query($con, $doc_sql);
 $doc = mysqli_fetch_assoc($doc_q);
 
@@ -30,7 +30,7 @@ setupStripeConnection($key_r['stripe_secret_key']);
         <b><? echo $_GET['msg'];?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
+$sql = "SELECT * FROM dental_users where userid='".$db->escape( $_GET['docid'])."'";
 $q = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_assoc($q);
 ?>
@@ -178,8 +178,8 @@ $case_q = mysqli_query($con, $case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-                        WHERE userid='".mysqli_real_escape_string($con, $_GET['docid'])."'
-                        AND adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'
+                        WHERE userid='".$db->escape( $_GET['docid'])."'
+                        AND adminid='".$db->escape( $_SESSION['adminuserid'])."'
                         ";
   $charge_q = mysqli_query($con, $charge_sql);
 ?>

@@ -8,7 +8,7 @@ require_once('../includes/constants.inc');
 
 $invoice_sql = "SELECT pi.*, c.name, c.add1, c.city, c.state, c.zip, c.phone FROM dental_percase_invoice pi
 	JOIN companies c ON c.id=pi.companyid
-	WHERE pi.id='".mysqli_real_escape_string($con, $_GET['invoice_id'])."'";
+	WHERE pi.id='".$db->escape( $_GET['invoice_id'])."'";
 $invoice_q = mysqli_query($con, $invoice_sql);
 $invoice = mysqli_fetch_assoc($invoice_q);
 

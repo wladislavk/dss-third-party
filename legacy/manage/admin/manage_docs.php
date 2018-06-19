@@ -5,7 +5,7 @@ include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
-    $del = "DELETE FROM dental_document WHERE documentid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    $del = "DELETE FROM dental_document WHERE documentid='".$db->escape($_GET['delid'])."'";
     mysqli_query($con,$del);
 }
 
@@ -29,8 +29,8 @@ if(isset($_POST['add_doc'])){
         adddate,
         ip_address
       ) VALUES (
-        '".mysqli_real_escape_string($con,$_POST['name'])."',
-        '".mysqli_real_escape_string($con,$_POST['category'])."',
+        '".$db->escape($_POST['name'])."',
+        '".$db->escape($_POST['category'])."',
         '".$banner1."',
         now(),
         '".$_SERVER['REMOTE_ADDR']."'
@@ -95,7 +95,7 @@ if(isset($_POST['add_doc'])){
 <?php
   $sql = "SELECT d.*, c.name as categoryname FROM dental_document d INNER JOIN dental_document_category c ON d.categoryid=c.categoryid";
   if(isset($_GET['cat'])){
-    $sql .= " WHERE d.categoryid=".mysqli_real_escape_string($con,$_GET['cat'])." ";
+    $sql .= " WHERE d.categoryid=".$db->escape($_GET['cat'])." ";
   }
   $sql .= " ORDER BY d.name ASC";
   $q = mysqli_query($con,$sql);

@@ -119,7 +119,7 @@ if (!empty($_POST['compsub']) && $_POST['compsub'] == 1) {
 
         $ed_sql = "
             update dental_users set 
-            logo = '" . mysqli_real_escape_string($con, $file_name) . "',
+            logo = '" . $db->escape( $file_name) . "',
             updated_at=now()
             where userid='" . $_SESSION["docid"] . "'"
         ;

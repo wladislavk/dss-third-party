@@ -38,7 +38,7 @@ if(isset($_REQUEST['sortdir'])){
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT pc.parent_patientid, pc.firstname, pc.lastname FROM dental_patients pc 
 	JOIN dental_patients p ON p.patientid = pc.parent_patientid
-	WHERE p.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." AND pc.parent_patientid IS NOT NULL AND pc.parent_patientid != ''";
+	WHERE p.docid=".$db->escape($_SESSION['docid'])." AND pc.parent_patientid IS NOT NULL AND pc.parent_patientid != ''";
 $sql .= "ORDER BY ".$sort." ".$dir;
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;

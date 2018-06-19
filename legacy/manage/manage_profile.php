@@ -31,29 +31,29 @@ if(isset($_POST["profile_submit"])) {
         <?php
     } else {
         $in_sql = "UPDATE dental_users SET
-          username='".mysqli_real_escape_string($con,$_POST['username'])."',
-          npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
-          medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
-          medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
-          tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
-          ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
-          ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
-          practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
-          first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
-          last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
-          name='".mysqli_real_escape_string($con,$_POST['first_name'])." ".mysqli_real_escape_string($con,$_POST['last_name'])."',
-          email='".mysqli_real_escape_string($con,$_POST['email'])."',
-          address='".mysqli_real_escape_string($con,$_POST['address'])."',
-          city='".mysqli_real_escape_string($con,$_POST['city'])."',
-          state='".mysqli_real_escape_string($con,$_POST['state'])."',
-          zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
-          phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
+          username='".$db->escape($_POST['username'])."',
+          npi='".$db->escape($_POST['npi'])."',
+          medicare_npi='".$db->escape($_POST['medicare_npi'])."',
+          medicare_ptan='".$db->escape($_POST['medicare_ptan'])."',
+          tax_id_or_ssn='".$db->escape($_POST['tax_id_or_ssn'])."',
+          ein='".$db->escape($_POST['ein'])."',
+          ssn='".$db->escape($_POST['ssn'])."',
+          practice='".$db->escape($_POST['practice'])."',
+          first_name='".$db->escape($_POST['first_name'])."',
+          last_name='".$db->escape($_POST['last_name'])."',
+          name='".$db->escape($_POST['first_name'])." ".$db->escape($_POST['last_name'])."',
+          email='".$db->escape($_POST['email'])."',
+          address='".$db->escape($_POST['address'])."',
+          city='".$db->escape($_POST['city'])."',
+          state='".$db->escape($_POST['state'])."',
+          zip='".$db->escape($_POST['zip'])."',
+          phone='".$db->escape($_POST['phone'])."',
           updated_at=now()
           WHERE userid='".$_SESSION['userid']."'";
 
         $db->query($in_sql);
 
-        $u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+        $u_sql = "SELECT edx_id FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
         $u = $db->getRow($u_sql);
         $userid = $u['edx_id'];
         shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
@@ -63,43 +63,43 @@ if(isset($_POST["profile_submit"])) {
 
 if(isset($_POST["practice_submit"])) {
     $in_sql = "UPDATE dental_users SET
-      username='".mysqli_real_escape_string($con,$_POST['username'])."',
-      npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
-      medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
-      medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
-      tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
+      username='".$db->escape($_POST['username'])."',
+      npi='".$db->escape($_POST['npi'])."',
+      medicare_npi='".$db->escape($_POST['medicare_npi'])."',
+      medicare_ptan='".$db->escape($_POST['medicare_ptan'])."',
+      tax_id_or_ssn='".$db->escape($_POST['tax_id_or_ssn'])."',
       ein='".($_POST['ssnein'] === 'ein' ? 1 : 0)."',
       ssn='".($_POST['ssnein'] === 'ssn' ? 1 : 0)."',
-      practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
-      first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
-      last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
-      name='".mysqli_real_escape_string($con,$_POST['first_name'])." ".mysqli_real_escape_string($con,$_POST['last_name'])."',
-      email='".mysqli_real_escape_string($con,$_POST['email'])."',
-      address='".mysqli_real_escape_string($con,$_POST['address'])."',
-      city='".mysqli_real_escape_string($con,$_POST['city'])."',
-      state='".mysqli_real_escape_string($con,$_POST['state'])."',
-      zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
-      phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
-      fax='".mysqli_real_escape_string($con,$_POST['fax'])."',
-      use_service_npi = '".mysqli_real_escape_string($con,$_POST['use_service_npi'])."',
-      service_name = '".mysqli_real_escape_string($con,$_POST['service_name'])."',
-      service_address = '".mysqli_real_escape_string($con,$_POST['service_address'])."',
-      service_city = '".mysqli_real_escape_string($con,$_POST['service_city'])."',
-      service_state = '".mysqli_real_escape_string($con,$_POST['service_state'])."',
-      service_zip = '".mysqli_real_escape_string($con,$_POST['service_zip'])."',
-      service_phone = '".mysqli_real_escape_string($con,$_POST['service_phone'])."',
-      service_fax = '".mysqli_real_escape_string($con,$_POST['service_fax'])."',
-      service_npi = '".mysqli_real_escape_string($con,$_POST['service_npi'])."',
-      service_medicare_npi = '".mysqli_real_escape_string($con,$_POST['service_medicare_npi'])."',
-      service_medicare_ptan = '".mysqli_real_escape_string($con,$_POST['service_medicare_ptan'])."',
-      service_tax_id_or_ssn = '".mysqli_real_escape_string($con,$_POST['service_tax_id_or_ssn'])."',
+      practice='".$db->escape($_POST['practice'])."',
+      first_name='".$db->escape($_POST['first_name'])."',
+      last_name='".$db->escape($_POST['last_name'])."',
+      name='".$db->escape($_POST['first_name'])." ".$db->escape($_POST['last_name'])."',
+      email='".$db->escape($_POST['email'])."',
+      address='".$db->escape($_POST['address'])."',
+      city='".$db->escape($_POST['city'])."',
+      state='".$db->escape($_POST['state'])."',
+      zip='".$db->escape($_POST['zip'])."',
+      phone='".$db->escape($_POST['phone'])."',
+      fax='".$db->escape($_POST['fax'])."',
+      use_service_npi = '".$db->escape($_POST['use_service_npi'])."',
+      service_name = '".$db->escape($_POST['service_name'])."',
+      service_address = '".$db->escape($_POST['service_address'])."',
+      service_city = '".$db->escape($_POST['service_city'])."',
+      service_state = '".$db->escape($_POST['service_state'])."',
+      service_zip = '".$db->escape($_POST['service_zip'])."',
+      service_phone = '".$db->escape($_POST['service_phone'])."',
+      service_fax = '".$db->escape($_POST['service_fax'])."',
+      service_npi = '".$db->escape($_POST['service_npi'])."',
+      service_medicare_npi = '".$db->escape($_POST['service_medicare_npi'])."',
+      service_medicare_ptan = '".$db->escape($_POST['service_medicare_ptan'])."',
+      service_tax_id_or_ssn = '".$db->escape($_POST['service_tax_id_or_ssn'])."',
       service_ein = '".($_POST['service_ssnein'] === 'ein' ? 1 : 0)."',
       service_ssn = '".($_POST['service_ssnein'] === 'ssn' ? 1 : 0)."',
       updated_at=now()
       WHERE userid='".$_SESSION['docid']."'";
 
     $db->query($in_sql);
-    $u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    $u_sql = "SELECT edx_id FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
 
     $u = $db->getRow($u_sql);
     $userid = $u['edx_id'];
@@ -150,12 +150,12 @@ if(isset($_POST["letter_settings_but"])){
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test'])) {
     $in_sql = "UPDATE dental_users SET
-      letter_margin_header = '".mysqli_real_escape_string($con,$_POST['letter_margin_header'])."',
-      letter_margin_footer = '".mysqli_real_escape_string($con,$_POST['letter_margin_footer'])."',
-      letter_margin_top = '".mysqli_real_escape_string($con,$_POST['letter_margin_top'])."',
-      letter_margin_bottom = '".mysqli_real_escape_string($con,$_POST['letter_margin_bottom'])."',
-      letter_margin_left = '".mysqli_real_escape_string($con,$_POST['letter_margin_left'])."',
-      letter_margin_right = '".mysqli_real_escape_string($con,$_POST['letter_margin_right'])."'
+      letter_margin_header = '".$db->escape($_POST['letter_margin_header'])."',
+      letter_margin_footer = '".$db->escape($_POST['letter_margin_footer'])."',
+      letter_margin_top = '".$db->escape($_POST['letter_margin_top'])."',
+      letter_margin_bottom = '".$db->escape($_POST['letter_margin_bottom'])."',
+      letter_margin_left = '".$db->escape($_POST['letter_margin_left'])."',
+      letter_margin_right = '".$db->escape($_POST['letter_margin_right'])."'
       WHERE userid='".$_SESSION['docid']."'";
 
     $db->query($in_sql);
@@ -419,14 +419,14 @@ if (isset($_POST["margins_reset"])) {
 </div>
 
 <?php
-$u_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+$u_sql = "SELECT * FROM dental_users where userid='".$db->escape($_SESSION['userid'])."'";
 
 $user = $db->getRow($u_sql);
 
 $p_sql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
                   LEFT JOIN dental_user_company c ON u.userid = c.userid
                   LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                  where u.userid='".mysqli_real_escape_string($con,$_SESSION["docid"])."'";
+                  where u.userid='".$db->escape($_SESSION["docid"])."'";
 
 $practice = $db->getRow($p_sql);
 ?>
@@ -520,7 +520,7 @@ $practice = $db->getRow($p_sql);
     </a>
 
     <?php
-    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
 
     $r = $db->getRow($sql);
     if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -843,14 +843,14 @@ $practice = $db->getRow($p_sql);
         <?php
         if(isset($_POST['auto_letters'])) {
             $sql = "UPDATE dental_users SET
-          tracker_letters = '".mysqli_real_escape_string($con,$_POST['tracker_letters'])."',
-          intro_letters = '".mysqli_real_escape_string($con,$_POST['intro_letters'])."'
-          WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+          tracker_letters = '".$db->escape($_POST['tracker_letters'])."',
+          intro_letters = '".$db->escape($_POST['intro_letters'])."'
+          WHERE userid='".$db->escape($_SESSION['docid'])."'";
 
             $db->query($sql);
         }
 
-        $let_sql = "SELECT use_letters, tracker_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+        $let_sql = "SELECT use_letters, tracker_letters, intro_letters FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
 
         $let_r = $db->getRow($let_sql);
         if($let_r['use_letters']) {

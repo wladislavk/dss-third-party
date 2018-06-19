@@ -8,8 +8,8 @@ $d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
 $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
 $info_sql = "UPDATE dental_flow_pg2_info SET
-    device_id='".mysqli_real_escape_string($con, $d)."'
-    WHERE id='".mysqli_real_escape_string($con, $id)."'";
+    device_id='".$db->escape( $d)."'
+    WHERE id='".$db->escape( $id)."'";
 
 $db = new Db();
 $q = $db->query($info_sql);
@@ -26,7 +26,7 @@ if ($last_r['id'] == $id) {
 
     if ($db->getNumberRows($sql) == 0) {
         $sql = "INSERT INTO dental_ex_page5 set 
-            dentaldevice='".mysqli_real_escape_string($con,$d)."', 
+            dentaldevice='".$db->escape($d)."', 
             patientid='".$pid."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
@@ -35,7 +35,7 @@ if ($last_r['id'] == $id) {
     } else {
         $exPageId5Row = $db->getRow($sql);
         $exPage5Id = $exPageId5Row['ex_page5id'];
-        $sql = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con, $d)."' where ex_page5id=$exPage5Id";
+        $sql = "update dental_ex_page5 set dentaldevice='".$db->escape( $d)."' where ex_page5id=$exPage5Id";
     }
     $q = $db->query($sql);
 }

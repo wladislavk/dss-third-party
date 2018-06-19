@@ -5,15 +5,15 @@ include "includes/top.htm";
 
 if(isset($_POST['update_btn'])){
   $s = "UPDATE dental_letter_templates SET
-		body='".mysqli_real_escape_string($con,$_POST['body'])."'
-		WHERE id='".mysqli_real_escape_string($con,$_POST['letterid'])."'";
+		body='".$db->escape($_POST['body'])."'
+		WHERE id='".$db->escape($_POST['letterid'])."'";
   mysqli_query($con,$s);
 }
 
 if(is_super($_SESSION['admin_access'])){
     $sql = "select * from dental_letter_templates WHERE default_letter=1 ORDER BY id ASC";
 }elseif(is_admin($_SESSION['admin_access'])){
-    $sql = "select * from dental_letter_templates WHERE companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ORDER BY id ASC";
+    $sql = "select * from dental_letter_templates WHERE companyid='".$db->escape($_SESSION['admincompanyid'])."' ORDER BY id ASC";
 }else{
 ?>
 You do not have permission to edit default letters.
@@ -43,10 +43,10 @@ $my = mysqli_query($con,$sql);
     <?php
     if (!empty($_GET['lid'])) {
         if (is_super($_SESSION['admin_access'])) {
-            $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."'";
+            $sql = "SELECT body from dental_letter_templates where id='".$db->escape($_REQUEST['lid'])."'";
         }
         else {
-            $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."' AND companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
+            $sql = "SELECT body from dental_letter_templates where id='".$db->escape($_REQUEST['lid'])."' AND companyid='".$db->escape($_SESSION['admincompanyid'])."'";
         }
         $q = mysqli_query($con,$sql);
         $row = mysqli_fetch_assoc($q);

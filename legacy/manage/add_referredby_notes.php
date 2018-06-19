@@ -8,7 +8,7 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     $referredby_notes = $_POST['referredby_notes'];
 
     $up_sql = "update dental_contact set 
-        referredby_notes = '".mysqli_real_escape_string($con, $referredby_notes)."'
+        referredby_notes = '".$db->escape( $referredby_notes)."'
         where contactid='".$_POST["rid"]."'";
     $db->query($up_sql);
 

@@ -12,12 +12,12 @@ function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid
 
     if ($old != $new) {
         $sql = "INSERT INTO dental_insurance_status_history SET
-            insuranceid='".mysqli_real_escape_string($con,$insuranceid)."',
-            status='".mysqli_real_escape_string($con,$new)."',
-            userid='".mysqli_real_escape_string($con,$userid)."',
-            adminid='".mysqli_real_escape_string($con,$adminid)."',
+            insuranceid='".$db->escape($insuranceid)."',
+            status='".$db->escape($new)."',
+            userid='".$db->escape($userid)."',
+            adminid='".$db->escape($adminid)."',
             adddate=now(),
-            ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+            ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         $db->query($sql);
     }
 }
@@ -143,7 +143,7 @@ function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false)
     $d = $db->getRow($sleepstudies);
     $diagnosis_1 = $d['diagnosis'];
 
-    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_1)."'";
+    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".$db->escape($diagnosis_1)."'";
     $ins_diag = $db->getRow($ins_diag_sql);
     $diagnosis_a = $ins_diag['ins_diagnosis'];
 
@@ -212,9 +212,9 @@ function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false)
         prior_authorization_number = '".s_for($prior_authorization_number)."',
         signature_physician = '".s_for($signature_physician)."',
         physician_signed_date = '".s_for($physician_signed_date)."',
-        p_m_eligible_payer_id = '".mysqli_real_escape_string($con, $p_m_eligible_payer_id)."',
-        p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
-        primary_claim_id = '".mysqli_real_escape_string($con, $primary_claim_id)."',
+        p_m_eligible_payer_id = '".$db->escape( $p_m_eligible_payer_id)."',
+        p_m_eligible_payer_name = '".$db->escape( $p_m_eligible_payer_name)."',
+        primary_claim_id = '".$db->escape( $primary_claim_id)."',
         status = '".s_for(DSS_CLAIM_SEC_PENDING)."',
         userid = '".s_for($_SESSION['userid'])."',
         docid = '".s_for($_SESSION['docid'])."',

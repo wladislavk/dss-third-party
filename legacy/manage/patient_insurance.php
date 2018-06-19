@@ -9,7 +9,7 @@ if(isset($_REQUEST['useid'])){
     $u = $_REQUEST['useid'];
     $pc = $_REQUEST['pcid'];
 
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con, $pc)."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape( $pc)."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
@@ -23,7 +23,7 @@ if(isset($_REQUEST['useid'])){
     $psql .= " = '".$u."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
     $db->query($psql);
 
-    $dsql = "DELETE FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con, $pc)."'";
+    $dsql = "DELETE FROM dental_patient_insurance WHERE id='".$db->escape( $pc)."'";
     $db->query($dsql);
     ?>
     <script type="text/javascript">
@@ -49,13 +49,13 @@ if(isset($_REQUEST['useid'])){
         state,
         zip,
         phone,
-        '".mysqli_real_escape_string($con, $_SESSION['docid'])."',
+        '".$db->escape( $_SESSION['docid'])."',
         '11'
     FROM dental_patient_insurance
-    WHERE id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
+    WHERE id='".$db->escape( $_REQUEST['createid'])."'";
 
     $pc_id = $db->getInsertId($s);
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['createid'])."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
@@ -68,7 +68,7 @@ if(isset($_REQUEST['useid'])){
     }
     $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
     $db->query($psql);
-    $d = "DELETE FROM dental_patient_insurance where id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
+    $d = "DELETE FROM dental_patient_insurance where id='".$db->escape( $_REQUEST['createid'])."'";
     $db->query($d);
     ?>
     <script type="text/javascript">
@@ -76,9 +76,9 @@ if(isset($_REQUEST['useid'])){
     </script>
     <?php
 }elseif(isset($_REQUEST['delid'])){
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['delid'])."'";
     $pcr = $db->getRow($pcsql);
-    $dsql = "DELETE FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";
+    $dsql = "DELETE FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['delid'])."'";
     $db->query($dsql);
     ?>
     <script type="text/javascript">
@@ -122,7 +122,7 @@ $sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname
     FROM dental_patient_insurance pi 
     INNER JOIN dental_patients p ON pi.patientid=p.patientid 
     WHERE p.docid='".$_SESSION['docid']."' 
-    AND p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    AND p.patientid='".$db->escape( $_GET['pid'])."'";
 $sql .= "ORDER BY ".$pisort." ".$pidir;
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;

@@ -77,7 +77,7 @@ if(isset($_POST["loginsub"]))
 
             if($check_myarray['docid'] != 0) {
                 $_SESSION['docid']=$check_myarray['docid'];
-                $ut_sql = "SELECT user_type FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $check_myarray['docid'])."'";
+                $ut_sql = "SELECT user_type FROM dental_users WHERE userid='".$db->escape( $check_myarray['docid'])."'";
                 $ut_r = $db->getRow($ut_sql);
                 $_SESSION['user_type']=$ut_r['user_type'];
             } else {

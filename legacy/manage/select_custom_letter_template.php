@@ -29,7 +29,7 @@ $sql = "SELECT
         c.name,
         ''
         FROM dental_letter_templates_custom c
-        WHERE c.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+        WHERE c.docid = '".$db->escape($_SESSION['docid'])."'
         ORDER BY template_type DESC, id ASC;";
 
 $my = $db->getResults($sql);

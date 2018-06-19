@@ -80,7 +80,7 @@ if(is_super($_SESSION['admin_access'])){
 $_REQUEST['sort'] = (!empty($_REQUEST['sort']))?$_REQUEST['sort']:'username';
 $_REQUEST['sortdir'] = (!empty($_REQUEST['sortdir']))?$_REQUEST['sortdir']:'ASC';
 
-$sort = ' ORDER BY '.mysqli_real_escape_string($con,$_REQUEST['sort']).' '.$_REQUEST['sortdir'];
+$sort = ' ORDER BY '.$db->escape($_REQUEST['sort']).' '.$_REQUEST['sortdir'];
 
 
 
@@ -341,7 +341,7 @@ Total CC + Invoice Last 30 days: $<?php echo  $total_charge + $count_r['cc_paid'
 				<?php
 					$hst_sql = "SELECT hst.name FROM companies hst
 								INNER JOIN dental_user_hst_company uhc ON uhc.companyid=hst.id
-								WHERE uhc.userid='".mysqli_real_escape_string($con,$myarray['userid'])."'";
+								WHERE uhc.userid='".$db->escape($myarray['userid'])."'";
 					$hst_q = mysqli_query($con,$hst_sql);
 					while($hst_r = mysqli_fetch_assoc($hst_q)){
 						echo $hst_r['name']."<br />";

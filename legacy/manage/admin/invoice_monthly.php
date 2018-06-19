@@ -11,15 +11,15 @@ include_once 'includes/main_include.php';
                 JOIN companies c ON c.id=uc.companyid
 		JOIN dental_plans plan ON plan.id=du.plan_id
                 WHERE du.status=1 AND du.docid=0 AND 
-		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
+		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+                	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
 			AND
 (SELECT COUNT(*) as num_inv FROM dental_percase_invoice
                         WHERE docid=du.userid AND 
                                 status = '".DSS_INVOICE_PENDING."') = 0";
 
   if(isset($_GET['company']) && $_GET['company'] != ""){
-        $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['company'])."' ";
+        $sql .= " AND c.id='".$db->escape($_GET['company'])."' ";
   }
 
   $q = mysqli_query($con,$sql);
@@ -29,7 +29,7 @@ include_once 'includes/main_include.php';
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
 		JOIN dental_plans p ON p.id=u.plan_id
-                WHERE u.userid='".mysqli_real_escape_string($con,$r['userid'])."'";
+                WHERE u.userid='".$db->escape($r['userid'])."'";
   	  $doc_q = mysqli_query($con,$doc_sql);
 if(mysqli_num_rows($doc_q) == 0){
   //If no plan get company fees
@@ -37,7 +37,7 @@ if(mysqli_num_rows($doc_q) == 0){
                 FROM dental_users u
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
-                WHERE u.userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+                WHERE u.userid='".$db->escape($_REQUEST['docid'])."'";
   $doc_q = mysqli_query($con,$doc_sql);
 }
 
@@ -63,7 +63,7 @@ if(mysqli_num_rows($doc_q) == 0){
 	}
 
 	$in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$r['userid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($monthly_date)))."', '".mysqli_real_escape_string($con,$doc['monthly_fee'])."')";
+                " VALUES (".$_SESSION['adminuserid'].", ".$r['userid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".$db->escape(date('Y-m-d', strtotime($monthly_date)))."', '".$db->escape($doc['monthly_fee'])."')";
 	mysqli_query($con,$in_sql);
 	$invoiceid = mysqli_insert_id($con);
 
@@ -72,14 +72,14 @@ if(mysqli_num_rows($doc_q) == 0){
 		  bill_card($r['cc_id'] ,$doc['monthly_fee'], $r['userid'], $invoiceid);	
 		}else{
                     $charge_sql = "INSERT INTO dental_charge SET
-                        amount='".mysqli_real_escape_string($con,str_replace(',','',$doc['monthly_fee']))."',
-                        userid='".mysqli_real_escape_string($con,(!empty($user['userid']) ? $user['userid'] : ''))."',
-                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+                        amount='".$db->escape(str_replace(',','',$doc['monthly_fee']))."',
+                        userid='".$db->escape((!empty($user['userid']) ? $user['userid'] : ''))."',
+                        adminid='".$db->escape($_SESSION['adminuserid'])."',
                         charge_date=NOW(),
-			invoice_id='".mysqli_real_escape_string($con,$invoiceid)."',
+			invoice_id='".$db->escape($invoiceid)."',
                         status='2',
                         adddate=NOW(),
-                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+                        ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
                         mysqli_query($con,$charge_sql);
 		     $i_sql = "UPDATE dental_percase_invoice set status=2 WHERE id='".$invoiceid."'";
 			mysqli_query($con,$i_sql);
@@ -129,31 +129,31 @@ try{
 } catch(\Stripe\Error\Card $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
-                        WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+                        WHERE id='".$db->escape($invoiceid)."'";
   mysqli_query($con,$invoice_sql);
   $status = 2;
 } catch (\Stripe\Error\InvalidRequest $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
-                        WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+                        WHERE id='".$db->escape($invoiceid)."'";
   mysqli_query($con,$invoice_sql);
   $status = 2;
 } catch (\Stripe\Error\Authentication $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
-                        WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+                        WHERE id='".$db->escape($invoiceid)."'";
   mysqli_query($con,$invoice_sql);
   $status = 2;
 } catch (\Stripe\Error\ApiConnection $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
-                        WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+                        WHERE id='".$db->escape($invoiceid)."'";
   mysqli_query($con,$invoice_sql);
   $status = 2;
 } catch (\Exception $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
-                        WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+                        WHERE id='".$db->escape($invoiceid)."'";
   mysqli_query($con,$invoice_sql);
   $status = 2;
 }
@@ -162,22 +162,22 @@ try{
   $stripe_customer = $charge->customer;
   $stripe_card_fingerprint = $charge->source->fingerprint;
   $charge_sql = "INSERT INTO dental_charge SET
-                        amount='".mysqli_real_escape_string($con,str_replace(',','',$amount))."',
-                        userid='".mysqli_real_escape_string($con,$userid)."',
-                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+                        amount='".$db->escape(str_replace(',','',$amount))."',
+                        userid='".$db->escape($userid)."',
+                        adminid='".$db->escape($_SESSION['adminuserid'])."',
                         charge_date=NOW(),
-                        stripe_customer='".mysqli_real_escape_string($con,$stripe_customer)."',
-                        stripe_charge='".mysqli_real_escape_string($con,$stripe_charge)."',
-                        stripe_card_fingerprint='".mysqli_real_escape_string($con,$stripe_card_fingerprint)."',
-			invoice_id='".mysqli_real_escape_string($con,$invoiceid)."',
+                        stripe_customer='".$db->escape($stripe_customer)."',
+                        stripe_charge='".$db->escape($stripe_charge)."',
+                        stripe_card_fingerprint='".$db->escape($stripe_card_fingerprint)."',
+			invoice_id='".$db->escape($invoiceid)."',
 			status='".$status."',
                         adddate=NOW(),
-                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+                        ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         mysqli_query($con,$charge_sql);
   if($status==1){
     $invoice_sql = "UPDATE dental_percase_invoice SET
 			status=1
-			WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
+			WHERE id='".$db->escape($invoiceid)."'";
     mysqli_query($con,$invoice_sql);
   }
 

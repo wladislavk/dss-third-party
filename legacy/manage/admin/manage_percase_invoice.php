@@ -58,7 +58,7 @@ if(is_super($_SESSION['admin_access'])){
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
 		LEFT JOIN dental_plans p ON p.id=du.plan_id
-		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".$db->escape($_SESSION['admincompanyid'])."'";
 }
 
 $sort_dir = (isset($_REQUEST['sort_dir'])) ? strtolower($_REQUEST['sort_dir']) : '';

@@ -21,14 +21,14 @@ if (strstr($table, '_pivot')) {
     if (count($ids)) {
         $table = str_replace('_pivot', '', $table);
         $idString = join(',', $ids);
-        $s = "UPDATE " . mysqli_real_escape_string($con, $table) . " 
-            SET " . mysqli_real_escape_string($con, $field) . "='" . mysqli_real_escape_string($con, $value) . "' 
-            WHERE $primaryKey IN (" . mysqli_real_escape_string($con, $idString) . ")";
+        $s = "UPDATE " . $db->escape( $table) . " 
+            SET " . $db->escape( $field) . "='" . $db->escape( $value) . "' 
+            WHERE $primaryKey IN (" . $db->escape( $idString) . ")";
     }
 } else {
-    $s = "UPDATE " . mysqli_real_escape_string($con, $table) . " 
-        SET " . mysqli_real_escape_string($con, $field) . "='" . mysqli_real_escape_string($con, $value) . "' 
-        WHERE patientid='" . mysqli_real_escape_string($con, $patient) . "' OR parent_patientid='" . mysqli_real_escape_string($con, $patient) . "'";
+    $s = "UPDATE " . $db->escape( $table) . " 
+        SET " . $db->escape( $field) . "='" . $db->escape( $value) . "' 
+        WHERE patientid='" . $db->escape( $patient) . "' OR parent_patientid='" . $db->escape( $patient) . "'";
 }
 $q = $db->query($s);
 

@@ -42,11 +42,11 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_users u 
         JOIN dental_user_company uc on uc.userid=u.userid 
         JOIN companies c ON c.id=uc.companyid
-        WHERE c.id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
+        WHERE c.id='".$db->escape($_SESSION['admincompanyid'])."'";
 } elseif (is_billing($_SESSION['admin_access'])) {
     $a_sql = "SELECT ac.companyid FROM admin_company ac
         JOIN admin a ON a.adminid = ac.adminid
-        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+        WHERE a.adminid='".$db->escape($_SESSION['adminuserid'])."'";
     $a_q = mysqli_query($con,$a_sql);
     $admin = mysqli_fetch_assoc($a_q);
     $s = "select u.first_name,u.last_name, 
@@ -66,7 +66,7 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_users u 
         JOIN dental_user_company uc on uc.userid=u.userid 
         JOIN companies c ON c.id=uc.companyid
-        WHERE u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."'";
+        WHERE u.billing_company_id='".$db->escape($admin['companyid'])."'";
 }
 $q = mysqli_query($con,$s);
 $csv = "\"First Name\",\"Last Name\",\"Email\",\"Company\",\"Practice\",\"Address\",\"City\",\"State\",\"Zip\",\"Phone\",\"Fax\",\"Status\",\"Created\",\"Suspended\"\n";

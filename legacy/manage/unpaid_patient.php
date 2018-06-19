@@ -23,7 +23,7 @@ if(!empty($_REQUEST["page"])) {
 }
 
 $docId = intval($_SESSION['docid']);
-$dbType = mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ);
+$dbType = $db->escape( DSS_TRXN_TYPE_ADJ);
 
 $db = new Db();
 

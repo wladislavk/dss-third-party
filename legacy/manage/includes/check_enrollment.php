@@ -11,12 +11,12 @@ include_once 'constants.inc';
   $sql = "SELECT e.* from dental_eligible_enrollment e
   	JOIN dental_enrollment_transaction_type t ON t.id = e.transaction_type_id
   	WHERE t.transaction_type='835'
-  		AND e.npi='".mysqli_real_escape_string($con,$npi)."'
-  		AND e.payer_id = '".mysqli_real_escape_string($con,$payer_id)."'";
+  		AND e.npi='".$db->escape($npi)."'
+  		AND e.payer_id = '".$db->escape($payer_id)."'";
   $q = $db->getResults($sql);
   $r = $q[0];
 
-  $u_sql ="SELECT userid FROM dental_users where npi='".mysqli_real_escape_string($con,$npi)."' OR service_npi='".mysqli_real_escape_string($con,$npi)."'";
+  $u_sql ="SELECT userid FROM dental_users where npi='".$db->escape($npi)."' OR service_npi='".$db->escape($npi)."'";
   $u_r = $db->getRow($u_sql);
 
   if(count($q) == 0){

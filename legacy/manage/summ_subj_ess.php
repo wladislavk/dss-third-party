@@ -99,7 +99,7 @@ if ($epworthid != '') {
                                     $a_sql = "SELECT answer 
                                         FROM dentalsummfu_ess
                                         WHERE epworthid='".$epworth_myarray['epworthid']."' 
-                                        AND followupid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."';";
+                                        AND followupid='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."';";
                                     $a = $db->getRow($a_sql);
                                     $chk = $a['answer']; ?>
                                     <tr>

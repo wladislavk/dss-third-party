@@ -86,7 +86,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($allergens)) {
         foreach ($allergens as $val) {
             if (trim($val) != '') {
-                $as = "SELECT allergens from dental_allergens where allergensid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $as = "SELECT allergens from dental_allergens where allergensid = '" . $db->escape( $val) . "'";
             }
             $aq = mysqli_query($con, $as);
             $arow = mysqli_fetch_assoc($aq);
@@ -98,7 +98,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($medications)) {
         foreach($medications as $val) {
             if (trim($val) != '') {
-                $ms = "SELECT medications from dental_medications where medicationsid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $ms = "SELECT medications from dental_medications where medicationsid = '" . $db->escape( $val) . "'";
             }
             $mq = mysqli_query($con, $ms);
             $mrow = mysqli_fetch_assoc($mq);
@@ -114,7 +114,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($history)) {
         foreach ($history as $val) {
             if (trim($val) != '') {
-                $hs = "SELECT history from dental_history where historyid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $hs = "SELECT history from dental_history where historyid = '" . $db->escape( $val) . "'";
             }
             $hq = mysqli_query($con, $hs);
             $hrow = mysqli_fetch_assoc($hq);
@@ -126,7 +126,7 @@ if ($_POST['q_page3sub'] == 1) {
         $history_arr = '~' . $history_arr;
     }
 
-    $exist_sql = "SELECT q_page3id FROM dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $exist_sql = "SELECT q_page3id FROM dental_q_page3_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
     $exist_q = mysqli_query($con, $exist_sql);
     if (mysqli_num_rows($exist_q) == 0) {
         $ins_sql = "insert into dental_q_page3 set 
@@ -196,8 +196,8 @@ if ($_POST['q_page3sub'] == 1) {
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
             set		
             premedcheck = '".s_for($_POST["premedcheck"])."',
@@ -276,8 +276,8 @@ if ($_POST['q_page3sub'] == 1) {
             drymouth_text = '".s_for($drymouth_text)."'
     		where q_page3id = $qPage3Id";
 		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
             set             
             premedcheck = '".s_for($_POST["premedcheck"])."',
@@ -348,7 +348,7 @@ if ($comp['history'] == 0) {
     $no_history = st($myarray['no_history']);
     $orthodontics = st($myarray['orthodontics']);
 
-    $psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $psql = "SELECT * FROM dental_patients where patientid='".$db->escape( $_SESSION['pid'])."'";
     $pmy = mysqli_query($con, $psql);
     $pmyarray = mysqli_fetch_array($pmy);
 

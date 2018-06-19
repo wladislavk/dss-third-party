@@ -10,7 +10,7 @@ ini_set('memory_limit', '1G');
 
 $invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi
 	JOIN dental_users u ON u.userid=pi.docid
-	WHERE id='".mysqli_real_escape_string($con, $_GET['invoice_id'])."'";
+	WHERE id='".$db->escape( $_GET['invoice_id'])."'";
 $invoice_q = mysqli_query($con, $invoice_sql);
 $invoice = mysqli_fetch_assoc($invoice_q);
 

@@ -5,8 +5,8 @@ if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
   $in_sql = "UPDATE dental_users SET
-		claim_margin_top = '".mysqli_real_escape_string($con,$_POST['claim_margin_top'])."',
-                claim_margin_left = '".mysqli_real_escape_string($con,$_POST['claim_margin_left'])."'
+		claim_margin_top = '".$db->escape($_POST['claim_margin_top'])."',
+                claim_margin_left = '".$db->escape($_POST['claim_margin_left'])."'
         WHERE userid='".$_SESSION['docid']."'";
   $db->query($in_sql);
   if(isset($_POST['margins_test'])){ ?>
@@ -60,7 +60,7 @@ $num_custom = count($my);
 </div>
 
 <?php
-  $p_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  $p_sql = "SELECT * FROM dental_users where userid='".$db->escape($_SESSION['docid'])."'";
   $practice = $db->getRow($p_sql);
 
 ?>

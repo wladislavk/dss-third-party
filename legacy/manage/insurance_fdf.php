@@ -290,7 +290,7 @@ if (empty($prior_authorization_number)) {
 $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
 $inscoinfo = $db->getRow($inscoquery);
 
-$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$db->escape( (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
 
 $prod_r = $db->getRow($prod_s);
 $claim_producer = $prod_r['producer'];
@@ -695,7 +695,7 @@ if (!empty($_REQUEST['type']) && $_REQUEST['type'] == "secondary") {
     $fdf_field = "primary_fdf";
 }
 
-$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con,$file)."' WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".$db->escape($file)."' WHERE insuranceid='".$db->escape((!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
 $db->query($sql);
 
 $handle = fopen("../../../shared/q_file/".$file, 'x+');

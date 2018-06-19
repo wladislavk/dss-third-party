@@ -127,11 +127,11 @@ $sql = "SELECT
     JOIN dental_patients p ON p.patientid = preauth.patient_id
     WHERE preauth.doc_id = {$_SESSION['docid']}";
 if (isset($_GET['status'])) {
-    $sql .= " AND preauth.status = '".mysqli_real_escape_string($con, $_GET['status'])."' ";
+    $sql .= " AND preauth.status = '".$db->escape( $_GET['status'])."' ";
 }
 if (isset($_GET['viewed'])) {
     if ($_GET['viewed'] == 1) {
-        $sql .= " AND preauth.viewed = '".mysqli_real_escape_string($con, $_GET['viewed'])."' ";
+        $sql .= " AND preauth.viewed = '".$db->escape( $_GET['viewed'])."' ";
     } else {
         $sql .= " AND (preauth.viewed = '0' OR preauth.viewed IS NULL) ";
     }

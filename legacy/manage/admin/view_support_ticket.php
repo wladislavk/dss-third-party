@@ -4,9 +4,9 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 include_once '../includes/constants.inc';
 
-$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 1 && id = ".mysqli_real_escape_string($con,$_REQUEST['ed']);
+$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 1 && id = ".$db->escape($_REQUEST['ed']);
 mysqli_query($con,$v_sql);
-$v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 1 AND ticket_id = ".mysqli_real_escape_string($con,$_REQUEST['ed']);
+$v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 1 AND ticket_id = ".$db->escape($_REQUEST['ed']);
 mysqli_query($con,$v_sql);
 
 if(isset($_POST['respond'])){
@@ -16,12 +16,12 @@ if(isset($_POST['respond'])){
       linkRequestData('dental_support_responses', $_GET['ed']);
 
     $s = "INSERT INTO dental_support_responses SET
-	ticket_id = '".mysqli_real_escape_string($con,$_GET['ed'])."',
-	responder_id='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+	ticket_id = '".$db->escape($_GET['ed'])."',
+	responder_id='".$db->escape($_SESSION['adminuserid'])."',
 	response_type=0,
-	body = '".mysqli_real_escape_string($con,$_POST['body'])."',
+	body = '".$db->escape($_POST['body'])."',
 	adddate = now(),
-	ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
+	ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'
 		";
     mysqli_query($con,$s);
     $r_id = mysqli_insert_id($con);
@@ -30,14 +30,14 @@ if(isset($_POST['respond'])){
   if(!empty($_POST['close']) && $_POST['close']==2){
     $s = "UPDATE dental_support_tickets SET
 		status='2'
-		WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
+		WHERE id = '".$db->escape($_GET['ed'])."'";
     mysqli_query($con,$s);
   }
 
   if(!empty($_POST['reopen']) && $_POST['reopen']==1){
     $s = "UPDATE dental_support_tickets SET
                 status='1'
-                WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
+                WHERE id = '".$db->escape($_GET['ed'])."'";
     mysqli_query($con,$s);
   } 
 
@@ -49,9 +49,9 @@ if(isset($_POST['respond'])){
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_support_attachment SET
-                                filename = '".mysqli_real_escape_string($con,$attachment)."',
-                                ticket_id='".mysqli_real_escape_string($con,$_GET['ed'])."',
-                                response_id='".mysqli_real_escape_string($con,$r_id)."'";
+                                filename = '".$db->escape($attachment)."',
+                                ticket_id='".$db->escape($_GET['ed'])."',
+                                response_id='".$db->escape($r_id)."'";
                   mysqli_query($con,$a_sql);
                 }
                 }
@@ -75,7 +75,7 @@ $sql = "select t.*,
                 LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
-	 WHERE t.id = ".mysqli_real_escape_string($con,$_REQUEST['ed']);
+	 WHERE t.id = ".$db->escape($_REQUEST['ed']);
 $my = mysqli_query($con,$sql);
 $t = mysqli_fetch_assoc($my);
 ?>
@@ -94,12 +94,12 @@ $t = mysqli_fetch_assoc($my);
 	<div class="panel-heading">
       <?php
         if($t['create_type']=='0'){
-          $u_sql = "SELECT username name FROM admin WHERE adminid='".mysqli_real_escape_string($con,$t['creator_id'])."'";
+          $u_sql = "SELECT username name FROM admin WHERE adminid='".$db->escape($t['creator_id'])."'";
           $u_q = mysqli_query($con,$u_sql);
           $u_r = mysqli_fetch_assoc($u_q);
           ?>Support - <?php echo  $u_r['name'];
         }elseif($t['create_type']=='1'){
-          $u_sql = "SELECT name FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$t['creator_id'])."'";
+          $u_sql = "SELECT name FROM dental_users WHERE userid='".$db->escape($t['creator_id'])."'";
           $u_q = mysqli_query($con,$u_sql);
           $u_r = mysqli_fetch_assoc($u_q);
           echo $u_r['name'];
@@ -113,7 +113,7 @@ $t = mysqli_fetch_assoc($my);
       <?php if($t['attachment']){
         ?> | <a href="display_file.php?f=<?php echo  $t['attachment']; ?>" target="_blank">View Attachment</a><?php
       } 
-        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".mysqli_real_escape_string($con,$t['id'])."'";
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".$db->escape($t['id'])."'";
         $a_q = mysqli_query($con,$a_sql);
         while($a=mysqli_fetch_assoc($a_q)){
         ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php
@@ -125,7 +125,7 @@ $t = mysqli_fetch_assoc($my);
 <div id="support_responses">
 <?php
   $r_sql = "SELECT r.* FROM dental_support_responses r
-		WHERE ticket_id = '".mysqli_real_escape_string($con,$_REQUEST['ed'])."'";
+		WHERE ticket_id = '".$db->escape($_REQUEST['ed'])."'";
   $r_q = mysqli_query($con,$r_sql);
   while($r = mysqli_fetch_assoc($r_q)){
     ?>
@@ -133,12 +133,12 @@ $t = mysqli_fetch_assoc($my);
 	<div class="panel-heading">
       <?php
         if($r['response_type']=='0'){
-          $u_sql = "SELECT username name FROM admin WHERE adminid='".mysqli_real_escape_string($con,$r['responder_id'])."'";
+          $u_sql = "SELECT username name FROM admin WHERE adminid='".$db->escape($r['responder_id'])."'";
           $u_q = mysqli_query($con,$u_sql);
           $u_r = mysqli_fetch_assoc($u_q);
           ?>Support - <?php echo  $u_r['name'];
         }elseif($r['response_type']=='1'){
-          $u_sql = "SELECT name FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$r['responder_id'])."'";
+          $u_sql = "SELECT name FROM dental_users WHERE userid='".$db->escape($r['responder_id'])."'";
           $u_q = mysqli_query($con,$u_sql);
           $u_r = mysqli_fetch_assoc($u_q);
           echo $u_r['name'];
@@ -153,7 +153,7 @@ $t = mysqli_fetch_assoc($my);
       if($r['attachment']){
         ?> | <a href="display_file.php?f=<?php echo  $r['attachment']; ?>" target="_blank">View Attachment</a><?php
       }
-        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id ='".mysqli_real_escape_string($con,$r['id'])."'";
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id ='".$db->escape($r['id'])."'";
         $a_q = mysqli_query($con,$a_sql);
         while($a=mysqli_fetch_assoc($a_q)){
         ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php

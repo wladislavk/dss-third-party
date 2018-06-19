@@ -37,7 +37,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -105,7 +105,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -129,7 +129,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -153,7 +153,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -265,7 +265,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -289,7 +289,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -313,7 +313,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -337,7 +337,7 @@ $db = new Db();
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = mysqli_query($con, $loc_sql);
                 $num_loc = mysqli_num_rows($loc_q);
                 if ($num_loc > 1) {

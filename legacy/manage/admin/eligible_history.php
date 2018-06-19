@@ -15,7 +15,7 @@ while ($r = mysqli_fetch_assoc($my)) { ?>
         <p>Response: <?= $r['response'];?></p>
         <h4>Webhook responses</h4>
         <?php
-        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con, $r['reference_id'])."'";
+        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".$db->escape( $r['reference_id'])."'";
         $w_q = mysqli_query($con, $w_sql);
         while ($w_r = mysqli_fetch_assoc($w_q)) { ?>
             <strong><?= $w_r['event_type']; ?></strong>

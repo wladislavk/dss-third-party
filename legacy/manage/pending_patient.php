@@ -48,14 +48,14 @@ $leftJoinDuplicates = "LEFT JOIN (
 $sumTotalsConditional = 'IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0)';
 
 if(isset($_REQUEST['deleteid'])){
-    $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
+    $dsql = "DELETE FROM dental_patients WHERE docid='".$db->escape( $_SESSION['docid'])."' AND patientid='".$db->escape( $_REQUEST['deleteid'])."'";
     $db->query($dsql);?>
 <script type="text/javascript">
     window.location = "pending_patient.php";
 </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
-    $sql = "UPDATE dental_patients SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
+    $sql = "UPDATE dental_patients SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".$db->escape( $_SESSION['docid'])."' AND patientid='".$db->escape( $_REQUEST['createid'])."'";
     $db->query($sql);
     ?>
     <script type="text/javascript">

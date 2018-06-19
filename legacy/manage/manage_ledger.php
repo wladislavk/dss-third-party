@@ -63,7 +63,7 @@ if(!empty($_REQUEST["delid"]))
 }
 
 if (isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != "") {
-  $sql = "DELETE FROM dental_ledger_statement WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delstatementid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+  $sql = "DELETE FROM dental_ledger_statement WHERE id='".$db->escape($_REQUEST['delstatementid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
   $db->query($sql);
   $msg = "Deleted Successfully";
           ?>
@@ -95,7 +95,7 @@ if (!empty($_REQUEST["delclaimid"])) {
 
 if (!empty($_REQUEST["delnoteid"])) {
 
-  $sql = "DELETE FROM dental_ledger_note WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delnoteid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+  $sql = "DELETE FROM dental_ledger_note WHERE id='".$db->escape($_REQUEST['delnoteid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
         $q = mysqli_query($con, $sql);
          if($q){
           $msg= "Deleted Successfully";

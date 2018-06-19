@@ -25,8 +25,8 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_custom SET
-			title='".mysqli_real_escape_string($con,$_POST["title"])."', 
-			description = '".mysqli_real_escape_string($con,$_POST["description"])."', 
+			title='".$db->escape($_POST["title"])."', 
+			description = '".$db->escape($_POST["description"])."', 
 			adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', 
 			default_text = 1";
 			mysqli_query($con,$ins_sql);

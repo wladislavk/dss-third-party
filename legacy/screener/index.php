@@ -308,7 +308,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
 </div>
 <?php
-  $s = "SELECT name FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'";
+  $s = "SELECT name FROM dental_users where userid='".$db->escape( $_SESSION['screener_doc'])."'";
   $q = mysqli_query($con, $s);
   $r = mysqli_fetch_assoc($q);
 ?>
@@ -357,7 +357,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <a href="#results" id="sect_results_next" class="fl next btn btn_medium btn_d">View Results</a>
 <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".$db->escape( $_SESSION['screener_doc'])."'
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysqli_query($con, $bu_sql);
                                 if(mysqli_num_rows($bu_q)>0){
@@ -487,7 +487,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
         <label class="lbl_a">HST Company</label>
   <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".$db->escape( $_SESSION['screener_doc'])."'
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysqli_query($con, $bu_sql);
                           while($bu_r = mysqli_fetch_assoc($bu_q)){ ?>

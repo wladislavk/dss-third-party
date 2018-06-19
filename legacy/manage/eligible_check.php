@@ -3,7 +3,7 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 $api_sql = "SELECT use_eligible_api FROM dental_users
-              WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+              WHERE userid='".$db->escape( $_SESSION['docid'])."'";
 $api_r = $db->getRow($api_sql);
 if($api_r['use_eligible_api']==1){?>
 <script>

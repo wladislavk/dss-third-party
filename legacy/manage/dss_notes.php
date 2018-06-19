@@ -4,7 +4,7 @@ namespace Ds3\Libraries\Legacy;
 $db = new Db();
 
 if (isset($_POST['newnotesubmit'])) {
-    $query = "UPDATE dental_patients SET patient_notes='".mysqli_real_escape_string($con, $_POST['notecontent'])."' WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+    $query = "UPDATE dental_patients SET patient_notes='".$db->escape( $_POST['notecontent'])."' WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
     
     if (!$db->query($query)) {
         echo "Could not add note! Please contact the system administrator or try again.";

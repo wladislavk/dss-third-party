@@ -186,7 +186,7 @@ if ($isDeleteStudy) {
     // Set default message. In case everything goes ok the message will be updated
     $msg = $errorMessage ?: 'There was an error uploading the attachment. Please try again.';
 
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $diagnosising_doc = $db->escape( $diagnosising_doc);
     $q = "UPDATE dental_summ_sleeplab SET
         `date` = '$date',
         `sleeptesttype` = '$sleeptesttype',
@@ -288,7 +288,7 @@ if ($isDeleteStudy) {
         }
     }
 
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $diagnosising_doc = $db->escape( $diagnosising_doc);
 
     $q = "INSERT INTO `dental_summ_sleeplab` (
             `id` ,

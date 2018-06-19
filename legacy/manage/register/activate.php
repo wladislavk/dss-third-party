@@ -16,7 +16,7 @@ if (!empty($_GET['hash'])) {
     $hash = '';
 }
 
-$status_sql = "SELECT status FROM dental_users where userid='".mysqli_real_escape_string($con,$id)."'";
+$status_sql = "SELECT status FROM dental_users where userid='".$db->escape($id)."'";
 
 $status_r = $db->getRow($status_sql);
 if ($status_r['status'] == 1) { ?>
@@ -28,8 +28,8 @@ if ($status_r['status'] == 1) { ?>
 }
 
 $s = "SELECT du.email, du.phone FROM dental_users du 
-      WHERE du.userid='".mysqli_real_escape_string($con,$id)."' AND
-      du.recover_hash='".mysqli_real_escape_string($con,$hash)."' AND
+      WHERE du.userid='".$db->escape($id)."' AND
+      du.recover_hash='".$db->escape($hash)."' AND
       du.status='2'";
 
 $q = $db->getResults($s);

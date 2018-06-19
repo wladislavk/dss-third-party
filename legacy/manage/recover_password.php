@@ -12,7 +12,7 @@ if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
     } elseif ($_POST['password1'] == $_POST['password2']) {
         $salt = create_salt();
         $pass = gen_password($_POST['password1'], $salt);
-        $up_sql = "UPDATE dental_users SET password='".mysqli_real_escape_string($con, $pass)."', salt='".$salt."', recover_hash='' WHERE userid = '".mysqli_real_escape_string($con, $_POST['userid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
+        $up_sql = "UPDATE dental_users SET password='".$db->escape( $pass)."', salt='".$salt."', recover_hash='' WHERE userid = '".$db->escape( $_POST['userid'])."' AND recover_hash='".$db->escape( $_POST['hash'])."'";
 
         $db->query($up_sql);?>
         <script type="text/javascript">

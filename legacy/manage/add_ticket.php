@@ -26,14 +26,14 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
     linkRequestData('dental_support_tickets', 0);
 
 	$ins_sql = "insert into dental_support_tickets set 
-                    title = '".mysqli_real_escape_string($con, $_POST['title'])."',
-                    category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."',
-                    company_id = '".mysqli_real_escape_string($con, $_POST['company_id'])."',
-                    body = '".mysqli_real_escape_string($con, $_POST['body'])."',
-                    userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-                    docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."',
+                    title = '".$db->escape( $_POST['title'])."',
+                    category_id = '".$db->escape( $_POST['category_id'])."',
+                    company_id = '".$db->escape( $_POST['company_id'])."',
+                    body = '".$db->escape( $_POST['body'])."',
+                    userid = '".$db->escape( $_SESSION['userid'])."',
+                    docid = '".$db->escape( $_SESSION['docid'])."',
                     create_type = '1',
-                    creator_id = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
+                    creator_id = '".$db->escape( $_SESSION['userid'])."',
                     adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
 	$t_id = $db->getInsertId($ins_sql);
@@ -45,15 +45,15 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
             move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
 	
             $a_sql = "INSERT INTO dental_support_attachment SET
-                        filename = '".mysqli_real_escape_string($con, $attachment)."',
-                        ticket_id=".mysqli_real_escape_string($con, $t_id);
+                        filename = '".$db->escape( $attachment)."',
+                        ticket_id=".$db->escape( $t_id);
             $db->query($a_sql);
         }
 	}
 
 	$u_sql = "SELECT a.* FROM admin a 
                 JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
-                WHERE ca.category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."'";
+                WHERE ca.category_id = '".$db->escape( $_POST['category_id'])."'";
 	$admins = $db->getResults($u_sql);
 
 	if ($admins) {
@@ -141,7 +141,7 @@ if(!empty($msg)) {?>
 $c_sql = "SELECT c.* FROM companies c
             JOIN dental_users u ON u.billing_company_id=c.id
             WHERE c.use_support=1 
-            AND u.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+            AND u.userid='".$db->escape( $_SESSION['docid'])."'
             ORDER BY c.name ASC;";
 $c_q = $db->getResults($c_sql);
 if ($c_q) 

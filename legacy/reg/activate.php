@@ -2,8 +2,8 @@
 <?php require_once("twilio/twilio.config.php");
 
 $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.practice, du.logo, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
-	WHERE dp.patientid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
-		dp.recover_hash='".mysqli_real_escape_string($con, $_GET['hash'])."' AND
+	WHERE dp.patientid='".$db->escape( $_GET['id'])."' AND
+		dp.recover_hash='".$db->escape( $_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
 		du.use_patient_portal='1'";
 $q = mysqli_query($con, $s);
@@ -18,13 +18,13 @@ if (!empty($r['mailing_practice'])) {
   $practice = '';
 }
 
-$loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".$db->escape( $_GET['id'])."'";
 $loc_q = mysqli_query($con, $loc_sql);
 $loc_r = mysqli_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-  $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
+  $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape( $loc_r['location'])."' AND docid='".$db->escape( $r['docid'])."'";
 }else{
-  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape( $r['docid'])."'";
 }
 $location_result = mysqli_query($con, $location_query);
 $location_info = mysqli_fetch_assoc($location_result);

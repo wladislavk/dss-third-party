@@ -10,16 +10,16 @@ $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
     FROM dental_claim_electronic ce 
     JOIN dental_insurance i ON i.insuranceid = ce.claimid
     JOIN dental_users u ON i.docid = u.userid
-    WHERE ce.claimid='".mysqli_real_escape_string($con, (!empty($_GET['id']) ? $_GET['id'] : ''))."' 
+    WHERE ce.claimid='".$db->escape( (!empty($_GET['id']) ? $_GET['id'] : ''))."' 
     AND ce.reference_id!=''
     ORDER BY id DESC LIMIT 1";
 $r = $db->getRow($sql);
 
-$l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".$db->escape( $_GET['id'])."'";
 $l = $db->getRow($l_sql);
 
 $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['user_id'])."'";
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $r['user_id'])."'";
 $api_key_query = mysqli_query($con, $api_key_sql);
 $api_key_result = mysqli_fetch_assoc($api_key_query);
 if ($api_key_result && !empty($api_key_result['eligible_api_key'])) {

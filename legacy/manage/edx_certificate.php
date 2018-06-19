@@ -12,7 +12,7 @@ include_once "includes/constants.inc";
 <ul class="fullwidth" style="list-style:none;">
 <?php
   $c_sql = "SELECT * FROM edx_certificates c JOIN dental_users u ON c.edx_id = u.edx_id
-			WHERE u.userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+			WHERE u.userid='".$db->escape( $_SESSION['userid'])."'";
   $c_q = $db->getResults($c_sql);
   foreach ($c_q as $c) { ?>
     <li>

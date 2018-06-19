@@ -26,7 +26,7 @@ $db = new Db();
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     $ins_sql = "insert into dental_contact set company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', contacttypeid = '11', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
     $pc_id = $db->getInsertId($ins_sql);
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape($_REQUEST['id'])."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
@@ -40,7 +40,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     }
     $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
     $db->query($psql);
-    $d = "DELETE FROM dental_patient_insurance where id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
+    $d = "DELETE FROM dental_patient_insurance where id='".$db->escape($_REQUEST['id'])."'";
     $db->query($d);?>
     <script type="text/javascript">
         parent.window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
@@ -48,7 +48,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     <?php
 }
 
-$thesql = "select * from dental_patient_insurance where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
+$thesql = "select * from dental_patient_insurance where id='".$db->escape((!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
 $company = st($themyarray['company']);

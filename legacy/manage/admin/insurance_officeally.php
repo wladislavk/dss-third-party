@@ -10,11 +10,11 @@ if (!empty($_POST['claim'])) {
         $claim_sql = "SELECT i.* 
             FROM dental_insurance i 
 	        JOIN dental_patients p on p.patientid=i.patientid
-	        WHERE i.insuranceid='".mysqli_real_escape_string($con,$claimid)."'";
+	        WHERE i.insuranceid='".$db->escape($claimid)."'";
         $claim_q = mysqli_query($con,$claim_sql);
         if ($claim = mysqli_fetch_assoc($claim_q)) {
             $row = [];
-            $pat_sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$claim['patientid'])."'";
+            $pat_sql = "SELECT * FROM dental_patients where patientid='".$db->escape($claim['patientid'])."'";
             $pat_q = mysqli_query($con,$pat_sql);
             $pat = mysqli_fetch_assoc($pat_q);
 
@@ -44,7 +44,7 @@ if (!empty($_POST['claim'])) {
             $row[] = $ins_co['company'];
             $row[] = '';
 
-            $ins_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con,$pat['p_m_ins_co'])."'";
+            $ins_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape($pat['p_m_ins_co'])."'";
             $ins_q = mysqli_query($con,$ins_sql);
             $ins = mysqli_fetch_assoc($ins_q);
 

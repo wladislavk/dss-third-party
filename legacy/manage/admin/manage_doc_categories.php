@@ -6,9 +6,9 @@ require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
-    $del = "DELETE FROM dental_document_category WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    $del = "DELETE FROM dental_document_category WHERE categoryid='".$db->escape($_GET['delid'])."'";
     mysqli_query($con,$del);
-    $deldoc = "DELETE FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+    $deldoc = "DELETE FROM dental_document WHERE categoryid='".$db->escape($_GET['delid'])."'";
     mysqli_query($con,$deldoc);
 }
 
@@ -19,8 +19,8 @@ if(isset($_POST['add_cat'])){
 	adddate,
 	ip_address
       ) VALUES (
-	'".mysqli_real_escape_string($con,$_POST['name'])."',
-	'".mysqli_real_escape_string($con,$_POST['status'])."',
+	'".$db->escape($_POST['name'])."',
+	'".$db->escape($_POST['status'])."',
         now(),
 	'".$_SERVER['REMOTE_ADDR']."'
       );";

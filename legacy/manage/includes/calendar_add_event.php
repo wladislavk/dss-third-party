@@ -23,7 +23,7 @@ include_once 'checkemail.php';
 $s = "INSERT INTO dental_calendar
     (start_date, end_date, event_id, description, category, producer_id, docid, patientid, rec_type, rec_pattern, event_length, event_pid, res_id, adddate)
     VALUES
-    ('".$sd."', '".$ed."', '".$id."', '".mysqli_real_escape_string($con, $de)."', '".$cat."', ".$pi.", '".$docid."', '".$pid."', '" . $r_type . "', '" . $r_pattern . "', " . $e_length . ", " . $e_pid . ", " . $res . ", " . "now())";
+    ('".$sd."', '".$ed."', '".$id."', '".$db->escape( $de)."', '".$cat."', ".$pi.", '".$docid."', '".$pid."', '" . $r_type . "', '" . $r_pattern . "', " . $e_length . ", " . $e_pid . ", " . $res . ", " . "now())";
 
 if ($db->query($s)) {
     $sql2 = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.event_id='".$id."' order by dc.id desc";

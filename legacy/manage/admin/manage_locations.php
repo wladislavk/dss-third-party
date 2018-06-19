@@ -18,9 +18,9 @@ if(!empty($_REQUEST["delid"]))
 }
 
 if(isset($_REQUEST['did'])){
-  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".$db->escape($_REQUEST['docid'])."'";
   mysqli_query($con,$d_sql);
-  $d_sql = "UPDATE dental_locations set default_location=1 where id='".mysqli_real_escape_string($con,$_REQUEST['did'])."' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+  $d_sql = "UPDATE dental_locations set default_location=1 where id='".$db->escape($_REQUEST['did'])."' AND docid='".$db->escape($_REQUEST['docid'])."'";
   mysqli_query($con,$d_sql);
 }
 

@@ -10,7 +10,7 @@ if(!empty($_POST["catsub"]) && $_POST["catsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_support_categories set 
-				title = '".mysqli_real_escape_string($con,$_POST["title"])."'
+				title = '".$db->escape($_POST["title"])."'
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
@@ -27,7 +27,7 @@ if(!empty($_POST["catsub"]) && $_POST["catsub"] == 1)
 
 
 			$ins_sql = "insert into dental_support_categories set 
-				title = '".mysqli_real_escape_string($con,$_POST["title"])."', 
+				title = '".$db->escape($_POST["title"])."', 
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);

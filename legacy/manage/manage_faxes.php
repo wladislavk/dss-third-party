@@ -4,7 +4,7 @@ include_once('includes/constants.inc');
 
 if(isset($_GET['ceid']) && $_GET['ceid']!=''){
   $up_sql = "UPDATE dental_faxes SET viewed='1'
-	WHERE id='".mysqli_real_escape_string($con,$_GET['ceid'])."'
+	WHERE id='".$db->escape($_GET['ceid'])."'
 	";
   $db->query($up_sql);
 }
@@ -23,7 +23,7 @@ $sql = "SELECT f.*,
         LEFT JOIN dental_patients p ON p.patientid = f.patientid
         LEFT JOIN dental_letters l ON l.letterid = f.letterid
         LEFT JOIN dental_fax_error_codes ec ON ec.error_code = f.sfax_error_code
-        WHERE f.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
+        WHERE f.docid='".$db->escape($_SESSION['docid'])."' AND
         sfax_completed=1 AND sfax_status=2 AND
         viewed = 0";
 $sql .= " ORDER BY adddate DESC";
@@ -164,7 +164,7 @@ $sql = "SELECT f.*,
 	LEFT JOIN dental_letters l ON l.letterid = f.letterid
 	LEFT JOIN dental_letter_templates t ON t.id=l.templateid
 	LEFT JOIN dental_letter_templates_custom tc ON tc.id=l.templateid
-	WHERE f.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' ";
+	WHERE f.docid='".$db->escape($_SESSION['docid'])."' ";
 
 if(isset($_REQUEST['filter'])){
     if($_REQUEST['filter'] == 'success'){

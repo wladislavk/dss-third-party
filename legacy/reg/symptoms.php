@@ -10,7 +10,7 @@ include 'includes/questionnaire_sections.php';
 <?php
 $todaysdate = date("m/d/Y");
 if ($_POST['q_page1sub'] == 1) {
-    $s_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $s_sql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
     $s_q = mysqli_query($con, $s_sql);
     $s_r = mysqli_fetch_assoc($s_q);
     if ($s_r['questionnaire_status'] == 0 || $s_r['questionnaire_status'] == 1) {
@@ -58,7 +58,7 @@ if ($_POST['q_page1sub'] == 1) {
             $main_reason_arr = '~' . $main_reason_arr;
         }
 	
-        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if (mysqli_num_rows($exist_q) == 0) {
     		$ins_sql = " insert into dental_q_page1 set 
@@ -86,8 +86,8 @@ if ($_POST['q_page1sub'] == 1) {
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-    		mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+    		mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
     		$msg = "Added Successfully";
     		?>
             <script type="text/javascript">
@@ -118,8 +118,8 @@ if ($_POST['q_page1sub'] == 1) {
                 where q_page1id = $qPage1IdSelected";
     		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
     		$msg = "Edited Successfully";
     		?>
             <script type="text/javascript">

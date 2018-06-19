@@ -22,19 +22,19 @@ include 'includes/completed.php';
 </script>
 <?php
 
-  $sql = "SELECT * from dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+  $sql = "SELECT * from dental_patients WHERE parent_patientid='".$db->escape( $_SESSION['pid'])."'";
   $q = mysqli_query($con, $sql);
   if(mysqli_num_rows($q) > 0){
       $p = mysqli_fetch_assoc($q);
   }else{
-      $sql = "SELECT * from dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+      $sql = "SELECT * from dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
       $q = mysqli_query($con, $sql);
       $p = mysqli_fetch_assoc($q);
   }
 
 $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c
     JOIN dental_user_company uc ON uc.companyid=c.id
-    WHERE uc.userid='".mysqli_real_escape_string($con, $p['patientid'])."'";
+    WHERE uc.userid='".$db->escape( $p['patientid'])."'";
 
 $c_r = $db->getRow($c_sql);
 
@@ -447,11 +447,11 @@ $c_r = $db->getRow($c_sql);
 
        	  	</div>
 			<?php
-				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".$db->escape( $_SESSION['pid'])."'";
 				$p_m_q = mysqli_query($con, $p_m_sql);
 				$p_m_r = mysqli_fetch_assoc($p_m_q);
                                 if(mysqli_num_rows($p_m_q)=='0'){
-                                        $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                        $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".$db->escape( $_SESSION['pid'])."'";
                                         $p_m_q = mysqli_query($con, $p_m_sql);
                                         $p_m_r = mysqli_fetch_assoc($p_m_q);
                                 }
@@ -600,11 +600,11 @@ $c_r = $db->getRow($c_sql);
 
                 </div>
                         <?php
-                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".$db->escape( $_SESSION['pid'])."'";
                                 $s_m_q = mysqli_query($con, $s_m_sql);
                                 $s_m_r = mysqli_fetch_assoc($s_m_q);
 				if(mysqli_num_rows($s_m_q)=='0'){
-					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".$db->escape( $_SESSION['pid'])."'";
 					$s_m_q = mysqli_query($con, $s_m_sql);
 					$s_m_r = mysqli_fetch_assoc($s_m_q);
 				}
@@ -828,7 +828,7 @@ foreach($types as $t){
                 }
 		$pcnum = 0;
 		if($cid == 0){
-			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".$db->escape( $_SESSION['pid'])."'";
 			$pcq = mysqli_query($con, $pcsql);
 			$pc = mysqli_fetch_assoc($pcq);
 			$pcnum = mysqli_num_rows($pcq);

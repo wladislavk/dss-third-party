@@ -5,13 +5,13 @@ include "includes/top.htm";
 
 if(!empty($_POST["update"]))
 {
-	$del_sql = "DELETE FROM dental_support_category_admin WHERE category_id='".mysqli_real_escape_string($con,$_REQUEST["catid"])."'";
+	$del_sql = "DELETE FROM dental_support_category_admin WHERE category_id='".$db->escape($_REQUEST["catid"])."'";
 	mysqli_query($con,$del_sql);
 	$admins = $_POST['admin'];
 
 	foreach($admins as $admin){
-          $ins_sql = "INSERT INTO dental_support_category_admin SET category_id='".mysqli_real_escape_string($con,$_REQUEST["catid"])."', adminid='".mysqli_real_escape_string($con,$admin)."',
-			adddate=now(), ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+          $ins_sql = "INSERT INTO dental_support_category_admin SET category_id='".$db->escape($_REQUEST["catid"])."', adminid='".$db->escape($admin)."',
+			adddate=now(), ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 	  mysqli_query($con,$ins_sql);
 	}
 	$msg= "Updated Successfully";
@@ -24,7 +24,7 @@ if(!empty($_POST["update"]))
 }
 
 $sql = "select a.*,
-	(SELECT '1' FROM dental_support_category_admin ca WHERE ca.adminid=a.adminid AND ca.category_id='".mysqli_real_escape_string($con,$_GET['catid'])."' LIMIT 1) AS selected 
+	(SELECT '1' FROM dental_support_category_admin ca WHERE ca.adminid=a.adminid AND ca.category_id='".$db->escape($_GET['catid'])."' LIMIT 1) AS selected 
 	FROM admin a 
 	WHERE a.status=1
 	 order by a.name ASC";

@@ -12,11 +12,11 @@ include 'includes/completed.php';
                                 lga_flowTabs.tabs_b();
                         });
         </script>
-<? $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'"; 
+<? $s = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
 $q = mysqli_query($con, $s);
 $pat = mysqli_fetch_assoc($q);
 
-$ds = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $pat['docid'])."'";
+$ds = "SELECT * FROM dental_users WHERE userid='".$db->escape( $pat['docid'])."'";
 $dq = mysqli_query($con, $ds);
 $doc = mysqli_fetch_assoc($dq);
 

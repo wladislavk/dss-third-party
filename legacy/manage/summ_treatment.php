@@ -103,7 +103,7 @@ namespace Ds3\Libraries\Legacy;
             </div>
             <?php
         }
-        $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'";
+        $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape( $_REQUEST['pid'])."'";
         $s_q = $db->getResults($s_sql);
         $s_num = count($s_q);
         if ($s_num != 0) { ?>

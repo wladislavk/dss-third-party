@@ -113,7 +113,7 @@ $page_limit = '10';
 $filter = "%";
 
 if (isset($_GET['filter'])) {
-    $filter = mysqli_real_escape_string($con, $_GET['filter']);
+    $filter = $db->escape( $_GET['filter']);
 }
 if(!isset($_REQUEST['sort'])){
     $_REQUEST['sort'] = 'generated_date';
@@ -372,7 +372,7 @@ if ($_REQUEST['sort2'] == "delivery_date" && $_REQUEST['sort2dir'] == "DESC") {
 $f_sql = "SELECT * FROM dental_faxes
     WHERE sfax_completed=1
     AND sfax_status=2
-    AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
+    AND patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
     AND viewed=0;";
 
 $f_q = mysqli_query($con,$f_sql);

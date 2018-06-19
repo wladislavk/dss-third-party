@@ -6,7 +6,7 @@ include "includes/top.htm";
 
 $db = new Db();
 
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape( $_SESSION['userid'])."'";
 $r = $db->getRow($sql);
 
 if ($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
@@ -16,12 +16,12 @@ if ($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
 }
 
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-    WHERE pi.status != '".DSS_INVOICE_PENDING."'AND pi.docid=".mysqli_real_escape_string($con, $_SESSION['docid'])." ORDER BY pi.due_date DESC";
+    WHERE pi.status != '".DSS_INVOICE_PENDING."'AND pi.docid=".$db->escape( $_SESSION['docid'])." ORDER BY pi.due_date DESC";
     
 $my = $db->getResults($sql);
 $num_users = count($my);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_SESSION['docid']);
+$doc_sql = "SELECT * from dental_users WHERE userid=".$db->escape( $_SESSION['docid']);
 $doc = $db->getRow($doc_sql);
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -80,7 +80,7 @@ $doc = $db->getRow($doc_sql);
     <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <?php
-$charge_sql = "SELECT * FROM dental_charge WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+$charge_sql = "SELECT * FROM dental_charge WHERE userid='".$db->escape( $_SESSION['docid'])."'";
 $charge_q = $db->getResults($charge_sql);
 ?>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">

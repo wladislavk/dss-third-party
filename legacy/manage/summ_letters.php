@@ -112,7 +112,7 @@ if (isset($patient_info) && $patient_info) {
     $filter = "%";
 
     if (isset($_GET['filter'])) {
-        $filter = mysqli_real_escape_string($con, $_GET['filter']);
+        $filter = $db->escape( $_GET['filter']);
     }
 
     if (!isset($_REQUEST['sort'])) {
@@ -406,8 +406,8 @@ if (isset($patient_info) && $patient_info) {
         SELECT * FROM dental_faxes 
         WHERE sfax_completed=1 
         AND sfax_status=2 
-        AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' 
-        AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
+        AND patientid='".$db->escape( $_GET['pid'])."' 
+        AND docid='".$db->escape( $_SESSION['docid'])."' 
         AND viewed=0;
     ";
     $f_num = $db->getNumberRows($f_sql);
@@ -420,7 +420,7 @@ if (isset($patient_info) && $patient_info) {
     <div style="padding-left: 15px;">
         <h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
         <?php
-        $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+        $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
         $let_r = $db->getRow($let_sql);
         if ($let_r['use_letters']) { ?>
             <div style="float: right;margin:20px 40px 0 0;">

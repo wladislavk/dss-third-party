@@ -8,7 +8,7 @@ $sql = "SELECT "
        . "WHERE "
        . "  patient_id = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " ";
 if(!empty($_GET['vob_id'])){
-  $sql .= " AND id='".mysqli_real_escape_string($con,$_GET['vob_id'])."' ";
+  $sql .= " AND id='".$db->escape($_GET['vob_id'])."' ";
 }
 $sql .= " ORDER BY "
          . "  front_office_request_date DESC "

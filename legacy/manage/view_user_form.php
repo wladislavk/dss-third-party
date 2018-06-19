@@ -18,7 +18,7 @@ $db = new Db();
 
 $loc = (isset($_GET['locid'])) ? $_GET['locid'] . '_' : '';
 $filename = "../../../shared/q_file/" . (!empty($_GET['file']) ? $_GET['file'] : '') . "_" . $loc . (!empty($_GET['did']) ? $_GET['did'] : '') . ".pdf";
-$sql = "SELECT updated_at FROM dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+$sql = "SELECT updated_at FROM dental_users WHERE userid='" . $db->escape( $_SESSION['docid']) . "'";
 
 $r = $db->getRow($sql);
 

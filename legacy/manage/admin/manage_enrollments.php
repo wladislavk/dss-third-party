@@ -14,7 +14,7 @@ if (!empty($_REQUEST["page"])) {
   $sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
         FROM dental_eligible_enrollment e
         LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
-        WHERE e.user_id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
+        WHERE e.user_id = '".$db->escape($_GET['ed'])."'";
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -135,7 +135,7 @@ $my = mysqli_query($con,$sql);
 				<td valign="top">
  <?=st($dss_enrollment_labels[$myarray["status"]]);?>
                     <?php
-                        $w_sql = "SELECT * from dental_eligible_response where reference_id='".mysqli_real_escape_string($con,$myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+                        $w_sql = "SELECT * from dental_eligible_response where reference_id='".$db->escape($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
                         $w_q = mysqli_query($con,$w_sql);
                         $w_r = mysqli_fetch_assoc($w_q);
                         if($w_r['adddate'] !=''){
@@ -154,7 +154,7 @@ $my = mysqli_query($con,$sql);
 				<td valign="top" align="center">
           <?php
             $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-            $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $myarray['user_id'])."'";
+            $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $myarray['user_id'])."'";
             $api_key_query = mysqli_query($con, $api_key_sql);
             $api_key_result = mysqli_fetch_assoc($api_key_query);
             if($api_key_result && !empty($api_key_result['eligible_api_key'])){

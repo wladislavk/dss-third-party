@@ -64,7 +64,7 @@ if ($missingCard) { ?>
         <?php
         $db = new Db();
 
-        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
 
         $r = $db->getRow($sql);
         $manage_staff_value = 0;

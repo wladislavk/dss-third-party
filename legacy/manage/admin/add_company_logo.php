@@ -78,7 +78,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
   }
   @chmod($file_path,0777);
 			$ed_sql = "update companies set 
-				logo = '".mysqli_real_escape_string($con,$file_name)."'
+				logo = '".$db->escape($file_name)."'
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 			$msg = "Edited Successfully";

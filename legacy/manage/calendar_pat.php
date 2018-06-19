@@ -26,7 +26,7 @@
 			<th class="col_head">View in Scheduler</th>
 		</tr>
 			<?php
-				$sql = "SELECT dc.*, dp.*, dt.name as etype from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid inner join dental_appt_types as dt on dc.category = dt.classname WHERE dc.docid='".$_SESSION['docid']."' and dt.docid='".$_SESSION['docid']."' AND dc.patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' order by dc.id asc";
+				$sql = "SELECT dc.*, dp.*, dt.name as etype from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid inner join dental_appt_types as dt on dc.category = dt.classname WHERE dc.docid='".$_SESSION['docid']."' and dt.docid='".$_SESSION['docid']."' AND dc.patientid='".$db->escape( !empty($_GET['pid']) ? $_GET['pid'] : '')."' order by dc.id asc";
 				$q = $db->getResults($sql);
 				if ($q) foreach ($q as $r){
 			?>

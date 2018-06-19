@@ -27,7 +27,7 @@ $doc_sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $doc_sql = "SELECT u.* FROM dental_users u 
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                WHERE u.user_access=2 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
+                WHERE u.user_access=2 AND uc.companyid='".$db->escape($_SESSION['admincompanyid'])."'
                 ORDER BY username";
 }
 
@@ -54,16 +54,16 @@ $sql = "select * from dental_patients order by lastname, firstname";
 $sql = "select p.* from dental_patients p 
 	JOIN dental_users u ON u.userid=p.docid 
    	JOIN dental_user_company uc ON uc.userid = u.userid
-	where uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' order by p.lastname, p.firstname";
+	where uc.companyid='".$db->escape($_SESSION['admincompanyid'])."' order by p.lastname, p.firstname";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+                        WHERE a.adminid='".$db->escape($_SESSION['adminuserid'])."'";
   $a_q = mysqli_query($con,$a_sql);
   $admin = mysqli_fetch_assoc($a_q);
 $sql = "select p.* from dental_patients p 
 	JOIN dental_users u ON u.userid=p.docid 
-	where u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."' order by p.lastname, p.firstname";
+	where u.billing_company_id='".$db->escape($admin['companyid'])."' order by p.lastname, p.firstname";
 }
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);

@@ -22,7 +22,7 @@ $db = new Db();
 
 $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
         LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '" . $start_date . "' AND '" . $end_date . "'
-        WHERE du.userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "' 
+        WHERE du.userid='" . $db->escape( $_SESSION['docid']) . "' 
         GROUP BY du.userid
         ";
 
@@ -122,7 +122,7 @@ $myarray = $db->getRow($sql);
   $consult_sql = "SELECT count(i.id) as num_consult FROM dental_flow_pg2_info i
                   JOIN dental_patients p ON p.patientid = i.patientid
                   WHERE i.segmentid=2
-                  AND p.docid='".mysqli_real_escape_string($con, $myarray['userid'])."'
+                  AND p.docid='".$db->escape( $myarray['userid'])."'
                   AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 
   $consult = $db->getRow($consult_sql);
@@ -130,21 +130,21 @@ $myarray = $db->getRow($sql);
   $imp_sql = "SELECT count(i.id) as num_imp FROM dental_flow_pg2_info i
               JOIN dental_patients p ON p.patientid = i.patientid
               WHERE i.segmentid=4
-              AND p.docid='".mysqli_real_escape_string($con, $myarray['userid'])."'
+              AND p.docid='".$db->escape( $myarray['userid'])."'
               AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 
   $imp = $db->getRow($imp_sql);
 
   $letters_sql = "SELECT count(l.letterid) as num_sent FROM dental_letters l 
                   WHERE 
-                  l.docid='".mysqli_real_escape_string($con, $myarray['userid'])."'
+                  l.docid='".$db->escape( $myarray['userid'])."'
                   AND l.date_sent BETWEEN '".$start_date."' AND '".$end_date."'";
 
   $letters = $db->getRow($letters_sql);
 
   $vob_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
               WHERE 
-              p.doc_id='".mysqli_real_escape_string($con, $myarray['userid'])."'
+              p.doc_id='".$db->escape( $myarray['userid'])."'
               AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 
   $vob = $db->getRow($vob_sql);

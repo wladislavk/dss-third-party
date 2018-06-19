@@ -8,11 +8,11 @@ include "includes/sescheck.php";
 		$l = $_POST['loser'];
 		$w = $_POST['winner'];
 
-		$w_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $w)."'";
+		$w_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $w)."'";
 		
 		$w_r = $db->getRow($w_sql);
 
-		$l_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $l)."'";
+		$l_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $l)."'";
 		
 		$l_r = $db->getRow($l_sql);
 		$fields = array();
@@ -54,7 +54,7 @@ include "includes/sescheck.php";
 			$db->query($up_sql);
 		}
 
-		$loser_sql = "UPDATE dental_contact SET merge_id='".mysqli_real_escape_string($con, $w_r['contactid'])."', merge_date=NOW() WHERE contactid='".mysqli_real_escape_string($con, $l_r['contactid'])."'";
+		$loser_sql = "UPDATE dental_contact SET merge_id='".$db->escape( $w_r['contactid'])."', merge_date=NOW() WHERE contactid='".$db->escape( $l_r['contactid'])."'";
 		
 		$db->query($loser_sql);
 		$letters_sql = "SELECT * FROM dental_letters WHERE FIND_IN_SET(".$l.", md_list)";
@@ -84,28 +84,28 @@ include "includes/sescheck.php";
 		}
 
 		if($w_r['contactid']!=''){
-			$ref_sql = "UPDATE dental_patients SET referred_by='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE referred_source='2' AND referred_by='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$ref_sql = "UPDATE dental_patients SET referred_by='".$db->escape( $w_r['contactid'])."' WHERE referred_source='2' AND referred_by='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($ref_sql);
-			$doc_sql = "UPDATE dental_patients SET docsleep='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docsleep='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docsleep='".$db->escape( $w_r['contactid'])."' WHERE docsleep='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docpcp='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docpcp='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docpcp='".$db->escape( $w_r['contactid'])."' WHERE docpcp='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docdentist='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docdentist='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docdentist='".$db->escape( $w_r['contactid'])."' WHERE docdentist='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 		 
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docent='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docent='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docent='".$db->escape( $w_r['contactid'])."' WHERE docent='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docmdother='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docmdother='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docmdother='".$db->escape( $w_r['contactid'])."' WHERE docmdother='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docmdother2='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docmdother2='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docmdother2='".$db->escape( $w_r['contactid'])."' WHERE docmdother2='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
-			$doc_sql = "UPDATE dental_patients SET docmdother3='".mysqli_real_escape_string($con, $w_r['contactid'])."' WHERE docmdother3='".mysqli_real_escape_string($con, $l_r['contactid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$doc_sql = "UPDATE dental_patients SET docmdother3='".$db->escape( $w_r['contactid'])."' WHERE docmdother3='".$db->escape( $l_r['contactid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
 			
 			$db->query($doc_sql);
 		}
@@ -142,7 +142,7 @@ include "includes/sescheck.php";
 		<?php
 			$p_sql = "SELECT dct.physician, dc.firstname, dc.lastname FROM dental_contacttype dct
 								JOIN dental_contact dc ON dc.contacttypeid=dct.contacttypeid
-								WHERE dc.contactid='".mysqli_real_escape_string($con, $_REQUEST['winner'])."'";
+								WHERE dc.contactid='".$db->escape( $_REQUEST['winner'])."'";
 
 			$pr = $db->getRow($p_sql);
 		?>
@@ -168,7 +168,7 @@ include "includes/sescheck.php";
 					$sql .= " (dct.physician IS NULL OR dct.physician=0 OR dct.physician='') ";
 				}
 
-				$sql .= " AND dc.status=1 AND merge_id IS NULL AND docid='".$_SESSION['docid']."' AND contactid!='".mysqli_real_escape_string($con, $_REQUEST['winner'])."' ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
+				$sql .= " AND dc.status=1 AND merge_id IS NULL AND docid='".$_SESSION['docid']."' AND contactid!='".$db->escape( $_REQUEST['winner'])."' ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
 				
 				$q = $db->getResults($sql);
 			?>

@@ -6,7 +6,7 @@ include_once 'includes/password.php';
 include_once '../includes/constants.inc';
 
 	if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1) {
-        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysqli_real_escape_string($con,$_POST['email'])."'";
+        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".$db->escape($_POST['email'])."'";
         
         $check_my = $db->getResults($check_sql);
         if(count($check_my) >= 1) {
@@ -49,7 +49,7 @@ include_once '../includes/constants.inc';
 	    if ($_POST['security_code'] == $_SESSION['security_code']) {
 	        $username = $_POST['username'];
 	        $rawPassword = $_POST['password'];
-	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$username)."' AND status=1";
+	        $salt_sql = "SELECT salt FROM admin WHERE username='".$db->escape($username)."' AND status=1";
 
 	        $salt_row = $db->getRow($salt_sql);
 
@@ -57,7 +57,7 @@ include_once '../includes/constants.inc';
 
 	        $check_sql = "SELECT a.*, ac.companyid  FROM admin a
 	            		  LEFT JOIN admin_company ac ON a.adminid = ac.adminid
-	            		  where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."'";
+	            		  where username='".$db->escape($_POST['username'])."' and password='".$pass."'";
 	        
 	        $check_my = $db->getResults($check_sql);
        

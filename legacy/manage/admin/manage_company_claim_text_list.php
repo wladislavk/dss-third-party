@@ -16,7 +16,7 @@ if (is_super($_SESSION['admin_access'])){
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid
-        where uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
+        where uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
 }
 
 $my = mysqli_query($con,$sql);

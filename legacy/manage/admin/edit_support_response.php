@@ -11,7 +11,7 @@ include_once '../includes/general_functions.php';
 
 if ($_POST["ressub"] == 1) {
     $ed_sql = "update dental_support_responses set 
-        body = '".mysqli_real_escape_string($con, $_POST["body"])."'
+        body = '".$db->escape( $_POST["body"])."'
     where id='".$_POST["id"]."'";
     mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 

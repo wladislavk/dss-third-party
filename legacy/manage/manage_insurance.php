@@ -3,8 +3,8 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 if(isset($_GET['vobdel'])){
-  $d = "DELETE FROM dental_insurance_preauth WHERE id='".mysqli_real_escape_string($con,$_GET['vobdel'])."'
-    		AND doc_id = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  $d = "DELETE FROM dental_insurance_preauth WHERE id='".$db->escape($_GET['vobdel'])."'
+    		AND doc_id = '".$db->escape($_SESSION['docid'])."'";
   $db->query($d);
 }?>
 

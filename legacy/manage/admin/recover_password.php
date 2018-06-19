@@ -47,7 +47,7 @@ include_once('includes/password.php');
                     if ($_POST['password1'] == $_POST['password2']) {
                         $salt = create_salt();
                         $pass = gen_password($_POST['password1'], $salt);
-                        $up_sql = "UPDATE admin SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE adminid='".mysqli_real_escape_string($con, $_POST['adminid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
+                        $up_sql = "UPDATE admin SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE adminid='".$db->escape( $_POST['adminid'])."' AND recover_hash='".$db->escape( $_POST['hash'])."'";
                         mysqli_query($con, $up_sql);
                         ?>
                         <script type="text/javascript">
@@ -56,7 +56,7 @@ include_once('includes/password.php');
                         <?php
                     }
                 }
-                $check_sql = "SELECT adminid FROM admin WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
+                $check_sql = "SELECT adminid FROM admin WHERE username='".$db->escape( $_GET['un'])."' AND recover_hash='".$db->escape( $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
                 $check_my = mysqli_query($con, $check_sql);
                 if (mysqli_num_rows($check_my) == 1) {
                     $check_myarray = mysqli_fetch_array($check_my);

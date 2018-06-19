@@ -38,11 +38,11 @@ if ($hstId) {
     $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
     if($chk != ''){
       $hst_sql = "INSERT INTO dental_hst_epworth SET
-                        hst_id = '".mysqli_real_escape_string($con, $hstId)."',
-                        epworth_id = '".mysqli_real_escape_string($con, $epworth_myarray['epworthid'])."',
-                        response = '".mysqli_real_escape_string($con, $chk)."',
+                        hst_id = '".$db->escape( $hstId)."',
+                        epworth_id = '".$db->escape( $epworth_myarray['epworthid'])."',
+                        response = '".$db->escape( $chk)."',
                         adddate = now(),
-                        ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+                        ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
       mysqli_query($con, $hst_sql);
     }
   }

@@ -37,7 +37,7 @@ $c = mysqli_fetch_assoc($c_q);
 	 FROM dental_claim_notes n 
 	left join dental_users u ON n.creator_id = u.userid
 	left join admin a ON n.creator_id = a.adminid
-	where n.claim_id='".mysqli_real_escape_string($con,$_GET['id'])."'
+	where n.claim_id='".$db->escape($_GET['id'])."'
 	ORDER BY adddate ASC";
  $n_q = mysqli_query($con,$n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
@@ -64,7 +64,7 @@ $c = mysqli_fetch_assoc($c_q);
 	<div class="panel-body">
      <?php echo  $r['note']; ?>
 <?php
-        $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysqli_real_escape_string($con,$r['id'])."'";
+        $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".$db->escape($r['id'])."'";
         $a_q = mysqli_query($con,$a_sql);
         while($a=mysqli_fetch_assoc($a_q)){
         ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php
@@ -82,7 +82,7 @@ $c = mysqli_fetch_assoc($c_q);
 <div style="clear:both;"></div>
 <?php
 $status_sql = "SELECT status, primary_claim_id FROM dental_insurance
-                WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
+                WHERE insuranceid='".$db->escape($_GET['id'])."'";
 $status_q = mysqli_query($con,$status_sql);
 $status_r = mysqli_fetch_assoc($status_q);
 $status = $status_r['status'];
@@ -259,7 +259,7 @@ $total_charge = st($myarray['total_charge']);
 ?>
 
                                                                 <?php
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$db->escape($_GET['id'])."'";
         $prod_q = mysqli_query($con,$prod_s);
         $prod_r = mysqli_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];

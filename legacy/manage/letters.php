@@ -132,7 +132,7 @@ if (isset($_GET['page'])) {
 }
 
 if (isset($_GET['filter'])) {
-  $filter = mysqli_real_escape_string($con, $_GET['filter']);
+  $filter = $db->escape( $_GET['filter']);
 }
 
 if (!isset($_REQUEST['sort'])) {
@@ -238,7 +238,7 @@ if (!empty($dental_letters)){
     $dental_letters[$key]['subject'] = $correspondence['name'];
     // Get Recipients for Sent to Column
     if(isset($letter['patientid'])){
-      $s = "SELECT referred_source FROM dental_patients where patientid=" . mysqli_real_escape_string($con,$letter['patientid']) . " LIMIT 1";
+      $s = "SELECT referred_source FROM dental_patients where patientid=" . $db->escape($letter['patientid']) . " LIMIT 1";
       $r = $db->getRow($s);
       $source = $r['referred_source'];
     } else {

@@ -8,7 +8,7 @@ include_once('../includes/general_functions.php');
 ?>
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php if(isset($_REQUEST['submit'])) {
-        $sqlex = "update dental_flow_pg2_info set study_type='".mysqli_real_escape_string($con,$_REQUEST['study_type'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+        $sqlex = "update dental_flow_pg2_info set study_type='".$db->escape($_REQUEST['study_type'])."' where id='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         $db->query($sqlex);
 ?>
         <script type="text/javascript">
@@ -30,7 +30,7 @@ include_once('../includes/general_functions.php');
   </head>
   <body>
     <?php
-      $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+      $s = "SELECT * FROM dental_patients where patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
       
       $r = $db->getRow($s);
     ?>

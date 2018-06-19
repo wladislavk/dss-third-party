@@ -10,7 +10,7 @@ $db = new Db();
 if (isset($_REQUEST['submit'])) {
     $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$_GET['pid']."'";
 
-    $escapedDentalDevice = mysqli_real_escape_string($con, $_REQUEST['dentaldevice']);
+    $escapedDentalDevice = $db->escape( $_REQUEST['dentaldevice']);
     if ($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 
             dentaldevice='$escapedDentalDevice', 
@@ -27,8 +27,8 @@ if (isset($_REQUEST['submit'])) {
     $db->query($sqlex);
 
     $flow_sql = "UPDATE dental_flow_pg2_info SET
-        device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
-        WHERE id='".mysqli_real_escape_string($con,$_GET['id'])."'";
+        device_id='".$db->escape($_REQUEST['dentaldevice'])."'
+        WHERE id='".$db->escape($_GET['id'])."'";
 
     $db->query($flow_sql); ?>
     <script type="text/javascript">
@@ -68,7 +68,7 @@ if (isset($_REQUEST['submit'])) {
     </div>
 
     <?php
-    $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+    $s = "SELECT * FROM dental_patients where patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
     $r = $db->getRow($s); ?>
 
     <script>
@@ -100,7 +100,7 @@ if (isset($_REQUEST['submit'])) {
                         <input type="hidden" name="setting<?php echo $s_r['id'];?>" id="input_opt_<?php echo $s_r['id'];?>" />
 
                         <?php
-                        $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$s_r['id'])."' ORDER BY option_id ASC";
+                        $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".$db->escape($s_r['id'])."' ORDER BY option_id ASC";
 
                         $o_q = $db->getResults($o_sql);
                         $setting_options = count($o_q);

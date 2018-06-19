@@ -11,12 +11,12 @@ include "includes/calendarinc.php";
 if (!empty($_POST["taskadd"]) && $_POST["taskadd"] == 1) {
     $due_date = (!empty($_POST['due_date']))?date('Y-m-d', strtotime($_POST['due_date'])):'';
     $sql = "INSERT INTO dental_task SET
-        task = '".mysqli_real_escape_string($con, $_POST['task'])."',
-        due_date = '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($due_date)))."',
-        userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-        status = '".mysqli_real_escape_string($con, (!empty($_POST['status']) ? $_POST['status'] : ''))."',
-        patientid = '".mysqli_real_escape_string($con, $_POST['patientid'])."',
-        responsibleid = '".mysqli_real_escape_string($con, $_POST['responsibleid'])."'";
+        task = '".$db->escape( $_POST['task'])."',
+        due_date = '".$db->escape( date('Y-m-d', strtotime($due_date)))."',
+        userid = '".$db->escape( $_SESSION['userid'])."',
+        status = '".$db->escape( (!empty($_POST['status']) ? $_POST['status'] : ''))."',
+        patientid = '".$db->escape( $_POST['patientid'])."',
+        responsibleid = '".$db->escape( $_POST['responsibleid'])."'";
     $db->query($sql);
     ?>
     <script type="text/javascript">
@@ -28,12 +28,12 @@ if (!empty($_POST["taskadd"]) && $_POST["taskadd"] == 1) {
 } elseif (!empty($_POST["taskedit"]) && $_POST["taskedit"] == 1) {
     $due_date = ($_POST['due_date'] != '') ? date('Y-m-d', strtotime($_POST['due_date'])) : '';
     $sql = "UPDATE dental_task SET
-        task = '".mysqli_real_escape_string($con, $_POST['task'])."',
-        due_date = '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($due_date)))."',
-        userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-        status = '".mysqli_real_escape_string($con, $_POST['status'])."',
-        responsibleid = '".mysqli_real_escape_string($con, $_POST['responsibleid'])."'
-        WHERE id='".mysqli_real_escape_string($con, $_POST['task_id'])."'";
+        task = '".$db->escape( $_POST['task'])."',
+        due_date = '".$db->escape( date('Y-m-d', strtotime($due_date)))."',
+        userid = '".$db->escape( $_SESSION['userid'])."',
+        status = '".$db->escape( $_POST['status'])."',
+        responsibleid = '".$db->escape( $_POST['responsibleid'])."'
+        WHERE id='".$db->escape( $_POST['task_id'])."'";
     $db->query($sql);
     ?>
     <script type="text/javascript">
@@ -46,7 +46,7 @@ if (!empty($_POST["taskadd"]) && $_POST["taskadd"] == 1) {
 if (isset($_GET['id'])) {
     $t_sql = "SELECT dt.*, p.firstname, p.lastname from dental_task dt 
         LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-        WHERE dt.id='".mysqli_real_escape_string($con,$_GET['id'])."'";
+        WHERE dt.id='".$db->escape($_GET['id'])."'";
     $task = $db->getRow($t_sql);
 } ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -68,7 +68,7 @@ if (isset($_GET['id'])) {
             <td class="cat_head" style="font-size:20px;">
                 <?php
                 if (isset($_GET['pid'])) {
-                    $p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                    $p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
                     $pat = $db->getRow($p_sql);
                     echo "Add a task about " . $pat['firstname'] . " " . $pat['lastname'];
                 } else { ?>
@@ -102,8 +102,8 @@ if (isset($_GET['id'])) {
                     <?php
                     $responsibleid = (!empty($task['responsibleid'])) ? $task['responsibleid'] : $_SESSION['userid'];
                     $r_sql = "SELECT * FROM dental_users
-                        WHERE (userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR
-                        docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') AND status=1";
+                        WHERE (userid='".$db->escape($_SESSION['docid'])."' OR
+                        docid='".$db->escape($_SESSION['docid'])."') AND status=1";
                     $r_q = $db->getResults($r_sql);
 
                     foreach ($r_q as $responsible) { ?>

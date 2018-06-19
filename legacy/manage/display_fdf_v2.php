@@ -53,13 +53,13 @@ include_once('admin/includes/invoice_functions.php');
       }
 
       if(isset($_SESSION['adminuserid'])){
-        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
+        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".$db->escape( $_SESSION['adminuserid'])."'";
        
         $d_r = $db->getRow($d_sql);
         $claim_margin_left = $d_r['claim_margin_left'];
         $claim_margin_top = $d_r['claim_margin_top'];
       }elseif(isset($_SESSION['userid'])){
-        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".$db->escape( $_SESSION['docid'])."'";
 
         $d_r = $db->getRow($d_sql);
         $claim_margin_left = $d_r['claim_margin_left'];

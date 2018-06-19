@@ -4,7 +4,7 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"])) {
-	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".$db->escape($_SESSION['docid'])."'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -17,9 +17,9 @@ if(!empty($_REQUEST["delid"])) {
 }
 
 if(isset($_REQUEST['did'])){
-	$d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+	$d_sql = "UPDATE dental_locations set default_location=0 where docid='".$db->escape($_SESSION['docid'])."'";
 	$db->query($d_sql);
-	$d_sql = "UPDATE dental_locations set default_location=1 where id='".mysqli_real_escape_string($con,$_REQUEST['did'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+	$d_sql = "UPDATE dental_locations set default_location=1 where id='".$db->escape($_REQUEST['did'])."' AND docid='".$db->escape($_SESSION['docid'])."'";
 	$db->query($d_sql);
 }
 

@@ -617,7 +617,7 @@ style='font-size:28.0pt;font-family:"Franklin Gothic Medium","sans-serif";
 color:white;background:black'>LICENSE #<?= $_SESSION['docid']; ?></span></b></p>
 <?php
 
-$s = "SELECT * from dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+$s = "SELECT * from dental_users where userid='".$db->escape( $_SESSION['docid'])."'";
 $q = mysqli_query($con, $s);
 $r = mysqli_fetch_assoc($q);
 $docname = $r['name'];

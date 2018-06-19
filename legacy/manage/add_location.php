@@ -11,14 +11,14 @@ include "includes/sescheck.php";
 if (!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     if ($_POST["ed"] != "") {
         $ed_sql = "update dental_locations set 
-            location = '".mysqli_real_escape_string($con, $_POST["location"])."', 
-            name = '".mysqli_real_escape_string($con, $_POST["name"])."',
-            address = '".mysqli_real_escape_string($con, $_POST["address"])."',
-            city = '".mysqli_real_escape_string($con, $_POST["city"])."',
-            state = '".mysqli_real_escape_string($con, $_POST["state"])."',
-            zip = '".mysqli_real_escape_string($con, $_POST["zip"])."',
-            phone = '".mysqli_real_escape_string($con, num($_POST["phone"]))."',
-            fax = '".mysqli_real_escape_string($con, num($_POST["fax"]))."'
+            location = '".$db->escape( $_POST["location"])."', 
+            name = '".$db->escape( $_POST["name"])."',
+            address = '".$db->escape( $_POST["address"])."',
+            city = '".$db->escape( $_POST["city"])."',
+            state = '".$db->escape( $_POST["state"])."',
+            zip = '".$db->escape( $_POST["zip"])."',
+            phone = '".$db->escape( num($_POST["phone"]))."',
+            fax = '".$db->escape( num($_POST["fax"]))."'
             where id='".$_POST["ed"]."'";
         $db->query($ed_sql);
 
@@ -30,13 +30,13 @@ if (!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
         trigger_error("Die called", E_USER_ERROR);
     } else {
         $ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."',
-            name = '".mysqli_real_escape_string($con, $_POST["name"])."',
-            address = '".mysqli_real_escape_string($con, $_POST["address"])."',
-            city = '".mysqli_real_escape_string($con, $_POST["city"])."',
-            state = '".mysqli_real_escape_string($con, $_POST["state"])."',
-            zip = '".mysqli_real_escape_string($con, $_POST["zip"])."',
-            phone = '".mysqli_real_escape_string($con, num($_POST["phone"]))."',
-            fax = '".mysqli_real_escape_string($con, num($_POST["fax"]))."',
+            name = '".$db->escape( $_POST["name"])."',
+            address = '".$db->escape( $_POST["address"])."',
+            city = '".$db->escape( $_POST["city"])."',
+            state = '".$db->escape( $_POST["state"])."',
+            zip = '".$db->escape( $_POST["zip"])."',
+            phone = '".$db->escape( num($_POST["phone"]))."',
+            fax = '".$db->escape( num($_POST["fax"]))."',
             docid='".$_SESSION['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
         $db->query($ins_sql);
         $msg = "Added Successfully"; ?>

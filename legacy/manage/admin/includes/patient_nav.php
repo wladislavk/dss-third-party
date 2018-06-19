@@ -6,7 +6,7 @@ $file = basename($_SERVER['PHP_SELF']);
 $thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-$docsql = "SELECT username, first_name, last_name, practice FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$themyarray['docid'])."'";
+$docsql = "SELECT username, first_name, last_name, practice FROM dental_users WHERE userid='".$db->escape($themyarray['docid'])."'";
 $docr = $db->getRow($docsql);
 ?>
 <script>

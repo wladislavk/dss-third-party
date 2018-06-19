@@ -128,7 +128,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
                 user_access=1,
                 docid='".$_GET['docid']."',
                 username = '".s_for($_POST["username"])."',
-                password = '".mysqli_real_escape_string($con,$password)."',
+                password = '".$db->escape($password)."',
                 salt='".$salt."',
                 first_name = '".s_for($_POST["first_name"])."', 
                 last_name = '".s_for($_POST["last_name"])."',
@@ -158,14 +158,14 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             edx_user_update($userid, (!empty($edx_con) ? $edx_con : ''));
             help_user_update($userid, (!empty($help_con) ? $help_con : ''));
 
-            $docname_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+            $docname_sql = "SELECT name from dental_users WHERE userid='".$db->escape($_GET['docid'])."'";
             $docname_q = mysqli_query($con,$docname_sql);
             $docname_r = mysqli_fetch_assoc($docname_q);
             $docname = $docname_r['name'];
             $co_sql = "SELECT c.id, c.name from companies c
                 JOIN dental_user_company uc ON c.id = uc.companyid
                 JOIN dental_users u ON u.userid = uc.userid
-                WHERE u.userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+                WHERE u.userid='".$db->escape($_GET['docid'])."'";
             $co_q = mysqli_query($con,$co_sql);
             $co_r = mysqli_fetch_assoc($co_q);
             $cid = $co_r['id'];

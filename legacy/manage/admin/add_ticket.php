@@ -20,14 +20,14 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
     $c_q = mysqli_query($con,$c_sql);
     $c = mysqli_fetch_assoc($c_q);
 		$ins_sql = "insert into dental_support_tickets set 
-				title = '".mysqli_real_escape_string($con,$_POST['title'])."',
-				category_id = '".mysqli_real_escape_string($con,$_POST['category_id'])."',
-				body = '".mysqli_real_escape_string($con,$_POST['body'])."',
-				userid = '".mysqli_real_escape_string($con,$_POST['userid'])."',
-				docid = '".mysqli_real_escape_string($con,$_POST['docid'])."',
+				title = '".$db->escape($_POST['title'])."',
+				category_id = '".$db->escape($_POST['category_id'])."',
+				body = '".$db->escape($_POST['body'])."',
+				userid = '".$db->escape($_POST['userid'])."',
+				docid = '".$db->escape($_POST['docid'])."',
 				create_type = '0',
                 company_id = '".$c['companyid']."',
-				creator_id = '".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+				creator_id = '".$db->escape($_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql);
 		$t_id = mysqli_insert_id($con);
@@ -40,14 +40,14 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_support_attachment SET
-                                filename = '".mysqli_real_escape_string($con,$attachment)."',
-                                ticket_id=".mysqli_real_escape_string($con,$t_id);
+                                filename = '".$db->escape($attachment)."',
+                                ticket_id=".$db->escape($t_id);
                   mysqli_query($con,$a_sql);
                 }
                 }
 
 
-		$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysqli_real_escape_string($con,(!empty($_SESSION['userid']) ? $_SESSION['userid'] : ''))."'";
+		$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".$db->escape((!empty($_SESSION['userid']) ? $_SESSION['userid'] : ''))."'";
 		$info_q = mysqli_query($con,$info_sql);
 		$info_r = mysqli_fetch_assoc($info_q);
 		$e = $info_r['email'];

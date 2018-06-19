@@ -9,17 +9,17 @@ $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
 $db = new Db();
 
-$s = "SELECT * FROM dental_flow_pg2_info WHERE id=".mysqli_real_escape_string($con, $id)." AND patientid=".mysqli_real_escape_string($con, $pid);
+$s = "SELECT * FROM dental_flow_pg2_info WHERE id=".$db->escape( $id)." AND patientid=".$db->escape( $pid);
 $r = $db->getRow($s);
 
 if (!empty($r['segmentid']) && $r['segmentid'] == 7){ //Update dental device date for device delivery step
-    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysqli_real_escape_string($con, $pid)." ORDER BY date_completed DESC";
+    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".$db->escape( $pid)." ORDER BY date_completed DESC";
     $last_r = $db->getRow($last_sql);
 
     if (!empty($last_r['id']) && $id == $last_r['id']) {
         $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$pid."'";
 
-        $compDateEscaped = mysqli_real_escape_string($con, $comp_date);
+        $compDateEscaped = $db->escape( $comp_date);
         $compDateString = date('Y-m-d', strtotime($compDateEscaped));
         if ($db->getNumberRows($sql) != 0) {
             $exPage5Row = $db->getRow($sql);
@@ -35,7 +35,7 @@ if (!empty($comp_date)) {
     $dateCompleted = date('Y-m-d');
 }
 
-$s = "update dental_flow_pg2_info set date_completed='" . $dateCompleted . "' WHERE id=".mysqli_real_escape_string($con, $id)." AND patientid=".mysqli_real_escape_string($con, $pid);
+$s = "update dental_flow_pg2_info set date_completed='" . $dateCompleted . "' WHERE id=".$db->escape( $id)." AND patientid=".$db->escape( $pid);
 $q = $db->query($s);
 
 if (!empty($q)) {

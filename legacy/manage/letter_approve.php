@@ -7,7 +7,7 @@ include_once 'admin/includes/invoice_functions.php';
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
-    $s = "SELECT pdf_path, send_method, md_list, md_referral_list from dental_letters where letterid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
+    $s = "SELECT pdf_path, send_method, md_list, md_referral_list from dental_letters where letterid='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."'";
     
     $r = $db->getRow($s);
     $file = './letterpdfs/'.$r['pdf_path'];
@@ -42,8 +42,8 @@ include_once 'admin/includes/invoice_functions.php';
         <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : 'null'); ?>', <?php echo ($reload ? 'true' : 'false'); ?>, '<?php echo (isset($page) ? $page : 'null'); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a>
     </div>
     <?php
-        $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysqli_real_escape_string($con,$r['md_list'])."' OR 
-        contactid='".mysqli_real_escape_string($con,$r['md_referral_list'])."'";
+        $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".$db->escape($r['md_list'])."' OR 
+        contactid='".$db->escape($r['md_referral_list'])."'";
         
         $f = $db->getRow($fsql); 
     ?>

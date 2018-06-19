@@ -8,19 +8,19 @@ include_once '../includes/claim_functions.php';
 
 $redirect = !empty($_GET['redirect']) || empty($_GET['embed']);
 
-$reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con, $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
+$reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".$db->escape( $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
 $reference_id_query = mysqli_query($con, $reference_id_sql);
 $reference_id_result = mysqli_fetch_assoc($reference_id_query);
 if ($reference_id_result) {
     $reference_id = $reference_id_result['reference_id'];
     if($reference_id != ""){
       $data = array();
-      $is_test_sql = "SELECT eligible_test, dental_insurance.docid FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+      $is_test_sql = "SELECT eligible_test, dental_insurance.docid FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".$db->escape( $_GET['insid'])."'";
       $is_test_query = mysqli_query($con, $is_test_sql);
       $is_test_result = mysqli_fetch_assoc($is_test_query);
           
       $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $is_test_result['docid'])."'";
+      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $is_test_result['docid'])."'";
       $api_key_query = mysqli_query($con, $api_key_sql);
       $api_key_result = mysqli_fetch_assoc($api_key_query);
       
@@ -43,11 +43,11 @@ if ($reference_id_result) {
       $json_response = json_decode($result);
 
       $payment_report_sql = "INSERT INTO dental_payment_reports SET
-        claimid = '".mysqli_real_escape_string($con, $_GET['insid'])."',
-        reference_id = '".mysqli_real_escape_string($con, $reference_id)."',
-        response = '".mysqli_real_escape_string($con, $result)."',
+        claimid = '".$db->escape( $_GET['insid'])."',
+        reference_id = '".$db->escape( $reference_id)."',
+        response = '".$db->escape( $result)."',
         adddate = now(),
-        ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+        ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
       mysqli_query($con, $payment_report_sql);
       
       $message = "STATUS CHECKED.";

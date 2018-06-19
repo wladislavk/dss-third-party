@@ -38,30 +38,30 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
 
     if ($_POST['ed'] == '') {
         $ins_sql = "insert into dental_ledger set 
-            patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
-            service_date = '".mysqli_real_escape_string($con, $service_date)."',
-            entry_date = '".mysqli_real_escape_string($con, $entry_date)."',
-            description = '".mysqli_real_escape_string($con, $description)."',
-            amount = '".mysqli_real_escape_string($con, $amount)."',
-            paid_amount = '".mysqli_real_escape_string($con, $paid_amount)."',
-            transaction_type = '".mysqli_real_escape_string($con, $transaction_type)."',
-            userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-            docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."',
-            transaction_code = '".mysqli_real_escape_string($con, $transaction_code)."',
+            patientid = '".$db->escape( $_GET['pid'])."',
+            service_date = '".$db->escape( $service_date)."',
+            entry_date = '".$db->escape( $entry_date)."',
+            description = '".$db->escape( $description)."',
+            amount = '".$db->escape( $amount)."',
+            paid_amount = '".$db->escape( $paid_amount)."',
+            transaction_type = '".$db->escape( $transaction_type)."',
+            userid = '".$db->escape( $_SESSION['userid'])."',
+            docid = '".$db->escape( $_SESSION['docid'])."',
+            transaction_code = '".$db->escape( $transaction_code)."',
             adddate = now(),
-            ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+            ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
         $db->getInsertId($ins_sql);
 
         $ins_sql_rec = "insert into dental_ledger_rec set 
-            userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-            patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
-            service_date = '".mysqli_real_escape_string($con, $service_date)."',
-            description = '".mysqli_real_escape_string($con, $description)."',
-            amount = '".mysqli_real_escape_string($con, $amount)."',
-            paid_amount = '".mysqli_real_escape_string($con, $paid_amount)."',
-            transaction_code = '".mysqli_real_escape_string($con, $transaction_code)."',
-            transaction_type = '".mysqli_real_escape_string($con, $transaction_type)."',
-            ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+            userid = '".$db->escape( $_SESSION['userid'])."',
+            patientid = '".$db->escape( $_GET['pid'])."',
+            service_date = '".$db->escape( $service_date)."',
+            description = '".$db->escape( $description)."',
+            amount = '".$db->escape( $amount)."',
+            paid_amount = '".$db->escape( $paid_amount)."',
+            transaction_code = '".$db->escape( $transaction_code)."',
+            transaction_type = '".$db->escape( $transaction_type)."',
+            ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
         $db->query($ins_sql_rec);
         $msg = "Added Successfully"; ?>
         <script type="text/javascript">
@@ -70,7 +70,7 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } elseif (count($_POST)) {
-        $pat_sql2 = "select * from dental_patients where patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+        $pat_sql2 = "select * from dental_patients where patientid='".$db->escape( $_GET['pid'])."'";
         $pat_my2 = $db->getResults($pat_sql2);
 
         if ($pat_my2) {
@@ -97,7 +97,7 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
                 $claim_r = $db->getRow($claim_sql);
 
                 if (($claim_r['primary_claim_id'] == '' || $claim_r['primary_claim_id'] == 0) && $status == DSS_TRXN_PENDING) {
-                    $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$claim_r['producerid'])."'";
+                    $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".$db->escape($claim_r['producerid'])."'";
                     $pf = $db->getRow($pf_sql);
 
                     if ($pf['producer_files'] == '1') {
@@ -106,7 +106,7 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
                         $claim_producer = $_SESSION['docid'];
                     }
 
-                    $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+                    $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".$db->escape($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
                     $q = $db->getResults($s);
 
                     $n = count($q);
@@ -125,15 +125,15 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
                 }
 
                 $up_sql = "update dental_ledger set
-                    service_date = '".mysqli_real_escape_string($con, $service_date)."',
-                    entry_date = '".mysqli_real_escape_string($con, $entry_date)."',
-                    description = '".mysqli_real_escape_string($con, $description)."',
-                    amount = '".mysqli_real_escape_string($con, $amount)."',
-                    paid_amount = '".mysqli_real_escape_string($con, $paid_amount)."',
-                    transaction_type = '".mysqli_real_escape_string($con, $transaction_type)."',
-                    transaction_code = '".mysqli_real_escape_string($con, $transaction_code)."',
-                    userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
-                    status = ". mysqli_real_escape_string($con, $status).",
+                    service_date = '".$db->escape( $service_date)."',
+                    entry_date = '".$db->escape( $entry_date)."',
+                    description = '".$db->escape( $description)."',
+                    amount = '".$db->escape( $amount)."',
+                    paid_amount = '".$db->escape( $paid_amount)."',
+                    transaction_type = '".$db->escape( $transaction_type)."',
+                    transaction_code = '".$db->escape( $transaction_code)."',
+                    userid = '".$db->escape( $_SESSION['userid'])."',
+                    status = ". $db->escape( $status).",
                     primary_claim_id='".$claim_id."'
                     where ledgerid='".$_POST["ed"]."'";
                 $db->query($up_sql);
@@ -149,7 +149,7 @@ if (!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
         }
     }
 }
-$pat_sql = "select * from dental_patients where patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".$db->escape( $_GET['pid'])."'";
 
 $pat_myarray = $db->getRow($pat_sql);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
@@ -273,7 +273,7 @@ if ($themyarray["userid"] != '') {
                     FROM dental_ledger_history h 
                     LEFT JOIN dental_users u ON u.userid=h.updated_by_user
                     LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-                    WHERE h.ledgerid='".mysqli_real_escape_string($con, $_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
+                    WHERE h.ledgerid='".$db->escape( $_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
                 $h_r = $db->getRow($h_sql);
                 if ($h_r['doc_name'] != '') {
                     echo $h_r['doc_name'];
@@ -295,7 +295,7 @@ if ($themyarray["userid"] != '') {
                     FROM dental_ledger_history h 
                     LEFT JOIN dental_users u ON u.userid=h.updated_by_user
                     LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-                    WHERE h.ledgerid='".mysqli_real_escape_string($con,$_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
+                    WHERE h.ledgerid='".$db->escape($_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
                 $h_r = $db->getRow($h_sql);
                 if ($h_r['doc_name'] != '') {
                     echo $h_r['doc_name'];

@@ -9,12 +9,12 @@ include '../manage/admin/includes/password.php';
 $e = '';
 
 if (isset($_POST['loginbut'])) {
-    $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
+    $salt_sql = "SELECT salt FROM dental_patients WHERE email='".$db->escape( $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
     $salt_q = mysqli_query($con, $salt_sql);
     $salt_row = mysqli_fetch_assoc($salt_q);
     $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, dp.docid, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
+    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, dp.docid, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".$db->escape( $_POST['username'])."' and dp.password='".$pass."' ";
     $check_my = mysqli_query($con, $check_sql);
 
     if (mysqli_num_rows($check_my) > 0) {

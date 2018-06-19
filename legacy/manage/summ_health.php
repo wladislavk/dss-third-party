@@ -18,7 +18,7 @@ $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$psql = "SELECT * FROM dental_patients where patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pmyarray = $db->getRow($psql);
 
 $premedcheck = st($pmyarray["premedcheck"]);

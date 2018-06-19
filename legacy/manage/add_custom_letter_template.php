@@ -29,19 +29,19 @@ function formatMm($number)
 if(isset($_POST['update_btn'])){
     if(!empty($_GET['ed'])){
         $s = "UPDATE dental_letter_templates_custom SET
-              name='".mysqli_real_escape_string($con, $_POST['name'])."',
-              body='".mysqli_real_escape_string($con, $_POST['body'])."'
+              name='".$db->escape( $_POST['name'])."',
+              body='".$db->escape( $_POST['body'])."'
               WHERE 
-              docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND
-              id='".mysqli_real_escape_string($con, $_GET['ed'])."'";
+              docid='".$db->escape( $_SESSION['docid'])."' AND
+              id='".$db->escape( $_GET['ed'])."'";
         $db->query($s);
     } else {
         $s = "INSERT INTO dental_letter_templates_custom SET
-              name='".mysqli_real_escape_string($con, $_POST['name'])."',
-              body='".mysqli_real_escape_string($con, $_POST['body'])."',
-              docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."',
+              name='".$db->escape( $_POST['name'])."',
+              body='".$db->escape( $_POST['body'])."',
+              docid='".$db->escape( $_SESSION['docid'])."',
               adddate=now(),
-              ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+              ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
         $db->query($s);
     }
     ?>
@@ -51,14 +51,14 @@ if(isset($_POST['update_btn'])){
     <?php
 }
 
-$sql = "select * from dental_letter_templates_custom WHERE id='".mysqli_real_escape_string($con, !empty($_GET['ed']) ? $_GET['ed'] : '')."' ";
+$sql = "select * from dental_letter_templates_custom WHERE id='".$db->escape( !empty($_GET['ed']) ? $_GET['ed'] : '')."' ";
 $r = $db->getRow($sql);
 
 if (isset($_GET['cid'])) {
     if ($_GET['cid'][0] != 'C') {
-        $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".mysqli_real_escape_string($con, $_GET['cid']).";";
+        $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".$db->escape( $_GET['cid']).";";
     } else {
-        $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".mysqli_real_escape_string($con, substr($_GET['cid'], 1)).";";
+        $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".$db->escape( substr($_GET['cid'], 1)).";";
     }
 
     $c_r = $db->getRow($c_sql);

@@ -33,8 +33,8 @@ $db = new Db();
         $u_sql = "SELECT u.userid, u.name FROM dental_users u
             JOIN dental_screener s ON u.userid = s.userid
             WHERE 
-            (u.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
-            OR u.userid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."') GROUP BY u.userid";
+            (u.docid = '".$db->escape($_SESSION['docid'])."'
+            OR u.userid = '".$db->escape($_SESSION['docid'])."') GROUP BY u.userid";
     $u_q = $db->getResults($u_sql);
     foreach ($u_q as $user) {
   ?>

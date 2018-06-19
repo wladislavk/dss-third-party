@@ -124,21 +124,21 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 
 		if($_POST["ed"] != "") {
 			$ed_sql = "update admin set 
-				first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
-				last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
-				username = '".mysqli_real_escape_string($con,$_POST["username"])."',
-				admin_access = '".mysqli_real_escape_string($con, $admin_access)."',
-				email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
-				status = '".mysqli_real_escape_string($con,$_POST["status"])."' 
+				first_name = '".$db->escape($_POST["first_name"])."',
+				last_name = '".$db->escape($_POST["last_name"])."',
+				username = '".$db->escape($_POST["username"])."',
+				admin_access = '".$db->escape( $admin_access)."',
+				email = '".$db->escape($_POST["email"])."', 
+				status = '".$db->escape($_POST["status"])."' 
 			where adminid='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
 			if(is_super($_SESSION['admin_access'])){
-			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
-			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
+			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".$db->escape($_POST["ed"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".$db->escape($_POST["ed"])."', companyid='".$db->escape($_POST["companyid"])."'");
 			} else {
-			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
-			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
+			    mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".$db->escape($_POST["ed"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".$db->escape($_POST["ed"])."', companyid='".$db->escape($_SESSION["companyid"])."'");
 			}
 			
 			$msg = "Edited Successfully";
@@ -166,23 +166,23 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			$password = gen_password($_POST['password'], $salt);
 
 			$ins_sql = "insert into admin set 
-                                username = '".mysqli_real_escape_string($con,$_POST["username"])."',
-                                admin_access='".mysqli_real_escape_string($con,$admin_access)."',
-                                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
-                                status = '".mysqli_real_escape_string($con,$_POST["status"])."', 
-				password = '".mysqli_real_escape_string($con,$password)."', 
+                                username = '".$db->escape($_POST["username"])."',
+                                admin_access='".$db->escape($admin_access)."',
+                                email = '".$db->escape($_POST["email"])."', 
+                                status = '".$db->escape($_POST["status"])."', 
+				password = '".$db->escape($password)."', 
 				salt = '".$salt."',
-                                first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
-                                last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
+                                first_name = '".$db->escape($_POST["first_name"])."',
+                                last_name = '".$db->escape($_POST["last_name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql); 
 			$adminid = mysqli_insert_id($con);
 
 			if(is_super($_SESSION['admin_access'])){
-			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".$db->escape($adminid)."', companyid='".$db->escape($_POST["companyid"])."'");
 			} else {
-			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_SESSION["admincompanyid"])."'");
+			    mysqli_query($con,"INSERT INTO admin_company SET adminid='".$db->escape($adminid)."', companyid='".$db->escape($_SESSION["admincompanyid"])."'");
 			}
 			$msg = "Added Successfully";
 			?>

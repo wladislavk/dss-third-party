@@ -273,7 +273,7 @@ if (isset($_GET['pid'])) { ?>
 if (!empty($_GET['pt_lastname'])) {
     $pat_sql = "
         select * from dental_patients 
-        where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
+        where docid='".$db->escape( $_SESSION['docid'])."' 
         AND lastname like '%".s_for($_GET['pt_lastname'])."%' 
         and status=1
     ";

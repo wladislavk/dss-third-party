@@ -30,7 +30,7 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
     $snore_5 = 0;
 
     $a_sql = "SELECT answer, thorntonid FROM dentalsummfu_tss
-              WHERE followupid='".mysqli_real_escape_string($con, (!empty($_GET['id']) ? $_GET['id'] : ''))."';";
+              WHERE followupid='".$db->escape( (!empty($_GET['id']) ? $_GET['id'] : ''))."';";
     
     $a_q = $db->getResults($a_sql);
     if ($a_q) {

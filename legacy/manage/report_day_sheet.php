@@ -87,8 +87,8 @@ $db = new Db();
                     LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                     where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                     AND dlp.amount != 0
-                    AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                    AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CREDIT)."'
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
                     ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -103,8 +103,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CREDIT)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -123,8 +123,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_DEBIT)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -139,8 +139,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_DEBIT)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -159,8 +159,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CHECK)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -175,8 +175,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CHECK)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -195,8 +195,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CASH)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -211,8 +211,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_CASH)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -231,8 +231,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_WRITEOFF)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -247,8 +247,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_WRITEOFF)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
                         ".$p_date;
 
                 $r = $db->getRow($sql);
@@ -267,8 +267,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_EFT)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
                         ".$p_date;
 
             $r = $db->getRow($sql);
@@ -283,8 +283,8 @@ $db = new Db();
                         LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_EFT)."'
+                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
                         ".$p_date;
 
             $r = $db->getRow($sql);

@@ -18,7 +18,7 @@
     }
 
     $sql = "SELECT * from dental_users 
-		    WHERE userid='".mysqli_real_escape_string($con,$regid)."' AND 
+		    WHERE userid='".$db->escape($regid)."' AND 
 		    status='2'";
 
     $q = $db->getResults($sql);
@@ -44,7 +44,7 @@
     
     $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
 		      JOIN dental_user_company uc ON uc.companyid=c.id
-			  WHERE uc.userid='".mysqli_real_escape_string($con,$userid)."'"; 
+			  WHERE uc.userid='".$db->escape($userid)."'"; 
 
     $c_r = $db->getRow($c_sql);
 ?>

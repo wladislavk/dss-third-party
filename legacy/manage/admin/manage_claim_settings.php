@@ -6,8 +6,8 @@ include "includes/top.htm";
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
   $in_sql = "UPDATE admin SET
-                claim_margin_top = '".mysqli_real_escape_string($con,$_POST['claim_margin_top'])."',
-                claim_margin_left = '".mysqli_real_escape_string($con,$_POST['claim_margin_left'])."'
+                claim_margin_top = '".$db->escape($_POST['claim_margin_top'])."',
+                claim_margin_left = '".$db->escape($_POST['claim_margin_left'])."'
         WHERE adminid='".$_SESSION['adminuserid']."'";
   mysqli_query($con,$in_sql);
   if(isset($_POST['margins_test'])){
@@ -41,7 +41,7 @@ if(isset($_POST["margins_reset"]))
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <?php
-  $p_sql = "SELECT * FROM admin where adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+  $p_sql = "SELECT * FROM admin where adminid='".$db->escape($_SESSION['adminuserid'])."'";
   $p_q = mysqli_query($con,$p_sql);
   $practice = mysqli_fetch_assoc($p_q);
 ?>

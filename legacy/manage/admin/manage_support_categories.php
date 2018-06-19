@@ -5,7 +5,7 @@ include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 {
-	$del_sql = "UPDATE dental_support_categories SET status=1 WHERE id='".mysqli_real_escape_string($con,$_REQUEST["delid"])."'";
+	$del_sql = "UPDATE dental_support_categories SET status=1 WHERE id='".$db->escape($_REQUEST["delid"])."'";
 	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";

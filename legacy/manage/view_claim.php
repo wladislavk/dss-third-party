@@ -24,25 +24,25 @@ $db = new Db();
 
 if(isset($_REQUEST['deleobid'])){
 
-    $esql = "SELECT * FROM dental_insurance_file WHERE id=".mysqli_real_escape_string($con,$_GET['deleobid']);
+    $esql = "SELECT * FROM dental_insurance_file WHERE id=".$db->escape($_GET['deleobid']);
     $eob = $db->getRow($esql);
 
-    $isql = "SELECT * FROM dental_insurance WHERE insuranceid=".mysqli_real_escape_string($con,$_GET['claimid']);
+    $isql = "SELECT * FROM dental_insurance WHERE insuranceid=".$db->escape($_GET['claimid']);
     $ins = $db->getRow($isql);
 
     if (($eob['status'] == DSS_CLAIM_DISPUTE && $ins['status']==DSS_CLAIM_DISPUTE) || ($eob['status'] == DSS_CLAIM_SEC_DISPUTE && $ins['status'] == DSS_CLAIM_SEC_DISPUTE)){
-      $dsql = "DELETE FROM dental_insurance_file WHERE id=".mysqli_real_escape_string($con,$_GET['deleobid'])." AND claimid=".mysqli_real_escape_string($con,$_GET['claimid']);
+      $dsql = "DELETE FROM dental_insurance_file WHERE id=".$db->escape($_GET['deleobid'])." AND claimid=".$db->escape($_GET['claimid']);
       if ($db->query($dsql)) {
         if ($eob['status'] == DSS_CLAIM_DISPUTE) {
           $del_pay = "DELETE FROM dental_ledger_payment 
                       WHERE payer=".DSS_TRXN_PAYER_PRIMARY." AND 
-                      ledgerid in (SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".mysqli_real_escape_string($con,$_GET['claimid']).")";
-          $up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SENT." WHERE insuranceid=".mysqli_real_escape_string($con,$_GET['claimid']);
+                      ledgerid in (SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".$db->escape($_GET['claimid']).")";
+          $up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SENT." WHERE insuranceid=".$db->escape($_GET['claimid']);
         } elseif ($eob['status'] == DSS_CLAIM_SEC_DISPUTE) {
           $del_pay = "DELETE FROM dental_ledger_payment  
                       WHERE payer=".DSS_TRXN_PAYER_SECONDARY." AND 
-                      ledgerid in (SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".mysqli_real_escape_string($con,$_GET['claimid']).")";
-          $up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SEC_SENT." WHERE insuranceid=".mysqli_real_escape_string($con,$_GET['claimid']);
+                      ledgerid in (SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".$db->escape($_GET['claimid']).")";
+          $up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SEC_SENT." WHERE insuranceid=".$db->escape($_GET['claimid']);
         }
         $db->query($del_pay);
         $db->query($up_claim);

@@ -506,7 +506,7 @@ include "includes/top.htm";
                     <?php
                     
                     $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                    LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_GET['ed'])."'
+                    LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".$db->escape($_GET['ed'])."'
                     WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                     $bu_q = $db->getResults($bu_sql);
                     

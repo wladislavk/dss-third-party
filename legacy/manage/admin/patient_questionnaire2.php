@@ -18,13 +18,13 @@ include "includes/patient_nav.php";
 <p>&nbsp;</p>
 <?php
 if (!empty($_GET['own']) && $_GET['own'] == 1) {
-    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     $c_q = mysqli_query($con, $c_sql);
     $changed = mysqli_num_rows($c_q);
-    $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     mysqli_query($con, $own_sql);
     if ($_GET['own_completed'] == 1) {
-        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
         $q1_q = mysqli_query($con, $q1_sql);
         if (mysqli_num_rows($q1_q) == 0) {
             $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
@@ -250,7 +250,7 @@ if ($pat_myarray['patientid'] == '') { ?>
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
 $exist_q = mysqli_query($con, $exist_sql);
 $exist_row = mysqli_fetch_assoc($exist_q);
 if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0) {
@@ -414,7 +414,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
         </div>
         <div style="clear:both;"></div>
         <?php
-        $patient_sql = "SELECT * FROM dental_q_page2_pivot WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+        $patient_sql = "SELECT * FROM dental_q_page2_pivot WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
         $patient_q = mysqli_query($con,$patient_sql);
         $pat_row = mysqli_fetch_assoc($patient_q);
         if (mysqli_num_rows($patient_q) == 0) {
@@ -678,7 +678,7 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
                                             <th></th>
                                         </tr>
                                         <?php
-                                        $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+                                        $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape($_REQUEST['pid'])."'";
                                         $s_q = mysqli_query($con, $s_sql);
                                         $s_count = 0;
                                         while ($s_row = mysqli_fetch_assoc($s_q)) { ?>

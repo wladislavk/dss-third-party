@@ -22,7 +22,7 @@ $result = $db->getResults($sql);
 
 $docr = [];
 if ($patient_info || count($result)) {
-    $docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    $docsql = "SELECT * FROM dental_users where userid='".$db->escape($_SESSION['docid'])."'";
 
     $docr = $db->getRow($docsql);
     $ledger_balance = 0;
@@ -450,11 +450,11 @@ if ($patient_info || count($result)) {
 	$filename = '/manage/letterpdfs/statement_'.(!empty($_GET['pid']) ? $_GET['pid'] : '').'_'.date('YmdHis').'.pdf';
 
 	$state_sql = "INSERT INTO dental_ledger_statement SET
-				  producerid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-				  filename = '".mysqli_real_escape_string($con,$filename)."',
+				  producerid = '".$db->escape($_SESSION['userid'])."',
+				  filename = '".$db->escape($filename)."',
 				  service_date = CURDATE(),
 				  entry_date = CURDATE(),
-				  patientid = '".mysqli_real_escape_string($con,$_GET['pid'])."',
+				  patientid = '".$db->escape($_GET['pid'])."',
 				  adddate = now(),
 				  ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 

@@ -10,7 +10,7 @@ if(is_billing($_SESSION['admin_access'])){
 
 
 if(isset($_GET['did']) && $_GET['did']!=''){
-  $s = "UPDATE dental_percase_invoice SET status=3 WHERE id='".mysqli_real_escape_string($con,$_GET['did'])."'";
+  $s = "UPDATE dental_percase_invoice SET status=3 WHERE id='".$db->escape($_GET['did'])."'";
   mysqli_query($con,$s);
 }
 
@@ -50,7 +50,7 @@ if(is_super($_SESSION['admin_access'])){
 		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
-		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".$db->escape($_SESSION['admincompanyid'])."'";
 }
 
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';

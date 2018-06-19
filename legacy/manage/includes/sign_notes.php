@@ -1,28 +1,31 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once '../admin/includes/main_include.php';
-	
-	if (!empty($_REQUEST['ids']) && is_string($_REQUEST['ids'])) {
-		$ids = $_REQUEST['ids'];
-	} else {
-		$ids = '';
-	}
+<?php
+namespace Ds3\Libraries\Legacy;
 
-    $ids = preg_split('/\D+/', $ids);
-    array_walk($ids, function(&$each){
-        $each = intval($each);
-    });
-    $ids = array_unique($ids);
-    $ids = "'" . join("','", $ids) . "'";
+include_once '../admin/includes/main_include.php';
 
-    $userId = intval($_SESSION['userid']);
+if (!empty($_REQUEST['ids']) && is_string($_REQUEST['ids'])) {
+    $ids = $_REQUEST['ids'];
+} else {
+    $ids = '';
+}
 
-	$s = "UPDATE dental_notes SET signed_id = '$userId',
-			signed_on = now()
-	        WHERE notesid IN ($ids)";
+$ids = preg_split('/\D+/', $ids);
+array_walk($ids, function(&$each){
+    $each = intval($each);
+});
+$ids = array_unique($ids);
+$ids = "'" . join("','", $ids) . "'";
 
-	if($db->query($s)){
-		echo '{"success":true}';
-	}else{
-	 	echo '{"error":true}';
-	}
-?>
+$userId = intval($_SESSION['userid']);
+
+$db = new Db();
+
+$s = "UPDATE dental_notes SET signed_id = '$userId',
+        signed_on = now()
+        WHERE notesid IN ($ids)";
+
+if($db->query($s)){
+    echo '{"success":true}';
+}else{
+    echo '{"error":true}';
+}

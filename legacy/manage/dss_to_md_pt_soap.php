@@ -12,7 +12,7 @@ if ($_GET['backoffice'] == '1') {
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 
 <?php
-$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
+$letterid = $db->escape( !empty($_GET['lid']) ? $_GET['lid'] : '');
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 

@@ -35,7 +35,7 @@ include("includes/calendarinc.php");
 
 		// Create Filename
 		if(isset($_POST['deletestudy'])&&isset($_POST['sleepstudyid'])){
-			$s = "DELETE FROM dental_sleepstudy where id=".mysqli_real_escape_string($con,$_POST['sleepstudyid'])." AND patientid=".mysqli_real_escape_string($con,$_POST['patientid']); 
+			$s = "DELETE FROM dental_sleepstudy where id=".$db->escape($_POST['sleepstudyid'])." AND patientid=".$db->escape($_POST['patientid']);
 			
 			$db->query($s);
 		}

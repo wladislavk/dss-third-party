@@ -26,7 +26,7 @@ $sql = "select u.*,
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid OR uc.userid = u.docid
-        where uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ";
+        where uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."' ";
 }
 
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';

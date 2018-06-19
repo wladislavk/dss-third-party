@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 include_once __DIR__ . '/../admin/includes/main_include.php';
 
+$db = new Db();
+
 $id = $db->escape($_REQUEST['id']);
 $pid = $db->escape($_REQUEST['pid']);
 

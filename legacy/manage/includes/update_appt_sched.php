@@ -8,7 +8,7 @@ include_once '../admin/includes/main_include.php';
   $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
   clean_steps($db, $pid);
-  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
 
   $let_r = $db->getRow($let_sql);
   $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
@@ -48,7 +48,7 @@ include_once '../admin/includes/main_include.php';
   { //Deletes not completed steps and clears scheduled
     $con = $GLOBALS['con'];
     
-    $s = "DELETE FROM dental_flow_pg2_info where patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=0";
+    $s = "DELETE FROM dental_flow_pg2_info where patientid='".$db->escape($pid)."' AND appointment_type=0";
     $db->query($s);
   }
 

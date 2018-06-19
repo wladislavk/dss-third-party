@@ -23,10 +23,10 @@ if(isset($_POST['edit_doc'])){
         $fsql = '';
       }
   $ed = "UPDATE dental_document SET
-  	name = '".mysqli_real_escape_string($con, $_POST['name'])."',
+  	name = '".$db->escape( $_POST['name'])."',
         ".$fsql."
-        categoryid = '".mysqli_real_escape_string($con, $_POST['category'])."'
-        where documentid='".mysqli_real_escape_string($con, $_GET['doc'])."'
+        categoryid = '".$db->escape( $_POST['category'])."'
+        where documentid='".$db->escape( $_GET['doc'])."'
         ";
   mysqli_query($con, $ed);
 ?>
@@ -37,7 +37,7 @@ if(isset($_POST['edit_doc'])){
 <?php
 }
 
-$ds = "SELECT * FROM dental_document WHERE documentid=".mysqli_real_escape_string($con, $_GET['doc']);
+$ds = "SELECT * FROM dental_document WHERE documentid=".$db->escape( $_GET['doc']);
 $dq = mysqli_query($con, $ds);
 $doc = mysqli_fetch_assoc($dq);
 ?>

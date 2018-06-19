@@ -80,7 +80,7 @@
             JOIN dental_patients as pat ON dl.patientid = pat.patientid
             LEFT JOIN dental_users as p ON dl.producerid=p.userid 
 	        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
-			AND dl.producerid='".mysqli_real_escape_string($con, (!empty($producer['userid']) ? $producer['userid'] : ''))."'
+			AND dl.producerid='".$db->escape( (!empty($producer['userid']) ? $producer['userid'] : ''))."'
 			and (dl.paid_amount IS NULL || dl.paid_amount = 0)
 			".$l_date."
 			UNION
@@ -106,7 +106,7 @@
                         LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
                         LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                    AND dl.producerid='".mysqli_real_escape_string($con, (!empty($producer['userid']) ? $producer['userid'] : ''))."'
+                    AND dl.producerid='".$db->escape( (!empty($producer['userid']) ? $producer['userid'] : ''))."'
                     AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
         			".$l_date."
  			UNION
@@ -131,7 +131,7 @@
             LEFT JOIN dental_users p ON dl.producerid=p.userid 
             LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
             where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-			AND dl.producerid='".mysqli_real_escape_string($con,(!empty($producer['userid']) ? $producer['userid'] : ''))."'
+			AND dl.producerid='".$db->escape((!empty($producer['userid']) ? $producer['userid'] : ''))."'
             AND dlp.amount != 0
 			".$p_date."
 			";

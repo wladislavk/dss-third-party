@@ -36,7 +36,7 @@ $pat = $db->getRow($sql);
     </h3>
     <?php
     $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".$db->escape( $_SESSION['docid'])."'
         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 
     $bu_q = $db->getResults($bu_sql);

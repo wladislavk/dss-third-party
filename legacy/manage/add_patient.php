@@ -90,7 +90,7 @@ if ($b_r) {
     var billing_co = '<?= $billing_co; ?>';
 </script>
 <?php
-$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".$db->escape( $_SESSION['docid'])."'";
 $docr = $db->getRow($docsql);
 $doc_patient_portal = $docr['use_patient_portal'];
 
@@ -323,9 +323,9 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
                 p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+                p_m_eligible_payer_name = '".$db->escape($p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
+                s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
                 has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
                 s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
                 s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -379,7 +379,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             where patientid='".intval($_POST["ed"])."'
         ";
         $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-        $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST["ed"])."'");
+        $db->query("UPDATE dental_patients set email='".$db->escape($_POST['email'])."' WHERE parent_patientid='".$db->escape( $_POST["ed"])."'");
 
         //Remove pending vobs if ins info has changed.
         if (
@@ -398,10 +398,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 UPDATE dental_insurance_preauth 
                 SET
                     status = " . DSS_PREAUTH_REJECTED . ",
-                    reject_reason = '".mysqli_real_escape_string($con,$_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
+                    reject_reason = '".$db->escape($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
                     viewed = 1,
                     updated_at = NOW()
-                WHERE patient_id = '".mysqli_real_escape_string($con,$_REQUEST['ed'])."'
+                WHERE patient_id = '".$db->escape($_REQUEST['ed'])."'
                 AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")
             ";
             $vob_update = $db->query($vob_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
@@ -413,7 +413,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         if (isset($_POST['location'])) {
             $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='$patientId'";
             $ds_q = $db->getRow($ds_sql);
-            $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
+            $escapedLocation = $db->escape( $_POST['location']);
             if ($ds_q) {
                 $summaryId = $ds_q['summaryid'];
                 $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
@@ -423,7 +423,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             $db->query($loc_query);
         }
 
-        $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+        $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".$db->escape($_POST['ed'])."'";
         $l = $db->getRow($lsql);
         $login = $l['login'];
         $pass = $l['password'];
@@ -447,7 +447,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             } else {
                 $login = strtolower($clogin);
             }
-            $ilsql = "UPDATE dental_patients set login='".mysqli_real_escape_string($con,$login)."'  WHERE patientid='".mysqli_real_escape_string($con, $_POST['ed'])."'";
+            $ilsql = "UPDATE dental_patients set login='".$db->escape($login)."'  WHERE patientid='".$db->escape( $_POST['ed'])."'";
             $db->query($ilsql);
         }
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']) {
@@ -474,16 +474,16 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             if ($old_referred_source == 2 && $_POST['referred_source'] == 2) {
                 // PHYSICIAN -> PHYSICIAN
                 // change pending letters to new referrer
-                $sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND md_referral_list=".$old_referred_by." AND patientid=".mysqli_real_escape_string($con, $_POST['ed']);
+                $sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND md_referral_list=".$old_referred_by." AND patientid=".$db->escape( $_POST['ed']);
                 $db->query($sql);
             } elseif ($old_referred_source == 1 && $_POST['referred_source'] == 1) {
                 // PATIENT -> PATIENT
                 // change pending letters to new referrer
-                $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
+                $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".$db->escape($_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
                 $db->query($sql);
             } elseif ($old_referred_source == 2 && $_POST['referred_source'] != 2) {
                 //PHYSICIAN -> NOT PHYSICIAN
-                $l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".mysqli_real_escape_string($con,$old_referred_by)."'  AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND status=0";
+                $l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".$db->escape($old_referred_by)."'  AND patientid=".$db->escape($_POST['ed'])." AND status=0";
                 $l_q = $db->getResults($l_sql);
                 if ($l_q) {
                     foreach ($l_q as $l) {
@@ -492,7 +492,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 }
             } elseif ($old_referred_source == 1 && $_POST['referred_source'] != 1) {
                 // PHYSICIAN -> NOT PHYSICIAN
-                $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".mysqli_real_escape_string($con,$old_referred_by)."'  AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND status=0";
+                $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".$db->escape($old_referred_by)."'  AND patientid=".$db->escape($_POST['ed'])." AND status=0";
                 $l_q = $db->getResults($l_sql);
                 if ($l_q) {
                     foreach ($l_q as $l) {
@@ -584,7 +584,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 preferred_name = '".s_for($_POST["preferred_name"])."',
                 login = '".$login."',
                 salt = '".$salt."',
-                password = '".mysqli_real_escape_string($con,$password)."',
+                password = '".$db->escape($password)."',
                 salutation = '".s_for($_POST["salutation"])."',
                 member_no = '".s_for(!empty($_POST['member_no']) ? $_POST['member_no'] : '')."',
                 group_no = '".s_for(!empty($_POST['group_no']) ? $_POST['group_no'] : '')."',
@@ -633,9 +633,9 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
                 p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+                p_m_eligible_payer_name = '".$db->escape($p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
+                s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
                 has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
                 s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
                 s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -710,7 +710,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $pid = $db->getInsertId($ins_sql);
 
         if (isset($_POST['location'])) {
-            $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con, $_POST['location'])."', patientid='$patientId'";
+            $loc_query = "INSERT INTO dental_summary SET location='".$db->escape( $_POST['location'])."', patientid='$patientId'";
             $db->query($loc_query);
         }
 
@@ -1127,9 +1127,9 @@ if (isset($msg) && $msg != '') { ?>
         var valid = true;
         <?php
         if ($referred_source == 1) {
-            $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND pat_referral_list='".$referred_by."'";
+            $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND pat_referral_list='".$referred_by."'";
         } else {
-            $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND md_referral_list='".$referred_by."'";
+            $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND md_referral_list='".$referred_by."'";
         }
         $rl_q = $db->getResults($rl_sql);
 
@@ -1353,7 +1353,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                 <?php
                 $bu_sql = "
                     SELECT h.*, uhc.id as uhc_id FROM companies h 
-                    JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+                    JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".$db->escape( $_SESSION['docid'])."'
                     WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' 
                     ORDER BY name ASC
                 ";
@@ -1816,7 +1816,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <?php
         $api_sql = "
             SELECT use_eligible_api FROM dental_users
-            WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+            WHERE userid='".$db->escape( $_SESSION['docid'])."'
         ";
         $api_r = $db->getRow($api_sql);
         if ($api_r['use_eligible_api'] == 1) { ?>

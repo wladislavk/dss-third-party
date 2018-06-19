@@ -5,14 +5,14 @@ include "includes/top.htm";
 
 if(isset($_REQUEST['order_submit'])){
   $parent_id = $_REQUEST['parent_id'];
-  mysqli_query($con,"DELETE FROM dental_flowsheet_steps_next where parent_id='".mysqli_real_escape_string($con,$parent_id)."'");
+  mysqli_query($con,"DELETE FROM dental_flowsheet_steps_next where parent_id='".$db->escape($parent_id)."'");
   $steps = "SELECT id from dental_flowsheet_steps";
   $step_q = mysqli_query($con,$steps);
   while($r = mysqli_fetch_assoc($step_q)){
     $sort = $_REQUEST['next_'.$r['id']];
     if($sort != ''){
       $n = "INSERT INTO dental_flowsheet_steps_next 
-	SET parent_id='".mysqli_real_escape_string($con,$parent_id)."',
+	SET parent_id='".$db->escape($parent_id)."',
 	  child_id='".$r['id']."',
 	  sort_by='".$sort."'";
       mysqli_query($con,$n);

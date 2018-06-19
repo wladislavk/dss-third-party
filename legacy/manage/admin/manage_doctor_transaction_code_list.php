@@ -15,7 +15,7 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $sql = "select u.* from dental_users u 
-	where u.billing_company_id = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
+	where u.billing_company_id = '".$db->escape($_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
 }
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);

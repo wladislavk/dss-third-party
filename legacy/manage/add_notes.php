@@ -26,7 +26,7 @@ if (!empty($_GET['forced'])) {
     error_log("The following browser requested a forced template load: {$_SERVER['HTTP_USER_AGENT']}");
 }
 
-$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+$sign_sql = "SELECT sign_notes FROM dental_users where userid='".$db->escape( $_SESSION['userid'])."'";
 
 $sign_r = $db->getRow($sign_sql);
 $user_sign = $sign_r['sign_notes'];
@@ -53,11 +53,11 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
         if (isset($_POST['sign']) && ($_SESSION['docid'] == $_SESSION['userid'] || $user_sign == 1)) {
             $ins_sql .= " signed_id='".$db->escape($_SESSION['userid'])."', signed_on=now(),";
         } elseif (isset($_POST['signstaff'])) {
-            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
+            $salt_sql = "SELECT salt FROM dental_users WHERE username='".$db->escape($_POST['username'])."'";
             $salt_row = $db->getRow($salt_sql);
             $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-            $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
+            $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".$db->escape($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
             $check_my = $db->getResults($check_sql);
 
             if (count($check_my) == 1) {
@@ -139,11 +139,11 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
         if (isset($_POST['sign']) && ($_SESSION['docid'] == $_SESSION['userid'] || $user_sign == 1)) {
             $ins_sql .= " signed_id='".$db->escape($_SESSION['userid'])."', signed_on=now(), ";
         } elseif (isset($_POST['signstaff'])) {
-            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
+            $salt_sql = "SELECT salt FROM dental_users WHERE username='".$db->escape($_POST['username'])."'";
             $salt_row = $db->getRow($salt_sql);
 
             $pass = gen_password($_POST['password'], $salt_row['salt']);
-            $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
+            $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".$db->escape($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
             $check_my = $db->getResults($check_sql);
 
             if (count($check_my) == 1) {
@@ -257,7 +257,7 @@ if ($my) {
     }
 }
 
-$doc_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$doc_sql = "SELECT name from dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
 $doc_r = $db->getRow($doc_sql);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -366,8 +366,8 @@ include "includes/calendarinc.php";
                 <span style="float:right;">
                     <?php
                     $r_sql = "SELECT n.parentid, u.name FROM dental_notes n LEFT JOIN dental_users u ON n.userid=u.userid
-                        WHERE parentid=(select parentid from dental_notes where notesid='".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."')
-                        AND notesid != '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
+                        WHERE parentid=(select parentid from dental_notes where notesid='".$db->escape((!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."')
+                        AND notesid != '".$db->escape((!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
                     $r_q = $db->getResults($r_sql);
 
                     $num_r = count($r_q);
@@ -416,7 +416,7 @@ include "includes/calendarinc.php";
                 if (isset($_REQUEST['ed'])) {
                     echo $themyarray["added_name"];
                 } else {
-                    $s = "SELECT first_name, last_name from dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+                    $s = "SELECT first_name, last_name from dental_users where userid='".$db->escape($_SESSION['userid'])."'";
                     $r = $db->getRow($s);
                     echo $r['first_name']." ".$r['last_name'];
                 }

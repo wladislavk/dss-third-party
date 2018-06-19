@@ -60,8 +60,8 @@ if ($q) {
         $errorCode = isset($item['ErrorCode']) ? $item['ErrorCode'] : (isset($faxStatus['ErrorCode']) ? $faxStatus['ErrorCode'] : -1);
         $success = isset($item['IsSuccess']) && $item['IsSuccess'] ? '1' : '2';
 
-        $apiResponse = mysqli_real_escape_string($con, $apiResponse);
-        $errorCode = mysqli_real_escape_string($con, $errorCode);
+        $apiResponse = $db->escape( $apiResponse);
+        $errorCode = $db->escape( $errorCode);
 
         $up_sql = "UPDATE dental_faxes SET
                 sfax_completed = '1',

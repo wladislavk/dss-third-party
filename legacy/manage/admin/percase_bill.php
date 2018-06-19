@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/includes/popup_top.htm';
 
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
-	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+	WHERE userid='".$db->escape($id)."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
 
@@ -85,19 +85,19 @@ try{
   $stripe_customer = $charge->customer;
   $stripe_card_fingerprint = $charge->source->fingerprint;
   $charge_sql = "INSERT INTO dental_charge SET
-			amount='".mysqli_real_escape_string($con,str_replace(',','',$_POST['amount']))."',
-                        userid='".mysqli_real_escape_string($con,$id)."',
-                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+			amount='".$db->escape(str_replace(',','',$_POST['amount']))."',
+                        userid='".$db->escape($id)."',
+                        adminid='".$db->escape($_SESSION['adminuserid'])."',
                         charge_date=NOW(),
-                        stripe_customer='".mysqli_real_escape_string($con,$stripe_customer)."',
-                        stripe_charge='".mysqli_real_escape_string($con,$stripe_charge)."',
-                        stripe_card_fingerprint='".mysqli_real_escape_string($con,$stripe_card_fingerprint)."',
-			invoice_id='".mysqli_real_escape_string($con,(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
+                        stripe_customer='".$db->escape($stripe_customer)."',
+                        stripe_charge='".$db->escape($stripe_charge)."',
+                        stripe_card_fingerprint='".$db->escape($stripe_card_fingerprint)."',
+			invoice_id='".$db->escape((isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
                         adddate=NOW(),
-                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";	
+                        ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
   	mysqli_query($con,$charge_sql); 
   if(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!=''){
-    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysqli_real_escape_string($con,$_REQUEST['invoice'])."'";
+    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".$db->escape($_REQUEST['invoice'])."'";
     mysqli_query($con,$i_sql);
   }
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
@@ -112,7 +112,7 @@ try{
 }
 
   if(isset($_GET['invoice']) && $_GET['invoice']!=''){
-    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".mysqli_real_escape_string($con,$_GET['invoice'])."'";
+    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".$db->escape($_GET['invoice'])."'";
     $a_q = mysqli_query($con,$a_sql);
     $myarray = mysqli_fetch_assoc($a_q);
     $total_charge = $myarray['monthly_fee_amount'];

@@ -10,12 +10,12 @@ include_once "../includes/constants.inc";
 include_once "includes/invoice_functions.php";
 
 if (isset($_POST["enrollsub"])) {
-    $sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+    $sql = "SELECT * FROM dental_users where userid='".$db->escape($_GET['docid'])."'";
     $q = mysqli_query($con,$sql);
     $r = mysqli_fetch_assoc($q);
 
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['userid'])."'";
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $r['userid'])."'";
     $api_key_query = mysqli_query($con, $api_key_sql);
     $api_key_result = mysqli_fetch_assoc($api_key_query);
     if ($api_key_result && !empty($api_key_result['eligible_api_key'])) {
@@ -26,11 +26,11 @@ if (isset($_POST["enrollsub"])) {
     $payer_id = substr($_POST['payer_id'], 0, strpos($_POST['payer_id'], '-'));
     $payer_name = substr($_POST['payer_id'], strpos($_POST['payer_id'], '-') + 1);
 
-    $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."'";
+    $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".$db->escape($_POST['transaction_type'])."'";
     $t_q = mysqli_query($con,$t_sql);
     $t_r = mysqli_fetch_assoc($t_q);
 
-    $signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . mysqli_real_escape_string($con, $_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
+    $signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . $db->escape( $_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
     $signature_query =  mysqli_query($con, $signature_sql);
     $signature_result = mysqli_fetch_assoc($signature_query);
     $signature_json = "";
@@ -85,26 +85,26 @@ if (isset($_POST["enrollsub"])) {
     } else {
         $ref_id = $json_response->enrollment_npi->id;
         $up_sql = "INSERT INTO dental_eligible_enrollment SET 
-            user_id = '".mysqli_real_escape_string($con,$_GET['docid'])."',
-            payer_id = '".mysqli_real_escape_string($con,$payer_id)."',
-            payer_name = '".mysqli_real_escape_string($con,$payer_name)."',
-            reference_id = '".mysqli_real_escape_string($con,$ref_id)."',
-            response='".mysqli_real_escape_string($con,$result)."',
-            transaction_type_id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."',
+            user_id = '".$db->escape($_GET['docid'])."',
+            payer_id = '".$db->escape($payer_id)."',
+            payer_name = '".$db->escape($payer_name)."',
+            reference_id = '".$db->escape($ref_id)."',
+            response='".$db->escape($result)."',
+            transaction_type_id='".$db->escape($_POST['transaction_type'])."',
             status='0',
-            facility_name = '".mysqli_real_escape_string($con,$_POST['facility_name'])."',
-            provider_name = '".mysqli_real_escape_string($con,$_POST['provider_name'])."',
-            tax_id = '".mysqli_real_escape_string($con,$_POST['tax_id'])."',
-            address = '".mysqli_real_escape_string($con,$_POST['address'])."',
-            city = '".mysqli_real_escape_string($con,$_POST['city'])."',
-            state = '".mysqli_real_escape_string($con,$_POST['state'])."',
-            zip = '".mysqli_real_escape_string($con,$_POST['zip'])."',
-            first_name = '".mysqli_real_escape_string($con,$_POST['first_name'])."',
-            last_name = '".mysqli_real_escape_string($con,$_POST['last_name'])."',
-            contact_number = '".mysqli_real_escape_string($con,$_POST['contact_number'])."',
-            email = '".mysqli_real_escape_string($con,$_POST['email'])."',
+            facility_name = '".$db->escape($_POST['facility_name'])."',
+            provider_name = '".$db->escape($_POST['provider_name'])."',
+            tax_id = '".$db->escape($_POST['tax_id'])."',
+            address = '".$db->escape($_POST['address'])."',
+            city = '".$db->escape($_POST['city'])."',
+            state = '".$db->escape($_POST['state'])."',
+            zip = '".$db->escape($_POST['zip'])."',
+            first_name = '".$db->escape($_POST['first_name'])."',
+            last_name = '".$db->escape($_POST['last_name'])."',
+            contact_number = '".$db->escape($_POST['contact_number'])."',
+            email = '".$db->escape($_POST['email'])."',
             adddate=now(),
-            ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
+            ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'
         ";
         mysqli_query($con,$up_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
         $eid = mysqli_insert_id($con);
@@ -199,7 +199,7 @@ if (isset($_POST["enrollsub"])) {
             <td valign="top" class="frmdata">
                 <select id="provider_select" name="provider_select" class="form-control">
                     <?php while ($r = mysqli_fetch_assoc($q)) {
-                        $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+                        $us_sql = "SELECT * FROM dental_user_signatures where user_id='".$db->escape($_GET['docid'])."'";
                         $us_q = mysqli_query($con,$us_sql);
                         $signature = mysqli_num_rows($us_q);
 

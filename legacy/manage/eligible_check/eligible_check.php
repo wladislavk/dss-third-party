@@ -34,7 +34,7 @@ include_once '../includes/calendarinc.php';
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+         WHERE p.patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
   $r = $db->getRow($s);
 
@@ -44,7 +44,7 @@ include_once '../includes/calendarinc.php';
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
 
   $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['doc_id'])."'";
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $r['doc_id'])."'";
   $api_key_query = mysqli_query($con, $api_key_sql);
   $api_key_result = mysqli_fetch_assoc($api_key_query);
   if($api_key_result && !empty($api_key_result['eligible_api_key'])){
@@ -535,7 +535,7 @@ include_once '../includes/calendarinc.php';
         <tbody>
             <?php
 
-            $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate desc";
+            $s = "SELECT * FROM dental_eligibility WHERE patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate desc";
 
             $q = $db->getResults($s);
 

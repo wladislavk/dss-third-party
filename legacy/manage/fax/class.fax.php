@@ -16,7 +16,7 @@ class FTSSamples
 
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
-                $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
+                $key_sql = "SELECT * FROM companies WHERE id='".$db->escape( $_SESSION['companyid'])."'";
                 $key_q = mysqli_query($con, $key_sql);
                 $keys = mysqli_fetch_assoc($key_q);
 	
@@ -213,7 +213,7 @@ class FTSAESHelper
 	
 	public function __construct($pSecurityContext)
 	{
-                $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
+                $key_sql = "SELECT * FROM companies WHERE id='".$db->escape( $_SESSION['companyid'])."'";
                 $key_q = mysqli_query($con, $key_sql);
                 $keys = mysqli_fetch_assoc($key_q);
 	$this->pTokenContext=$pSecurityContext;

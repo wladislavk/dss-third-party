@@ -7,7 +7,7 @@ include_once 'admin/includes/password.php';
 
 $db = new Db();
 
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape( $_SESSION['userid'])."'";
 
 $r = $db->getRow($sql);
 if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
@@ -24,7 +24,7 @@ if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
 <?php
 if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $classname = strtolower(str_replace('.', '', str_replace('/', '', str_replace(' ', '_', $_POST['name']))));
-    $sel_check = "select * from dental_appt_types where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
+    $sel_check = "select * from dental_appt_types where docid='".$db->escape($_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
     if ($db->getNumberRows($sel_check) > 0) {
         $msg = "Appointment Type name already exists. Please give another name."; ?>
         <script type="text/javascript">
@@ -34,7 +34,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
         <?php
     } else {
         if ($_POST["ed"] != "") {
-            $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con, $_POST["ed"])."'";
+            $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".$db->escape( $_SESSION['docid'])."' AND id='".$db->escape( $_POST["ed"])."'";
 
             $old_r = $db->getRow($old_sql);
             $old_class = $old_r['classname'];
@@ -46,7 +46,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
 
             $db->query($ed_sql);
 
-            $update_sql = "update dental_calendar SET category='".mysqli_real_escape_string($con, $classname)."' WHERE category='".mysqli_real_escape_string($con, $old_class)."' and docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+            $update_sql = "update dental_calendar SET category='".$db->escape( $classname)."' WHERE category='".$db->escape( $old_class)."' and docid='".$db->escape( $_SESSION['docid'])."'";
             $db->query($update_sql);
             $msg = "Edited Successfully" . $_POST['name']; ?>
             <script type="text/javascript">
@@ -55,7 +55,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".mysqli_real_escape_string($con,$_SESSION['docid'])."')";
+            $ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".$db->escape($_SESSION['docid'])."')";
             $db->getInsertId($ins_sql);
             $msg = "Added Successfully";
             ?>
@@ -141,7 +141,7 @@ if ($themyarray["id"] != '') {
                 <input type="submit" value=" <?php echo $but_text?> Appointment Type" class="button" />
                 <?php if ($themyarray["id"] != '') { ?>
                     <?php
-                    $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['id'])."'";
+                    $l_sql = "SELECT * from dental_login WHERE userid='".$db->escape($themyarray['id'])."'";
                     $logins = $db->getNumberRows($l_sql);
                     ?>
                     <a style="float:right;" href="manage_appts.php?delid=<?php echo $themyarray["id"];?>" onclick="return confirm_delete(<?php echo  $logins; ?>);" class="dellink" title="DELETE" target="_parent">

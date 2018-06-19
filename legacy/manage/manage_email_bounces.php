@@ -8,7 +8,7 @@ if(isset($_GET['rid'])){
 }
 
 $rec_disp = 20;
-$sql = "SELECT * from dental_patients where email_bounce=1 AND docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY lastname ASC, firstname ASC";
+$sql = "SELECT * from dental_patients where email_bounce=1 AND docid=".$db->escape($_SESSION['docid'])." ORDER BY lastname ASC, firstname ASC";
 $total_rec = $db->getNumberRows($sql);
 $my = $db->getResults($sql);
 ?>

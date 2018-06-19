@@ -13,8 +13,8 @@
 		$c = '';
 	}
 	
-	$s = "UPDATE dental_screener SET contacted = '".mysqli_real_escape_string($con,$c)."'
-		  WHERE id='".mysqli_real_escape_string($con,$id)."'";
+	$s = "UPDATE dental_screener SET contacted = '".$db->escape($c)."'
+		  WHERE id='".$db->escape($id)."'";
 
 	echo $s;
 	if($db->query($s)){

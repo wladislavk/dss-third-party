@@ -11,12 +11,12 @@ if (is_billing($_SESSION['admin_access'])) { ?>
 
 if (isset($_GET['bounce'])) {
     $s = "UPDATE dental_patients SET email_bounce='1'
-		WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
-        AND docid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+		WHERE patientid='".$db->escape($_GET['pid'])."'
+        AND docid='".$db->escape($_GET['docid'])."'";
     $q = mysqli_query($con,$s);
     if ($q) {
-        $s = "SELECT * from dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
-            AND docid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+        $s = "SELECT * from dental_patients where patientid='".$db->escape($_GET['pid'])."'
+            AND docid='".$db->escape($_GET['docid'])."'";
         $q = mysqli_query($con,$s);
         if ($r = mysqli_fetch_assoc($q)) {
             $msg = "Bounce marked for ".$r['firstname']." ".$r['lastname'];
@@ -55,7 +55,7 @@ if (isset($_REQUEST['email'])) {
 		JOIN dental_user_company uc ON uc.userid = p.docid
 		LEFT JOIN dental_users u ON u.userid = p.docid
 		LEFT JOIN companies c ON c.id=uc.companyid
-		WHERE uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
+		WHERE uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
 	}
 	$q = mysqli_query($con,$s);
 	if(mysqli_num_rows($q)==0){

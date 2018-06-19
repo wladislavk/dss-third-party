@@ -47,7 +47,7 @@ if ($patient_info) {
             $ins_sql = " insert into dental_ex_page2 set 
                 patientid = '".s_for($_GET['pid'])."',
                 mallampati = '".s_for($mallampati)."',
-                additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+                additional_notes = '".$db->escape( $_POST['additional_notes'])."',
                 tonsils = '".s_for($tonsils_arr)."',
                 tonsils_grade = '".s_for($tonsils_grade)."',
                 userid = '".s_for($_SESSION['userid'])."',
@@ -72,7 +72,7 @@ if ($patient_info) {
         } else {
             $ed_sql = " update dental_ex_page2 set 
         		mallampati = '".s_for($mallampati)."',
-                additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+                additional_notes = '".$db->escape( $_POST['additional_notes'])."',
         		tonsils = '".s_for($tonsils_arr)."',
         		tonsils_grade = '".s_for($tonsils_grade)."'
         		where ex_page2id = '".s_for($_POST['ed'])."'";

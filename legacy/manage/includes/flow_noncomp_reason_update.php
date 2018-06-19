@@ -10,9 +10,9 @@ $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : -1);
 $db = new Db();
 
 $s = "UPDATE dental_flow_pg2_info SET
-    noncomp_reason = '".mysqli_real_escape_string($con,$r)."'
-    WHERE patientid = ".mysqli_real_escape_string($con,$pid)." 
-    AND id = ".mysqli_real_escape_string($con,$id);
+    noncomp_reason = '".$db->escape($r)."'
+    WHERE patientid = ".$db->escape($pid)." 
+    AND id = ".$db->escape($id);
 $q = $db->query($s);
 
 if(!empty($q)){

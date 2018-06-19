@@ -6,7 +6,7 @@ include_once 'includes/constants.inc';
 
 $db = new Db();
 
-$sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+$sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape( $_SESSION['userid']) . "'";
 
 $sign_r = $db->getRow($sign_sql);
 $user_sign = $sign_r['sign_notes'];
@@ -29,10 +29,10 @@ $num_unsigned = count($unsigned_res);
     <script type="text/javascript" src="js/manage_unsigned_notes.js"></script>
     <?php
     foreach ($unsigned_res as $unsigned_r) {
-        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1_pivot q on q.patientid=p.patientid where p.patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid']);
+        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1_pivot q on q.patientid=p.patientid where p.patientid=".$db->escape( $unsigned_r['patientid']);
         $p_r = $db->getRow($p_sql);
 
-        $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
+        $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$db->escape( $unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
         $itype = $db->getRow($itype_sql);
         $patient_photo = $itype['image_file'];
         ?>

@@ -5,7 +5,7 @@ include "includes/top.htm";
 
 $db = new Db();
 
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape( $_SESSION['userid'])."'";
 $r = $db->getRow($sql);
 if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){ ?>
     You are not authorized to access this page.

@@ -8,10 +8,10 @@ $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE 
 		pi.status != '".DSS_INVOICE_PENDING."'
 		AND
-		pi.docid=".mysqli_real_escape_string($con,$_GET['docid'])." ORDER BY pi.due_date DESC";
+		pi.docid=".$db->escape($_GET['docid'])." ORDER BY pi.due_date DESC";
 $my = mysqli_query($con,$sql);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con,$_GET['docid']);
+$doc_sql = "SELECT * from dental_users WHERE userid=".$db->escape($_GET['docid']);
 $doc_q = mysqli_query($con,$doc_sql);
 $doc = mysqli_fetch_assoc($doc_q);
 
@@ -42,7 +42,7 @@ if ($card) {
         <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+$sql = "SELECT * FROM dental_users where userid='".$db->escape($_GET['docid'])."'";
 $q = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_assoc($q);
 ?>
@@ -190,7 +190,7 @@ $case_q = mysqli_query($con,$case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-			WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+			WHERE userid='".$db->escape($_GET['docid'])."'";
   $charge_q = mysqli_query($con,$charge_sql);
 ?>
 
@@ -244,7 +244,7 @@ $case_q = mysqli_query($con,$case_sql);
                                             echo st($charge_r["amount"]); ?>
                                 </td>
                                 <td valign="top" style="font-weight:bold;">
-					<?php $r_sql = "SELECT SUM(amount) refund FROM dental_refund WHERE charge_id='".mysqli_real_escape_string($con,$charge_r['id'])."'";
+					<?php $r_sql = "SELECT SUM(amount) refund FROM dental_refund WHERE charge_id='".$db->escape($charge_r['id'])."'";
 						$r_q = mysqli_query($con,$r_sql);
 						$refund = mysqli_fetch_assoc($r_q);
 						?>

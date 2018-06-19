@@ -6,7 +6,7 @@ include_once('includes/sescheck.php');
 
 $check_sql = "SELECT dental_users.userid, username, name, user_access, docid, user_type, uc.companyid FROM dental_users 
                 LEFT JOIN dental_user_company uc ON dental_users.userid=uc.userid
-                where username='".mysqli_real_escape_string($con,$_POST['username'])."'";
+                where username='".$db->escape($_POST['username'])."'";
 $check_my = mysqli_query($con,$check_sql);
 if (mysqli_num_rows($check_my) == 1) {
     echo('here');

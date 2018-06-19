@@ -8,7 +8,7 @@ include 'includes/sescheck.php';
 	$key = sha1(rand().'*&Tuvt7X'.$_SESSION['username'].rand());
 	$pass = sha1($_SESSION['username'].'HNb%5#fc'.rand());
 
-	$del_sql = "delete from help_wp.dss_wp_signon where user_name = '".mysqli_real_escape_string($con,$username)."'";
+	$del_sql = "delete from help_wp.dss_wp_signon where user_name = '".$db->escape($username)."'";
 	$db->query($del_sql);
 
 	$login_sql = "insert into help_wp.dss_wp_signon (user_name, user_temp_key) values ('".$username."', '".$key."');";

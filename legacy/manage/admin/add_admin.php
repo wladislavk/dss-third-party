@@ -53,7 +53,7 @@ if($_POST["adminsub"] == 1) {
 			$ins_sql = "insert into admin SET
 				username = '".s_for($_POST["username"])."',
 				admin_access = '".s_for($_POST['admin_access'])."', 
-				password = '".mysqli_real_escape_string($con, $password)."', 
+				password = '".$db->escape( $password)."', 
 				salt = '".$salt."',
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 

@@ -4,7 +4,7 @@ include "includes/top.htm";
 if(isset($_GET['delid']) && $_GET['delid']){
 
   $d = "UPDATE dental_letter_templates_custom SET status=2 WHERE docid='".$_SESSION['docid']."'
-  		AND id='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+  		AND id='".$db->escape($_GET['delid'])."'";
   $db->query($d);
 }
 

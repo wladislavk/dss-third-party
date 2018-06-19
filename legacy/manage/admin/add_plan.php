@@ -8,30 +8,30 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_plans set 
-				name = '".mysqli_real_escape_string($con,$_POST['name'])."',
-                                monthly_fee = '".mysqli_real_escape_string($con,$_POST['monthly_fee'])."',
-                                trial_period = '".mysqli_real_escape_string($con,$_POST['trial_period'])."',
-                                fax_fee = '".mysqli_real_escape_string($con,$_POST['fax_fee'])."',
-                                free_fax = '".mysqli_real_escape_string($con,$_POST['free_fax'])."',
-                		eligibility_fee = '".mysqli_real_escape_string($con,$_POST['eligibility_fee'])."',
-                		free_eligibility = '".mysqli_real_escape_string($con,$_POST['free_eligibility'])."',
-               	 		enrollment_fee = '".mysqli_real_escape_string($con,$_POST['enrollment_fee'])."',
-                		free_enrollment = '".mysqli_real_escape_string($con,$_POST['free_enrollment'])."',
-                		claim_fee = '".mysqli_real_escape_string($con,$_POST['claim_fee'])."',
-                		free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
-                		efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
-                		free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
-                        e0486_bill = '".mysqli_real_escape_string($con,$_POST['e0486_bill'])."',
-                        e0486_fee = '".mysqli_real_escape_string($con,$_POST['e0486_fee'])."',
-                		vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
-                		free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
-				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
-				user_fee = '".mysqli_real_escape_string($con,$_POST['user_fee'])."',
-				patient_fee = '".mysqli_real_escape_string($con,$_POST['patient_fee'])."',
-				duration = '".mysqli_real_escape_string($con,$_POST['duration'])."',
-                		office_type = '".mysqli_real_escape_string($con,$_POST['office_type'])."',
-                                status = '".mysqli_real_escape_string($con,$_POST['status'])."'
-				WHERE id = '".mysqli_real_escape_string($con,$_POST['ed'])."'";
+				name = '".$db->escape($_POST['name'])."',
+                                monthly_fee = '".$db->escape($_POST['monthly_fee'])."',
+                                trial_period = '".$db->escape($_POST['trial_period'])."',
+                                fax_fee = '".$db->escape($_POST['fax_fee'])."',
+                                free_fax = '".$db->escape($_POST['free_fax'])."',
+                		eligibility_fee = '".$db->escape($_POST['eligibility_fee'])."',
+                		free_eligibility = '".$db->escape($_POST['free_eligibility'])."',
+               	 		enrollment_fee = '".$db->escape($_POST['enrollment_fee'])."',
+                		free_enrollment = '".$db->escape($_POST['free_enrollment'])."',
+                		claim_fee = '".$db->escape($_POST['claim_fee'])."',
+                		free_claim = '".$db->escape($_POST['free_claim'])."',
+                		efile_fee = '".$db->escape($_POST['efile_fee'])."',
+                		free_efile = '".$db->escape($_POST['free_efile'])."',
+                        e0486_bill = '".$db->escape($_POST['e0486_bill'])."',
+                        e0486_fee = '".$db->escape($_POST['e0486_fee'])."',
+                		vob_fee = '".$db->escape($_POST['vob_fee'])."',
+                		free_vob = '".$db->escape($_POST['free_vob'])."',
+				producer_fee = '".$db->escape($_POST['producer_fee'])."',
+				user_fee = '".$db->escape($_POST['user_fee'])."',
+				patient_fee = '".$db->escape($_POST['patient_fee'])."',
+				duration = '".$db->escape($_POST['duration'])."',
+                		office_type = '".$db->escape($_POST['office_type'])."',
+                                status = '".$db->escape($_POST['status'])."'
+				WHERE id = '".$db->escape($_POST['ed'])."'";
 			mysqli_query($con,$ed_sql);
 			
 			$msg = "Edited Successfully";
@@ -45,29 +45,29 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_plans SET
-                                name = '".mysqli_real_escape_string($con,$_POST['name'])."',
-                                monthly_fee = '".mysqli_real_escape_string($con,$_POST['monthly_fee'])."',
-                                trial_period = '".mysqli_real_escape_string($con,$_POST['trial_period'])."',
-                                fax_fee = '".mysqli_real_escape_string($con,$_POST['fax_fee'])."',
-                                free_fax = '".mysqli_real_escape_string($con,$_POST['free_fax'])."',
-                                eligibility_fee = '".mysqli_real_escape_string($con,$_POST['eligibility_fee'])."',
-                                free_eligibility = '".mysqli_real_escape_string($con,$_POST['free_eligibility'])."',
-                                enrollment_fee = '".mysqli_real_escape_string($con,$_POST['enrollment_fee'])."',
-                                free_enrollment = '".mysqli_real_escape_string($con,$_POST['free_enrollment'])."',
-                                claim_fee = '".mysqli_real_escape_string($con,$_POST['claim_fee'])."',
-                                free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
-                                efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
-                                free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
-                                e0486_bill = '".mysqli_real_escape_string($con,$_POST['e0486_bill'])."',
-                                e0486_fee = '".mysqli_real_escape_string($con,$_POST['e0486_fee'])."',
-                                vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
-                                free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
-				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
-				user_fee = '".mysqli_real_escape_string($con,$_POST['user_fee'])."',
-				patient_fee = '".mysqli_real_escape_string($con,$_POST['patient_fee'])."',
-				duration = '".mysqli_real_escape_string($con,$_POST['duration'])."',
-                                office_type = '".mysqli_real_escape_string($con,$_POST['office_type'])."',
-                                status = '".mysqli_real_escape_string($con,$_POST['status'])."',
+                                name = '".$db->escape($_POST['name'])."',
+                                monthly_fee = '".$db->escape($_POST['monthly_fee'])."',
+                                trial_period = '".$db->escape($_POST['trial_period'])."',
+                                fax_fee = '".$db->escape($_POST['fax_fee'])."',
+                                free_fax = '".$db->escape($_POST['free_fax'])."',
+                                eligibility_fee = '".$db->escape($_POST['eligibility_fee'])."',
+                                free_eligibility = '".$db->escape($_POST['free_eligibility'])."',
+                                enrollment_fee = '".$db->escape($_POST['enrollment_fee'])."',
+                                free_enrollment = '".$db->escape($_POST['free_enrollment'])."',
+                                claim_fee = '".$db->escape($_POST['claim_fee'])."',
+                                free_claim = '".$db->escape($_POST['free_claim'])."',
+                                efile_fee = '".$db->escape($_POST['efile_fee'])."',
+                                free_efile = '".$db->escape($_POST['free_efile'])."',
+                                e0486_bill = '".$db->escape($_POST['e0486_bill'])."',
+                                e0486_fee = '".$db->escape($_POST['e0486_fee'])."',
+                                vob_fee = '".$db->escape($_POST['vob_fee'])."',
+                                free_vob = '".$db->escape($_POST['free_vob'])."',
+				producer_fee = '".$db->escape($_POST['producer_fee'])."',
+				user_fee = '".$db->escape($_POST['user_fee'])."',
+				patient_fee = '".$db->escape($_POST['patient_fee'])."',
+				duration = '".$db->escape($_POST['duration'])."',
+                                office_type = '".$db->escape($_POST['office_type'])."',
+                                status = '".$db->escape($_POST['status'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);
 			
@@ -402,7 +402,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
                 <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
                 <input type="submit" value="<?php echo $but_text?> Plan" class="btn btn-primary">
 		<?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
-		<?php $u_sql = "SELECT userid, first_name, last_name FROM dental_users where plan_id='".mysqli_real_escape_string($con,$themyarray["id"])."'";
+		<?php $u_sql = "SELECT userid, first_name, last_name FROM dental_users where plan_id='".$db->escape($themyarray["id"])."'";
 		      $u_q = mysqli_query($con,$u_sql);
 		      if(mysqli_num_rows($u_q)>0){ 
 			$names = '';

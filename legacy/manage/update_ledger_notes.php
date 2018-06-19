@@ -12,7 +12,7 @@ $db = new Db();
 $private = !empty($_POST['private']) && $_POST['private'];
 $serviceDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
 $entryDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
-$note = !empty($_POST['note']) ? mysqli_real_escape_string($con, $_POST['note']) : '';
+$note = !empty($_POST['note']) ? $db->escape( $_POST['note']) : '';
 $producerId = !empty($_POST['producer']) ? intval($_POST['producer']) : '';
 $noteId = !empty($_POST['id']) ? intval($_POST['id']) : '';
 
@@ -63,7 +63,7 @@ $sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
         `transaction_code`
    ) VALUES ";
 
-$txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
+$txcode['description'] = $db->escape( $txcode['description']);
 
 if (!empty($_POST['form'])) {
     foreach($_POST['form'] as $form) {

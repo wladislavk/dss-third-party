@@ -34,17 +34,17 @@ if(is_super($_SESSION['admin_access'])){
 }elseif(is_software($_SESSION['admin_access'])){
   $sql = "SELECT du.* FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
-		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".$db->escape($_SESSION['admincompanyid'])."'";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+                        WHERE a.adminid='".$db->escape($_SESSION['adminuserid'])."'";
   $a_q = mysqli_query($con,$a_sql);
   $admin = mysqli_fetch_assoc($a_q);
   $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
                 LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '".$start_date."' AND '".$end_date."'
                 WHERE du.docid=0 
-		AND du.billing_company_id = '".mysqli_real_escape_string($con,$admin['companyid'])."'
+		AND du.billing_company_id = '".$db->escape($admin['companyid'])."'
                 GROUP BY du.userid
                 ";
 }
@@ -191,7 +191,7 @@ $sleepstudies = "SELECT count(ss.id) as num_ss
 $consult_sql = "SELECT count(i.id) as num_consult FROM dental_flow_pg2_info i
 			JOIN dental_patients p ON p.patientid = i.patientid
 			WHERE i.segmentid=2
- 				AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+ 				AND p.docid='".$db->escape($myarray['userid'])."'
  				AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 $consult_q = mysqli_query($con,$consult_sql);
 $consult = mysqli_fetch_assoc($consult_q); 
@@ -199,7 +199,7 @@ $consult = mysqli_fetch_assoc($consult_q);
 $imp_sql = "SELECT count(i.id) as num_imp FROM dental_flow_pg2_info i
                         JOIN dental_patients p ON p.patientid = i.patientid
                         WHERE i.segmentid=4
-				AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+				AND p.docid='".$db->escape($myarray['userid'])."'
                                 AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 $imp_q = mysqli_query($con,$imp_sql);
 $imp = mysqli_fetch_assoc($imp_q);
@@ -207,21 +207,21 @@ $imp = mysqli_fetch_assoc($imp_q);
 $dd_sql = "SELECT count(i.id) as num_dd FROM dental_flow_pg2_info i
                         JOIN dental_patients p ON p.patientid = i.patientid
                         WHERE i.segmentid=7
-                                AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+                                AND p.docid='".$db->escape($myarray['userid'])."'
                                 AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 $dd_q = mysqli_query($con,$dd_sql);
 $dd = mysqli_fetch_assoc($dd_q);
 
 $letters_sql = "SELECT count(l.letterid) as num_sent FROM dental_letters l 
                         WHERE 
-                                l.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+                                l.docid='".$db->escape($myarray['userid'])."'
                                 AND l.date_sent BETWEEN '".$start_date."' AND '".$end_date."'";
 $letters_q = mysqli_query($con,$letters_sql);
 $letters = mysqli_fetch_assoc($letters_q);
 
 $vob_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
                         WHERE 
-                                p.doc_id='".mysqli_real_escape_string($con,$myarray['userid'])."'
+                                p.doc_id='".$db->escape($myarray['userid'])."'
                                 AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
 $vob_q = mysqli_query($con,$vob_sql);
 $vob = mysqli_fetch_assoc($vob_q);
@@ -229,9 +229,9 @@ $vob = mysqli_fetch_assoc($vob_q);
 $ins_sent_sql = "SELECT count(h.id) as num_sent FROM dental_insurance i
 			JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
                         WHERE 
-                                i.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
-				AND (h.status = '".mysqli_real_escape_string($con,DSS_CLAIM_SENT)."'
-					OR h.status = '".mysqli_real_escape_string($con,DSS_CLAIM_SEC_SENT)."')
+                                i.docid='".$db->escape($myarray['userid'])."'
+				AND (h.status = '".$db->escape(DSS_CLAIM_SENT)."'
+					OR h.status = '".$db->escape(DSS_CLAIM_SEC_SENT)."')
                                 AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
 $ins_sent_q = mysqli_query($con,$ins_sent_sql);
 $ins_sent = mysqli_fetch_assoc($ins_sent_q);
@@ -239,11 +239,11 @@ $ins_sent = mysqli_fetch_assoc($ins_sent_q);
 $ins_paid_sql = "SELECT count(h.id) as num_paid FROM dental_insurance i
                         JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
                         WHERE 
-                                i.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
-                                AND h.status IN (".mysqli_real_escape_string($con,DSS_CLAIM_PAID_INSURANCE).",
-						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_PATIENT).",
-						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_SEC_INSURANCE).",
-						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_SEC_PATIENT).")
+                                i.docid='".$db->escape($myarray['userid'])."'
+                                AND h.status IN (".$db->escape(DSS_CLAIM_PAID_INSURANCE).",
+						".$db->escape(DSS_CLAIM_PAID_PATIENT).",
+						".$db->escape(DSS_CLAIM_PAID_SEC_INSURANCE).",
+						".$db->escape(DSS_CLAIM_PAID_SEC_PATIENT).")
                                 AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
 $ins_paid_q = mysqli_query($con,$ins_paid_sql);
 $ins_paid = mysqli_fetch_assoc($ins_paid_q);

@@ -6,8 +6,8 @@ include("includes/sescheck.php");
 if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1) {
     if($_POST["ed"] != "") {
         $ed_sql = "update dental_claim_text set 
-        title = '".mysqli_real_escape_string($con,$_POST["title"])."', 
-        description = '".mysqli_real_escape_string($con,$_POST["description"])."'
+        title = '".$db->escape($_POST["title"])."', 
+        description = '".$db->escape($_POST["description"])."'
         where id='".$_POST["ed"]."'";
         mysqli_query($con,$ed_sql);
 
@@ -20,8 +20,8 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1) {
         trigger_error("Die called", E_USER_ERROR);
     } else {
         $ins_sql = "insert into dental_claim_text set 
-        title = '".mysqli_real_escape_string($con,$_POST["title"])."',
-        description = '".mysqli_real_escape_string($con,$_POST["description"])."',
+        title = '".$db->escape($_POST["title"])."',
+        description = '".$db->escape($_POST["description"])."',
         adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', companyid=".$_GET['companyid'];
         mysqli_query($con,$ins_sql);
 

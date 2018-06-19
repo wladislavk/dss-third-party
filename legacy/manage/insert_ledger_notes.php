@@ -13,7 +13,7 @@ include "includes/sescheck.php";
 
     $serviceDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
     $entryDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
-    $note = mysqli_real_escape_string($con, !empty($_POST['note']) ? $_POST['note'] : '');
+    $note = $db->escape( !empty($_POST['note']) ? $_POST['note'] : '');
     $private = !empty($_POST['private']) ? 1 : 0;
     $addDate = date('m/d/Y');
     $ipAddress = $_SERVER['REMOTE_ADDR'];
@@ -92,7 +92,7 @@ include "includes/sescheck.php";
 
 $insertions = [];
 
-$txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
+$txcode['description'] = $db->escape( $txcode['description']);
 
     if (!empty($_POST['form'])) {
         foreach ($_POST['form'] as $form) {

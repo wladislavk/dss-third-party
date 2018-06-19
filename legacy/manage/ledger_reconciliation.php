@@ -290,7 +290,7 @@
 
 	<?php
 		if(isset($_GET['pt_lastname']) && $_GET['pt_lastname'] <> '') {
-			$pat_sql = "select * from dental_patients where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
+			$pat_sql = "select * from dental_patients where docid='".$db->escape($_SESSION['docid'])."' AND lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
 			
 			$pat_my = $db->getResults($pat_sql);
 	?>

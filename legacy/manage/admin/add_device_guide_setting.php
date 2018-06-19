@@ -10,22 +10,22 @@ include_once '../includes/general_functions.php';
 if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1) {
 		if($_POST["ed"] != "") {
 			$ed_sql = "update dental_device_guide_settings set 
-				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
-                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
-                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
-                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
-                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
-				range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
-				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
-				options = '".mysqli_real_escape_string($con,$_POST['options'])."'
+				name = '".$db->escape($_POST["name"])."',
+                setting_type = '".$db->escape($_POST["setting_type"])."', 
+                range_start = '".$db->escape($_POST["range_start"])."', 
+                range_start_label = '".$db->escape($_POST["range_start_label"])."', 
+                range_end = '".$db->escape($_POST['range_end'])."',
+				range_end_label = '".$db->escape($_POST['range_end_label'])."',
+				rank = '".$db->escape($_POST['rank'])."',
+				options = '".$db->escape($_POST['options'])."'
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 
-			mysqli_query($con,"DELETE FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$_POST['ed'])."'");
+			mysqli_query($con,"DELETE FROM dental_device_guide_setting_options WHERE setting_id='".$db->escape($_POST['ed'])."'");
                         for($i=1; $i<=$_POST['options']; $i++){
                           $o_sql = "INSERT INTO dental_device_guide_setting_options SET
                                         option_id='".$i."',
-                                        setting_id='".mysqli_real_escape_string($con,$_POST['ed'])."',
+                                        setting_id='".$db->escape($_POST['ed'])."',
                                         label='".$_POST['option_'.$i]."'";
                           mysqli_query($con,$o_sql);
                         }
@@ -40,14 +40,14 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1) {
 		else
 		{
 			$ins_sql = "insert into dental_device_guide_settings set 
-                name = '".mysqli_real_escape_string($con,$_POST["name"])."',
-                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
-                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
-                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
-                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
-                range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
-				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
-				options = '".mysqli_real_escape_string($con,$_POST['options'])."',
+                name = '".$db->escape($_POST["name"])."',
+                setting_type = '".$db->escape($_POST["setting_type"])."', 
+                range_start = '".$db->escape($_POST["range_start"])."', 
+                range_start_label = '".$db->escape($_POST["range_start_label"])."', 
+                range_end = '".$db->escape($_POST['range_end'])."',
+                range_end_label = '".$db->escape($_POST['range_end_label'])."',
+				rank = '".$db->escape($_POST['rank'])."',
+				options = '".$db->escape($_POST['options'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysqli_query($con,$ins_sql);
@@ -201,8 +201,8 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1) {
                   <?php for($i=1; $i<=10; $i++){ ?>
 		<?php
 			$o_sql = "SELECT label FROM dental_device_guide_setting_options o
-					WHERE option_id='".mysqli_real_escape_string($con,$i)."'
-						AND setting_id='".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
+					WHERE option_id='".$db->escape($i)."'
+						AND setting_id='".$db->escape((!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
 			$o_q = mysqli_query($con,$o_sql);
 			$o_r = mysqli_fetch_assoc($o_q);
 		?>

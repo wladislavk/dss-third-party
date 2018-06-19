@@ -55,7 +55,7 @@ $leftJoinDuplicates = "LEFT JOIN (
 $sumTotalsConditional = 'IFNULL(by_company.total, 0) + IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0)';
 
 if(isset($_REQUEST['deleteid'])){
-    $dsql = "DELETE FROM dental_contact WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
+    $dsql = "DELETE FROM dental_contact WHERE docid='".$db->escape( $_SESSION['docid'])."' AND contactid='".$db->escape( $_REQUEST['deleteid'])."'";
     $db->query($dsql);
 ?>
 <script type="text/javascript">
@@ -63,7 +63,7 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
-    $sql = "UPDATE dental_contact SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
+    $sql = "UPDATE dental_contact SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".$db->escape( $_SESSION['docid'])."' AND contactid='".$db->escape( $_REQUEST['createid'])."'";
     $db->query($sql);
 ?>
 <script type="text/javascript">

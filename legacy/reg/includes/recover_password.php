@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../../manage/admin/includes/main_include.php';
 
-    $s = "SELECT * FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."'";
+    $s = "SELECT * FROM dental_patients WHERE email='".$db->escape( $_POST['email'])."'";
     $q = mysqli_query($con, $s);
     if(mysqli_num_rows($q) > 0){
       $r = mysqli_fetch_assoc($q);

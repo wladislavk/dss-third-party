@@ -12,7 +12,7 @@ include("includes/sescheck.php");
 require_once('includes/dental_patient_summary.php');
 include_once 'includes/constants.inc';
 
-$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+$docsql = "SELECT * FROM dental_users where userid='".$db->escape( $_SESSION['docid'])."'";
 $docq = mysqli_query($con, $docsql);
 $docr = mysqli_fetch_assoc($docq); 
 

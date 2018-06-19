@@ -56,7 +56,7 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                 }
 
                 if ($form['status'] == 1) {
-                    $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $form['producer'])."'";
+                    $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".$db->escape( $form['producer'])."'";
                         
                     $pf = $db->getRow($pf_sql);
                     if ($pf['producer_files'] == '1') {
@@ -65,7 +65,7 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                         $claim_producer = $_SESSION['docid'];
                     }
 
-                    $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+                    $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".$db->escape( $_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
                         
                     $q = $db->getResults($s);
                     $n = count($q);
@@ -100,12 +100,12 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                     $amount = $form['amount'];
                 }
 
-                $_POST['patientid'] = mysqli_real_escape_string($con, $_POST['patientid']);
-                $_SESSION['userid'] = mysqli_real_escape_string($con, $_SESSION['userid']);
-                $_SESSION['docid'] = mysqli_real_escape_string($con, $_SESSION['docid']);
-                $_SERVER['REMOTE_ADDR'] = mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR']);
-                $txcode['transaction_code'] = mysqli_real_escape_string($con, $txcode['transaction_code']);
-                $txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
+                $_POST['patientid'] = $db->escape( $_POST['patientid']);
+                $_SESSION['userid'] = $db->escape( $_SESSION['userid']);
+                $_SESSION['docid'] = $db->escape( $_SESSION['docid']);
+                $_SERVER['REMOTE_ADDR'] = $db->escape( $_SERVER['REMOTE_ADDR']);
+                $txcode['transaction_code'] = $db->escape( $txcode['transaction_code']);
+                $txcode['description'] = $db->escape( $txcode['description']);
 
                 if ($d <= $i) {
                     if ($form['status'] == 1) {

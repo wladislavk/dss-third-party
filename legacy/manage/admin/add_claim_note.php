@@ -14,10 +14,10 @@ require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     if($_POST['nid']=='') {
 		$ins_sql = "insert into dental_claim_notes set 
-				claim_id = '".mysqli_real_escape_string($con, $_POST['claim_id'])."',
-				note = '".mysqli_real_escape_string($con, $_POST['note'])."',
+				claim_id = '".$db->escape( $_POST['claim_id'])."',
+				note = '".$db->escape( $_POST['note'])."',
 				create_type = '0',
-				creator_id = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."',
+				creator_id = '".$db->escape( $_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		$n_id = mysqli_insert_id($con);
@@ -28,8 +28,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
 		        move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
 		        $a_sql = "INSERT INTO dental_claim_note_attachment SET
-                                filename = '".mysqli_real_escape_string($con, $attachment)."',
-                                note_id=".mysqli_real_escape_string($con, $n_id);
+                                filename = '".$db->escape( $attachment)."',
+                                note_id=".$db->escape( $n_id);
 		        mysqli_query($con,$a_sql);
 		    }
 		}
@@ -45,8 +45,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
         trigger_error("Die called", E_USER_ERROR);
   }else{
                 $up_sql = "update dental_claim_notes set 
-                                note = '".mysqli_real_escape_string($con, $_POST['note'])."'
-                                WHERE id='".mysqli_real_escape_string($con, $_POST['nid'])."'";
+                                note = '".$db->escape( $_POST['note'])."'
+                                WHERE id='".$db->escape( $_POST['nid'])."'";
                 mysqli_query($con,$up_sql) or trigger_error($up_sql.mysqli_error($con), E_USER_ERROR);
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
@@ -56,8 +56,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
                       move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                       $a_sql = "INSERT INTO dental_claim_note_attachment SET
-                                    filename = '".mysqli_real_escape_string($con, $attachment)."',
-                                    note_id=".mysqli_real_escape_string($con, $n_id);
+                                    filename = '".$db->escape( $attachment)."',
+                                    note_id=".$db->escape( $n_id);
                       mysqli_query($con,$a_sql);
                     }
                 }
@@ -74,7 +74,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
   }
 }
 
-$sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' order by Title";
+$sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".$db->escape( $_SESSION['admincompanyid'])."' order by Title";
 $my = mysqli_query($con,$sql);
 
 ?>

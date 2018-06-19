@@ -152,7 +152,7 @@ if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 if (isset($_GET['filter'])) {
-    $filter = mysqli_real_escape_string($con,$_GET['filter']);
+    $filter = $db->escape($_GET['filter']);
 }
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $doc_filter = '';
@@ -230,7 +230,7 @@ if ($status == 'pending') {
         JOIN dental_user_company uc ON uc.userid = dental_letters.docid
         JOIN dental_users u ON u.userid = dental_letters.docid
         LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-                WHERE u.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND
+                WHERE u.billing_company_id='".$db->escape($_SESSION['admincompanyid'])."' AND
                         ((dental_letters.status = '1' AND dental_letters.delivered=0) 
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND
@@ -263,7 +263,7 @@ if ($status == 'pending') {
                       JOIN dental_user_company uc ON uc.userid = dental_letters.docid
                     	JOIN dental_users u ON u.userid = dental_letters.docid
 	                  LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-		WHERE uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND
+		WHERE uc.companyid='".$db->escape($_SESSION['admincompanyid'])."' AND
 			((dental_letters.status = '1' AND dental_letters.delivered=0) 
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND

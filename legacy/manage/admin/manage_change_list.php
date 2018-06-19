@@ -6,7 +6,7 @@ include_once('includes/password.php');
 
 if(!empty($_POST['clsub']) && $_POST['clsub'] == 1)
 {
-        $up_sql = "update dental_change_list set content='".mysqli_real_escape_string($con,$_POST['content'])."'";
+        $up_sql = "update dental_change_list set content='".$db->escape($_POST['content'])."'";
 		mysqli_query($con,$up_sql);
 		
 		$msg="Change List Updated Successfully.";

@@ -22,10 +22,10 @@ include_once "admin/includes/general.htm";
 if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
     if ($_POST['nid'] == '') {
         $ins_sql = "insert into dental_claim_notes set 
-            claim_id = '".mysqli_real_escape_string($con, $_POST['claim_id'])."',
-            note = '".mysqli_real_escape_string($con, $_POST['note'])."',
+            claim_id = '".$db->escape( $_POST['claim_id'])."',
+            note = '".$db->escape( $_POST['note'])."',
             create_type = '1',
-            creator_id = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
+            creator_id = '".$db->escape( $_SESSION['userid'])."',
             adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
         $db->query($ins_sql);
 
@@ -44,8 +44,8 @@ if (!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
         trigger_error("Die called", E_USER_ERROR);
     } else {
         $up_sql = "update dental_claim_notes set 
-            note = '".mysqli_real_escape_string($con, $_POST['note'])."'
-		    WHERE id='".mysqli_real_escape_string($con, $_POST['nid'])."'";
+            note = '".$db->escape( $_POST['note'])."'
+		    WHERE id='".$db->escape( $_POST['nid'])."'";
         $db->query($up_sql);
 
         if ($_POST['close'] == 1) { ?>

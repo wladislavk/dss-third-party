@@ -7,10 +7,10 @@ function num_patient_changes($pid){
 
 	$num_changes = 0;
 
-	$psql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$pid)."'";
+	$psql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape($pid)."'";
 	$p = $db->getRow($psql);
 
-	$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
+	$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($pid)."'";
 	$cq = $db->getResults($csql);
 	$c = (!empty($cq[0]) ? $cq[0] : array());
 

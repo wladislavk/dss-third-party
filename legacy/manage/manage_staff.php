@@ -11,7 +11,7 @@ $isStaff = $db->getColumn("SELECT manage_staff FROM dental_users WHERE userid = 
 
 if(!empty($_REQUEST["delid"]))
 {
-	$l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
+	$l_sql = "SELECT * from dental_login WHERE userid='".$db->escape($_REQUEST['delid'])."'";
   	$logins = $db->getNumberRows($l_sql);
 
 	if($logins == 0){

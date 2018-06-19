@@ -11,7 +11,7 @@ include_once('../includes/general_functions.php');
 $db = new Db();
 
 if(isset($_REQUEST['submit'])) {
-    $sqlex = "update dental_flow_pg2_info set delay_reason='".mysqli_real_escape_string($con,$_REQUEST['delay_reason'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $sqlex = "update dental_flow_pg2_info set delay_reason='".$db->escape($_REQUEST['delay_reason'])."' where id='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $db->query($sqlex);
     ?>
     <script type="text/javascript">
@@ -36,7 +36,7 @@ if(isset($_REQUEST['submit'])) {
 </head>
 <body>
 <?php
-$s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$s = "SELECT * FROM dental_patients where patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $r = $db->getRow($s);
 ?>
 

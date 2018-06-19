@@ -11,7 +11,7 @@ if (isset($_POST['partial_name'])) {
 }
 $names = explode(" ", $partial);
 
-$doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+$doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
 $doc_q = mysqli_query($con, $doc_sql);
 $doc = mysqli_fetch_assoc($doc_q);
 $docid = $doc['docid'];

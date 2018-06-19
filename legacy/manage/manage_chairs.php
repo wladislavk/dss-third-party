@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))
 {
-	$del_sql = "delete from dental_resources where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_resources where docid='".$db->escape($_SESSION['docid'])."' AND id='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -43,7 +43,7 @@ $num_users = count($my);
 <br />
 &nbsp;
 <?php
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
 $r = $db->getRow($sql);
 if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 <div align="right">
@@ -104,7 +104,7 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 		</td>
 		<td valign="top">
 		<?php
-		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
 		$r = $db->getRow($sql);
 		if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 			<a href="Javascript:;"  onclick="Javascript: loadPopup('add_chair.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">

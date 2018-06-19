@@ -4,8 +4,8 @@ namespace Ds3\Libraries\Legacy;
 $db = new Db();
 
 $status_sql = "SELECT status FROM dental_insurance 
-    WHERE insuranceid='".mysqli_real_escape_string($con, (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
-    AND patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+    WHERE insuranceid='".$db->escape( (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
+    AND patientid='".$db->escape( (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
 $status_r = $db->getRow($status_sql);
 $status = $status_r['status'];
@@ -112,7 +112,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status)
         $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
         $prod_r = $db->getRow($prod_s);
         $claim_producer = $prod_r['producer'];
-        $s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con, $claim_producer)."' AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+        $s = "SELECT insuranceid from dental_insurance where producer = '".$db->escape( $claim_producer)."' AND patientid='".$db->escape( $_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
         $q = $db->getRow($s);
         if (!empty($q)) {
             $r = $q;
@@ -565,7 +565,7 @@ if (!empty($_POST['ex_statusbtn'])) {
             billing_provider_dd = '".s_for($billing_provider_dd)."',
             billing_provider_b_other = '".s_for($billing_provider_b_other)."',
             p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-            p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
+            p_m_eligible_payer_name = '".$db->escape( $p_m_eligible_payer_name)."',
             status = '".s_for(DSS_CLAIM_PENDING)."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
@@ -777,7 +777,7 @@ if (!empty($_POST['ex_statusbtn'])) {
             billing_provider_dd = '".s_for($billing_provider_dd)."',
             billing_provider_b_other = '".s_for($billing_provider_b_other)."',
             p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-            p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."'";
+            p_m_eligible_payer_name = '".$db->escape( $p_m_eligible_payer_name)."'";
 		if (isset($_POST['reject_but'])) {
 		    $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
 		    $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -792,7 +792,7 @@ if (!empty($_POST['ex_statusbtn'])) {
 		update_ledger_trxns((!empty($_POST['ed']) ? $_POST['ed'] : ''), $trxn_status);
 
 		if (isset($_POST['p_m_ins_payer_id'])) {
-		  $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."' WHERE patientid='".mysqli_real_escape_string($con,$pat_myarray['patientid'])."'";
+		  $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."' WHERE patientid='".$db->escape($pat_myarray['patientid'])."'";
 		  $db->query($pat_sql);
 		}
 
@@ -1277,7 +1277,7 @@ if (empty($prior_authorization_number)) {
                 <?php if (!$is_sent) {  ?>
                     <input type="submit" name="ex_pagebtn" value="Print Claim" />
                     <?php
-                    $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+                    $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
                     $api_r = $db->getRow($api_sql);
                     if ($api_r['use_eligible_api'] == 1) {
                         if (!$is_pending && $is_rejected) { ?>
@@ -1300,10 +1300,10 @@ if (empty($prior_authorization_number)) {
 if ($is_rejected) { ?>
     <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
         <?php
-        $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."' ORDER BY adddate DESC LIMIT 1";
+        $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".$db->escape((!empty($_GET['insid']) ? $_GET['insid'] : ''))."' ORDER BY adddate DESC LIMIT 1";
         $r = $db->getRow($r_sql);
         if ($r['reference_id']) {
-            $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+            $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".$db->escape($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
             $w_r = $db->getRow($w_sql);
             if ($w_r['response'] != '') { ?>
                 <h3>
@@ -2007,7 +2007,7 @@ if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWAR
 								<td valign="top">
 									<span class="num">17<span class="num_a">b.</span></span> 
 								<?php
-                                $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+                                $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$db->escape((!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
                                 $prod_r = $db->getRow($prod_s);
                                 $claim_producer = $prod_r['producer'];
 

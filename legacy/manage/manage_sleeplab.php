@@ -51,7 +51,7 @@ if (isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']) {
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_sleeplab where docid='" . $_SESSION['docid'] . "' ";
 if (isset($_GET['letter'])) {
-	$sql .= " AND company like '" . mysqli_real_escape_string($con,$_GET['letter']) . "%' ";
+	$sql .= " AND company like '" . $db->escape($_GET['letter']) . "%' ";
 }
 	$sql .= "ORDER BY " . $sort . " " . $dir;
 
@@ -159,7 +159,7 @@ $num_sleeplab = count($my);
 					<?php
 						$pat_sql = "SELECT p.* FROM dental_patients p
 								INNER JOIN dental_summ_sleeplab s ON s.patiendid=p.patientid
-								WHERE s.place = '".mysqli_real_escape_string($con,$myarray['sleeplabid'])."' GROUP BY p.patientid";
+								WHERE s.place = '".$db->escape($myarray['sleeplabid'])."' GROUP BY p.patientid";
 						$pat_q = $db->getResults($pat_sql);
 						$pat_num = count($pat_q);
 					?>

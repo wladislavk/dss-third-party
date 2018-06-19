@@ -211,7 +211,7 @@ if (isset($_GET['msg'])) { ?>
             <tr>
                 <td colspan="4">
                     <?php
-                    $e_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
+                    $e_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".$db->escape($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
                     $e_q = $db->getResults($e_sql);
                     foreach ($e_q as $electronic) {
                         $r = json_decode($electronic['response']);
@@ -221,7 +221,7 @@ if (isset($_GET['msg'])) { ?>
                             echo $error->message."<br />";
                         }
 
-                        $r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".mysqli_real_escape_string($con,$electronic['reference_id'])."'";
+                        $r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".$db->escape($electronic['reference_id'])."'";
                         $r_q = $db->getResults($r_sql);
 
                         if ($r_q) {

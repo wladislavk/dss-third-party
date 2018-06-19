@@ -48,7 +48,7 @@ if (isset($_GET['sort2'])) {
         $sort = $_GET['sort2']." ".$_GET['dir2'];
     }
 }
-$pend_sql .= " ORDER BY " . mysqli_real_escape_string($con, $sort);
+$pend_sql .= " ORDER BY " . $db->escape( $sort);
 
 $pend_my = $db->getResults($pend_sql);
 ?>

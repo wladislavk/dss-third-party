@@ -7,7 +7,7 @@ include_once 'admin/includes/password.php';
 
 $db = new Db();
 
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape( $_SESSION['userid'])."'";
 
 $r = $db->getRow($sql);
 if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -41,7 +41,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     } else {
         if ($_POST["ed"] != "") {
             $ed_sql = "update dental_resources set name = '".s_for($_POST["name"])."', ";
-            $ed_sql .= "rank='" . mysqli_real_escape_string($con, $_POST['rank']) . "' ";
+            $ed_sql .= "rank='" . $db->escape( $_POST['rank']) . "' ";
             $ed_sql .= " where id='". intval($_POST["ed"]) ."'";
 
             $db->query($ed_sql);
@@ -52,7 +52,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', '" . mysqli_real_escape_string($con, $_POST['rank']) . "', '" . intval($_SESSION['docid']) ."')";
+            $ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', '" . $db->escape( $_POST['rank']) . "', '" . intval($_SESSION['docid']) ."')";
             $db->getInsertId($ins_sql);
             $msg = "Added Successfully"; ?>
             <script type="text/javascript">
@@ -75,7 +75,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
 </head>
 <body>
 <?php
-$thesql = "select * from dental_resources where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".(!empty($_REQUEST["ed"]) ? intval($_REQUEST["ed"]) : '')."'";
+$thesql = "select * from dental_resources where docid='".$db->escape($_SESSION['docid'])."' AND id='".(!empty($_REQUEST["ed"]) ? intval($_REQUEST["ed"]) : '')."'";
 
 $themyarray = $db->getRow($thesql);
 
@@ -135,7 +135,7 @@ if ($themyarray["id"] != '') {
                 <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
                 <input type="submit" value=" <?php echo $but_text?> Resource" class="button" />
                 <?php if ($themyarray["id"] != '') {
-                    $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['id'])."'";
+                    $l_sql = "SELECT * from dental_login WHERE userid='".$db->escape($themyarray['id'])."'";
                     $logins = $db->getNumberRows($l_sql); ?>
                     <a style="float:right;" href="manage_chairs.php?delid=<?php echo $themyarray["id"];?>" onclick="return confirm_delete(<?php echo  $logins; ?>);" class="dellink" title="DELETE" target="_parent">
                         Delete

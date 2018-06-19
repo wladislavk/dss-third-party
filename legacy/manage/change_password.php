@@ -27,7 +27,7 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
 <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $up_sql = "update dental_users set password='".mysqli_real_escape_string($con, $_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
+        $up_sql = "update dental_users set password='".$db->escape( $_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
 
         $db->query($up_sql);
         $msg = "Password Changed Successfully.";

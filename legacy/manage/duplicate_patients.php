@@ -9,14 +9,14 @@ include "includes/similar.php";
 <?php
  
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
+$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".$db->escape( $_SESSION['docid'])."' AND 
 		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
 		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
 		)";
 
 
 if (isset($_REQUEST['deleteid'])) {
-    $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['deleteid'])."'";
+    $dsql = "DELETE FROM dental_patients WHERE docid='".$db->escape($_SESSION['docid'])."' AND patientid='".$db->escape($_REQUEST['deleteid'])."'";
     $db->query($dsql);?>
     <script type="text/javascript">
         alert("Duplicate patient removed.");
@@ -30,7 +30,7 @@ if (isset($_REQUEST['deleteid'])) {
     <?php
 }
 
-$sql = "SELECT p.* FROM dental_patients p WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND ".$simsql."!=0 ";
+$sql = "SELECT p.* FROM dental_patients p WHERE patientid='".$db->escape($_REQUEST['pid'])."' AND docid='".$db->escape($_SESSION['docid'])."' AND ".$simsql."!=0 ";
 $sql .= "ORDER BY p.lastname ASC"; 
 $myarray = $db->getRow($sql);?>
 

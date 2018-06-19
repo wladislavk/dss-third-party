@@ -132,7 +132,7 @@ $my = mysqli_query($con,$sql);
                                         <?php echo st($myarray["free_fax"]);?>
                                 </td>
                                 <td valign="top">
-                                <?php $u_sql = "SELECT * FROM dental_users WHERE plan_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
+                                <?php $u_sql = "SELECT * FROM dental_users WHERE plan_id='".$db->escape($myarray['id'])."'";
                                         $u_q = mysqli_query($con,$u_sql);
                                         $num_u = mysqli_num_rows($u_q);
                                 ?>

@@ -361,7 +361,7 @@ if(isset($_GET['msg'])){
             <?php echo $dss_claim_status_labels[$pend_myarray['status']];?>
             <?php
             if($pend_myarray['p_m_dss_file']!=2){
-                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$pend_myarray['docid'])."'";
+                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".$db->escape($pend_myarray['docid'])."'";
                 $b_q = $db->getRow($b_sql);
                 if(!empty($b_q)){
                     $b_r = $b_q;

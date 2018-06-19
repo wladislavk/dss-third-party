@@ -3,10 +3,10 @@
 include "includes/top.htm";
 
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.companyid='".mysqli_real_escape_string($con, $_GET['companyid'])."' AND pi.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
+	WHERE pi.companyid='".$db->escape( $_GET['companyid'])."' AND pi.invoice_type='".$db->escape( DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
 $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 
-$c_sql = "SELECT * from companies WHERE id=".mysqli_real_escape_string($con, $_GET['companyid']);
+$c_sql = "SELECT * from companies WHERE id=".$db->escape( $_GET['companyid']);
 $c_q = mysqli_query($con, $c_sql);
 $company = mysqli_fetch_assoc($c_q);
 ?>
@@ -22,7 +22,7 @@ $company = mysqli_fetch_assoc($c_q);
         <b><? echo $_GET['msg'];?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM companies where id='".mysqli_real_escape_string($con, $_GET['companyid'])."'";
+$sql = "SELECT * FROM companies where id='".$db->escape( $_GET['companyid'])."'";
 $q = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_assoc($q);
 ?>

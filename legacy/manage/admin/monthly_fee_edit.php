@@ -9,9 +9,9 @@ include_once '../includes/general_functions.php';
 
 if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 			$ed_sql = "update companies set 
-				monthly_fee = '".mysqli_real_escape_string($con,$_POST["monthly_fee"])."',
-				fax_fee = '".mysqli_real_escape_string($con,$_POST["fax_fee"])."',
-				free_fax = '".mysqli_real_escape_string($con,$_POST["free_fax"])."'
+				monthly_fee = '".$db->escape($_POST["monthly_fee"])."',
+				fax_fee = '".$db->escape($_POST["fax_fee"])."',
+				free_fax = '".$db->escape($_POST["free_fax"])."'
 			where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);;
 

@@ -11,15 +11,15 @@ include_once '../includes/general_functions.php';
     }
 </style>
 <?php
-$sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$sql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
 $q = mysqli_query($con,$sql);
 $pat = mysqli_fetch_assoc($q);
 
-$p_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['p_m_ins_co'])."'";
+$p_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $pat['p_m_ins_co'])."'";
 $p_q = mysqli_query($con,$p_sql);
 $p_ins = mysqli_fetch_assoc($p_q);
 
-$s_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['s_m_ins_co'])."'";
+$s_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $pat['s_m_ins_co'])."'";
 $s_q = mysqli_query($con,$s_sql);
 $s_ins = mysqli_fetch_assoc($s_q);
 ?>
@@ -192,7 +192,7 @@ if ($pat['has_s_m_ins'] == 'Yes') { ?>
 <div class="space">Medical Contacts:</div>
 <?php
 if ($pat['docpcp']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docpcp'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docpcp'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -217,7 +217,7 @@ if ($pat['docpcp']) {
 
 <?php
 if ($pat['docent']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docent'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docent'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -242,7 +242,7 @@ if ($pat['docent']) {
 
 <?php
 if ($pat['docsleep']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docsleep'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docsleep'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -267,7 +267,7 @@ if ($pat['docsleep']) {
 
 <?php
 if ($pat['docdentist']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docdentist'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docdentist'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -291,7 +291,7 @@ if ($pat['docdentist']) {
 }
 
 if ($pat['docmdother']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -315,7 +315,7 @@ if ($pat['docmdother']) {
 }
 
 if ($pat['docmdother2']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother2'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother2'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -339,7 +339,7 @@ if ($pat['docmdother2']) {
 }
 
 if ($pat['docmdother3']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother3'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother3'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -545,7 +545,7 @@ $other_complaint = st($myarray['other_complaint']);
 <div class="box">
     <strong>Reason for seeking tx:</strong>
     <?php
-    $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
     $c_q = mysqli_query($con, $c_sql);
     $c_r = mysqli_fetch_assoc($c_q);
     echo $c_r['chief_complaint_text'];
@@ -829,7 +829,7 @@ if (
         </div>
         <?php
     }
-    $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+    $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape($_REQUEST['pid'])."'";
     $s_q = mysqli_query($con,$s_sql);
     $s_num = mysqli_num_rows($s_q);
     if ($s_num != 0) { ?>
@@ -889,7 +889,7 @@ $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$psql = "SELECT * FROM dental_patients where patientid='".$db->escape($_GET['pid'])."'";
 $pmy = mysqli_query($con,$psql);
 $pmyarray = mysqli_fetch_array($pmy);
 

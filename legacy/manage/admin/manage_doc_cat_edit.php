@@ -7,9 +7,9 @@ include_once "includes/general.htm";
 
 if(isset($_POST['edit_cat'])){
   $ins = "UPDATE dental_document_category SET
-	name = '".mysqli_real_escape_string($con,$_POST['name'])."',
-	status = '".mysqli_real_escape_string($con,$_POST['status'])."'
-        WHERE categoryid='".mysqli_real_escape_string($con,$_POST['categoryid'])."'
+	name = '".$db->escape($_POST['name'])."',
+	status = '".$db->escape($_POST['status'])."'
+        WHERE categoryid='".$db->escape($_POST['categoryid'])."'
       ;";
   mysqli_query($con,$ins);
   ?>

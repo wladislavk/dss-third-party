@@ -117,7 +117,7 @@ if ($patient_info) {
   $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
   $pat_r = $db->getRow($pat_sql);
 
-  $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
+  $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".$db->escape((!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
   $b_q = $db->getRow($b_sql);
   if(!empty($b_q) && !empty($b_q['exclusive'])){
     $exclusive_billing = $b_q['exclusive'];
@@ -164,7 +164,7 @@ if ($patient_info) {
   }
   $vrt_sql = "SELECT c.vob_require_test FROM companies c
                  JOIN dental_users u ON u.billing_company_id=c.id
-                 WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+                 WHERE u.userid='".$db->escape($_SESSION['docid'])."'";
   $vrt_q = mysqli_query($con, $vrt_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
   $vrt = mysqli_fetch_assoc($vrt_q);
   if($vrt['vob_require_test']!='1'){
@@ -233,15 +233,15 @@ if ($patient_info) {
 
 <?php
 $api_sql = "SELECT use_eligible_api FROM dental_users
-              WHERE userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
+              WHERE userid='".$db->escape((!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
 $api_r = $db->getRow($api_sql);
   if($api_r['use_eligible_api']==1){?>
 
 <br /><br />
 
 <?php 
-    $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
-                  AND patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'
+    $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".$db->escape($_SESSION['docid'])."'
+                  AND patient_id='".$db->escape($_GET['pid'])."'
                   ORDER BY front_office_request_date DESC";
     $vob_q = $db->getResults($vob_sql);
     $num_vob = count($vob_q);
@@ -271,7 +271,7 @@ $api_r = $db->getRow($api_sql);
     </tr>
 
 <?php 
-    $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+    $s = "SELECT * FROM dental_eligibility WHERE patientid='".$db->escape($_GET['pid'])."'";
     $q = $db->getResults($s);
     if ($q) {
       foreach ($q as $r) {?>

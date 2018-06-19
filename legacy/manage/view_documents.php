@@ -15,7 +15,7 @@ include 'includes/top.htm';
     <?php
     $db = new Db();
 
-    $s = "SELECT * FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,(!empty($_GET['cat']) ? $_GET['cat'] : ''))."'";
+    $s = "SELECT * FROM dental_document WHERE categoryid='".$db->escape((!empty($_GET['cat']) ? $_GET['cat'] : ''))."'";
     $sq = $db->getResults($s);
     foreach ($sq as $doc) { ?>
         <tr>

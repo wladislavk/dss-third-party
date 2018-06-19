@@ -1,7 +1,7 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "SELECT * FROM dental_patients where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
 
@@ -44,7 +44,7 @@ $protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_q = mysqli_query($con,$imp_s);
 $imp_r = mysqli_fetch_assoc($imp_q);
 
@@ -111,7 +111,7 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 </div>
 
 <?php
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_q = mysqli_query($con, $imp_s);
 $imp_r = mysqli_fetch_assoc($imp_q);
 ?>
@@ -181,7 +181,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Reason for seeking tx:</strong>
                 <?php
-                $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".$db->escape( !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                 $c_q = mysqli_query($con,$c_sql);
                 $c_r = mysqli_fetch_assoc($c_q);
                 
@@ -326,7 +326,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Next appt:</strong>
                 <?php
-                $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_scheduled DESC";
+                $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_scheduled DESC";
                 $next_q = mysqli_query($con,$next_sql);
                 $next_r = mysqli_fetch_assoc($next_q);
                 ?>

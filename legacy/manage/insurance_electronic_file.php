@@ -143,7 +143,7 @@ if (!empty($is_pending)) {
     $docid = $pat_myarray['docid'];
 }
 
-$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$db->escape( (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
 $prod_r = $db->getRow($prod_s);
 $claim_producer = $prod_r['producer'];
 
@@ -213,7 +213,7 @@ if (isset($_GET['test']) && $_GET['test'] == 1) {
     $data['test'] = 'true';
 }
 $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $docid)."'";
 $api_key_query = mysqli_query($con, $api_key_sql);
 $api_key_result = mysqli_fetch_assoc($api_key_query);
 if ($api_key_result) {
@@ -257,7 +257,7 @@ $data['subscriber'] = array(
             "zip" => $insured_zip),
     "dob" => $claim_ins_dob);
 
-$ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysqli_real_escape_string($con,$pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
+$ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".$db->escape($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
 
 $ins_contact_res = $db->getRow($ins_contact_qry);
 $data['payer'] = array(
@@ -380,11 +380,11 @@ if (!empty($json_response)) {
 }
 
 $up_sql = "INSERT INTO dental_claim_electronic SET 
-    claimid='".mysqli_real_escape_string($con, (!empty($_GET['insid']) ? $_GET['insid'] : ''))."',
-    reference_id = '".mysqli_real_escape_string($con, (!empty($ref_id) ? $ref_id : ''))."',
-    response='".mysqli_real_escape_string($con, $result)."',
+    claimid='".$db->escape( (!empty($_GET['insid']) ? $_GET['insid'] : ''))."',
+    reference_id = '".$db->escape( (!empty($ref_id) ? $ref_id : ''))."',
+    response='".$db->escape( $result)."',
     adddate=now(),
-    ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
+    ip_address='".$db->escape( $_SERVER['REMOTE_ADDR'])."'
 ";
 
 $dce_id = $db->getInsertId($up_sql);
@@ -392,7 +392,7 @@ invoice_add_efile('1', $docid, $dce_id);
 invoice_add_claim('1', $docid, (!empty($_GET['insid']) ? $_GET['insid'] : ''));
 
 if (empty($success) || !$success) {
-    $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+    $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".$db->escape( (!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
     $db->query($up_sql);
     claim_status_history_update((!empty($_GET['ins_id']) ? $_GET['ins_id'] : ''), '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
     ?>

@@ -15,12 +15,12 @@ include_once dirname(__FILE__) . '/includes/popup_top.htm';
 <?php
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
-	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+	WHERE userid='".$db->escape($id)."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
   $charge_sql = "SELECT * FROM dental_charge
-                WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'
-				AND id='".mysqli_real_escape_string($con,$_GET['cid'])."'";
+                WHERE userid='".$db->escape($_GET['docid'])."'
+				AND id='".$db->escape($_GET['cid'])."'";
 $charge_q = mysqli_query($con,$charge_sql);
 $charge_r = mysqli_fetch_assoc($charge_q);
 $key_r = getStripeRelatedUserData($_GET['docid']);
@@ -38,7 +38,7 @@ if(isset($_POST['bill_submit'])){
   if($charge!=''){
     $amount = (str_replace(',','',$_POST['amount'])*100);
 
-    $csql = "SELECT * FROM dental_charge WHERE id='".mysqli_real_escape_string($con,$charge)."'";
+    $csql = "SELECT * FROM dental_charge WHERE id='".$db->escape($charge)."'";
     $cq = mysqli_query($con,$csql);
     $cr = mysqli_fetch_assoc($cq);
 try{
@@ -89,13 +89,13 @@ try{
 }
 
   $charge_sql = "INSERT INTO dental_refund SET
-			amount='".mysqli_real_escape_string($con,str_replace(',','',$_POST['amount']))."',
-                        userid='".mysqli_real_escape_string($con,$id)."',
-                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
+			amount='".$db->escape(str_replace(',','',$_POST['amount']))."',
+                        userid='".$db->escape($id)."',
+                        adminid='".$db->escape($_SESSION['adminuserid'])."',
                         refund_date=NOW(),
-                        charge_id='".mysqli_real_escape_string($con,$cr['id'])."',
+                        charge_id='".$db->escape($cr['id'])."',
                         adddate=NOW(),
-                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";	
+                        ip_address='".$db->escape($_SERVER['REMOTE_ADDR'])."'";
   	mysqli_query($con,$charge_sql); 
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> refunded <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php

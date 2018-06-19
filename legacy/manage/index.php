@@ -9,10 +9,10 @@ include 'includes/top.htm';
 $docId = (int)$_SESSION['docid'];
 $apiToken = apiToken();
 
-$sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
+$sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
 $r = $db->getRow($sql);
 
-$manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+$manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . $db->escape( $_SESSION['userid']) . "'";
 $manageStaff = $db->getRow($manageStaffSql);
 
 if ($r['homepage'] != '1'): ?>
@@ -129,7 +129,7 @@ endif ?>
                                     $course_sql = "
                                         SELECT s.use_course, d.use_course_staff FROM dental_users s
                                         JOIN dental_users d ON d.userid = s.docid
-                                        WHERE s.userid='" . mysqli_real_escape_string($con,$_SESSION['userid']). "'
+                                        WHERE s.userid='" . $db->escape($_SESSION['userid']). "'
                                     ";
                                     $course_r = $db->getRow($course_sql);
                                     if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1): ?>

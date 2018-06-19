@@ -119,7 +119,7 @@ $my = mysqli_query($con,$sql);
 				</td>
 			</tr>
 			<?php
-				$u_sql = "SELECT * FROM dental_users WHERE access_code_id='".mysqli_real_escape_string($con,$myarray["id"])."'";
+				$u_sql = "SELECT * FROM dental_users WHERE access_code_id='".$db->escape($myarray["id"])."'";
 				$u_q = mysqli_query($con,$u_sql);
 				while($u_r = mysqli_fetch_assoc($u_q)){
 			?>

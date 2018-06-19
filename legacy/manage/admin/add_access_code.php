@@ -5,7 +5,7 @@ include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if(isset($_POST['accesscodedelete'])){
-  $sql = "DELETE FROM dental_access_codes WHERE id='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+  $sql = "DELETE FROM dental_access_codes WHERE id='".$db->escape($_POST['ed'])."'";
   mysqli_query($con,$sql);
                         ?>
                         <script type="text/javascript">
@@ -35,10 +35,10 @@ if(isset($_POST["accesscodesub"]))
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_access_codes set 
-				access_code = '".mysqli_real_escape_string($con,$_POST['access_code'])."',
-				notes = '".mysqli_real_escape_string($con,$_POST['notes'])."',
-				status = '".mysqli_real_escape_string($con,$_POST['status'])."',
-				plan_id = '".mysqli_real_escape_string($con,$_POST['plan_id'])."'
+				access_code = '".$db->escape($_POST['access_code'])."',
+				notes = '".$db->escape($_POST['notes'])."',
+				status = '".$db->escape($_POST['status'])."',
+				plan_id = '".$db->escape($_POST['plan_id'])."'
 				where id='".$_POST["ed"]."'";
 			mysqli_query($con,$ed_sql);
 			
@@ -54,10 +54,10 @@ if(isset($_POST["accesscodesub"]))
 		else
 		{
                         $ins_sql = "INSERT INTO dental_access_codes set 
-                                access_code = '".mysqli_real_escape_string($con,$_POST['access_code'])."',
-                                notes = '".mysqli_real_escape_string($con,$_POST['notes'])."',
-				plan_id = '".mysqli_real_escape_string($con,$_POST['plan_id'])."',
-                                status = '".mysqli_real_escape_string($con,$_POST['status'])."'";
+                                access_code = '".$db->escape($_POST['access_code'])."',
+                                notes = '".$db->escape($_POST['notes'])."',
+				plan_id = '".$db->escape($_POST['plan_id'])."',
+                                status = '".$db->escape($_POST['status'])."'";
 
 			mysqli_query($con,$ins_sql);
 			

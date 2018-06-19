@@ -61,7 +61,7 @@ if ($patient_info) {
     <script type="text/javascript" src="js/q_page1.js?v=20171219"></script>
     <script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
     <?php
-	if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
+    if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
         $exam_date = ($_POST['exam_date'] != '') ? date('Y-m-d', strtotime($_POST['exam_date'])) : '';
         $ess = $_POST['ess'];
         $tss = $_POST['tss'];
@@ -800,7 +800,7 @@ if ($patient_info) {
         <div id="backgroundPopup"></div>
         <br /><br />
         <?php
-	} //end symptom status check
+    } //end symptom status check
 } else {  // end pt info check
     echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 } ?>

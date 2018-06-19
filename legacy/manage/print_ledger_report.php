@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 session_start();
+
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
@@ -45,7 +46,7 @@ $num_users = count($my);
 </head>
 <body onload="window.print()">
 <span class="admin_head">
-	Ledger Report
+    Ledger Report
     <?php
     if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){?>
         (<i><?php echo date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
@@ -68,66 +69,65 @@ $num_users = count($my);
     }?>
 </span>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
-			Svc Date
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Entry Date
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Patient
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Producer
-		</td>
-		<td valign="top" class="col_head" width="30%">
-			Description
-		</td>
-		<td valign="top" class="col_head" width="10%" style="text-align: right;">
-			Charges
-		</td>
-		<td valign="top" class="col_head" width="10%" style="text-align: right;">
-			Credits
-		</td>
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head" width="10%">
+            Svc Date
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Entry Date
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Patient
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Producer
+        </td>
+        <td valign="top" class="col_head" width="30%">
+            Description
+        </td>
+        <td valign="top" class="col_head" width="10%" style="text-align: right;">
+            Charges
+        </td>
+        <td valign="top" class="col_head" width="10%" style="text-align: right;">
+            Credits
+        </td>
         <td valign="top" class="col_head" width="10%" style="text-align: right;">
             Adj.
         </td>
-		<td valign="top" class="col_head" width="5%"  style="text-align: left;">
-			Ins
-		</td>
-	</tr>
-<?php 
-if($num_users == 0){ ?>
-	<tr class="tr_bg">
-		<td valign="top" class="col_head" colspan="10" align="center">
-			No Records
-		</td>
-	</tr>
-<?php
-}else{
-    $tot_charges = 0;
-    $tot_credit = 0;
-    $tot_adj = 0;
-    if(isset($_GET['pid'])){
-        $lpsql = " AND dl.patientid = '".$_GET['pid']."'"; 
-        $npsql = " AND n.patientid = '".$_GET['pid']."'";   
-        $ipsql = " AND i.patientid = '".$_GET['pid']."'";   
+        <td valign="top" class="col_head" width="5%"  style="text-align: left;">
+            Ins
+        </td>
+    </tr>
+    <?php
+    if($num_users == 0){ ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="10" align="center">
+                No Records
+            </td>
+        </tr>
+        <?php
     }else{
-        $ipsql = $lpsql = $npsql= "";
-    }
+        $tot_charges = 0;
+        $tot_credit = 0;
+        $tot_adj = 0;
+        if(isset($_GET['pid'])){
+            $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
+            $npsql = " AND n.patientid = '".$_GET['pid']."'";
+            $ipsql = " AND i.patientid = '".$_GET['pid']."'";
+        }else{
+            $ipsql = $lpsql = $npsql= "";
+        }
 
-    if($start_date){
-        $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-        $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
-        $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'"; 
-        $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-    }else{
-        $p_date = $i_date = $n_date = $l_date = '';
-    }
-
-    $newquery = "
-                select 
+        if($start_date){
+            $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+            $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
+            $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
+            $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
+        }else{
+            $p_date = $i_date = $n_date = $l_date = '';
+        }
+        $newquery = "
+            select 
                 'ledger',
                 dl.ledgerid,
                 dl.service_date,
@@ -143,14 +143,14 @@ if($num_users == 0){ ?>
                 tc.type as payer,
                 '' as payment_type,
                 dl.primary_claim_id
-        from dental_ledger dl 
-                JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
-        ".$l_date."
- UNION
-        select 
+            from dental_ledger dl 
+            JOIN dental_patients as pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+            LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+            where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
+            ".$l_date."
+        UNION
+            select 
                 'ledger_payment',
                 dlp.id,
                 dlp.payment_date,
@@ -166,93 +166,93 @@ if($num_users == 0){ ?>
                 dlp.payer,
                 dlp.payment_type,
                 ''
-        from dental_ledger dl 
-                JOIN dental_patients pat on dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        ".$p_date."
-";
+            from dental_ledger dl 
+            JOIN dental_patients pat on dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid=p.userid 
+            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+            where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+            AND dlp.amount != 0
+            ".$p_date."
+        ";
+        $runquery = $db->getResults($newquery);
 
-    $runquery = $db->getResults($newquery);
-    foreach ($runquery as $myarray) {
-    	$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-    	$pat_myarray = $db->getRow($pat_sql);
-    	
-    	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-    	
-    	$tr_class = "tr_active";?>
-    <tr class="<?php echo $tr_class;?>">
-        <td valign="top" width="10%">
-            <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
-        </td>
-        <td valign="top" width="10%">
-            <?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
-        </td>
-        <td valign="top" width="10%">
-            <?php echo st($name);?>
-        </td>
-        <td valign="top" width="10%">
-            <?php echo st($myarray["name"]);?>
-        </td>
-        <td valign="top" width="30%">
-        <?php echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
-              echo $myarray["description"];
-              echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' || !empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
-              echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
-              echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
-              echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
-        </td>
-        <td valign="top" align="right" width="10%">
-<?php
-        if (!isset($tot_charge)) {
-            $tot_charge = 0;
-        }
+        foreach ($runquery as $myarray) {
+            $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
+            $pat_myarray = $db->getRow($pat_sql);
 
-        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim' && $myarray['amount'] <> 0){
-            echo number_format($myarray["amount"],2);
-            $tot_charge += $myarray["amount"];
-        }?>
-    	</td>
-<?php 
-        if((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
-			$tot_adj += st($myarray["paid_amount"]);?>
-        <td></td>
-<?php 
-        } ?>
-		<td valign="top" align="right" width="10%">
+            $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+
+            $tr_class = "tr_active"; ?>
+            <tr class="<?php echo $tr_class;?>">
+                <td valign="top" width="10%">
+                    <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo st($name);?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo st($myarray["name"]);?>
+                </td>
+                <td valign="top" width="30%">
+                <?php echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
+                      echo $myarray["description"];
+                      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' || !empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+                      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
+                      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
+                      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+                </td>
+                <td valign="top" align="right" width="10%">
+                    <?php
+                    if (!isset($tot_charge)) {
+                        $tot_charge = 0;
+                    }
+
+                    if(!empty($myarray['ledger']) && $myarray['ledger']!='claim' && $myarray['amount'] <> 0){
+                        echo number_format($myarray["amount"],2);
+                        $tot_charge += $myarray["amount"];
+                    } ?>
+                </td>
+                <?php
+                if((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+                    $tot_adj += st($myarray["paid_amount"]);?>
+                    <td></td>
+                    <?php
+                } ?>
+                <td valign="top" align="right" width="10%">
+                    <?php
+                    if(!empty($myarray['ledger']) && $myarray['ledger']!='claim') {
+                        if(st($myarray["paid_amount"]) <> 0) {
+                            echo number_format(st($myarray["paid_amount"]),2);
+                        }
+                    } ?>
+                </td>
+                <?php
+                if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+                    $tot_credit += st($myarray["paid_amount"]);?>
+                    <td></td>
+                    <?php
+                } ?>
+                <td valign="top" align="left" width="5%">
+                    <?php
+                    if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger'){
+                        echo trim($dss_trxn_status_labels[$myarray["status"]]);
+                    }elseif(!empty($myarray['ledger']) && $myarray['ledger'] == 'claim'){
+                        echo trim($dss_claim_status_labels[$myarray["status"]]);
+                    }
+                }   ?>
+        </td>
+    </tr>
 <?php
-        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim') {
-            if(st($myarray["paid_amount"]) <> 0) {
-                echo number_format(st($myarray["paid_amount"]),2); 
-			}
-		} ?>
-		</td>
-<?php 
-        if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
-			$tot_credit += st($myarray["paid_amount"]);?>
-        <td></td>
-<?php 
-        } ?>
-		<td valign="top" align="left" width="5%">
-<?php 
-        if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger'){
-            echo trim($dss_trxn_status_labels[$myarray["status"]]);
-        }elseif(!empty($myarray['ledger']) && $myarray['ledger'] == 'claim'){
-            echo trim($dss_claim_status_labels[$myarray["status"]]);
-        }
-    }?>       	
-		</td>
-	</tr>
-<?php 	
 }?> 
 
     <tr>
-    	<td valign="top" colspan="5" align="right">
-    		<b>Total</b>
-    	</td>
-    	<td valign="top" align="right">
+        <td valign="top" colspan="5" align="right">
+            <b>Total</b>
+        </td>
+        <td valign="top" align="right">
             <b>
             <?php echo "$".number_format($tot_charge,2); ?>
             </b>
@@ -265,7 +265,7 @@ if($num_users == 0){ ?>
         <td valign="top" align="right">
             <b>
             <?php echo "$".number_format($tot_adj,2);?>
-            </b>	
+            </b>
         </td>
     </tr>
     <tr>

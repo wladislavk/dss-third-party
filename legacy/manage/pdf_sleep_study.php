@@ -55,33 +55,30 @@ if(isset($_FILES['pdf_file'])){
     }
 
     $sql = "INSERT INTO dental_summ_sleeplab set
-    		date='".date('m/d/Y')."',
-    		`diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosing_doc)."',
-    		`diagnosising_npi` = '".mysqli_real_escape_string($con,$diagnosing_npi)."',
-    		`ahi` = '".mysqli_real_escape_string($con,$ahi)."' ,
-    		`ahisupine` = '".mysqli_real_escape_string($con,$ahi_supine)."',
-    		`rdi` = '".mysqli_real_escape_string($con,$rdi)."',
-    		`rdisupine` = '".mysqli_real_escape_string($con,$rdi_supine)."',
-    		`o2nadir` = '".mysqli_real_escape_string($con,$o2_nadir)."',
-    		`t9002` = '".mysqli_real_escape_string($con,$t_90)."',
-    		`patiendid` = '".mysqli_real_escape_string($con,$_GET['pid'])."',
-    		`filename` = '".$banner1."'";
-
+        date='".date('m/d/Y')."',
+        `diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosing_doc)."',
+        `diagnosising_npi` = '".mysqli_real_escape_string($con,$diagnosing_npi)."',
+        `ahi` = '".mysqli_real_escape_string($con,$ahi)."' ,
+        `ahisupine` = '".mysqli_real_escape_string($con,$ahi_supine)."',
+        `rdi` = '".mysqli_real_escape_string($con,$rdi)."',
+        `rdisupine` = '".mysqli_real_escape_string($con,$rdi_supine)."',
+        `o2nadir` = '".mysqli_real_escape_string($con,$o2_nadir)."',
+        `t9002` = '".mysqli_real_escape_string($con,$t_90)."',
+        `patiendid` = '".mysqli_real_escape_string($con,$_GET['pid'])."',
+        `filename` = '".$banner1."'";
     $db->query($sql);
 
     $ins_sql = "INSERT INTO dental_q_image set 
-                    patientid = '".s_for($_GET['pid'])."',
-                    title = '".$sleeptesttype." ".date('m/d/Y')."',
-                    imagetypeid = '1',
-                    image_file = '".s_for($banner1)."',
-                    userid = '".s_for($_SESSION['userid'])."',
-                    docid = '".s_for($_SESSION['docid'])."',
-                    adddate = now(),
-                    ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
+        patientid = '".s_for($_GET['pid'])."',
+        title = '".$sleeptesttype." ".date('m/d/Y')."',
+        imagetypeid = '1',
+        image_file = '".s_for($banner1)."',
+        userid = '".s_for($_SESSION['userid'])."',
+        docid = '".s_for($_SESSION['docid'])."',
+        adddate = now(),
+        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     $db->query($ins_sql);
 }
-
 ?>
 
 <div class="fullwidth">
@@ -92,5 +89,4 @@ if(isset($_FILES['pdf_file'])){
         <input type="submit" value="Submit" />
     </form>
 </div>
-
 <?php include 'includes/bottom.htm';?>

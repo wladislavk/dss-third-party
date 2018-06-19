@@ -4,93 +4,95 @@ namespace Ds3\Libraries\Legacy;
 include "admin/includes/main_include.php";
 include "includes/constants.inc";
 
-	$rec_disp = 200;
-	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
-		$index_val = $_REQUEST["page"];
-	} else {
-		$index_val = 0;
-	}
+$rec_disp = 200;
+if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 
-	$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date limit 0, 10;";
-	
-	if((!isset($_POST['dailysub']) || $_POST['dailysub'] != 1) && (!isset($_POST['monthlysub']) || $_POST['monthlysub'] != 1)){
-		$sql = "select 
-                'ledger',
-                dl.ledgerid,
-                dl.service_date,
-                dl.entry_date,
-                dl.amount,
-                dl.paid_amount,
-                dl.status, 
-                dl.description,
-                CONCAT(p.first_name,' ',p.last_name) as name,
-                pat.patientid,
-                pat.firstname, 
-                pat.lastname,
-                '' as payer,
-                '' as payment_type
-        		from dental_ledger dl 
-                JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-		        where dl.docid='".$_SESSION['docid']."' 
-		        AND dl.service_date=CURDATE()
-				UNION
-        		select 
-                'ledger_payment',
-                dlp.id,
-                dlp.payment_date,
-                dlp.entry_date,
-                '',
-                dlp.amount,
-                '',
-                '',
-                CONCAT(p.first_name,' ',p.last_name),
-                pat.patientid,
-                pat.firstname,
-                pat.lastname,
-                dlp.payer,
-                dlp.payment_type
-        		from dental_ledger dl 
-                JOIN dental_patients pat on dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                where dl.docid='".$_SESSION['docid']."' 
-                AND dlp.amount != 0
-                AND dlp.payment_date=CURDATE()
-				";
-    }
+$db = new Db();
 
-	$my = $db->getResults($sql);
-	$num_users = count($my);
+$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date limit 0, 10;";
+
+if((!isset($_POST['dailysub']) || $_POST['dailysub'] != 1) && (!isset($_POST['monthlysub']) || $_POST['monthlysub'] != 1)){
+    $sql = "select 
+            'ledger',
+            dl.ledgerid,
+            dl.service_date,
+            dl.entry_date,
+            dl.amount,
+            dl.paid_amount,
+            dl.status, 
+            dl.description,
+            CONCAT(p.first_name,' ',p.last_name) as name,
+            pat.patientid,
+            pat.firstname, 
+            pat.lastname,
+            '' as payer,
+            '' as payment_type
+            from dental_ledger dl 
+            JOIN dental_patients as pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+            where dl.docid='".$_SESSION['docid']."' 
+            AND dl.service_date=CURDATE()
+            UNION
+            select 
+            'ledger_payment',
+            dlp.id,
+            dlp.payment_date,
+            dlp.entry_date,
+            '',
+            dlp.amount,
+            '',
+            '',
+            CONCAT(p.first_name,' ',p.last_name),
+            pat.patientid,
+            pat.firstname,
+            pat.lastname,
+            dlp.payer,
+            dlp.payment_type
+            from dental_ledger dl 
+            JOIN dental_patients pat on dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid=p.userid 
+            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+            where dl.docid='".$_SESSION['docid']."' 
+            AND dlp.amount != 0
+            AND dlp.payment_date=CURDATE()
+            ";
+}
+
+$my = $db->getResults($sql);
+$num_users = count($my);
 ?>
 
-	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-	<script src="admin/popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 
-	<span class="admin_head">
-		Ledger Report
-		<?php if(isset($_POST['dailysub']) && $_POST['dailysub'] == 1) { ?>
-		    (<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_dd']?>-<?php echo $_POST['d_yy']?></i>)
-		<?php }
-		
-		if(isset($_POST['monthlysub']) && $_POST['monthlysub'] == 1) { ?>
-			(<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_yy']?></i>)
-		<?php }
-		
-		if($_GET['pid'] != '') { ?>
-			(<i><?php echo isset($thename) ? $thename : '';?></i>)
-		<?php } ?>
-	</span>
+<span class="admin_head">
+    Ledger Report
+    <?php if(isset($_POST['dailysub']) && $_POST['dailysub'] == 1) { ?>
+        (<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_dd']?>-<?php echo $_POST['d_yy']?></i>)
+    <?php }
 
-	<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
+    if(isset($_POST['monthlysub']) && $_POST['monthlysub'] == 1) { ?>
+        (<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_yy']?></i>)
+    <?php }
 
-	<div align="center" class="red">
-		<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
-	</div>
+    if($_GET['pid'] != '') { ?>
+        (<i><?php echo isset($thename) ? $thename : '';?></i>)
+    <?php } ?>
+</span>
+
+<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
+
+<div align="center" class="red">
+    <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
+</div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <?php if(isset($total_rec) && ($total_rec > $rec_disp)) { ?>
-        <tr bgColor="#ffffff">
-            <td  align="right" colspan="15" class="bp">
+        <tr bgcolor="#ffffff">
+            <td align="right" colspan="15" class="bp">
                 Pages:
                 <?php
                 paging($no_pages, $index_val, "");
@@ -199,8 +201,7 @@ include "includes/constants.inc";
                         } else {
                             echo "Pend";
                         }
-            }
-    ?>
+            } ?>
                     </td>
                 </tr>
     <?php

@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once('includes/constants.inc');
 include_once('admin/includes/main_include.php');
 
+$db = new Db();
+
 $s = "SELECT primary_fdf, secondary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 
 $r = $db->getRow($s);

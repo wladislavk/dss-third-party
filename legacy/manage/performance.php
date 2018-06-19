@@ -18,6 +18,8 @@ if (isset($_REQUEST['start_date'])) {
   $end_date = date('Y-m-d');
 }
 
+$db = new Db();
+
 $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
         LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '" . $start_date . "' AND '" . $end_date . "'
         WHERE du.userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "' 
@@ -28,7 +30,7 @@ $myarray = $db->getRow($sql);
 ?>
 
 <span class="admin_head">
-	Performance
+    Performance
 </span>
 <br /><br /><br />
 

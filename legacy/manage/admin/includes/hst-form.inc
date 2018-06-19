@@ -37,7 +37,7 @@ if ($is_front_office) {
     $authorizedProviderJoinConditional = $isStaff ? "'$userId'" : "'$docId'";
 } else {
     $userId = 0;
-    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'"));
+    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'", 'docid'));
 
     $isStaff = false;
     $authorizedProviderJoinConditional = 'p.docid';
@@ -94,8 +94,6 @@ $hstData = !empty($hstData) ? $hstData : [];
 
 if ($patientData) {
     /**
-     * @see DSS-166
-     *
      * If the HST request has not been found, create a new set to be displayed
      * Otherwise, complete blank fields for HST not requested (status = DSS_HST_REQUESTED)
      */

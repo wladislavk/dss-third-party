@@ -21,6 +21,8 @@ if (!isset($_POST['claim']) || !is_array($_POST['claim'])) { ?>
     trigger_error("Die called", E_USER_ERROR);
 }
 
+$db = new Db();
+
 $status = $db->getColumn("SELECT status
     FROM dental_insurance
     WHERE insuranceid = '$claimId'
@@ -49,7 +51,7 @@ if (!is_object($jsonResponse) || !isset($jsonResponse->success)) { ?>
         }
     </script>
 <?php } elseif (!$jsonResponse->success) {
-    $confirm = array('Submission failed.');
+    $confirm = ['Submission failed.'];
     $errors = $jsonResponse->errors;
 
     if (is_array($errors) && count($errors)) {
@@ -57,7 +59,7 @@ if (!is_object($jsonResponse) || !isset($jsonResponse->success)) { ?>
             $confirm []= $error->message;
         }
     } else {
-        $confirm = array('The processing API is experiencing high load at the moment and the request could not be processed.');
+        $confirm = ['The processing API is experiencing high load at the moment and the request could not be processed.'];
     }
 
     ?>

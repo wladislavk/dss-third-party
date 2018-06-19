@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -28,7 +29,7 @@ if(!empty($_POST["mult_epworthsub"]) && $_POST["mult_epworthsub"] == 1)
 	<script type="text/javascript">
 		parent.window.location='manage_epworth.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -45,7 +46,7 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -69,7 +70,7 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_epworth.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -82,7 +83,7 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_epworth.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -92,7 +93,7 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_epworth where epworthid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -110,7 +111,6 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
-		$but_text = "Add ";
 	}
 	
 	if($themyarray["epworthid"] != '')
@@ -135,7 +135,7 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Epworth 
-               <?php if($epworth <> "") {?>
+               <?php if($epworth != "") {?>
                		&quot;<?php echo $epworth;?>&quot;
                <?php }?>
             </td>
@@ -185,9 +185,9 @@ if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
                 <input type="hidden" name="ed" value="<?php echo $themyarray["epworthid"]?>" />
                 <input type="submit" value="<?php echo $but_text?> Epworth" class="btn btn-primary">
 		<?php if($themyarray["epworthid"] != '' && $_SESSION['admin_access']==1){ ?>
-		                    <a href="manage_epworth.php?delid=<?php echo $themyarray["epworthid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
+		                    <a href="manage_epworth.php?delid=<?php echo $themyarray["epworthid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                                Delete
+                            </a>
 		<?php } ?>
             </td>
         </tr>

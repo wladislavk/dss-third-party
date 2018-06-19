@@ -81,30 +81,26 @@ class padCrypt
     
     public static function pad_BIT($data, $block_size)
     {
-		$length = $block_size - (strlen($data) % $block_size) - 1;
-		return $data . "\x80" . str_repeat("\x00", $length);
+        $length = $block_size - (strlen($data) % $block_size) - 1;
+        return $data . "\x80" . str_repeat("\x00", $length);
     }
     
     public static function unpad_BIT($data)
-    {	
-		if(substr(rtrim($data, "\x00"), -1) == "\x80")
-		{
-			return substr(rtrim($data, "\x00"), 0, -1);
-		}
-		
-		return $data;
+    {
+        if(substr(rtrim($data, "\x00"), -1) == "\x80") {
+            return substr(rtrim($data, "\x00"), 0, -1);
+        }
+        return $data;
     }
     
     public static function pad_ZERO($data, $block_size)
     {
-		$length = $block_size - (strlen($data) % $block_size);
-		return $data . str_repeat("\x00", $length);
+        $length = $block_size - (strlen($data) % $block_size);
+        return $data . str_repeat("\x00", $length);
     }
     
     public static function unpad_ZERO($data)
     {
-		return rtrim($data, "\x00");
+        return rtrim($data, "\x00");
     }
 }
-
-?>

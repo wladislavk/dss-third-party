@@ -1,7 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include 'includes/top.htm';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-  if(!$use_letters){ 
+include 'includes/top.htm';
+
+if(!$use_letters){
 ?>
     <h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3>
 <?php
@@ -13,95 +15,106 @@
 <script src="js/letters.js?v<?= time() ?>" type="text/javascript"></script>
 
 <?php
-
-function name_asc($a, $b) {
-  return strcmp ($a['lastname'] . $a['middlename'] . $a['firstname'], $b['lastname'] . $b['middlename'] . $b['firstname']);
+function name_asc($a, $b)
+{
+    return strcmp ($a['lastname'] . $a['middlename'] . $a['firstname'], $b['lastname'] . $b['middlename'] . $b['firstname']);
 }
 
-function name_desc($a, $b) {
-  return strcmp ($b['lastname'] . $b['middlename'] . $b['firstname'], $a['lastname'] . $a['middlename'] . $a['firstname']);
+function name_desc($a, $b)
+{
+    return strcmp ($b['lastname'] . $b['middlename'] . $b['firstname'], $a['lastname'] . $a['middlename'] . $a['firstname']);
 }
 
-function subject_asc($a, $b) {
-  return strcmp ($a['subject'], $b['subject']);
+function subject_asc($a, $b)
+{
+    return strcmp ($a['subject'], $b['subject']);
 }
 
-function subject_desc($a, $b) {
-  return strcmp ($b['subject'], $a['subject']);
+function subject_desc($a, $b)
+{
+    return strcmp ($b['subject'], $a['subject']);
 }
 
-function sentto_asc($a, $b) {
-  $word_lista = explode(" ", $a['sentto']);
-  $word_listb = explode(" ", $b['sentto']);
-  if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
-    if ($word_lista[0] == $word_listb[0]) {
-      return 0;
-    } else {
-      return ($word_lista[0] < $word_listb[0]) ? -1 : 1;
+function sentto_asc($a, $b)
+{
+    $word_lista = explode(" ", $a['sentto']);
+    $word_listb = explode(" ", $b['sentto']);
+    if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
+        if ($word_lista[0] == $word_listb[0]) {
+            return 0;
+        } else {
+            return ($word_lista[0] < $word_listb[0]) ? -1 : 1;
+        }
     }
-  }
-  if (is_numeric($word_lista[0])) {
-    return -1;
-  }
-  if (is_numeric($word_listb[0])) {
-    return 1;
-  }
-  return strcmp ($a['sentto'], $b['sentto']);
-}
-
-function sentto_desc($a, $b) {
-  $word_lista = explode(" ", $a['sentto']);
-  $word_listb = explode(" ", $b['sentto']);
-  if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
-    if ($word_lista[0] == $word_listb[0]) {
-      return 0;
-    } else {
-      return ($word_lista[0] > $word_listb[0]) ? -1 : 1;
+    if (is_numeric($word_lista[0])) {
+        return -1;
     }
-  }
-  if (is_numeric($word_lista[0])) {
-    return 1;
-  }
-  if (is_numeric($word_listb[0])) {
-    return -1;
-  }
-  return strcmp ($b['sentto'], $a['sentto']);
+    if (is_numeric($word_listb[0])) {
+        return 1;
+    }
+    return strcmp ($a['sentto'], $b['sentto']);
 }
 
-function generated_date_asc($a, $b) {
-  if ($a['generated_date'] == $b['generated_date']) {
-    return 0;
-  }
-  return ($a['generated_date'] < $b['generated_date']) ? -1 : 1;
+function sentto_desc($a, $b)
+{
+    $word_lista = explode(" ", $a['sentto']);
+    $word_listb = explode(" ", $b['sentto']);
+    if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
+        if ($word_lista[0] == $word_listb[0]) {
+            return 0;
+        } else {
+            return ($word_lista[0] > $word_listb[0]) ? -1 : 1;
+        }
+    }
+    if (is_numeric($word_lista[0])) {
+        return 1;
+    }
+    if (is_numeric($word_listb[0])) {
+        return -1;
+    }
+    return strcmp ($b['sentto'], $a['sentto']);
 }
 
-function generated_date_desc($a, $b) {
-  if ($a['generated_date'] == $b['generated_date']) {
-    return 0;
-  }
-  return ($a['generated_date'] > $b['generated_date']) ? -1 : 1;
+function generated_date_asc($a, $b)
+{
+    if ($a['generated_date'] == $b['generated_date']) {
+        return 0;
+    }
+    return ($a['generated_date'] < $b['generated_date']) ? -1 : 1;
 }
 
-function date_sent_asc($a, $b) {
-  if ($a['date_sent'] == $b['date_sent']) {
-    return 0;
-  }
-  return ($a['date_sent'] < $b['date_sent']) ? -1 : 1;
+function generated_date_desc($a, $b)
+{
+    if ($a['generated_date'] == $b['generated_date']) {
+        return 0;
+    }
+    return ($a['generated_date'] > $b['generated_date']) ? -1 : 1;
 }
 
-function date_sent_desc($a, $b) {
-  if ($a['date_sent'] == $b['date_sent']) {
-    return 0;
-  }
-  return ($a['date_sent'] > $b['date_sent']) ? -1 : 1;
+function date_sent_asc($a, $b)
+{
+    if ($a['date_sent'] == $b['date_sent']) {
+        return 0;
+    }
+    return ($a['date_sent'] < $b['date_sent']) ? -1 : 1;
 }
 
-function send_method_asc($a, $b) {
-  return strcmp ($a['send_method'], $b['send_method']);
+function date_sent_desc($a, $b)
+{
+    if ($a['date_sent'] == $b['date_sent']) {
+        return 0;
+    }
+    return ($a['date_sent'] > $b['date_sent']) ? -1 : 1;
 }
 
-function send_method_desc($a, $b) {
-  return strcmp ($b['send_method'], $a['send_method']);
+function send_method_asc($a, $b)
+{
+    return strcmp ($a['send_method'], $b['send_method']);
+}
+
+function send_method_desc($a, $b)
+{
+    return strcmp ($b['send_method'], $a['send_method']);
 }
 
 $status = 'pending';
@@ -119,7 +132,7 @@ if (isset($_GET['page'])) {
 }
 
 if (isset($_GET['filter'])) {
-  $filter = mysqli_real_escape_string($con,$_GET['filter']);
+  $filter = mysqli_real_escape_string($con, $_GET['filter']);
 }
 
 if (!isset($_REQUEST['sort'])) {
@@ -140,11 +153,11 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
+$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
     LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
     WHERE dental_letters.docid='" . $docid . "' AND dental_letters.delivered=0 AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
-  $letters_res = $db->getResults($letters_query);
-  $count_pending_letters = count($letters_res);
+$letters_res = $db->getResults($letters_query);
+$count_pending_letters = count($letters_res);
 
 if ($status == 'sent') {
   $letters_query = "SELECT dental_letters.letterid, 
@@ -385,33 +398,38 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
 ?>
 
 <div class="letters-tryptych1">
-  <h1 class="blue"><?php 
-	if($mailed=="0"){
-		echo "Unmailed";
-	}elseif($status == 'pending'){
-		echo "Pending";
-  }elseif($status == "sent"){
-		echo "Sent";
-	} ?> Letters (<?php echo count($dental_letters); ?>)</h1>
-  <form name="filter_letters" action="/manage/letters.php" method="get">
-		<input type="hidden" name="status" value="<?php echo $status;?>" />
-      Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
-    <option value="%"></option>
-    <?php
-    $templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates t 
-                        INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
-                        WHERE ct.companyid='".$_SESSION['companyid']."'
-                        ORDER BY id ASC;";
-    $result = $db->getResults($templates);
-    foreach ($result as $row) {
-      //DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
-      if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
-        print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
-      }
-    }
-    ?>
-    </select>
-  </form>
+    <h1 class="blue">
+        <?php
+        if($mailed=="0"){
+            echo "Unmailed";
+        }elseif($status == 'pending'){
+            echo "Pending";
+        }elseif($status == "sent"){
+            echo "Sent";
+        } ?>
+        Letters (<?php echo count($dental_letters); ?>)
+    </h1>
+    <form name="filter_letters" action="/manage/letters.php" method="get">
+        <input type="hidden" name="status" value="<?php echo $status;?>" />
+        Filter by type:
+        <select name="filter" onchange="document.filter_letters.submit();">
+            <option value="%"></option>
+            <?php
+            $templates = "SELECT t.id, t.name, ct.triggerid 
+                FROM dental_letter_templates t 
+                INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
+                WHERE ct.companyid='".$_SESSION['companyid']."'
+                ORDER BY id ASC;";
+            $result = $db->getResults($templates);
+            foreach ($result as $row) {
+                //DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+                if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
+                    echo "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+                }
+            }
+            ?>
+        </select>
+    </form>
 </div>
 <?php
     $count_letters = $unmailed_letters + $count_pending_letters;
@@ -428,18 +446,18 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
 </div>
 <div class="letters-tryptych3">
 <?php if ($status != "sent" || $mailed == "0"): ?>
-  <div style="float:right;margin-right: 10px;">
-  	<form method="post" action="/manage/letters.php?status=sent">
-  	<input class="addButton" type="submit" value="Sent Letters">
-  	</form>
-  </div>
+    <div style="float:right;margin-right: 10px;">
+        <form method="post" action="/manage/letters.php?status=sent">
+            <input class="addButton" type="submit" value="Sent Letters">
+        </form>
+    </div>
 <?php endif; ?>
 <?php if ($status != "pending"): ?>
-  <div style="float:right;margin-right: 10px;">
-  	<form method="post" action="/manage/letters.php?status=pending">
-  	<input class="addButton" type="submit" value="Pending Letters">
-  	</form>
-  </div>
+    <div style="float:right;margin-right: 10px;">
+        <form method="post" action="/manage/letters.php?status=pending">
+            <input class="addButton" type="submit" value="Pending Letters">
+        </form>
+    </div>
 <?php endif; ?>
 <?php if ($mailed != "0" && $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE): ?>
   <div style="float:right;margin-right: 10px;">
@@ -490,7 +508,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
         $subject='[View Letter]'; 
       }
       $sentto = $dental_letters[$i]['sentto'];
-  		$method = $dental_letters[$i]['send_method'];
+      $method = $dental_letters[$i]['send_method'];
       $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
       $sent = (isset($dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
       $id = $dental_letters[$i]['id'];
@@ -513,30 +531,31 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
             <?php if($total_contacts>1){ ?>
               <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle(); return false;"><?php echo  $sentto; ?></a>
               <div style="display:none;" id="contacts_<?php echo  $id; ?>">
-              <?php if(isset($dental_letters[$i]['patient'])){
-                foreach($dental_letters[$i]['patient'] as $pat){
-                  echo "<br />" . $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
-                  if($status == 'pending'){ ?>
-                  <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+              <?php
+              if(isset($dental_letters[$i]['patient'])){
+                  foreach($dental_letters[$i]['patient'] as $pat){
+                      echo "<br />" . $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
+                      if($status == 'pending'){ ?>
+                          <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+                      }
                   }
-                }
-  				    }
-  				    if(isset($dental_letters[$i]['mds'])){
-                foreach($dental_letters[$i]['mds'] as $md){
-                 echo "<br />" . $md['salutation']." ".$md['firstname']." ".$md['lastname'];
-  					     if($status == 'pending'){ ?>
-                 <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'md', '<?php echo  $md['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
-  					     }
-                }
-  				    }
-  			      if(isset($dental_letters[$i]['md_referrals'])){
-                foreach($dental_letters[$i]['md_referrals'] as $md_referral){
-                  echo "<br />" . $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
-                  if($status == 'pending'){ ?>
-                    <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+              }
+              if(isset($dental_letters[$i]['mds'])){
+                  foreach($dental_letters[$i]['mds'] as $md){
+                      echo "<br />" . $md['salutation']." ".$md['firstname']." ".$md['lastname'];
+                      if($status == 'pending'){ ?>
+                          <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'md', '<?php echo  $md['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+                      }
                   }
-                }
-  				    } ?>
+              }
+              if(isset($dental_letters[$i]['md_referrals'])){
+                  foreach($dental_letters[$i]['md_referrals'] as $md_referral){
+                      echo "<br />" . $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
+                      if($status == 'pending'){ ?>
+                          <a href="#" onclick="delete_pending_letter('<?php echo  $id; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+                      }
+                  }
+              } ?>
               </div>
               <?php
             }else{
@@ -557,7 +576,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
           <td>
             <input type="checkbox" class="mailed_chk" value="<?php echo  $id; ?>" <?php echo  ($mailed !='')?'checked="checked"':''; ?> />
           </td>
-  		    <?php } ?>
+              <?php } ?>
           <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
           <td><?php echo  ($mailed !='')?'X':''; ?></td>
           <?php }

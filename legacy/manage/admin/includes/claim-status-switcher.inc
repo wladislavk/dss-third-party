@@ -47,7 +47,7 @@ function claimStatusSwitcher($targetClaimId, $displayCurrentStatus = true)
         <?php } ?>
         <select>
             <option value="-1" selected>Switch claim status:</option>
-            <?php foreach ($dss_claim_status_labels as $value=>$label) {
+            <?php foreach ($dss_claim_status_labels as $value => $label) {
                 if (preg_match('/secondary/i', $label)) {
                     continue;
                 }

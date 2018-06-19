@@ -74,11 +74,13 @@ $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, national_prov
 $result = $db->getResults($sql);
 $patients = [];
 $i = 0;
-if ($result) foreach ($result as $row) {
-    $patients[$i]['id'] = $row['national_provider_id'];
-    $patients[$i]['name'] = $row['firstname'] . " " . $row['lastname'] . " - " . $row['contacttype'];
-    $patients[$i]['source'] = $row['referral_type'];
-    $i++;
+if ($result) {
+    foreach ($result as $row) {
+        $patients[$i]['id'] = $row['national_provider_id'];
+        $patients[$i]['name'] = $row['firstname'] . " " . $row['lastname'] . " - " . $row['contacttype'];
+        $patients[$i]['source'] = $row['referral_type'];
+        $i++;
+    }
 }
 
 if (!$result) {

@@ -5,8 +5,10 @@ include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 include_once 'admin/includes/password.php';
 
+$db = new Db();
+
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
-	
+
 $r = $db->getRow($sql);
 if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
     <br />You do not have permissions to edit appointment types.

@@ -32,8 +32,6 @@ if (!empty($is_back_office)) {
 }
 
 /**
- * @see DSS-437
- *
  * Retrieve all NPIs associated to member of this office
  */
 if (!isset($npiList)) {

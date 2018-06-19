@@ -13,7 +13,8 @@ require_once __DIR__ . '/../../includes/claim_functions.php';
  * @param bool|mixed $payerType
  * @return mixed
  */
-function getLedgerPaymentAmount ($claimId, $payerType=false) {
+function getLedgerPaymentAmount($claimId, $payerType = false)
+{
     $db = new Db();
     $claimId = intval($claimId);
 
@@ -38,7 +39,8 @@ function getLedgerPaymentAmount ($claimId, $payerType=false) {
  * @param array $ledgerPayments
  * @return float
  */
-function possiblePaymentAmount (Array $ledgerPayments) {
+function possiblePaymentAmount(array $ledgerPayments)
+{
     $total = 0.00;
 
     foreach ($ledgerPayments as $payments) {
@@ -77,7 +79,8 @@ function possiblePaymentAmount (Array $ledgerPayments) {
  * @param int   $adminId
  * @return array
  */
-function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $payer, $userId, $adminId) {
+function insertLedgerPayments($claimId, Array $ledgerPayments, $paymentType, $payer, $userId, $adminId)
+{
     $db = new Db();
 
     if ($claimId) {
@@ -207,7 +210,8 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
  * @param array  $imageData
  * @return string
  */
-function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
+function uploadInsuranceFile($targetName, $tempName, array $imageData)
+{
     $db = new Db();
 
     if ($targetName == '') {
@@ -254,7 +258,8 @@ function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
  * @param int   $adminId
  * @return array
  */
-function updateLedgerPayments (Array $ledgerPayments, $paymentType, $payer, $userId, $adminId) {
+function updateLedgerPayments(array $ledgerPayments, $paymentType, $payer, $userId, $adminId)
+{
     $db = new Db();
 
     $updateIds = [];
@@ -443,7 +448,8 @@ function ledgerTransactionsQuery ($docId, Array $patientIds=[]) {
  * @param int $docId
  * @return string
  */
-function ledgerDetailsQuery ($docId, $patientId) {
+function ledgerDetailsQuery($docId, $patientId)
+{
     $docId = intval($docId);
     $patientId = intval($patientId);
 
@@ -584,7 +590,8 @@ function ledgerDetailsQuery ($docId, $patientId) {
  * @param array $extraConditionals
  * @return string
  */
-function ledgerBalanceQuery ($docId, Array $patientIds=[], $mailedOnly=false, $extraConditionals=[]) {
+function ledgerBalanceQuery($docId, array $patientIds = [], $mailedOnly = false, $extraConditionals = [])
+{
     $docId = intval($docId);
     $trxnTypeAdj = DSS_TRXN_TYPE_ADJ;
 
@@ -667,7 +674,8 @@ function ledgerBalanceQuery ($docId, Array $patientIds=[], $mailedOnly=false, $e
  * @param array $extraConditionals
  * @return array
  */
-function ledgerBalance ($docId, Array $patientIds=[], $mailedOnly=false, $extraConditionals=[]) {
+function ledgerBalance($docId, array $patientIds = [], $mailedOnly = false, $extraConditionals = [])
+{
     $db = new Db();
 
     $query = ledgerBalanceQuery($docId, $patientIds, $mailedOnly, $extraConditionals);
@@ -676,7 +684,8 @@ function ledgerBalance ($docId, Array $patientIds=[], $mailedOnly=false, $extraC
     return $balance;
 }
 
-function ledgerBalanceForPrimaryClaim ($docId, $patientId, $claimId) {
+function ledgerBalanceForPrimaryClaim($docId, $patientId, $claimId)
+{
     $claimId = intval($claimId);
     $balance = ledgerBalance($docId, [$patientId], false, ["report.primary_claim_id = '$claimId'"]);
 
@@ -692,7 +701,8 @@ function ledgerBalanceForPrimaryClaim ($docId, $patientId, $claimId) {
  * @param string $limit
  * @return string
  */
-function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
+function ledgerReportQuery($patientId, $docId, $orderBy = '', $limit = '')
+{
     $ledgerTransactionsQuery = ledgerTransactionsQuery($docId, [$patientId]);
     $ledgerDetailsQuery = ledgerDetailsQuery($docId, $patientId);
 
@@ -717,7 +727,8 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
  * @param string $limit
  * @return array
  */
-function ledgerReport ($patientId, $docId, $orderBy='', $limit='') {
+function ledgerReport($patientId, $docId, $orderBy = '', $limit = '')
+{
     $db = new Db();
 
     $query = ledgerReportQuery($patientId, $docId, $orderBy, $limit);

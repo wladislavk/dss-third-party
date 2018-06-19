@@ -7,6 +7,8 @@ require_once 'main_include.php';
 require_once '../../includes/constants.inc';
 require 'access.php';
 
+$db = new Db();
+
 $oid = $db->escape($_REQUEST['oid']);
 $nid = $db->escape($_REQUEST['nid']);
 $cur = $db->escape($_REQUEST['cur']);

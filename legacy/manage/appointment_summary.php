@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
 <table width="98%" class="table table-bordered table-hover">
     <tr>
         <th>Date</th>

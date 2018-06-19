@@ -1,11 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include_once 'admin/includes/main_include.php';
-    include_once 'includes/general_functions.php';
-    include_once 'admin/includes/invoice_functions.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once 'admin/includes/main_include.php';
+include_once 'includes/general_functions.php';
+include_once 'admin/includes/invoice_functions.php';
 ?>
-
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
     $s = "SELECT pdf_path, send_method, md_list, md_referral_list from dental_letters where letterid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
     
@@ -14,7 +14,6 @@
     $jpg = substr( $file, 0, -4 ) . '';
 ?>
     <br />
-
 <?php
     exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>

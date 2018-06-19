@@ -5,100 +5,100 @@ include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if(!empty($_POST["mult_assess_additionsub"]) && $_POST["mult_assess_additionsub"] == 1) {
-	$op_arr = explode("\n",trim($_POST['assess_addition']));
-	foreach ($op_arr as $i => $val) {
-		if($val != '') {
-			$sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($val)."'";
-			$query_check=mysqli_query($con,$sel_check);
-			
-			if(mysqli_num_rows($query_check) == 0) {
-				$ins_sql = "insert into dental_assess_addition set assess_addition = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql);
-			}
-		}
-	}
-	$msg = "Added Successfully";
-	?>
-	<script type="text/javascript">
-		parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+    $op_arr = explode("\n",trim($_POST['assess_addition']));
+    foreach ($op_arr as $i => $val) {
+        if($val != '') {
+            $sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($val)."'";
+            $query_check=mysqli_query($con,$sel_check);
+
+            if(mysqli_num_rows($query_check) == 0) {
+                $ins_sql = "insert into dental_assess_addition set assess_addition = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                mysqli_query($con,$ins_sql);
+            }
+        }
+    }
+    $msg = "Added Successfully";
+    ?>
+    <script type="text/javascript">
+        parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
-	$sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($_POST["assess_addition"])."' and assess_additionid <> '".s_for($_POST['ed'])."'";
-	$query_check = mysqli_query($con,$sel_check);
-	
-	if(mysqli_num_rows($query_check)>0) {
-		$msg="Assessment Addition already exist. So please give another Assessment Addition.";
-		?>
-		<script type="text/javascript">
-			alert("<?php echo $msg;?>");
-			window.location="#add";
-		</script>
-		<?php
-	} else {
-		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
-			$sby = 999;
-		} else {
-			$sby = s_for($_POST["sortby"]);
-		}
-		
-		if($_POST["ed"] != "") {
-			$ed_sql = "update dental_assess_addition set assess_addition = '".s_for($_POST["assess_addition"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where assess_additionid='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql);
+    $sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($_POST["assess_addition"])."' and assess_additionid <> '".s_for($_POST['ed'])."'";
+    $query_check = mysqli_query($con,$sel_check);
 
-			$msg = "Edited Successfully";
-			?>
-			<script type="text/javascript">
-				parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
-			</script>
-			<?
-			trigger_error("Die called", E_USER_ERROR);
-		} else {
-			$ins_sql = "insert into dental_assess_addition set assess_addition = '".s_for($_POST["assess_addition"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con,$ins_sql);
-			
-			$msg = "Added Successfully";
-			?>
-			<script type="text/javascript">
-				parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
-			</script>
-			<?
-			trigger_error("Die called", E_USER_ERROR);
-		}
-	}
+    if(mysqli_num_rows($query_check)>0) {
+        $msg="Assessment Addition already exist. So please give another Assessment Addition.";
+        ?>
+        <script type="text/javascript">
+            alert("<?php echo $msg;?>");
+            window.location="#add";
+        </script>
+        <?php
+    } else {
+        if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
+            $sby = 999;
+        } else {
+            $sby = s_for($_POST["sortby"]);
+        }
+
+        if($_POST["ed"] != "") {
+            $ed_sql = "update dental_assess_addition set assess_addition = '".s_for($_POST["assess_addition"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where assess_additionid='".$_POST["ed"]."'";
+            mysqli_query($con,$ed_sql);
+
+            $msg = "Edited Successfully";
+            ?>
+            <script type="text/javascript">
+                parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
+            </script>
+            <?
+            trigger_error("Die called", E_USER_ERROR);
+        } else {
+            $ins_sql = "insert into dental_assess_addition set assess_addition = '".s_for($_POST["assess_addition"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+            mysqli_query($con,$ins_sql);
+
+            $msg = "Added Successfully";
+            ?>
+            <script type="text/javascript">
+                parent.window.location='manage_assess_addition.php?msg=<?php echo $msg;?>';
+            </script>
+            <?
+            trigger_error("Die called", E_USER_ERROR);
+        }
+    }
 }
 ?>
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
     $thesql = "select * from dental_assess_addition where assess_additionid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-	$themy = mysqli_query($con,$thesql);
-	$themyarray = mysqli_fetch_array($themy);
-	
-	if(!empty($msg)) {
-		$assess_addition = $_POST['assess_addition'];
-		$sortby = $_POST['sortby'];
-		$status = $_POST['status'];
-		$description = $_POST['description'];
-	} else {
-		$assess_addition = st($themyarray['assess_addition']);
-		$sortby = st($themyarray['sortby']);
-		$status = st($themyarray['status']);
-		$description = st($themyarray['description']);
-	}
-	
-	if($themyarray["assess_additionid"] != '') {
-		$but_text = "Edit ";
-	} else {
-		$but_text = "Add ";
-	}
-	?>
-	
-	<br /><br />
-	
-	<?php if(!empty($msg)) {?>
+    $themy = mysqli_query($con,$thesql);
+    $themyarray = mysqli_fetch_array($themy);
+
+    if(!empty($msg)) {
+        $assess_addition = $_POST['assess_addition'];
+        $sortby = $_POST['sortby'];
+        $status = $_POST['status'];
+        $description = $_POST['description'];
+    } else {
+        $assess_addition = st($themyarray['assess_addition']);
+        $sortby = st($themyarray['sortby']);
+        $status = st($themyarray['status']);
+        $description = st($themyarray['description']);
+    }
+
+    if($themyarray["assess_additionid"] != '') {
+        $but_text = "Edit ";
+    } else {
+        $but_text = "Add ";
+    }
+    ?>
+
+    <br /><br />
+
+    <?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
@@ -109,7 +109,7 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Assessment Addition 
                <?php if($assess_addition <> "") {?>
-               		&quot;<?php echo $assess_addition;?>&quot;
+                   &quot;<?php echo $assess_addition;?>&quot;
                <?php }?>
             </td>
         </tr>
@@ -119,7 +119,7 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="assess_addition" value="<?php echo $assess_addition?>" class="form-control" /> 
-                <span class="red">*</span>				
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -127,7 +127,7 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?php echo $sortby;?>" class="form-control" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?php echo $sortby;?>" class="form-control" style="width:30px"/>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -135,9 +135,9 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="form-control">
-                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="form-control">
+                    <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>
@@ -146,38 +146,37 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
+                <textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
             </td>
         </tr>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="assess_additionsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["assess_additionid"]?>" />
                 <input type="submit" value="<?php echo $but_text?> Assessment Addition" class="btn btn-primary">
-		<?php if($themyarray["assess_additionid"] != '' && $_SESSION['admin_access']==1){ ?>
+        <?php if($themyarray["assess_additionid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_assess_addition.php?delid=<?php echo $themyarray["assess_additionid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                         Delete
                     </a>
-		<?php } ?>
+        <?php } ?>
             </td>
         </tr>
     </table>
     </form>
-    <?php if(empty($_GET['ed']))
-	{?>
-    	<div class="alert alert-danger text-center">
-    		<b>--------------------------------- OR ---------------------------------</b>
+    <?php if(empty($_GET['ed'])) { ?>
+        <div class="alert alert-danger text-center">
+            <b>--------------------------------- OR ---------------------------------</b>
         </div>
-		<form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
+        <form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Assessment Addition 
                    <span class="red">
-	                   (Type Each New Assessment Addition on New Line)
+                       (Type Each New Assessment Addition on New Line)
                    </span>
                 </td>
             </tr>
@@ -189,7 +188,7 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
             <tr>
                 <td  colspan="2" align="center">
                     <span class="red">
-                        * Required Fields					
+                        * Required Fields
                     </span><br />
                     <input type="hidden" name="mult_assess_additionsub" value="1" />
                     <input type="submit" value="Add Multiple Assessment Addition" class="btn btn-primary">

@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 /*
  * This helper file contains all HTML 'forms' that are converted to PDF files for each user/office.
  * Some of the HTML has dynamic content to auto-populate user information like name/logo based on user profile.

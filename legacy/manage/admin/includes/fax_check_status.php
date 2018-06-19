@@ -24,19 +24,16 @@ if ($q) {
     error_log('Update Fax Status: pending faxes - ' . mysqli_num_rows($q));
     $apiCalls = 0;
 
-    $successFaxes = array();
-    $pendingFaxes = array();
-    $updatedFaxes = array();
-    $updatedLetters = array();
+    $successFaxes = [];
+    $pendingFaxes = [];
+    $updatedFaxes = [];
+    $updatedLetters = [];
 
     while ($r = mysqli_fetch_assoc($q)) {
         $faxId = intval($r['id']);
         $letterId = intval($r['letterid']);
         $companyId = intval($r['companyid']);
         $transmissionId = $r['sfax_transmission_id'];
-
-        $apiResponse = '';
-        $faxStatus = array();
 
         $_SESSION['companyid'] = $companyId;
         $fts = new \FTSSamples();
@@ -60,8 +57,7 @@ if ($q) {
         }
 
         $item = $faxStatus['RecipientFaxStatusItems'][0];
-        $errorCode = isset($item['ErrorCode']) ? $item['ErrorCode'] :
-            (isset($faxStatus['ErrorCode']) ? $faxStatus['ErrorCode'] : -1);
+        $errorCode = isset($item['ErrorCode']) ? $item['ErrorCode'] : (isset($faxStatus['ErrorCode']) ? $faxStatus['ErrorCode'] : -1);
         $success = isset($item['IsSuccess']) && $item['IsSuccess'] ? '1' : '2';
 
         $apiResponse = mysqli_real_escape_string($con, $apiResponse);
@@ -81,9 +77,9 @@ if ($q) {
             $let_sql = "UPDATE dental_letters SET status='0' WHERE letterid='$letterId'";
             mysqli_query($con, $let_sql);
 
-            $updatedLetters []= $letterId;
+            $updatedLetters[] = $letterId;
         } else {
-            $successFaxes []= $faxId;
+            $successFaxes[] = $faxId;
         }
     }
 

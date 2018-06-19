@@ -19,7 +19,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_custom_text.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -36,7 +36,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_custom_text.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 }
@@ -45,7 +45,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

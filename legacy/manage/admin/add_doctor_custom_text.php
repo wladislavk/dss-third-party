@@ -19,7 +19,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 				//alert("<?=$msg;?>");
 				parent.window.location='manage_doctor_custom_text.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -35,7 +35,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_doctor_custom_text.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 }
@@ -44,7 +44,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -73,19 +73,19 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 	
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?= $_GET['docid']; ?>" method="post">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Custom Text 
-               <? if($title <> "") {?>
+               <?php if($title <> "") {?>
                		&quot;<?=$title;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

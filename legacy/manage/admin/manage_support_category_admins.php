@@ -19,7 +19,7 @@ if(!empty($_POST["update"]))
         <script type="text/javascript">
                 window.location="manage_support_categories.php?msg=<?php echo $msg?>";
         </script>
-        <?
+        <?php
         trigger_error("Die called", E_USER_ERROR);
 }
 

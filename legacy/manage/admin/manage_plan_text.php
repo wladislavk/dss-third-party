@@ -15,7 +15,7 @@ if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
 		<script type="text/javascript">
 			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
@@ -28,7 +28,7 @@ if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
 		<script type="text/javascript">
 			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 }

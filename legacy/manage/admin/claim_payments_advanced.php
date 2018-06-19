@@ -175,7 +175,7 @@ $num_sa = mysqli_num_rows($saq);
     </div>
 </div>
 <div align="center" class="red">
-  <? echo $_GET['msg'];?>
+  <?php echo $_GET['msg'];?>
 </div>
 <?php
 $sql = "SELECT dlp.*, dl.description

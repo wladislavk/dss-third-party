@@ -23,7 +23,7 @@ if(!empty($_POST["mult_complaintsub"]) && $_POST["mult_complaintsub"] == 1) {
 	<script type="text/javascript">
 		parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -55,7 +55,7 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ins_sql = "insert into dental_complaint set complaint = '".s_for($_POST["complaint"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";

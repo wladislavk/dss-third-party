@@ -582,7 +582,7 @@ if($themyarray["userid"] != '') {
             <div class="form-group">
                 <label for="referred_by" class="col-md-3 control-label">Referred by</label>
                 <div class="col-md-5">
-                    <?
+                    <?php
                     $referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' order by firstname";
                     $referredby_my = mysqli_query($con,$referredby_sql);
                     ?>

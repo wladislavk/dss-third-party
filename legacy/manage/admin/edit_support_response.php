@@ -20,7 +20,7 @@ if ($_POST["ressub"] == 1) {
     <script type="text/javascript">
         parent.window.location='view_support_ticket.php?ed=<?=$_GET['ed'];?>&msg=<?=$msg;?>';
     </script>
-    <?
+    <?php
     trigger_error("Die called", E_USER_ERROR);
 }
 ?>

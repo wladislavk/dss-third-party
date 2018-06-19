@@ -14,7 +14,7 @@ include "includes/top.htm";
 &nbsp;
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 <div class="fullwidth">
@@ -31,4 +31,4 @@ include 'legal_user.php';
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

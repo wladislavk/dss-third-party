@@ -103,7 +103,7 @@ $my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     </div>
 </div>
 <div align="center" class="red" style="clear:both;">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>

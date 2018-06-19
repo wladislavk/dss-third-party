@@ -125,7 +125,7 @@ $my=mysqli_query($con,$sql);
     </div>
 </div>
 <div align="center" class="red" style="clear:both;">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;

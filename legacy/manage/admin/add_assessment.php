@@ -56,7 +56,7 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ins_sql = "insert into dental_assessment set assessment = '".s_for($_POST["assessment"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -67,7 +67,7 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}

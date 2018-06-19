@@ -112,9 +112,9 @@ if($themyarray["followupid"] != '') {
 
 <?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="followupfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return followupabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
@@ -148,8 +148,8 @@ if($themyarray["followupid"] != '') {
             </td>
             <td valign="top" class="frmdata">
                 <select name="status" class="form-control">
-                    <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                    <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                    <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

@@ -238,7 +238,7 @@ $last_r = mysqli_fetch_assoc($last_q);
                     How many times per night does your bedtime partner notice you quit breathing?
                     <?php echo $quit_breathing;?>
                 </li>
-            <? } ?>
+            <?php } ?>
         </ul>
         
         <h4>History</h4>
@@ -439,7 +439,7 @@ $last_r = mysqli_fetch_assoc($last_q);
 	        </li>
             <li class="list-group-item">
                 <strong>Most Recent:</strong>
-                <? if ($baseline_sleepstudy['date'] != '') { ?>
+                <?php if ($baseline_sleepstudy['date'] != '') { ?>
                     <?php echo time_ago_format(date('U') - strtotime($baseline_sleepstudy['date'])); ?> ago - <?php echo date('m/d/Y', strtotime($baseline_sleepstudy['date'])); ?>
                 <?php } ?>
             </li>

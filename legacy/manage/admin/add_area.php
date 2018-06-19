@@ -34,7 +34,7 @@ if($_POST["areasub"] == 1) {
             <script type="text/javascript">
                 parent.window.location='manage_area.php?msg=<?=$msg;?>';
             </script>
-            <?
+            <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
             $ins_sql = "insert into spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";

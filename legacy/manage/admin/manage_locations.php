@@ -63,12 +63,12 @@ $my = mysqli_query($con,$sql);
 
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
@@ -77,7 +77,7 @@ $my = mysqli_query($con,$sql);
 			?>
 		</td>
 	</tr>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
 			Location
@@ -86,7 +86,7 @@ $my = mysqli_query($con,$sql);
 			Action
 		</td>
 	</tr>
-	<? if(mysqli_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">

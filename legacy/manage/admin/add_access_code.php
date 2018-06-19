@@ -11,7 +11,7 @@ if(isset($_POST['accesscodedelete'])){
                         <script type="text/javascript">
                                 parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
                         </script>
-                        <?
+                        <?php
                         trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -28,7 +28,7 @@ if(isset($_POST["accesscodesub"]))
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -48,7 +48,7 @@ if(isset($_POST["accesscodesub"]))
 				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -66,7 +66,7 @@ if(isset($_POST["accesscodesub"]))
 			<script type="text/javascript">
 				parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -76,7 +76,7 @@ if(isset($_POST["accesscodesub"]))
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_access_codes where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

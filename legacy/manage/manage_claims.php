@@ -312,7 +312,7 @@ $my = $db->getResults($sql);
 if(isset($_GET['msg'])){
 ?>
 <div align="center" class="red">
-    <b><? echo $_GET['msg'];?></b>
+    <b><?php echo $_GET['msg'];?></b>
 </div>
 <?php
 } 
@@ -559,7 +559,7 @@ if(v == '100'){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 
 <script type="text/javascript">
   $('.mailed_chk:not(.filed-by-bo)').click( function(){

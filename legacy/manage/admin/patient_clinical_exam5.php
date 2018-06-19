@@ -496,7 +496,7 @@ if ($jointid != '') {
                                             </span>
                                         </td>
                                         <td valign="top">
-                                            <table width="100%" cellpadding="3" cellspacing="1">                                        	<?
+                                            <table width="100%" cellpadding="3" cellspacing="1">                                        	<?php
                                                 $joint_sql = "select * from dental_joint where status=1 order by sortby";
                                                 $joint_my = mysqli_query($con,$joint_sql);
                                                 while ($joint_myarray = mysqli_fetch_array($joint_my)) {

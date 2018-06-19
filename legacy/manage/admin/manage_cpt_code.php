@@ -73,7 +73,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>

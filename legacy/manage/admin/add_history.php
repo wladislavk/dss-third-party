@@ -28,7 +28,7 @@ if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 	<script type="text/javascript">
 		parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -45,7 +45,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -69,7 +69,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -82,7 +82,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -92,7 +92,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_history where historyid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

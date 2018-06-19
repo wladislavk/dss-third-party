@@ -55,7 +55,7 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -125,4 +125,4 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

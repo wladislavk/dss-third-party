@@ -19,7 +19,7 @@ if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
 			alert("<?=$msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -90,7 +90,7 @@ if(!$uploaded){
 			<script type="text/javascript">
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -116,7 +116,7 @@ if(!$uploaded){
 			<script type="text/javascript">
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -158,19 +158,19 @@ if(!$uploaded){
 	
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Device 
-               <? if($device <> "") {?>
+               <?php if($device <> "") {?>
                		&quot;<?=$device;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -196,8 +196,8 @@ if(!$uploaded){
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

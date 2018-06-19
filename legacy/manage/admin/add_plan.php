@@ -39,7 +39,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -77,7 +77,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 				//alert("<?php echo $msg;?>");
 				parent.window.location = 'manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -87,7 +87,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput.min.js"></script>
 	<script type="text/javascript" src="/manage/script/masks.js"></script>
-    <?
+    <?php
     $thesql = "select * from dental_plans where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

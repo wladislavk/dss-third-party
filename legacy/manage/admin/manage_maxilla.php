@@ -53,7 +53,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>

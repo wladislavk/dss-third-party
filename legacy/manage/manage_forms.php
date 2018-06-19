@@ -83,7 +83,7 @@ if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 				<tr bgColor="#ffffff">
 					<td  align="right" colspan="15" class="bp">
 						Pages:
-						<?
+						<?php
 							 paging($no_pages,$index_val,"");
 						?>
 					</td>        

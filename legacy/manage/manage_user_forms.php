@@ -17,7 +17,7 @@ $db = new Db();
 <br/>
 <?php if (isset($_GET['msg'])) { ?>
     <div align="center" class="red">
-        <b><? echo $_GET['msg']; ?></b>
+        <b><?php echo $_GET['msg']; ?></b>
     </div>
 <?php } ?>
 

@@ -46,7 +46,7 @@ if($_POST["devsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -76,7 +76,7 @@ if($_POST["devsub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 }
@@ -85,7 +85,7 @@ if($_POST["devsub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_device_guide_devices where id='".$_REQUEST["ed"]."'";
 	$themy = mysqli_query($con, $thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -111,19 +111,19 @@ if($_POST["devsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Device Setting
-               <? if($name <> "") {?>
+               <?php if($name <> "") {?>
                		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

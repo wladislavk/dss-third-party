@@ -94,7 +94,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from companies where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -114,22 +114,22 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 	
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-               <? if($logo <> "") {?>
+    <?php }?>
+               <?php if($logo <> "") {?>
                    <img src="display_file.php?f=<?=$logo;?>" />
-               <? }?>
+               <?php }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Company 
-               <? if($name <> "") {?>
+               <?php if($name <> "") {?>
                		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

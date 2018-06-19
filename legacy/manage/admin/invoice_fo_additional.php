@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once __DIR__ . '/includes/stripe-functions.php';
 include "includes/top.htm";
 include '../includes/calendarinc.php';
@@ -464,11 +464,11 @@ if(mysqli_num_rows($doc_q) == 0){
         - Plan: <?= $doc['plan_name']; ?>
 </small></h2></div>
 
-<? if($_GET['msg'] != '') {?>
+<?php if($_GET['msg'] != '') {?>
 <div class="alert alert-danger text-center">
-    <? echo $_GET['msg'];?>
+    <?php echo $_GET['msg'];?>
 </div>
-<? } ?>
+<?php } ?>
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -592,7 +592,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-	           <? } ?>
+	           <?php } ?>
 
 
                 <?php 
@@ -622,7 +622,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-                   <? } 
+                   <?php } 
 			}
 			?>
 
@@ -687,7 +687,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-                   <? } ?>
+                   <?php } ?>
 
 
             <?php if ($doc['user_type']==DSS_USER_TYPE_SOFTWARE) { ?>
@@ -816,7 +816,7 @@ function check_billed () {
     return false;
 }
 </script>
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 
 
 <?php

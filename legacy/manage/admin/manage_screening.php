@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -53,7 +53,7 @@ if($_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -77,7 +77,7 @@ if($_POST['sortsub'] == 1)
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
@@ -154,7 +154,7 @@ if($_POST['sortsub'] == 1)
 				<input type="submit" value=" Change " class="btn btn-warning">
 			</td>
 		</tr>
-		<?
+		<?php
 	} ?>
 </table>
 </form>

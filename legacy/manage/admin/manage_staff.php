@@ -19,7 +19,7 @@ if(!empty($_REQUEST["delid"]))
 	<script type="text/javascript">
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid'];?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -81,7 +81,7 @@ $my = mysqli_query($con,$sql);
 			?>
 		</td>
 	</tr>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
 			Username

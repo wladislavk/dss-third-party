@@ -30,7 +30,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 		<script type="text/javascript">
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
@@ -53,7 +53,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 		<script type="text/javascript">
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 }
@@ -61,7 +61,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_locations where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -116,9 +116,9 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         <div class="page-header">
             <h1>
                 <?php echo $but_text?> <?php echo (!empty($_GET['heading']) ? $_GET['heading'] : ''); ?> Location 
-                <? if($location <> "") {?>
+                <?php if($location <> "") {?>
                     &quot;<?php echo $location;?>&quot;
-                <? }?>
+                <?php }?>
             </h1>
         </div>
         <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return locationabc(this)" class="form-horizontal">

@@ -27,7 +27,7 @@ setupStripeConnection($key_r['stripe_secret_key']);
 </small></h2></div>
 <br />
 <div align="center" class="red" style="clear:both;">
-        <b><? echo $_GET['msg'];?></b>
+        <b><?php echo $_GET['msg'];?></b>
 </div>
 <?php 
 $sql = "SELECT * FROM dental_users where userid='".$db->escape( $_GET['docid'])."'";
@@ -174,7 +174,7 @@ $case_q = mysqli_query($con, $case_sql);
 </small></h2></div>
 <br />
 <div align="center" class="red" style="clear:both;">
-        <b><? echo $_GET['msg'];?></b>
+        <b><?php echo $_GET['msg'];?></b>
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
@@ -254,7 +254,7 @@ echo $charge->source->last4;
 				</td>
 
                         </tr>
-        <?      }
+        <?php      }
 
         }?>
 </table>

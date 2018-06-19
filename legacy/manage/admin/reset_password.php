@@ -33,6 +33,6 @@ if ($check_myarray) {
     ?>
     <br />
     <h3>Password reset and user has been emailed.</h3>
-    <?
+    <?php
     trigger_error("Die called", E_USER_ERROR);
 }

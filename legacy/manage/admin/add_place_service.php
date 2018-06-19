@@ -28,7 +28,7 @@ if(!empty($_POST["mult_place_servicesub"]) && $_POST["mult_place_servicesub"] ==
 	<script type="text/javascript">
 		parent.window.location='manage_place_service.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -45,7 +45,7 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -69,7 +69,7 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_place_service.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -82,7 +82,7 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_place_service.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -92,7 +92,7 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_place_service where place_serviceid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

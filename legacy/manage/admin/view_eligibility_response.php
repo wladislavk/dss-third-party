@@ -27,7 +27,7 @@ include_once('includes/password.php');
 </head>
 <body>
 <div id="coverage_container"></div>
-    <?
+    <?php
     $thesql = "select e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
                         from dental_eligibility e 
                         JOIN dental_patients p on p.patientid=e.patientid

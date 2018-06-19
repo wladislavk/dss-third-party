@@ -312,9 +312,9 @@ $num_users = count($my);
             &nbsp;
           </td>
           <td align="right">
-            <? if(st($paid_amount) != 0) {?>
+            <?php if(st($paid_amount) != 0) {?>
                       <?=number_format(st($paid_amount),2);?>
-            <? 
+            <?php
               $tot_credit += st($paid_amount);
             }?>
             &nbsp;

@@ -88,7 +88,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
 		</TD>        

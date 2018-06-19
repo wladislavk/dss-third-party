@@ -71,9 +71,9 @@ if(isset($json_response->{"error"})){
 ?>
     <?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>

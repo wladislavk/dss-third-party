@@ -19,7 +19,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
               parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
 	    <?php } ?>
         </script>
-        <?
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
     else
@@ -37,7 +37,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
               parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
             <?php } ?>
         </script>
-        <?
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
 }
@@ -46,7 +46,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_contact where contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
     $themy = mysqli_query($con,$thesql);
     $themyarray = mysqli_fetch_array($themy);
@@ -126,7 +126,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
                 <div class="col-md-9">
-                    <?
+                    <?php
 
                     if(isset($_GET['ed'])){
     $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
@@ -144,7 +144,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
     ?>
                     <select id="contacttypeid" name="contacttypeid" class="form-control">
 
-                        <? while($ctype_myarray = mysqli_fetch_array($ctype_my)){
+                        <?php while($ctype_myarray = mysqli_fetch_array($ctype_my)){
       ?>
 
       <option <?php if(!empty($ctid['contacttypeid']) && $ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if(!empty($_GET['type']) && $ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?php echo st($ctype_myarray['contacttypeid']);?>">
@@ -152,7 +152,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
                                 <?php echo st($ctype_myarray['contacttype']);?>
  				<?php echo  ($ctype_myarray['corporate']=='1')?" - Only avail. in Corp. contacts":""; ?>
                             </option>
-                        <? }?>
+                        <?php }?>
                     </select>
                 </div>
             </div>
@@ -278,18 +278,18 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="qualifier" class="col-md-3 control-label">Qualifier</label>
                 <div class="col-md-9">
-                    <? 
+                    <?php 
                     $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
                     $qualifier_my = mysqli_query($con,$qualifier_sql);
                     ?>
                     <select id="qualifier" name="qualifier" class="form-control">
                         <option value="0"></option>
-                        <? while($qualifier_myarray = mysqli_fetch_array($qualifier_my))
+                        <?php while($qualifier_myarray = mysqli_fetch_array($qualifier_my))
                         {?>
                             <option value="<?php echo st($qualifier_myarray['qualifierid']);?>">
                                 <?php echo st($qualifier_myarray['qualifier']);?>
                             </option>
-                        <? }?>
+                        <?php }?>
                     </select>
                 </div>
             </div>

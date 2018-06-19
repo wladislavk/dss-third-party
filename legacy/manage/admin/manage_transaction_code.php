@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 	<script type="text/javascript">
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -52,7 +52,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -90,7 +90,7 @@ if(is_super($_SESSION['admin_access'])){
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
 		</TD>        
@@ -192,7 +192,7 @@ if(is_super($_SESSION['admin_access'])){
 				<?php } ?>
 			</td>
 		</tr>
-		<?
+		<?php
 	}?>
 </table>
 </form>

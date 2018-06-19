@@ -261,9 +261,9 @@ if ($errorMessages) {
 	
 	<?php if(!empty($msg)) {?>
     <div align="center" class="text-danger">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>

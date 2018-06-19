@@ -872,7 +872,7 @@ $db = new Db();
 														<option value="<?php echo st($doc_myarray['userid'])?>" <?php if(st($doc_myarray['userid']) == $dss_dentists) { echo " selected";}?>>
 															<?php echo st($doc_myarray['name'])?>
 														</option>
-													<?
+													<?php
 													}?>
 												</select>
 												<label for="add2">DSS dentists</label>

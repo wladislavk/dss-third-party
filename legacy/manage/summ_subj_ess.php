@@ -108,10 +108,10 @@ if ($epworthid != '') {
                                         </td>
                                         <td valign="top" class="frmdata">
                                             <select id="epworth_<?php echo st($epworth_myarray['epworthid']);?>" name="epworth_<?php echo st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
-                                                <option value="0" <? if ($chk == '0') echo " selected";?>>0</option>
-                                                <option value="1" <? if ($chk == 1) echo " selected";?>>1</option>
-                                                <option value="2" <? if ($chk == 2) echo " selected";?>>2</option>
-                                                <option value="3" <? if ($chk == 3) echo " selected";?>>3</option>
+                                                <option value="0" <?php if ($chk == '0') echo " selected";?>>0</option>
+                                                <option value="1" <?php if ($chk == 1) echo " selected";?>>1</option>
+                                                <option value="2" <?php if ($chk == 2) echo " selected";?>>2</option>
+                                                <option value="3" <?php if ($chk == 3) echo " selected";?>>3</option>
                                             </select>
                                         </td>
                                     </tr>

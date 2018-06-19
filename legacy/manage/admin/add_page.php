@@ -17,7 +17,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 			alert("<?=$msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -31,7 +31,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -45,7 +45,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 				//alert("<?=$msg;?>");
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -55,7 +55,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_pages where pageid='".(!empty($_REQUEST["ed"]))."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -88,19 +88,19 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 	
 	<br /><br />
     
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="pagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return pageabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Page
-               <? if($title <> "") {?>
+               <?php if($title <> "") {?>
                		&quot;<?=$title;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -147,8 +147,8 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

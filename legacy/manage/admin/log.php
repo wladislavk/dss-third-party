@@ -38,12 +38,12 @@ $my=mysqli_query($con,$sql);
         <tr bgcolor="#ffffff">
             <td align="right" colspan="15" class="bp">
                 Pages:
-                <?
+                <?php
                      paging($no_pages,$index_val,"led=".$_GET['led']);
                 ?>
             </td>
         </tr>
-        <? }?>
+        <?php }?>
         <tr class="tr_bg_h">
             <td valign="top" class="col_head" width="30%">
                 Login Date	

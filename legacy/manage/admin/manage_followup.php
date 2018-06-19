@@ -77,7 +77,7 @@ if($_POST['sortsub'] == 1)
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
@@ -92,7 +92,7 @@ if($_POST['sortsub'] == 1)
 			?>
 		</td>
 	</tr>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
 			Follow Up		

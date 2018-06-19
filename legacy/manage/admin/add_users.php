@@ -86,7 +86,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	}
         $sel_check2 = "select * from dental_users where email = '".$db->escape($_POST["email"])."' and userid <> '".$db->escape($_POST['ed'])."'";
@@ -99,7 +99,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                         alert("<?php echo $msg;?>");
                         window.location="#add";
                 </script>
-                <?
+                <?php
         }
         else
 	{
@@ -248,7 +248,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			<script type="text/javascript">
 				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -427,7 +427,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 //alert("<?php echo $msg;?>");
                                 parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
                         </script>
-                        <?
+                        <?php
                         trigger_error("Die called", E_USER_ERROR);
 		}else{
 			$msg = "Added Successfully";
@@ -435,7 +435,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			<script type="text/javascript">
 				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		}

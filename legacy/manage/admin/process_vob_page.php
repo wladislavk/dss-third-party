@@ -210,11 +210,11 @@ if ($disabled) { ?>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js?v=<?= time() ?>"></script>
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div align="center" class="red">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
 <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
     <input type="hidden" name="save_vob" value="1" />
     <table class="table table-bordered table-hover">

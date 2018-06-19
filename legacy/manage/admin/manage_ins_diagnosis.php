@@ -159,7 +159,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 				<?php } ?>
 			</td>
 		</tr>
-		<?
+		<?php
 	}?>
 </table>
 </form>

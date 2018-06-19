@@ -146,7 +146,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
             if (
@@ -232,19 +232,19 @@ $themyarray = mysqli_fetch_array($themy);
 	
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Backoffice User 
-               <? if($username <> "") {?>
+               <?php if($username <> "") {?>
                		&quot;<?php echo $username;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -368,9 +368,9 @@ $themyarray = mysqli_fetch_array($themy);
             </td>
             <td valign="top" class="frmdata">
                 <select name="status" class="form-control">
-                    <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
+                    <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
                     <?php if (!is_basic($_SESSION['admin_access'])) { ?>
-                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                        <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                     <?php } ?>
                 </select>
             </td>

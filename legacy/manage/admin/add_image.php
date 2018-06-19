@@ -264,7 +264,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         <script type="text/javascript">
                                 parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
                         </script>
-                        <?
+                        <?php
                         trigger_error("Die called", E_USER_ERROR);
 
 }
@@ -285,7 +285,7 @@ if($uploaded ){
 			<script type="text/javascript">
 				parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -341,21 +341,21 @@ if($uploaded ){
 				<script type="text/javascript">
 					parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
 				</script>
-				<?
+				<?php
 				trigger_error("Die called", E_USER_ERROR);
 			} elseif($_REQUEST['return']=='patinfo'){
 				?>
                                 <script type="text/javascript">
-					<? if($_REQUEST['return_field']=='profile'){ ?>
+					<?php if($_REQUEST['return_field']=='profile'){ ?>
 						parent.updateProfileImage('<?php echo  $banner1; ?>');
-					<? }elseif($_POST['imagetypeid']==10){ ?>
+					<?php }elseif($_POST['imagetypeid']==10){ ?>
 						parent.updateInsCard('<?php echo  $banner1; ?>', 'p_m_ins_card');
-					<? }elseif($_POST['imagetypeid']==12){ ?>
+					<?php }elseif($_POST['imagetypeid']==12){ ?>
                                                 parent.updateInsCard('<?php echo  $banner1; ?>', 's_m_ins_card');
-                                        <? } ?>
+                                        <?php } ?>
 					parent.disablePopupClean();
                                 </script>
-                                <?
+                                <?php
 			
                                 trigger_error("Die called", E_USER_ERROR);
 			} else {
@@ -363,7 +363,7 @@ if($uploaded ){
 				<script type="text/javascript">
 					parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>';
 				</script>
-				<?
+				<?php
 				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
@@ -387,7 +387,7 @@ if($uploaded ){
 <div id="loader" style="position:absolute;width:100%; height:98%; display:none;">
 <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
-    <?
+    <?php
     $thesql = "select * from dental_q_image where imageid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
@@ -421,11 +421,11 @@ if($uploaded ){
 	
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div align="center" class="red">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
  
 		<input name="flow" type="hidden" value="<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>" />
@@ -433,9 +433,9 @@ if($uploaded ){
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Image
-               <? if($title <> "") {?>
+               <?php if($title <> "") {?>
                		&quot;<?php echo $title;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
 		<tr>
@@ -445,7 +445,7 @@ if($uploaded ){
 						<span>
 							Image Type
 							&nbsp;&nbsp;
-							<? 
+							<?php 
 							$itype_sql = "select * from dental_imagetype where status=1 order by sortby";
 							$itype_my = mysqli_query($con,$itype_sql);
 							if(!empty($_GET['itro']) && $_GET['itro']==1){
@@ -459,12 +459,12 @@ if($uploaded ){
 							?>
 							<select id="imagetypeid" name="imagetypeid" class="field text addr tbox" >
 								<option value=""></option>
-								<? while($itype_myarray = mysqli_fetch_array($itype_my))
+								<?php while($itype_myarray = mysqli_fetch_array($itype_my))
 								{?>
-									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
+									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <?php if($imagetypeid == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
 										<?php echo st($itype_myarray['imagetype']);?>
 									</option>
-								<? }?>
+								<?php }?>
 								<option value="0">Clinical Photos (Pre-Tx Batch)</option>
 							</select>
 							<?php } ?>
@@ -570,11 +570,11 @@ if($rl_r['rxlomn_imgid']!=''){
 							Image
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<? if($image_file <> '') {?>
+							<?php if($image_file <> '') {?>
                                 <a href="display_file.php?f=<?php echo $image_file?>" target="_blank">
                                     <b>Preview</b></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                            <? }?>
+                            <?php }?>
                             <input type="file" name="image_file" value="" size="26" />
                             <input type="hidden" name="image_file_old" value="<?php echo $image_file;?>" />
 						</span>

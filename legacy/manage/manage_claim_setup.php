@@ -56,7 +56,7 @@ $num_custom = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <?php

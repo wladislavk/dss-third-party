@@ -399,11 +399,11 @@ if(mysqli_num_rows($doc_q) == 0){
         - Plan: <?= $doc['plan_name']; ?>
 </small></h2></div>
 
-<? if($_GET['msg'] != '') {?>
+<?php if($_GET['msg'] != '') {?>
 <div class="alert alert-danger text-center">
-    <? echo $_GET['msg'];?>
+    <?php echo $_GET['msg'];?>
 </div>
-<? } ?>
+<?php } ?>
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -505,7 +505,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-	           <? } ?>
+	           <?php } ?>
 
 
                 <?php while ($efile = mysqli_fetch_array($efile_q)) { ?>
@@ -533,7 +533,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-                   <? } ?>
+                   <?php } ?>
 
 		<?php $users_r = mysqli_fetch_assoc($users_q); ?>
                 <tr id="user_row">
@@ -588,7 +588,7 @@ Invoice Due Date:
                         </div>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
             <?php } ?>
             
             <?php if ($fax['total_faxes'] > 0) { ?>
@@ -895,7 +895,7 @@ function check_billed () {
     return false;
 }
 </script>
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 
 
 <?php

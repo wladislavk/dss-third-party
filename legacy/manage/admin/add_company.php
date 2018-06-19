@@ -44,7 +44,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ins_sql = "insert into companies set 
@@ -159,7 +159,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
@@ -318,9 +318,9 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
             </td>
             <td valign="top" class="frmdata">
                 <select name="company_type" class="form-control">
-                        <option value="<?= DSS_COMPANY_TYPE_SOFTWARE; ?>" <? if($company_type == DSS_COMPANY_TYPE_SOFTWARE) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE]; ?></option>
-                        <option value="<?= DSS_COMPANY_TYPE_BILLING; ?>" <? if($company_type!='' && $company_type == DSS_COMPANY_TYPE_BILLING) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING]; ?></option>
-                        <option value="<?= DSS_COMPANY_TYPE_HST; ?>" <? if($company_type!='' && $company_type == DSS_COMPANY_TYPE_HST) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_HST]; ?></option>
+                        <option value="<?= DSS_COMPANY_TYPE_SOFTWARE; ?>" <?php if($company_type == DSS_COMPANY_TYPE_SOFTWARE) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE]; ?></option>
+                        <option value="<?= DSS_COMPANY_TYPE_BILLING; ?>" <?php if($company_type!='' && $company_type == DSS_COMPANY_TYPE_BILLING) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING]; ?></option>
+                        <option value="<?= DSS_COMPANY_TYPE_HST; ?>" <?php if($company_type!='' && $company_type == DSS_COMPANY_TYPE_HST) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_HST]; ?></option>
                 </select>
             </td>
         </tr>
@@ -355,8 +355,8 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

@@ -58,11 +58,11 @@ if(isset($json_response->{"error"})){
  <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
  <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=20160719"></script>
 <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
-	<? if($msg != '') {?>
+	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
     <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>

@@ -12,7 +12,7 @@ include 'includes/completed.php';
                                 lga_flowTabs.tabs_b();
                         });
         </script>
-<? $s = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
+<?php $s = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
 $q = mysqli_query($con, $s);
 $pat = mysqli_fetch_assoc($q);
 

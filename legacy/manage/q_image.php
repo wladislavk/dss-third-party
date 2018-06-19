@@ -63,7 +63,7 @@ if ($patient_info) {
             <option value="<?php echo st($itype_myarray['imagetypeid']);?>" <?php if(!empty($_GET['sh']) && $_GET['sh'] == st($itype_myarray['imagetypeid'])) echo " selected";?>>
                 <?php echo st($itype_myarray['imagetype']);?>
             </option>
-        <? } ?>
+        <?php } ?>
     </select>
     <br />
     <div align="right">

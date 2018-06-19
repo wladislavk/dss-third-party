@@ -1240,11 +1240,11 @@ $weight = st($bmi_myarray['weight']);
                 </tr>
             <?php } ?>
         </table>
-        <? if ($range_normal == 1) { ?>
+        <?php if ($range_normal == 1) { ?>
             Within normal limits
             <br /><br />
             NOTE: (Normal range of motion has been noted Vertical 40 - 50mm,  Lateral 12mm, Protrusive 9mm)
-        <? } ?>
+        <?php } ?>
     </div>
     <br />
     <?php if ($additional_paragraph_rm != '') { ?>

@@ -107,7 +107,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 		<script type="text/javascript">
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
@@ -121,7 +121,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			//alert("<?php echo $msg;?>");
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
 }
@@ -130,7 +130,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_doc_welcome where doc_welcomeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

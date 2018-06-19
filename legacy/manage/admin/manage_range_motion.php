@@ -77,7 +77,7 @@ if($_POST['sortsub'] == 1)
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 &nbsp;
@@ -88,7 +88,7 @@ if($_POST['sortsub'] == 1)
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
 		</td>

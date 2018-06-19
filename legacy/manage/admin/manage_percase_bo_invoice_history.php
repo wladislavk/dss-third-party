@@ -19,7 +19,7 @@ $company = mysqli_fetch_assoc($c_q);
 </small></h2></div>
 <br />
 <div align="center" class="red" style="clear:both;">
-        <b><? echo $_GET['msg'];?></b>
+        <b><?php echo $_GET['msg'];?></b>
 </div>
 <?php 
 $sql = "SELECT * FROM companies where id='".$db->escape( $_GET['companyid'])."'";

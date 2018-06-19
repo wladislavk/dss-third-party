@@ -63,7 +63,7 @@ if (count($my)) {
                 No Records
             </td>
         </tr>
-    <?
+    <?php
     }
     else
     {

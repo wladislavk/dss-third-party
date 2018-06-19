@@ -519,9 +519,9 @@ if ($comp['history'] == 0) {
             </div>
             <div class="sepH_b half">
                     <label class="lbl_in2">Have you had TMJ (jaw joint) surgery?</label>
-                    <input type="radio" class="extra" name="tmj_surgery" value="Yes" <? if($tmj_surgery == 'Yes') echo " checked";?> /> Yes
+                    <input type="radio" class="extra" name="tmj_surgery" value="Yes" <?php if($tmj_surgery == 'Yes') echo " checked";?> /> Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="extra" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> /> No
+                    <input type="radio" class="extra" name="tmj_surgery" value="No" <?php if($tmj_surgery == 'No') echo " checked";?> /> No
                     <span id="tmj_surgery_extra"><label class="lbl_in2">Please describe:</label><input type="text" class="inpt_in2" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" /></span>
             </div>
             <div class="sepH_b clear half">

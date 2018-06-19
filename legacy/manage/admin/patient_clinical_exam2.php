@@ -150,11 +150,11 @@ $tongue = st($myarray['tongue']);
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <a name="top"></a>
 &nbsp;&nbsp;
-<? include "../includes/form_top.htm";?>
+<?php include "../includes/form_top.htm";?>
 <br />
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
@@ -188,7 +188,7 @@ $tongue = st($myarray['tongue']);
                                 <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
                                     <?php for ($i = 50; $i <= 150; $i++) { ?>
                                         <option value="<?=$i?>" <?php if ($pulse == $i) echo " selected";?>><?=$i?></option>
-                                    <? } ?>
+                                    <?php } ?>
                                 </select>
                             </span>
                         </div>

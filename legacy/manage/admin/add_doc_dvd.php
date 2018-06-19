@@ -157,13 +157,13 @@ if($_POST["doc_dvdub"] == 1) {
 				Video File
             </td>
             <td valign="top" class="frmdata">
-				<? if($video_file <> '') {?>
+				<?php if($video_file <> '') {?>
 					<a href="preview.php?fn=<?=$video_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<input type="checkbox" name="remove_video" value="1" />
 					<br />
-				<? }?>
+				<?php }?>
 				<input type="file" name="video_file" value="" size="26" />
 				<input type="hidden" name="video_file_old" value="<?=$video_file;?>" />
             </td>
@@ -173,13 +173,13 @@ if($_POST["doc_dvdub"] == 1) {
 				Material File
             </td>
             <td valign="top" class="frmdata">
-				<? if($doc_file <> '') {?>
+				<?php if($doc_file <> '') {?>
 					<a href="../doc_file/<?=$doc_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<input type="checkbox" name="remove_doc" value="1" />
 					<br />
-				<? }?>
+				<?php }?>
 				<input type="file" name="doc_file" value="" size="26" />
 				<input type="hidden" name="doc_file_old" value="<?=$doc_file;?>" />
             </td>
@@ -227,7 +227,7 @@ if($_POST["doc_dvdub"] == 1) {
                 
                 <select name="docid[]" multiple="multiple" size="5" class="form-control">
                 	<?php while($doc_myarray = mysqli_fetch_array($doc_my)) { ?>
-                    	<option value="<?=st($doc_myarray['userid'])?>"  <? if(strpos($docid,'~'.st($doc_myarray['userid']).'~') === false){ } else { echo " selected";}?>>
+                    	<option value="<?=st($doc_myarray['userid'])?>"  <?php if(strpos($docid,'~'.st($doc_myarray['userid']).'~') === false){ } else { echo " selected";}?>>
                         	<?=st($doc_myarray['username'])?>
                         </option>
                     <?php }?>
@@ -250,8 +250,8 @@ if($_POST["doc_dvdub"] == 1) {
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

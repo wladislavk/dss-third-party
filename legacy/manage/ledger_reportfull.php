@@ -171,7 +171,7 @@ $num_users = count($my);
     <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-    <? if(!empty($total_rec) && $total_rec > $rec_disp) {?>
+    <?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
         <TD  align="right" colspan="15" class="bp">
             Pages:
@@ -266,7 +266,7 @@ $num_users = count($my);
         <td valign="top" align="right" width="10%">
             <?php if(st($myarray["paid_amount"]) <> 0) {?>
                 <?php echo number_format(st($myarray["paid_amount"]),2);?>
-            <? 
+            <?php
             }?>
             &nbsp;
         </td>
@@ -340,4 +340,4 @@ $num_users = count($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />    
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -54,7 +54,7 @@ $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 <table class="table table-bordered table-hover">

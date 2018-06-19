@@ -234,7 +234,7 @@ if ($comp['epworth'] == 0) {
                     <option value="3" <?php if ($chk == 3) echo " selected";?>>3</option>
                 </select>
             </div>
-            <?
+            <?php
         } ?>
         <h5 class="clear">Analysis</h5>
         <textarea name="analysis" class="field text addr tbox" style="width:650px; height:100px;"><?=$analysis;?></textarea>

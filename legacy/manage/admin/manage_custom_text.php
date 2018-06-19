@@ -64,7 +64,7 @@ $my = mysqli_query($con,$sql);
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
 		</td>

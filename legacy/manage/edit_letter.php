@@ -2127,7 +2127,7 @@ foreach ($master_q as $master_r) {
                     <?php if (!(!empty($_GET['backoffice']) && $_GET['backoffice'] == "1" && $_SESSION['admin_access'] != 1)) { ?>
                         <input type="submit" name="delete_letter[<?php echo $cur_letter_num ?>]" class="addButton" value="Delete"/>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div style="float:right;">
                     <input type="submit" style="display:none;" name="save_letter[<?php echo $cur_letter_num ?>]" class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Save Changes"/>

@@ -44,7 +44,7 @@ if($_POST["adminsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$salt = create_salt();
@@ -66,7 +66,7 @@ if($_POST["adminsub"] == 1) {
 			<script type="text/javascript">
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -101,7 +101,7 @@ if($_POST["adminsub"] == 1) {
 	<br /><br />
 	<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
     <?php } ?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
@@ -109,9 +109,9 @@ if($_POST["adminsub"] == 1) {
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> User 
-               <? if($username <> "") {?>
+               <?php if($username <> "") {?>
                		&quot;<?=$username;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

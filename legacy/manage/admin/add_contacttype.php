@@ -28,7 +28,7 @@ if(!empty($_POST["mult_contacttypesub"]) && $_POST["mult_contacttypesub"] == 1)
 	<script type="text/javascript">
 		parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -45,7 +45,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -68,7 +68,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -81,7 +81,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -91,7 +91,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_contacttype where contacttypeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

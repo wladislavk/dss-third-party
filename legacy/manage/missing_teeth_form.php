@@ -295,27 +295,27 @@ $mob_arr = explode('~', $mob);
                                                 <tr>
                                                     <td valign="top" align="center">
                                                         <?php $mob_c++;?>
-                                                        <input type="text" maxlength="2" tabindex="<?php echo $mob_c + 384; ?>" name="mob_<?php echo $i?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $mob_arr[$mob_c];?>">
+                                                        <input type="text" maxlength="2" tabindex="<?php echo $mob_c + 384; ?>" name="mob_<?php echo $i?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $mob_arr[$mob_c];?>">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td valign="top" align="center">
                                                         <?php $pck1_c++;?>
-                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_<?php echo ($i < 9) ? '1' : '3' ?>" tabindex="<?php echo $pck1_c + 48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c + $ratio];?>">
+                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_<?php echo ($i < 9) ? '1' : '3' ?>" tabindex="<?php echo $pck1_c + 48; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c + $ratio];?>">
                                                         <?php $pck1_c++;?>
-                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_2" tabindex="<?php echo $pck1_c+48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c];?>">
+                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_2" tabindex="<?php echo $pck1_c+48; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c];?>">
                                                         <?php $pck1_c++;?>
-                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_<?php echo ($i < 9) ? '3' : '1' ?>" tabindex="<?php echo $pck1_c + 48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c - $ratio];?>">
+                                                        <input type="text" maxlength="2" name="pck1_<?php echo $i?>_<?php echo ($i < 9) ? '3' : '1' ?>" tabindex="<?php echo $pck1_c + 48; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $pck1_arr[$pck1_c - $ratio];?>">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td valign="top" align="center">
                                                         <?php $rec1_c++;?>
-                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_<?php echo ($i < 9) ? '1' : '3' ?>" tabindex="<?php echo $rec1_c + 240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c + $ratio];?>">
+                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_<?php echo ($i < 9) ? '1' : '3' ?>" tabindex="<?php echo $rec1_c + 240; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c + $ratio];?>">
                                                         <?php $rec1_c++;?>
-                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_2" tabindex="<?php echo $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c];?>">
+                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_2" tabindex="<?php echo $rec1_c+240; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c];?>">
                                                         <?php $rec1_c++;?>
-                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_<?php echo ($i < 9) ? '3' : '1' ?>" tabindex="<?php echo $rec1_c + 240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c - $ratio];?>">
+                                                        <input type="text" maxlength="2" name="rec1_<?php echo $i?>_<?php echo ($i < 9) ? '3' : '1' ?>" tabindex="<?php echo $rec1_c + 240; ?>" style="width:14px" <?php if($miss == 1) echo " disabled";?> value="<?php echo $rec1_arr[$rec1_c - $ratio];?>">
                                                         <br />
                                                         <?php if ($i < 9) { ?>
                                                             Di

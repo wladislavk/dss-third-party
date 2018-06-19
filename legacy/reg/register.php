@@ -302,11 +302,11 @@ $c_r = $db->getRow($c_sql);
                 <label class="lbl_a">Feet</label>
                             <select name="feet" id="feet" class="inpt_a" tabindex="5" onchange="cal_bmi();" >
                                 <option value="0">Feet</option>
-                                <? for($i=1;$i<9;$i++)
+                                <?php for($i=1;$i<9;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($p['feet'] == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
+                                                                        <option value="<?=$i?>" <?php if($p['feet'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?php
                                                                 }?>
                             </select>
         </div>
@@ -314,11 +314,11 @@ $c_r = $db->getRow($c_sql);
                 <label class="lbl_a">Inches</label>
                 <select name="inches" id="inches" class="inpt_a" tabindex="6" onchange="cal_bmi();">
                                 <option value="-1">Inches</option>
-                                <? for($i=0;$i<12;$i++)
+                                <?php for($i=0;$i<12;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($p['inches']!='' && $p['inches'] == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
+                                                                        <option value="<?=$i?>" <?php if($p['inches']!='' && $p['inches'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?php
                                                                 }?>
                             </select>
         </div>
@@ -326,11 +326,11 @@ $c_r = $db->getRow($c_sql);
                 <label class="lbl_a">Weight</label>
                 <select name="weight" id="weight" class="inpt_a" tabindex="7" onchange="cal_bmi();">
                                 <option value="0">Weight</option>
-                                <? for($i=80;$i<=500;$i++)
+                                <?php for($i=80;$i<=500;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($p['weight'] == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
+                                                                        <option value="<?=$i?>" <?php if($p['weight'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?php
                                                                 }?>
                             </select>
         </div>
@@ -391,11 +391,11 @@ $c_r = $db->getRow($c_sql);
                 </div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>2.</strong> Your relationship to primary insured:</label><select id="p_m_relation" name="p_m_relation" class="inpt_a validate field text addr tbox" style="width:200px;">
-                                                                        <option value="" <? if($p['p_m_relation'] == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($p['p_m_relation'] == 'Self') echo " selected";?>>Self</option>      
-                                                                        <option value="Spouse" <? if($p['p_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($p['p_m_relation'] == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($p['p_m_relation'] == 'Other') echo " selected";?>>Other</option>
+                                                                        <option value="" <?php if($p['p_m_relation'] == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <?php if($p['p_m_relation'] == 'Self') echo " selected";?>>Self</option>      
+                                                                        <option value="Spouse" <?php if($p['p_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <?php if($p['p_m_relation'] == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <?php if($p['p_m_relation'] == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
                 </div>
                 <div class="sepH_b third">
@@ -544,11 +544,11 @@ $c_r = $db->getRow($c_sql);
                 </div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>1.</strong> Your relationship to primary insured:</label><select class="inpt_a validate" id="s_m_relation" name="s_m_relation" >
-                                                                        <option value="" <? if($p['s_m_relation'] == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($p['s_m_relation'] == 'Self') echo " selected";?>>Self</option>
-                                                                        <option value="Spouse" <? if($p['s_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($p['s_m_relation'] == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($p['s_m_relation'] == 'Other') echo " selected";?>>Other</option>
+                                                                        <option value="" <?php if($p['s_m_relation'] == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <?php if($p['s_m_relation'] == 'Self') echo " selected";?>>Self</option>
+                                                                        <option value="Spouse" <?php if($p['s_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <?php if($p['s_m_relation'] == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <?php if($p['s_m_relation'] == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
                 </div>
                 <div class="sepH_b third">

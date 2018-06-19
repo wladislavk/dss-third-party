@@ -52,7 +52,7 @@ $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR
 
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 <table class="table table-bordered table-hover">
@@ -60,7 +60,7 @@ $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR
 	<tr bgcolor="#ffffff">
 		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"&logid=".$_GET['logid']);
 			?>
 		</td>
@@ -98,4 +98,4 @@ $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR
 </table>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

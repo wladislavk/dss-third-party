@@ -29,7 +29,7 @@ if(!empty($_POST["mult_nasal_passagessub"]) && $_POST["mult_nasal_passagessub"] 
 		//alert("<?php echo $msg;?>");
 		parent.window.location='manage_nasal_passages.php?msg=<?php echo $msg;?>';
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -46,7 +46,7 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
-		<?
+		<?php
 	} 
 	else
 	{
@@ -70,7 +70,7 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 				//alert("<?php echo $msg;?>");
 				parent.window.location='manage_nasal_passages.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
@@ -83,7 +83,7 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 			<script type="text/javascript">
 				parent.window.location='manage_nasal_passages.php?msg=<?php echo $msg;?>';
 			</script>
-			<?
+			<?php
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -93,7 +93,7 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
-    <?
+    <?php
     $thesql = "select * from dental_nasal_passages where nasal_passagesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);

@@ -113,9 +113,9 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Diagnostic Test 
-               <? if($diagnostic <> "") {?>
+               <?php if($diagnostic <> "") {?>
                		&quot;<?=$diagnostic;?>&quot;
-               <? }?>
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -141,8 +141,8 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>

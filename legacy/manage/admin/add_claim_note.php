@@ -84,12 +84,12 @@ $my = mysqli_query($con,$sql);
                         var title_arr = new Array();
                         var desc_arr = new Array();
                         
-                        <? $i=0;
+                        <?php $i=0;
                         while($myarray = mysqli_fetch_array($my))
                         {?>
                                 title_arr[<?php echo $i;?>] = "<?php echo st(addslashes($myarray['title']));?>";
                                 desc_arr[<?php echo $i;?>] = "<?php echo st(trim( preg_replace( '/\n\r|\r\n/','%n%',addslashes($myarray['description']))));?>";
-                        <?
+                        <?php
                                 $i++;                        }?>
                         document.getElementById("note").value = desc_arr[fa].replace(/\%n\%/g,'\r\n').replace(/&amp;/g,'&');;
                 } else {
@@ -111,9 +111,9 @@ $but_text = "Add ";
 	
 	 if(!empty($msg)) {?>
     <div align="center" class="red">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
+    <?php }?>
         <div class="page-header">
             <h1>
                 Add Claim Note 

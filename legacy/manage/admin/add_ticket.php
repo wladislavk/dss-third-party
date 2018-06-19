@@ -68,7 +68,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
 			alert('Thank you for your submission! We will respond promptly to you inquiry.');
 			parent.window.location='manage_support_tickets.php?msg=<?php echo $msg;?>';
 		</script>
-		<?
+		<?php
 		
 		trigger_error("Die called", E_USER_ERROR);
 	

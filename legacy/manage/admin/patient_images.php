@@ -14,7 +14,7 @@ if($pat_myarray['patientid'] == '')
         <script type="text/javascript">
                 window.location = 'manage_patient.php';
         </script>
-        <?
+        <?php
         trigger_error("Die called", E_USER_ERROR);
 }
 

@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><style>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<style>
 <!--
  /* Font Definitions */
  @font-face

@@ -1,9 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once '../admin/includes/main_include.php';
 include_once 'checkemail.php';
 
-$docid = $db->escape( $_SESSION['docid']);
+$db = new Db();
+
 $sd = $db->escape( $_POST['start_date']);
 $ed = $db->escape( $_POST['end_date']);
 $de = $db->escape( $_POST['description']);
@@ -11,7 +13,6 @@ $cat = $db->escape( $_POST['category']);
 $pi = $db->escape( $_POST['producer']);
 $pid = $db->escape( $_POST['patient']);
 $e_id = $db->escape( $_POST['e_id']);
-$t_id = $db->escape( $_POST['t_id']);
 $res = $db->escape( $_POST['resource']);
 $r_type = $db->escape( ($_POST['rec_type'] != 'null') ? $_POST['rec_type'] : ''); //to fix bug with string 'null'
 $r_pattern = $db->escape( ($_POST['rec_pattern'] != 'null') ? $_POST['rec_pattern'] : '');

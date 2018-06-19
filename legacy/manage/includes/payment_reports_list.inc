@@ -48,13 +48,13 @@ if ($is_unviewed) {
 }
 
 /**
- * @see DSS-437
- *
  * Retrieve all NPIs associated to member of this office
  */
 if (empty($back_office)) {
     $franchiseeId = $docId;
 }
+
+$db = new Db();
 
 if ($franchiseeId) {
     $sql_user_filter = "i.docid = '$franchiseeId'";
@@ -288,4 +288,4 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
         });
     });
 </script>
-<?php  include 'includes/bottom.htm';?>
+<?php include 'includes/bottom.htm';?>

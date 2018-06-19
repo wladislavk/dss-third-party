@@ -7,6 +7,8 @@ $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
 $d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
 $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
+$db = new Db();
+
 $info_sql = "UPDATE dental_flow_pg2_info SET
     device_id='".$db->escape( $d)."'
     WHERE id='".$db->escape( $id)."'";

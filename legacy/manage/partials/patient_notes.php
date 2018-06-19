@@ -1,12 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
 <?php
-if (isset($my)) {
-    ?>
-<style>
-    #sect_notes dd {
-        word-break: break-all;
-    }
-</style>
+namespace Ds3\Libraries\Legacy;
+
+if (isset($my)) { ?>
+    <style>
+        #sect_notes dd {
+            word-break: break-all;
+        }
+    </style>
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
         <?php
         if (count($my) == 0) { ?>
@@ -15,11 +15,11 @@ if (isset($my)) {
             </tr>
             <?php
         } else {
-            $signNotesResult = [];
-            if (isset($db) && $db instanceof Db) {
-                $signNotesSql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape($_SESSION['userid']) . "'";
-                $signNotesResult = $db->getRow($signNotesSql);
-            }
+            $db = new Db();
+
+            $signNotesSql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape($_SESSION['userid']) . "'";
+            $signNotesResult = $db->getRow($signNotesSql);
+
             $userSign = $signNotesResult['sign_notes'];
             $userIds = [];
             foreach ($my as $dentalNote) {

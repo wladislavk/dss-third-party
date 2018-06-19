@@ -5,7 +5,6 @@ include_once '../admin/includes/main_include.php';
 include_once '../includes/constants.inc';
 include "../includes/sescheck.php";
 include_once '../includes/general_functions.php';
-
 ?>
 <script type="text/javascript" src="../admin/script/jquery-1.6.2.min.js"></script>
 <?php

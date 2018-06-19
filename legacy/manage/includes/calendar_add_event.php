@@ -20,6 +20,8 @@ $e_pid = empty($_POST['epid']) ? "''" : $_POST['epid'];
 include_once '../admin/includes/main_include.php';
 include_once 'checkemail.php';
 
+$db = new Db();
+
 $s = "INSERT INTO dental_calendar
     (start_date, end_date, event_id, description, category, producer_id, docid, patientid, rec_type, rec_pattern, event_length, event_pid, res_id, adddate)
     VALUES

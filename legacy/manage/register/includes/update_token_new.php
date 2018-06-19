@@ -22,6 +22,8 @@ $exp_year = $_REQUEST['exp_year'];
 $cvc = $_REQUEST['cvc'];
 $zip = $_REQUEST['zip'];
 
+$db = new Db();
+
 $key_sql = "SELECT stripe_secret_key FROM companies WHERE id = '" . $db->escape($companyid) . "'";
 $key_r= $db->getRow($key_sql);
 setupStripeConnection($key_r['stripe_secret_key']);
@@ -70,13 +72,6 @@ try {
     echo '{"error": {"code":"'.$e->getCode().'","message":"'.$e->getMessage().'"}}';
     trigger_error("Die called", E_USER_ERROR);
 }
-
-// charge the Customer instead of the card
-//Stripe_Charge::create(array(
-//  "amount" => 1000, # amount in cents, again
-//  "currency" => "usd",
-//  "customer" => $customer->id)
-//);
 
 $recover_hash = hash('sha256', $id.$email.rand());
 

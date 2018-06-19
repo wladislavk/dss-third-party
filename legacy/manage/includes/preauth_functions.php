@@ -4,7 +4,6 @@ namespace Ds3\Libraries\Legacy;
 function claim_errors($pid, $medicare = false)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $errors = [];
 
@@ -102,29 +101,9 @@ function claim_errors($pid, $medicare = false)
         array_push($errors, "Does not have flowsheet");
     } else {
         $flow = $flowresult[0];
-        $copyreqdate = $flow['copyreqdate'];
-        $referred_by = $flow['referred_by'];
-        $referreddate = $flow['referreddate'];
-        $thxletter = $flow['thxletter'];
-        $queststartdate = $flow['queststartdate'];
-        $questcompdate = $flow['questcompdate'];
-        $insinforec = $flow['insinforec'];
-        $rxreq = $flow['rxreq'];
         $rxrec = $flow['rxrec'];
-        $lomnreq = $flow['lomnreq'];
         $lomnrec = $flow['lomnrec'];
         $rxlomnrec = $flow['rxlomnrec'];
-        $contact_location = $flow['contact_location'];
-        $questsendmeth = $flow['questsendmeth'];
-        $questsender = $flow['questsender'];
-        $refneed = $flow['refneed'];
-        $refneeddate1 = $flow['refneeddate1'];
-        $refneeddate2 = $flow['refneeddate2'];
-        $preauth = $flow['preauth'];
-        $preauth1 = $flow['preauth1'];
-        $preauth2 = $flow['preauth2'];
-        $insverbendate1 = $flow['insverbendate1'];
-        $insverbendate2 = $flow['insverbendate2'];
     }
 
     if (!(($rxrec != '' && $lomnrec != '') || $rxlomnrec != '')) {
@@ -148,7 +127,6 @@ function list_preauth_errors($pid)
 function create_vob($pid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $sql = "SELECT tc.* 
         FROM dental_patients p 

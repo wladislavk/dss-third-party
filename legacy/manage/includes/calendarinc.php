@@ -1,5 +1,6 @@
 <?php
-namespace Ds3\Libraries\Legacy; ?>
+namespace Ds3\Libraries\Legacy;
+?>
 <script src="/manage/3rdParty/JSCal/src/js/jscal2.js"></script>
 <script src="/manage/3rdParty/JSCal/src/js/lang/en.js"></script>
 <link rel="stylesheet" type="text/css" href="/manage/3rdParty/JSCal/src/css/jscal2.css" />

@@ -1,33 +1,35 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include '../manage/admin/includes/main_include.php'; ?>
-<?php require_once("twilio/twilio.config.php");
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include '../manage/admin/includes/main_include.php';
+require_once("twilio/twilio.config.php");
+
+$db = new Db();
 
 $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.practice, du.logo, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
-	WHERE dp.patientid='".$db->escape( $_GET['id'])."' AND
-		dp.recover_hash='".$db->escape( $_GET['hash'])."' AND
-		dp.use_patient_portal='1' AND
-		du.use_patient_portal='1'";
-$q = mysqli_query($con, $s);
-    if(mysqli_num_rows($q) > 0){
-      $r = mysqli_fetch_assoc($q);
+    WHERE dp.patientid='".$db->escape( $_GET['id'])."' AND
+    dp.recover_hash='".$db->escape( $_GET['hash'])."' AND
+    dp.use_patient_portal='1' AND
+    du.use_patient_portal='1'";
+if($db->getNumberRows($s) > 0){
+    $r = $db->getRow($s);
 
-if (!empty($r['mailing_practice'])) {
-  $practice = $r['mailing_practice'];
-} elseif (!empty($r['practice'])) {
-  $practice = $r['practice'];
-} else {
-  $practice = '';
-}
+    if (!empty($r['mailing_practice'])) {
+        $practice = $r['mailing_practice'];
+    } elseif (!empty($r['practice'])) {
+        $practice = $r['practice'];
+    } else {
+        $practice = '';
+    }
 
 $loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".$db->escape( $_GET['id'])."'";
-$loc_q = mysqli_query($con, $loc_sql);
-$loc_r = mysqli_fetch_assoc($loc_q);
+$loc_r = $db->getRow($loc_sql);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-  $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape( $loc_r['location'])."' AND docid='".$db->escape( $r['docid'])."'";
+    $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape( $loc_r['location'])."' AND docid='".$db->escape( $r['docid'])."'";
 }else{
-  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape( $r['docid'])."'";
+    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape( $r['docid'])."'";
 }
-$location_result = mysqli_query($con, $location_query);
-$location_info = mysqli_fetch_assoc($location_result);
+$location_info = $db->getRow($location_query);
 
   $n = $location_info['phone'];
 } else { ?>
@@ -63,11 +65,11 @@ function send_text(from, but){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){ 
-	  if(from=="button"){
-	    $('#sent_text').html("Text message sent! Please allow up to 1 minute to receive the message, then enter your access code on this page.")
-	  }else{ 
+      if(from=="button"){
+        $('#sent_text').html("Text message sent! Please allow up to 1 minute to receive the message, then enter your access code on this page.")
+      }else{
       $('#sent_text').html("We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.").show('slow');
-	  }
+      }
         }else{
           if(r.error == "cell"){
                 $('#sent_text').html("Error: Cell phone not found.").show('slow');   
@@ -109,15 +111,15 @@ $(document).ready(function(){
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
      <p id="sent_text" class="error">
-	<?php
-  	  if($r['access_type']==2){
-	?>
+    <?php
+      if($r['access_type']==2){
+    ?>
 
-	Please enter the unique PIN access code you<br />received in the box below.
-	<?php }else{ ?>
-	<?= $error; ?>
-	<?php } ?>
-	</p>
+    Please enter the unique PIN access code you<br />received in the box below.
+    <?php }else{ ?>
+    <?= $error; ?>
+    <?php } ?>
+    </p>
      <p id="first2_error" class="error"></p>
      <div class="field">
        <label>Email Address</label>
@@ -127,18 +129,18 @@ $(document).ready(function(){
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a PIN code?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
-		Didn't receive a PIN access code from <?= $practice; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
+        Didn't receive a PIN access code from <?= $practice; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
           </p>
        </div>
-	<?php }else{ ?>
+    <?php }else{ ?>
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a text message?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
-		Didn't receive a text message from us? Don't worry. Click "Text Access Code" and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
-	  </p>
+        Didn't receive a text message from us? Don't worry. Click "Text Access Code" and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
+      </p>
           <button class="fr" onclick="send_text('button', this)">Text Access Code</button>
        </div>
-	<?php } ?>
+    <?php } ?>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />
      </div>
      <div class="field">
@@ -155,7 +157,7 @@ $(document).ready(function(){
      </div>
      <div class="field half">
         I accept the <a id="user_agree_but" href="#user_agree">user agreement</a> 
-	<input type="checkbox" id="agreement" name="agreement" />
+    <input type="checkbox" id="agreement" name="agreement" />
      </div>
      <div class="field half">
        <button class="fr" onclick="createPassword()">Create</button>
@@ -167,7 +169,7 @@ $(document).ready(function(){
 <div style="clear:both;"></div>
 
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
-<br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
+<br/><a style="font-family: arial, sans-serif; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>
 
 <div style="display:none">
@@ -227,11 +229,11 @@ $(document).ready(function(){
 <script type="text/javascript">
 $(document).ready(function() {
 
-	/* Using custom settings */
-	
-	$("a#user_agree_but").fancybox({
-		'hideOnContentClick': true
-	});
+    /* Using custom settings */
+
+    $("a#user_agree_but").fancybox({
+        'hideOnContentClick': true
+    });
 });
 
 function createPassword(){

@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
@@ -19,6 +20,8 @@ include 'includes/questionnaire_sections.php';
     }
 </script>
 <?php
+$db = new Db();
+
 if ($_POST['q_page3sub'] == 1) {
     $allergens = $_POST['allergens'];
     $allergenscheck = $_POST['allergenscheck'];
@@ -49,8 +52,6 @@ if ($_POST['q_page3sub'] == 1) {
     $no_medications = $_POST['no_medications'];
     $no_history = $_POST['no_history'];
     $orthodontics = $_POST['orthodontics'];
-    $premedcheck = $_POST["premedcheck"];
-    $premed = $_POST["premeddet"];
     $family_hd = $_POST['family_hd'];
     $family_bp = $_POST['family_bp'];
     $family_dia = $_POST['family_dia'];
@@ -165,8 +166,8 @@ if ($_POST['q_page3sub'] == 1) {
             family_hd = '".s_for($family_hd)."',
             family_bp = '".s_for($family_bp)."',
             family_dia = '".s_for($family_dia)."',
-            family_sd = '".s_for($family_sd)."',	
-    		alcohol = '".s_for($alcohol)."',
+            family_sd = '".s_for($family_sd)."',
+            alcohol = '".s_for($alcohol)."',
             sedative = '".s_for($sedative)."',
             caffeine = '".s_for($caffeine)."',
             smoke = '".s_for($smoke)."',
@@ -196,17 +197,16 @@ if ($_POST['q_page3sub'] == 1) {
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape($_SESSION['pid'])."'");
         mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
-            set		
+            set
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."'
             where 
             patientid='".$_SESSION["pid"]."'";
         mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-
-        $msg = "Added Successfully"; ?>
+        ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';
         </script>
@@ -247,7 +247,7 @@ if ($_POST['q_page3sub'] == 1) {
             family_hd = '".s_for($family_hd)."',
             family_bp = '".s_for($family_bp)."',
             family_dia = '".s_for($family_dia)."',
-    		family_sd = '".s_for($family_sd)."',
+            family_sd = '".s_for($family_sd)."',
             alcohol = '".s_for($alcohol)."',
             sedative = '".s_for($sedative)."',
             caffeine = '".s_for($caffeine)."',
@@ -274,8 +274,8 @@ if ($_POST['q_page3sub'] == 1) {
             clinch_grind_text  = '".s_for($clinch_grind_text)."',
             future_dental_det = '".s_for($future_dental_det)."',
             drymouth_text = '".s_for($drymouth_text)."'
-    		where q_page3id = $qPage3Id";
-		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+            where q_page3id = $qPage3Id";
+        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
         mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
@@ -285,8 +285,6 @@ if ($_POST['q_page3sub'] == 1) {
             where 
             patientid='".$_SESSION["pid"]."'";
         mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-
-        $msg = "Edited Successfully";
         ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';
@@ -303,8 +301,6 @@ if ($comp['history'] == 0) {
     $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."' ";
     $pat_my = mysqli_query($con, $pat_sql);
     $pat_myarray = mysqli_fetch_array($pat_my);
-
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
@@ -327,25 +323,12 @@ if ($comp['history'] == 0) {
     $history = st($myarray['history']);
     $other_history = st($myarray['other_history']);
     $dental_health = st($myarray['dental_health']);
-    $injurytohead = st($myarray['injurytohead']);
-    $injurytoface = st($myarray['injurytoface']);
-    $injurytoneck = st($myarray['injurytoneck']);
-    $injurytoteeth = st($myarray['injurytoteeth']);
-    $injurytomouth = st($myarray['injurytomouth']);
     $drymouth = st($myarray['drymouth']);
     $removable = st($myarray['removable']);
     $year_completed = st($myarray['year_completed']);
-    $tmj = st($myarray['tmj']);
-    $gum_problems = st($myarray['gum_problems']);
-    $dental_pain = st($myarray['dental_pain']);
-    $dental_pain_describe = st($myarray['dental_pain_describe']);
     $completed_future = st($myarray['completed_future']);
     $clinch_grind = st($myarray['clinch_grind']);
     $wisdom_extraction = st($myarray['wisdom_extraction']);
-    $jawjointsurgery = st($myarray['jawjointsurgery']);
-    $no_allergens = st($myarray['no_allergens']);
-    $no_medications = st($myarray['no_medications']);
-    $no_history = st($myarray['no_history']);
     $orthodontics = st($myarray['orthodontics']);
 
     $psql = "SELECT * FROM dental_patients where patientid='".$db->escape( $_SESSION['pid'])."'";

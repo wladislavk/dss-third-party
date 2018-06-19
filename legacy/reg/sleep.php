@@ -1,10 +1,13 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
 <?php
+$db = new Db();
+
 if ($_POST['q_sleepsub'] == 1) {
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = mysqli_query($con, $epworth_sql);
@@ -35,7 +38,7 @@ if ($_POST['q_sleepsub'] == 1) {
             analysis = '".s_for($analysis)."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".$db->error(), E_USER_ERROR);
 
         $ins_sql = "insert into dental_thorton set 
             patientid = '".s_for($_SESSION['pid'])."',
@@ -79,7 +82,7 @@ if ($_POST['q_sleepsub'] == 1) {
             epworthid = '".s_for($epworth_arr)."',
             analysis = '".s_for($analysis)."'
             where q_sleepid = '".s_for($_POST['ed'])."'";
-		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
         $ed_sql = " update dental_thorton set 
             snore_1 = '".s_for($snore_1)."',
@@ -105,8 +108,8 @@ if ($_POST['q_sleepsub'] == 1) {
                 ess='$newEss',
                 tss='$newTss'
                 WHERE q_page1id=$qPage1Id";
-    		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-    	}
+            mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        }
         mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
         mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $msg = " Edited Successfully";

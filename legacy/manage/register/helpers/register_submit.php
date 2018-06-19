@@ -13,6 +13,8 @@ $userId = intval($_POST['userid']);
 
 linkRequestData('dental_patients', $userId);
 
+$db = new Db();
+
 $sql = "UPDATE dental_users set
         first_name = '".$db->escape($_POST['first_name'])."',
         last_name = '".$db->escape($_POST['last_name'])."',

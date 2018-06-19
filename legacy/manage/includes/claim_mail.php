@@ -10,7 +10,7 @@ $mailed = $_REQUEST['mailed'];
 $type = $_REQUEST['type'];
 $s = mail_claim($lid, $mailed, $type);
 if($s){
-  echo '{"success":true}';
+    echo '{"success":true}';
 }else{
-  echo '{"error":true}';
+    echo '{"error":true}';
 }

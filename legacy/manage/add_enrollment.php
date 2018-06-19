@@ -31,6 +31,8 @@ include_once "admin/includes/invoice_functions.php";
 <body id="enrollmentManager">
 <br />
 <?php
+$db = new Db();
+
 if (isset($_POST["enroll_but"])) {
     $sql = "SELECT * FROM dental_users where userid='".$db->escape( $_SESSION['docid'])."'";
     $r = $db->getRow($sql);
@@ -42,8 +44,7 @@ if (isset($_POST["enroll_but"])) {
 
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
     $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".$db->escape( $_SESSION['docid'])."'";
-    $api_key_query = mysqli_query($con, $api_key_sql);
-    $api_key_result = mysqli_fetch_assoc($api_key_query);
+    $api_key_result = $db->getRow($api_key_sql);
     if ($api_key_result && !empty($api_key_result['eligible_api_key'])) {
         if (trim($api_key_result['eligible_api_key']) != "") {
             $api_key = $api_key_result['eligible_api_key'];
@@ -97,8 +98,7 @@ if (isset($_POST["enroll_but"])) {
         </script>
         <?php
     } else {
-        $ref_id = $json_response->{"enrollment_npi"}->{"id"};
-        $success = $json_response->{"success"};
+        $ref_id = $json_response->enrollment_npi->id;
         $up_sql = "INSERT INTO dental_eligible_enrollment SET 
             user_id = '".$db->escape($_SESSION['docid'])."',
             payer_id = '".$db->escape($payer_id)."',
@@ -185,7 +185,7 @@ if (isset($_POST["enroll_but"])) {
     $q = $db->getResults($sql);
     ?>
     <div>
-    	<label style="color:#fff;">NPI to Enroll</label>
+        <label style="color:#fff;">NPI to Enroll</label>
         <select id="provider_select" name="provider_select">
             <?php
             if ($q) {
@@ -210,8 +210,8 @@ if (isset($_POST["enroll_but"])) {
         </select>
     </div>
     <div style="clear:both;">
-    	<label style="color:#fff;">Facility Name</label>
-    	<input type="text" id="facility_name" name="facility_name" value="<?php echo $r['practice']; ?>" readonly="readonly" />
+        <label style="color:#fff;">Facility Name</label>
+        <input type="text" id="facility_name" name="facility_name" value="<?php echo $r['practice']; ?>" readonly="readonly" />
     </div>
     <div>
         <label>Provider Name</label>

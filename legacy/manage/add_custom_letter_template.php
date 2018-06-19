@@ -26,6 +26,8 @@ function formatMm($number)
     return number_format($number, 1, '.', '') . 'mm';
 }
 
+$db = new Db();
+
 if(isset($_POST['update_btn'])){
     if(!empty($_GET['ed'])){
         $s = "UPDATE dental_letter_templates_custom SET

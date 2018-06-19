@@ -7,6 +7,8 @@ $id = $_POST['id'];
 include_once '../admin/includes/main_include.php';
 include_once 'checkemail.php';
 
+$db = new Db();
+
 $sql = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.event_id='".$id."' order by dc.id desc";
 
 if ($r = $db->getRow($sql)) {

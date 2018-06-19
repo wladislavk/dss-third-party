@@ -11,7 +11,8 @@ namespace Ds3\Libraries\Legacy;
  * @param array $ledgerIds
  * @return int|string
  */
-function claim_history_update ($claimId, $userId, $adminId, $ledgerIds=[]) {
+function claim_history_update($claimId, $userId, $adminId, $ledgerIds = [])
+{
     $db = new Db();
     
     $claimId = intval($claimId);
@@ -68,7 +69,8 @@ function claim_history_update ($claimId, $userId, $adminId, $ledgerIds=[]) {
     return $historyId;
 }
 
-function payment_history_update ($paymentId, $userId, $adminId) {
+function payment_history_update($paymentId, $userId, $adminId)
+{
     $db = new Db();
 
     $paymentId = intval($paymentId);
@@ -101,9 +103,8 @@ function payment_history_update ($paymentId, $userId, $adminId) {
  * @param array $serviceLines
  * @return bool
  */
-function hasLedgerTransactionsChanged ($claimId, $serviceLines) {
-    $db = new Db();
-
+function hasLedgerTransactionsChanged($claimId, $serviceLines)
+{
     $comparisons = [];
     $dynamicLines = [];
     $unorderedLines = ClaimFormData::dynamicLedgerItems($claimId);
@@ -145,7 +146,8 @@ function hasLedgerTransactionsChanged ($claimId, $serviceLines) {
  * @param int   $trxnStatus
  * @param array $serviceLines
  */
-function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
+function updateLedgerTransactions($claimId, $trxnStatus, $serviceLines)
+{
     $db = new Db();
 
     $claimId = intval($claimId);
@@ -230,7 +232,8 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
  * @param int $claimId
  * @param int|null $status
  */
-function deleteClaim ($claimId, $status=NULL) {
+function deleteClaim($claimId, $status = null)
+{
     $db = new Db();
 
     $ledgerIds = [];

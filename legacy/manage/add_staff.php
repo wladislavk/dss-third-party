@@ -111,7 +111,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             $db->query("UPDATE dental_users SET $userData WHERE userid = '$postUserId'");
 
             edx_user_update($postUserId);
-            help_user_update($postUserId, NULL);
+            help_user_update($postUserId);
             ?>
             <script type="text/javascript">
                 parent.window.location = 'manage_staff.php?msg=Edited+successfully';
@@ -135,7 +135,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             $userId = $db->getInsertId("INSERT INTO dental_users SET $userData, adddate = NOW()");
 
             edx_user_update($userId);
-            help_user_update($userId, NULL);
+            help_user_update($userId);
             ?>
             <script type="text/javascript">
                 parent.window.location = 'manage_staff.php?msg=Added+successfully';

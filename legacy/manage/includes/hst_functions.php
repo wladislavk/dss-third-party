@@ -97,7 +97,7 @@ function createPatientFromScreener($screenerId)
 }
 
 /**
- * Mark a  HST Request as authorized, create proper EP worth entry and email patient
+ * Mark a HST Request as authorized, create proper EP worth entry and email patient
  *
  * @param int $hstId
  * @param int $hstCompanyId
@@ -223,6 +223,5 @@ function cancelHSTRequest($hstId, $userId)
     ];
     $updateData = $db->escapeAssignmentList($updateData);
 
-    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updatedate = NOW()
-        WHERE id = '$hstId'");
+    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updatedate = NOW() WHERE id = '$hstId'");
 }

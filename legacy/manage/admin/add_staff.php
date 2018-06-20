@@ -92,7 +92,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             mysqli_query($con, $ed_sql);
 
             edx_user_update($_POST['ed'], $edx_con);
-            help_user_update($_POST['ed'], $help_con);
+            help_user_update($_POST['ed']);
 
             $msg = "Edited Successfully";
             ?>
@@ -156,7 +156,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             mysqli_query($con,$ins_sql);
             $userid = mysqli_insert_id($con);
             edx_user_update($userid, (!empty($edx_con) ? $edx_con : ''));
-            help_user_update($userid, (!empty($help_con) ? $help_con : ''));
+            help_user_update($userid);
 
             $docname_sql = "SELECT name from dental_users WHERE userid='".$db->escape($_GET['docid'])."'";
             $docname_q = mysqli_query($con,$docname_sql);

@@ -76,7 +76,6 @@ $patient_middle = st($claimData['patient_middle']);
 $patient_dob = st($claimData['patient_dob']);
 $patient_sex = st($claimData['patient_sex']);
 
-$insurancetype = st($claimData['insurance_type']);
 $other_insured_firstname = st($claimData['other_insured_firstname']);
 $other_insured_lastname = st($claimData['other_insured_lastname']);
 $other_insured_middle = st($claimData['other_insured_middle']);
@@ -106,7 +105,6 @@ $patient_relation_other_insured = st($claimData['patient_relation_other_insured'
 $patient_address = st($claimData['patient_address']);
 $patient_city = st($claimData['patient_city']);
 $patient_state = st($claimData['patient_state']);
-$patient_status = st($claimData['patient_status']);
 $patient_zip = st($claimData['patient_zip']);
 $patient_phone_code = st($claimData['patient_phone_code']);
 $patient_phone = st($claimData['patient_phone']);
@@ -174,7 +172,6 @@ $billing_provider_address = st($claimData['billing_provider_address']);
 $billing_provider_city = st($claimData['billing_provider_city']);
 $billing_provider_info = parseCityStateZip($billing_provider_city);
 $billing_provider_a = st($claimData['billing_provider_a']);
-$status = st($claimData['status']);
 
 $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
 

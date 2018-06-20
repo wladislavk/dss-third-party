@@ -1,7 +1,7 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-function help_user_update($id, $help_con)
+function help_user_update($id)
 {
     if (getenv('DOCKER_USED')) {
         return;
@@ -13,11 +13,7 @@ function help_user_update($id, $help_con)
 
     $r = $db->getRow($sql);
     $help_id = $r['help_id'];
-    $docid = ($r['docid']!=0)?$r['docid']:$r['userid'];
 
-    $loc_sql = "SELECT * from dental_locations WHERE docid='".mysqli_real_escape_string($GLOBALS['con'], $docid)."' order by default_location DESC limit 1";
-
-    $loc = $db->getRow($loc_sql);
     if(empty($help_id)){
         $help_sql = "INSERT INTO help_wp.wp_users 
                     (user_login, 
@@ -50,19 +46,4 @@ function help_user_update($id, $help_con)
                     where ID = '".mysqli_real_escape_string($GLOBALS['con'], $help_id)."'";
         $db->query($help_sql);
     }
-}
-
-function help_user_delete($id, $help_con)
-{
-    if (getenv('DOCKER_USED')) {
-        return;
-    }
-
-    $db = new Db();
-
-    $sql = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $id)."'";
-
-    $r = $db->getRow($sql);
-    $profile_sql = "DELETE FROM help_wp.wp_users WHERE ID = '".mysqli_real_escape_string($GLOBALS['con'], $r['edx_id'])."'";
-    $db->query($profile_sql);
 }

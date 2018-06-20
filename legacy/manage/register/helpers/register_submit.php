@@ -95,4 +95,4 @@ if (count($loc_q) > 0) {
 $db->query($loc_sql);
 
 edx_user_update($userId, NULL);
-help_user_update($userId, NULL);
+help_user_update($userId);

@@ -49,10 +49,8 @@ function confirm_ledger_trxns(Db $db)
 
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
-function update_ledger_trxns($primary_claim_id, $trxn_status)
+function update_ledger_trxns(Db $db, $primary_claim_id, $trxn_status)
 {
-    $db = new Db();
-
     $num = 0;
     $added_ledger_ids = [];
 
@@ -581,7 +579,7 @@ if (!empty($_POST['ex_statusbtn'])) {
         $primary_claim_id = $db->getInsertId($ins_sql);
 
         // update the ledger trxns passed in with the form
-        update_ledger_trxns($primary_claim_id, DSS_TRXN_PROCESSING);
+        update_ledger_trxns($db, $primary_claim_id, DSS_TRXN_PROCESSING);
             claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);
         $msg = "Added Successfully";
         ?>
@@ -792,7 +790,7 @@ if (!empty($_POST['ex_statusbtn'])) {
         $db->query($ed_sql);
         // update the ledger trxns passed in with the form
         $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-        update_ledger_trxns((!empty($_POST['ed']) ? $_POST['ed'] : ''), $trxn_status);
+        update_ledger_trxns($db, (!empty($_POST['ed']) ? $_POST['ed'] : ''), $trxn_status);
 
         if (isset($_POST['p_m_ins_payer_id'])) {
           $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."' WHERE patientid='".$db->escape($pat_myarray['patientid'])."'";
@@ -1043,7 +1041,8 @@ if ($is_pri_pending) {
         JOIN dental_patients p on ss.patiendid=p.patientid                        
         WHERE (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) 
         AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') 
-        AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
+        AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."' 
+        ORDER BY id DESC LIMIT 1;";
     $d = $db->getRow($sleepstudies);
 
     $referring_provider = $d['diagnosising_doc'];

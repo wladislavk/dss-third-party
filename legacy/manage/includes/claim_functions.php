@@ -210,7 +210,9 @@ function updateLedgerTransactions($claimId, $trxnStatus, $serviceLines)
             array_search($serviceLine['procedure_code'], $codes),
             array_search($serviceLine['procedure_code'], $descriptions),
             array_search($serviceLine['procedure_code'], $longDescriptions),
-        ], function ($each) { return $each !== false; });
+        ], function ($each) {
+            return $each !== false;
+        });
 
         $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
 

@@ -7,8 +7,8 @@ $db = new Db();
 
 if(isset($_POST['sign_but'])){
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
-
     $r = $db->getRow($sql);
+
     if($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
         <script type="text/javascript">
             alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
@@ -49,16 +49,16 @@ if(isset($_POST['sign_but'])){
 <br />
 <div class="fullwidth">
     <?php
-        $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".$db->escape($_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
+    $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".$db->escape($_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
 
-        $sign = $db->getRow($sign_sql);
-        if(file_exists('../../../shared/q_file/signature_' . $_SESSION['userid'] . '_' . $sign['id'] . '.png')) {
+    $sign = $db->getRow($sign_sql);
+    if(file_exists('../../../shared/q_file/signature_' . $_SESSION['userid'] . '_' . $sign['id'] . '.png')) {
     ?>
         <img src='display_file.php?f=signature_<?php echo $_SESSION['userid'];?>_<?php echo $sign['id'];?>.png' />
         <a href="#" onclick="$('#update_signature').show();return false;">Update Signature</a>
         <div id="update_signature" style="display:none;">
     <?php } else { ?>
-            <div>
+        <div>
     <?php } ?>
                 <form method="post" action="" class="sigPad" style="margin-left:20px">
                     <p class="typeItDesc">Review your signature</p>

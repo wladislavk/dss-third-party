@@ -18,6 +18,8 @@ if (!isset($_GET['filter'])) {
     $_GET['filter'] = 100;
 }
 
+$db = new Db();
+
 if (isset($_REQUEST["vid"])) {
     $del_sql = "UPDATE dental_insurance SET fo_paid_viewed=1 where insuranceid='".$_REQUEST["claimid"]."'";
     $db->query($del_sql);

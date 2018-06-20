@@ -30,7 +30,7 @@ if(isset($_REQUEST['useid'])){
         window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
     </script>
     <?php
-}elseif(isset($_REQUEST['createid'])){
+} elseif(isset($_REQUEST['createid'])) {
     $s = "INSERT INTO dental_contact (
         company,
         add1,
@@ -75,7 +75,7 @@ if(isset($_REQUEST['useid'])){
         window.location = "add_contact.php?ed=<?php echo $pc_id; ?>";
     </script>
     <?php
-}elseif(isset($_REQUEST['delid'])){
+} elseif(isset($_REQUEST['delid'])) {
     $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['delid'])."'";
     $pcr = $db->getRow($pcsql);
     $dsql = "DELETE FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['delid'])."'";
@@ -106,14 +106,14 @@ if(isset($_REQUEST['pisort'])){
         $pisort = 'pc.phone';
         break;
     }
-}else{
+} else {
     $_REQUEST['pisort']='company';
     $_REQUEST['pisortdir']='DESC';
     $pisort = "pi.company";
 }
-if(isset($_REQUEST['sortdir'])){
+if (isset($_REQUEST['sortdir'])) {
     $pidir = $_REQUEST['sortdir'];
-}else{
+} else {
     $pidir = 'DESC';
 }
 
@@ -130,7 +130,7 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
-if($total_rec > 0){
+if ($total_rec > 0) {
     ?>
     <span class="admin_head">
         Manage Patient Insurance
@@ -146,7 +146,7 @@ if($total_rec > 0){
     <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
             <?php if($total_rec > $rec_disp) {?>
-                <tr bgColor="#ffffff">
+                <tr bgcolor="#ffffff">
                     <td align="right" colspan="15" class="bp">
                         Pages:
                         <?php
@@ -218,8 +218,8 @@ if($total_rec > 0){
                         </td>
                     </tr>
                     <?php
-                    if(count($sim) > 0){
-                        foreach($sim as $s){ ?>
+                    if (count($sim) > 0) {
+                        foreach ($sim as $s) { ?>
                             <tr class="similar sim_<?php echo $myarray['id']; ?>">
                                 <td valign="top">
                                     <?php echo st($s["name"]);?>

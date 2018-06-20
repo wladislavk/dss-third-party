@@ -50,7 +50,6 @@ $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
 $notes = st($themyarray['notes']);
 ?>
-
 <link rel="stylesheet" href="css/quick_view.css" type="text/css" media="screen" />
 
 <div style="padding-top:10px;background: #fff; width: 98%; height:380px; margin-left: 1%;">
@@ -88,10 +87,10 @@ $notes = st($themyarray['notes']);
         <label>Notes:</label> <span class="value"><?php echo $notes; ?></span>
     </div>
     <?php
-    if($themyarray['corporate']=='1'){ ?>
+    if ($themyarray['corporate'] == '1') { ?>
         <a href="view_fcontact.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">View Full</a>
         <?php
-    }else{ ?>
+    } else { ?>
         <a href="add_contact.php?ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>" style="margin-right:10px;float:right;">Edit</a>
         <?php
     } ?>

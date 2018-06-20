@@ -9,6 +9,8 @@ include 'includes/top.htm';
 $docId = (int)$_SESSION['docid'];
 $apiToken = apiToken();
 
+$db = new Db();
+
 $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
 $r = $db->getRow($sql);
 

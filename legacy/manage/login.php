@@ -18,14 +18,7 @@ if(!empty($_SESSION['loginid'])) {
     $db->query($cur_ins_sql);
 }
 
-if(strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false) {
-    $unload = 0 ;
-} else {
-    $unload = 1 ;
-}
-
-if(isset($_POST["loginsub"]))
-{
+if(isset($_POST["loginsub"])) {
     $username = $db->escape($_POST['username']);
     $rawPassword = $_POST['password'];
 
@@ -127,14 +120,6 @@ if(!empty($_GET['msg'])) {
     <script type="text/javascript" src="script/validation.js"></script>
 </head>
 <body>
-
-<!--[if lte IE 7]>
-<div id="alert_container">
-  This application does not support old versions of IE.<br />For best performance please use Chrome, Firefox or IE8+
-</div>
-<![endif]-->
-
-
 <div id="login_container">
     <div id="form-container">
         <form name="loginfrm" id="loginForm" method="POST" action="/manage/login.php<?= $queryString ? "?$queryString" : '' ?>" onSubmit="return loginabc(this)">

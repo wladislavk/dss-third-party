@@ -24,6 +24,8 @@ $hstData = [
     'ip_address' => $_SERVER['REMOTE_ADDR']
 ];
 
+$db = new Db();
+
 $hstData = $db->escapeAssignmentList($hstData);
 $hstId = $db->getInsertId("INSERT INTO dental_hst SET $hstData, adddate = NOW()");
 
@@ -32,9 +34,7 @@ if ($hstId) {
 
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
   $epworth_my = mysqli_query($con, $epworth_sql);
-  $epworth_number = mysqli_num_rows($epworth_my);
-  while($epworth_myarray = mysqli_fetch_array($epworth_my))
-  {
+  while($epworth_myarray = mysqli_fetch_array($epworth_my)) {
     $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
     if($chk != ''){
       $hst_sql = "INSERT INTO dental_hst_epworth SET
@@ -53,19 +53,16 @@ if ($hstId) {
 }
 
 if (!function_exists(__NAMESPACE__ . '\\num')) {
-    function num($n, $phone=true){
+    function num($n, $phone = true)
+    {
         $n = preg_replace('/\D/', '', $n);
-
         if (!$phone) {
             return $n;
         }
-
         $pattern = '/([1]*)(.*)/';
-
         if (preg_match($pattern, $n, $matches)) {
             return $matches[2];
         }
-
         return $n;
     }
 }

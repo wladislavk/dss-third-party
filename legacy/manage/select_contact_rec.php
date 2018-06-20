@@ -5,7 +5,7 @@ include "admin/includes/main_include.php";
 
 $rec_disp = 40;
 
-if($_REQUEST["page"] != "") {
+if ($_REQUEST["page"] != "") {
     $index_val = $_REQUEST["page"];
 } else {
     $index_val = 0;

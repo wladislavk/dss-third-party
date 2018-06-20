@@ -149,7 +149,6 @@ $mob_arr = explode('~', $mob);
     <script type="text/javascript" src="js/missing_teeth_form.js?v=20160524"></script>
 </head>
 <body>
-
 <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
     <tr bgcolor="#FFFFFF">
         <td>

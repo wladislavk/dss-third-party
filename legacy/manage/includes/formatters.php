@@ -31,17 +31,17 @@ function format_date($date = null, $past = false)
 
     if ($years > 0 && !$past && $neg) {
         $value = "<span class=\"red\">(".$years." yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
-    } else if ($months > 0 && !$past && $neg) {
+    } elseif ($months > 0 && !$past && $neg) {
         $value = "<span class=\"red\">($months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
-    } else if ($totaldays > 0 && !$past && $neg) {
+    } elseif ($totaldays > 0 && !$past && $neg) {
         $value = "<span class=\"red\">(" . ($totaldays > 1 ? "$totaldays days" : "$totaldays day") . ")</span>";
-    } else if ($years > 0 && !$past) {
+    } elseif ($years > 0 && !$past) {
         $value = "$years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
-    } else if ($months > 0 && !$past) {
+    } elseif ($months > 0 && !$past) {
         $value = "$months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
-    } else if ($totaldays > 0 && !$past) {
+    } elseif ($totaldays > 0 && !$past) {
         $value = $totaldays . ($totaldays > 1 ? " days" : " day");
-    } else if (!$past) {
+    } elseif (!$past) {
         $value = "Today";
     }
     if ($totaldays >= 0 && $totaldays <= 7 && !$neg) {
@@ -57,7 +57,7 @@ function format_ledger($balance)
 {
     if ($balance > 0) {
         return "<span class=\"red\">($$balance)</span>";
-    } else{
+    } else {
         return "<span class=\"green\">$$balance</span>";
     }
 }

@@ -93,7 +93,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             sendRemEmail($_POST['ed'], $_POST['email']); //send reminder email
         } elseif(!isset($_POST['sendReg']) && $s_r['registration_status'] == 1 && trim($_POST['email']) != trim($s_r['email'])) {
             if ($doc_patient_portal && $use_patient_portal) {
-                sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered
+                sendRegEmail($_POST['ed'], $_POST['email']); //send reg email if email is updated and not registered
             }
         }
         $ed_sql = "update dental_patients 
@@ -267,7 +267,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']);
+                sendRegEmail($_POST['ed'], $_POST['email'], $s_r['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');
@@ -496,7 +496,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
 
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST["use_patient_portal"]) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($pid, $_POST['email'], $login);
+                sendRegEmail($pid, $_POST['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');
@@ -679,7 +679,6 @@ if (isset($msg) && $msg != '') {
     $lastname = st($themyarray['lastname']);
     $preferred_name = st($themyarray['preferred_name']);
     $salutation = st($themyarray['salutation']);
-    $login = st($themyarray['login']);
     $group_no = st($themyarray['group_no']);
     $plan_no = st($themyarray['plan_no']);
     $dob = st($themyarray['dob']);

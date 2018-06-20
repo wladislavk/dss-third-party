@@ -11,5 +11,5 @@ if (!is_numeric($letter)) {
 }
 ?>
 <script type="text/javascript">
-  window.location = '/manage/index.php';
+    window.location = '/manage/index.php';
 </script>

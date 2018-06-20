@@ -90,7 +90,7 @@ $num_contact = count($my);
                                 $tr_class = "tr_inactive";
                             }
                             $name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
-                    ?>
+                            ?>
                             <tr class="<?php echo $tr_class;?>">
                                 <td valign="top">
                                     <?php echo $name;?>
@@ -105,7 +105,7 @@ $num_contact = count($my);
                                     <input type="radio" name="sel_con" value="<?php echo st($name);?>" onclick="fill_up(this.value)" />
                                 </td>
                             </tr>
-                    <?php
+                            <?php
                         }
                     }
                     ?>

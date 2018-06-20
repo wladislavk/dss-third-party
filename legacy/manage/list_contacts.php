@@ -19,16 +19,16 @@ $names = explode(" ", $partial);
 $db = new Db();
 
 $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERRED_PHYSICIAN."' as referral_type, ct.contacttype
-     FROM dental_contact c
-     JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid
-     WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')
-     AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))
-     OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .(!empty($names[1]) ? $names[1] : '')."%' AND lastname LIKE '" . (!empty($names[2]) ? $names[2] : '') . "%'))
-     AND docid = '" . $_SESSION['docid'] . "'
-     AND c.status=1
-     AND ct.physician=1
-     AND merge_id IS NULL ORDER BY lastname ASC
- ";
+    FROM dental_contact c
+    JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid
+    WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')
+    AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))
+    OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .(!empty($names[1]) ? $names[1] : '')."%' AND lastname LIKE '" . (!empty($names[2]) ? $names[2] : '') . "%'))
+    AND docid = '" . $_SESSION['docid'] . "'
+    AND c.status=1
+    AND ct.physician=1
+    AND merge_id IS NULL ORDER BY lastname ASC
+";
 $result = $db->getResults($sql);
 
 $patients = [];

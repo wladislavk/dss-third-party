@@ -8,9 +8,10 @@ $themyarray = $db->getRow($thesql);
 
 $docsleep = intval($themyarray["docsleep"]);
 if ($docsleep) {
-    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
-              LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-              WHERE contactid=".$docsleep;
+    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax 
+        FROM dental_contact dc
+        LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+        WHERE contactid=".$docsleep;
     $d = $db->getRow($dsql);
 
     $docsleep_id = '';
@@ -27,9 +28,10 @@ if ($docsleep) {
 
 $docpcp = intval($themyarray["docpcp"]);
 if ($docpcp) {
-    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
-              LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-              WHERE contactid=".$docpcp;
+    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax 
+        FROM dental_contact dc
+        LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+        WHERE contactid=".$docpcp;
     $d = $db->getRow($dsql);
 
     $docpcp_id = '';
@@ -46,9 +48,10 @@ if ($docpcp) {
 
 $docdentist = intval($themyarray["docdentist"]);
 if ($docdentist) {
-    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
-              LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-              WHERE contactid=".$docdentist;
+    $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax 
+        FROM dental_contact dc
+        LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+        WHERE contactid=".$docdentist;
     $d = $db->getRow($dsql);
 
     $docdentist_id = '';

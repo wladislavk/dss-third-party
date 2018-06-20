@@ -11,21 +11,20 @@ include_once "includes/constants.inc";
 <?php
 
 if (isset($_REQUEST['start_date'])) {
-  $start_date = date('Y-m-d', strtotime($_REQUEST['start_date']));
-  $end_date = date('Y-m-d', strtotime($_REQUEST['end_date']));
+    $start_date = date('Y-m-d', strtotime($_REQUEST['start_date']));
+    $end_date = date('Y-m-d', strtotime($_REQUEST['end_date']));
 } else {
-  $start_date = date('Y-m-d', mktime(0,0,0,date('m'), date('d')-30, date('Y')));
-  $end_date = date('Y-m-d');
+    $start_date = date('Y-m-d', mktime(0,0,0,date('m'), date('d')-30, date('Y')));
+    $end_date = date('Y-m-d');
 }
 
 $db = new Db();
 
-$sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
-        LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '" . $start_date . "' AND '" . $end_date . "'
-        WHERE du.userid='" . $db->escape( $_SESSION['docid']) . "' 
-        GROUP BY du.userid
-        ";
-
+$sql = "SELECT du.*, count(s.id) AS num_screened 
+    FROM dental_users du 
+    LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '" . $start_date . "' AND '" . $end_date . "'
+    WHERE du.userid='" . $db->escape( $_SESSION['docid']) . "' 
+    GROUP BY du.userid";
 $myarray = $db->getRow($sql);
 ?>
 
@@ -94,28 +93,28 @@ $myarray = $db->getRow($sql);
   $screen_q = $db->getResults($screen_sql);
   $sleepstudies = "SELECT count(ss.id) as num_ss
       FROM dental_summ_sleeplab ss
-        JOIN dental_patients p on ss.patiendid = p.patientid
+      JOIN dental_patients p on ss.patiendid = p.patientid
       WHERE (
               p.p_m_ins_type != '1'
               OR (
                   COALESCE(ss.diagnosising_doc, '') != ''
                   AND COALESCE(ss.diagnosising_npi, '') != ''
               )
-          )
-          AND COALESCE(ss.diagnosis, '') != ''
-          AND ss.completed = 'Yes'
-          AND ss.filename IS NOT NULL
-          AND p.docid = '".$myarray['userid']."'
-          AND COALESCE(
-              STR_TO_DATE(ss.date, '%m/%d/%Y'),
-              STR_TO_DATE(ss.date, '%m/%d/%y'),
-              STR_TO_DATE(ss.date, '%Y%m%d'),
-              STR_TO_DATE(ss.date, '%m-%d-%Y'),
-              STR_TO_DATE(ss.date, '%m-%d-%y'),
-              STR_TO_DATE(ss.date, '%m%d%Y'),
-              STR_TO_DATE(ss.date, '%m%d%y')
-          ) BETWEEN '$start_date' AND '$end_date'
-      ";
+      )
+      AND COALESCE(ss.diagnosis, '') != ''
+      AND ss.completed = 'Yes'
+      AND ss.filename IS NOT NULL
+      AND p.docid = '".$myarray['userid']."'
+      AND COALESCE(
+          STR_TO_DATE(ss.date, '%m/%d/%Y'),
+          STR_TO_DATE(ss.date, '%m/%d/%y'),
+          STR_TO_DATE(ss.date, '%Y%m%d'),
+          STR_TO_DATE(ss.date, '%m-%d-%Y'),
+          STR_TO_DATE(ss.date, '%m-%d-%y'),
+          STR_TO_DATE(ss.date, '%m%d%Y'),
+          STR_TO_DATE(ss.date, '%m%d%y')
+      ) BETWEEN '$start_date' AND '$end_date'
+  ";
 
   $ss = $db->getRow($sleepstudies);
 
@@ -212,17 +211,16 @@ $myarray = $db->getRow($sql);
 </div>
 
 <?php
-                if($start_date){
-                   $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                   $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                } else {
-                  $p_date = $i_date = $n_date = $l_date = '';
-                }
+if($start_date){
+    $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+    $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
+} else {
+    $p_date = $l_date = '';
+}
 ?>
 <?php include 'ledger_summary_report.php'; ?>
 
 <div style="clear:both;">&nbsp;</div>
 <?php
-
 include 'includes/bottom.htm';
 ?>

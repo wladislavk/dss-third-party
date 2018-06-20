@@ -4,7 +4,7 @@ namespace Ds3\Libraries\Legacy;
 include 'includes/top.htm';
 
 if (!$use_letters) {
-?>
+    ?>
     <h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3>
     <?php
     trigger_error("Die called", E_USER_ERROR);
@@ -155,7 +155,7 @@ if ($patient_info) {
 
     $letters_res = $db->getResults($letters_query);
     if (!$letters_res) {
-        echo "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting letters from the database.";
+        echo "MYSQL ERROR:".$db->errorNumber().": ".$db->errorNumber()."<br/>"."Error selecting letters from the database.";
     } else {
         foreach ($letters_res as $row) {
             $dental_letters[] = $row;
@@ -260,8 +260,8 @@ if ($patient_info) {
     }
 
     // Collect Letters in array
-    $pending_letters = array();
-    $sent_letters = array();
+    $pending_letters = [];
+    $sent_letters = [];
     foreach ($dental_letters as $letter) {
         if ($letter['status'] == "0" || $letter['status'] == DSS_LETTER_SEND_FAILED) {
             $pending_letters[] = $letter;

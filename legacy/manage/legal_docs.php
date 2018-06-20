@@ -7,14 +7,14 @@ include "includes/top.htm";
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Legal Documents	
+    Legal Documents
 </span>
 <br />
 <br />
 &nbsp;
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+    <b><?php echo $_GET['msg'];?></b>
 </div>
 
 <div class="fullwidth">
@@ -30,5 +30,5 @@ include 'legal_user.php';
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

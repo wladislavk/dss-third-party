@@ -7,7 +7,7 @@ namespace Ds3\Libraries\Legacy;
 <script src="3rdParty/novus-nvd3/nv.d3.js"></script>
 
 <div id="treatment">
-  <svg style='height:300px; width: 450px;'/>
+    <svg style='height:300px; width: 450px;'/>
 </div>
 
 <script type="text/javascript">
@@ -18,7 +18,7 @@ $(document).ready(function(){
    chart.xAxis
        .axisLabel('Date')
   .showMaxMin(false)  
-  .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
+  .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));});
  
    d3.select('#treatment svg')
        .datum(treatmentCount())
@@ -43,6 +43,7 @@ $(document).ready(function(){
    var consult = [];
    var impressions = [];
    <?php
+         $db = new Db();
 
     $sql = "select a.Date as treatment_date,
             COALESCE((SELECT count(i.id) 

@@ -17,7 +17,6 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
             <?php
         }
     }
-
     $ess_score = 0;
     foreach ($_POST as $index => $value) {
         if (preg_match('/^epworth_\d+$/', $index)) {
@@ -50,8 +49,7 @@ $epworthid = st($myarray['epworthid']);
 
 if ($epworthid != '') {
     $epworth_arr1 = explode('~', $epworthid);
-    foreach($epworth_arr1 as $i => $val)
-    {
+    foreach($epworth_arr1 as $i => $val) {
         $epworth_arr2 = explode('|', $val);
         $epid[$i] = $epworth_arr2[0];
         $epseq[$i] = (!empty($epworth_arr2[1]) ? $epworth_arr2[1] : '');

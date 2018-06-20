@@ -107,24 +107,19 @@ $num_users = count($my);
         </tr>
         <?php
     }else{
-        $tot_charges = 0;
         $tot_credit = 0;
         $tot_adj = 0;
         if(isset($_GET['pid'])){
             $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
-            $npsql = " AND n.patientid = '".$_GET['pid']."'";
-            $ipsql = " AND i.patientid = '".$_GET['pid']."'";
         }else{
-            $ipsql = $lpsql = $npsql= "";
+            $lpsql = "";
         }
 
         if($start_date){
             $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-            $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
-            $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
             $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
         }else{
-            $p_date = $i_date = $n_date = $l_date = '';
+            $p_date = $l_date = '';
         }
         $newquery = "
             select 

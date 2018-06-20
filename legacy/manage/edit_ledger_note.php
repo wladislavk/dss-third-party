@@ -5,8 +5,9 @@ include_once 'admin/includes/main_include.php';
 include "includes/sescheck.php";
 include "includes/calendarinc.php";
 
-$sql = "SELECT * FROM dental_ledger_note where id=".(!empty($_GET['ed']) ? $_GET['ed'] : '');
+$db = new Db();
 
+$sql = "SELECT * FROM dental_ledger_note where id=".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 $n = $db->getRow($sql);
 ?>
 
@@ -64,7 +65,7 @@ $n = $db->getRow($sql);
         </tr>
         <tr>
             <td class="frmhead">
-                <a href="/manage/manage_ledger.php?delnoteid=<?php echo  (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>&amp;pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                <a href="/manage/manage_ledger.php?delnoteid=<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>&amp;pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" target="_parent" style="font-weight:bold;" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                     Delete
                 </a>
             </td>

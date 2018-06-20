@@ -5,9 +5,7 @@ include "includes/top.htm";
 include "includes/similar.php";
 require_once('includes/constants.inc');
 ?>
-
 <link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
-
 <?php
 $db = new Db();
 

@@ -29,7 +29,8 @@ if ($exitStatus) {
 include_once '3rdParty/tcpdf/tcpdf.php';
 include_once '3rdParty/fpdi/fpdi.php';
 
-class PDF extends \FPDI {
+class PDF extends \FPDI
+{
     /**
      * "Remembers" the template id of the imported page
      */
@@ -38,7 +39,8 @@ class PDF extends \FPDI {
     /**
      * include a background template for every page
      */
-    function Header() {
+    function Header()
+    {
         $db = new Db();
 
         if (is_null($this->_tplIdx)) {

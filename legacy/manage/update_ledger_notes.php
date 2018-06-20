@@ -63,7 +63,7 @@ $sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
         `transaction_code`
    ) VALUES ";
 
-$txcode['description'] = $db->escape( $txcode['description']);
+$txcode['description'] = $db->escape($txcode['description']);
 
 if (!empty($_POST['form'])) {
     foreach($_POST['form'] as $form) {

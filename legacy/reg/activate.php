@@ -22,16 +22,15 @@ if($db->getNumberRows($s) > 0){
         $practice = '';
     }
 
-$loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".$db->escape( $_GET['id'])."'";
-$loc_r = $db->getRow($loc_sql);
-if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-    $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape( $loc_r['location'])."' AND docid='".$db->escape( $r['docid'])."'";
-}else{
-    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape( $r['docid'])."'";
-}
-$location_info = $db->getRow($location_query);
-
-  $n = $location_info['phone'];
+    $loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".$db->escape( $_GET['id'])."'";
+    $loc_r = $db->getRow($loc_sql);
+    if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+        $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape( $loc_r['location'])."' AND docid='".$db->escape( $r['docid'])."'";
+    }else{
+        $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape( $r['docid'])."'";
+    }
+    $location_info = $db->getRow($location_query);
+    $n = $location_info['phone'];
 } else { ?>
     <script type="text/javascript">
         window.location = 'login.php';
@@ -51,9 +50,6 @@ $location_info = $db->getRow($location_query);
     <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
     <link href="css/login.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-    <!--[if IE]>
-        <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-    <![endif]-->
     <script type="text/javascript">
 function send_text(from, but){
   but.disabled = true;

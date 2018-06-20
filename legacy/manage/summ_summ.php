@@ -71,7 +71,7 @@ if (isset($_POST['device_submit'])) {
                 adddate = now(),
                 ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'
         ";
-        $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ex_ins_sql);
     }
     $sql = "select * from dental_summary_pivot where patientid=$pid";
     $row = $db->getRow($sql);

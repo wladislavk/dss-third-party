@@ -11,12 +11,12 @@ $db = new Db();
 <body>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
-if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '') { ?>
+if ($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '') { ?>
     <script type="text/javascript">
         window.location = 'ledger.php';
     </script>
-<?php
-   trigger_error("Die called", E_USER_ERROR);
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!isset($_REQUEST['sort'])){
@@ -83,7 +83,7 @@ $num_users = count($my);
             ?>
                 (<i><?php echo $thename;?></i>)
             <?php } ?>
-       Reconciliation 
+        Reconciliation
     </span>
     <div>
         <br />
@@ -125,19 +125,15 @@ $num_users = count($my);
 
                 if(isset($_GET['pid'])){
                     $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
-                    $npsql = " AND n.patientid = '".$_GET['pid']."'";
-                    $ipsql = " AND i.patientid = '".$_GET['pid']."'";
                 }else{
-                    $ipsql = $lpsql = $npsql= "";
+                    $lpsql = "";
                 }
 
                 if($start_date){
                     $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                    $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                    $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
                     $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
                 }else{
-                    $p_date = $i_date = $n_date = $l_date = '';
+                    $p_date = $l_date = '';
                 }
 
                 $newquery = "select 
@@ -198,16 +194,17 @@ $num_users = count($my);
                 }
 
                 $runquery = $db->getResults($newquery);
-                if ($runquery) foreach ($runquery as $myarray) {
-                    if($myarray['paid_amount'] > 0){
-                        $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
+                if ($runquery) {
+                    foreach ($runquery as $myarray) {
+                        if($myarray['paid_amount'] > 0){
+                            $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 
-                        $pat_myarray = $db->getRow($pat_sql);
-                        $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-            
-                        $tr_class = "tr_active";
-            ?>
-                        <tr onclick="window.location = 'manage_ledger.php?pid=<?php echo  $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo  $myarray['ledger']; ?>">
+                            $pat_myarray = $db->getRow($pat_sql);
+                            $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+
+                            $tr_class = "tr_active";
+                            ?>
+                            <tr onclick="window.location = 'manage_ledger.php?pid=<?php echo  $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo  $myarray['ledger']; ?>">
                             <td valign="top" width="10%">
                                 <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
                             </td>
@@ -231,27 +228,28 @@ $num_users = count($my);
                             <td valign="top" align="right" width="10%">
                                 <?php if(st($myarray["paid_amount"]) <> 0) { ?>
                                     <?php echo number_format(st($myarray["paid_amount"]),2);?>
-                                <?php 
+                                    <?php
                                     $tot_credit += st($myarray["paid_amount"]);
-                                   }
+                                }
                                 ?>
                                 &nbsp;
                             </td>
                             <td valign="top" width="5%">&nbsp;
-                                <?php 
-                                if (isset($myarray[0])) {
-                                    if($myarray[0] == 'ledger'){
-                                        echo $dss_trxn_status_labels[$myarray["status"]];
-                                    }elseif($myarray[0] == 'claim'){
-                                        echo $dss_claim_status_labels[$myarray["status"]];
-                                    }
+                            <?php
+                            if (isset($myarray[0])) {
+                                if($myarray[0] == 'ledger'){
+                                    echo $dss_trxn_status_labels[$myarray["status"]];
+                                }elseif($myarray[0] == 'claim'){
+                                    echo $dss_claim_status_labels[$myarray["status"]];
                                 }
+                            }
+                        }
+                        ?>
+                        </td>
+                        </tr>
+                        <?php
                     }
-                            ?>
-                </td>
-            </tr>
-            <?php
-        }
+                }
     }
     ?> 
     <tr>

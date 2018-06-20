@@ -31,9 +31,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
         trigger_error("Die called", E_USER_ERROR);
     }
 }
-
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -47,7 +45,6 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     <script type="text/javascript" src="js/check_elements.js"></script>
 </head>
 <body onload="check();">
-
 <?php
 $thesql = "select * from dental_contact where contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
@@ -99,23 +96,21 @@ if($themyarray["contactid"] != ''){
 }else{
     $but_text = "Add ";
 }?>
-
 <br /><br />
-
 <?php 
 if(!empty($msg)) {?>
-<div align="center" class="red">
-    <?php echo $msg;?>
-</div>
-<?php 
+    <div align="center" class="red">
+        <?php echo $msg;?>
+    </div>
+    <?php
 }?>
- 
 <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contactabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
-               <?php echo $but_text . 'Contact';
-               if($name != "") { ?>
+               <?php
+               echo $but_text . 'Contact';
+               if ($name != "") { ?>
                    &quot;<?php echo $name;?>&quot;
                    <?php
                } ?>
@@ -291,7 +286,7 @@ if(!empty($msg)) {?>
             </td>
         </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <span class="red">
                     * Required Fields
                 </span><br />
@@ -300,6 +295,6 @@ if(!empty($msg)) {?>
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

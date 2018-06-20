@@ -117,17 +117,17 @@ namespace Ds3\Libraries\Legacy;
                             <th>Surgery</th>
                             <th></th>
                         </tr>
-                    <?php
-                    $s_count = 0;
-                    foreach ($s_q as $s_row) { ?>
-                        <tr id="surgery_row_<?= $s_count; ?>">
-                            <td><?= $s_row['surgery_date']; ?></td>
-                            <td><?= $s_row['surgeon']; ?></td>
-                            <td><?= $s_row['surgery']; ?></td>
-                        </tr>
                         <?php
-                        $s_count++;
-                    } ?>
+                        $s_count = 0;
+                        foreach ($s_q as $s_row) { ?>
+                            <tr id="surgery_row_<?= $s_count; ?>">
+                                <td><?= $s_row['surgery_date']; ?></td>
+                                <td><?= $s_row['surgeon']; ?></td>
+                                <td><?= $s_row['surgery']; ?></td>
+                            </tr>
+                            <?php
+                            $s_count++;
+                        } ?>
                     </table>
                 </span>
             </div>

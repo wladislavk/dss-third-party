@@ -36,10 +36,8 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
     </script>
     <?php
 }
-
 $mt_arr = explode(',',(!empty($_GET['fval']) ? $_GET['fval'] : ''));
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -72,11 +70,11 @@ $mt_arr = explode(',',(!empty($_GET['fval']) ? $_GET['fval'] : ''));
                                     </td>
                                 </tr>
                                 <?php
-                                    $j = 32;
-                                    for($i = 1; $i < 17; $i++) {
-                                        if($i < 10)
-                                            $i = '0' . $i;
-                                ?>
+                                $j = 32;
+                                for($i = 1; $i < 17; $i++) {
+                                    if($i < 10) {
+                                        $i = '0' . $i;
+                                    } ?>
                                             <tr>
                                                 <td valign="top" width="50%" height="10">
                                                     <input type="checkbox" id="per_teeth<?php echo $i?>" name="per_teeth[]" value="<?php echo $i?>" <?php if(in_array($i,$mt_arr)) { echo " checked";}?> />

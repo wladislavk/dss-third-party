@@ -17,6 +17,7 @@ include 'includes/top.htm';
 
     $s = "SELECT * FROM dental_document WHERE categoryid='".$db->escape((!empty($_GET['cat']) ? $_GET['cat'] : ''))."'";
     $sq = $db->getResults($s);
+
     foreach ($sq as $doc) { ?>
         <tr>
             <td>

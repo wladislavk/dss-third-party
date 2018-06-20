@@ -8,12 +8,14 @@ function checkEmail($e, $i)
     if(trim($e) == ''){
         $n = 0;
     }else{
-        $s = "SELECT patientid FROM dental_patients WHERE 
-            email='".$db->escape($e)."' AND 
-            ((patientid!='".$db->escape($i)."' AND 
-            parent_patientid!='".$db->escape($i)."') OR 
-            (patientid!='".$db->escape($i)."' AND 
-            parent_patientid IS NULL)) ";
+        $s = "SELECT patientid 
+            FROM dental_patients 
+            WHERE email='".$db->escape($e)."' 
+            AND (
+                (patientid!='".$db->escape($i)."' AND parent_patientid!='".$db->escape($i)."') OR 
+                (patientid!='".$db->escape($i)."' AND 
+                parent_patientid IS NULL)
+            )";
         $n = $db->getNumberRows($s);
     }
     return $n;

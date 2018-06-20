@@ -15,6 +15,8 @@ $tot_charges = 0;
 $tot_credit = 0;
 $tot_adj = 0;
 
+$db = new Db();
+
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
 
 if (
@@ -172,14 +174,14 @@ $num_users = count($my);
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
-    <TR bgColor="#ffffff">
-        <TD  align="right" colspan="15" class="bp">
+    <tr bgcolor="#ffffff">
+        <td align="right" colspan="15" class="bp">
             Pages:
             <?php
                 paging($no_pages,$index_val,"");
             ?>
-        </TD>        
-    </TR>
+        </td>
+    </tr>
     <?php }?>
     <tr class="tr_bg_h">
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">

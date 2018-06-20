@@ -12,11 +12,10 @@ $coMorbidityLabels = coMorbidityLabels();
 $docId = intval($_SESSION['docid']);
 $userId = intval($_SESSION['userid']);
 
-if (isset($db) && $db instanceof Db) {
-    $isStaff = $userId == $docId ||
-        $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
-}
+$db = new Db();
 
+$isStaff = $userId == $docId ||
+    $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />
@@ -38,14 +37,12 @@ if (!empty($_GET['create_for'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-	if (isset($_REQUEST['delid'])) {
-        if (isset($con)) {
-            $deleteScreenerSql = "DELETE FROM dental_screener where docid='".$db->escape( $_SESSION['docid'])."' AND id='".$db->escape($_REQUEST['delid'])."'";
-        }
-	  $db->query($deleteScreenerSql);
-	}
+    if (isset($_REQUEST['delid'])) {
+        $deleteScreenerSql = "DELETE FROM dental_screener where docid='".$db->escape( $_SESSION['docid'])."' AND id='".$db->escape($_REQUEST['delid'])."'";
+        $db->query($deleteScreenerSql);
+    }
 
-	if (isset($_REQUEST['hst'])) {
+    if (isset($_REQUEST['hst'])) {
         $screenerSql = "SELECT * FROM dental_screener WHERE id='".$db->escape( $_REQUEST['hst'])."'";
         $screenerResult = $db->getRow($screenerSql);
 
@@ -102,15 +99,15 @@ if (!empty($_GET['create_for'])) {
     $sort = "s.adddate";
     if (isset($_REQUEST['sort']) && $_REQUEST['sort'] != '') {
         switch ($_REQUEST['sort']) {
-		    case 'patient':
-		        $sort = "s.last_name";
-		        break;
-		    case 'user':
-		        $sort = 'u.name';
-		        break;
-		    case 'phone':
-		        $sort = 's.phone';
-		        break;
+            case 'patient':
+                $sort = "s.last_name";
+                break;
+            case 'user':
+                $sort = 'u.name';
+                break;
+            case 'phone':
+                $sort = 's.phone';
+                break;
         }
     } else {
         $_REQUEST['sort'] = 'adddate';
@@ -155,14 +152,14 @@ if (!empty($_GET['create_for'])) {
 
     if ($contacted !== '') {
         $mainScreenerSql .= " AND contacted = ".$db->escape( $contacted)." ";
-	}
+    }
 
-	if ($contactedRisk !== '') {
+    if ($contactedRisk !== '') {
         $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".$db->escape( $contactedRisk)." ";
         $mainScreenerSql .= " AND contacted = 0 ";
     }
 
-	$mainScreenerSql .= "ORDER BY $sort $dir";
+    $mainScreenerSql .= "ORDER BY $sort $dir";
 
     $totalRecords = $db->getNumberRows($mainScreenerSql);
 
@@ -182,44 +179,44 @@ if (!empty($_GET['create_for'])) {
 <br /><br />&nbsp;<br />
 
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div style="margin-left:20px;margin-bottom:10px;">
-	<?php if ($risk >= 10) { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
-	<?php } ?>
+    <?php if ($risk >= 10) { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
+    <?php } ?>
 
-	<?php if ($contacted == '0') { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
-	<?php } ?>
+    <?php if ($contacted == '0') { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
+    <?php } ?>
 
-	<?php if ($contactedRisk >= 10) { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
-	<?php } ?>
+    <?php if ($contactedRisk >= 10) { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
+    <?php } ?>
 </div>
 
 <div style="font-weight:bold; font-size: 14px; margin:0 auto; width: 300px; text-align:center;">
-	<?php if ($risk >= 10) { ?>
-		<p>Showing High/Severe Patients only</p>
-	<?php } elseif ($contacted == '0') { ?>
-		<p>Showing NOT contacted patients only</p>
-	<?php } elseif ($contactedRisk >= 10) { ?>
-	        <p>Showing High/Severe NOT contacted patients only</p>
-	<?php } else { ?>
-		<p>Showing ALL Patients</p>
-	<?php } ?>
+    <?php if ($risk >= 10) { ?>
+        <p>Showing High/Severe Patients only</p>
+    <?php } elseif ($contacted == '0') { ?>
+        <p>Showing NOT contacted patients only</p>
+    <?php } elseif ($contactedRisk >= 10) { ?>
+            <p>Showing High/Severe NOT contacted patients only</p>
+    <?php } else { ?>
+        <p>Showing ALL Patients</p>
+    <?php } ?>
 </div>
 
 <form name="sortfrm" action="<?= $_SERVER['PHP_SELF']?>" method="post">
-	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-		<?php
+    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <?php
         if ($totalRecords > $rec_disp) { ?>
             <tr bgColor="#ffffff">
                 <td align="right" colspan="15" class="bp">
@@ -251,9 +248,9 @@ if (!empty($_GET['create_for'])) {
             <td valign="top" class="col_head" width="10%">Results</td>
             <td valign="top" class="col_head" width="10%">HST</td>
             <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user') ? 'arrow_'.strtolower($_REQUEST['sortdir']) : ''; ?>" width="10%">
-	            <a href="manage_screeners.php?sort=user&sortdir=<?= ($_REQUEST['sort'] == 'user' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Screened By</a>
-	        </td>
-	        <td valign="top" class="col_head" width="10%">Contacted</td>
+                <a href="manage_screeners.php?sort=user&sortdir=<?= ($_REQUEST['sort'] == 'user' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Screened By</a>
+            </td>
+            <td valign="top" class="col_head" width="10%">Contacted</td>
             <td valign="top" class="col_head">Edit</td>
         </tr>
         <?php

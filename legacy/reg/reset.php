@@ -1,16 +1,22 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include '../manage/admin/includes/main_include.php'; ?>
-<?php require_once("twilio/twilio.config.php");
+<?php
+namespace Ds3\Libraries\Legacy;
 
-$s = "SELECT dp.cell_phone, dp.email FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
-        WHERE dp.patientid='".$db->escape( $_GET['id'])."' AND
-                dp.recover_hash='".$db->escape( $_GET['hash'])."' AND
-                dp.use_patient_portal='1' AND
-                du.use_patient_portal='1'";
+include '../manage/admin/includes/main_include.php';
+require_once("twilio/twilio.config.php");
 
+$db = new Db();
+
+$s = "SELECT dp.cell_phone, dp.email 
+    FROM dental_patients dp 
+    JOIN dental_users du on du.userid=dp.docid 
+    WHERE dp.patientid='".$db->escape( $_GET['id'])."' 
+    AND dp.recover_hash='".$db->escape( $_GET['hash'])."' 
+    AND dp.use_patient_portal='1' 
+    AND du.use_patient_portal='1'";
 $q = mysqli_query($con, $s);
 
 if (mysqli_num_rows($q) > 0) {
-  $r = mysqli_fetch_assoc($q);
+    $r = mysqli_fetch_assoc($q);
 } else { ?>
     <script type="text/javascript">
         window.location = "index.php";
@@ -18,7 +24,6 @@ if (mysqli_num_rows($q) > 0) {
     <?php
     trigger_error('Die called', E_USER_ERROR);
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,9 +33,6 @@ if (mysqli_num_rows($q) > 0) {
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <link href="css/login.css" rel="stylesheet" type="text/css" />
-    <!--[if IE]>
-        <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-    <![endif]-->
     <script type="text/javascript">
 function send_text(but){
   but.disabled = true;
@@ -53,7 +55,7 @@ function send_text(but){
                 $('#sent_text').html("Error.").show('slow');
           }
         }
-	but.disabled = false;
+    but.disabled = false;
     }
   });
 }
@@ -94,7 +96,7 @@ $(document).ready(function(){
 </div>
 <div style="clear:both;"></div>
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
-<br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
+<br/><a style="font-family: arial, sans-serif; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>
 <script type="text/javascript">
 function createPassword(){

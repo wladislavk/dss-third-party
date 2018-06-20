@@ -229,46 +229,52 @@ $data['receiver'] = [
     "id" => (!empty($eligible_id) ? $eligible_id : ''),
 ];
 
-$data['billing_provider']= array(
+$data['billing_provider']= [
     "taxonomy_code" => "332B00000X",
     "practice_name" => $practice,
     "npi" => $npi,
-    "address" => array(
+    "address" => [
         "street_line_1" => str_replace(',', '', $address),
         "street_line_2" => "",
         "city" => $city,
         "state" => $state,
-        "zip" => $zip),
+        "zip" => $zip,
+    ],
     "tin" => $tax_id_or_ssn,
-    "insurance_provider_id" => $medicare_ptan);
+    "insurance_provider_id" => $medicare_ptan,
+];
 
-$data['subscriber'] = array(
+$data['subscriber'] = [
     "last_name" => $insured_lastname,
     "first_name" => $insured_firstname,
     "member_id" => $insured_id_number,
     "group_id" => $insured_policy_group_feca,
     "group_name" => $insured_insurance_plan,
     "gender" => $pat_gender,
-    "address" => array(
-            "street_line_1" => $insured_address,
-            "street_line_2" => "",
-            "city" => $insured_city,
-            "state" => $insured_state,
-            "zip" => $insured_zip),
-    "dob" => $claim_ins_dob);
+    "address" => [
+        "street_line_1" => $insured_address,
+        "street_line_2" => "",
+        "city" => $insured_city,
+        "state" => $insured_state,
+        "zip" => $insured_zip
+    ],
+    "dob" => $claim_ins_dob,
+];
 
 $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".$db->escape($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
 
 $ins_contact_res = $db->getRow($ins_contact_qry);
-$data['payer'] = array(
+$data['payer'] = [
     "name" => (!empty($eligible_ins) ? $eligible_ins : ''),
     "id" => (!empty($eligible_id) ? $eligible_id : ''),
-    "address" => array(
+    "address" => [
         "street_line_1" => $ins_contact_res['add1'],
         "street_line_2" =>  $ins_contact_res['add2'],
         "city" =>  $ins_contact_res['city'],
         "state" =>  $ins_contact_res['state'],
-        "zip" =>  $ins_contact_res['zip']));
+        "zip" =>  $ins_contact_res['zip'],
+    ],
+];
 
 if ($relationship_id != 18) {
     $data['dependent'] = [

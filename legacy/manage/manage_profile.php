@@ -226,7 +226,8 @@ if(isset($_POST["margins_submit"]) || isset($_POST['margins_test'])) {
   <table>
   <tr>
   <td>$cover_image</td>
-  <td><center>
+  <td>
+  <center>
   <b>CONFIDENTIAL HEALTH INFORMATION<br />
   FAX COVER SHEET</b>
   </center>
@@ -882,5 +883,5 @@ $practice = $db->getRow($p_sql);
     </div>
     <div id="backgroundPopup"></div>
 
-    <br /><br />
-    <?php include "includes/bottom.htm";?>
+<br /><br />
+<?php include "includes/bottom.htm";?>

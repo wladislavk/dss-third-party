@@ -49,29 +49,6 @@ if (isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])) {
     $start_date = false;
     $end_date = false;
 }
-
-$rec_disp = 200;
-
-if(!empty($_REQUEST["page"])) {
-    $index_val = $_REQUEST["page"];
-} else {
-    $index_val = 0;
-}
-    	
-$i_val = $index_val * $rec_disp;
-
-if (isset($_GET['pid'])) {
-    $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' ";
-} else {
-    $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
-}
-$sql .= " order by service_date";
-$total_rec = $db->getNumberRows($sql);
-$no_pages = $total_rec / $rec_disp;
-
-$sql .= " limit ".$i_val.",".$rec_disp.";";
-$my = $db->getResults($sql);
-$num_users = count($my);
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
@@ -124,7 +101,7 @@ $p_sql = "SELECT * FROM dental_users WHERE
         producer=1))";
 $p_q = $db->getResults($p_sql);
 if ($p_q) {
-    foreach ($p_q as $producer) {
+    for ($i = 0; $i < count($p_q); $i++) {
         include 'ledger_producer_table.php';
     }
 }

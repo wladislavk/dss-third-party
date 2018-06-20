@@ -18,13 +18,13 @@ $chargesQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
         SUM(dl.amount) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
+    JOIN dental_patients p ON p.patientid = dl.patientid
     WHERE dl.docid = '$docId'
         $patientConditional
         $ledgerDateConditional
-        AND COALESCE(dl.paid_amount, 0) = 0
-        AND dl.amount != 0
-        GROUP BY payment_description";
+    AND COALESCE(dl.paid_amount, 0) = 0
+    AND dl.amount != 0
+    GROUP BY payment_description";
 
 // ledger_payment - from UNION
 $creditsTypeQuery = "SELECT
@@ -32,13 +32,13 @@ $creditsTypeQuery = "SELECT
         SUM(dlp.amount) AS payment_amount,
         COALESCE(dlp.payer, '') AS payment_payer
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+    JOIN dental_patients p ON p.patientid = dl.patientid
+    LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
     WHERE dl.docid = '$docId'
         $patientConditional
-        AND dlp.amount != 0
+    AND dlp.amount != 0
         $paymentDateConditional
-        GROUP BY payment_description, payment_payer";
+    GROUP BY payment_description, payment_payer";
 
 // ledger_paid - from UNION
 $creditsNamedQuery = "SELECT
@@ -46,15 +46,14 @@ $creditsNamedQuery = "SELECT
         SUM(dl.paid_amount) AS payment_amount,
         tc.type AS payment_type
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-            AND tc.docid = '$docId'
+    JOIN dental_patients p ON p.patientid = dl.patientid
+    LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'
         $patientConditional
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
+    AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+    AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
         $ledgerDateConditional
-        GROUP BY payment_type, payment_description";
+    GROUP BY payment_type, payment_description";
 
 // ledger_paid - from UNION -- but, tx.type conditional INVERTED
 // No need to use COALESCE(tc.type, '') because we WANT TO IGNORE null values
@@ -62,15 +61,14 @@ $adjustmentsQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
         SUM(dl.paid_amount) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-            AND tc.docid = '$docId'
+    JOIN dental_patients p ON p.patientid = dl.patientid
+    LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'
         $patientConditional
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND tc.type = '$trxnTypeAdjustment'
+    AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+    AND tc.type = '$trxnTypeAdjustment'
         $ledgerDateConditional
-        GROUP BY payment_description";
+    GROUP BY payment_description";
 
 $chargeItems = $db->getResults($chargesQuery);
 $creditTypeItems = $db->getResults($creditsTypeQuery);
@@ -120,8 +118,6 @@ array_walk($creditNamedItems, function (&$item) {
 });
 
 /**
- * @see DSS-246
- *
  * Merge credit arrays, "type" items precede named items
  */
 $creditItems = [];

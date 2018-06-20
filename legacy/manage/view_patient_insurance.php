@@ -187,7 +187,6 @@ $but_text = "Add ";
                 <br />&nbsp;
             </td>
         </tr>
-        
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

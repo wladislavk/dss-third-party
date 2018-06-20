@@ -58,13 +58,13 @@ $my = $db->getResults($sql);
                         <td align="right" colspan="15" class="cat_head">
                             <?php echo count($my)?> Patient(s) found for
                             <?php
-                            if($_POST['d_mm'] <> '') {?>
+                            if($_POST['d_mm'] <> '') { ?>
                                 &nbsp;&nbsp;
                                 <i>Date From :</i>
                                 <?php
                                 echo $_POST['d_mm'] . ' - ' . $_POST['d_dd'] . ' - ' . $_POST['d_yy'];
                             }
-                            if($_POST['d_mm1'] <> '') {?>
+                            if($_POST['d_mm1'] <> '') { ?>
                                 &nbsp;&nbsp;
                                 <i>Date To :</i>
                                 <?php
@@ -93,7 +93,8 @@ $my = $db->getResults($sql);
                             Added Date
                         </td>
                     </tr>
-                    <?php  if(count($my) == 0){ ?>
+                    <?php
+                    if(count($my) == 0) { ?>
                         <tr class="tr_bg">
                             <td valign="top" class="col_head" colspan="10" align="center">
                                 No Records
@@ -119,8 +120,9 @@ $my = $db->getResults($sql);
                                     <?php echo date('m-d-Y H:m',strtotime(st($myarray["adddate"])));?>
                                 </td>
                             </tr>
-                        <?php }
-                    }?>
+                            <?php
+                        }
+                    } ?>
                 </table>
                 <br /><br />
             </div>

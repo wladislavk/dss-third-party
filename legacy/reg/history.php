@@ -665,7 +665,7 @@ if ($comp['history'] == 0) {
                 var v = $(this).val();
                 var n = $(this).attr('name');
                 var c = $(this).attr('checked');
-                if (v == "Yes") {
+                if (v === "Yes") {
                     if (c) {
                         $('#' + n + '_extra').css('display', 'inline');
                     } else {
@@ -678,7 +678,7 @@ if ($comp['history'] == 0) {
             $('.extra').click(function (e) {
                 var v = e.target.value;
                 var n = e.target.name;
-                if (v == "Yes") {
+                if (v === "Yes") {
                     $('#'+n+'_extra').css('display', 'inline');
                 } else {
                     $('#'+n+'_extra').css('display', 'none');

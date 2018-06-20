@@ -13,7 +13,7 @@ if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
             parent.edited = true;
         }
         parent.disablePopupRefClean();
-        if("<?php echo  $_GET['tx']; ?>" == "missing"){
+        if("<?php echo $_GET['tx']; ?>" === "missing"){
             parent.reloadPerio("<?php echo $t_text; ?>");
         }
     </script>
@@ -47,14 +47,12 @@ if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
                 <input <?php echo (!empty($_GET['fval']) && $_GET['fval']=="Generalized - Severe")?'checked="checked"':'';?> name="general" type="radio" value="Severe" /> Severe<br />
                 <input type="hidden" name="selsub" value="1" />
             </form>
-
             <script type="text/javascript">
                 function fill_up(fa) {
                     parent.document.q_recipientsfrm.<?php echo $_GET['tx']?>.value = fa;
                     parent.disablePopupRefClean();
                 }
             </script>
-
             <br /><br />
         </td>
     </tr>

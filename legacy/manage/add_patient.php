@@ -21,7 +21,6 @@ if (!isset($_GET['noheaders'])) {
     include_once 'admin/includes/main_include.php';
     include 'includes/sescheck.php';
     include_once 'includes/constants.inc';
-    include_once 'includes/authorization_functions.php';
     include_once 'includes/general_functions.php';
     include_once 'includes/notifications.php';
     include_once 'includes/patient_changes.php';
@@ -240,7 +239,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             sendRemEmail($_POST['ed'], $_POST['email']); // send reminder email
         } elseif (!isset($_POST['sendReg']) && $s_r['registration_status'] == 1 && trim($_POST['email']) != trim($s_r['email'])) {
             if ($doc_patient_portal && $use_patient_portal) {
-                sendRegEmail($_POST['ed'], $_POST['email'], ''); // send reg email if email is updated and not registered
+                sendRegEmail($_POST['ed'], $_POST['email']); // send reg email if email is updated and not registered
             }
         }
 
@@ -447,12 +446,12 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             } else {
                 $login = strtolower($clogin);
             }
-            $ilsql = "UPDATE dental_patients set login='".$db->escape($login)."'  WHERE patientid='".$db->escape( $_POST['ed'])."'";
+            $ilsql = "UPDATE dental_patients set login='".$db->escape($login)."'  WHERE patientid='".$db->escape($_POST['ed'])."'";
             $db->query($ilsql);
         }
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']) {
             if(trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']);
+                sendRegEmail($_POST['ed'], $_POST['email'], $s_r['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');
@@ -710,7 +709,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $pid = $db->getInsertId($ins_sql);
 
         if (isset($_POST['location'])) {
-            $loc_query = "INSERT INTO dental_summary SET location='".$db->escape( $_POST['location'])."', patientid='$patientId'";
+            $loc_query = "INSERT INTO dental_summary SET location='".$db->escape($_POST['location'])."', patientid='$patientId'";
             $db->query($loc_query);
         }
 
@@ -718,7 +717,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
 
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST["use_patient_portal"]) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($pid, $_POST['email'], $login);
+                sendRegEmail($pid, $_POST['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');

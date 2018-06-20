@@ -4,18 +4,21 @@ include_once 'includes/constants.inc';
 include_once 'admin/includes/main_include.php';
 
 $_GET['id'] = (!empty($_GET['insid']) ? $_GET['insid'] : '');
+
+$db = new Db();
+
 $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
     ce.reference_id,
     u.first_name, u.last_name
     FROM dental_claim_electronic ce 
     JOIN dental_insurance i ON i.insuranceid = ce.claimid
     JOIN dental_users u ON i.docid = u.userid
-    WHERE ce.claimid='".$db->escape( (!empty($_GET['id']) ? $_GET['id'] : ''))."' 
+    WHERE ce.claimid='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."' 
     AND ce.reference_id!=''
     ORDER BY id DESC LIMIT 1";
 $r = $db->getRow($sql);
 
-$l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".$db->escape( $_GET['id'])."'";
+$l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".$db->escape($_GET['id'])."'";
 $l = $db->getRow($l_sql);
 
 $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
@@ -49,7 +52,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_exec($ch);
-curl_close ($ch);
+curl_close($ch);
 
 if (!function_exists('\Ds3\Libraries\Legacy\fill_cents')) {
     function fill_cents($v)

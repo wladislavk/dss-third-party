@@ -4,7 +4,7 @@ namespace Ds3\Libraries\Legacy;
 $db = new Db();
 ?>
 <div id="screened">
-  <svg style='height:300px; width: 450px;'/>
+    <svg style='height:300px; width: 450px;'/>
 </div>
 
 <script type="text/javascript">
@@ -35,41 +35,36 @@ $db = new Db();
             WHERE 
             (u.docid = '".$db->escape($_SESSION['docid'])."'
             OR u.userid = '".$db->escape($_SESSION['docid'])."') GROUP BY u.userid";
-    $u_q = $db->getResults($u_sql);
-    foreach ($u_q as $user) {
-  ?>
-
-      s = '{ "key": "<?php echo  $user['name'];?>","color":"#'+Math.floor(Math.random()*16777215).toString(16)+'", "values": [';
-      screened = [];
-
-      <?php
-        $sql = "select a.Date as screened_date,
+        $u_q = $db->getResults($u_sql);
+        foreach ($u_q as $user) {
+            ?>
+            s = '{ "key": "<?php echo  $user['name'];?>","color":"#'+Math.floor(Math.random()*16777215).toString(16)+'", "values": [';
+            screened = [];
+            <?php
+            $sql = "select a.Date as screened_date,
                 COALESCE((SELECT count(id) 
                 FROM dental_screener t1
                 WHERE userid='".$user['userid']."' AND DATE(t1.adddate) = a.Date), 0) as num_screened 
                 from (
-                  select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
-                  from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
-                  cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
-                  cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+                    select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+                    from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+                    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+                    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
                 ) a
                 where a.Date between '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."' 
                 ORDER BY a.Date";
-        $q = $db->getResults($sql);
-        foreach ($q as $r) {
-      ?>
-
-          s += '{"x": "<?php echo  date('U',strtotime($r['screened_date'])); ?>", "y": <?php echo  $r['num_screened']; ?>},';
-      <?php } ?>
-
-        s = s.slice(0, -1);
-        s +=  "]}";
-        s = $.parseJSON(s);
-        series.push(s);
-
-  <?php } ?>
-
-  return series;
-}
-
+            $q = $db->getResults($sql);
+            foreach ($q as $r) {
+                ?>
+                s += '{"x": "<?php echo  date('U',strtotime($r['screened_date'])); ?>", "y": <?php echo  $r['num_screened']; ?>},';
+                <?php
+            } ?>
+            s = s.slice(0, -1);
+            s +=  "]}";
+            s = $.parseJSON(s);
+            series.push(s);
+            <?php
+        } ?>
+        return series;
+    }
 </script>

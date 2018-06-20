@@ -14,27 +14,25 @@ if(isset($_POST['template'])) { ?>
 $db = new Db();
 
 $sql = "SELECT 
-        'default' as template_type,
-        t.id, 
-        t.name, 
-        ct.triggerid 
+            'default' as template_type,
+            t.id, 
+            t.name, 
+            ct.triggerid 
         FROM dental_letter_templates  t 
         INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
-        WHERE ct.companyid='".$_SESSION['companyid']."' AND
-        t.default_letter=1 
-        UNION
+        WHERE ct.companyid='".$_SESSION['companyid']."' 
+        AND t.default_letter=1 
+    UNION
         SELECT 
-        'custom',
-        c.id,
-        c.name,
-        ''
+            'custom',
+            c.id,
+            c.name,
+            ''
         FROM dental_letter_templates_custom c
         WHERE c.docid = '".$db->escape($_SESSION['docid'])."'
         ORDER BY template_type DESC, id ASC;";
-
 $my = $db->getResults($sql);
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -51,7 +49,7 @@ $my = $db->getResults($sql);
         <select name="template">
             <?php if ($my) foreach ($my as $r) { ?>
                 <?php
-                    if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $r['triggerid']!=1) {
+                    if ($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $r['triggerid'] != 1) {
                         echo "<option value=\"" . (($r['template_type']=='custom')?'C':'').$r['id'] . "\">" . (($r['template_type']=='custom')?'C':'').$r['id'] . " - " . $r['name'] . "</option>";
                     }
                 ?>

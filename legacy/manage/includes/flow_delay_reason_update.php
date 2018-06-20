@@ -10,10 +10,9 @@ $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 $db = new Db();
 
 $s = "UPDATE dental_flow_pg2_info SET
-      delay_reason = '".$db->escape($r)."'
-      WHERE
-      patientid = '".$db->escape($pid)."' AND
-      id = '".$db->escape($id)."'";
+          delay_reason = '".$db->escape($r)."'
+      WHERE patientid = '".$db->escape($pid)."' 
+      AND id = '".$db->escape($id)."'";
 
 $q = $db->query($s);
 if(!empty($q)){

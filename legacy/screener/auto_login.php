@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
 $userid = $_SESSION['userid'];
 $docid = $_SESSION['docid'];
@@ -8,9 +10,7 @@ session_start();
 
 $_SESSION['screener_user'] = $userid;
 $_SESSION['screener_doc'] = $docid;
-
 ?>
-
 <script type="text/javascript">
-	window.location = 'index.php';
+    window.location = 'index.php';
 </script>

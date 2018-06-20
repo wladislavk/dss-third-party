@@ -20,6 +20,8 @@ $patientId = (int)$_GET['pid'];
 
 <div class="clear"></div>
 <?php
+$db = new Db();
+
 $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where docid='".$_SESSION['docid']."' and status IN (1,2) and patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate desc

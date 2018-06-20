@@ -65,10 +65,10 @@ if ($missingCard) { ?>
         $db = new Db();
 
         $sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
-
         $r = $db->getRow($sql);
+
         $manage_staff_value = 0;
-        if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1) {
+        if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
             $manage_staff_value = 1;
         }
         ?>
@@ -100,5 +100,4 @@ if ($missingCard) { ?>
             </div>
 
             <div class="clear"></div>
-
         <script type="text/javascript" src="/manage/js/stripe_card_info.js"></script>

@@ -20,7 +20,7 @@ if (isset($_GET['pid'])) { ?>
     <button class="addButton" onclick="window.location.href='ledger.php'" style="float:right;">All Patients</button>
     <?php
 } ?>
-	
+
 <form name="dailyfrm" action="ledger_report.php<?= (isset($_GET['pid'])) ? "?pid=".$_GET['pid'] : ''; ?>" method="get" onSubmit="return dailyabc(this)">
     <?php
     if (isset($_GET['pid'])) { ?>
@@ -268,8 +268,9 @@ if (isset($_GET['pid'])) { ?>
         </tr>
     </table>
 </form>
-
 <?php
+$db = new Db();
+
 if (!empty($_GET['pt_lastname'])) {
     $pat_sql = "
         select * from dental_patients 

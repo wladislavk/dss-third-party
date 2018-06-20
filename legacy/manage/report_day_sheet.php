@@ -6,302 +6,302 @@ include "includes/top.htm";
 $db = new Db();
 ?>
 
-    <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-    <script src="admin/popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 
-    <span class="admin_head">
-        Day Sheet
-    </span>
-    <br />
+<span class="admin_head">
+    Day Sheet
+</span>
+<br />
 
-    <div align="center" class="red">
-        <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
-    </div>
+<div align="center" class="red">
+    <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
+</div>
 
-    <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-        <tr class="tr_bg_h">
-            <th class="col_head">Type</th>
-            <th class="col_head">Production</th>
-            <th class="col_head">Collections</th>
-            <th class="col_head">Adjustments</th>
-            <th class="col_head">A.R. Impact</th>
-        </tr>
-        <tr>
-            <td>Services</td>
-            <?php
-                if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
-                    $start_date = $_REQUEST['start_date'];
-                    $end_date = $_REQUEST['end_date'];
-                }elseif(isset($_REQUEST['dailysub'])){
-                    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-                    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-                }elseif(isset($_REQUEST['weeklysub'])){
-                    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-                    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
-                }elseif(isset($_REQUEST['monthlysub'])){
-                    $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-                    $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-                }elseif(isset($_REQUEST['rangesub'])){
-                    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
-                    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
-                }else{
-                    $start_date = false;
-                    $end_date = false;
-                }
+<table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+    <tr class="tr_bg_h">
+        <th class="col_head">Type</th>
+        <th class="col_head">Production</th>
+        <th class="col_head">Collections</th>
+        <th class="col_head">Adjustments</th>
+        <th class="col_head">A.R. Impact</th>
+    </tr>
+    <tr>
+        <td>Services</td>
+        <?php
+            if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
+                $start_date = $_REQUEST['start_date'];
+                $end_date = $_REQUEST['end_date'];
+            }elseif(isset($_REQUEST['dailysub'])){
+                $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+                $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+            }elseif(isset($_REQUEST['weeklysub'])){
+                $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+                $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
+            }elseif(isset($_REQUEST['monthlysub'])){
+                $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+                $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+            }elseif(isset($_REQUEST['rangesub'])){
+                $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
+                $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
+            }else{
+                $start_date = false;
+                $end_date = false;
+            }
 
 
-                if(isset($_GET['pid'])){
-                    $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
-                }
+            if(isset($_GET['pid'])){
+                $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
+            }
 
-                if($start_date){
-                    $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                    $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-                }else{
-                    $p_date = $l_date = '';
-                }
+            if($start_date){
+                $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
+            }else{
+                $p_date = $l_date = '';
+            }
 
-                $sql = "select 
-                        sum(dl.amount) amount
-                        from dental_ledger dl 
-                        JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
-                        ".$l_date."
-                        ";
+            $sql = "select 
+                    sum(dl.amount) amount
+                    from dental_ledger dl 
+                    JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                    LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
+                    ".$l_date."
+                    ";
 
-                $r = $db->getRow($sql);
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>---</td>
-            <td>---</td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-        </tr>
-        <tr>
-            <td>Credit Payments</td>
-            <?php
-                $impact = 0;
-                $sql = "SELECT
+            $r = $db->getRow($sql);
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>---</td>
+        <td>---</td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+    </tr>
+    <tr>
+        <td>Credit Payments</td>
+        <?php
+            $impact = 0;
+            $sql = "SELECT
+                sum(dlp.amount) amount
+                from dental_ledger dl 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                AND dlp.amount != 0
+                AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
+                ".$p_date;
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
+                    ".$p_date;
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>$<?php echo  number_format($impact,2); ?></td>
+    </tr>
+    <tr>
+        <td>Debit Payments</td>
+        <?php
+            $impact = 0;
+            $sql = "select
                     sum(dlp.amount) amount
                     from dental_ledger dl 
                     LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                     where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                     AND dlp.amount != 0
                     AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
                     ".$p_date;
 
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CREDIT)."'
-                        ".$p_date;
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
+                    ".$p_date;
 
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>$<?php echo  number_format($impact,2); ?></td>
-        </tr>
-        <tr>
-            <td>Debit Payments</td>
-            <?php
-                $impact = 0;
-                $sql = "select
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_DEBIT)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>$<?php echo  number_format($impact,2); ?></td>
-        </tr>
-        <tr>
-            <td>Check Payments</td>
-            <?php
-                $impact = 0;
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>$<?php echo  number_format($impact,2); ?></td>
-        </tr>
-        <tr>
-            <td>Cash Payments</td>
-            <?php
-                $impact = 0;
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>$<?php echo  number_format($impact,2); ?></td>
-        </tr>
-        <tr>
-            <td>Write Off</td>
-            <?php
-                $impact = 0;
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
-                $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
-                        ".$p_date;
-
-                $r = $db->getRow($sql);
-                $impact += $r['amount'];
-            ?>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <td>$<?php echo  number_format($impact,2); ?></td>
-        </tr>
-        <tr>
-            <td>Electronic Funds Transfer (EFT)</td>
-            <?php
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>$<?php echo  number_format($impact,2); ?></td>
+    </tr>
+    <tr>
+        <td>Check Payments</td>
+        <?php
             $impact = 0;
             $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
-                        ".$p_date;
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
+                    ".$p_date;
 
             $r = $db->getRow($sql);
             $impact += $r['amount'];
-            ?>
-            <td></td>
-            <td>$<?php echo  number_format($r['amount'],2); ?></td>
-            <?php
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
             $sql = "SELECT
-                        sum(dlp.amount) amount
-                        from dental_ledger dl
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                        AND dlp.amount != 0
-                        AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
-                        AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
-                        ".$p_date;
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CHECK)."'
+                    ".$p_date;
 
             $r = $db->getRow($sql);
             $impact += $r['amount'];
-            ?>
-            <td>$<?php echo number_format($r['amount'],2); ?></td>
-            <td>$<?php echo number_format($impact,2); ?></td>
-        </tr>
-    </table>
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>$<?php echo  number_format($impact,2); ?></td>
+    </tr>
+    <tr>
+        <td>Cash Payments</td>
+        <?php
+            $impact = 0;
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
+                    ".$p_date;
 
-    <div id="popupContact" style="width:750px;">
-        <a id="popupContactClose">
-            <button>X</button>
-        </a>
-        <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-    </div>
-    <div id="backgroundPopup"></div>
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_CASH)."'
+                    ".$p_date;
 
-    <br /><br />    
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>$<?php echo  number_format($impact,2); ?></td>
+    </tr>
+    <tr>
+        <td>Write Off</td>
+        <?php
+            $impact = 0;
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
+                    ".$p_date;
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
+            $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl 
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_WRITEOFF)."'
+                    ".$p_date;
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+        ?>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <td>$<?php echo  number_format($impact,2); ?></td>
+    </tr>
+    <tr>
+        <td>Electronic Funds Transfer (EFT)</td>
+        <?php
+        $impact = 0;
+        $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_PRIMARY).",".$db->escape( DSS_TRXN_PAYER_SECONDARY).",".$db->escape( DSS_TRXN_PAYER_PATIENT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
+                    ".$p_date;
+
+        $r = $db->getRow($sql);
+        $impact += $r['amount'];
+        ?>
+        <td></td>
+        <td>$<?php echo  number_format($r['amount'],2); ?></td>
+        <?php
+        $sql = "SELECT
+                    sum(dlp.amount) amount
+                    from dental_ledger dl
+                    LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                    where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dlp.amount != 0
+                    AND dlp.payer IN (".$db->escape( DSS_TRXN_PAYER_WRITEOFF).",".$db->escape( DSS_TRXN_PAYER_DISCOUNT).")
+                    AND dlp.payment_type='".$db->escape( DSS_TRXN_PYMT_EFT)."'
+                    ".$p_date;
+
+        $r = $db->getRow($sql);
+        $impact += $r['amount'];
+        ?>
+        <td>$<?php echo number_format($r['amount'],2); ?></td>
+        <td>$<?php echo number_format($impact,2); ?></td>
+    </tr>
+</table>
+
+<div id="popupContact" style="width:750px;">
+    <a id="popupContactClose">
+        <button>X</button>
+    </a>
+    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopup"></div>
+
+<br /><br />
 <?php include "includes/bottom.htm";?>

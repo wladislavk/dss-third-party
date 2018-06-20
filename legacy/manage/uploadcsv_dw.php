@@ -15,9 +15,9 @@ include 'includes/dental_patient_summary.php';
 
 $db = new Db();
 
-if(isset($_POST['submitbut'])){
+if (isset($_POST['submitbut'])) {
     // check there are no errors
-    if($_FILES['csv']['error'] == 0){
+    if ($_FILES['csv']['error'] == 0) {
         $ext = strtolower(preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['csv']['name'])));
         $tmpName = $_FILES['csv']['tmp_name'];
 
@@ -30,11 +30,11 @@ if(isset($_POST['submitbut'])){
                 $row = 0;
                 $error_count = 0;
                 $error_array = [];
-                while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                     // get the values from the csv
-                    if($row == 0){
-                        for($i=0;$i<27;$i++){
-                            switch(strtolower(trim($data[$i]))){
+                    if ($row == 0) {
+                        for ($i = 0; $i < 27; $i++) {
+                            switch (strtolower(trim($data[$i]))) {
                                 case 'lastname':
                                     $fields[] = 'lastname';
                                     break;
@@ -51,11 +51,11 @@ if(isset($_POST['submitbut'])){
                                     $fields[]='';
                                     break;
                                 case 'active':
-                                        $fields[] = 'status';
-                                        break;
+                                    $fields[] = 'status';
+                                    break;
                                 case 'address1':
-                                        $fields[] = 'add1';
-                                        break;
+                                    $fields[] = 'add1';
+                                    break;
                                 case 'address2':
                                     $fields[] = 'add2';
                                     break;
@@ -113,7 +113,7 @@ if(isset($_POST['submitbut'])){
                             }
                         }
                         $row++;
-                    }else{
+                    } else {
                         $patientphone = $patientemail = $patientdob = $patientadd = $patientcity = $patientstate = $patientzip = $patientgender = false;
                         $s = "INSERT INTO dental_patients SET ";
                         foreach($fields AS $id => $field){
@@ -201,7 +201,7 @@ if(isset($_POST['submitbut'])){
 
                         $complete_info = 0;
                         if (($patientemail || $patientphone) && $patientadd && $patientcity && $patientstate && $patientzip && $patientdob && $patientgender) {
-                                $complete_info = 1;
+                            $complete_info = 1;
                         }
                         // Determine Whether Patient Info has been set
                         update_patient_summary($pid, 'patient_info', $complete_info);
@@ -233,7 +233,7 @@ if(isset($_POST['submitbut'])){
                 $msg = "<h4>Inserted ".($row-1)." rows.</h4>";
                 if($error_count){
                     $msg .= "<p>".$error_count." errors. Imported emails already assigned to existing patients. The following email addresses will not be imported:</p><ul>";
-                        foreach($error_array as $e){
+                        foreach ($error_array as $e) {
                             $msg .= "<li>".$e."</li>";
                         }
                     $msg .= "</ul>";

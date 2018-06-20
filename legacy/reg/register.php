@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 session_start();
+
 if(!isset($_SESSION['pid'])){ ?>
     <script type="text/javascript">window.location = "login.php";</script>
     <?php
@@ -42,55 +43,52 @@ $c_r = $db->getRow($c_sql);
 ?>
                 <div id="content_wrapper">
                     <div id="main_content" class="cf">
-
                         <h2 class="sepH_c">Step-by-Step Patient Registration </h2>
     <form action="register.php" name="register_form" id="register_form" method="post">
         <input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect'] ?>" />
         <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
         <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
         <input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
-                            <ul id="status" class="cf">
-                            <?php $pagenum = 1; ?>
-                            <?php if(!$p['registered']){ ?>
-                                <li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
-                            <?php } ?>
-                                <li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Info</span></li>
-                                <li><span class="large"><?= $pagenum++; ?>. Personal Info</span></li>
-                                <li><span class="large"><?= $pagenum++; ?>. Insurance</span></li>
-                                <li><span class="large"><?= $pagenum++; ?>. 2nd Insurance</span></li>
-                                <li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
-                                <li><span class="large"><?= $pagenum++; ?>. Contacts</span></li>
-                            </ul>
-                            <div id="register" class="wizard">
-                                <div class="items formEl_a">
-                                    <?php if(!$p['registered']){ ?>
-                                                    <div class="page">
-                                                            <div class="pageInside">
-                                                                    <div class="cf">
-                                                                            <div class="dp100">
-                                                                                    <h3 class="sepH_a">Welcome!</h3>
-                                                                                    <p>Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
-<br />
-                                                                                    <div class="cf">
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
-                                                                                    </div>
-
-                                                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-<?php } ?>
-
-                                    <div class="page">
-                                        <div class="pageInside">
-                                            <div class="cf">
-                                                <div class="dp25">
-                                                    <h3 class="sepH_a">Welcome!</h3>
-                                                    <p class="s_color small">Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
-                                                </div>
-                                                <div class="dp75">
-                                                    <div>
-                                                        <div id="welcome_errors" class="form_errors" style="display:none"></div>
+        <ul id="status" class="cf">
+            <?php $pagenum = 1; ?>
+            <?php if(!$p['registered']){ ?>
+                <li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
+            <?php } ?>
+            <li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Info</span></li>
+            <li><span class="large"><?= $pagenum++; ?>. Personal Info</span></li>
+            <li><span class="large"><?= $pagenum++; ?>. Insurance</span></li>
+            <li><span class="large"><?= $pagenum++; ?>. 2nd Insurance</span></li>
+            <li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
+            <li><span class="large"><?= $pagenum++; ?>. Contacts</span></li>
+        </ul>
+        <div id="register" class="wizard">
+            <div class="items formEl_a">
+                <?php if(!$p['registered']){ ?>
+                    <div class="page">
+                        <div class="pageInside">
+                            <div class="cf">
+                                <div class="dp100">
+                                    <h3 class="sepH_a">Welcome!</h3>
+                                    <p>Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+                                    <br />
+                                    <div class="cf">
+                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="page">
+                    <div class="pageInside">
+                        <div class="cf">
+                            <div class="dp25">
+                                <h3 class="sepH_a">Welcome!</h3>
+                                <p class="s_color small">Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+                            </div>
+                            <div class="dp75">
+                                <div>
+                                    <div id="welcome_errors" class="form_errors" style="display:none"></div>
         <div class="sepH_b third">
             <label class="lbl_a"><strong>1.</strong> First Name <span class="req">*</span></label>
             <input class="inpt_a validate" type="text" name="firstname" id="firstname" value="<?= $p['firstname']; ?>" />
@@ -132,7 +130,7 @@ $c_r = $db->getRow($c_sql);
                 <div class="sepH_b third">
             <?php $s = $p['state']; ?>
                         <label class="lbl_a"><strong>12.</strong> State:</label>
-    <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
+    <select data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
                                 <option <?= ($s=='AL')?'selected="selected"':'' ?> value="AL">AL - Alabama</option>
@@ -200,7 +198,6 @@ $c_r = $db->getRow($c_sql);
                                             </div>
                                         </div>
                                     </div>
-
                                 <div class="page">
                                                                                 <div class="pageInside">
                                                                                         <div class="cf">
@@ -643,7 +640,7 @@ $c_r = $db->getRow($c_sql);
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6g.</strong> Phone</label>
-                        <input class="inpt_a extphonemask validate" i="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
+                        <input class="inpt_a extphonemask validate" id="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6h.</strong> Fax</label>
@@ -803,7 +800,7 @@ $c_r = $db->getRow($c_sql);
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
 <?php 
-$types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
+$types = [DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER];
 foreach($types as $t){
                 switch($t){
                         case '1':
@@ -903,10 +900,9 @@ $(document).ready(function(){
                                                 <h3 class="sepH_b">Congratulations!</h3>
                                                 <p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
  <?php
-                                                                                                if(!$questionnaire_completed){
-                                                                                                ?>
-
-                                                <p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next visit!</p>
+ if(!$questionnaire_completed){
+     ?>
+     <p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next visit!</p>
 <?php } ?>
                                             </div>
 

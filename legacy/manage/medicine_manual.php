@@ -14,4 +14,3 @@ include_once 'includes/constants.inc';
 </div>
 
 <?php include 'includes/bottom.htm';?>
-

@@ -7,13 +7,13 @@ include "includes/similar.php";
 ?>
 <link rel="stylesheet" href="css/manage_display_similar.css" type="text/css" media="screen" />
 <?php
- 
+$db = new Db();
+
 //SQL to search for possible duplicates
 $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".$db->escape( $_SESSION['docid'])."' AND 
-		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-		)";
-
+    ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
+    (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
+)";
 
 if (isset($_REQUEST['deleteid'])) {
     $dsql = "DELETE FROM dental_patients WHERE docid='".$db->escape($_SESSION['docid'])."' AND patientid='".$db->escape($_REQUEST['deleteid'])."'";
@@ -35,13 +35,12 @@ $sql .= "ORDER BY p.lastname ASC";
 $myarray = $db->getRow($sql);?>
 
 <span class="admin_head" style="float:left;">
-	Warning: Possible Duplicate Patients
+    Warning: Possible Duplicate Patients
 </span>
 <br />
 <br />
 <div align="center" class="red" style="clear:both;padding:0 30px;">
-	<b>Patient <?php echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create as New Patient" to add the patient to the software. If the patient IS a duplicate click "Use This Patient" next to the correct patient to use the original patient instead.</b>
-	<!--<b>Patient <?php echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>-->
+    <b>Patient <?php echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create as New Patient" to add the patient to the software. If the patient IS a duplicate click "Use This Patient" next to the correct patient to use the original patient instead.</b>
 </div>
 <br />
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?createid=<?php echo $myarray['patientid']; ?>" class="addButton" style="margin-left:30px;font-size:14px;">Create as New Patient</a>
@@ -49,23 +48,23 @@ $myarray = $db->getRow($sql);?>
 
 <br /><br />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="25%">
-			Patient Name
-		</td>
-		<td valign="top" class="col_head" width="40%">
-			Address
-		</td>
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head" width="25%">
+            Patient Name
+        </td>
+        <td valign="top" class="col_head" width="40%">
+            Address
+        </td>
                <td valign="top" class="col_head" width="10%">
-			Phone
+            Phone
                 </td>
-		<td valign="top" class="col_head" width="10%">
- 			View
-		</td>
-		<td valign="top" class="col_head" width="15%">
-			Action
-		</td>
-	</tr>
+        <td valign="top" class="col_head" width="10%">
+            View
+        </td>
+        <td valign="top" class="col_head" width="15%">
+            Action
+        </td>
+    </tr>
 <?php
 $sim = similar_patients($myarray['patientid']);
 if (count($sim) > 0) {
@@ -88,7 +87,7 @@ if (count($sim) > 0) {
             </td>
         </tr>
         <?php
-	}
+    }
 } ?>
 </table>
 <?php include "includes/bottom.htm";?>

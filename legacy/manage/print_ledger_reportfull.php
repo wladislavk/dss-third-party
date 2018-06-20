@@ -31,13 +31,13 @@ if((!isset($_POST['dailysub']) || $_POST['dailysub'] != 1) && (!isset($_POST['mo
             pat.lastname,
             '' as payer,
             '' as payment_type
-            from dental_ledger dl 
-            JOIN dental_patients as pat ON dl.patientid = pat.patientid
-            LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-            where dl.docid='".$_SESSION['docid']."' 
-            AND dl.service_date=CURDATE()
-            UNION
-            select 
+        from dental_ledger dl 
+        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dl.service_date=CURDATE()
+    UNION
+        select 
             'ledger_payment',
             dlp.id,
             dlp.payment_date,
@@ -52,16 +52,15 @@ if((!isset($_POST['dailysub']) || $_POST['dailysub'] != 1) && (!isset($_POST['mo
             pat.lastname,
             dlp.payer,
             dlp.payment_type
-            from dental_ledger dl 
-            JOIN dental_patients pat on dl.patientid = pat.patientid
-            LEFT JOIN dental_users p ON dl.producerid=p.userid 
-            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-            where dl.docid='".$_SESSION['docid']."' 
-            AND dlp.amount != 0
-            AND dlp.payment_date=CURDATE()
-            ";
+        from dental_ledger dl 
+        JOIN dental_patients pat on dl.patientid = pat.patientid
+        LEFT JOIN dental_users p ON dl.producerid=p.userid 
+        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dlp.amount != 0
+        AND dlp.payment_date=CURDATE()
+    ";
 }
-
 $my = $db->getResults($sql);
 $num_users = count($my);
 ?>
@@ -136,101 +135,101 @@ $num_users = count($my);
             </td>
         </tr>
     <?php } else {
-            $tot_charges = 0;
-            $tot_credit = 0;
-            $tot_adj = 0;
-            foreach ($my as $myarray) {
-                $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-                $pat_myarray = $db->getRow($pat_sql);
-                $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-                $tr_class = "tr_active";
-                ?>
-                <tr class="<?php echo $tr_class;?>">
-                    <td valign="top" width="10%">
-                        <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
-                    </td>
-                    <td valign="top" width="10%">
-                        <?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
-                    </td>
-                    <td valign="top" width="10%">
-                        <?php echo st($name);?>
-                    </td>
-                    <td valign="top" width="10%">
-                        <?php echo st($myarray["name"]);?>
-                    </td>
-                    <td valign="top" width="30%">
-                        <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
-                        <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
-                        <?php echo (($myarray[0] == 'ledger'))?$myarray["description"]:'';?>
-                    </td>
-                    <td valign="top" align="right" width="10%">
-                        <?php
-                        echo $myarray["amount"];
-                        $tot_charges += $myarray["amount"];
-                        ?>
-                        &nbsp;
-                    </td>
-                    <?php if($myarray[0] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ) { ?>
-                        <td></td>
-                        <?php
-                        if ($myarray[0] != 'claim') {
-                            $tot_adj += st($myarray["paid_amount"]);
-                        }
-                        ?>
-                    <?php } ?>
-                    <td valign="top" align="right" width="10%">
-                        <?php
-                        if (st($myarray["paid_amount"]) != 0) {
-                            echo number_format(st($myarray["paid_amount"]), 2);
-                        } ?>
-                        &nbsp;
-                    </td>
+        $tot_charges = 0;
+        $tot_credit = 0;
+        $tot_adj = 0;
+        foreach ($my as $myarray) {
+            $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
+            $pat_myarray = $db->getRow($pat_sql);
+            $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+            $tr_class = "tr_active";
+            ?>
+            <tr class="<?php echo $tr_class;?>">
+                <td valign="top" width="10%">
+                    <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo st($name);?>
+                </td>
+                <td valign="top" width="10%">
+                    <?php echo st($myarray["name"]);?>
+                </td>
+                <td valign="top" width="30%">
+                    <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+                    <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+                    <?php echo (($myarray[0] == 'ledger'))?$myarray["description"]:'';?>
+                </td>
+                <td valign="top" align="right" width="10%">
                     <?php
-                    if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)) {
-                        if($myarray[0]!='claim') {
-                            $tot_credit += st($myarray["paid_amount"]);
-                        }
-                        ?>
+                    echo $myarray["amount"];
+                    $tot_charges += $myarray["amount"];
+                    ?>
+                    &nbsp;
+                </td>
+                <?php if($myarray[0] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ) { ?>
                     <td></td>
-                    <?php } ?>
-                    <td valign="top" width="5%">&nbsp;
-                        <?php if($myarray["status"] == 1) {
-                            echo "Sent";
-                        } elseif($myarray["status"] == 2) {
-                            echo "Filed";
-                        } else {
-                            echo "Pend";
-                        }
-            } ?>
+                    <?php
+                    if ($myarray[0] != 'claim') {
+                        $tot_adj += st($myarray["paid_amount"]);
+                    }
+                    ?>
+                <?php } ?>
+                <td valign="top" align="right" width="10%">
+                    <?php
+                    if (st($myarray["paid_amount"]) != 0) {
+                        echo number_format(st($myarray["paid_amount"]), 2);
+                    } ?>
+                    &nbsp;
+                </td>
+                <?php
+                if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)) {
+                    if($myarray[0]!='claim') {
+                        $tot_credit += st($myarray["paid_amount"]);
+                    }
+                    ?>
+                <td></td>
+                <?php } ?>
+                <td valign="top" width="5%">&nbsp;
+                    <?php if($myarray["status"] == 1) {
+                        echo "Sent";
+                    } elseif($myarray["status"] == 2) {
+                        echo "Filed";
+                    } else {
+                        echo "Pend";
+                    }
+        } ?>
                     </td>
                 </tr>
-    <?php
+            <?php
         }
     ?>
-                <tr>
-                    <td valign="top" colspan="5" align="right">
-                        <b>Daily Balance</b>
-                    </td>
-                    <td valign="top" align="right">
-                        <b>
-                        <?php echo "$".number_format(isset($tot_charges) ? $tot_charges : 0,2); ?>
-                        &nbsp;
-                        </b>
-                    </td>
-                    <td valign="top" align="right">
-                        <b>
-                        <?php echo "$".number_format(isset($tot_credit) ? $tot_credit : 0,2);?>
-                        &nbsp;
-                        </b>
-                    </td>
-                    <td valign="top" align="right">
-                        <b>
-                        <?php echo "$".number_format(isset($tot_adj) ? $tot_adj : 0,2);?>
-                        &nbsp;
-                        </b>
-                    </td>
-                    <td valign="top">&nbsp;</td>
-                </tr>
+    <tr>
+        <td valign="top" colspan="5" align="right">
+            <b>Daily Balance</b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+            <?php echo "$".number_format(isset($tot_charges) ? $tot_charges : 0,2); ?>
+            &nbsp;
+            </b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+            <?php echo "$".number_format(isset($tot_credit) ? $tot_credit : 0,2);?>
+            &nbsp;
+            </b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+            <?php echo "$".number_format(isset($tot_adj) ? $tot_adj : 0,2);?>
+            &nbsp;
+            </b>
+        </td>
+        <td valign="top">&nbsp;</td>
+    </tr>
 </table>
 <?php include 'ledger_summary_reportfull.php'; ?>
 <br /><br />

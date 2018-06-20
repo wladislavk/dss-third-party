@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include_once 'includes/constants.inc';
 
+$db = new Db();
+
 $docId = intval($_SESSION['docid']);
 $patientId = intval($_GET['pid']);
 $trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);

@@ -31,7 +31,6 @@ if ($patient_info) { ?>
     <?php
     if (!$isHistoricview && !empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
         $exam_teeth = $_POST['exam_teeth'];
-        $other_maxilla = $_POST['other_maxilla'];
         $other_exam_teeth = $_POST['other_exam_teeth'];
         $caries = $_POST['caries'];
         $where_facets = $_POST['wear_facets'];
@@ -138,7 +137,6 @@ if ($patient_info) { ?>
 
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
     if($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">

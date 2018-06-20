@@ -17,8 +17,8 @@ if (strpos($foo, '#') !== false) {
         WHERE event_id='".$e_id."'";
 
     if($db->query($s)) {
-      echo '{"success":true}';
+        echo '{"success":true}';
     } else {
-      echo '{"error":true}';
+        echo '{"error":true}';
     }
 }

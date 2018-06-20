@@ -111,6 +111,8 @@ if (isset($patient_info) && $patient_info) {
     $page_limit = '10';
     $filter = "%";
 
+    $db = new Db();
+
     if (isset($_GET['filter'])) {
         $filter = $db->escape( $_GET['filter']);
     }

@@ -16,9 +16,6 @@ if (empty($_SESSION['userid'])) {
 
 /**
  * This section was deleting dental_letters rows by mistake. We now NEVER delete them, we just deactivate them.
- *
- * @see DSS-196
- * @see DSS-198
  */
 if ($id && $pid) {
     $infoData = $db->query("SELECT id from dental_flow_pg2_info WHERE id = '$id' AND patientid = '$pid'");
@@ -27,8 +24,10 @@ if ($id && $pid) {
         $userId = $db->escape($_SESSION['userid']);
 
         $db->query("DELETE from dental_flow_pg2_info WHERE id = '$id' AND patientid = '$pid'");
-        $db->query("UPDATE dental_letters SET deleted = 1, deleted_by = '$userId', deleted_on = NOW()
-            WHERE info_id != '' AND info_id = '$id'");
+        $db->query("UPDATE dental_letters 
+            SET deleted = 1, deleted_by = '$userId', deleted_on = NOW()
+            WHERE info_id != '' 
+            AND info_id = '$id'");
 
         $response = ['success' => true];
     }

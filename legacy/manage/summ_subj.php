@@ -13,9 +13,10 @@ if ($myarray) { ?>
         <strong>Epworth Sleepiness Score</strong><br />
         <?php
         $ep_sql = "SELECT se.response, e.epworth 
-                    FROM dental_screener_epworth se
-                    JOIN dental_epworth e ON se.epworth_id =e.epworthid
-                    WHERE se.response > 0 AND se.screener_id='".$db->escape( $myarray['id'])."'";
+            FROM dental_screener_epworth se
+            JOIN dental_epworth e ON se.epworth_id =e.epworthid
+            WHERE se.response > 0 
+            AND se.screener_id='".$db->escape( $myarray['id'])."'";
         $ep_q = $db->getResults($ep_sql);
         foreach ($ep_q as $ep_r) { ?>
             <?= $ep_r['response'] ?> - <strong><?= $ep_r['epworth'] ?></strong><br />

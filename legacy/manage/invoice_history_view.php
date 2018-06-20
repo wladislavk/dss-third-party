@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 
+$db = new Db();
+
 $docId = (int)$_SESSION['docid'];
 $invoice_id = (int)array_get($_REQUEST, 'invoice_id', 0);
 $invoice_sql = "SELECT i.*, u.name

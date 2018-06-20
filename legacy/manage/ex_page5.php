@@ -32,7 +32,6 @@ if (empty($patient_info)) { ?>
 $db = new Db();
 if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
     $additional_paragraph_pal = $_POST['additional_paragraph_pal'];
-    $caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
     $joint_exam = $_POST['joint_exam'];
     $i_opening_from = $_POST['i_opening_from'];
     $i_opening_to = (!empty($_POST['i_opening_to']) ? $_POST['i_opening_to'] : '');
@@ -234,9 +233,6 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
         trigger_error("Die called", E_USER_ERROR);
     }
 }
-
-$sqls = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-$myarrays = $db->getRow($sqls);
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);

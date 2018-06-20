@@ -1,25 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/admin/includes/password.php';
 
-    $s = "SELECT * FROM dental_patients WHERE 
-	email='".$db->escape( $_POST['email'])."' AND
-	access_code='".$db->escape( $_POST['code'])."'";
+$db = new Db();
 
-    $q = mysqli_query($con, $s);
-    if(mysqli_num_rows($q)>0){
-    	$r = mysqli_fetch_assoc($q);
-        linkRequestData('dental_patients', $r['patientid']);
-			$p = $_POST['p'];
-                        $salt = create_salt();
-                        $password = gen_password($p , $salt);
-                        $psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."', recover_hash='', access_code='', registration_status=2  WHERE patientid='".$db->escape( $r['patientid'])."'";
-                        mysqli_query($con, $psql);
-                $_SESSION['pid']=$r['patientid'];
-	echo '{"success":true}';
-    }else{
-        linkRequestData('dental_patients', 0);
-	echo '{"error":"code"}';
-    }
-?> 
+$s = "SELECT * FROM dental_patients WHERE 
+    email='".$db->escape( $_POST['email'])."' AND
+    access_code='".$db->escape( $_POST['code'])."'";
+
+$q = mysqli_query($con, $s);
+if(mysqli_num_rows($q)>0){
+    $r = mysqli_fetch_assoc($q);
+    linkRequestData('dental_patients', $r['patientid']);
+    $p = $_POST['p'];
+    $salt = create_salt();
+    $password = gen_password($p , $salt);
+    $psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."', recover_hash='', access_code='', registration_status=2  WHERE patientid='".$db->escape( $r['patientid'])."'";
+    mysqli_query($con, $psql);
+    $_SESSION['pid'] = $r['patientid'];
+    echo '{"success":true}';
+}else{
+    linkRequestData('dental_patients', 0);
+    echo '{"error":"code"}';
+}

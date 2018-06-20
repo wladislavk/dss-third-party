@@ -10,6 +10,8 @@ $patientId = intval($_GET['pid']);
 $mergeId = isset($_GET['merge_id']) ? intval($_GET['merge_id']) : 0;
 $fromExternal = !empty($_GET['external']);
 
+$db = new Db();
+
 $psql = "SELECT *
     FROM dental_patients
     WHERE patientid = '$patientId'
@@ -39,7 +41,7 @@ if ($fromExternal) {
 
 $c = $db->getRow($sql);
 
-$fields = array();
+$fields = [];
 $fields['firstname'] = "First Name";
 $fields['middlename'] = "Middle Name";
 $fields['lastname'] = "Last Name";
@@ -104,7 +106,7 @@ $fields['docpcp'] = "Primary Care Physician";
 $fields['docdentist'] = "Dentist";
 $fields['docent'] = "ENT";
 $fields['docmdother'] = "Other MD";
-$doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
+$doc_fields = ['docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother'];
 
 $validKeys = array_keys(array_intersect_key($p, $c, $fields));
 $fields = array_only($fields, $validKeys);
@@ -120,7 +122,6 @@ $emailsInUse = [];
 foreach (['p', 'c'] as $which) {
     if (isset(${$which}['email'])) {
         $email = trim(${$which}['email']);
-
         if (strlen($email)) {
             $emailsToUpdate[] = $email;
         }
@@ -130,9 +131,7 @@ foreach (['p', 'c'] as $which) {
         if (!isset(${$which}[$field])) {
             continue;
         }
-
         $dateTime = strtotime(${$which}[$field]);
-
         if ($dateTime) {
             ${$which}[$field] = date('m/d/Y', $dateTime);
         }
@@ -142,7 +141,6 @@ foreach (['p', 'c'] as $which) {
         if (!isset(${$which}[$field])) {
             continue;
         }
-
         $gender = strtolower(${$which}[$field]);
 
         switch ($gender) {
@@ -157,7 +155,6 @@ foreach (['p', 'c'] as $which) {
             default:
                 $gender = '';
         }
-
         ${$which}[$field] = $gender;
     }
 
@@ -165,9 +162,7 @@ foreach (['p', 'c'] as $which) {
         if (!isset(${$which}[$field])) {
             continue;
         }
-
         $relationship = strtolower(${$which}[$field]);
-
         switch ($relationship) {
             case 'self':
             case 'spouse':
@@ -178,7 +173,6 @@ foreach (['p', 'c'] as $which) {
             default:
                 $relationship = '';
         }
-
         ${$which}[$field] = $relationship;
     }
 
@@ -186,9 +180,7 @@ foreach (['p', 'c'] as $which) {
         if (!isset(${$which}[$field])) {
             continue;
         }
-
         $status = strtolower(${$which}[$field]);
-
         switch ($status) {
             case 'married':
             case '1':
@@ -209,7 +201,6 @@ foreach (['p', 'c'] as $which) {
             default:
                 $status = '';
         }
-
         ${$which}[$field] = $status;
     }
 }
@@ -221,9 +212,9 @@ if (count($emailsToUpdate)) {
     $emailsInUse = $db->getResults("SELECT email
         FROM dental_patients
         WHERE patientid != '$patientId'
-            AND parent_patientid != '$patientId'
-            $andExcludeMergeId
-            AND email IN ($escapedEmails)");
+        AND parent_patientid != '$patientId'
+        $andExcludeMergeId
+        AND email IN ($escapedEmails)");
     $emailsInUse = array_pluck($emailsInUse, 'email');
 }
 
@@ -243,24 +234,23 @@ if(isset($_POST['submit'])){
     if ($fromExternal) {
         $verification = $db->getRow("SELECT COUNT(p.patientid)
             FROM dental_patients p
-                LEFT JOIN dental_external_patients ep ON ep.patient_id = p.patientid
+            LEFT JOIN dental_external_patients ep ON ep.patient_id = p.patientid
             WHERE (
-                    p.patientid = '$patientId'
-                    OR ep.patient_id = '$patientId'
-                )
-                AND p.docid = '$docId'", 'total');
+                p.patientid = '$patientId'
+                OR ep.patient_id = '$patientId'
+            )
+            AND p.docid = '$docId'");
         $validMerge = $verification > 1;
     } else if ($mergeId) {
         $verification = $db->getRow("SELECT COUNT(p.patientid)
             FROM dental_patients p
             WHERE p.patientid IN ('$patientId', '$mergeId')
-                AND p.docid = '$docId'
-                AND IF(p.patientid = '$patientId', p.status IN (1, 2), TRUE)
-                AND IF(p.patientid = '$mergeId', p.status NOT IN (1, 2), TRUE)
-                ", 'total');
+            AND p.docid = '$docId'
+            AND IF(p.patientid = '$patientId', p.status IN (1, 2), TRUE)
+            AND IF(p.patientid = '$mergeId', p.status NOT IN (1, 2), TRUE)
+        ");
         $validMerge = $verification > 1;
     }
-
     if (!$validMerge) { ?>
         <script>
             <?php if ($fromExternal) { ?>
@@ -277,13 +267,10 @@ if(isset($_POST['submit'])){
     $doctorFields = [];
     $patientFields = [];
     $completed = true;
-
     foreach ($fields as $field => $label) {
         $value = $_POST["value_$field"];
 
-        /**
-         * Email is in use, don't update it
-         */
+        // Email is in use, don't update it
         if ($field === 'email' && in_array(trim($value), $emailsInUse)) {
             continue;
         }
@@ -303,16 +290,13 @@ if(isset($_POST['submit'])){
             case 'dob':
             case 'ins_dob':
             case 'ins2_dob':
-                /**
-                 * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
-                 */
+                // Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
                 $dateTime = strtotime($value);
-
                 if ($dateTime) {
                     $value = date('m/d/Y', $dateTime);
                 }
+                break;
         }
-
         if ($_POST['accepted_' . $field] == 'doc') {
             $doctorFields[$field] = $value;
         } elseif ($_POST['accepted_' . $field] == 'pat') {
@@ -368,7 +352,6 @@ if(isset($_POST['submit'])){
             }
         }
     }
-
     ?>
     <script type="text/javascript">
         parent.window.location = parent.window.location;
@@ -609,11 +592,12 @@ if ($num_changes == 0) {
 
 require_once __DIR__ . '/includes/bottom.htm';
 
-function printSelectionButtons ($field, $disableLeftSide=false, $disableRightSide=false) {
+function printSelectionButtons ($field, $disableLeftSide = false, $disableRightSide = false)
+{
     foreach (['l' => 'doc', 'r' => 'pat'] as $side=>$target) {
         $disabled = ($side === 'l' && $disableLeftSide) || ($side === 'r' && $disableRightSide);
         ?>
-        <input type="button" class="button1" value="&<?= $side ?>aquo;" <?= $disabled ? 'disabled' : '' ?>
-               onclick="updateField(<?= e(json_encode($field)) ?>, '<?= $target ?>');return false;" />
-    <?php }
+        <input type="button" class="button1" value="&<?= $side ?>aquo;" <?= $disabled ? 'disabled' : '' ?> onclick="updateField(<?= e(json_encode($field)) ?>, '<?= $target ?>');return false;" />
+        <?php
+    }
 }

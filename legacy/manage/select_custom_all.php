@@ -40,7 +40,7 @@ if (!empty($_POST['selsub']) && $_POST['selsub'] == 1) { ?>
 $sql = "SELECT *
     FROM dental_custom
     WHERE docid = '$docId'
-        AND description NOT LIKE '%\"is_soap\":\"1\",%'
+    AND description NOT LIKE '%\"is_soap\":\"1\",%'
     ORDER BY title";
 $my = $db->getResults($sql);
 

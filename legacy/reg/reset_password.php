@@ -1,8 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
-
-
-
-  <div class="login_content" id="first2_sect" style="display:none;">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<div class="login_content" id="first2_sect" style="display:none;">
      <h3>Enter your access code</h3>
      <p>We sent a text message to your phone number ending in -<span id="access_phone"></span>.  Please enter the code we sent you.</p>
      <p id="first2_error" class="error"></p>
@@ -27,4 +26,3 @@
      </div>
      <a href="javascript:showSect('login');">&laquo; Return to Login Screen</a>
   </div>
-

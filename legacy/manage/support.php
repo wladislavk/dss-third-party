@@ -7,16 +7,16 @@ include_once "includes/constants.inc";
 $db = new Db();
 
 if(isset($_GET['rid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".$db->escape($_GET['rid'])."' AND create_type=0 ";
-  $db->query($u_sql);
-  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".$db->escape($_GET['rid'])."' AND response_type=0 ";
-  $db->query($u_sql);
+    $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".$db->escape($_GET['rid'])."' AND create_type=0 ";
+    $db->query($u_sql);
+    $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".$db->escape($_GET['rid'])."' AND response_type=0 ";
+    $db->query($u_sql);
 }
 if(isset($_GET['urid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id='".$db->escape($_GET['urid'])."' AND create_type=0 ";
-  $db->query($u_sql);
-  $u_sql = "UPDATE dental_support_responses SET viewed=1 WHERE ticket_id='".$db->escape($_GET['urid'])."' AND response_type=0 ";
-  $db->query($u_sql);
+    $u_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id='".$db->escape($_GET['urid'])."' AND create_type=0 ";
+    $db->query($u_sql);
+    $u_sql = "UPDATE dental_support_responses SET viewed=1 WHERE ticket_id='".$db->escape($_GET['urid'])."' AND response_type=0 ";
+    $db->query($u_sql);
 }
 ?>
 <link rel="stylesheet" type="text/css" href="admin/css/support.css" />

@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include "includes/top.htm";
 include_once 'includes/constants.inc';
 
+$db = new Db();
+
 $sql = "SELECT 
     i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone',
     p.p_m_ins_co, p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id',
@@ -24,7 +26,6 @@ $sql = "SELECT
     JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486'
     LEFT JOIN dental_q_page2_pivot q2 ON p.patientid = q2.patientid
     WHERE p.patientid = ".(!empty($_GET['ed']) ? $_GET['ed'] : '');
-
 $pat = $db->getRow($sql);
 ?>
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">

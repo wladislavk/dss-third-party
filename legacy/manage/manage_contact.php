@@ -1,9 +1,9 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include "includes/top.htm";
-
 use Illuminate\Support\Facades\Input;
+
+include "includes/top.htm";
 
 $contactType = Input::get('contacttype', '');
 $byLetter = strtoupper(Input::get('letter', ''));
@@ -13,6 +13,8 @@ $sortDir = strtoupper(Input::get('sortdir', 'asc'));
 $byLetter = preg_replace('/[^a-z]+/i', '', $byLetter);
 $sortBy = $sortBy ?: ($byLetter ? 'name' : '');
 $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
+
+$db = new Db();
 
 if (!empty($_REQUEST["delid"])) {
     delete_contact_letters($_REQUEST["delid"]);

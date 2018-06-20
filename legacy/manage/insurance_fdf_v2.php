@@ -249,7 +249,7 @@ $fdfData['insured_policy_group_fill'] = $insured_policy_group_feca;
 $fdfData['other_insured_policy_fill'] = $other_insured_policy_group_feca;
 
 $fdfData['pt_condition_employment_yes_chkbox'] = isOptionSelected($employment) ? 1 : '';
-$fdfData['pt_condition_employment_no_chkbox'] = !isoptionselected($employment) ? 1 : '';
+$fdfData['pt_condition_employment_no_chkbox'] = !isOptionSelected($employment) ? 1 : '';
 $fdfData['pt_condition_auto_yes_chkbox'] = isOptionSelected($auto_accident) ? 1 : '';
 $fdfData['pt_condition_auto_no_chkbox'] = !isOptionSelected($auto_accident) ? 1 : '';
 $fdfData['pt_condition_place_fill'] = !empty($auto_accident_place) ? $auto_accident_place : '';

@@ -16,6 +16,8 @@ if (isset($_POST['partial_name'])) {
 
 $names = explode(" ", $partial);
 
+$db = new Db();
+
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, '".DSS_REFERRED_PATIENT."' AS referral_type, 'Patient' as label"
      . " FROM dental_patients p"
      . " LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
@@ -45,7 +47,7 @@ if ($result) {
 }
 
 if (!$result) {
-    $patients = array("error" => "Error: No matching contact found.");
+    $patients = ["error" => "Error: No matching contact found."];
 }
 
 echo json_encode($patients);

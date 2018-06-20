@@ -3,7 +3,6 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/main_include.php';
 require_once __DIR__ . '/../../includes/constants.inc';
-require_once __DIR__ . '/../../includes/authorization_functions.php';
 require_once __DIR__ . '/../../includes/claim_functions.php';
 require_once __DIR__ . '/claim_functions.php';
 require_once __DIR__ . '/ledger-functions.php';
@@ -14,16 +13,6 @@ if ($is_front_office) {
     require_once __DIR__ . '/../../includes/sescheck.php';
 } else {
     require_once __DIR__ . '/sescheck.php';
-}
-
-if (!authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)) { ?>
-    <script type="text/javascript">
-        alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
-        history.go(-1);
-    </script>
-    <?php
-
-    trigger_error('Die called', E_USER_ERROR);
 }
 
 $alertMessages = [];

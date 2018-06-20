@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../../manage/admin/includes/main_include.php';
+
 $docid = $_REQUEST['docid'];
 $userid = $_REQUEST['userid'];
 $first_name = $_REQUEST['first_name'];
@@ -32,11 +35,7 @@ $rx_heartburn = $_REQUEST['rx_heartburn'];
 $rx_afib = $_REQUEST['rx_afib'];
 $rx_cpap = $_REQUEST['rx_cpap'];
 
-/*
-$ = $_REQUEST[''];
-$ = $_REQUEST[''];
-$ = $_REQUEST[''];
-*/
+$db = new Db();
 
 $s = "INSERT INTO dental_screener (
         docid,
@@ -107,15 +106,13 @@ $s = "INSERT INTO dental_screener (
         now(),
         '".$_SERVER['REMOTE_ADDR']."'
     )";
-	$q = mysqli_query($con, $s);
-	$screenerid = mysqli_insert_id($con);
+    mysqli_query($con, $s);
+    $screenerid = mysqli_insert_id($con);
 
 if($screenerid){
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = mysqli_query($con, $epworth_sql);
-    $epworth_number = mysqli_num_rows($epworth_my);
-    while($epworth_myarray = mysqli_fetch_array($epworth_my))
-    {
+    while($epworth_myarray = mysqli_fetch_array($epworth_my)) {
         $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
         if($chk != ''){
             $hst_sql = "INSERT INTO dental_screener_epworth SET
@@ -132,5 +129,5 @@ if($screenerid){
 }else{
     $error = mysqli_error($con);
     error_log('Screener insertion failed: ' . $error);
-  echo '{"error":true}';
+    echo '{"error":true}';
 }

@@ -801,7 +801,7 @@ function fill_cents($v)
     }
 }
 
-function escapeFdf ($value)
+function escapeFdf($value)
 {
     return addcslashes($value, '\()');
 }

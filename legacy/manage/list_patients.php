@@ -16,6 +16,8 @@ if (isset($_POST['partial_name'])) {
 
 $names = explode(" ", $partial);
 
+$db = new Db();
+
 $sql = "
     SELECT p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info 
     FROM dental_patients p

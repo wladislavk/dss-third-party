@@ -3,23 +3,23 @@ namespace Ds3\Libraries\Legacy;
 
 $db = new Db();
 
-if(!empty($_GET['rx']) && $_GET['rx']==1){?>
-
-<div id="loader" style="position:absolute;width:100%; height:98%;">
-  <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
-</div>
-<?php
-  $file = (!empty($_FILES['rx_file']) ? $_FILES['rx_file'] : []);
-  if (!empty($file["name"])) {
-    $rximgid = save_insurance_image($file, 6);
-    $rxrec = date("m/d/Y");
-    $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$rximgid."', rxrec='".$rxrec."' WHERE pid = '".(!empty($_GET['pid']))."';";
-    $db->query($rx_sql);?>
-<script type="text/javascript">
-  $('#loader').hide();
-</script>
-<?php
-  }
+if(!empty($_GET['rx']) && $_GET['rx']==1) { ?>
+    <div id="loader" style="position:absolute;width:100%; height:98%;">
+        <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
+    </div>
+    <?php
+    $file = (!empty($_FILES['rx_file']) ? $_FILES['rx_file'] : []);
+    if (!empty($file["name"])) {
+        $rximgid = save_insurance_image($file, 6);
+        $rxrec = date("m/d/Y");
+        $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$rximgid."', rxrec='".$rxrec."' WHERE pid = '".(!empty($_GET['pid']))."';";
+        $db->query($rx_sql);
+        ?>
+        <script type="text/javascript">
+            $('#loader').hide();
+        </script>
+        <?php
+    }
 }
 
 if(!empty($_GET['lomn']) && $_GET['lomn']==1){?>

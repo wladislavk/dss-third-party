@@ -31,8 +31,7 @@ if (isset($_POST['loginbut'])) {
             <script type="text/javascript">
                 window.location = 'register.php';
             </script>
-        <?php }
-
+            <?php }
         trigger_error('Die called', E_USER_ERROR);
     } else {
         $login_error = true;
@@ -223,10 +222,10 @@ function sendAccessCode(){
       $('#access_phone').html(r.phone);
           showSect('first2');
     }else{
-      if(r.error == "existing"){
+      if(r.error === "existing"){
         $('#existing_email').html(e);
         showSect('existing');
-          }else if(r.error == "email"){
+          }else if(r.error === "email"){
         $('#first1_error').html("Email address not found.").show('slow');
       }else{
         $('#first1_error').html("Error finding email.").show('slow');

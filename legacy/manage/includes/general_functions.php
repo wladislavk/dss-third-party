@@ -7,7 +7,7 @@ define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 require_once __DIR__ . '/constants.inc';
 require_once __DIR__ . '/../../reg/twilio/Services/Twilio.php';
 
-function logoutFO ()
+function logoutFO()
 {
     $db = new Db();
 
@@ -42,12 +42,7 @@ function generateAdminApiToken($username, $password)
     return generateApiToken($username, $password, ['admin' => 1]);
 }
 
-function generatePatientApiToken($username, $password)
-{
-    return generateApiToken($username, $password, ['patient' => 1]);
-}
-
-function generateApiToken($username, $password, array $options=[])
+function generateApiToken($username, $password, array $options = [])
 {
     $postFields = $options;
     $postFields['username'] = $username;
@@ -80,36 +75,22 @@ function apiToken()
     return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
 }
 
-function adminApiToken ()
+function adminApiToken()
 {
     return isset($_SESSION['admin_api_token']) ? $_SESSION['admin_api_token'] : '';
 }
 
-function patientApiToken ()
+function patientApiToken()
 {
     return isset($_SESSION['patient_api_token']) ? $_SESSION['patient_api_token'] : '';
 }
 
-function secureSessionStart()
-{
-    $domain = 'example.com'; // note $domain
-    $session_name = 'sec_session_id'; // Set a custom session name
-    $secure = true; // Set to true if using https.
-    $httponly = true; // This stops javascript being able to access the session id.
-    ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies.
-    $cookieParams = session_get_cookie_params(); // Gets current cookies params.
-    session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $domain, $secure, $httponly); // note $domain
-    session_name($session_name); // Sets the session name to the one set above.
-    session_start(); // Start the php session
-    session_regenerate_id(true); // regenerated the session, delete the old one.
-}
-
-function isSharedFile ($name)
+function isSharedFile($name)
 {
     return strlen($name) && is_file(Q_FILE_FOLDER . $name);
 }
 
-function isFaultyUpload ($uploadError)
+function isFaultyUpload($uploadError)
 {
     return !in_array($uploadError, [UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE]);
 }
@@ -118,11 +99,10 @@ function uploadImage($image, $file_path, $type = 'general')
 {
     $uploadedfile = $image['tmp_name'];
     $fname = $image["name"];
-    $lastdot = strrpos($fname,".");
-    $name = substr($fname,0,$lastdot);
+    $lastdot = strrpos($fname, ".");
     $filesize = $image["size"];
-    $extension = substr($fname,$lastdot+1);
-    list($width,$height)=getimagesize($uploadedfile);
+    $extension = substr($fname, $lastdot + 1);
+    list($width, $height) = getimagesize($uploadedfile);
     if (
         ($width > DSS_IMAGE_MAX_WIDTH || $height > DSS_IMAGE_MAX_HEIGHT) ||
         $filesize > DSS_IMAGE_MAX_SIZE ||
@@ -183,7 +163,7 @@ function uploadImage($image, $file_path, $type = 'general')
         } elseif ($extension == "png") {
             imagepng($tmp, $file_path, 6);
         } else {
-            imagegif($tmp, $file_path, 60);
+            imagegif($tmp, $file_path);
         }
         $uploaded = true;
         if (filesize($file_path) > DSS_FILE_MAX_SIZE) {
@@ -218,7 +198,7 @@ function uploadImage($image, $file_path, $type = 'general')
  * @param string $filename
  * @return string
  */
-function getTemplate ($filename)
+function getTemplate($filename)
 {
     $templatePath = __DIR__ . '/../admin/includes/templates';
 
@@ -243,7 +223,7 @@ function getTemplate ($filename)
  * @param bool   $escapeHtml
  * @return string
  */
-function parseTemplate ($template, array $variables = [], $escapeHtml = true)
+function parseTemplate($template, array $variables = [], $escapeHtml = true)
 {
     if (!isset($variables['baseUrl'])) {
         $variables['baseUrl'] = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
@@ -285,7 +265,7 @@ function parseTemplate ($template, array $variables = [], $escapeHtml = true)
  * @param string $body
  * @param string $headers
  */
-function logEmailActivity ($from, $to, $subject, $body, $headers)
+function logEmailActivity($from, $to, $subject, $body, $headers)
 {
     $db = new Db();
     $emailData = [
@@ -377,7 +357,8 @@ function sendEmail($from, $to, $subject, $template, array $variables = [], array
  * @param int $patientId
  * @return array
  */
-function retrieveMailerData ($patientId) {
+function retrieveMailerData($patientId)
+{
     $db = new Db();
     $patientId = intval($patientId);
 
@@ -501,12 +482,11 @@ function sendRegistrationRelatedEmail($patientId, $patientEmail, $isPasswordRese
  *
  * @param int    $patientId
  * @param string $patientEmail
- * @param mixed  $unusedLogin
  * @param string $oldEmail
  * @param int    $accessType
  * @return bool
  */
-function sendRegEmail($patientId, $patientEmail, $unusedLogin, $oldEmail, $accessType = 1)
+function sendRegEmail($patientId, $patientEmail, $oldEmail = '', $accessType = 1)
 {
     return sendRegistrationRelatedEmail($patientId, $patientEmail, true, $oldEmail, $accessType);
 }
@@ -878,6 +858,10 @@ function dateFormat($data, $defaultsNow = true)
  * Return an array of two elements, each one having the proper amount of digits
  *
  * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
+ *
+ * @param string $areaCodeOrFullNumber
+ * @param string $phoneNumber
+ * @return array
  */
 function parsePhoneNumber($areaCodeOrFullNumber, $phoneNumber = '')
 {
@@ -976,12 +960,6 @@ function stateSearch($nameOrCode)
 function parseCityStateZip($location)
 {
     $location = trim($location);
-    $parsed = [
-        'city' => '',
-        'state' => '',
-        'stateCode' => '',
-        'zip' => '',
-    ];
 
     $states = stateList();
     $stateCodes = array_keys($states);
@@ -1033,10 +1011,9 @@ function isOptionSelected($value)
  * Generate options for a select dropdown
  *
  * @param array      $fields
- * @param mixed|null $selected
  * @return string
  */
-function dropdown(array $fields, $selected = null)
+function dropdown(array $fields)
 {
     ob_start();
 
@@ -1049,7 +1026,7 @@ function dropdown(array $fields, $selected = null)
             $class = $current['class'];
         }
         ?>
-        <option class="<?= e($class) ?>" value="<?= e($value) ?>"<?= !is_null($selected) && $value == $selected ? ' selected' : '' ?>>
+        <option class="<?= e($class) ?>" value="<?= e($value) ?>">
             <?= e($label) ?>
         </option>
         <?php
@@ -1111,6 +1088,7 @@ function questionnairesExamsSectionName($slugName)
  * Create tabs/menu for patient's Questionnaires and Exams
  *
  * @param string $phpSelf
+ * @param string $elementClass
  * @return string
  */
 function questionnairesExamsMenu($phpSelf, $elementClass)
@@ -1195,23 +1173,8 @@ function jsonOrderedObject($data)
         if (is_array($value)) {
             $value = jsonOrderedObject($value);
         }
-        return array($key, $value);
+        return [$key, $value];
     }, array_keys($data), array_values($data));
-}
-
-/**
- * Auxiliary function to change spaces to low dashes
- *
- * @param string $string
- * @return string
- */
-function tokenizeString($string)
-{
-    $string = preg_replace('/[^a-z]+/', ' ', $string);
-    $string = trim($string);
-    $string = str_replace(' ', '_', $string);
-
-    return strtolower($string);
 }
 
 /**
@@ -1399,67 +1362,6 @@ function backupExamQuestionnaireTable($tableView, $docId, $userId, $patientId)
     $db->query("INSERT INTO $sourceTable
         ($columns, adddate, updated_at) VALUES ($newRow, NOW(), NOW())
     ");
-}
-
-/**
- * Remove all form values from the form. Preserves relevant IDs as patient, doctor, creator, parent form/contact, etc.
- *
- * At least ONE table contains a typo in the column name, "patiendid" instead of "patientid".
- *
- * @param string $sourceTable
- * @param int    $sourceId
- * @return bool
- */
-function resetExamQuestionnaireTable($sourceTable, $sourceId)
-{
-    $db = new Db();
-
-    if (!in_array($sourceTable, EXAM_QUESTIONNAIRE_TABLES)) {
-        return false;
-    }
-
-    $primaryKey = $db->primaryKey($sourceTable);
-
-    $protectedColumns = [
-        $primaryKey,
-        'patientid',
-        'patiendid',
-        'patient_id',
-        'parentpatientid',
-        'parentpatiendid',
-        'parentpatient_id',
-        'parent_patientid',
-        'parent_patiendid',
-        'parent_patient_id',
-        'docid',
-        'doc_id',
-        'formid',
-        'form_id',
-        'userid',
-        'user_id',
-        'status',
-        'adddate',
-        'ip_address',
-        'referenceid',
-        'reference_id',
-        'epworthid',
-        'epworth_id',
-        'created_at',
-        'updated_at'
-    ];
-
-    $columns = $db->getColumnNames($sourceTable);
-    $filteredColumns = array_diff($columns, $protectedColumns);
-    $resetArray = array_fill_keys($filteredColumns, '');
-    $resetData = $db->escapeAssignmentList($resetArray);
-
-
-    $sourceTable = preg_replace('/_pivot$/', '', $sourceTable);
-    $db->query("UPDATE `$sourceTable`
-        SET $resetData
-        WHERE `$primaryKey` = '$sourceId'");
-
-    return true;
 }
 
 function nestedUtf8Encode(&$value)

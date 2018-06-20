@@ -41,7 +41,7 @@ if(isset($_REQUEST['useid'])){
         window.location = "manage_patient_contacts.php";
     </script>
     <?php
-}elseif(isset($_REQUEST['createid'])){
+} elseif(isset($_REQUEST['createid'])) {
     $s = "INSERT INTO dental_contact (
             firstname,
             lastname,
@@ -69,7 +69,7 @@ if(isset($_REQUEST['useid'])){
     $pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".$db->escape( $_REQUEST['createid'])."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
-    switch($pcr['contacttype']){
+    switch ($pcr['contacttype']) {
         case '1':
             $psql .= " docsleep ";
             break;
@@ -90,7 +90,7 @@ if(isset($_REQUEST['useid'])){
     $db->query($psql);
     $d = "DELETE FROM dental_patient_contacts where id='".$db->escape( $_REQUEST['createid'])."'";
     $db->query($d);
-}elseif(isset($_REQUEST['delid'])){
+} elseif(isset($_REQUEST['delid'])) {
     $dsql = "DELETE FROM dental_patient_contacts WHERE id='".$db->escape( $_REQUEST['delid'])."'";
     $db->query($dsql);
     ?>
@@ -107,8 +107,8 @@ if(!empty($_REQUEST["page"])) {
 } else {
     $index_val = 0;
 }
-if(isset($_REQUEST['sort'])){
-    switch($_REQUEST['sort']){
+if(isset($_REQUEST['sort'])) {
+    switch($_REQUEST['sort']) {
         case 'address':
             $sort = "pc.address1";
             break;
@@ -119,14 +119,14 @@ if(isset($_REQUEST['sort'])){
             $sort = 'pc.phone';
             break;
     }
-}else{
+} else {
     $_REQUEST['sort']='name';
     $_REQUEST['sortdir']='DESC';
     $sort = "pc.lastname";
 }
-if(isset($_REQUEST['sortdir'])){
+if(isset($_REQUEST['sortdir'])) {
     $dir = $_REQUEST['sortdir'];
-}else{
+} else {
     $dir = 'DESC';
 }
 
@@ -144,7 +144,7 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
-if($total_rec > 0){
+if ($total_rec > 0) {
     ?>
     <span class="admin_head">
         Manage Patient Contacts
@@ -218,7 +218,7 @@ if($total_rec > 0){
                         </td>
                         <td valign="top">
                             <?php
-                            switch($myarray['contacttype']){
+                            switch ($myarray['contacttype']) {
                                 case '1':
                                     echo "Sleep MD";
                                     break;
@@ -255,8 +255,8 @@ if($total_rec > 0){
                         </td>
                     </tr>
                     <?php
-                    if(count($sim) > 0){
-                        foreach($sim as $s){ ?>
+                    if (count($sim) > 0) {
+                        foreach ($sim as $s) { ?>
                             <tr class="similar sim_<?php echo $myarray['id']; ?>">
                                 <td valign="top">
                                     <?php echo st($s["name"]);?>

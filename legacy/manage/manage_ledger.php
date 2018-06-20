@@ -26,94 +26,85 @@ if ($result) {
 }
 update_patient_summary((!empty($_GET['pid']) ? $_GET['pid'] : ''), 'ledger', $ledger_balance);
 ?>
-
 <link rel="stylesheet" href="css/ledger.css" />
-
 <?php
 if(!isset($_GET['sort'])){
-  $_GET['sort'] = 'service_date';
-  $_GET['sortdir'] = 'desc';
+    $_GET['sort'] = 'service_date';
+    $_GET['sortdir'] = 'desc';
 }
 
-if(!empty($_REQUEST["delid"]))
-{
-  $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-  $pat_my2 = $db->getResults($pat_sql2);
-  foreach ($pat_my2 as $pat_myarray2) {
-    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
-    if(!$pat_sql3){
-      echo "There was an error updating the ledger record.  Please contact your system administrator.";
+if(!empty($_REQUEST["delid"])) {
+    $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    $pat_my2 = $db->getResults($pat_sql2);
+    foreach ($pat_my2 as $pat_myarray2) {
+        $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+        if(!$pat_sql3){
+            echo "There was an error updating the ledger record.  Please contact your system administrator.";
+        }
     }
-  }  
-  
-  $del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
-  $db->query($del_sql);
-  
-  $msg= "Deleted Successfully";?>
 
-  <script type="text/javascript">
-                <?php if ($_GET['popup'] == 1) { ?>
-                  parent.window.location.reload();
-                <?php } else { ?>
-      window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-  </script>
-  <?php
-  trigger_error("Die called", E_USER_ERROR);
+    $del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
+    $db->query($del_sql);
+
+    $msg= "Deleted Successfully";?>
+    <script type="text/javascript">
+        <?php if ($_GET['popup'] == 1) { ?>
+            parent.window.location.reload();
+        <?php } else { ?>
+            window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if (isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != "") {
-  $sql = "DELETE FROM dental_ledger_statement WHERE id='".$db->escape($_REQUEST['delstatementid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
-  $db->query($sql);
-  $msg = "Deleted Successfully";
-          ?>
-        <script type="text/javascript">
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
+    $sql = "DELETE FROM dental_ledger_statement WHERE id='".$db->escape($_REQUEST['delstatementid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
+    $db->query($sql);
+    $msg = "Deleted Successfully"; ?>
+    <script type="text/javascript">
+        window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if (!empty($_REQUEST["delclaimid"])) {
-  $sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
-  $q = $db->getResults($sql);
-  if (count($q) > 0) {
-      deleteClaim($_REQUEST['delclaimid'], DSS_CLAIM_PENDING);
-      $msg = "Deleted Successfully";
-  }
-  ?>
-        <script type="text/javascript">
-                <?php if($_GET['popup']==1){ ?>
-                  parent.window.location.reload();
-                <?php }else{ ?>
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
+    $sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
+    $q = $db->getResults($sql);
+    if (count($q) > 0) {
+        deleteClaim($_REQUEST['delclaimid'], DSS_CLAIM_PENDING);
+        $msg = "Deleted Successfully";
+    } ?>
+    <script type="text/javascript">
+        <?php if($_GET['popup']==1){ ?>
+            parent.window.location.reload();
+        <?php }else{ ?>
+            window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if (!empty($_REQUEST["delnoteid"])) {
-
-  $sql = "DELETE FROM dental_ledger_note WHERE id='".$db->escape($_REQUEST['delnoteid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
-        $q = mysqli_query($con, $sql);
-         if($q){
-          $msg= "Deleted Successfully";
-         }else{
-          $msg = "Error deleting.";
-        }
-        ?>
-        <script type="text/javascript">
-                <?php if($_GET['popup']==1){ ?>
-                  parent.window.location.reload();
-                <?php }else{ ?>
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
+    $sql = "DELETE FROM dental_ledger_note WHERE id='".$db->escape($_REQUEST['delnoteid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
+    $q = mysqli_query($con, $sql);
+    if($q){
+        $msg= "Deleted Successfully";
+    }else{
+        $msg = "Error deleting.";
+    } ?>
+    <script type="text/javascript">
+        <?php if($_GET['popup']==1){ ?>
+              parent.window.location.reload();
+        <?php }else{ ?>
+              window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
-
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql); 
@@ -166,10 +157,10 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
             i.mailed_date,
             $filedByBackOfficeConditional AS filed_by_bo
         FROM dental_insurance i
-            LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
-            LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
+        LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
+        LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
         WHERE i.patientid = '$patientId'
-            AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
+        AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
         GROUP BY i.insuranceid
     ";
 } else {
@@ -720,9 +711,11 @@ if($_GET['sortdir']=='DESC'){ ?>
     </tr>
     <tr>
       <td colspan="8">
-        <center><button class="addButton" onclick="loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;">
-        View Ledger Records
-        </button></center>
+        <center>
+            <button class="addButton" onclick="loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;">
+                View Ledger Records
+            </button>
+        </center>
       </td>
     </tr> 
   </table>

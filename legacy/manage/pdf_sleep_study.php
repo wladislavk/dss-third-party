@@ -54,6 +54,8 @@ if(isset($_FILES['pdf_file'])){
         $banner1 = '';
     }
 
+    $db = new Db();
+
     $sql = "INSERT INTO dental_summ_sleeplab set
         date='".date('m/d/Y')."',
         `diagnosising_doc` = '".$db->escape($diagnosing_doc)."',

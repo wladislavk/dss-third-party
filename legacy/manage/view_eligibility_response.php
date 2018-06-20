@@ -26,21 +26,21 @@ include_once('admin/includes/password.php');
     <script type="text/javascript" src="script/validation.js"></script>
 </head>
 
-    <body>
-        <div id="coverage_container"></div>
-        <?php
-        $db = new Db();
+<body>
+<div id="coverage_container"></div>
+<?php
+$db = new Db();
 
-        $thesql = "SELECT e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
-            from dental_eligibility e 
-            JOIN dental_patients p on p.patientid=e.patientid
-            where e.id='".(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : '')."'";
-        $themyarray = $db->getRow($thesql);
-        ?>
-        <h2 style="color:#fff;">Eligibility for <?php echo $themyarray['pat_name']; ?> - <?php echo date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
-        <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
-        <section class="coverage-section"></section>
-        <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
+$thesql = "SELECT e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
+    from dental_eligibility e 
+    JOIN dental_patients p on p.patientid=e.patientid
+    where e.id='".(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : '')."'";
+$themyarray = $db->getRow($thesql);
+?>
+<h2 style="color:#fff;">Eligibility for <?php echo $themyarray['pat_name']; ?> - <?php echo date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
+<a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
+<section class="coverage-section"></section>
+<a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
 
 <script type="text/javascript">
     var response = <?php echo $themyarray['response']; ?>;

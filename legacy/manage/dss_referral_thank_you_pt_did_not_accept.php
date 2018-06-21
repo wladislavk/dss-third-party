@@ -426,7 +426,7 @@ $template = "<p>%todays_date%</p>
             }
             $type = $contact['type'];
             $recipientid = $contact['id'];
-            $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+            $letterid = delete_letter($letterid, $type, $recipientid, $new_template[$key]);
             if ($parent) { ?>
                 <script type="text/javascript">
                     window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';

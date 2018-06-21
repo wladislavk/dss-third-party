@@ -67,7 +67,7 @@ function paging2($no_pages, $index_val, $vid, $index_val1 = 0)
 
 // Function to Get Contacts
 // Returns comma delimited list of contactids
-function get_mdcontactids ($pid, $active = true)
+function get_mdcontactids($pid, $active = true)
 {
     $db = new DB();
     $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for($pid)."';";
@@ -266,51 +266,6 @@ function clear_id_list($string_list)
     return $string_list;
 }
 
-/**
- * @param string $string
- * @return string
- */
-function explodeAndEscapeList($string)
-{
-    if (!is_null($string) || !strlen($string)) {
-        return "'-1'";
-    }
-    $array = preg_split('/ *, */', $string);
-    $array = array_filter($array, function ($each) {
-        return strlen($each) > 0;
-    });
-    $array = array_unique($array);
-    $db = new Db();
-    $array = $db->escapeList($array);
-    return $array;
-}
-
-//get number of contacts for letter
-function num_letter_contacts($lid)
-{
-    $db = new Db();
-    $sql = "SELECT topatient, md_list, md_referral_list 
-        FROM dental_letters l
-        WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$lid)."' 
-        OR parentid='".mysqli_real_escape_string($GLOBALS['con'],$lid)."'";
-    $q = $db->getResults($sql);
-    $num_contacts = 0;
-    if ($q) {
-        foreach ($q as $r) {
-            if($r['topatient']==1){
-                $num_contacts++;
-            }
-            if($r['md_list']!=''){
-                $num_contacts += count(explode(',',$r['md_list']));
-            }
-            if($r['md_referral_list']!=''){
-                $num_contacts += count(explode(',',$r['md_referral_list']));
-            }
-        }
-    }
-    return $num_contacts;
-}
-
 //To remove referral source from md list
 class MDReferralFilter
 {
@@ -472,7 +427,7 @@ function create_letter($templateid, $pid = null, $info_id = null, $topatient = n
 }
 
 // Function to Create Letters
-function create_welcome_letter ($templateid, $md_list, $docid)
+function create_welcome_letter($templateid, $md_list, $docid)
 {
     $db = new Db();
     $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
@@ -1195,138 +1150,6 @@ function deliver_letter($letterid, $message)
     return null;
 }
 
-function send_email($to_name, $to_email, $from_name, $from_email, $subject, $message, $attachment = null, $uid)
-{
-    $db = new Db();
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/swift-4.0.6/lib/swift_required.php');
-    $email = \Swift_Message::newInstance();
-
-    $sql = "SELECT email_header, email_footer FROM dental_users WHERE userid = '".st($uid)."';";
-    $my = $db->getRow($sql);
-    $email_header_imgname = $my['email_header'];
-    $email_footer_imgname = $my['email_footer'];
-    if (!empty($email_header_imgname)) {
-        $header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $email_header_imgname;
-    } else {
-        $header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_header.jpg";
-    }
-    if (!empty($email_footer_imgname)) {
-        $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $email_footer_imgname;
-    } else {
-        $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
-    }
-
-    $header_html = "<img src=\"" . $email->embed(\Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
-    $footer_html = "<img src=\"" . $email->embed(\Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
-
-    $HTMLMessage = "$header_html<table width=\"600px\"><tr><td>$message</tr></td></table>$footer_html";
-
-    $email->setSubject('Dental Sleep Solutions Correspondence');
-    $email->setFrom([$from_email => $from_name]);
-    $email->setTo([$to_email => $to_name]);
-    $email->setBody($HTMLMessage, 'text/html');
-    if ($attachment != '') {
-        $email->attach(\Swift_Attachment::fromPath($attachment));
-    }
-
-    $transport = \Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
-    $mailer = \Swift_Mailer::newInstance($transport);
-
-    if (!$mailer->send($email, $failures)) {
-        if (count($failures) > 0) {
-            return "Rejected Email Address";
-        } else {
-            return false;
-        }
-    } else {
-        return true;
-    }
-}
-
-function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name, $pdf_filename, $message, $uid)
-{
-    $db= new Db();
-    $sql = "SELECT fax_header, fax_footer FROM dental_users WHERE userid = '".st($uid)."';";
-    $result = $db->query($sql);
-    $my = $db->getRow($result);
-
-    $fax_header_imgname = $my['fax_header'];
-    $fax_footer_imgname = $my['fax_footer'];
-    if (!empty($fax_header_imgname)) {
-        $header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $fax_header_imgname;
-    }
-    if (!empty($fax_footer_imgname)) {
-      $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $fax_footer_imgname;
-    }
-    $title = "Dental Sleep Solutions";
-    $filename = "fax_" . $pdf_filename;
-    create_pdf($title, $filename, $message, true, $header_path, $footer_path);
-    $client = new SoapClient("https://faxregistration.com/sfaxws/sfaxapi.asmx?wsdl");
-
-    $fax = preg_replace("/[^0-9]/", "", $fax);
-    $phone = preg_replace("/[^0-9]/", "", $phone);
-
-    //set fax request variables
-    $sUserId = "dentalsleepsolutions"; // <-- Important: Your Sfax userID
-    $sPassword = "sfaxDSS54321!"; // <-- Important: Your Sfax password
-    $sRecipientName = $name;
-    $sRecipientCompany = $company;
-    $sRecipientPhone = "1" . $phone; // 1+; all digits only
-    $sRecipientFax = "1" . $fax; // 1+; all digits only
-    $sRecipientEmail = $email;
-    $sSubject = $subject;
-    $sDocType = "PDF"; // <--Important: tells Sfax how to process the document.
-    $sDocName = $filename;
-    $sTrackingKey = $filename;
-    $sDocMerge = "false";
-    $sNotes = "";
-    $sSenderName = $sender_name;
-    // CoverSheet values are:
-    // 1) “Default” – tells the fax engine to use the default cover sheet.
-    // 2) “<NameOfCoverSheet>” – tells the fax engine to use the cover sheet named.
-    $sCoverSheet = "Default";
-
-    //convert c:\test.doc to Base64 string
-    $filename = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
-    $handle = fopen($filename, "rb");
-    $contents = fread($handle, filesize($filename));
-    fclose($handle);
-    $sImage = base64_encode($contents);
-
-    //create fax request document
-    $xml = new DOMDocument('1.0', 'utf-16');
-    $xml->formatOutput = true;
-    $xml->preserveWhiteSpace = false;
-    $xml->appendChild($xml->createElement('FaxRequest'));
-    $xml->documentElement->appendChild($xml->createElement('UserId', $sUserId));
-    $xml->documentElement->appendChild($xml->createElement('Password', $sPassword));
-    $xml->documentElement->appendChild($xml->createElement('RecipientName', $sRecipientName));
-    $xml->documentElement->appendChild($xml->createElement('RecipientCompany', $sRecipientCompany));
-    $xml->documentElement->appendChild($xml->createElement('RecipientPhone', $sRecipientPhone));
-    $xml->documentElement->appendChild($xml->createElement('RecipientFax', $sRecipientFax));
-    $xml->documentElement->appendChild($xml->createElement('RecipientEmail', $sRecipientEmail));
-    $xml->documentElement->appendChild($xml->createElement('Subject', $sSubject));
-    $xml->documentElement->appendChild($xml->createElement('DocType', $sDocType));
-    $xml->documentElement->appendChild($xml->createElement('DocName', $sDocName));
-    $xml->documentElement->appendChild($xml->createElement('image', $sImage));
-    $xml->documentElement->appendChild($xml->createElement('TrackingKey', $sTrackingKey));
-    $xml->documentElement->appendChild($xml->createElement('DocMerge', $sDocMerge));
-    $xml->documentElement->appendChild($xml->createElement('Notes', $sNotes));
-    $xml->documentElement->appendChild($xml->createElement('SenderName', $sSenderName));
-    $xml->documentElement->appendChild($xml->createElement('CoverSheet', $sCoverSheet));
-
-    //send fax as string
-    $sXML = $xml->saveXML($xml->documentElement);
-    $params = ['sDoc'=>$sXML];
-    $result = $client->sendFaxString($params);
-
-    if (strpos($result->sendFaxStringResult, "Success")) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
@@ -1606,14 +1429,12 @@ function mail_claim($claimid, $mailed = true, $type = 'pri')
     return $db->query($s);
 }
 
-/* Set $parent to true if you want to delete the original letter including all contacts
- * if $parent is false or not set, one contact will be removed from the letter and a new letter will be created
- * with the deleted flag set to true.
+/*
  * $type is either patient, md, or md_referral.  It refers to the type of contact who's letter is being deleted
  * $recipientid is the id of the contact to be removed from the original letter
  * $template is for a modified template (including tokens) if the original template has been edited.
  */
-function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null)
+function delete_letter($letterid, $type, $recipientid, $template = null)
 {
     $db = new Db();
     $c_sql = "SELECT patientid, topatient, md_list, md_referral_list, pat_referral_list FROM dental_letters WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
@@ -1712,7 +1533,7 @@ function delete_contact_letters($contact)
     if ($l_q) {
         foreach ($l_q as $l_r) {
             $lid = $l_r['letterid'];
-            delete_letter($lid, false, 'md', $contact);
+            delete_letter($lid, 'md', $contact);
         }
     }
 
@@ -1724,7 +1545,7 @@ function delete_contact_letters($contact)
     if ($l_q) {
         foreach ($l_q as $l_r) {
             $lid = $l_r['letterid'];
-            delete_letter($lid, false, 'md_referral', $contact);
+            delete_letter($lid, 'md_referral', $contact);
         }
     }
 }
@@ -1748,7 +1569,8 @@ function delete_contact_from_patients($contact)
  * Returns a mysql resultset resource for dental_users table on success,
  * false otherwise. Only franchisees are included (no staff).
  */
-function get_franchisees () {
+function get_franchisees()
+{
     $db = new Db();
     return $db->getResults("SELECT *
         FROM dental_users
@@ -1807,19 +1629,6 @@ function get_patients($franchisee_id = -1)
     $con = $GLOBALS['con'];
     $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
     return mysqli_query($con,$sql);
-}
-
-function get_insurance($franchisee_id = -1)
-{
-    $con = $GLOBALS['con'];
-    $sql = "SELECT * 
-        FROM dental_contact 
-        WHERE docid = $franchisee_id 
-        AND contacttypeid=11 
-        AND merge_id IS NULL 
-        AND status=1 
-        ORDER BY company ASC";
-    return mysqli_query($con, $sql);
 }
 
 /**

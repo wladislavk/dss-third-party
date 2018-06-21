@@ -410,11 +410,11 @@ $template = "<p>%todays_date%</p>
         // Catch Post Delete Button and Delete letters Here
         if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
             if (count($letter_contacts) == 1) {
-                    $parent = true;
+                $parent = true;
             }
             $type = $contact['type'];
             $recipientid = $contact['id'];
-            $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+            $letterid = delete_letter($letterid, $type, $recipientid, $new_template[$key]);
             if ($parent) {
 ?>
                 <script type="text/javascript">

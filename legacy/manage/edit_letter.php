@@ -1897,7 +1897,7 @@ foreach ($master_q as $master_r) {
 
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
-                delete_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+                delete_letter($letterid, $type, $recipientid, $new_template[$cur_letter_num]);
 
                 if ($parent) {
                     if (isset($_REQUEST['goto']) && $_REQUEST['goto'] != '') {

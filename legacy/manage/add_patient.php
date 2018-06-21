@@ -487,7 +487,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 $l_q = $db->getResults($l_sql);
                 if ($l_q) {
                     foreach ($l_q as $l) {
-                        delete_letter($l['letterid'], null, 'md_referral', $old_referred_by);
+                        delete_letter($l['letterid'], 'md_referral', $old_referred_by);
                     }
                 }
             } elseif ($old_referred_source == 1 && $_POST['referred_source'] != 1) {
@@ -496,7 +496,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
                 $l_q = $db->getResults($l_sql);
                 if ($l_q) {
                     foreach ($l_q as $l) {
-                        delete_letter($l['letterid'], null, 'pat_referral', $old_referred_by);
+                        delete_letter($l['letterid'], 'pat_referral', $old_referred_by);
                     }
                 }
             }

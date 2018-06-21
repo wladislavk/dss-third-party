@@ -7,10 +7,10 @@ require_once '../admin/includes/general.htm';
 $lid = $_REQUEST['lid'];
 $type = $_REQUEST['type'];
 $rid = $_REQUEST['rid'];
-$par = $_REQUEST['par'];
-$s = delete_letter($lid, $par, $type, $rid);
-if($s){
+
+$s = delete_letter($lid, $type, $rid);
+if ($s) {
     echo '{"success":true}';
-}else{
+} else {
     echo '{"error":true}';
 }

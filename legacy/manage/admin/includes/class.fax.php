@@ -28,6 +28,75 @@ class FTSSamples
         $this->apiKey = $keys['sfax_app_key'];//Required Key
     }
 
+
+    public function OutboundFaxCreate($faxNumber, $filePath, $faxRecipient = "test")
+    {
+        $optionalParams="CoverPageName=None;CoverPageSubject=PHPTest;CoverPageReference=PhpTest1234;TrackingCode=PHPTest1234";//Parameters to pass for CoverPages
+
+        // Set Security Token
+        $FTSAES = new FTSAESHelper($this->db, $this->securityContext);
+        $this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
+
+        // Construct the base service URL endpoint
+        $url = $this->serviceEndpointUrl;
+        $url .= "sendfax?";
+        $url .= "token=". urlencode($this->securityToken);
+        $url .= "&ApiKey=" . urlencode($this->apiKey);
+
+        // Add the method specific parameters
+        $url .= "&RecipientFax=" . urlencode($faxNumber);
+        $url .= "&RecipientName=" . urlencode($faxRecipient);
+        $url .= "&OptionalParams=" . urlencode($optionalParams);
+
+        //echo "URL: " . $url;
+
+        //reference primary file to fax
+        $postData = ['file' => "@$filePath"];
+
+        //initialize cURL and set cURL options
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_NOBODY, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+
+        //trust any cert - FOR DEVELOPMENT ONLY
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        //execute curl and get response information
+        $responseBody = curl_exec($ch);
+        $responseInfo = curl_getinfo($ch);
+
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $body = json_decode(substr($responseBody, $header_size), true);
+        curl_close ($ch);
+
+        //get headers and response data
+        $helper = new FTSHelper();
+        $headers = $helper->GetHeaders($responseBody, $responseInfo);
+        $helper->GetResponseData($responseBody, $responseInfo);
+        if ($body['isSuccess']) {
+            //get additional information from XML payload
+            //response data xml payload
+            $helper->GetResponseData($responseBody, $responseInfo);
+
+            //get additional information from XML payload
+            //response data xml payload
+            $helper->GetResponseData($responseBody, $responseInfo);
+
+            $return["status"] = true;
+            $return["transmission_id"] = $body['SendFaxQueueId'];
+            return $return;
+        } else {
+            error_log(__CLASS__ . " - Post data: " . print_r($postData, true));
+            error_log(__CLASS__ . " - Raw response: " . $responseBody);
+            return $headers;
+        }
+    }
+
     public function OutboundFaxStatus($sendfaxQueueId)
     {
         // key parameters
@@ -109,6 +178,12 @@ class FTSHelper
             }
         }
         return $headers;
+    }
+
+    public function GetResponseData($responseBody, $responseInfo)
+    {
+        $body = "" . substr($responseBody, $responseInfo['header_size']);
+        echo "SendFaxResponse: " . $body;
     }
 
     public function ReturnResponseData($responseBody, $responseInfo)

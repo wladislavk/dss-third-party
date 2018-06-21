@@ -530,7 +530,6 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
         $sql = "SELECT templateid, send_method FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
         $result = $db->getRow($sql);
         $templateid = $result['templateid'];
-        $send_method = $result['send_method'];
         if(empty($allowemail) && !in_array($templateid, $safeemails)) {
             $preferred = "paper";
         }
@@ -717,7 +716,7 @@ function create_letter_pdf($letterid)
     $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
     $row = $db->getRow($sql);
     if (!$row) {
-        return mysqli_error($con);
+        return $db->error();
     }
     $to_name = $firstname . " " . $lastname;
     $send_method = $row['send_method'];
@@ -925,9 +924,8 @@ function deliver_created_letter($letterid)
     if ($send_method == 'fax' && $use_digital_fax) {
         include 'class.fax.php';
         $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
-        $fileType = "pdf";
         $fts = new \FTSSamples($doc_company);
-        $digitalFax = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+        $digitalFax = $fts->OutboundFaxCreate('1'.$fax, $filePath);
 
         $send_success = $digitalFax['status'] === true;
 
@@ -1165,9 +1163,8 @@ function deliver_letter($letterid, $message)
         if ($send_method == 'fax' && $use_digital_fax) {
             include 'class.fax.php';
             $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
-            $fileType = "pdf";
             $fts = new \FTSSamples($doc_company);
-            $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType, $firstname);
+            $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filePath, $firstname);
             if($fax_send !== true){
                 if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
                     $send_success = false;

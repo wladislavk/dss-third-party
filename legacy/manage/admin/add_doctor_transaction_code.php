@@ -9,23 +9,22 @@ include '../includes/constants.inc';
 <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="../script/masks.js"></script>
 <?php
+$db = new Db();
+
 if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1) {
     $op_arr = split("\n",trim($_POST['transaction_code']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {
             $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."'";
-            $query_check=mysqli_query($con,$sel_check);
+            $query_check = mysqli_query($con,$sel_check);
 
-            if(mysqli_num_rows($query_check) == 0)
-            {
+            if(mysqli_num_rows($query_check) == 0) {
                 $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-                mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
+                $db->query($ins_sql);
             }
-
         }
     }
-
     $msg = "Added Successfully"; ?>
     <script type="text/javascript">
         parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
@@ -38,7 +37,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) 
     $sel_check = "select * from dental_transaction_code where docid=". $_GET['docid'] ." AND  transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con,$sel_check);
 
-    if(mysqli_num_rows($query_check)>0) {
+    if(mysqli_num_rows($query_check) > 0) {
         $msg = "Transaction Code already exist. So please give another Transaction Code.";
         ?>
         <script type="text/javascript">
@@ -47,12 +46,11 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) 
         </script>
         <?php
     } else {
-        if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
+        if (s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
             $sby = 999;
         } else {
             $sby = s_for($_POST["sortby"]);
         }
-
         if($_POST["ed"] != "") {
             $ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
@@ -60,7 +58,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) 
                 days_units = '".s_for($_POST['days_units'])."',
                 amount_adjust = '".s_for($_POST['amount_adjust'])."',
                 sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
-            mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+            $db->query($ed_sql);
 
             $msg = "Edited Successfully";
             ?>
@@ -76,7 +74,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) 
                 days_units = '".s_for($_POST['days_units'])."',
                 amount_adjust = '".s_for($_POST['amount_adjust'])."',
                 sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
-            mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
+            $db->query($ins_sql);
 
             $msg = "Added Successfully";
             ?>
@@ -88,9 +86,9 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) 
         }
     }
 }
-?>
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-<?php
+
+require_once dirname(__FILE__) . '/includes/popup_top.htm';
+
 $thesql = "select * from dental_transaction_code where transaction_codeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themy = mysqli_query($con,$thesql);
 $themyarray = mysqli_fetch_array($themy);
@@ -139,7 +137,7 @@ if($themyarray["transaction_codeid"] != '') {
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Transaction Code 
                <?php if($transaction_code != "") {?>
-                    &quot;<?php echo $transaction_code;?>&quot;
+                   &quot;<?php echo $transaction_code;?>&quot;
                <?php }?>
             </td>
         </tr>
@@ -170,7 +168,7 @@ if($themyarray["transaction_codeid"] != '') {
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-               Place
+                Place
             </td>
             <td valign="top" class="frmdata">
                 <select name="place" class="form-control">
@@ -178,8 +176,7 @@ if($themyarray["transaction_codeid"] != '') {
                     <?php
                     $psql = "select * from dental_place_service order by sortby";
                     $pmy = mysqli_query($con,$psql);
-                    while($prow = mysqli_fetch_assoc($pmy)){
-                        ?>
+                    while($prow = mysqli_fetch_assoc($pmy)){ ?>
                         <option value="<?php echo  $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?php echo  $prow['place_service']." ".$prow['description']; ?></option>
                     <?php } ?>
                 </select>
@@ -187,40 +184,40 @@ if($themyarray["transaction_codeid"] != '') {
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-               Default Modifier Code 1
+                Default Modifier Code 1
             </td>
             <td valign="top" class="frmdata">
                 <select name="modifier_code_1" class="form-control">
                     <option value=""></option>
                     <?php
-                        $psql = "select * from dental_modifier_code order by sortby";
-                        $pmy = mysqli_query($con,$psql);
-                        while($prow = mysqli_fetch_assoc($pmy)){
-                  ?>
-                  <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description'];
- ?></option>
-                  <?php } ?>
+                    $psql = "select * from dental_modifier_code order by sortby";
+                    $pmy = mysqli_query($con,$psql);
+                    while($prow = mysqli_fetch_assoc($pmy)){
+                        ?>
+                        <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">            <td valign="top" class="frmhead" width="30%">
-               Default Modifier Code 2
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Default Modifier Code 2
             </td>
             <td valign="top" class="frmdata">
                 <select name="modifier_code_2" class="form-control">
-                  <option value=""></option>
-                  <?php
-                        $psql = "select * from dental_modifier_code order by sortby";
-                        $pmy = mysqli_query($con,$psql);
-                        while($prow = mysqli_fetch_assoc($pmy)){
-                  ?>                  <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description'];
- ?></option>
-                  <?php } ?>
+                    <option value=""></option>
+                    <?php
+                    $psql = "select * from dental_modifier_code order by sortby";
+                    $pmy = mysqli_query($con,$psql);
+                    while($prow = mysqli_fetch_assoc($pmy)){ ?>
+                        <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">            <td valign="top" class="frmhead" width="30%">
-               Default Days/Units
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Default Days/Units
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="days_units" value="<?php echo $days_units;?>" class="tbox singlenumber" style="width:30px"/>
@@ -242,7 +239,6 @@ if($themyarray["transaction_codeid"] != '') {
                 $<input type="text" name="amount" value="<?php echo $amount;?>" class="form-control" style="width:100px"/>
             </td>
         </tr>
-
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status
@@ -275,7 +271,7 @@ if($themyarray["transaction_codeid"] != '') {
             </td>
         </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <span class="red">
                     * Required Fields
                 </span><br />

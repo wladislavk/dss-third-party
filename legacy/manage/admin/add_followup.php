@@ -11,19 +11,15 @@ $db = new Db();
 if($_POST["mult_followupsub"] == 1) {
     $op_arr = split("\n",trim($_POST['followup']));
 
-    foreach($op_arr as $i=>$val)
-    {
-        if($val != '')
-        {
+    foreach($op_arr as $i=>$val) {
+        if($val != '') {
             $sel_check = "select * from dental_followup where followup = '".s_for($val)."'";
             $query_check=mysqli_query($con, $sel_check);
 
-            if(mysqli_num_rows($query_check) == 0)
-            {
+            if(mysqli_num_rows($query_check) == 0) {
                 $ins_sql = "insert into dental_followup set followup = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
                 mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
             }
-
         }
     }
 
@@ -36,8 +32,7 @@ if($_POST["mult_followupsub"] == 1) {
     trigger_error("Die called", E_USER_ERROR);
 }
 
-if($_POST["followupsub"] == 1)
-{
+if($_POST["followupsub"] == 1) {
     $sel_check = "select * from dental_followup where followup = '".s_for($_POST["followup"])."' and followupid != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con, $sel_check);
 
@@ -81,7 +76,6 @@ if($_POST["followupsub"] == 1)
         }
     }
 }
-
 ?>
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
@@ -114,8 +108,8 @@ if($themyarray["followupid"] != '') {
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="followupfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return followupabc(this)">
+<?php }?>
+<form name="followupfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return followupabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -169,21 +163,21 @@ if($themyarray["followupid"] != '') {
                 <input type="hidden" name="followupsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["followupid"]?>" />
                 <input type="submit" value="<?=$but_text?> Follow Up" class="btn btn-primary">
-        <?php if($themyarray["followupid"] != '' && $_SESSION['admin_access']==1){ ?>
+                <?php if($themyarray["followupid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_followup.php?delid=<?=$themyarray["followupid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent"class="editdel btn btn-danger pull-right" title="DELETE">
-                            Delete
+                        Delete
                     </a>
-        <?php } ?>
+                <?php } ?>
             </td>
         </tr>
     </table>
-    </form>
+</form>
     
-    <?php if($_GET['ed'] == '') { ?>
-        <div class="alert alert-danger text-center">
-            <b>--------------------------------- OR ---------------------------------</b>
-        </div>
-        <form name="followupfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return followupabc(this)">
+<?php if($_GET['ed'] == '') { ?>
+    <div class="alert alert-danger text-center">
+        <b>--------------------------------- OR ---------------------------------</b>
+    </div>
+    <form name="followupfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return followupabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
@@ -208,8 +202,7 @@ if($themyarray["followupid"] != '') {
                 </td>
             </tr>
         </table>
-        </form>
-    
-    <?php } ?>
+    </form>
+<?php } ?>
 </body>
 </html>

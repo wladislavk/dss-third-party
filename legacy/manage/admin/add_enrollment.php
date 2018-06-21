@@ -9,6 +9,8 @@ include_once "includes/general.htm";
 include_once "../includes/constants.inc";
 include_once "includes/invoice_functions.php";
 
+$db = new Db();
+
 if (isset($_POST["enrollsub"])) {
     $sql = "SELECT * FROM dental_users where userid='".$db->escape($_GET['docid'])."'";
     $q = mysqli_query($con,$sql);

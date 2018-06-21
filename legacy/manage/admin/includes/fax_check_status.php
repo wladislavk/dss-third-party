@@ -6,6 +6,8 @@ namespace Ds3\Libraries\Legacy;
 require(dirname(__FILE__).'/class.fax.php');
 require(dirname(__FILE__).'/config.php');
 
+$db = new Db();
+
 set_time_limit(5*60); // 5 minutes
 
 $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 50;
@@ -13,7 +15,7 @@ $limit = $limit < 1 ? 50 : $limit;
 
 $sql = "SELECT f.*, c.companyid
     FROM dental_faxes f
-        JOIN dental_user_company c ON c.userid = f.docid
+    JOIN dental_user_company c ON c.userid = f.docid
     WHERE sfax_completed=0
     AND sfax_transmission_id IS NOT NULL
     ORDER BY f.id ASC
@@ -36,7 +38,7 @@ if ($q) {
         $transmissionId = $r['sfax_transmission_id'];
 
         $_SESSION['companyid'] = $companyId;
-        $fts = new \FTSSamples();
+        $fts = new \FTSSamples($db);
 
         // Try/catch block for API calls
         try {
@@ -60,8 +62,8 @@ if ($q) {
         $errorCode = isset($item['ErrorCode']) ? $item['ErrorCode'] : (isset($faxStatus['ErrorCode']) ? $faxStatus['ErrorCode'] : -1);
         $success = isset($item['IsSuccess']) && $item['IsSuccess'] ? '1' : '2';
 
-        $apiResponse = $db->escape( $apiResponse);
-        $errorCode = $db->escape( $errorCode);
+        $apiResponse = $db->escape($apiResponse);
+        $errorCode = $db->escape($errorCode);
 
         $up_sql = "UPDATE dental_faxes SET
                 sfax_completed = '1',

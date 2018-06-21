@@ -127,7 +127,8 @@ function edx_user_update($userId)
  *
  * @param int $edxId
  */
-function edx_user_delete ($edxId) {
+function edx_user_delete($edxId)
+{
     if ($edxId) {
         edx_command('delete', [$edxId]);
     }

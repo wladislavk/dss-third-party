@@ -17,7 +17,7 @@ if(!empty($_REQUEST["delid"])) {
     $logins = $db->getNumberRows($l_sql);
 
     if($logins == 0){
-        edx_user_delete($_REQUEST['delid'], $edx_con);
+        edx_user_delete($_REQUEST['delid']);
         $del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
     }else{
         $del_sql = "update dental_users set status=2 where userid='".$_REQUEST["delid"]."'";

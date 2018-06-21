@@ -149,9 +149,7 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice = fals
     $filename = "financial_agreement_medicare_nonpar_" . $id . ".pdf";
 
     create_form_pdf($html, $filename, $title, $backoffice);
-
 }
-
 
 /**
  * "Financial Agreement CASH" form PDF generation code
@@ -325,7 +323,6 @@ function update_financial_agreement_cash_form($id, $backoffice = false)
 
 }
 
-
 /**
  * "Financial Agreement OON (Out of Network)" form PDF generation code
  *
@@ -495,7 +492,6 @@ function update_financial_agreement_oon_form($id, $backoffice)
     create_form_pdf($html, $filename, $title, $backoffice);
 
 }
-
 
 /**
  * "Home Care Instructions" form PDF generation code
@@ -1064,7 +1060,6 @@ function update_sleep_recorder_release_form($id, $locid = null, $backoffice = fa
 
 }
 
-
 /**
  * "Custom Release Form" form PDF generation code
  *
@@ -1214,7 +1209,6 @@ function update_custom_release_form($id, $locid = null, $backoffice = false)
 
 }
 
-
 /**
  * "CPAP Intolerance Affadavit" form PDF generation code
  *
@@ -1226,7 +1220,6 @@ function update_custom_release_form($id, $locid = null, $backoffice = false)
  */
 function update_affidavit_for_cpap_intolerance_form($id, $backoffice)
 {
-
     $logo = get_logo($id, $backoffice);
 
     $html = '
@@ -1366,7 +1359,6 @@ function update_affidavit_for_cpap_intolerance_form($id, $backoffice)
 
 }
 
-
 /**
  * "Device Titration - EMA" form PDF generation code
  *
@@ -1376,10 +1368,8 @@ function update_affidavit_for_cpap_intolerance_form($id, $backoffice)
  * @param $id
  * @param $backoffice
  */
-//Device Titration Form (Arms/bands)
 function update_device_titration_ema_form($id, $backoffice)
 {
-
     $logo = get_logo($id, $backoffice);
 
     $html = '
@@ -1676,7 +1666,6 @@ function update_device_titration_ema_form($id, $backoffice)
 
 }
 
-
 /**
  * "Device Titration - Using Key" form PDF generation code
  *
@@ -1689,7 +1678,6 @@ function update_device_titration_ema_form($id, $backoffice)
 //Device Titration Form (with Key)
 function update_device_titration_form($id, $backoffice)
 {
-
     $logo = get_logo($id, $backoffice);
 
     $html = '
@@ -1975,7 +1963,6 @@ function update_device_titration_form($id, $backoffice)
     create_form_pdf($html, $filename, $title, $backoffice);
 
 }
-
 
 /**
  * "ESS - TSS (Epworth / Thornton) Forms" form PDF generation code
@@ -2540,7 +2527,6 @@ function update_ess_tss_form($id, $backoffice)
 
 }
 
-
 /**
  * "Release of Liability" form PDF generation code
  *
@@ -2719,7 +2705,6 @@ function update_release_liability_form($id, $locid = null, $backoffice = false)
     create_form_pdf($html, $filename, $title, $backoffice);
 
 }
-
 
 /**
  * "Informed Consent" form PDF generation code
@@ -3883,7 +3868,6 @@ function update_the_dss_experience_form($id, $backoffice)
 
 }
 
-
 /**
  * "Patient Notices" form PDF generation code
  *
@@ -4102,7 +4086,6 @@ function update_patient_notices_form($id, $locid = null, $backoffice = false)
     create_form_pdf($html, $filename, $title, $backoffice);
 
 }
-
 
 /**
  * "New Patient" form PDF generation code
@@ -4442,7 +4425,6 @@ function update_new_patient_form($id, $locid = null, $backoffice = false)
 
 }
 
-
 /**
  * "Patient Questionnaire" form PDF generation code
  *
@@ -4660,618 +4642,6 @@ function update_patient_questionnaire_form($id, $locid = null, $backoffice = fal
 
 
 }
-
-
-/**
- * "Patient Questionnaire OLD FORM" form PDF generation code
- *
- * This HTML section is auto-populated with user variables to create a customized PDF 'form'
- * that FO user can download from /manage/manage_user_forms.php
- *
- * @param $id
- * @param null $locid
- * @param bool $backoffice
- */
-function update_patient_questionnaire_form_old($id, $locid = null, $backoffice = false)
-{
-    $db = new Db();
-    $con = $GLOBALS['con'];
-
-    $logo = get_logo($id, $backoffice);
-    $l_sql = "SELECT logo, user_type FROM dental_users where userid=" . $db->escape( $id);
-    $l_q = mysqli_query($con, $l_sql);
-    $l_r = mysqli_fetch_assoc($l_q);
-    if ($locid) {
-        $loc_sql = "SELECT * FROM dental_locations WHERE docid='" . $db->escape( $id) . "' AND id='" . $db->escape( $locid) . "'";
-        $loc_q = mysqli_query($con, $loc_sql);
-        $loc_r = mysqli_fetch_assoc($loc_q);
-    } else {
-        $loc_sql = "SELECT * FROM dental_locations WHERE docid='" . $db->escape( $id) . "' AND default_location=1";
-        $loc_q = mysqli_query($con, $loc_sql);
-        $loc_r = mysqli_fetch_assoc($loc_q);
-    }
-
-    if ($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE) {
-        $practice = $loc_r['location'];
-    } else {
-        $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
-    }
-
-    $html = '
-<html>
-    <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 14 (filtered)">
-        <style>
-            <!--
-                /* Font Definitions */
-                @font-face
-                {font-family:Wingdings;
-                panose-1:5 0 0 0 0 0 0 0 0 0;}
-                @font-face
-                {font-family:Wingdings;
-                panose-1:5 0 0 0 0 0 0 0 0 0;}
-                @font-face
-                {font-family:Calibri;
-                panose-1:2 15 5 2 2 2 4 3 2 4;}
-                @font-face
-                {font-family:Tahoma;
-                panose-1:2 11 6 4 3 5 4 4 2 4;}
-                @font-face
-                {font-family:"Adobe Garamond Pro";
-                panose-1:2 2 5 2 6 5 6 2 4 3;}
-                @font-face
-                {font-family:Webdings;
-                panose-1:5 3 1 2 1 5 9 6 7 3;}
-                /* Style Definitions */
-                p.MsoNormal, li.MsoNormal, div.MsoNormal
-                {margin-top:0in;
-                margin-right:0in;
-                margin-bottom:0in;
-                margin-left:0in;
-                line-height:115%;
-                text-autospace:ideograph-other;
-                font-size:11.0pt;
-                font-family:"Calibri","sans-serif";}
-                p.MsoHeader, li.MsoHeader, div.MsoHeader
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:11.0pt;
-                font-family:"Calibri","sans-serif";}
-                p.MsoFooter, li.MsoFooter, div.MsoFooter
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:11.0pt;
-                font-family:"Calibri","sans-serif";}
-                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";}
-                p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-                {margin-top:0in;
-                margin-right:0in;
-                margin-bottom:10.0pt;
-                margin-left:.5in;
-                line-height:115%;
-                text-autospace:ideograph-other;
-                font-size:11.0pt;
-                font-family:"Calibri","sans-serif";}
-                span.HeaderChar
-                {mso-style-name:"Header Char";}
-                span.FooterChar
-                {mso-style-name:"Footer Char";}
-                span.BalloonTextChar
-                {mso-style-name:"Balloon Text Char";
-                font-family:"Tahoma","sans-serif";}
-                .MsoChpDefault
-                {font-family:"Calibri","sans-serif";}
-                .MsoPapDefault
-                {margin-bottom:10.0pt;
-                line-height:115%;
-                text-autospace:ideograph-other;}
-                /* Page Definitions */
-                @page WordSection1
-                {size:8.5in 11.0in;
-                border:solid black 1.0pt;
-                }
-                div.WordSection1
-                {page:WordSection1;}
-                @page WordSection2
-                {size:8.5in 11.0in;
-                border:solid black 1.0pt;
-                }
-                div.WordSection2
-                {page:WordSection2;}
-                @page WordSection3
-                {size:8.5in 11.0in;
-                margin:.4in .5in .4in .5in;
-                border:solid black 1.0pt;
-                padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection3
-                {page:WordSection3;}
-                @page WordSection4
-                {size:8.5in 11.0in;
-                margin:.4in .5in .4in .5in;
-                border:solid black 1.0pt;
-                padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection4
-                {page:WordSection4;}
-                @page WordSection5
-                {size:8.5in 11.0in;
-                margin:.4in .5in .4in .5in;
-                border:solid black 1.0pt;
-                padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection5
-                {page:WordSection5;}
-                /* List Definitions */
-                ol
-                {margin-bottom:0in;}
-                ul
-                {margin-bottom:0in;}
-                -->
-        </style>
-    </head>
-    <body lang=EN-US>
-        <div class=WordSection1>
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                            Patient Questionnaire</span></b>
-                        </h2>
-                    </td>
-                </tr>
-            </table>
-            <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-            text-align:center;line-height:normal\'><img width=900 height=400
-                src="/manage/images/patient_questionnaire_files/image002.png" align=left
-                hspace=12><span style=\'position:absolute;z-index:251665408;left:0px;margin-left:
-            -16px;margin-top:54px;width:941px;height:5px\'><img width=941 height=5
-                src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Primary
-            Symptoms</span></b></p>
-            <p class=MsoNormal><b><span style=\'font-size:12.0pt;line-height:115%\'>Please
-                list the main reason(s) you are seeking treatment for snoring or sleep apnea</span></b><span
-                    style=\'font-size:12.0pt;line-height:115%\'>: </span>__________________________________________________________________________________________________
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;\'><b>Do you
-                have other complaints?</b>
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:100%\'>  </span>Frequent snoring </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:100%\'>  </span>Excessive Daytime Sleepiness
-                (EDS)
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:100%\'>  </span>Difficulty falling asleep</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:100%\'>  </span>Waking up gasping / choking</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Morning headaches</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Neck or facial pain</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>I have been told I stop
-                breathing when I sleep
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Other:
-                _____________________________________
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Difficulty maintaining sleep</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Choking while sleeping</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Feeling unrefreshed in the morning</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Memory problems</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Impotence</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Nasal problems, difficulty
-                breathing through nose
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
-                style=\'font-size:10.0pt;line-height:115%\'>  </span>Irritability or mood swings</p>
-            <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-            text-align:center;line-height:normal\'><span style=\'position:absolute;
-            z-index:251688960;left:0px;margin-left:-16px;margin-top:242px;width:941px;
-            height:5px\'><img width=941 height=5
-                src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Subjective
-            Signs and Symptoms</span></b></p>
-            <p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
-            0in;margin-left:0in;margin-bottom:.0001pt;line-height:140%\'><b>Rate your
-            overall energy level</b>                   (Low)     1      2      3     
-            4      5      6      7      8      9      10 (Excellent)</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>Rate your sleep quality</b>                                (Low)     1     
-            2      3      4      5      6      7      8      9      10 (Excellent)</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>Have you been told you snore?</b>                 YES / NO / SOMETIMES</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>Rate the sound of your snoring</b>                 (Quiet)   1     
-            2      3      4      5      6      7      8      9      10 (Loud)</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>On average, how many times per night do you wake up?</b>              _____________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>On average, how many hours of sleep do you get per night?</b>        _____________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>How often do you awaken with headaches?</b>        NEVER / RARELY / SOMETIMES
-            / OFTEN / EVERYDAY</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>Do you have a bed partner?</b>        YES / NO / SOMETIMES                  <b>Do
-            you sleep in the same room?</b>   YES / NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'><b>How many times per night does your bedtime partner notice you stop
-            breathing?</b></p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            140%\'>SEVERAL TIMES PER NIGHT / ONCE PER NIGHT / SEVERAL TIMES PER WEEK /
-            OCCASIONALLY / SELDOM / NEVER</p>
-            <br pagebreak="true" />
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                            Patient Questionnaire</span></b>
-                        </h2>
-                    </td>
-                </tr>
-            </table>
-            <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-            text-align:center;line-height:normal\'><span style=\'position:absolute;
-            z-index:251676672;left:0px;margin-left:-16px;margin-top:362px;width:941px;
-            height:5px\'><img width=941 height=5
-                src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Previous
-            Treatments</span></b></p>
-            <p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
-            0in;margin-left:0in;margin-bottom:.0001pt;line-height:normal\'><b>Have you ever
-            had a sleep study?</b>            YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-                normal\'><b>If YES, where and when?</b>
-                ___________________________________________________<b>Date:</b>______________________
-            </p>
-            <p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
-            0in;margin-left:0in;margin-bottom:.0001pt;line-height:125%\'><b>Have you tried
-            CPAP?</b>                                  YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>Are you currently using CPAP?</b>                  YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>If YES, how many nights per week do you wear it?</b>   ______________/
-            7 Nights</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>When you wear your CPAP, how many hours per night do you wear it?</b>
-            ______________hours per night</p>
-            <p class=MsoNormal style=\'margin-top:12.0pt\'><b>If you use or have used CPAP,
-                what are your chief complaints about CPAP?</b>
-            </p>
-        </div>
-        <span style=\'font-size:11.0pt;line-height:115%;font-family:"Calibri","sans-serif"\'><br
-            clear=all style=\'page-break-before:auto\'>
-        </span>
-        <div class=WordSection4>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Mask
-                leaks
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>An
-                inability to get the mask to fit properly
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Discomfort
-                from the straps or headgear
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Decrease
-                sleep quality or interrupted sleep from CPAP device
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Noise
-                from the device disrupting sleep and/or bedtime partner’s sleep
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
-                restricted movement during sleep
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
-                seems to be ineffective
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Device
-                causes teeth or jaw problems
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>A
-                latex allergy
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Device
-                causes claustrophobia or panic attacks 
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>An
-                unconscious need to remove CPAP at night
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Caused
-                GI / stomach / intestinal problems
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
-                device irritated my nasal passages
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Inability
-                to wear due to nasal problems
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Causes
-                dry nose or dry mouth
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>The
-                device causes irritation due to air leaks
-            </p>
-            <p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
-                text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
-                Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Other:
-                ______________________________________________________________________________
-            </p>
-        </div>
-        <span style=\'font-size:11.0pt;line-height:115%;font-family:"Calibri","sans-serif"\'><br
-            clear=all style=\'page-break-before:auto\'>
-        </span>
-        <div class=WordSection5>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-                normal\'>&nbsp;</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>Are you currently wearing a dental device?</b>          YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>Have you previously tried a dental device?</b>           YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>If YES, was it Over the Counter (OTC)?</b>                   YES         NO         </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'><b>Was it fabricated by a dentist?   </b>                              YES         NO
-                    <b>If YES, who fabricated it?</b> ________________________</p>
-            <p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
-            0in;margin-left:0in;margin-bottom:.0001pt;line-height:normal\'><b>If applicable,
-            please describe your previous dental device experience:</b></p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-                normal\'>__________________________________________________________________________________________________</p>
-            <p class=MsoNormal style=\'margin-top:12.0pt\'><b>Have you ever had surgery for
-                snoring or sleep apnea?</b>    YES       NO
-            </p>
-            <p class=MsoNormal style=\'margin-top:12.0pt\'><b>Please list any nose, palatal,
-                throat, tongue, or jaw surgeries you have had. </b>
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
-            ________________________________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
-            ________________________________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
-            ________________________________________</p>
-            <p class=MsoNormal>&nbsp;</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Please
-                comment about any other therapy attempts (weight loss, gastric bypass, etc.)
-                and how each impacted your snoring and apnea and sleep quality.</b>
-                ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-            </p>
-            <br pagebreak="true" />
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                            Patient Questionnaire</span></b>
-                        </h2>
-                    </td>
-                </tr>
-            </table>
-            <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-            text-align:center;line-height:normal\'><span style=\'position:absolute;
-            z-index:251679744;left:0px;margin-left:-16px;margin-top:293px;width:941px;
-            height:5px\'><img width=941 height=5
-                src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Health
-            History</span></b></p>
-            <p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
-            margin-left:0in;margin-bottom:.0001pt\'><b>PRE-MEDICATION – Have you been told
-            you should receive pre-medication before dental procedures?</b>          YES      NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>If YES,
-                what medication(s) and why do you require it?</b>
-                _____________________________________________________
-            </p>
-            <p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
-            0in;margin-left:0in;margin-bottom:.0001pt\'><b>ALLERGENS -- </b>Please list
-            everything you are allergic to (for example: aspirin, latex, penicillin, etc):</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>_____
-                _____________________________________________________________________________________________
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>MEDICATIONS
-                -- </b>Please list all medications you are currently taking:
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>_________________________________________________________________________________________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>MEDICAL
-                HISTORY – </b>Please list all medical diagnoses and surgeries from birth until
-                now (for example: heart attack, high blood pressure, asthma, stroke, hip
-                replacement, HIV, diabetes, etc):
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-                normal\'>______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________</p>
-            <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-            text-align:center;line-height:normal\'><span style=\'position:absolute;
-            z-index:251695104;left:0px;margin-left:-16px;margin-top:369px;width:941px;
-            height:5px\'><img width=941 height=5
-                src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Dental
-            History</span></b></p>
-            <p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in;
-            margin-left:0in;margin-bottom:.0001pt\'><b>How would you describe your dental
-            health?</b>      EXCELLENT     GOOD     FAIR     POOR</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'position:absolute;z-index:251701248;margin-left:455px;margin-top:358px;
-                width:24px;height:19px\'><img width=24 height=19
-                    src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
-                ever had teeth extracted?</b>                       YES         NO           <b>If
-                YES, please describe</b>__________________________
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
-                wear removable partials?</b>                            YES         NO         
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
-                wear full dentures?</b>                                        YES         NO
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'position:absolute;z-index:251703296;margin-left:455px;margin-top:376px;
-                width:24px;height:19px\'><img width=24 height=19
-                    src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
-                ever worn braces (orthodontics)?</b>         YES         NO           <b>If
-                YES, date completed:</b> _________________________
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'position:absolute;z-index:251705344;margin-left:455px;margin-top:1px;
-                width:24px;height:19px\'><img width=24 height=19
-                    src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Does your
-                TMJ (jaw joint) click or pop?</b>                 YES         NO           <b>Do
-                you have pain in this joint?</b>                    YES     NO
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Have you
-                had TMJ (jaw joint) surgery?</b>                  YES         NO         
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-                style=\'position:absolute;z-index:251707392;margin-left:455px;margin-top:15px;
-                width:24px;height:19px\'><img width=24 height=19
-                    src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
-                ever had gum problems?</b>                         YES         NO           <b>If
-                YES, have you ever had gum surgery?   </b>YES     NO
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
-                have dry mouth?</b>                                           YES         NO
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Have you
-                ever had an injury to your head, face, neck, or mouth?             </b>YES         NO         
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Are you
-                planning to have dental work done in the near future?  </b>               YES         NO
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
-                clench or grind your teeth?</b>                                                                      YES         NO         
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>If you
-                answered YES to any question above, please briefly describe your answer here:</b>
-            </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>____________________________________________________________________________________________________________________________________________________________________________________________________</p>
-            <p class=MsoNormal align=center style=\'margin-top:4.0pt;margin-right:0in;
-            margin-bottom:0in;margin-left:0in;margin-bottom:.0001pt;text-align:center;
-            line-height:normal\'><span style=\'position:absolute;z-index:251697152;
-            left:0px;margin-left:-16px;margin-top:88px;width:941px;height:5px\'><img
-                width=941 height=5 src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Family
-            History</span></b></p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>Have genetic members of your family had:</b>          </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>Heart Disease?   </b>YES         NO         <b>High Blood Pressure?      </b>YES         NO         <b>Diabetes?            </b>YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>Have genetic members of your family been diagnosed or treated for a
-            sleep disorder?</b>     YES         NO</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>How often do you consume alcohol within 2-3 hours of bedtime?</b>             <span
-                style=\'font-family:Webdings\'>&#9633;</span> Daily    <span style=\'font-family:Webdings\'>&#9633;</span>
-            Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>How often do you take sedatives within 2-3 hours of bedtime?</b>                  <span
-                style=\'font-family:Webdings\'>&#9633;</span> Daily     <span style=\'font-family:Webdings\'>&#9633;</span>
-            Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>How often do you consume caffeine within 2-3 hours of bedtime?</b>           <span
-                style=\'font-family:Webdings\'>&#9633;</span> Daily     <span style=\'font-family:Webdings\'>&#9633;</span>
-            Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never               </p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>Do you smoke? </b>                              YES         NO         <b>If
-            YES, how many packs per day?</b>   _________________</p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            130%\'><b>Do you use chewing tobacco?</b>    YES         NO         <b>If YES,
-            how many times per day?</b> __________________</p>
-            <p class=MsoNormal align=center style=\'margin-top:8.0pt;margin-right:0in;
-            margin-bottom:0in;margin-left:0in;margin-bottom:.0001pt;text-align:center;
-            line-height:normal\'><span style=\'position:absolute;z-index:251712512;
-            left:0px;margin-left:-16px;margin-top:178px;width:941px;height:5px\'><img
-                width=941 height=5 src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
-            style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'> PATIENT
-            SIGNATURE</span></b></p>
-            <p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
-            margin-left:0in;margin-bottom:.0001pt\'><b><span style=\'font-size:10.5pt;
-            line-height:115%\'>I certify that the information I have completed on these
-            forms is true, accurate, and complete to the best of my knowledge. </span></b></p>
-            <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Patient
-                or Guardian Signature</b>: __________________________________________________
-                Date: _________________
-            </p>
-        </div>
-    </body>
-</html>
-';
-
-    $title = "Patient Questionnaire";
-    if ($locid) {
-        $filename = "patient_questionnaire_" . $locid . '_' . $id . ".pdf";
-    } else {
-        $filename = "patient_questionnaire_" . $id . ".pdf";
-    }
-
-    create_form_pdf($html, $filename, $title, $backoffice);
-
-}
-
 
 /**
  * "Proof of Delivery" form PDF generation code
@@ -5557,7 +4927,6 @@ function update_proof_of_delivery_form($id, $locid = null, $backoffice = false)
 
 }
 
-
 /**
  * Cleanup function to REGENERATE HTML/PDF forms
  *
@@ -5597,7 +4966,6 @@ function form_update_all($docid, $backoffice = false)
     update_the_dss_experience_form($docid, $backoffice);
 }
 
-
 /**
  * Get frontoffice User "logo" for form
  *
@@ -5632,7 +5000,6 @@ function get_logo($id, $backoffice)
     }
     return $logo;
 }
-
 
 /**
  * CREATE FORM "MASTER" PDF generation helper function

@@ -15,10 +15,10 @@ if($_POST["doc_newub"] == 1) {
 	}
 	
 	$doc_id = '';
-	if(count($_POST['docid']) <> 0) {
+	if(count($_POST['docid']) != 0) {
 		$doc_arr = '~';
 		foreach($_POST['docid'] as $doc_val) {
-			if($doc_val <> '')
+			if($doc_val != '')
 			{
 				$doc_arr .= $doc_val.'~';
 			}
@@ -32,7 +32,7 @@ if($_POST["doc_newub"] == 1) {
 		$banner1 = '';
 		@unlink("../video_file/".$_POST['video_file_old']);
 	} else {
-		if($_FILES["video_file"]["name"] <> '') {
+		if($_FILES["video_file"]["name"] != '') {
 			$fname = $_FILES["video_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -45,7 +45,7 @@ if($_POST["doc_newub"] == 1) {
 			@move_uploaded_file($_FILES["video_file"]["tmp_name"],"../video_file/".$banner1);
 			@chmod("../video_file/".$banner1,0777);
 			
-			if($_POST['video_file_old'] <> '') {
+			if($_POST['video_file_old'] != '') {
 				@unlink("../video_file/".$_POST['video_file_old']);
 			}
 		} else {
@@ -57,7 +57,7 @@ if($_POST["doc_newub"] == 1) {
 		$banner2 = '';
 		@unlink("../doc_file/".$_POST['doc_file_old']);
 	} else {
-		if($_FILES["doc_file"]["name"] <> '') {
+		if($_FILES["doc_file"]["name"] != '') {
 			$fname = $_FILES["doc_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -70,7 +70,7 @@ if($_POST["doc_newub"] == 1) {
 			@move_uploaded_file($_FILES["doc_file"]["tmp_name"],"../doc_file/".$banner2);
 			@chmod("../doc_file/".$banner2,0777);
 			
-			if($_POST['doc_file_old'] <> '') {
+			if($_POST['doc_file_old'] != '') {
 				@unlink("../doc_file/".$_POST['doc_file_old']);
 			}
 		} else {
@@ -140,7 +140,7 @@ if($_POST["doc_newub"] == 1) {
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> What&prime;s New
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?=$title;?>&quot;
                <?php }?>
             </td>
@@ -159,7 +159,7 @@ if($_POST["doc_newub"] == 1) {
 				Video File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($video_file <> '') {?>
+				<?php if($video_file != '') {?>
 					<a href="preview.php?fn=<?=$video_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -175,7 +175,7 @@ if($_POST["doc_newub"] == 1) {
 				Material File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($doc_file <> '') {?>
+				<?php if($doc_file != '') {?>
 					<a href="../doc_file/<?=$doc_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;

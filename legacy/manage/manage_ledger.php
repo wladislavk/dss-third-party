@@ -430,7 +430,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
                                   >
 <?php 
-      if(st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
+      if(st($myarray["amount"]) != 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["amount"]),2);
         if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
@@ -463,7 +463,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
                                   >
 <?php 
-      if(st($myarray["paid_amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
+      if(st($myarray["paid_amount"]) != 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["paid_amount"]),2);
       }?>
         &nbsp;

@@ -249,7 +249,7 @@ $num_users = count($my);
         <?php
 
             if($myarray['ledger'] == 'ledger'){
-                if($myarray["amount"] <> 0){
+                if($myarray["amount"] != 0){
                     echo number_format($myarray["amount"],2);
                     $tot_charges += $myarray["amount"];
                 }
@@ -266,7 +266,7 @@ $num_users = count($my);
                 }
             } ?>
         <td valign="top" align="right" width="10%">
-            <?php if(st($myarray["paid_amount"]) <> 0) {?>
+            <?php if(st($myarray["paid_amount"]) != 0) {?>
                 <?php echo number_format(st($myarray["paid_amount"]),2);?>
             <?php
             }?>

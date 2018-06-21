@@ -18,7 +18,7 @@ if (isset($_POST['accesscodedelete'])) {
 }
 
 if (isset($_POST["accesscodesub"])) {
-    $sel_check = "select * from dental_access_codes where access_code = '".s_for($_POST["access_code"])."' and id <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_access_codes where access_code = '".s_for($_POST["access_code"])."' and id != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con,$sel_check);
 
     if (mysqli_num_rows( $query_check) > 0) {

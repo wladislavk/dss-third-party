@@ -280,7 +280,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 $filesize = $_FILES["image_file"]["size"];
 
                 if ($filesize <= DSS_IMAGE_MAX_SIZE) {
-                    if ($_FILES["image_file"]["name"] <> '') {
+                    if ($_FILES["image_file"]["name"] != '') {
                         $banner1 = $name.'_'.date('dmy_Hi');
                         $banner1 .= ".".$extension;
 
@@ -288,7 +288,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                         $uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
 
                         if ($uploaded) {
-                            if ($_POST['image_file_old'] <> '') {
+                            if ($_POST['image_file_old'] != '') {
                                 @unlink("../../../shared/q_file/".$_POST['image_file_old']);
                             }
                         } else {

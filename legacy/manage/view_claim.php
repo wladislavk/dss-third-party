@@ -420,14 +420,14 @@ W1: <?php echo (!empty($pat_myarray['cell_phone']) ? st($pat_myarray['cell_phone
                         <?php echo (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
                     </td>
                     <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
-                        <?php if(st($myarray["amount"]) <> 0) {?>
+                        <?php if(st($myarray["amount"]) != 0) {?>
                             <?php echo number_format(st($myarray["amount"]),2);?>
                             <?php $cur_bal += st($myarray["amount"]);
                         } ?>
                         &nbsp;
                     </td>
                     <td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top" align="right">
-                        <?php if(st($myarray["paid_amount"]) <> 0) { ?>
+                        <?php if(st($myarray["paid_amount"]) != 0) { ?>
                             <?php echo number_format(st($myarray["paid_amount"]),2);?>
                             <?php
                             $cur_bal -= st($myarray["paid_amount"]);

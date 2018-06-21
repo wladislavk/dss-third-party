@@ -135,7 +135,7 @@ if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Evaluation New
-               <?php if($evaluation_new <> "") {?>
+               <?php if($evaluation_new != "") {?>
                		&quot;<?php echo $evaluation_new;?>&quot;
                <?php }?>
             </td>

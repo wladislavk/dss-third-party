@@ -260,7 +260,7 @@ include 'includes/top2.htm';
                     <table width="660" border="0" align="center" cellpadding="0" cellspacing="0">
                         <tr>
                             <td valign="top" class="em_title">
-                                <?php if ($_SESSION['username'] <> '') { ?>
+                                <?php if ($_SESSION['username'] != '') { ?>
                                     Welcome <?php echo $_SESSION['username'];?>
                                 <?php } else { ?>
                                     Welcome to <?php echo $sitename;?>
@@ -296,7 +296,7 @@ include 'includes/top2.htm';
                             </map>
                         </center>
                         <br />
-                        <?php if($_SESSION['username'] <> '') { ?>
+                        <?php if($_SESSION['username'] != '') { ?>
                             <font style="font-size:15px; font-weight:bold; color:#00457c;"><center>Welcome <?php echo $_SESSION['username'];?> -</font><font style="font-size:17px; font-weight:bold; color:#000000;"> Select A Category</center></font>
                         <?php } else { ?>
                             <font style="font-size:15px; font-weight:bold; color:#00457c;"><center>Welcome to <?php echo $sitename;?></center></font>

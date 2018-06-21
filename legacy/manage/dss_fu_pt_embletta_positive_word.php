@@ -53,7 +53,7 @@ foreach($medications_arr as $val) {
         $medications_myarray = $db->getRow($medications_sql);
 
         if(st($medications_myarray['medications']) != '') {
-            if($medications_disp <> '') $medications_disp .= ', ';
+            if($medications_disp != '') $medications_disp .= ', ';
             $medications_disp .= st($medications_myarray['medications']);
         }
     }
@@ -71,11 +71,11 @@ foreach($medications_arr as $val) {
             <br><br>
             <strong>
             <?php echo $name;?>
-            <?php if(st($pat_myarray['add1']) <> '') { ?>
+            <?php if(st($pat_myarray['add1']) != '') { ?>
                 <br /><?php echo st($pat_myarray['add1']);?>
             <?php } ?>
 
-            <?php if(st($pat_myarray['add2']) <> '') { ?>
+            <?php if(st($pat_myarray['add2']) != '') { ?>
                 <br /><?php echo st($pat_myarray['add2']);?>
             <?php } ?>
             &nbsp;

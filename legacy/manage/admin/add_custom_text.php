@@ -71,7 +71,7 @@ if($themyarray["customid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Custom Text 
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                    &quot;<?php echo $title;?>&quot;
                <?php }?>
             </td>

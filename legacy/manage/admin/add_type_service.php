@@ -9,7 +9,7 @@ if(!empty($_POST["mult_type_servicesub"]) && $_POST["mult_type_servicesub"] == 1
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_type_service where type_service = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_type_servicesub"]) && $_POST["mult_type_servicesub"] == 1
 
 if(!empty($_POST["type_servicesub"]) && $_POST["type_servicesub"] == 1)
 {
-	$sel_check = "select * from dental_type_service where type_service = '".s_for($_POST["type_service"])."' and type_serviceid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_type_service where type_service = '".s_for($_POST["type_service"])."' and type_serviceid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["type_servicesub"]) && $_POST["type_servicesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Type of Service 
-               <?php if($type_service <> "") {?>
+               <?php if($type_service != "") {?>
                		&quot;<?php echo $type_service;?>&quot;
                <?php }?>
             </td>

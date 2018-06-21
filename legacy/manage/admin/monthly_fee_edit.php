@@ -62,7 +62,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Fees 
-               <?php if($name <> "") {?>
+               <?php if($name != "") {?>
                		&quot;<?php echo $name;?>&quot;
                <?php }?>
             </td>

@@ -15,7 +15,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -40,7 +40,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 
 if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 {
-	$sel_check = "select * from dental_transaction_code where default_code=1 transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_transaction_code where default_code=1 transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid != '".s_for($_POST['ed'])."'";
 	$query_check = mysqli_query($con,$sel_check);
 	
 	if(!empty($query_check) && mysqli_num_rows($query_check) > 0)
@@ -163,7 +163,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Transaction Code 
-               <?php if($transaction_code <> "") {?>
+               <?php if($transaction_code != "") {?>
                		&quot;<?php echo $transaction_code;?>&quot;
                <?php }?>
             </td>

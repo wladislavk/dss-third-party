@@ -83,7 +83,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Custom Text 
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?=$title;?>&quot;
                <?php }?>
             </td>

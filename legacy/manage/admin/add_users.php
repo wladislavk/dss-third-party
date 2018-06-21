@@ -75,7 +75,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     }
 
 	if(isset($_POST['save_but']) || $_POST['username']!=''){
-	$sel_check = "select * from dental_users where username = '".$db->escape(trim($_POST["username"]))."' and userid <> '".$db->escape($_POST['ed'])."'";
+	$sel_check = "select * from dental_users where username = '".$db->escape(trim($_POST["username"]))."' and userid != '".$db->escape($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 
 	if(mysqli_num_rows($query_check)>0)
@@ -89,7 +89,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 		<?php
 	} 
 	}
-        $sel_check2 = "select * from dental_users where email = '".$db->escape($_POST["email"])."' and userid <> '".$db->escape($_POST['ed'])."'";
+        $sel_check2 = "select * from dental_users where email = '".$db->escape($_POST["email"])."' and userid != '".$db->escape($_POST['ed'])."'";
         $query_check2=mysqli_query($con,$sel_check2);
 	if(mysqli_num_rows($query_check2)>0)
         {

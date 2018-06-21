@@ -69,7 +69,7 @@ if($themyarray["id"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Claim Text 
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                    &quot;<?=$title;?>&quot;
                <?php } ?>
             </td>

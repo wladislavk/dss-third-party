@@ -10,7 +10,7 @@ if(!empty($_POST["mult_epworthsub"]) && $_POST["mult_epworthsub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_epworth where epworth = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -35,7 +35,7 @@ if(!empty($_POST["mult_epworthsub"]) && $_POST["mult_epworthsub"] == 1)
 
 if(!empty($_POST["epworthsub"]) && $_POST["epworthsub"] == 1)
 {
-	$sel_check = "select * from dental_epworth where epworth = '".s_for($_POST["epworth"])."' and epworthid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_epworth where epworth = '".s_for($_POST["epworth"])."' and epworthid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)

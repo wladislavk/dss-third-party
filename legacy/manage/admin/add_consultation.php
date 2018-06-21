@@ -8,7 +8,7 @@ if(!empty($_POST["mult_consultationsub"]) && $_POST["mult_consultationsub"] == 1
     $op_arr = explode("\n",trim($_POST['consultation']));
 
     foreach($op_arr as $i=>$val) {
-        if($val <> '') {
+        if($val != '') {
             $sel_check = "select * from dental_consultation where consultation = '".s_for($val)."'";
             $query_check=mysqli_query($con,$sel_check);
 
@@ -28,7 +28,7 @@ if(!empty($_POST["mult_consultationsub"]) && $_POST["mult_consultationsub"] == 1
 }
 
 if(!empty($_POST["consultationsub"]) && $_POST["consultationsub"] == 1) {
-    $sel_check = "select * from dental_consultation where consultation = '".s_for($_POST["consultation"])."' and consultationid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_consultation where consultation = '".s_for($_POST["consultation"])."' and consultationid != '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con,$sel_check);
 
     if(mysqli_num_rows( $query_check)>0) {
@@ -107,7 +107,7 @@ if($themyarray["consultationid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Consultation
-               <?php if($consultation <> "") {?>
+               <?php if($consultation != "") {?>
                    &quot;<?php echo $consultation;?>&quot;
                <?php }?>
             </td>

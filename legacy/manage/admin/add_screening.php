@@ -9,7 +9,7 @@ if($_POST["mult_screeningsub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_screening where screening = '".s_for($val)."'";
 			$query_check=mysqli_query($con, $sel_check);
@@ -34,7 +34,7 @@ if($_POST["mult_screeningsub"] == 1)
 
 if($_POST["screeningsub"] == 1)
 {
-	$sel_check = "select * from dental_screening where screening = '".s_for($_POST["screening"])."' and screeningid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_screening where screening = '".s_for($_POST["screening"])."' and screeningid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con, $sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -134,7 +134,7 @@ if($_POST["screeningsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Screening 
-               <?php if($screening <> "") {?>
+               <?php if($screening != "") {?>
                		&quot;<?=$screening;?>&quot;
                <?php }?>
             </td>

@@ -11,7 +11,7 @@ function save_image($field = null, $fieldname = null) {
 		$my = mysqli_fetch_array($result);
 		$imgname = $my[$field]; 
 
-		if($_FILES[$fieldname]["name"] <> '') {
+		if($_FILES[$fieldname]["name"] != '') {
 			$fname = $_FILES[$fieldname]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -21,7 +21,7 @@ function save_image($field = null, $fieldname = null) {
 			$banner1 = str_replace(".","_",$banner1);
 			$banner1 .= ".".$extension;
 			$uploaded = uploadImage($_FILES[$fieldname], $folder.$banner1);
-			if($imgname <> '') {
+			if($imgname != '') {
 				@unlink($folder.$imgname);
 			}
 		} else {

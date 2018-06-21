@@ -6,7 +6,7 @@ include "fckeditor/fckeditor.php";
 
 if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 {
-	$sel_check = "select * from dental_pages where title = '".s_for($_POST["title"])."' and pageid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_pages where title = '".s_for($_POST["title"])."' and pageid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -98,7 +98,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Page
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?=$title;?>&quot;
                <?php }?>
             </td>

@@ -9,7 +9,7 @@ if(!empty($_POST["mult_nasal_passagessub"]) && $_POST["mult_nasal_passagessub"] 
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_nasal_passages where nasal_passages = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -35,7 +35,7 @@ if(!empty($_POST["mult_nasal_passagessub"]) && $_POST["mult_nasal_passagessub"] 
 
 if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
 {
-	$sel_check = "select * from dental_nasal_passages where nasal_passages = '".s_for($_POST["nasal_passages"])."' and nasal_passagesid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_nasal_passages where nasal_passages = '".s_for($_POST["nasal_passages"])."' and nasal_passagesid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -136,7 +136,7 @@ if(!empty($_POST["nasal_passagessub"]) && $_POST["nasal_passagessub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Nasal Passages 
-               <?php if($nasal_passages <> "") {?>
+               <?php if($nasal_passages != "") {?>
                		&quot;<?php echo $nasal_passages;?>&quot;
                <?php }?>
             </td>

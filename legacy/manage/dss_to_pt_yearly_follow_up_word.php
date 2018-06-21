@@ -37,11 +37,11 @@ if($pat_myarray['patientid'] == '') {
             <?php echo date('F d, Y')?><br><br>
             <strong>
             <?php echo $name;?>
-            <?php if(st($pat_myarray['add1']) <> '') { ?>
+            <?php if(st($pat_myarray['add1']) != '') { ?>
                 <br /><?php echo st($pat_myarray['add1']);?>
             <?php } ?>
 
-            <?php if(st($pat_myarray['add2']) <> '') { ?>
+            <?php if(st($pat_myarray['add2']) != '') { ?>
                 <br /><?php echo st($pat_myarray['add2']);?>
             <?php } ?>
             &nbsp;

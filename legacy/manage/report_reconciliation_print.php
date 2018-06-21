@@ -79,7 +79,7 @@ $num_users = count($my);
             ?>
                 (<i><?php echo  date('m-Y', strtotime($start_date)) ?></i>)
             <?php }
-                if(isset($_GET['pid']) && $_GET['pid'] <> '') {
+                if(isset($_GET['pid']) && $_GET['pid'] != '') {
             ?>
                 (<i><?php echo $thename;?></i>)
             <?php } ?>
@@ -226,7 +226,7 @@ $num_users = count($my);
                                 <?php } ?>
                             </td>
                             <td valign="top" align="right" width="10%">
-                                <?php if(st($myarray["paid_amount"]) <> 0) { ?>
+                                <?php if(st($myarray["paid_amount"]) != 0) { ?>
                                     <?php echo number_format(st($myarray["paid_amount"]),2);?>
                                     <?php
                                     $tot_credit += st($myarray["paid_amount"]);

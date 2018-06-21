@@ -8,7 +8,7 @@ if(!empty($_POST["mult_cpt_codesub"]) && $_POST["mult_cpt_codesub"] == 1) {
     $op_arr = explode("\n",trim($_POST['cpt_code']));
 
     foreach($op_arr as $i=>$val) {
-        if($val <> '') {
+        if($val != '') {
             $sel_check = "select * from dental_cpt_code where cpt_code = '".s_for($val)."'";
             $query_check=mysqli_query($con,$sel_check);
             if(mysqli_num_rows($query_check) == 0) {
@@ -27,7 +27,7 @@ if(!empty($_POST["mult_cpt_codesub"]) && $_POST["mult_cpt_codesub"] == 1) {
 }
 
 if(!empty($_POST["cpt_codesub"]) && $_POST["cpt_codesub"] == 1) {
-    $sel_check = "select * from dental_cpt_code where cpt_code = '".s_for($_POST["cpt_code"])."' and cpt_codeid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_cpt_code where cpt_code = '".s_for($_POST["cpt_code"])."' and cpt_codeid != '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con,$sel_check);
     if(mysqli_num_rows($query_check)>0) {
         $msg="CPT Code already exist. So please give another CPT Code.";
@@ -103,7 +103,7 @@ if($themyarray["cpt_codeid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> CPT Code 
-               <?php if($cpt_code <> "") {?>
+               <?php if($cpt_code != "") {?>
                    &quot;<?php echo $cpt_code;?>&quot;
                <?php }?>
             </td>

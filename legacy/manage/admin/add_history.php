@@ -9,7 +9,7 @@ if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_history where history = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 
 if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 {
-	$sel_check = "select * from dental_history where history = '".s_for($_POST["history"])."' and historyid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_history where history = '".s_for($_POST["history"])."' and historyid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Medical History 
-               <?php if($history <> "") {?>
+               <?php if($history != "") {?>
                		&quot;<?php echo $history;?>&quot;
                <?php }?>
             </td>

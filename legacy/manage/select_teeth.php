@@ -14,7 +14,7 @@ if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
     }
 
     if(is_array($per_teeth)) {
-        if($t_text <> '' ) {
+        if($t_text != '' ) {
             $t_text .= ', ';
         }
 

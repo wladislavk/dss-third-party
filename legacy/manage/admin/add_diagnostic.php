@@ -8,7 +8,7 @@ if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1) {
     $op_arr = explode("\n",trim($_POST['diagnostic']));
 
     foreach($op_arr as $i=>$val) {
-        if($val <> '') {
+        if($val != '') {
             $sel_check = "select * from dental_diagnostic where diagnostic = '".s_for($val)."'";
             $query_check=mysqli_query($con,$sel_check);
             if(mysqli_num_rows($query_check) == 0) {
@@ -28,7 +28,7 @@ if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1) {
 }
 
 if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1) {
-    $sel_check = "select * from dental_diagnostic where diagnostic = '".s_for($_POST["diagnostic"])."' and diagnosticid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_diagnostic where diagnostic = '".s_for($_POST["diagnostic"])."' and diagnosticid != '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con,$sel_check);
 
     if(mysqli_num_rows($query_check)>0) {
@@ -107,7 +107,7 @@ if($themyarray["diagnosticid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Diagnostic Test 
-               <?php if($diagnostic <> "") {?>
+               <?php if($diagnostic != "") {?>
                    &quot;<?=$diagnostic;?>&quot;
                <?php }?>
             </td>

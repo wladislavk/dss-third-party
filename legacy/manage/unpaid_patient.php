@@ -307,7 +307,7 @@ $num_users = count($my);
                         &nbsp;
                     </td>
                     <td align="right">
-                        <?php if(st($myarray['adjusted_amount']) <> 0) {?>
+                        <?php if(st($myarray['adjusted_amount']) != 0) {?>
                             <?=number_format(st($myarray['adjusted_amount']),2);?>
                             <?php
                             $tot_adjusted += st($myarray['adjusted_amount']);

@@ -261,7 +261,7 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
                 $html .= (($myarray[0] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
                 $html .= '</td>
                     <td valign="top" align="right">';
-                if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {
+                if(st($myarray["amount"]) != 0 && $myarray[0]!='claim') {
                     $html .= number_format(st($myarray["amount"]),2);
                     if($myarray[0]!='claim'){
                         $cur_bal += st($myarray["amount"]);
@@ -270,7 +270,7 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
                 }
                 $html .= '</td>
                     <td valign="top" align="right">';
-                if(st($myarray["paid_amount"]) <> 0 && $myarray[0]!='claim') {
+                if(st($myarray["paid_amount"]) != 0 && $myarray[0]!='claim') {
                     $html .= number_format(st($myarray["paid_amount"]),2);
                     if($myarray[0]!='claim'){
                     $cur_bal -= st($myarray["paid_amount"]);
@@ -299,7 +299,7 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
         $head = '<table><tr><td width="60%">';
         $head .= '<div style="display:block; ">';
         $head .= $docr['name'];
-        if(st($docr['address']) <> '') {
+        if(st($docr['address']) != '') {
             $head.='<br />' .
             st($docr['address']);
         }
@@ -309,11 +309,11 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
         $head .= '<br /><br />';
         $head .= '<div style="display:block; ">';
         $head .= $name;
-        if(st($pat_myarray['add1']) <> '') {
+        if(st($pat_myarray['add1']) != '') {
             $head.='<br />' .
             st($pat_myarray['add1']);
         }
-        if(st($pat_myarray['add2']) <> '') {
+        if(st($pat_myarray['add2']) != '') {
             $head .= '<br />' .
             st($pat_myarray['add2']);
         }

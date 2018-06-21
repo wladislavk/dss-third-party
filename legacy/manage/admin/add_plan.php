@@ -168,7 +168,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Plan
-               <?php if($name <> "") {?>
+               <?php if($name != "") {?>
                		&quot;<?php echo $name;?>&quot;
                <?php }?>
             </td>

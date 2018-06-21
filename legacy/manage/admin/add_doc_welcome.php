@@ -17,12 +17,12 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 	
 	
 	$doc_id = '';
-	if(!empty($_POST['docid']) && count($_POST['docid']) <> 0)
+	if(!empty($_POST['docid']) && count($_POST['docid']) != 0)
 	{
 		$doc_arr = '~';
 		foreach($_POST['docid'] as $doc_val)
 		{
-			if($doc_val <> '')
+			if($doc_val != '')
 			{
 				$doc_arr .= $doc_val.'~';
 			}
@@ -40,7 +40,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 	}
 	else
 	{
-		if($_FILES["video_file"]["name"] <> '')
+		if($_FILES["video_file"]["name"] != '')
 		{
 			$fname = $_FILES["video_file"]["name"];
 			$lastdot = strrpos($fname,".");
@@ -54,7 +54,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			@move_uploaded_file($_FILES["video_file"]["tmp_name"],"../video_file/".$banner1);
 			@chmod("../video_file/".$banner1,0777);
 			
-			if($_POST['video_file_old'] <> '')
+			if($_POST['video_file_old'] != '')
 			{
 				@unlink("../video_file/".$_POST['video_file_old']);
 			}
@@ -72,7 +72,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 	}
 	else
 	{
-		if($_FILES["doc_file"]["name"] <> '')
+		if($_FILES["doc_file"]["name"] != '')
 		{
 			$fname = $_FILES["doc_file"]["name"];
 			$lastdot = strrpos($fname,".");
@@ -86,7 +86,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			@move_uploaded_file($_FILES["doc_file"]["tmp_name"],"../doc_file/".$banner2);
 			@chmod("../doc_file/".$banner2,0777);
 			
-			if($_POST['doc_file_old'] <> '')
+			if($_POST['doc_file_old'] != '')
 			{
 				@unlink("../doc_file/".$_POST['doc_file_old']);
 			}
@@ -175,7 +175,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Welcome Information
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?php echo $title;?>&quot;
                <?php }?>
             </td>
@@ -194,7 +194,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 				Video File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($video_file <> '') {?>
+				<?php if($video_file != '') {?>
 					<a href="preview.php?fn=<?php echo $video_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -210,7 +210,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 				Material File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($doc_file <> '') {?>
+				<?php if($doc_file != '') {?>
 					<a href="../doc_file/<?php echo $doc_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;

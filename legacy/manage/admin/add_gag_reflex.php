@@ -9,7 +9,7 @@ if(!empty($_POST["mult_gag_reflexsub"]) && $_POST["mult_gag_reflexsub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_gag_reflex where gag_reflex = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_gag_reflexsub"]) && $_POST["mult_gag_reflexsub"] == 1)
 
 if(!empty($_POST["gag_reflexsub"]) && $_POST["gag_reflexsub"] == 1)
 {
-	$sel_check = "select * from dental_gag_reflex where gag_reflex = '".s_for($_POST["gag_reflex"])."' and gag_reflexid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_gag_reflex where gag_reflex = '".s_for($_POST["gag_reflex"])."' and gag_reflexid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["gag_reflexsub"]) && $_POST["gag_reflexsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Gag Reflex 
-               <?php if($gag_reflex <> "") {?>
+               <?php if($gag_reflex != "") {?>
                		&quot;<?php echo $gag_reflex;?>&quot;
                <?php }?>
             </td>

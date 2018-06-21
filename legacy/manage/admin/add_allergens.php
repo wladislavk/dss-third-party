@@ -29,7 +29,7 @@ if(!empty($_POST["mult_allergenssub"]) && $_POST["mult_allergenssub"] == 1) {
 
 if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
 {
-    $sel_check = "select * from dental_allergens where allergens = '".s_for($_POST["allergens"])."' and allergensid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_allergens where allergens = '".s_for($_POST["allergens"])."' and allergensid != '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con,$sel_check);
 
     if (mysqli_num_rows($query_check)>0) {
@@ -108,7 +108,7 @@ if($themyarray["allergensid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Allergens 
-               <?php if($allergens <> "") { ?>
+               <?php if($allergens != "") { ?>
                     &quot;<?php echo $allergens;?>&quot;
                <?php }?>
             </td>

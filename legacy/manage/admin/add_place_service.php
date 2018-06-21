@@ -9,7 +9,7 @@ if(!empty($_POST["mult_place_servicesub"]) && $_POST["mult_place_servicesub"] ==
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_place_service where place_service = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_place_servicesub"]) && $_POST["mult_place_servicesub"] ==
 
 if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
 {
-	$sel_check = "select * from dental_place_service where place_service = '".s_for($_POST["place_service"])."' and place_serviceid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_place_service where place_service = '".s_for($_POST["place_service"])."' and place_serviceid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["place_servicesub"]) && $_POST["place_servicesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Place of Service 
-               <?php if($place_service <> "") {?>
+               <?php if($place_service != "") {?>
                		&quot;<?php echo $place_service;?>&quot;
                <?php }?>
             </td>

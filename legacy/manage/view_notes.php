@@ -20,7 +20,7 @@ if($pat_myarray['patientid'] == '') {
 }
 
 $sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
-if(isset($_GET['ed']) && $_GET['ed'] <> '') {
+if(isset($_GET['ed']) && $_GET['ed'] != '') {
     $sql .= " and notesid = '".$_GET['ed']."' ";
 }
 $sql .= " order by adddate DESC";

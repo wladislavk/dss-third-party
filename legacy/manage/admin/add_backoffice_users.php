@@ -82,9 +82,9 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         trigger_error('Die called', E_USER_ERROR);
     }
 
-    $sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con,$sel_check);
-    $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
+    $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid != '".s_for($_POST['ed'])."'";
     $query_check2 = mysqli_query($con,$sel_check2);
 
     if (mysqli_num_rows($query_check) > 0) {
@@ -243,7 +243,7 @@ if($themyarray["adminid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Backoffice User 
-               <?php if($username <> "") {?>
+               <?php if($username != "") {?>
                    &quot;<?php echo $username;?>&quot;
                <?php }?>
             </td>

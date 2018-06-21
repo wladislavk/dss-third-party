@@ -27,7 +27,7 @@ if(!empty($_POST["mult_assess_additionsub"]) && $_POST["mult_assess_additionsub"
 }
 
 if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
-    $sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($_POST["assess_addition"])."' and assess_additionid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_assess_addition where assess_addition = '".s_for($_POST["assess_addition"])."' and assess_additionid != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con,$sel_check);
 
     if(mysqli_num_rows($query_check)>0) {
@@ -106,7 +106,7 @@ if($themyarray["assess_additionid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Assessment Addition 
-               <?php if($assess_addition <> "") {?>
+               <?php if($assess_addition != "") {?>
                    &quot;<?php echo $assess_addition;?>&quot;
                <?php }?>
             </td>

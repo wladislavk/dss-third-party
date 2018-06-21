@@ -115,7 +115,7 @@ if($themyarray["id"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Device Setting
-               <?php if($name <> "") {?>
+               <?php if($name != "") {?>
                    &quot;<?php echo $name;?>&quot;
                <?php }?>
             </td>

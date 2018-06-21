@@ -35,7 +35,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
   $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".$db->escape( $patientid)."'";
   $doc_q = mysqli_query($con,$doc_sql);
   $doc = mysqli_fetch_assoc($doc_q);
-                if($_FILES["ss_file"]["name"] <> '')
+                if($_FILES["ss_file"]["name"] != '')
                 {
                         $fname = $_FILES["ss_file"]["name"];
                         $lastdot = strrpos($fname,".");
@@ -216,7 +216,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
 
 	     $filesize = $_FILES["image_file"]["size"];
 	     if($filesize <= DSS_IMAGE_MAX_SIZE){
-		if($_FILES["image_file"]["name"] <> '')
+		if($_FILES["image_file"]["name"] != '')
 		{
 			$banner1 = $name.'_'.date('dmy_Hi');
 			$banner1 = str_replace(" ","_",$banner1);
@@ -226,7 +226,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
 			$banner1 .= ".".$extension;
 			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
 			$uploaded = uploadImage($_FILES['image_file'], "../../../../shared/q_file/".$banner1, $profile);
-			if($_POST['image_file_old'] <> '')
+			if($_POST['image_file_old'] != '')
 			{
 				@unlink("../../../../shared/q_file/".$_POST['image_file_old']);
 			}
@@ -433,7 +433,7 @@ if($uploaded ){
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Image
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?php echo $title;?>&quot;
                <?php }?>
             </td>
@@ -570,7 +570,7 @@ if($rl_r['rxlomn_imgid']!=''){
 							Image
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<?php if($image_file <> '') {?>
+							<?php if($image_file != '') {?>
                                 <a href="display_file.php?f=<?php echo $image_file?>" target="_blank">
                                     <b>Preview</b></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;

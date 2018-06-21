@@ -9,7 +9,7 @@ if(!empty($_POST["mult_modifier_codesub"]) && $_POST["mult_modifier_codesub"] ==
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_modifier_code where modifier_code = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_modifier_codesub"]) && $_POST["mult_modifier_codesub"] ==
 
 if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
 {
-	$sel_check = "select * from dental_modifier_code where modifier_code = '".s_for($_POST["modifier_code"])."' and modifier_codeid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_modifier_code where modifier_code = '".s_for($_POST["modifier_code"])."' and modifier_codeid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Modifier Code 
-               <?php if($modifier_code <> "") {?>
+               <?php if($modifier_code != "") {?>
                		&quot;<?=$modifier_code;?>&quot;
                <?php }?>
             </td>

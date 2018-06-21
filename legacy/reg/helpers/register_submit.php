@@ -4,7 +4,6 @@ namespace Ds3\Libraries\Legacy;
 include '../../manage/admin/includes/main_include.php';
 include '../../manage/includes/constants.inc';
 require_once '../../manage/includes/general_functions.php';
-require_once '../../manage/includes/notifications.php';
 
 linkRequestData('dental_patients', $_SESSION['pid']);
 

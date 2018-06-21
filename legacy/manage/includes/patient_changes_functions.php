@@ -76,9 +76,9 @@ function num_patient_changes($pid)
     $fields['docent'] = "ENT";
     $fields['docmdother'] = "Other MD";
 
-    if(count($cq) > 0){
-        foreach($fields as $field => $label){
-            if(trim($p[$field]) != trim($c[$field])){
+    if (count($cq) > 0) {
+        foreach ($fields as $field => $label) {
+            if (trim($p[$field]) != trim($c[$field])) {
                 $num_changes++;
             }
         }

@@ -1,12 +1,11 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include_once('admin/includes/main_include.php');
-include_once("includes/sescheck.php");
-include_once('includes/constants.inc');
-include_once('includes/general_functions.php');
-include_once('includes/notifications.php');
-include_once('includes/patient_changes.php');
+include_once __DIR__ . '../admin/includes/main_include.php';
+include_once __DIR__ . "/sescheck.php";
+include_once __DIR__ . '/constants.inc';
+include_once __DIR__ . '/general_functions.php';
+include_once __DIR__ . '/patient_changes_functions.php';
 
 if( $_SESSION['userid'] == '') {
     ?>
@@ -923,8 +922,6 @@ $num_rejected_preauth = $db->getNumberRows($preauth_query);
           $my = $db->getResults($sql);
           foreach ($my as $myarray) {
             $thename = $myarray['firstname']." ".$myarray['lastname'];
-            if ($myarray["premedcheck"] == 1) {
-            }
           }
         ?>
       </div>
@@ -937,9 +934,9 @@ $num_rejected_preauth = $db->getNumberRows($preauth_query);
       if (isset($_GET['pid'])) {
           $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
 
-        $n = $db->getNumberRows($q);
-        $pat = $db->getRow($q);
-        $n = num_patient_changes($_GET['pid']);
+          $n = $db->getNumberRows($q);
+          $pat = $db->getRow($q);
+          $n = num_patient_changes($_GET['pid']);
                                 
         $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
           p.firstname as patfirstname, p.lastname as patlastname

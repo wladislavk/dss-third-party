@@ -4,7 +4,6 @@ namespace Ds3\Libraries\Legacy;
 include '../../admin/includes/main_include.php';
 include '../../includes/constants.inc';
 include_once '../../includes/general_functions.php';
-include_once '../../includes/notifications.php';
 include_once '../../admin/includes/password.php';
 
 linkRequestData('dental_users', $_POST['userid']);

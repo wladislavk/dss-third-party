@@ -10,7 +10,7 @@ if (!empty($_REQUEST['ids']) && is_string($_REQUEST['ids'])) {
 }
 
 $ids = preg_split('/\D+/', $ids);
-array_walk($ids, function(&$each){
+array_walk($ids, function (&$each) {
     $each = intval($each);
 });
 $ids = array_unique($ids);
@@ -26,6 +26,6 @@ $s = "UPDATE dental_notes SET signed_id = '$userId',
 
 if($db->query($s)){
     echo '{"success":true}';
-}else{
+} else {
     echo '{"error":true}';
 }

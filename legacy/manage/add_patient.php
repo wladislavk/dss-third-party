@@ -14,6 +14,8 @@ if (isset($_GET['pid']) && (string)$patientId !== (string)$_GET['pid']) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
+include_once 'includes/notifications.php';
+
 if (!isset($_GET['noheaders'])) {
     include 'includes/top.htm';
     include_once 'includes/constants.inc';
@@ -22,7 +24,6 @@ if (!isset($_GET['noheaders'])) {
     include 'includes/sescheck.php';
     include_once 'includes/constants.inc';
     include_once 'includes/general_functions.php';
-    include_once 'includes/notifications.php';
     include_once 'includes/patient_changes.php';
     ?>
     <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />

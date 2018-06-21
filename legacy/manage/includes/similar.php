@@ -119,7 +119,6 @@ function similar_contacts($id)
     return $docs;
 }
 
-
 function similar_patients($id)
 {
     $db = new Db();

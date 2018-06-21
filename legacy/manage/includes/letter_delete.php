@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../admin/includes/main_include.php';
 require_once '../admin/includes/general.htm';
 
@@ -8,8 +10,7 @@ $rid = $_REQUEST['rid'];
 $par = $_REQUEST['par'];
 $s = delete_letter($lid, $par, $type, $rid);
 if($s){
-  echo '{"success":true}';
+    echo '{"success":true}';
 }else{
-  echo '{"error":true}';
+    echo '{"error":true}';
 }
-?>

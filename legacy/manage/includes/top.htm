@@ -5,21 +5,11 @@ include __DIR__ . '/../admin/includes/main_include.php';
 include_once __DIR__ . '/sescheck.php';
 include_once __DIR__ . '/constants.inc';
 include_once __DIR__ . '/general_functions.php';
-include __DIR__ . '/notifications.php';
-include __DIR__ . '/patient_changes.php';
+include __DIR__ . '/patient_changes_functions.php';
 include __DIR__ . '/claim_functions.php';
 include __DIR__ . '/edx_functions.php';
 include __DIR__ . '/help_functions.php';
 include __DIR__ . '/../admin/includes/claim_functions.php';
-
-function redirectToLogin()
-{ ?>
-    <script type="text/javascript">
-        alert("Members Area, Please Login");
-        window.location = "login.php";
-    </script>
-    <?php
-}
 
 $db = new Db();
 
@@ -47,16 +37,6 @@ if ($r['homepage'] != '1') {
             )
         ";
         $db->query($cur_ins_sql);
-    }
-
-    $unload = 1;
-    if (
-        strpos($_SERVER['PHP_SELF'], 'q_page') === false &&
-        strpos($_SERVER['PHP_SELF'], 'ex_page') === false &&
-        strpos($_SERVER['PHP_SELF'], 'q_sleep') === false &&
-        strpos($_SERVER['PHP_SELF'], 'q_image') === false
-    ) {
-        $unload = 0;
     }
 
     $docid = intval($_SESSION['docid']);

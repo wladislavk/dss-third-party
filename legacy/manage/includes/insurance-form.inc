@@ -4,18 +4,6 @@ namespace Ds3\Libraries\Legacy;
 class ClaimFormHelper
 {
     /**
-     * Default transform method, applied to list of source paths
-     * with no methods specified
-     *
-     * @return string|null
-     */
-    public static function concatenate()
-    {
-        $arguments = func_get_args();
-        return count($arguments) ? join(' ', $arguments) : null;
-    }
-
-    /**
      * Map relationship for insured and patient, between paper form and e-file
      *
      * @param string $search Either the name (paper form) or the code (e-file) of the relationship to locate

@@ -1,19 +1,11 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-function claim_errors($pid, $medicare = false)
+function claim_errors($pid)
 {
     $db = new Db();
 
     $errors = [];
-
-    if ($medicare) {
-        $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".(!empty($pid) ? $pid : '')." LIMIT 1";
-        $row = $db->getRow($sql);
-        if ($row['p_m_ins_type'] == 1) {
-            array_push($errors, "patient has Medicare Insurance. You can change patient\'s insurance type in the Patient Info section");
-        }
-    }
 
     $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$pid;
     $num = $db->getNumberRows($sql);
@@ -110,18 +102,6 @@ function claim_errors($pid, $medicare = false)
         array_push($errors, "Insurance - Rx and LOMN not completed");
     }
     return $errors;
-}
-
-function list_preauth_errors($pid)
-{
-    $errors = preauth_errors($pid);
-    if (count($errors) > 0) {
-        $e_text = 'Unable to request verification of benefits:\n';
-        foreach ($errors as $e) {
-            $e_text .= '\n'.$e;
-        }
-    }
-    return $e_text;
 }
 
 function create_vob($pid)

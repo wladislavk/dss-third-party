@@ -9,8 +9,8 @@ $id = (!empty($_POST['id']) ? $_POST['id'] : '');
 $s = "UPDATE dental_notifications SET status='2' WHERE id='".$db->escape($id)."'";
 
 $q = $db->query($s);
-if(!empty($q)){
+if (!empty($q)) {
     echo '{"success":true}';
-}else{
+} else {
     echo '{"error":"update"}';
 }

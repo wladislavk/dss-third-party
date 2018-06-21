@@ -116,7 +116,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
         <div class="page-header">
             <h1>
                 <?php echo $but_text?> <?php echo (!empty($_GET['heading']) ? $_GET['heading'] : ''); ?> Location 
-                <?php if($location <> "") {?>
+                <?php if($location != "") {?>
                     &quot;<?php echo $location;?>&quot;
                 <?php }?>
             </h1>

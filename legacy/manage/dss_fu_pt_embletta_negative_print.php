@@ -45,7 +45,7 @@ foreach ($medications_arr as $val) {
         $medications_sql = "select * from dental_medications where medicationsid='".trim($val)."' and status=1 ";
         $medications_myarray = $db->getRow($medications_sql);
         if (st($medications_myarray['medications']) != '') {
-            if ($medications_disp <> '') {
+            if ($medications_disp !='') {
                 $medications_disp .= ', ';
             }
             $medications_disp .= st($medications_myarray['medications']);

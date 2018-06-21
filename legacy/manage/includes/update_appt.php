@@ -39,7 +39,7 @@ $s = "update dental_flow_pg2_info set date_completed='" . $dateCompleted . "' WH
 $q = $db->query($s);
 
 if (!empty($q)) {
-  echo '{"success":true}';
+    echo '{"success":true}';
 } else {
-  echo '{"error":true}';
+    echo '{"error":true}';
 }

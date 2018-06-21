@@ -32,8 +32,7 @@ if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
     $sel_check = "select * from dental_allergens where allergens = '".s_for($_POST["allergens"])."' and allergensid <> '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con,$sel_check);
 
-    if(mysqli_num_rows($query_check)>0)
-    {
+    if (mysqli_num_rows($query_check)>0) {
         $msg="Allergens already exist. So please give another Allergens.";
         ?>
         <script type="text/javascript">
@@ -42,13 +41,13 @@ if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
         </script>
         <?php
     } else {
-        if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
+        if (s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
             $sby = 999;
         } else {
             $sby = s_for($_POST["sortby"]);
         }
 
-        if($_POST["ed"] != "") {
+        if ($_POST["ed"] != "") {
             $ed_sql = "update dental_allergens set allergens = '".s_for($_POST["allergens"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where allergensid='".$_POST["ed"]."'";
             mysqli_query($con,$ed_sql);
 
@@ -76,42 +75,40 @@ if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
 ?>
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
-    $thesql = "select * from dental_allergens where allergensid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-    $themy = mysqli_query($con,$thesql);
-    $themyarray = mysqli_fetch_array($themy);
+$thesql = "select * from dental_allergens where allergensid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
 
-    if(!empty($msg)) {
-        $allergens = $_POST['allergens'];
-        $sortby = $_POST['sortby'];
-        $status = $_POST['status'];
-        $description = $_POST['description'];
-    } else {
-        $allergens = st($themyarray['allergens']);
-        $sortby = st($themyarray['sortby']);
-        $status = st($themyarray['status']);
-        $description = st($themyarray['description']);
-    }
+if (!empty($msg)) {
+    $allergens = $_POST['allergens'];
+    $sortby = $_POST['sortby'];
+    $status = $_POST['status'];
+    $description = $_POST['description'];
+} else {
+    $allergens = st($themyarray['allergens']);
+    $sortby = st($themyarray['sortby']);
+    $status = st($themyarray['status']);
+    $description = st($themyarray['description']);
+}
 
-    if($themyarray["allergensid"] != '') {
-        $but_text = "Edit ";
-    } else {
-        $but_text = "Add ";
-    }
-    ?>
-
-    <br /><br />
-
-    <?php if(!empty($msg)) {?>
+if($themyarray["allergensid"] != '') {
+    $but_text = "Edit ";
+} else {
+    $but_text = "Add ";
+}
+?>
+<br /><br />
+<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
+<?php } ?>
+<form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Allergens 
-               <?php if($allergens <> "") {?>
+               <?php if($allergens <> "") { ?>
                     &quot;<?php echo $allergens;?>&quot;
                <?php }?>
             </td>
@@ -160,25 +157,25 @@ if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
                 <input type="hidden" name="allergenssub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["allergensid"]?>" />
                 <input type="submit" value="<?php echo $but_text?> Allergens" class="btn btn-primary">
-        <?php if($themyarray["allergensid"] != ''  && $_SESSION['admin_access']==1) { ?>
+                <?php if($themyarray["allergensid"] != ''  && $_SESSION['admin_access']==1) { ?>
                     <a href="manage_allergens.php?delid=<?php echo $themyarray["allergensid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                         Delete
                     </a>
-        <?php } ?>
+                <?php } ?>
             </td>
         </tr>
     </table>
-    </form>
+</form>
     
-    <?php if(empty($_GET['ed'])) { ?>
-        <div class="alert alert-danger text-center">
-            <b>--------------------------------- OR ---------------------------------</b>
-        </div>
-        <form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
+<?php if(empty($_GET['ed'])) { ?>
+    <div class="alert alert-danger text-center">
+        <b>--------------------------------- OR ---------------------------------</b>
+    </div>
+    <form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
-                   Add Multiple Allergens 
+                   Add Multiple Allergens
                    <span class="red">
                        (Type Each New Allergens on New Line)
                    </span>
@@ -199,8 +196,7 @@ if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
                 </td>
             </tr>
         </table>
-        </form>
-    
-    <?php }?>
+    </form>
+<?php } ?>
 </body>
 </html>

@@ -72,7 +72,7 @@ include 'partials/patient_notes.php'; ?>
         $.ajax({
             url:'create_draft_note.php?pid='+pid,
             complete: function (response) {
-                note_id = response['responseText'].replace(/\s*\<.*?\>\s*/g, ''); //strips all things in <>
+                note_id = response['responseText'].replace(/\s*\<.*?\>\s*/g, ''); //strips all things in tags
                 loadPopup('add_notes.php?pid='+pid+'&ed='+note_id);
             },
             error: function () {

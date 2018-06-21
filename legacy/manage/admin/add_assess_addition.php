@@ -73,37 +73,35 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
 ?>
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
-    $thesql = "select * from dental_assess_addition where assess_additionid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-    $themy = mysqli_query($con,$thesql);
-    $themyarray = mysqli_fetch_array($themy);
+$thesql = "select * from dental_assess_addition where assess_additionid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
 
-    if(!empty($msg)) {
-        $assess_addition = $_POST['assess_addition'];
-        $sortby = $_POST['sortby'];
-        $status = $_POST['status'];
-        $description = $_POST['description'];
-    } else {
-        $assess_addition = st($themyarray['assess_addition']);
-        $sortby = st($themyarray['sortby']);
-        $status = st($themyarray['status']);
-        $description = st($themyarray['description']);
-    }
+if(!empty($msg)) {
+    $assess_addition = $_POST['assess_addition'];
+    $sortby = $_POST['sortby'];
+    $status = $_POST['status'];
+    $description = $_POST['description'];
+} else {
+    $assess_addition = st($themyarray['assess_addition']);
+    $sortby = st($themyarray['sortby']);
+    $status = st($themyarray['status']);
+    $description = st($themyarray['description']);
+}
 
-    if($themyarray["assess_additionid"] != '') {
-        $but_text = "Edit ";
-    } else {
-        $but_text = "Add ";
-    }
-    ?>
-
-    <br /><br />
-
-    <?php if(!empty($msg)) {?>
+if($themyarray["assess_additionid"] != '') {
+    $but_text = "Edit ";
+} else {
+    $but_text = "Add ";
+}
+?>
+<br /><br />
+<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
+<?php }?>
+<form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -165,12 +163,12 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
             </td>
         </tr>
     </table>
-    </form>
-    <?php if(empty($_GET['ed'])) { ?>
-        <div class="alert alert-danger text-center">
-            <b>--------------------------------- OR ---------------------------------</b>
-        </div>
-        <form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
+</form>
+<?php if(empty($_GET['ed'])) { ?>
+    <div class="alert alert-danger text-center">
+        <b>--------------------------------- OR ---------------------------------</b>
+    </div>
+    <form name="assess_additionfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
@@ -195,8 +193,7 @@ if(!empty($_POST["assess_additionsub"]) && $_POST["assess_additionsub"] == 1) {
                 </td>
             </tr>
         </table>
-        </form>
-    
-    <?php }?>
+    </form>
+<?php }?>
 </body>
 </html>

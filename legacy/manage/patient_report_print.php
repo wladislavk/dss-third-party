@@ -58,19 +58,19 @@ $my = $db->getResults($sql);
                         <td align="right" colspan="15" class="cat_head">
                             <?php echo count($my)?> Patient(s) found for
                             <?php
-                            if($_POST['d_mm'] <> '') { ?>
+                            if($_POST['d_mm'] !='') { ?>
                                 &nbsp;&nbsp;
                                 <i>Date From :</i>
                                 <?php
                                 echo $_POST['d_mm'] . ' - ' . $_POST['d_dd'] . ' - ' . $_POST['d_yy'];
                             }
-                            if($_POST['d_mm1'] <> '') { ?>
+                            if($_POST['d_mm1'] !='') { ?>
                                 &nbsp;&nbsp;
                                 <i>Date To :</i>
                                 <?php
                                 echo $_POST['d_mm1'] . ' - ' . $_POST['d_dd1'] . ' - ' . $_POST['d_yy1'];
                             }
-                            if($_POST['referred_by'] <> '') {
+                            if($_POST['referred_by'] !='') {
                                 $referredby_sql = "select * from dental_contact where contactid='".$_POST['referred_by']."'";
                                 $referredby_myarray = $db->getRow($referredby_sql);
                                 $ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);

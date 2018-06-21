@@ -54,16 +54,8 @@ if ($r['homepage'] != '1') {
         )
         ORDER BY generated_date ASC;
     ";
-
-    $generated_date = $db->getRow($dental_letters_query);
     $pending_letters = $db->getNumberRows($dental_letters_query);
     $seconds_per_day = 86400;
-
-    $oldest_letter = 0;
-    if ($generated_date != 0) {
-        $timestamp = strtotime($generated_date['generated_date']);
-        $oldest_letter = floor((time() - $timestamp) / $seconds_per_day);
-    }
 
     $dental_letters_query = "
         SELECT COUNT(letterid) AS total
@@ -1069,6 +1061,7 @@ if ($r['homepage'] != '1') {
                         if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
                             $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
                             $pat = $db->getRow($s);
+
                             $n = num_patient_changes($_GET['pid']);
                             $contacts_sql = "
                                 SELECT 

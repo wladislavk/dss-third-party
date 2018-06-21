@@ -9,7 +9,7 @@ if(!empty($_POST["mult_exam_teethsub"]) && $_POST["mult_exam_teethsub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_exam_teeth where exam_teeth = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_exam_teethsub"]) && $_POST["mult_exam_teethsub"] == 1)
 
 if(!empty($_POST["exam_teethsub"]) && $_POST["exam_teethsub"] == 1)
 {
-	$sel_check = "select * from dental_exam_teeth where exam_teeth = '".s_for($_POST["exam_teeth"])."' and exam_teethid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_exam_teeth where exam_teeth = '".s_for($_POST["exam_teeth"])."' and exam_teethid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["exam_teethsub"]) && $_POST["exam_teethsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Teeth Examination 
-               <?php if($exam_teeth <> "") {?>
+               <?php if($exam_teeth != "") {?>
                		&quot;<?php echo $exam_teeth;?>&quot;
                <?php }?>
             </td>

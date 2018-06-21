@@ -10,8 +10,8 @@ $db = new Db();
 
 if(isset($_POST["profile_submit"])) {
 
-    $sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_SESSION['userid'])."'";
-    $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_SESSION['userid'])."'";
+    $sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid != '".s_for($_SESSION['userid'])."'";
+    $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid != '".s_for($_SESSION['userid'])."'";
 
     if($db->getNumberRows($sel_check) > 0) {
         $msg="Username already exist. So please give another Username.";
@@ -512,7 +512,7 @@ $practice = $db->getRow($p_sql);
     <h3>Practice Profile</h3>
     <h4>Practice Logo</h4>
 
-    <?php if($practice['logo'] <> "") { ?>
+    <?php if($practice['logo'] != "") { ?>
         <img src="display_file.php?f=<?php echo $practice['logo'];?>" />
     <?php } ?>
 

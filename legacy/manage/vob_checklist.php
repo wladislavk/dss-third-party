@@ -29,7 +29,7 @@ if(!empty($_GET['lomn']) && $_GET['lomn']==1){?>
 </div>
 <?php
   $file = $_FILES['lomn_file'];
-    if ($file["name"] <> '') {
+    if ($file["name"] !='') {
       $lomnimgid = save_insurance_image($file, 7);
       $lomnrec = date("m/d/Y");
       $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$lomnimgid."', lomnrec='".$lomnrec."' WHERE pid = '".$_GET['pid']."';";

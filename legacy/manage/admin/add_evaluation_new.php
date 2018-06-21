@@ -9,7 +9,7 @@ if(!empty($_POST["mult_evaluation_newsub"]) && $_POST["mult_evaluation_newsub"] 
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_evaluation_new where evaluation_new = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_evaluation_newsub"]) && $_POST["mult_evaluation_newsub"] 
 
 if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
 {
-	$sel_check = "select * from dental_evaluation_new where evaluation_new = '".s_for($_POST["evaluation_new"])."' and evaluation_newid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_evaluation_new where evaluation_new = '".s_for($_POST["evaluation_new"])."' and evaluation_newid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)

@@ -24,7 +24,7 @@ if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) { ?>
 <?php
 if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $classname = strtolower(str_replace('.', '', str_replace('/', '', str_replace(' ', '_', $_POST['name']))));
-    $sel_check = "select * from dental_appt_types where docid='".$db->escape($_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
+    $sel_check = "select * from dental_appt_types where docid='".$db->escape($_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id != '" . $_POST['ed']."'";
     if ($db->getNumberRows($sel_check) > 0) {
         $msg = "Appointment Type name already exists. Please give another name."; ?>
         <script type="text/javascript">

@@ -19,7 +19,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
     $op_arr = explode("\n",trim($_POST['transaction_code']));
 
     foreach($op_arr as $i=>$val) {
-        if($val <> '') {
+        if($val != '') {
             $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."' AND docid ='".$_SESSION['docid']."';";
 
             if($db->getNumberRows($sel_check) == 0) {
@@ -38,7 +38,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
     trigger_error("Die called", E_USER_ERROR);
 }
         if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) {
-            $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
+            $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid != '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
 
             if($db->getNumberRows($sel_check) > 0) {
                 $msg="Transaction Code already exist. So please give another Transaction Code.";

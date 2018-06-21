@@ -64,17 +64,3 @@ function trigger_letter6($pid, $info_id)
     }
     return null;
 }
-
-function trigger_letter9($pid, $info_id)
-{
-    $letterid = '9';
-    $md_list = '';
-    $md_referral_list = get_mdreferralids($pid);
-    $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
-    if (!is_numeric($letter)) {
-        echo "Can't send letter 9: " . $letter;
-    } else {
-        return $letter;
-    }
-    return null;
-}

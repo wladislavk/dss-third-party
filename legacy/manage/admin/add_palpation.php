@@ -9,7 +9,7 @@ if(!empty($_POST["mult_palpationsub"]) && $_POST["mult_palpationsub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_palpation where palpation = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_palpationsub"]) && $_POST["mult_palpationsub"] == 1)
 
 if(!empty($_POST["palpationsub"]) && $_POST["palpationsub"] == 1)
 {
-	$sel_check = "select * from dental_palpation where palpation = '".s_for($_POST["palpation"])."' and palpationid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_palpation where palpation = '".s_for($_POST["palpation"])."' and palpationid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["palpationsub"]) && $_POST["palpationsub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Palpation 
-               <?php if($palpation <> "") {?>
+               <?php if($palpation != "") {?>
                		&quot;<?php echo $palpation;?>&quot;
                <?php }?>
             </td>

@@ -60,7 +60,7 @@ $num_users = count($my);
         (<i><?php echo date('m-Y', strtotime($_REQUEST['start_date'])) ?></i>)
     <?php
     }
-    if($_GET['pid'] <> ''){?>
+    if($_GET['pid'] !=''){?>
         (<i><?php echo $thename;?></i>)
         <br />
         <?php echo $theaddress; ?>
@@ -205,7 +205,7 @@ $num_users = count($my);
                         $tot_charge = 0;
                     }
 
-                    if(!empty($myarray['ledger']) && $myarray['ledger']!='claim' && $myarray['amount'] <> 0){
+                    if(!empty($myarray['ledger']) && $myarray['ledger']!='claim' && $myarray['amount'] != 0){
                         echo number_format($myarray["amount"],2);
                         $tot_charge += $myarray["amount"];
                     } ?>
@@ -219,7 +219,7 @@ $num_users = count($my);
                 <td valign="top" align="right" width="10%">
                     <?php
                     if(!empty($myarray['ledger']) && $myarray['ledger']!='claim') {
-                        if(st($myarray["paid_amount"]) <> 0) {
+                        if(st($myarray["paid_amount"]) != 0) {
                             echo number_format(st($myarray["paid_amount"]),2);
                         }
                     } ?>

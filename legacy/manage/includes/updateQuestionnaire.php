@@ -16,7 +16,7 @@ if (strstr($table, '_pivot')) {
     $idQuery = "SELECT $primaryKey FROM $table WHERE patientid=$patient OR parent_patientid=$patient";
     $result = $db->getResults($idQuery);
     foreach ($result as $row) {
-        $ids[] = $numericRow[$primaryKey];
+        $ids[] = $row[$primaryKey];
     }
     if (count($ids)) {
         $table = str_replace('_pivot', '', $table);

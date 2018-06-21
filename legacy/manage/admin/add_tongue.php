@@ -9,7 +9,7 @@ if(!empty($_POST["mult_tonguesub"]) && $_POST["mult_tonguesub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_tongue where tongue = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_tonguesub"]) && $_POST["mult_tonguesub"] == 1)
 
 if(!empty($_POST["tonguesub"]) && $_POST["tonguesub"] == 1)
 {
-	$sel_check = "select * from dental_tongue where tongue = '".s_for($_POST["tongue"])."' and tongueid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_tongue where tongue = '".s_for($_POST["tongue"])."' and tongueid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["tonguesub"]) && $_POST["tonguesub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Tongue Evaluation 
-               <?php if($tongue <> "") {?>
+               <?php if($tongue != "") {?>
                		&quot;<?php echo $tongue;?>&quot;
                <?php }?>
             </td>

@@ -24,27 +24,14 @@ if($_SESSION['loginid'] <> '') {
     $db->query($cur_ins_sql);
 }
 
-if (strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false) {
-    $unload = 0;
-} else {
-    $unload = 1;
-}
-
 // Count letters
 $docid = $_SESSION['docid'];
 
 $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' ORDER BY generated_date ASC;";
 
 $pending_letters = $db->getNumberRows($dental_letters_query);
-$generated_date = $db->getRow($dental_letters_query);
 
 $seconds_per_day = 86400;
-
-if ($generated_date == 0) {
-    $oldest_letter = 0;
-} else {
-    $oldest_letter = floor((time() - $generated_date['generated_date']) / $seconds_per_day);
-}
 
 $dental_letters_query = "SELECT letterid FROM dental_letters 
         LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid 
@@ -819,7 +806,6 @@ $num_rejected_preauth = $db->getNumberRows($preauth_query);
               </li>
 
               <?php
-                $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
                 $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
               ?>
 
@@ -934,8 +920,7 @@ $num_rejected_preauth = $db->getNumberRows($preauth_query);
       if (isset($_GET['pid'])) {
           $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
 
-          $n = $db->getNumberRows($q);
-          $pat = $db->getRow($q);
+          $pat = $db->getRow($s);
           $n = num_patient_changes($_GET['pid']);
                                 
         $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,

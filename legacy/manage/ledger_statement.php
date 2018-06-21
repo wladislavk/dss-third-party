@@ -319,7 +319,7 @@ if ($patient_info || count($result)) {
             $html .= '</td>
                 <td valign="top" align="right">';
 
-            if(st($myarray["amount"]) <> 0 && $myarray['ledger'] !='claim') {
+            if(st($myarray["amount"]) != 0 && $myarray['ledger'] !='claim') {
                 $html .= number_format(st($myarray["amount"]),2);
                 if($myarray['ledger'] !='claim'){
                     $cur_bal -= st($myarray["amount"]);
@@ -333,7 +333,7 @@ if ($patient_info || count($result)) {
             }
 
             $html .= '<td valign="top" align="right">';
-            if(st($myarray["paid_amount"]) <> 0 && $myarray['ledger'] !='claim') {
+            if(st($myarray["paid_amount"]) != 0 && $myarray['ledger'] !='claim') {
                 $html .= number_format(st($myarray["paid_amount"]),2);
                 if($myarray['ledger'] !='claim'){
                     $cur_bal += st($myarray["paid_amount"]);
@@ -371,7 +371,7 @@ if ($patient_info || count($result)) {
     $head.='<br />';
     $head .= (!empty($docr['first_name']) ? $docr['first_name'] : '')." ".(!empty($docr['last_name']) ? $docr['last_name'] : '');
 
-    if(isset($docr['address']) && st($docr['address']) <> '') {
+    if(isset($docr['address']) && st($docr['address']) != '') {
         $head.='<br />' .
         st($docr['address']);
     }
@@ -382,12 +382,12 @@ if ($patient_info || count($result)) {
     $head .= '<div style="display:block; ">';
     $head .= (isset($name) ? $name : '');
 
-    if(isset($pat_myarray['add1']) && st($pat_myarray['add1']) <> '') {
+    if(isset($pat_myarray['add1']) && st($pat_myarray['add1']) != '') {
         $head.='<br />' .
         st($pat_myarray['add1']);
     }
 
-    if(isset($pat_myarray['add2']) && st($pat_myarray['add2']) <> '') {
+    if(isset($pat_myarray['add2']) && st($pat_myarray['add2']) != '') {
         $head .= '<br />' .
         st($pat_myarray['add2']);
     }

@@ -61,8 +61,8 @@ foreach($history_arr as $val) {
         $his_sql = "select history from dental_history where historyid='".trim($val)."' and status=1;";
         $his_myarray = $db->getRow($his_sql);
 
-        if($his_myarray['history'] <> '') {
-            if($history_disp <> '') $history_disp .= ' and ';
+        if($his_myarray['history'] != '') {
+            if($history_disp != '') $history_disp .= ' and ';
             $history_disp .= $his_myarray['history'];
         }
     }
@@ -82,8 +82,8 @@ foreach($history_arr as $val) {
             $medications_sql = "select medications from dental_medications where medicationsid='".trim($val)."' and status=1;";
             $medications_myarray = $db->getRow($medications_sql);
 
-            if($medications_myarray['medications'] <> '') {
-                if($medications_disp <> '') {
+            if($medications_myarray['medications'] != '') {
+                if($medications_disp != '') {
                     if ($medcount == $key) {
                         $medications_disp .= ', and ';
                     } else {

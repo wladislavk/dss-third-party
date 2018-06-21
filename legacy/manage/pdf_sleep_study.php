@@ -37,7 +37,7 @@ if(isset($_FILES['pdf_file'])){
         $t_90 = str_replace(',','', $matches[1][0]);
     }
 
-    if($_FILES["pdf_file"]["name"] <> ''){
+    if($_FILES["pdf_file"]["name"] != ''){
         $fname = $_FILES["pdf_file"]["name"];
         $lastdot = strrpos($fname,".");
         $name = substr($fname,0,$lastdot);

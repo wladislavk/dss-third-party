@@ -36,7 +36,7 @@ $referring_physician = st($ref_myarray['referring_physician']);
 $a_arr = explode('
 ',$referring_physician);
 
-if(st($pat_myarray['dob']) <> '' ){
+if(st($pat_myarray['dob']) != '' ){
     $dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
     $cur_y = date('Y');
     $age = $cur_y - $dob_y;
@@ -53,13 +53,13 @@ $medications = st($q3_myarray['medications']);
 $history_arr = explode('~',$history);
 $history_disp = '';
 foreach($history_arr as $val){
-    if(trim($val) <> ""){
+    if(trim($val) != ""){
         $his_sql = "select * from dental_history where historyid='".trim($val)."' and status=1 ";
         $his_myarray = $db->getRow($his_sql);
 
-        if(st($his_myarray['history']) <> '')
+        if(st($his_myarray['history']) != '')
         {
-            if($history_disp <> '')
+            if($history_disp != '')
                 $history_disp .= ' and ';
             $history_disp .= st($his_myarray['history']);
         }
@@ -69,13 +69,13 @@ foreach($history_arr as $val){
 $medications_arr = explode('~',$medications);
 $medications_disp = '';
 foreach($medications_arr as $val){
-    if(trim($val) <> ""){
+    if(trim($val) != ""){
         $medications_sql = "select * from dental_medications where medicationsid='".trim($val)."' and status=1 ";
         $medications_myarray = $db->getRow($medications_sql);
 
-        if(st($medications_myarray['medications']) <> '')
+        if(st($medications_myarray['medications']) != '')
         {
-            if($medications_disp <> '')
+            if($medications_disp != '')
                 $medications_disp .= ', ';
             $medications_disp .= st($medications_myarray['medications']);
         }
@@ -134,7 +134,7 @@ DOB: <strong><?php echo st($pat_myarray['dob'])?></strong><br><br>
 
 Dear Dr. <strong><?php echo $a_arr[0];?></strong>,<br><br>
 
-I write regarding our mutual Patient, <strong><?php echo $name;?></strong>.  As you recall, <strong><?php echo $name1?></strong> is a <strong><?php echo $age;?></strong> year old <strong><?php echo $pat_myarray['gender']?></strong> with a PMH that includes <strong><?php echo $history_disp;?></strong>.  <strong><?php echo $h_h;?></strong> medications include <strong><?php echo $medications_disp?></strong>.  <strong><?php echo $name1?></strong> had a <strong>sleep test <?php echo $type_study;?></strong> done at the <strong><?php echo $sleeplab_name?></strong> on <strong><?php echo date('F d, Y',strtotime($sleep_study_on))?></strong> which showed an AHI of <strong><?php echo $ahi?></strong> <?php if($rdi <> '') {?>, RDI of <strong><?php echo $rdi?></strong> <?php }?> and low O2 of <strong><?php echo $sti_o2_1;?></strong>; <strong><?php echo $s_h;?></strong> was diagnosed with <strong><?php echo $confirmed_diagnosis;?> <?php echo $custom_diagnosis;?></strong>.  You referred <strong><?php echo $h_h1;?></strong> to me for treatment with a Dental Sleep Device.<br><br>
+I write regarding our mutual Patient, <strong><?php echo $name;?></strong>.  As you recall, <strong><?php echo $name1?></strong> is a <strong><?php echo $age;?></strong> year old <strong><?php echo $pat_myarray['gender']?></strong> with a PMH that includes <strong><?php echo $history_disp;?></strong>.  <strong><?php echo $h_h;?></strong> medications include <strong><?php echo $medications_disp?></strong>.  <strong><?php echo $name1?></strong> had a <strong>sleep test <?php echo $type_study;?></strong> done at the <strong><?php echo $sleeplab_name?></strong> on <strong><?php echo date('F d, Y',strtotime($sleep_study_on))?></strong> which showed an AHI of <strong><?php echo $ahi?></strong> <?php if($rdi != '') {?>, RDI of <strong><?php echo $rdi?></strong> <?php }?> and low O2 of <strong><?php echo $sti_o2_1;?></strong>; <strong><?php echo $s_h;?></strong> was diagnosed with <strong><?php echo $confirmed_diagnosis;?> <?php echo $custom_diagnosis;?></strong>.  You referred <strong><?php echo $h_h1;?></strong> to me for treatment with a Dental Sleep Device.<br><br>
 
 I appreciate your confidence and the referral, but I regret to inform you that <strong><?php echo $name1?></strong> is not a candidate for dental device therapy.  I have counseled her to return to your office to discuss other treatment options.<br><br />
 

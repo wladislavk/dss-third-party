@@ -34,12 +34,12 @@ $medications = st($q3_myarray['medications']);
 $history_arr = explode('~',$history);
 $history_disp = '';
 foreach($history_arr as $val) {
-    if(trim($val) <> "") {
+    if(trim($val) != "") {
         $his_sql = "select * from dental_history where historyid='".trim($val)."' and status=1 ";
         $his_myarray = $db->getRow($his_sql);
 
-        if(st($his_myarray['history']) <> '') {
-            if($history_disp <> '') $history_disp .= ' and ';
+        if(st($his_myarray['history']) != '') {
+            if($history_disp != '') $history_disp .= ' and ';
             $history_disp .= st($his_myarray['history']);
         }
     }
@@ -48,11 +48,11 @@ foreach($history_arr as $val) {
 $medications_arr = explode('~',$medications);
 $medications_disp = '';
 foreach($medications_arr as $val) {
-    if(trim($val) <> "") {
+    if(trim($val) != "") {
         $medications_sql = "select * from dental_medications where medicationsid='".trim($val)."' and status=1 ";
         $medications_myarray = $db->getRow($medications_sql);
 
-        if(st($medications_myarray['medications']) <> '') {
+        if(st($medications_myarray['medications']) != '') {
             if($medications_disp <> '') $medications_disp .= ', ';
             $medications_disp .= st($medications_myarray['medications']);
         }

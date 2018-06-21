@@ -9,7 +9,7 @@ if(!empty($_POST["mult_uvulasub"]) && $_POST["mult_uvulasub"] == 1)
 				
 	foreach($op_arr as $i=>$val)
 	{
-		if($val <> '')
+		if($val != '')
 		{
 			$sel_check = "select * from dental_uvula where uvula = '".s_for($val)."'";
 			$query_check=mysqli_query($con,$sel_check);
@@ -34,7 +34,7 @@ if(!empty($_POST["mult_uvulasub"]) && $_POST["mult_uvulasub"] == 1)
 
 if(!empty($_POST["uvulasub"]) && $_POST["uvulasub"] == 1)
 {
-	$sel_check = "select * from dental_uvula where uvula = '".s_for($_POST["uvula"])."' and uvulaid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_uvula where uvula = '".s_for($_POST["uvula"])."' and uvulaid != '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
 	
 	if(mysqli_num_rows($query_check)>0)
@@ -135,7 +135,7 @@ if(!empty($_POST["uvulasub"]) && $_POST["uvulasub"] == 1)
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Uvula 
-               <?php if($uvula <> "") {?>
+               <?php if($uvula != "") {?>
                		&quot;<?php echo $uvula;?>&quot;
                <?php }?>
             </td>

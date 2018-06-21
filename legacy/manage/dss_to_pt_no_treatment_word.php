@@ -50,7 +50,7 @@ $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
                 <br /><?php echo st($pat_myarray['add1']);?>
             <?php } ?>
 
-            <?php if(st($pat_myarray['add2']) <> '') { ?>
+            <?php if(st($pat_myarray['add2']) != '') { ?>
                 <br /><?php echo st($pat_myarray['add2']);?>
             <?php } ?>
             &nbsp;

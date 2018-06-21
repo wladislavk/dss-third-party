@@ -110,7 +110,7 @@ class tc_calendar
     //check for leapyear
     function is_leapyear($year){
         return ($year % 4 == 0) ?
-            !($year % 100 == 0 && $year % 400 <> 0)	: false;
+            !($year % 100 == 0 && $year % 400 != 0)	: false;
     }
 
     //get the total day of each month in year

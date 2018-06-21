@@ -13,7 +13,7 @@ if($_POST["mult_followupsub"] == 1) {
 
     foreach($op_arr as $i=>$val)
     {
-        if($val <> '')
+        if($val != '')
         {
             $sel_check = "select * from dental_followup where followup = '".s_for($val)."'";
             $query_check=mysqli_query($con, $sel_check);
@@ -38,7 +38,7 @@ if($_POST["mult_followupsub"] == 1) {
 
 if($_POST["followupsub"] == 1)
 {
-    $sel_check = "select * from dental_followup where followup = '".s_for($_POST["followup"])."' and followupid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from dental_followup where followup = '".s_for($_POST["followup"])."' and followupid != '".s_for($_POST['ed'])."'";
     $query_check = mysqli_query($con, $sel_check);
 
     if(mysqli_num_rows($query_check)>0) {
@@ -120,7 +120,7 @@ if($themyarray["followupid"] != '') {
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Follow Up 
-               <?php if($followup <> "") {?>
+               <?php if($followup != "") {?>
                    &quot;<?=$followup;?>&quot;
                <?php } ?>
             </td>

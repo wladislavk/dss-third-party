@@ -7,7 +7,7 @@ require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if($_POST["areasub"] == 1) {
-    $sel_check = "select * from spine_area where area = '".s_for($_POST["area"])."' and areaid <> '".s_for($_POST['ed'])."'";
+    $sel_check = "select * from spine_area where area = '".s_for($_POST["area"])."' and areaid != '".s_for($_POST['ed'])."'";
     $query_check=mysqli_query($con, $sel_check);
 
     if(mysqli_num_rows($query_check)>0) {
@@ -54,40 +54,40 @@ if($_POST["areasub"] == 1) {
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <br />
 <?php
-    $thesql = "select * from spine_area where areaid='".$_REQUEST["ed"]."'";
-    $themy = mysqli_query($con, $thesql);
-    $themyarray = mysqli_fetch_array($themy);
+$thesql = "select * from spine_area where areaid='".$_REQUEST["ed"]."'";
+$themy = mysqli_query($con, $thesql);
+$themyarray = mysqli_fetch_array($themy);
 
-    if ($msg != '') {
-        $area = $_POST['area'];
-        $sortby = $_POST['sortby'];
-        $status = $_POST['status'];
-        $description = $_POST['description'];
-    } else {
-        $area = st($themyarray['area']);
-        $sortby = st($themyarray['sortby']);
-        $status = st($themyarray['status']);
-        $description = st($themyarray['description']);
-    }
+if ($msg != '') {
+    $area = $_POST['area'];
+    $sortby = $_POST['sortby'];
+    $status = $_POST['status'];
+    $description = $_POST['description'];
+} else {
+    $area = st($themyarray['area']);
+    $sortby = st($themyarray['sortby']);
+    $status = st($themyarray['status']);
+    $description = st($themyarray['description']);
+}
 
-    if($themyarray["areaid"] != '') {
-        $but_text = "Edit ";
-    } else {
-        $but_text = "Add ";
-    }
-    ?>
-    <br /><br />
-    <?php if($msg != '') {?>
+if($themyarray["areaid"] != '') {
+    $but_text = "Edit ";
+} else {
+    $but_text = "Add ";
+}
+?>
+<br /><br />
+<?php if($msg != '') {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <?php } ?>
-    <form name="areafrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return areaabc(this)">
+<?php } ?>
+<form name="areafrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return areaabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Area 
-               <?php if($area <> "") {?>
+               <?php if($area != "") {?>
                    &quot;<?=$area;?>&quot;
                <?php }?>
             </td>
@@ -139,6 +139,6 @@ if($_POST["areasub"] == 1) {
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

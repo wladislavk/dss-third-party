@@ -63,8 +63,8 @@ foreach($history_arr as $val) {
         $his_sql = "select history from dental_history where historyid='".trim($val)."' and status=1;";
 
         $his_myarray = $db->getRow($his_sql);
-        if($his_myarray['history'] <> '') {
-            if($history_disp <> '') $history_disp .= ' and ';
+        if($his_myarray['history'] != '') {
+            if($history_disp != '') $history_disp .= ' and ';
             $history_disp .= $his_myarray['history'];
         }
     }

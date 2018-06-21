@@ -13,10 +13,10 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 	}
 	
 	$doc_id = '';
-	if(!empty($_POST['docid']) && count($_POST['docid']) <> 0) {
+	if(!empty($_POST['docid']) && count($_POST['docid']) != 0) {
 		$doc_arr = '~';
 		foreach($_POST['docid'] as $doc_val) {
-			if($doc_val <> '') {
+			if($doc_val != '') {
 				$doc_arr .= $doc_val.'~';
 			}
 		}
@@ -29,7 +29,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 		$banner1 = '';
 		@unlink("../video_file/".$_POST['video_file_old']);
 	} else {
-		if($_FILES["video_file"]["name"] <> '') {
+		if($_FILES["video_file"]["name"] != '') {
 			$fname = $_FILES["video_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -42,7 +42,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 			@move_uploaded_file($_FILES["video_file"]["tmp_name"],"../video_file/".$banner1);
 			@chmod("../video_file/".$banner1,0777);
 			
-			if($_POST['video_file_old'] <> '') {
+			if($_POST['video_file_old'] != '') {
 				@unlink("../video_file/".$_POST['video_file_old']);
 			}
 		} else {
@@ -54,7 +54,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 		$banner2 = '';
 		@unlink("../doc_file/".$_POST['doc_file_old']);
 	} else {
-		if($_FILES["doc_file"]["name"] <> '') {
+		if($_FILES["doc_file"]["name"] != '') {
 			$fname = $_FILES["doc_file"]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
@@ -67,7 +67,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 			@move_uploaded_file($_FILES["doc_file"]["tmp_name"],"../doc_file/".$banner2);
 			@chmod("../doc_file/".$banner2,0777);
 			
-			if($_POST['doc_file_old'] <> '') {
+			if($_POST['doc_file_old'] != '') {
 				@unlink("../doc_file/".$_POST['doc_file_old']);
 			}
 		} else {
@@ -86,9 +86,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 		</script>
 		<?php
 		trigger_error("Die called", E_USER_ERROR);
-	}
-	else
-	{
+	} else {
 		$ins_sql = "insert into dental_doc_lab set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql);
 		
@@ -102,45 +100,44 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 	}
 }
 
+include_once dirname(__FILE__) . '/includes/popup_top.htm';
+
+$thesql = "select * from dental_doc_lab where doc_labid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
+
+$title = st($themyarray['title']);
+$description = st($themyarray['description']);
+$video_file = $themyarray['video_file'];
+$doc_file = $themyarray['doc_file'];
+$status = st($themyarray['status']);
+$sortby = st($themyarray['sortby']);
+$docid = st($themyarray['docid']);
+
+if(empty($show_to) && empty($docid)) {
+    $show_to = 0;
+} else {
+    $show_to = 1;
+}
+
+if ($themyarray["doc_labid"] != '') {
+    $but_text = "Edit ";
+} else {
+    $but_text = "Add ";
+}
 ?>
-<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-<?php
-    $thesql = "select * from dental_doc_lab where doc_labid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
-	$themy = mysqli_query($con,$thesql);
-	$themyarray = mysqli_fetch_array($themy);
-
-	$title = st($themyarray['title']);
-	$description = st($themyarray['description']);
-	$video_file = $themyarray['video_file'];
-	$doc_file = $themyarray['doc_file'];
-	$status = st($themyarray['status']);
-	$sortby = st($themyarray['sortby']);
-	$docid = st($themyarray['docid']);
-	
-	if(empty($show_to) && empty($docid)) {
-		$show_to = 0;
-	} else {
-		$show_to = 1;
-	}
-
-	if ($themyarray["doc_labid"] != '') {
-		$but_text = "Edit ";
-	} else {
-		$but_text = "Add ";
-	}
-	?>
-	<br /><br />
-	<?php if(!empty($msg)) {?>
+<br /><br />
+<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="doc_labfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_lababc(this)" enctype="multipart/form-data">
+<?php }?>
+<form name="doc_labfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_lababc(this)" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?php echo $but_text?> Dental Appliance Lab Info
-               <?php if($title <> "") {?>
+               <?php if($title != "") {?>
                		&quot;<?php echo $title;?>&quot;
                <?php }?>
             </td>
@@ -159,7 +156,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 				Video File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($video_file <> '') {?>
+				<?php if($video_file != '') {?>
 					<a href="preview.php?fn=<?php echo $video_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -175,7 +172,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
 				Material File
             </td>
             <td valign="top" class="frmdata">
-				<?php if($doc_file <> '') {?>
+				<?php if($doc_file != '') {?>
 					<a href="../doc_file/<?php echo $doc_file;?>" target="_blank">
 						<b>Preview</b></a>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -270,6 +267,6 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1) {
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

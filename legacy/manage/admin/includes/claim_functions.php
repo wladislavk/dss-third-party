@@ -8,7 +8,6 @@ require_once __DIR__ . '/../../includes/constants.inc';
 function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid = '')
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if ($old != $new) {
         $sql = "INSERT INTO dental_insurance_status_history SET
@@ -25,7 +24,6 @@ function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid
 function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
     $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
         JOIN dental_users u ON u.userid=p.docid
         where p.patientid='".s_for($pid)."'";
@@ -133,11 +131,11 @@ function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false)
     //NEED SECONDARY?
     $p_m_eligible_payer_id = $pat_myarray['s_m_eligible_payer_id'];
     $p_m_eligible_payer_name = $pat_myarray['s_m_eligible_payer_name'];
-    $sleepstudies = "SELECT ss.diagnosis 
-        FROM dental_summ_sleeplab ss                                 
-        JOIN dental_patients p on ss.patiendid=p.patientid                        
-        WHERE (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) 
-        AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') 
+    $sleepstudies = "SELECT ss.diagnosis
+        FROM dental_summ_sleeplab ss
+        JOIN dental_patients p on ss.patiendid=p.patientid
+        WHERE (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')))
+        AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
         AND ss.filename IS NOT NULL 
         AND ss.patiendid = '".$pid."';";
     $d = $db->getRow($sleepstudies);
@@ -409,7 +407,8 @@ class ClaimFormData
      * @param int $status
      * @return bool
      */
-    public static function isPrimary ($status) {
+    public static function isPrimary($status)
+    {
         return !self::isSecondary($status);
     }
 
@@ -419,7 +418,8 @@ class ClaimFormData
      * @param int $status
      * @return bool
      */
-    public static function isSecondary ($status) {
+    public static function isSecondary($status)
+    {
         return in_array(
             $status,
             [
@@ -446,7 +446,8 @@ class ClaimFormData
      * @param string $name
      * @return array
      */
-    public static function statusListByName ($name) {
+    public static function statusListByName($name)
+    {
         $statusList = self::$claimStatuses;
 
         if (array_key_exists($name, $statusList)) {
@@ -466,7 +467,8 @@ class ClaimFormData
      * @param int $status
      * @return array
      */
-    public static function statusListByStatus ($status) {
+    public static function statusListByStatus($status)
+    {
         $statusList = self::$claimStatuses;
 
         // Only return sections of the statuses where the status appear
@@ -483,7 +485,8 @@ class ClaimFormData
      * @param int $status
      * @return string
      */
-    public static function statusName ($status) {
+    public static function statusName($status)
+    {
         /**
          * There are status names that represent collections of statuses, we are not interested on those.
          * The result must be an array if zero or one element
@@ -506,7 +509,8 @@ class ClaimFormData
      * @param int          $status
      * @return bool
      */
-    public static function isStatus ($names, $status) {
+    public static function isStatus($names, $status)
+    {
         if (is_string($names)) {
             $names = [$names];
         }
@@ -528,7 +532,8 @@ class ClaimFormData
      * @param string $message
      * @throws \RuntimeException
      */
-    private static function raiseError ($message) {
+    private static function raiseError($message)
+    {
         if (self::$throwExceptions) {
             throw new \RuntimeException($message);
         }
@@ -548,7 +553,8 @@ class ClaimFormData
      * @param array $claimData
      * @return string
      */
-    private static function prepareClaimDataFields ($claimData) {
+    private static function prepareClaimDataFields($claimData)
+    {
         $db = new Db();
 
         $dbFields = [
@@ -781,7 +787,7 @@ class ClaimFormData
 
         foreach ($dbFields as $field) {
             $value = isset($claimData[$field]) ? $db->escape($claimData[$field]) : '';
-            $escapedFields []= "$field = '$value'";
+            $escapedFields[] = "$field = '$value'";
         }
 
         return implode(', ', $escapedFields);
@@ -793,7 +799,8 @@ class ClaimFormData
      * @param int $claimId
      * @return int|float
      */
-    public static function amountPaidForClaim ($claimId) {
+    private static function amountPaidForClaim($claimId)
+    {
         $db = new Db();
         $amount = 0;
 
@@ -814,7 +821,8 @@ class ClaimFormData
      * @param int $claimId
      * @return array
      */
-    public static function dynamicLedgerItems ($claimId) {
+    public static function dynamicLedgerItems($claimId)
+    {
         $db = new Db();
         $claimId = intval($claimId);
 
@@ -904,7 +912,8 @@ class ClaimFormData
      * @param int $claimId
      * @return array
      */
-    public static function storedLedgerItems ($claimId) {
+    private static function storedLedgerItems($claimId)
+    {
         $db = new Db();
 
         $claimId = intval($claimId);
@@ -972,7 +981,8 @@ class ClaimFormData
      * @param int $claimId
      * @return array
      */
-    public static function associatedLedgerItems ($claimId) {
+    public static function associatedLedgerItems($claimId)
+    {
         $db = new Db();
         $claimId = intval($claimId);
 
@@ -1079,7 +1089,8 @@ class ClaimFormData
      * @throws \RuntimeException
      * @return array
      */
-    private static function emptyClaimData ($patientId, $producerId, $sequence, $primaryClaimId) {
+    private static function emptyClaimData($patientId, $producerId, $sequence, $primaryClaimId)
+    {
         /**
          * Always assume primary unless explicit request of secondary
          * Also, enforce valid values for primary claim ids, or we will have "dangling" secondary claims
@@ -1119,7 +1130,8 @@ class ClaimFormData
      * @throws \RuntimeException
      * @return array
      */
-    public static function dynamicClaimData ($patientId, $producerId, $sequence='primary', $primaryClaimId=null) {
+    private static function dynamicClaimData($patientId, $producerId, $sequence='primary', $primaryClaimId=null)
+    {
         $db = new Db();
 
         $patientId = intval($patientId);
@@ -1454,7 +1466,8 @@ class ClaimFormData
      * @param int $historyId
      * @return array|null
      */
-    public static function historicClaimData ($claimId, $historyId) {
+    public static function historicClaimData($claimId, $historyId)
+    {
         $db = new Db();
 
         $claimId = intval($claimId);
@@ -1477,13 +1490,13 @@ class ClaimFormData
      * @param bool|int $forcedStatus
      * @return int
      */
-    public static function createClaim (
+    private static function createClaim(
         $patientId,
         $producerId,
         $sequence,
         $primaryClaimId,
-        $empty=false,
-        $forcedStatus=false
+        $empty = false,
+        $forcedStatus = false
     ) {
         $db = new Db();
 
@@ -1544,7 +1557,7 @@ class ClaimFormData
      * @param int $producerId
      * @return int
      */
-    public static function createPrimaryClaim ($patientId, $producerId) {
+    public static function createPrimaryClaim($patientId, $producerId) {
         return self::createClaim($patientId, $producerId, 'primary', null, false);
     }
 
@@ -1555,7 +1568,8 @@ class ClaimFormData
      * @param int $producerId
      * @return int
      */
-    public static function createEmptyPrimaryClaim ($patientId, $producerId) {
+    public static function createEmptyPrimaryClaim($patientId, $producerId)
+    {
         return self::createClaim($patientId, $producerId, 'primary', null, true);
     }
 
@@ -1568,27 +1582,17 @@ class ClaimFormData
      * @param bool|int $forcedStatus
      * @return int
      */
-    public static function createSecondaryClaim ($patientId, $producerId, $primaryClaimId, $forcedStatus=false) {
+    public static function createSecondaryClaim($patientId, $producerId, $primaryClaimId, $forcedStatus = false)
+    {
         return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, false, $forcedStatus);
-    }
-
-    /**
-     * Only saves
-     *
-     * @param int $patientId
-     * @param int $producerId
-     * @param int $primaryClaimId
-     * @return int
-     */
-    public static function createEmptySecondaryClaim ($patientId, $producerId, $primaryClaimId) {
-        return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, true);
     }
 
     /**
      * @param int $claimId
      * @return array
      */
-    public static function dynamicDataForClaim ($claimId) {
+    public static function dynamicDataForClaim($claimId)
+    {
         $db = new Db();
         $claimId = intval($claimId);
 
@@ -1624,7 +1628,7 @@ class ClaimFormData
      * @param int|null $patientId
      * @return array
      */
-    public static function storedDataForClaim ($claimId, $patientId = null)
+    public static function storedDataForClaim($claimId, $patientId = null)
     {
         $db = new Db();
         $claimId = intval($claimId);
@@ -1648,7 +1652,7 @@ class ClaimFormData
  * @param array $aliases List of table names for each related table in the conditional
  * @return string
  */
-function frontOfficeClaimsConditional ($aliases = [])
+function frontOfficeClaimsConditional($aliases = [])
 {
     return '(NOT ' . backOfficeClaimsConditional($aliases) . ')';
 }
@@ -1701,24 +1705,6 @@ function filedByBackOfficeConditional($claimAlias = 'claim')
                 -- Filed by back office, new logic
                 OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
             )";
-}
-
-/**
- * Auxiliary function for webhooks / Eligible events
- *
- * @param int $claimId
- * @return string
- */
-function referenceIdFromClaimId($claimId)
-{
-    $db = new Db();
-    $claimId = intval($claimId);
-
-    $eClaim = $db->getRow("SELECT reference_id
-        FROM dental_claim_electronic
-        WHERE COALESCE(claimid, '') != '' AND claimid = '$claimId'");
-
-    return $eClaim ? $eClaim['reference_id'] : '';
 }
 
 /**

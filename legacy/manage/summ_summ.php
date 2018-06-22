@@ -147,17 +147,25 @@ if ($imp_r) {
     $dentaldevice_date = st(($myarrayex['dentaldevice_date'] != '') ? date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])) : '');
 }
 
-$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
-$maxIdRow = $db->getRow($maxIdSql);
-$maxId = $maxIdRow['max_summaryid'];
-
-$sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from dental_summary where summaryid=$maxId";
-$myarrays = $db->getRow($sqls);
-$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
-$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
-$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
-$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
-$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+$initial_device_titration_1 = '';
+$initial_device_titration_equal_h = '';
+$initial_device_titration_equal_v = '';
+$optimum_echovision_hor = '';
+$optimum_echovision_ver = '';
+if ($pid) {
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
+    $maxIdRow = $db->getRow($maxIdSql);
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from dental_summary where summaryid=$maxId";
+        $myarrays = $db->getRow($sqls);
+        $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
+        $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
+        $initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
+        $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
+        $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+    }
+}
 ?>
 <div style="margin-bottom:6px">
     <?php

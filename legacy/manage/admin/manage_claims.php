@@ -558,7 +558,7 @@ $statusDropdown = [
                 </td>
             </tr>
         <?php } ?>
-	    <?php
+        <?php
         $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid . "&status=" . ((isset($_REQUEST['status'])) ? $_REQUEST['status'] : '') . "&sort_by=%s&sort_dir=%s";
         ?>
         <tr class="tr_bg_h">
@@ -595,7 +595,7 @@ $statusDropdown = [
             <td valign="top" class="col_head" width="15%">
                 Mailed
             </td>
-	    </tr>
+        </tr>
         <?php
         if (mysqli_num_rows($my) == 0) { ?>
             <tr class="tr_bg">
@@ -820,7 +820,7 @@ $statusDropdown = [
     </table>
 </form>
 
-<br /><br />	
+<br /><br />
 <?php
 if (isset($_GET['sendins']) && $_GET['sendins'] == 1) {
     include '../insurance_electronic_file.php';

@@ -13,6 +13,8 @@ require_once __DIR__ . '/includes/access.php';
 $isBillingAdmin = is_billing($_SESSION['admin_access']);
 $canEdit = !$isBillingAdmin;
 
+$db = new Db();
+
 if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     if (!$canEdit) { ?>
         <script>
@@ -28,7 +30,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $query_check2 = mysqli_query($con, $sel_check2);
 
     if (mysqli_num_rows($query_check) > 0) {
-        $msg="Username already exist. So please give another Username.";
+        $msg = "Username already exist. So please give another Username.";
         ?>
         <script type="text/javascript">
             alert("<?=$msg;?>");
@@ -36,7 +38,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
         </script>
         <?php
     } elseif (mysqli_num_rows($query_check2) > 0) {
-        $msg="Email already exist. So please give another Email.";
+        $msg = "Email already exist. So please give another Email.";
         ?>
         <script type="text/javascript">
             alert("<?=$msg;?>");
@@ -91,7 +93,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
                 sign_notes=".$n." where userid='".$_POST["ed"]."'";
             mysqli_query($con, $ed_sql);
 
-            edx_user_update($_POST['ed'], $edx_con);
+            edx_user_update($_POST['ed']);
             help_user_update($_POST['ed']);
 
             $msg = "Edited Successfully";
@@ -155,21 +157,9 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
                 sign_notes=".$n;
             mysqli_query($con,$ins_sql);
             $userid = mysqli_insert_id($con);
-            edx_user_update($userid, (!empty($edx_con) ? $edx_con : ''));
+            edx_user_update($userid);
             help_user_update($userid);
 
-            $docname_sql = "SELECT name from dental_users WHERE userid='".$db->escape($_GET['docid'])."'";
-            $docname_q = mysqli_query($con,$docname_sql);
-            $docname_r = mysqli_fetch_assoc($docname_q);
-            $docname = $docname_r['name'];
-            $co_sql = "SELECT c.id, c.name from companies c
-                JOIN dental_user_company uc ON c.id = uc.companyid
-                JOIN dental_users u ON u.userid = uc.userid
-                WHERE u.userid='".$db->escape($_GET['docid'])."'";
-            $co_q = mysqli_query($con,$co_sql);
-            $co_r = mysqli_fetch_assoc($co_q);
-            $cid = $co_r['id'];
-            $cname = $co_r['name'];
             $msg = "Added Successfully";
             ?>
             <script type="text/javascript">
@@ -195,8 +185,6 @@ if (!empty($msg)) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
     $status = $_POST['status'];
     $producer = (!empty($_POST['producer']) ? $_POST['producer'] : '');
     $producer_files = (!empty($_POST['producer_files']) ? $_POST['producer_files'] : '');
@@ -220,8 +208,6 @@ if (!empty($msg)) {
     $first_name = st($themyarray['first_name']);
     $last_name = st($themyarray['last_name']);
     $email = st($themyarray['email']);
-    $address = st($themyarray['address']);
-    $phone = st($themyarray['phone']);
     $status = st($themyarray['status']);
     $producer = st($themyarray['producer']);
     $producer_files = st($themyarray['producer_files']);
@@ -239,7 +225,6 @@ if (!empty($msg)) {
     $phone = st($themyarray['phone']);
     $use_course = st($themyarray['use_course']);
     $sign_notes = st($themyarray['sign_notes']);
-    $but_text = "Add ";
 }
 
 if ($themyarray["userid"] != '') {

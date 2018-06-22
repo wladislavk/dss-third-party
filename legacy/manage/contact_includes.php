@@ -23,7 +23,6 @@ $pcont_array = $db->getResults($pcont_qry);
                         } else {
                             $currentcontact_type = "Type Not Set";
                         }
-
                         echo "<a href=\"add_contact.php?ed=".$pcont_l['contactid']."\">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</a><br />";
                         ?>
                     </td>
@@ -39,4 +38,4 @@ $pcont_array = $db->getResults($pcont_qry);
         <input class="button" style="width:150px;" type="submit" name="add_contact_but" value="Add Contact to Patient" />
         </td>
     </tr>
- </table>
+</table>

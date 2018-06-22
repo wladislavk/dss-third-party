@@ -5,7 +5,6 @@ namespace Ds3\Libraries\Legacy;
 function invoice_create($user_type, $user_id, $inv_type)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){ //Front office is billed
         $sql = "INSERT INTO dental_percase_invoice SET
@@ -31,7 +30,6 @@ function invoice_create($user_type, $user_id, $inv_type)
 function invoice_find($user_type, $user_id, $inv_type = DSS_INVOICE_TYPE_SU_FO)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1') {
         $sql = "SELECT id FROM dental_percase_invoice 
@@ -62,7 +60,6 @@ function invoice_find($user_type, $user_id, $inv_type = DSS_INVOICE_TYPE_SU_FO)
 function invoice_add_efile($user_type, $user_id, $eid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_find($user_type, $user_id);
     $sql = "UPDATE dental_claim_electronic SET
@@ -74,7 +71,6 @@ function invoice_add_efile($user_type, $user_id, $eid)
 function invoice_add_claim($user_type, $user_id, $eid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_find($user_type, $user_id, DSS_INVOICE_TYPE_BC_FO);
     $sql = "UPDATE dental_insurance SET
@@ -86,7 +82,6 @@ function invoice_add_claim($user_type, $user_id, $eid)
 function invoice_add_e0486($user_type, $user_id, $eid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_find($user_type, $user_id, DSS_INVOICE_TYPE_BC_FO);
     $sql = "UPDATE dental_ledger SET
@@ -98,7 +93,6 @@ function invoice_add_e0486($user_type, $user_id, $eid)
 function invoice_add_vob($user_type, $user_id, $eid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_find($user_type, $user_id, DSS_INVOICE_TYPE_BC_FO);
     $sql = "UPDATE dental_insurance_preauth SET
@@ -111,7 +105,6 @@ function invoice_add_vob($user_type, $user_id, $eid)
 function invoice_eligibility_create($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_find($user_type, $user_id);
     $sql = "INSERT INTO dental_eligibility_invoice SET
@@ -126,7 +119,6 @@ function invoice_eligibility_create($user_type, $user_id)
 function invoice_eligibility_find($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){
         $sql = "SELECT ei.id FROM dental_percase_invoice i
@@ -157,7 +149,6 @@ function invoice_eligibility_find($user_type, $user_id)
 function invoice_add_eligibility($user_type, $user_id, $eid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $inv_id = invoice_eligibility_find($user_type, $user_id);
     $sql = "UPDATE dental_eligibility SET
@@ -174,7 +165,6 @@ function invoice_add_eligibility($user_type, $user_id, $eid)
 function invoice_enrollment_create($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){
         $inv_id = invoice_find($user_type, $user_id);
@@ -198,7 +188,6 @@ function invoice_enrollment_create($user_type, $user_id)
 function invoice_enrollment_find($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){
         $sql = "SELECT ei.id FROM dental_percase_invoice i
@@ -231,7 +220,6 @@ function invoice_enrollment_find($user_type, $user_id)
 function invoice_add_enrollment($user_type, $user_id, $eid)
 {
   $db = new Db();
-  $con = $GLOBALS['con'];
 
   $inv_id = invoice_enrollment_find($user_type, $user_id);
   $sql = "UPDATE dental_eligible_enrollment SET
@@ -245,7 +233,6 @@ function invoice_add_enrollment($user_type, $user_id, $eid)
 function invoice_fax_create($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){
         $inv_id = invoice_find($user_type, $user_id);
@@ -262,7 +249,6 @@ function invoice_fax_create($user_type, $user_id)
 function invoice_fax_find($user_type, $user_id)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     if($user_type == '1'){
         $sql = "SELECT fi.id FROM dental_percase_invoice i
@@ -283,7 +269,6 @@ function invoice_fax_find($user_type, $user_id)
 function invoice_add_fax($user_type, $user_id, $fid)
 {
   $db = new Db();
-  $con = $GLOBALS['con'];
 
   $inv_id = invoice_fax_find($user_type, $user_id);
   $sql = "UPDATE dental_faxes SET

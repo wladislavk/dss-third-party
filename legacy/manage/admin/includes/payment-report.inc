@@ -31,6 +31,8 @@ if (!empty($is_back_office)) {
     $userAccessConditional = "claim.docid = '$docId'";
 }
 
+$db = new Db();
+
 /**
  * Retrieve all NPIs associated to member of this office
  */

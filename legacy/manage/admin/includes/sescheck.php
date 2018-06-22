@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 include_once __DIR__ . '/main_include.php';
 
+$db = new Db();
+
 if (empty($_SESSION["adminuserid"])) { ?>
     <script type="text/javascript">
         window.location = "index.php";

@@ -6,7 +6,7 @@ function invoice_create($user_type, $user_id, $inv_type)
 {
     $db = new Db();
 
-    if($user_type == '1'){ //Front office is billed
+    if ($user_type == '1') { //Front office is billed
         $sql = "INSERT INTO dental_percase_invoice SET
             docid = '".$db->escape($user_id)."',
             status = '".$db->escape(DSS_INVOICE_PENDING)."',
@@ -14,7 +14,7 @@ function invoice_create($user_type, $user_id, $inv_type)
             adddate = now(),
             ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         return $db->getInsertId($sql);
-    } elseif($user_type == '2'){ //Billing company is billed
+    } elseif ($user_type == '2') { //Billing company is billed
         $sql = "INSERT INTO dental_percase_invoice SET
             companyid = '".$db->escape($user_id)."',
             status = '".$db->escape(DSS_INVOICE_PENDING)."',
@@ -31,26 +31,26 @@ function invoice_find($user_type, $user_id, $inv_type = DSS_INVOICE_TYPE_SU_FO)
 {
     $db = new Db();
 
-    if($user_type == '1') {
+    if ($user_type == '1') {
         $sql = "SELECT id FROM dental_percase_invoice 
             WHERE docid='".$db->escape($user_id)."'
             AND invoice_type='".$db->escape($inv_type)."'
             AND status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_create($user_type, $user_id, $inv_type);
         }
-    }elseif($user_type == '2'){
+    } elseif ($user_type == '2') {
         $sql = "SELECT id FROM dental_percase_invoice 
             WHERE companyid='".$db->escape($user_id)."'
             AND invoice_type='".DSS_INVOICE_TYPE_SU_BC."'
             AND status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_create($user_type, $user_id, $inv_type);
         }
     }
@@ -120,26 +120,26 @@ function invoice_eligibility_find($user_type, $user_id)
 {
     $db = new Db();
 
-    if($user_type == '1'){
+    if ($user_type == '1') {
         $sql = "SELECT ei.id FROM dental_percase_invoice i
             JOIN dental_eligibility_invoice ei ON ei.invoice_id=i.id
             WHERE i.docid='".$db->escape($user_id)."'
             AND i.status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_eligibility_create($user_type, $user_id);
         }
-    }elseif($user_type == '2'){
+    } elseif ($user_type == '2') {
         $sql = "SELECT ei.id FROM dental_percase_invoice i
             JOIN dental_eligibility_invoice ei ON ei.invoice_id=i.id
             WHERE i.companyid='".$db->escape($user_id)."'
             AND i.status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_eligibility_create($user_type, $user_id);
         }
     }
@@ -166,14 +166,14 @@ function invoice_enrollment_create($user_type, $user_id)
 {
     $db = new Db();
 
-    if($user_type == '1'){
+    if ($user_type == '1') {
         $inv_id = invoice_find($user_type, $user_id);
         $sql = "INSERT INTO dental_enrollment_invoice SET
             invoice_id = '".$db->escape($inv_id)."',
             adddate = now(),
             ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         return $db->getInsertId($sql);
-    }elseif($user_type == '2'){
+    } elseif ($user_type == '2') {
         $inv_id = invoice_find($user_type, $user_id);
         $sql = "INSERT INTO dental_enrollment_invoice SET
             invoice_id = '".$db->escape($inv_id)."',
@@ -189,28 +189,28 @@ function invoice_enrollment_find($user_type, $user_id)
 {
     $db = new Db();
 
-    if($user_type == '1'){
+    if ($user_type == '1') {
         $sql = "SELECT ei.id FROM dental_percase_invoice i
             JOIN dental_enrollment_invoice ei ON ei.invoice_id=i.id
             WHERE i.companyid='".$db->escape($user_id)."'
             AND i.status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
 
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_enrollment_create($user_type, $user_id);
         }
-    }elseif($user_type == '2'){
+    } elseif($user_type == '2') {
         $sql = "SELECT ei.id FROM dental_percase_invoice i
             JOIN dental_enrollment_invoice ei ON ei.invoice_id=i.id
             WHERE i.docid='".$db->escape($user_id)."'
             AND i.status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
 
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_enrollment_create($user_type, $user_id);
         }
     }
@@ -219,14 +219,14 @@ function invoice_enrollment_find($user_type, $user_id)
 
 function invoice_add_enrollment($user_type, $user_id, $eid)
 {
-  $db = new Db();
+    $db = new Db();
 
-  $inv_id = invoice_enrollment_find($user_type, $user_id);
-  $sql = "UPDATE dental_eligible_enrollment SET
+    $inv_id = invoice_enrollment_find($user_type, $user_id);
+    $sql = "UPDATE dental_eligible_enrollment SET
         enrollment_invoice_id = '".$db->escape($inv_id)."'
         WHERE id='".$db->escape($eid)."'";
 
-  return $db->query($sql);
+    return $db->query($sql);
 }
 
 // create new eligibility invoice for user and return id
@@ -234,7 +234,7 @@ function invoice_fax_create($user_type, $user_id)
 {
     $db = new Db();
 
-    if($user_type == '1'){
+    if ($user_type == '1') {
         $inv_id = invoice_find($user_type, $user_id);
         $sql = "INSERT INTO dental_fax_invoice SET
             invoice_id = '".$db->escape($inv_id)."',
@@ -250,16 +250,16 @@ function invoice_fax_find($user_type, $user_id)
 {
     $db = new Db();
 
-    if($user_type == '1'){
+    if ($user_type == '1') {
         $sql = "SELECT fi.id FROM dental_percase_invoice i
             JOIN dental_fax_invoice fi ON fi.invoice_id=i.id
             WHERE i.docid='".$db->escape($user_id)."'
             AND i.status = '".DSS_INVOICE_PENDING."'";
         $q = $db->getRow($sql);
 
-        if(!empty($q)){
+        if (!empty($q)) {
             return $q['id'];
-        }else{  // if no pending invoice create new
+        } else {  // if no pending invoice create new
             return invoice_fax_create($user_type, $user_id);
         }
     }
@@ -268,12 +268,12 @@ function invoice_fax_find($user_type, $user_id)
 
 function invoice_add_fax($user_type, $user_id, $fid)
 {
-  $db = new Db();
+    $db = new Db();
 
-  $inv_id = invoice_fax_find($user_type, $user_id);
-  $sql = "UPDATE dental_faxes SET
+    $inv_id = invoice_fax_find($user_type, $user_id);
+    $sql = "UPDATE dental_faxes SET
         fax_invoice_id = '".$db->escape($inv_id)."'
         WHERE id='".$db->escape($fid)."'";
-  
-  return $db->query($sql);
+
+    return $db->query($sql);
 }

@@ -10,21 +10,17 @@ require_once __DIR__ . '/../../includes/claim_functions.php';
  * Retrieve payments from a given claim id
  *
  * @param int        $claimId
- * @param bool|mixed $payerType
  * @return mixed
  */
-function getLedgerPaymentAmount($claimId, $payerType = false)
+function getLedgerPaymentAmount($claimId)
 {
     $db = new Db();
     $claimId = intval($claimId);
 
-    $andPayerTypeConditional = $payerType === false ? '' : "AND dlp.payer = '$payerType'";
-
     $query = "SELECT SUM(dlp.amount) AS paid_amount
         FROM dental_ledger dl
             LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-        WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
-          $andPayerTypeConditional";
+        WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')";
 
     $amount = $db->getColumn($query, 'paid_amount', 0);
     $amount = $amount ?: 0;
@@ -79,7 +75,7 @@ function possiblePaymentAmount(array $ledgerPayments)
  * @param int   $adminId
  * @return array
  */
-function insertLedgerPayments($claimId, Array $ledgerPayments, $paymentType, $payer, $userId, $adminId)
+function insertLedgerPayments($claimId, array $ledgerPayments, $paymentType, $payer, $userId, $adminId)
 {
     $db = new Db();
 
@@ -252,13 +248,11 @@ function uploadInsuranceFile($targetName, $tempName, array $imageData)
  * ]
  *
  * @param array $ledgerPayments
- * @param int   $paymentType
- * @param int   $payer
  * @param int   $userId
  * @param int   $adminId
  * @return array
  */
-function updateLedgerPayments(array $ledgerPayments, $paymentType, $payer, $userId, $adminId)
+function updateLedgerPayments(array $ledgerPayments, $userId, $adminId)
 {
     $db = new Db();
 
@@ -331,7 +325,8 @@ function updateLedgerPayments(array $ledgerPayments, $paymentType, $payer, $user
  * @param array $patientIds
  * @return string
  */
-function ledgerTransactionsQuery ($docId, Array $patientIds=[]) {
+function ledgerTransactionsQuery($docId, array $patientIds = [])
+{
     $docId = intval($docId);
 
     if ($patientIds) {
@@ -590,7 +585,7 @@ function ledgerDetailsQuery($docId, $patientId)
  * @param array $extraConditionals
  * @return string
  */
-function ledgerBalanceQuery($docId, array $patientIds = [], $mailedOnly = false, $extraConditionals = [])
+function ledgerBalanceQuery($docId, array $patientIds, $mailedOnly, array $extraConditionals)
 {
     $docId = intval($docId);
     $trxnTypeAdj = DSS_TRXN_TYPE_ADJ;
@@ -674,7 +669,7 @@ function ledgerBalanceQuery($docId, array $patientIds = [], $mailedOnly = false,
  * @param array $extraConditionals
  * @return array
  */
-function ledgerBalance($docId, array $patientIds = [], $mailedOnly = false, $extraConditionals = [])
+function ledgerBalance($docId, array $patientIds, $mailedOnly, $extraConditionals = [])
 {
     $db = new Db();
 
@@ -716,23 +711,4 @@ function ledgerReportQuery($patientId, $docId, $orderBy = '', $limit = '')
         $limit";
 
     return $query;
-}
-
-/**
- * Manage Ledger report, encapsulated for easier use
- *
- * @param int    $patientId
- * @param int    $docId
- * @param string $orderBy
- * @param string $limit
- * @return array
- */
-function ledgerReport($patientId, $docId, $orderBy = '', $limit = '')
-{
-    $db = new Db();
-
-    $query = ledgerReportQuery($patientId, $docId, $orderBy, $limit);
-    $report = $db->getResults($query);
-
-    return $report;
 }

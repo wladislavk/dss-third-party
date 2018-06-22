@@ -12,7 +12,7 @@ require_once __DIR__ . '/ledger-functions.php';
  * @param string $claimAlias
  * @return string
  */
-function mailingDateConditional(array $dayLimit, $claimAlias='dental_insurance')
+function mailingDateConditional(array $dayLimit, $claimAlias = 'dental_insurance')
 {
     $lowerLimit = intval($dayLimit[0]);
     $upperLimit = intval($dayLimit[1]);
@@ -38,7 +38,7 @@ function mailingDateConditional(array $dayLimit, $claimAlias='dental_insurance')
  * @param string $andExtraConditionals
  * @return array
  */
-function getClaimChargesResults(array $dayLimit, $patientId, $andExtraConditionals='')
+function getClaimChargesResults(array $dayLimit, $patientId, $andExtraConditionals)
 {
     $db = new Db();
 

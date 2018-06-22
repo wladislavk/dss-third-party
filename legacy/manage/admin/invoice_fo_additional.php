@@ -211,7 +211,7 @@ $total_amount = 0;
         " WHERE id = '".$id."'";
       mysqli_query($con, $up_sql);
     }else{
-      invoice_add_vob('1',$user['userid'],$id, DSS_INVOICE_TYPE_BC_FO);
+      invoice_add_vob('1',$user['userid'],$id);
     }
 
   }

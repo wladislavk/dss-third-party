@@ -3,6 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 $file = basename($_SERVER['PHP_SELF']);
 
+$db = new Db();
+
 $thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
 $themyarray = $db->getRow($thesql);
 

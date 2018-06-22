@@ -15,13 +15,14 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function jsonOutput ($output) {
+function jsonOutput($output)
+{
     header('Content-Type: text/json');
     echo @json_encode($output);
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function retrieveClaim ($claimId)
+function retrieveClaim($claimId)
 {
     $db = new Db();
 
@@ -72,7 +73,7 @@ function retrieveClaim ($claimId)
     ]);
 }
 
-function setReference ($claimId, $referenceId)
+function setReference($claimId, $referenceId)
 {
     $db = new Db();
 
@@ -168,7 +169,6 @@ require_once __DIR__ . '/includes/top.htm';
 
         $log.prepend('[' + niceTime() + '] ' + message + '\n');
     }
-
 
     function onStart () {
         debugLog('Starting...');
@@ -346,7 +346,7 @@ require_once __DIR__ . '/includes/top.htm';
     jQuery(function($){
         var $menu = $('ul#webhook-menu'),
             $modelItem = $menu.find('#model-menu'),
-            $tabs = $('div#webhook-tabs')
+            $tabs = $('div#webhook-tabs'),
             $modelTab = $tabs.find('#model-tab');
 
         for (var eventType in webHookList) {
@@ -494,5 +494,4 @@ require_once __DIR__ . '/includes/top.htm';
     </div>
 </div>
 <?php
-
 require_once __DIR__ . '/includes/bottom.htm';

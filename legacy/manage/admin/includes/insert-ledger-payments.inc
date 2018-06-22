@@ -33,11 +33,9 @@ $patientData = $db->getRow("SELECT *
     FROM dental_patients p
     WHERE p.patientid = '$patientId'");
 
-$isPending = ClaimFormData::isStatus('pending', $claimData['status']);
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
 
-$amountPayment = getLedgerPaymentAmount($claimId, DSS_TRXN_PAYER_PRIMARY);
 $possiblePaymentAmount = 0;
 $paymentsAdded = [];
 

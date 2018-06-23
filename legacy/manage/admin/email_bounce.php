@@ -9,13 +9,17 @@ if (is_billing($_SESSION['admin_access'])) { ?>
     trigger_error("Die called", E_USER_ERROR);
 }
 
+$db = new Db();
+
 if (isset($_GET['bounce'])) {
     $s = "UPDATE dental_patients SET email_bounce='1'
-		WHERE patientid='".$db->escape($_GET['pid'])."'
+        WHERE patientid='".$db->escape($_GET['pid'])."'
         AND docid='".$db->escape($_GET['docid'])."'";
     $q = mysqli_query($con,$s);
     if ($q) {
-        $s = "SELECT * from dental_patients where patientid='".$db->escape($_GET['pid'])."'
+        $s = "SELECT * 
+            from dental_patients 
+            where patientid='".$db->escape($_GET['pid'])."'
             AND docid='".$db->escape($_GET['docid'])."'";
         $q = mysqli_query($con,$s);
         if ($r = mysqli_fetch_assoc($q)) {
@@ -42,52 +46,59 @@ if (isset($_GET['bounce'])) {
 </form>
 <?php
 if (isset($_REQUEST['email'])) {
-	if (is_super($_SESSION['admin_access'])) {
-	    $s = "SELECT p.*, u.name as user_name, c.name as company_name 
+    if (is_super($_SESSION['admin_access'])) {
+        $s = "SELECT p.*, u.name as user_name, c.name as company_name 
             FROM dental_patients p
-		    LEFT JOIN dental_users u ON u.userid = p.docid
+            LEFT JOIN dental_users u ON u.userid = p.docid
             LEFT JOIN dental_user_company uc ON uc.userid=p.docid
             LEFT JOIN companies c ON c.id=uc.companyid
-		    WHERE p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL 
-		    ORDER BY p.email ASC";
-	} else {
-	  $s = "SELECT p.*, u.name as user_name, c.name as company_name FROM dental_patients p 
-		JOIN dental_user_company uc ON uc.userid = p.docid
-		LEFT JOIN dental_users u ON u.userid = p.docid
-		LEFT JOIN companies c ON c.id=uc.companyid
-		WHERE uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
-	}
-	$q = mysqli_query($con,$s);
-	if(mysqli_num_rows($q)==0){
-		?><h3>NO RESULTS</h3><?php
-	}else{
-	?><table class="table table-bordered table-hover">
-		<tr>
-			<th>Name</th>
-			<th>Email</th>
-			<th>User</th>
-			<th>Company</th>
-			<th>Action</th>
-		</tr>
-	<?php
-	while($r = mysqli_fetch_assoc($q)){
-		?><tr> 
-			<td><?php echo  $r['firstname']." ".$r['lastname']; ?></td>
-			<td><?php echo  $r['email']; ?></td>
-			<td><?php echo  $r['user_name']; ?></td>
-			<td><?php echo  $r['company_name']; ?></td>
-			<td><a style="margin-right:20px;" href="#" onclick="loadPopup('add_patient.php?ed=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>');" title="Edit" class="btn btn-primary btn-sm">
-						Edit
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-				
-				<a href="email_bounce.php?pid=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>&bounce=1&email=<?php echo  urlencode($_REQUEST['email']); ?>" title="Edit" class="btn btn-primary btn-sm">
-                                                Mark Bounce 
-                                         <span class="glyphicon glyphicon-pencil"></span></a>
-			</td>
-		<?php
-	}
-	?></table><?php
-	}
+            WHERE p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL 
+            ORDER BY p.email ASC";
+    } else {
+        $s = "SELECT p.*, u.name as user_name, c.name as company_name FROM dental_patients p 
+            JOIN dental_user_company uc ON uc.userid = p.docid
+            LEFT JOIN dental_users u ON u.userid = p.docid
+            LEFT JOIN companies c ON c.id=uc.companyid
+            WHERE uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
+    }
+    $q = mysqli_query($con,$s);
+    if(mysqli_num_rows($q)==0){ ?>
+        <h3>NO RESULTS</h3>
+        <?php
+    }else{
+        ?>
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>User</th>
+                <th>Company</th>
+                <th>Action</th>
+            </tr>
+            <?php
+            while($r = mysqli_fetch_assoc($q)){
+                ?>
+                <tr>
+                    <td><?php echo  $r['firstname']." ".$r['lastname']; ?></td>
+                    <td><?php echo  $r['email']; ?></td>
+                    <td><?php echo  $r['user_name']; ?></td>
+                    <td><?php echo  $r['company_name']; ?></td>
+                    <td>
+                        <a style="margin-right:20px;" href="#" onclick="loadPopup('add_patient.php?ed=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>');" title="Edit" class="btn btn-primary btn-sm">
+                            Edit
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="email_bounce.php?pid=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>&bounce=1&email=<?php echo  urlencode($_REQUEST['email']); ?>" title="Edit" class="btn btn-primary btn-sm">
+                            Mark Bounce
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                </tr>
+                <?php
+            } ?>
+        </table>
+        <?php
+    }
 }
 ?>
 
@@ -97,5 +108,5 @@ if (isset($_REQUEST['email'])) {
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

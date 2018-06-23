@@ -14,10 +14,10 @@ if (!is_super($_SESSION['admin_access'])) {
  * @param int $number
  * @return string
  */
-function toOrdinal ($number)
+function toOrdinal($number)
 {
     $ends = ['th', 'st', 'nd', 'rd'];
-    $lastDigit = $number%10;
+    $lastDigit = $number % 10;
 
     if (($lastDigit >= 1) && ($lastDigit <= 3)) {
         return $number . $ends[$lastDigit];
@@ -29,7 +29,7 @@ function toOrdinal ($number)
 /**
  * @return array
  */
-function defaultClaimFields ()
+function defaultClaimFields()
 {
     return [
         'insuranceid',
@@ -49,7 +49,7 @@ function defaultClaimFields ()
 /**
  * @return array
  */
-function specialClaimFields ()
+function specialClaimFields()
 {
     return [
         'status_label' => "CASE status
@@ -91,13 +91,13 @@ function specialClaimFields ()
  * @param array  $orderBy
  * @return array
  */
-function retrieveClaimRelatedData (
+function retrieveClaimRelatedData(
     $claimId,
-    array $fieldList = [],
-    $overrideFields = false,
-    array $specialList = [],
-    $overrideSpecial = false,
-    $targetTable = 'dental_insurance',
+    array $fieldList,
+    $overrideFields,
+    array $specialList,
+    $overrideSpecial,
+    $targetTable,
     $orderBy = ['id' => 'DESC']
 ) {
     $db = new Db();
@@ -157,14 +157,12 @@ function retrieveClaimStatusHistory($claimId)
 
 /**
  * @param int   $claimId
- * @param array $fieldList
- * @param array $specialList
  * @return array
  */
-function retrieveClaimData($claimId, array $fieldList = [], array $specialList = [])
+function retrieveClaimData($claimId)
 {
     return retrieveClaimRelatedData(
-        $claimId, $fieldList, false, $specialList, false, 'dental_insurance', ['insuranceid' => 'DESC']
+        $claimId, [], false, [], false, 'dental_insurance', ['insuranceid' => 'DESC']
     );
 }
 
@@ -271,7 +269,6 @@ function renderTableFromArray(array $rows, $title='Unnamed data')
     if (!$rows) { ?>
         <p class="lead text-center"><?= e($title) ?> is empty</p>
         <?php
-
         return;
     }
 
@@ -283,7 +280,6 @@ function renderTableFromArray(array $rows, $title='Unnamed data')
     </tr>
     <?php
     $headerRow = ob_get_clean();
-
     ?>
     <table class="table table-striped table-hover">
         <thead>
@@ -323,14 +319,14 @@ $eligibleEvents = retrieveEligibleEvents($eligibleReferences);
 $timeLine = [];
 
 if ($isTimeLine) {
-    $timeLine []= [
+    $timeLine[] = [
         'event_date' => $claimData[0]['adddate'],
         'event_type' => 'Creation',
         'event_data' => $claimData[0]
     ];
 
     foreach ($claimBOFlagHistory as $each) {
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['adddate'],
             'event_type' => 'BO Flag Change',
             'event_data' => $each['p_m_dss_file']
@@ -338,7 +334,7 @@ if ($isTimeLine) {
     }
 
     foreach ($claimHistory as $each) {
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['updated_at'],
             'event_type' => 'Claim Change',
             'event_data' => $each,
@@ -346,7 +342,7 @@ if ($isTimeLine) {
     }
 
     foreach ($claimStatusHistory as $each) {
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['adddate'],
             'event_type' => 'Status Change',
             'event_data' => $each,
@@ -359,7 +355,7 @@ if ($isTimeLine) {
 
         $each['ordinal'] = "$ordinalEligibleId ID";
 
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['adddate'],
             'event_type' => 'Eligible Event',
             'event_data' => $each,
@@ -372,7 +368,7 @@ if ($isTimeLine) {
 
         $each['ordinal'] = "$ordinalEligibleId ID";
 
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['adddate'],
             'event_type' => 'Eligible Response',
             'event_data' => $each,
@@ -385,7 +381,7 @@ if ($isTimeLine) {
 
         $each['ordinal'] = "$ordinalEligibleId ID";
 
-        $timeLine []= [
+        $timeLine[] = [
             'event_date' => $each['created_at'],
             'event_type' => 'Status Policy',
             'event_data' => $each,
@@ -560,10 +556,12 @@ require_once __DIR__ . '/includes/top.htm';
     Eligible ids:
 </p>
 <ol>
-    <li><?= $eligibleReferences ?
-        '<code>' . join('</code></li><li><code>', array_flatten($eligibleReferences)) . '</code>' :
-        'none found'
-    ?></li>
+    <li>
+        <?= $eligibleReferences ?
+            '<code>' . join('</code></li><li><code>', array_flatten($eligibleReferences)) . '</code>' :
+            'none found'
+        ?>
+    </li>
 </ol>
 <a class="btn btn-primary" role="button" data-toggle="collapse" href="#eligible-events">
     Toggle Eligible events

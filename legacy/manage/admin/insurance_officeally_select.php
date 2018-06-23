@@ -1,15 +1,17 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
 
 /**
- * @see DSS-142
- *
  * Filter claims for BO based on who filed the claim, and the dss filing option.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  */
 $backOfficeClaimsConditional = backOfficeClaimsConditional();
+
+$db = new Db();
 
 $sql = "SELECT
     claim.insuranceid,
@@ -229,9 +231,6 @@ if (isset($_GET['msg'])) { ?>
                     <td valign="top">
                         <?=st($myarray["adddate"]);?>&nbsp;
                     </td>
-                    <?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "yellow" : "green"; ?>
-                    <?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
-                    <?php $status_text = ($myarray["status"] == DSS_CLAIM_PENDING) ? "black" : "white"; ?>
                     <td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?>">
                         <?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
                     </td>

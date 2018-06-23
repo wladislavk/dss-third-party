@@ -4,20 +4,20 @@ require_once('includes/sescheck.php');
 
 if(isset($_GET['clear'])){
     $s = "DELETE FROM dental_claim_electronic WHERE reference_id IN 
-            ('12312312', 
-            '56565656',
-            '11111111',
-            '34343434',
-            '12121212', 
-            '45454545', 
-            '67676767', 
-            '78787878', 
-            '89898989', 
-            '919191919', 
-            '202020202', 
-            '212121212')";
-	mysqli_query($con, $s);
-	?>
+        ('12312312', 
+        '56565656',
+        '11111111',
+        '34343434',
+        '12121212', 
+        '45454545', 
+        '67676767', 
+        '78787878', 
+        '89898989', 
+        '919191919', 
+        '202020202', 
+        '212121212')";
+    mysqli_query($con, $s);
+    ?>
     <h1>Test reference IDs deleted.</h1>
     <?php
 }
@@ -25,28 +25,28 @@ if(isset($_GET['clear'])){
 
 <table>
 <?php
-	$s = "SELECT * FROM dental_claim_electronic WHERE reference_id IN 
-		('12312312', 
-		'56565656',
-		'11111111',
-		'34343434',
-                '12121212', 
-                '45454545', 
-                '67676767', 
-                '78787878', 
-                '89898989', 
-                '919191919', 
-                '202020202', 
-                '212121212')"; 
-	$q = mysqli_query($con, $s);
-	while($r = mysqli_fetch_assoc($q)){
-		?>
+    $s = "SELECT * FROM dental_claim_electronic WHERE reference_id IN 
+        ('12312312', 
+        '56565656',
+        '11111111',
+        '34343434',
+        '12121212', 
+        '45454545', 
+        '67676767', 
+        '78787878', 
+        '89898989', 
+        '919191919', 
+        '202020202', 
+        '212121212')";
+    $q = mysqli_query($con, $s);
+    while($r = mysqli_fetch_assoc($q)){
+        ?>
         <tr>
             <td><?php echo $r['claimid']; ?></td>
             <td><?php echo $r['reference_id']; ?></td>
-		</tr>
+        </tr>
         <?php
-	} 
+    }
 ?>
 </table>
 <a href="clear_webhooks.php?clear=1" onclick="return prompt('Enter Code') =='dss999!';">Clear</a>

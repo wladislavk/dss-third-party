@@ -1,55 +1,58 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  require_once __DIR__ . '/includes/stripe-functions.php';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/stripe-functions.php';
 include_once 'includes/main_include.php';
-  include_once '../includes/constants.inc';
- $no_card = array();
-  $sql = "SELECT du.*, c.name AS company_name, c.free_fax,
-		plan.trial_period,
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
-                FROM dental_users du 
-                JOIN dental_user_company uc ON uc.userid = du.userid
-                JOIN companies c ON c.id=uc.companyid
-		JOIN dental_plans plan ON plan.id=du.plan_id
-                WHERE du.status=1 AND du.docid=0 AND 
-		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
-			AND
-(SELECT COUNT(*) as num_inv FROM dental_percase_invoice
-                        WHERE docid=du.userid AND 
-                                status = '".DSS_INVOICE_PENDING."') = 0";
+include_once '../includes/constants.inc';
 
-  if(isset($_GET['company']) && $_GET['company'] != ""){
-        $sql .= " AND c.id='".$db->escape($_GET['company'])."' ";
-  }
+$no_card = [];
+$sql = "SELECT du.*, 
+    c.name AS company_name, 
+    c.free_fax,
+    plan.trial_period,
+    (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+    FROM dental_users du 
+    JOIN dental_user_company uc ON uc.userid = du.userid
+    JOIN companies c ON c.id=uc.companyid
+    JOIN dental_plans plan ON plan.id=du.plan_id
+    WHERE du.status=1 AND du.docid=0 
+    AND 
+        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".$db->escape(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
+    AND (SELECT COUNT(*) as num_inv FROM dental_percase_invoice WHERE docid=du.userid AND status = '".DSS_INVOICE_PENDING."') = 0";
 
-  $q = mysqli_query($con,$sql);
-  while($r = mysqli_fetch_assoc($q)){
-	  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, u.name, u.user_type
-                FROM dental_users u
-                JOIN dental_user_company uc ON uc.userid = u.userid
-                JOIN companies c ON uc.companyid = c.id
-		JOIN dental_plans p ON p.id=u.plan_id
-                WHERE u.userid='".$db->escape($r['userid'])."'";
-  	  $doc_q = mysqli_query($con,$doc_sql);
-if(mysqli_num_rows($doc_q) == 0){
-  //If no plan get company fees
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
-                FROM dental_users u
-                JOIN dental_user_company uc ON uc.userid = u.userid
-                JOIN companies c ON uc.companyid = c.id
-                WHERE u.userid='".$db->escape($_REQUEST['docid'])."'";
-  $doc_q = mysqli_query($con,$doc_sql);
+if(isset($_GET['company']) && $_GET['company'] != ""){
+    $sql .= " AND c.id='".$db->escape($_GET['company'])."' ";
 }
 
-  	  $doc = mysqli_fetch_assoc($doc_q);
+$q = mysqli_query($con,$sql);
+while($r = mysqli_fetch_assoc($q)){
+    $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, u.name, u.user_type
+        FROM dental_users u
+        JOIN dental_user_company uc ON uc.userid = u.userid
+        JOIN companies c ON uc.companyid = c.id
+        JOIN dental_plans p ON p.id=u.plan_id
+        WHERE u.userid='".$db->escape($r['userid'])."'";
+    $doc_q = mysqli_query($con,$doc_sql);
+    if(mysqli_num_rows($doc_q) == 0){
+        //If no plan get company fees
+        $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
+            FROM dental_users u
+            JOIN dental_user_company uc ON uc.userid = u.userid
+            JOIN companies c ON uc.companyid = c.id
+            WHERE u.userid='".$db->escape($_REQUEST['docid'])."'";
+        $doc_q = mysqli_query($con,$doc_sql);
+    }
+
+    $doc = mysqli_fetch_assoc($doc_q);
 	if($r['last_monthly_fee_date']){
-          $date = $r['last_monthly_fee_date'];
-	  $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
-	  $monthly_date = date ( 'Y-m-d' , $newdate );
-        }elseif($r['registration_date']){
-          $date = $r['registration_date'];
-          $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
-          $monthly_date = date ( 'Y-m-d' , $newdate );
+	    $date = $r['last_monthly_fee_date'];
+	    $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+	    $monthly_date = date ( 'Y-m-d' , $newdate );
+	}elseif($r['registration_date']){
+	    $date = $r['registration_date'];
+	    $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+	    $monthly_date = date ( 'Y-m-d' , $newdate );
 	}elseif(!empty($user['trial_period'])  && !empty($user['adddate'])){
           $date = $user['adddate'];
           $newdate = strtotime ( '+'.($user['trial_period']+1).' day' , strtotime ( $date ) ) ;

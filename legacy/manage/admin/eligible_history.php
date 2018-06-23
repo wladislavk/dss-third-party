@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $sql = "SELECT * FROM dental_claim_electronic ORDER BY adddate DESC";
 $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
@@ -26,8 +28,8 @@ while ($r = mysqli_fetch_assoc($my)) { ?>
                 Status: <?= $p->details->codes->status_code; ?> - <?= $p->details->codes->status_label; ?>
             </p>
             <p><?= $w_r['response']; ?></p>
-			<?php
+            <?php
         } ?>
-	</div>
+    </div>
     <?php
 }

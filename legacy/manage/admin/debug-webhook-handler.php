@@ -83,7 +83,7 @@ function setReference($claimId, $referenceId)
     $db->query("UPDATE dental_claim_electronic
         SET reference_id = '$referenceId'
         WHERE claimid = '$claimId'
-            AND (reference_id IS NULL OR reference_id = '')");
+        AND (reference_id IS NULL OR reference_id = '')");
 
     $referenceId = $db->getColumn("SELECT reference_id
         FROM dental_claim_electronic
@@ -495,3 +495,4 @@ require_once __DIR__ . '/includes/top.htm';
 </div>
 <?php
 require_once __DIR__ . '/includes/bottom.htm';
+?>

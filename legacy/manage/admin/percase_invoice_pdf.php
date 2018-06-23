@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('../3rdParty/tcpdf/config/lang/eng.php');
 include_once('../3rdParty/tcpdf/tcpdf.php');
 include_once('includes/main_include.php');
@@ -250,33 +252,6 @@ $html .= '<tr>
 									</tr><tr><td colspan="5" style="color:#333333;" valign="top">'.str_pad('-',430,'-').'</td></tr>'; 
 
 }
-/*								<!-- table row no3.-->
-									<tr>
-									<!-- table column with item name-->
-									<td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">Second item</td>
-									<!-- table column with item number-->
-									<td height="30" width="100" align="left" valign="middle" style="text-align: left; border-bottom: 1px dotted #DDDDDD;">#00000</td>
-									<!-- table column with item quantity-->
-									<td height="30" width="100" align="center" valign="middle" style="text-align: center; border-bottom: 1px dotted #DDDDDD;">0</td>
-									<!-- table column with item price per pc -->
-									<td height="30" width="100" align="right" valign="middle" style="text-align: right; border-bottom: 1px dotted #DDDDDD;">0.00 $</td>
-									<!-- table column with item price -->
-									<td height="30" width="90" align="right" valign="middle" style="text-align: right; border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">0.00 $</td>
-									</tr>
-									<!-- table row no4.-->
-									<tr>
-									<!-- table column with item name-->
-									<td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">Third item</td>
-									<!-- table column with item number-->
-									<td height="30" width="100" align="left" valign="middle" style="text-align: left; border-bottom: 1px dotted #DDDDDD;">#00000</td>
-									<!-- table column with item quantity-->
-									<td height="30" width="100" align="center" valign="middle" style="text-align: center; border-bottom: 1px dotted #DDDDDD;">0</td>
-									<!-- table column with item price per pc -->
-									<td height="30" width="100" align="right" valign="middle" style="text-align: right; border-bottom: 1px dotted #DDDDDD;">0.00 $</td>
-									<!-- table column with item price -->
-									<td height="30" width="90" align="right" valign="middle" style="text-align: right; border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">0.00 $</td>
-									</tr>
-*/
 $html .= '
 									<!-- table row no5.-->
 									<tr style="font-size:30px;">

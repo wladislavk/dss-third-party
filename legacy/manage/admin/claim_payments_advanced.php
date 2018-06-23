@@ -6,10 +6,12 @@ require_once __DIR__ . '/../includes/constants.inc';
 
 $claimId = intval($_GET['id']);
 
+$db = new Db();
+
 $c_sql = "SELECT CONCAT(p.firstname, ' ', p.lastname) AS pat_name, CONCAT(u.first_name, ' ', u.last_name) AS doc_name
     FROM dental_insurance i
-        JOIN dental_patients p ON i.patientid = p.patientid
-        JOIN dental_users u ON u.userid = p.docid
+    JOIN dental_patients p ON i.patientid = p.patientid
+    JOIN dental_users u ON u.userid = p.docid
     WHERE i.insuranceid = '$claimId'";
 $c_q = mysqli_query($con, $c_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $c = mysqli_fetch_assoc($c_q);
@@ -18,16 +20,19 @@ $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';
 $cq = mysqli_query($con, $csql);
 $claim = mysqli_fetch_array($cq);
 
-$pasql = "SELECT * FROM dental_insurance_file where claimid='".$db->escape( $_GET['id'])."' AND
-                (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
+$pasql = "SELECT * 
+    FROM dental_insurance_file 
+    where claimid='".$db->escape( $_GET['id'])."' 
+    AND (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
 $paq = mysqli_query($con, $pasql);
 $num_pa = mysqli_num_rows($paq);
 
-$sasql = "SELECT * FROM dental_insurance_file where claimid='".$db->escape( $_GET['id'])."' AND
-                (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
+$sasql = "SELECT * 
+    FROM dental_insurance_file 
+    where claimid='".$db->escape( $_GET['id'])."' 
+    AND (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 $saq = mysqli_query($con, $sasql);
 $num_sa = mysqli_num_rows($saq);
-
 ?>
 <script type="text/javascript">
     //CHECK LEDGER PAYMENT SUBMISSION
@@ -156,7 +161,7 @@ $num_sa = mysqli_num_rows($saq);
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 
 <p class="lead">
-	Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
+    Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
 </p>
 <div class="row">
     <div class="col-md-6">

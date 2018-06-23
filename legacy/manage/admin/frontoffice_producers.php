@@ -54,6 +54,8 @@ if ($needsFilter) {
     $andSoftwareCompanyConditional = '';
 }
 
+$db = new Db();
+
 $orderedProducerList = [];
 $unorderedProducerList = $db->getResults("SELECT
         staff.userid,
@@ -152,7 +154,6 @@ require_once __DIR__ . '/includes/top.htm';
             $doctor = $producerList[0];
             $producerCount = count($producerList);
             $rowSpan = $producerCount + 1;
-
             ?>
             <tr>
                 <td rowspan="<?= $rowSpan ?>">

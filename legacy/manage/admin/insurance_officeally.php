@@ -5,12 +5,15 @@ include_once('../includes/constants.inc');
 include_once('includes/main_include.php');
 
 $data = [];
+
+$db = new Db();
+
 if (!empty($_POST['claim'])) {
     foreach ($_POST['claim'] as $claimid) {
         $claim_sql = "SELECT i.* 
             FROM dental_insurance i 
-	        JOIN dental_patients p on p.patientid=i.patientid
-	        WHERE i.insuranceid='".$db->escape($claimid)."'";
+            JOIN dental_patients p on p.patientid=i.patientid
+            WHERE i.insuranceid='".$db->escape($claimid)."'";
         $claim_q = mysqli_query($con,$claim_sql);
         if ($claim = mysqli_fetch_assoc($claim_q)) {
             $row = [];
@@ -54,7 +57,6 @@ if (!empty($_POST['claim'])) {
             $row[] = $ins['zip'];
             $row[] = '';
             $row[] = $ins['phone1'];
-
 
             if ($claim['insurance_type'] == 1) {
                 $row[] = "X";
@@ -164,7 +166,6 @@ if (!empty($_POST['claim'])) {
             $patient_status = st($claim['patient_status']);
             $patient_status_array = explode('~', $patient_status);
 
-
             if (in_array("Single", $patient_status_array)) {
                 $row[] = "X";
                 $row[] = "";
@@ -178,7 +179,6 @@ if (!empty($_POST['claim'])) {
                 $row[] = "";
                 $row[] = "X";
             }
-
 
             if (in_array("Employed", $patient_status_array)) {
                 $row[] = "X";
@@ -426,22 +426,19 @@ if (!empty($_POST['claim'])) {
             } else {
                 $sql .= " user.npi ";
             }
-            $sql .= " as 'provider_id', ps.place_service as 'place' "
-                . "FROM "
-                . "  dental_ledger ledger "
-                . "  JOIN dental_users user ON user.userid = ledger.docid "
-                . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-                . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-                . "WHERE "
-                . "  ledger.primary_claim_id = " . $claim['insuranceid'] . " "
-                . "  AND ledger.patientid = " . $claim['patientid'] . " "
-                . "  AND ledger.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-                . "ORDER BY "
-                . "  ledger.service_date ASC";
-
+            $sql .= " as 'provider_id', ps.place_service as 'place' 
+                FROM dental_ledger ledger 
+                JOIN dental_users user ON user.userid = ledger.docid 
+                JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code 
+                LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid 
+                WHERE ledger.primary_claim_id = " . $claim['insuranceid'] . " 
+                AND ledger.patientid = " . $claim['patientid'] . " 
+                AND ledger.docid = " . $claim['docid'] . " 
+                AND trxn_code.docid = " . $claim['docid'] . "
+                AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " 
+                ORDER BY ledger.service_date ASC";
             $query = mysqli_query($con,$sql);
+
             $c=0;
             while ($ledger = mysqli_fetch_assoc($query)) {
                 $diagnosispointer = ($ledger['diagnosispointer'])?$ledger['diagnosispointer']:'1';
@@ -509,41 +506,33 @@ if (!empty($_POST['claim'])) {
                 $row[] = "";
             }
 
-            $sql = "SELECT "
-                . "  SUM(ledger.amount) as 'total_charge' "
-                . "FROM "
-                . "  dental_ledger ledger "
-                . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-                . "WHERE "
-                . "  ledger.status = " . DSS_TRXN_PENDING . " "
-                . "  AND ledger.patientid = " . $claim['patientid'] . " "
-                . "  AND ledger.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-                . "ORDER BY "
-                . "  ledger.service_date ASC";
-
+            $sql = "SELECT SUM(ledger.amount) as 'total_charge' 
+                FROM dental_ledger ledger 
+                JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code 
+                WHERE ledger.status = " . DSS_TRXN_PENDING . " 
+                AND ledger.patientid = " . $claim['patientid'] . " 
+                AND ledger.docid = " . $claim['docid'] . " 
+                AND trxn_code.docid = " . $claim['docid'] . " 
+                AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " 
+                ORDER BY ledger.service_date ASC";
             $charge_my = mysqli_query($con,$sql);
+
             if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
                 $charge_row = mysqli_fetch_array($charge_my);
                 $total_charge = $charge_row['total_charge'];
             }
 
-            $sql = "SELECT "
-                . "  SUM(ledger.paid_amount) as 'amount_paid' "
-                . "FROM "
-                . "  dental_ledger ledger "
-                . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-                . "WHERE "
-                . "  ledger.status = " . DSS_TRXN_PENDING . " "
-                . "  AND ledger.patientid = " . $claim['patientid'] . " "
-                . "  AND ledger.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.docid = " . $claim['docid'] . " "
-                . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
-                . "ORDER BY "
-                . "  ledger.service_date ASC";
-
+            $sql = "SELECT SUM(ledger.paid_amount) as 'amount_paid' 
+                FROM dental_ledger ledger 
+                JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code 
+                WHERE ledger.status = " . DSS_TRXN_PENDING . " 
+                AND ledger.patientid = " . $claim['patientid'] . " 
+                AND ledger.docid = " . $claim['docid'] . " 
+                AND trxn_code.docid = " . $claim['docid'] . " 
+                AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") 
+                ORDER BY ledger.service_date ASC";
             $paid_my = mysqli_query($con,$sql);
+
             if ($paid_my && (mysqli_num_rows($paid_my) > 0)) {
                 $paid_row = mysqli_fetch_array($paid_my);
                 $amount_paid = $paid_row['amount_paid'];
@@ -594,6 +583,7 @@ if (!empty($_POST['claim'])) {
 
 header("Content-Type: text/plain");
 header("Content-Disposition: attachment;filename=OfficeAlly_HCFA_".date('Ymd-Hi').".txt");
+
 $f = fopen('php://output', 'a');
 foreach ($data as $fields) {
     fputs($f, implode($fields, "\t")."\n");

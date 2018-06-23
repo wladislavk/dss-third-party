@@ -9,11 +9,13 @@ include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
 
+$db = new Db();
+
 if ($_POST["ressub"] == 1) {
     $ed_sql = "update dental_support_responses set 
         body = '".$db->escape( $_POST["body"])."'
-    where id='".$_POST["id"]."'";
-    mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        where id='".$_POST["id"]."'";
+    $db->query($ed_sql);
 
     $msg = "Edited Successfully";
     ?>
@@ -24,28 +26,23 @@ if ($_POST["ressub"] == 1) {
     trigger_error("Die called", E_USER_ERROR);
 }
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?php
-    $thesql = "select * from dental_support_responses where id='".$_REQUEST["id"]."'";
-	$themy = mysqli_query($con, $thesql);
-	$themyarray = mysqli_fetch_array($themy);
-	
-	?>
-	
-	<br /><br />
-	
-	<?php if($msg != '') {?>
+<?php
+$thesql = "select * from dental_support_responses where id='".$_REQUEST["id"]."'";
+$themy = mysqli_query($con, $thesql);
+$themyarray = mysqli_fetch_array($themy);
+?>
+<br /><br />
+<?php if($msg != '') {?>
     <div align="center" class="red">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?ed=<?= $_GET['ed']; ?>" method="post" >
+<?php }?>
+<form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?ed=<?= $_GET['ed']; ?>" method="post" >
     <table class="table table-bordered table-hover">
         <tr>
             <td class="cat_head">
-               <?=$but_text?> Support Response
+                <?=$but_text?> Support Response
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -65,6 +62,6 @@ if ($_POST["ressub"] == 1) {
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

@@ -3,15 +3,21 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 
+$db = new Db();
+
 $logs = $db->getResults('SELECT *
     FROM dental_api_logs
     ORDER BY id DESC');
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <style type="text/css">
-    pre { max-height: 300px; }
+    pre {
+        max-height: 300px;
+    }
 
-    table { table-layout: fixed; }
+    table {
+        table-layout: fixed;
+    }
 
     td[rowspan] {
         position: relative;
@@ -45,22 +51,22 @@ $logs = $db->getResults('SELECT *
             <col width="15%">
         </colgroup>
         <thead>
-            <tr>
-                <th>Method</th>
-                <th>Path</th>
-                <th>Payload</th>
-                <th>Timestamp</th>
-            </tr>
+        <tr>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Payload</th>
+            <th>Timestamp</th>
+        </tr>
         </thead>
         <tbody>
-            <?php foreach ($logs as $log) { ?>
-                <tr>
-                    <td><?= e($log['method']) ?></td>
-                    <td><?= e($log['route']) ?></td>
-                    <td><code class="on-demand"><?= e($log['payload']) ?></code></td>
-                    <td><?= e($log['created_at']) ?></td>
-                </tr>
-            <?php } ?>
+        <?php foreach ($logs as $log) { ?>
+            <tr>
+                <td><?= e($log['method']) ?></td>
+                <td><?= e($log['route']) ?></td>
+                <td><code class="on-demand"><?= e($log['payload']) ?></code></td>
+                <td><?= e($log['created_at']) ?></td>
+            </tr>
+        <?php } ?>
         </tbody>
     </table>
 <?php } else { ?>

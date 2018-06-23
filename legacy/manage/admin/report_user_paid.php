@@ -9,37 +9,36 @@ namespace Ds3\Libraries\Legacy;
     <svg style='height:300px; width: 450px;'/>
 </div>
 <script type="text/javascript">
- nv.addGraph(function() {  
-   var chart = nv.models.lineChart();
- 
-   chart.xAxis
-       .axisLabel('Date')
-	.showMaxMin(false)	
-	.tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
- 
-   d3.select('#user_paid svg')
-       .datum(treatmentCount())
-     .transition().duration(500)
-       .call(chart);
- 
-   nv.utils.windowResize(function() { d3.select('#user_paid svg').call(chart) });
- 
-   return chart;
- });
- 
- 
- 
- 
+    nv.addGraph(function() {
+        var chart = nv.models.lineChart();
+
+        chart.xAxis
+            .axisLabel('Date')
+            .showMaxMin(false)
+            .tickFormat(function(d) {
+                return d3.time.format("%x")(new Date(d*1000));
+            });
+
+        d3.select('#user_paid svg')
+            .datum(treatmentCount())
+            .transition()
+            .duration(500)
+            .call(chart);
+
+        nv.utils.windowResize(function() { d3.select('#user_paid svg').call(chart) });
+
+        return chart;
+    });
+
  /**************************************
   * Simple test data generator
   */
- 
- 
+
  function treatmentCount() {
-   var paid = [];
-   <?php
-  $start_date = date('Y-m-d', mktime(0,0,0,date('m'), date('d')-30, date('Y')));
-  $end_date = date('Y-m-d');
+     var paid = [];
+     <?php
+     $start_date = date('Y-m-d', mktime(0,0,0,date('m'), date('d')-30, date('Y')));
+     $end_date = date('Y-m-d');
     $sql = "select a.Date as paid_date,
        COALESCE( 
 	(

@@ -62,18 +62,16 @@ $sql = "SELECT
         user.billing_company_id = '$companyId' AS company_client,
         user.billing_company_id != '$companyId' && user.billing_company_id != 0 AS other_client
     FROM dental_users user
-		LEFT JOIN companies company ON company.id = user.billing_company_id
-            AND company.company_type = '$companyType'
-	WHERE user.docid = 0
-	ORDER BY user.billing_company_id = '$companyId' DESC,
-	    user.billing_company_id = 0 ASC,
-	    user.last_name ASC,
-	    user.first_name ASC,
-	    user.username ASC
-	";
+    LEFT JOIN companies company ON company.id = user.billing_company_id AND company.company_type = '$companyType'
+    WHERE user.docid = 0
+    ORDER BY user.billing_company_id = '$companyId' DESC,
+        user.billing_company_id = 0 ASC,
+        user.last_name ASC,
+        user.first_name ASC,
+        user.username ASC
+";
 
 $users = $db->getResults($sql);
-
 ?>
 <div class="page-header">
     <?= e($companyName) ?> Company Users

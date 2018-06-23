@@ -56,7 +56,6 @@ if ($customDateRange && $validCustomDates) {
     $lastRange = 'custom_range';
     $rangeLabel = 'Custom Range';
 }
-
 ?>
 <script>
     $(document).ready(function(){
@@ -142,9 +141,7 @@ if ($customDateRange && $validCustomDates) {
     <form action="<?= queryString($queryValues, '') ?>" method="get" class="form form-inline">
         <?php if ($isSuperAdmin) { ?>
             Company:
-            <input type="text" id="company_name" class="form-control"
-                   onclick="updateval(this)" autocomplete="off" name="company_name"
-                   value="<?= $companyName ?>" placeholder="Type company name" />
+            <input type="text" id="company_name" class="form-control" onclick="updateval(this)" autocomplete="off" name="company_name" value="<?= $companyName ?>" placeholder="Type company name" />
             <div id="company_hints" class="search_hints" style="display:none;">
                 <ul id="company_list" class="search_list">
                     <li class="template" style="display:none">HST Company</li>
@@ -154,9 +151,7 @@ if ($customDateRange && $validCustomDates) {
         <?php } ?>
         &nbsp;
         Account:
-        <input type="text" id="account_name" class="form-control"
-               onclick="updateval(this)" autocomplete="off" name="account_name"
-               value="<?= $doctorName ?>" placeholder="Type contact name" />
+        <input type="text" id="account_name" class="form-control" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?= $doctorName ?>" placeholder="Type contact name" />
         <div id="account_hints" class="search_hints" style="display:none;">
             <ul id="account_list" class="search_list">
                 <li class="template" style="display:none">Doe, John S</li>
@@ -166,22 +161,18 @@ if ($customDateRange && $validCustomDates) {
         &nbsp;
         From:
         <span>
-            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
-                   name="from" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'from')) ?>" size="12" />
+            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy" name="from" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'from')) ?>" size="12" />
         </span>
         &nbsp;
         To:
         <span>
-            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
-                   name="to" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'to')) ?>" size="12" />
+            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy" name="to" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'to')) ?>" size="12" />
         </span>
         &nbsp;
         <input type="hidden" name="sort" value="<?= $sortField ?>" />
         <input type="hidden" name="dir" value="<?= $sortDir ?>"/>
         <input type="submit" value="Filter List" class="btn btn-primary">
-        <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'"
-               class="btn btn-primary">
-
+        <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'" class="btn btn-primary">
         <?php if ($isSuperAdmin) { ?>
             &nbsp;
             <?php if ($groupedByCompany) { ?>
@@ -209,128 +200,126 @@ if ($customDateRange && $validCustomDates) {
         <col width="8%" />
     </colgroup>
     <thead>
-        <?php if ($total && $total > $count) { ?>
-            <tr bgColor="#ffffff">
-                <td  align="right" colspan="15" class="bp">
-                    Pages:
-                    <?php hstPaging($queryValues, $total, $count, $page); ?>
-                </td>
-            </tr>
-        <?php } ?>
-        <tr class="tr_bg_h">
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, 'company') ?>">HST Company</a>
-            </th>
-            <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, 'user') ?>">Doctor</a>
-            </th>
-            <th class="col_head">
-                Status
-            </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, '0') ?>">0 - 30</a>
-            </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, '30') ?>">31 - 60</a>
-            </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, '60') ?>">61 - 90</a>
-            </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= queryString($queryValues, '90') ?>">90+</a>
-            </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
-                <a href="<?= queryString($queryValues, $lastRange) ?>">
-                    <?= e($rangeLabel) ?>
-                </a>
-            </th>
+    <?php if ($total && $total > $count) { ?>
+        <tr bgcolor="#ffffff">
+            <td align="right" colspan="15" class="bp">
+                Pages:
+                <?php hstPaging($queryValues, $total, $count, $page); ?>
+            </td>
         </tr>
+    <?php } ?>
+    <tr class="tr_bg_h">
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, 'company') ?>">HST Company</a>
+        </th>
+        <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, 'user') ?>">Doctor</a>
+        </th>
+        <th class="col_head">
+            Status
+        </th>
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, '0') ?>">0 - 30</a>
+        </th>
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, '30') ?>">31 - 60</a>
+        </th>
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, '60') ?>">61 - 90</a>
+        </th>
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
+            <a href="<?= queryString($queryValues, '90') ?>">90+</a>
+        </th>
+        <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
+            <a href="<?= queryString($queryValues, $lastRange) ?>">
+                <?= e($rangeLabel) ?>
+            </a>
+        </th>
+    </tr>
     </thead>
     <tbody>
-        <tr class="hidden"><td colspan="15"></tr>
-        <?php if (!count($results)) { ?>
-            <tr class="tr_bg">
-                <td valign="top" class="col_head" colspan="6" align="center">
-                    No Records
-                </td>
-            </tr>
-        <?php } ?>
-        <?php
-        foreach ($results as $each) {
-            $alternate = [];
+    <tr class="hidden"><td colspan="15"></td></tr>
+    <?php if (!count($results)) { ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="6" align="center">
+                No Records
+            </td>
+        </tr>
+    <?php } ?>
+    <?php
+    foreach ($results as $each) {
+        $alternate = [];
 
-            if (isset($completedResults[$each['company_id']])) {
-                $alternate = $completedResults[$each['company_id']];
-            }
+        if (isset($completedResults[$each['company_id']])) {
+            $alternate = $completedResults[$each['company_id']];
+        }
 
-            ?>
-            <tr>
-                <td valign="top" rowspan="2">
-                    <?php if ($each['company_id']) { ?>
-                        <?= e($each['company_name']) ?>
-                    <?php } else { ?>
-                        <i>No company</i>
-                    <?php } ?>
-                </td>
-                <td valign="top" class="<?= $hiddenByGroup ?>" rowspan="2">
-                    <a href="/manage/admin/view_user.php?ed=<?= $each['doctor_id'] ?>">
-                        <?= e($each['doctor_name']) ?>
-                    </a>
-                </td>
-                <td valign="top" class="text-right">
-                    Any
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($each['0-30'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($each['31-60'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($each['61-90'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($each['90+'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?php if ($customDateRange && $validCustomDates) { ?>
-                        <?= number_format($each['custom_range'], 0, '.', ',') ?>
-                    <?php } else { ?>
-                        <?= number_format($each['lifetime'], 0, '.', ',') ?>
-                    <?php } ?>
-                </td>
-            </tr>
-            <tr>
-                <td valign="top" class="text-right">
-                    Completed
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($alternate['0-30'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($alternate['31-60'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($alternate['61-90'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?= number_format($alternate['90+'], 0, '.', ',') ?>
-                </td>
-                <td valign="top" class="text-right">
-                    <?php if ($customDateRange && $validCustomDates) { ?>
-                        <?= number_format($alternate['custom_range'], 0, '.', ',') ?>
-                    <?php } else { ?>
-                        <?= number_format($alternate['lifetime'], 0, '.', ',') ?>
-                    <?php } ?>
-                </td>
-            </tr>
-        <?php } ?>
+        ?>
+        <tr>
+            <td valign="top" rowspan="2">
+                <?php if ($each['company_id']) { ?>
+                    <?= e($each['company_name']) ?>
+                <?php } else { ?>
+                    <i>No company</i>
+                <?php } ?>
+            </td>
+            <td valign="top" class="<?= $hiddenByGroup ?>" rowspan="2">
+                <a href="/manage/admin/view_user.php?ed=<?= $each['doctor_id'] ?>">
+                    <?= e($each['doctor_name']) ?>
+                </a>
+            </td>
+            <td valign="top" class="text-right">
+                Any
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($each['0-30'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($each['31-60'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($each['61-90'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($each['90+'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?php if ($customDateRange && $validCustomDates) { ?>
+                    <?= number_format($each['custom_range'], 0, '.', ',') ?>
+                <?php } else { ?>
+                    <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" class="text-right">
+                Completed
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($alternate['0-30'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($alternate['31-60'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($alternate['61-90'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?= number_format($alternate['90+'], 0, '.', ',') ?>
+            </td>
+            <td valign="top" class="text-right">
+                <?php if ($customDateRange && $validCustomDates) { ?>
+                    <?= number_format($alternate['custom_range'], 0, '.', ',') ?>
+                <?php } else { ?>
+                    <?= number_format($alternate['lifetime'], 0, '.', ',') ?>
+                <?php } ?>
+            </td>
+        </tr>
+    <?php } ?>
     </tbody>
 </table>
 <?php
-
 require_once __DIR__ . '/includes/bottom.htm';
-
 
 /**
  * Perform the main query
@@ -378,7 +367,7 @@ function hstQuery(array $options, array $statuses = [])
 
     $whereConditionals = hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, $statuses);
     $groupBy = 'GROUP BY company.id, doctor.userid';
-    $sortBy = hstSortBy($sortField, $sortDir, $lastDateRange);
+    $sortBy = hstSortBy($sortField, $sortDir);
 
     if ($groupedByCompany) {
         $groupBy = 'GROUP BY company.id';
@@ -406,8 +395,8 @@ function hstQuery(array $options, array $statuses = [])
             $customInterval AS `custom_range`,
             SUM(IF(hst.id, 1, 0)) AS `lifetime`
         FROM dental_users doctor
-            LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
-            LEFT JOIN companies company ON company.id = hst.company_id
+        LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
+        LEFT JOIN companies company ON company.id = hst.company_id
         $whereConditionals
         $groupBy
         HAVING SUM(IF(hst.id, 1, 0)) > 0
@@ -462,7 +451,7 @@ function hstDayDiff($stringDate, \DateTime $referenceDate)
  * @param array $statuses
  * @return string
  */
-function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, array $statuses = [])
+function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, array $statuses)
 {
     $db = new Db();
     $conditionals = [];
@@ -498,7 +487,8 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, ar
  * @param string $sortBy
  * @return string
  */
-function hstSortField($sortBy) {
+function hstSortField($sortBy)
+{
     $sortBy = strtolower($sortBy);
 
     if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime', 'custom_range'])) {
@@ -514,7 +504,8 @@ function hstSortField($sortBy) {
  * @param string $sortDir
  * @return string
  */
-function hstSortDirection($sortDir) {
+function hstSortDirection($sortDir)
+{
     $sortDir = strtolower($sortDir);
 
     if ($sortDir === 'desc') {
@@ -531,7 +522,8 @@ function hstSortDirection($sortDir) {
  * @param string|int $upperLimit
  * @return string
  */
-function hstInterval($lowerLimit, $upperLimit) {
+function hstInterval($lowerLimit, $upperLimit)
+{
     $upperLimit = (int)$upperLimit;
     $lowerLimit = (int)$lowerLimit;
 
@@ -568,10 +560,10 @@ function hstInterval($lowerLimit, $upperLimit) {
  *
  * @param string $sortBy
  * @param string $direction
- * @param array  $customLimit
  * @return string
  */
-function hstSortBy($sortBy, $direction, array $customLimit = []) {
+function hstSortBy($sortBy, $direction)
+{
     $orderCompany = "company.name $direction";
     $orderUser = "doctor.last_name $direction, doctor.first_name $direction";
 
@@ -637,5 +629,5 @@ function hstPaging(array $queryValues, $total, $count, $page)
 {
     unset($queryValues['page']);
     $queryString = http_build_query($queryValues);
-    paging(floor($total/$count), $page, $queryString);
+    paging(floor($total / $count), $page, $queryString);
 }

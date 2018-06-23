@@ -11,13 +11,14 @@ if (!is_super($_SESSION['admin_access']) || !strlen($partial)) {
     returnJson(['error' => 'No companies found']);
 }
 
+$db = new Db();
+
 $partial = $db->escape($partial);
 
 $sql = "SELECT id, name
     FROM companies
     WHERE name LIKE '$partial%' OR name LIKE '%$partial'
     ORDER BY name ASC";
-
 $results = $db->getResults($sql);
 
 if (!$results) {
@@ -26,7 +27,8 @@ if (!$results) {
 
 returnJson($results);
 
-function returnJson ($data) {
+function returnJson ($data)
+{
     echo json_encode($data);
     trigger_error('Die called', E_USER_ERROR);
 }

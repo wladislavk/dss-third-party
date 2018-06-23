@@ -13,23 +13,23 @@ if (isset($_POST['partial_name'])) {
 }
 $names = explode(" ", $partial);
 if(is_super($_SESSION['admin_access'])){
-$sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
-  .   " s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment,  "
-  .		" s.delivery_date, s.vob, s.ledger, s.patient_info, d.device, "
-                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, u.username "
-	.		" FROM dental_patients p"
-  .   " JOIN dental_users u ON u.userid=p.docid "
-  .   " LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
-  .   " LEFT JOIN dental_device d ON s.appliance = d.deviceid "
-                 . "  LEFT JOIN dental_flow_pg1 fs ON fs.pid = p.patientid "
-	.		" WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')" 
-	.		" AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
-	.		" OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
-        .               " AND p.status=1 "
-	.		" AND p.docid='".$db->escape( $_GET['fid'])."'"
-	.		" ORDER BY lastname ASC;";
+    $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,
+        s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment,
+        s.delivery_date, s.vob, s.ledger, s.patient_info, d.device,
+        fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, u.username
+        FROM dental_patients p
+        JOIN dental_users u ON u.userid=p.docid
+        LEFT JOIN dental_patient_summary s ON p.patientid = s.pid
+        LEFT JOIN dental_device d ON s.appliance = d.deviceid
+        LEFT JOIN dental_flow_pg1 fs ON fs.pid = p.patientid
+        WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')
+        AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))
+        OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))
+        AND p.status=1
+        AND p.docid='".$db->escape( $_GET['fid'])."'
+        ORDER BY lastname ASC;";
 }elseif(is_software($_SESSION['admin_access'])){
-$sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
+    $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
   .   " s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment,  "
   .             " s.delivery_date, s.vob, s.ledger, s.patient_info, d.device, "
                  . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, u.username "

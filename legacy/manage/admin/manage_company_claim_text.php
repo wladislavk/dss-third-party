@@ -1,18 +1,19 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
-{
-	$del_sql = "delete from dental_custom where customid='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo  $_GET['docid']; ?>";
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1) {
+    $del_sql = "delete from dental_custom where customid='".$_REQUEST["delid"]."'";
+    mysqli_query($con,$del_sql);
+
+    $msg= "Deleted Successfully";
+    ?>
+    <script type="text/javascript">
+        window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo  $_GET['docid']; ?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 50;
@@ -25,6 +26,7 @@ if (!empty($_REQUEST["page"])) {
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_claim_text where companyid=".(!empty($_GET['companyid']) ? $_GET['companyid'] : '');
 $my = mysqli_query($con,$sql);
+
 $total_rec = (!empty($my) ? mysqli_num_rows($my) : '');
 $no_pages = $total_rec/$rec_disp;
 
@@ -36,82 +38,77 @@ $my = mysqli_query($con,$sql);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	Manage Claim Note Text
+    Manage Claim Note Text
 </div>
 <br />
 <br />
 <div align="right">
-	<button onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo (!empty($_GET['companyid']) ? $_GET['companyid'] : ''); ?>');" class="btn btn-success">
-		Add New Claim Text
-		<span class="glyphicon glyphicon-plus">
-	</button>
-	&nbsp;&nbsp;
+    <button onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo (!empty($_GET['companyid']) ? $_GET['companyid'] : ''); ?>');" class="btn btn-success">
+        Add New Claim Text
+        <span class="glyphicon glyphicon-plus">
+    </button>
+    &nbsp;&nbsp;
 </div>
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 &nbsp;
 <b>Total Records: <?php echo $total_rec;?></b>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>?docid=<?php echo  (!empty($_GET['docid']) ? $_GET['docid'] : ''); ?>" method="post">
-<table class="table table-bordered table-hover">
-	<?php if($total_rec > $rec_disp) {?>
-	<tr bgcolor="#ffffff">
-		<td align="right" colspan="15" class="bp">
-			Pages:
-			<?php
-            paging($no_pages,$index_val,"");
-			?>
-		</td>
-	</tr>
-	<?php }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="30%">
-			Title		
-		</td>
-		<td valign="top" class="col_head" width="50%">
-			Description		
-		</td>
-		<td valign="top" class="col_head" width="20%">
-			Action
-		</td>
-	</tr>
-	<?php if(!empty($my) && mysqli_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<?php 
-	}
-	else
-	{
-		if (!empty($my)) while($myarray = mysqli_fetch_array($my))
-		{
-				$tr_class = "tr_active";
-		?>
-			<tr class="<?php echo $tr_class;?>">
-				<td valign="top">
-					<?php echo st($myarray["title"]);?>
-				</td>
-				<td valign="top">
-					<?php echo st(substr($myarray["description"], 0, 50));?>
-				</td>
-				<td valign="top">
-					<a href="Javascript:;"  onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo  $_GET['companyid']; ?>&ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
-						Edit
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-				</td>
-			</tr>
-	<?php 	}
-		?>
-		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;</td>
-		</tr>
-		<?php
-	} ?>
-</table>
+    <table class="table table-bordered table-hover">
+        <?php if($total_rec > $rec_disp) {?>
+            <tr bgcolor="#ffffff">
+                <td align="right" colspan="15" class="bp">
+                    Pages:
+                    <?php
+                    paging($no_pages,$index_val,"");
+                    ?>
+                </td>
+            </tr>
+        <?php }?>
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head" width="30%">
+                Title
+            </td>
+            <td valign="top" class="col_head" width="50%">
+                Description
+            </td>
+            <td valign="top" class="col_head" width="20%">
+                Action
+            </td>
+        </tr>
+        <?php if(!empty($my) && mysqli_num_rows($my) == 0) { ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="10" align="center">
+                    No Records
+                </td>
+            </tr>
+            <?php
+        } else {
+            if (!empty($my)) while($myarray = mysqli_fetch_array($my)) {
+                $tr_class = "tr_active"; ?>
+                <tr class="<?php echo $tr_class;?>">
+                    <td valign="top">
+                        <?php echo st($myarray["title"]);?>
+                    </td>
+                    <td valign="top">
+                        <?php echo st(substr($myarray["description"], 0, 50));?>
+                    </td>
+                    <td valign="top">
+                        <a href="Javascript:;"  onclick="loadPopup('add_company_claim_text.php?companyid=<?php echo  $_GET['companyid']; ?>&ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+                            Edit
+                         <span class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                </tr>
+                <?php
+            } ?>
+            <tr>
+                <td valign="top" class="col_head" colspan="3">&nbsp;</td>
+            </tr>
+            <?php
+        } ?>
+    </table>
 </form>
 
 <div id="popupContact">
@@ -120,5 +117,5 @@ $my = mysqli_query($con,$sql);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

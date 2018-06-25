@@ -40,7 +40,6 @@ if (isset($_GET['upstatus'])) {
     }
 }
 
-
 $fid = (isset($_REQUEST['fid'])) ? $_REQUEST['fid'] : '';
 $pid = (isset($_GET['pid'])) ? $_GET['pid'] : '';
 define('SORT_BY_DATE', '0');
@@ -55,7 +54,6 @@ $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-
 switch ($sort_by) {
     case SORT_BY_DATE:
         $sort_by_sql = "claim.adddate $sort_dir";
@@ -85,7 +83,6 @@ switch ($sort_by) {
 
 if (isset($_REQUEST["delid"]) && $_SESSION['admin_access'] == 1) {
     deleteClaim($_REQUEST['delid']);
-
     $msg= "Deleted Successfully";
     ?>
     <script type="text/javascript">
@@ -104,6 +101,7 @@ if (isset($_REQUEST['sendid'])) {
             ORDER BY f.id DESC";
         $send_q = mysqli_query($con,$send_sql);
         $send_r = mysqli_fetch_assoc($send_q);
+
         $status = $send_r['status'];
         if ($status == DSS_CLAIM_DISPUTE) {
             $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".$db->escape( $sendid)."'";
@@ -549,7 +547,7 @@ $statusDropdown = [
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
     <table class="table table-bordered table-hover">
         <?php if ($total_rec > $rec_disp) {?>
-            <tr bgColor="#ffffff">
+            <tr bgcolor="#ffffff">
                 <td align="right" colspan="15" class="bp">
                     Pages:
                     <?php
@@ -603,7 +601,7 @@ $statusDropdown = [
                     No Records
                 </td>
             </tr>
-        <?php
+            <?php
         } else {
             while ($myarray = mysqli_fetch_array($my)) { ?>
                 <tr class="<?php echo (isset($tr_class)) ? $tr_class : '';?>">
@@ -630,7 +628,6 @@ $statusDropdown = [
                             break;
                         default:
                             $status_color = "success";
-                            break;
                     }
                     ?>
                     <td valign="top" class="claim_<?php echo $myarray["status"]; ?> <?php echo ($myarray['days_pending'] > 7) ? 'old' : ''; ?> <?php echo $status_color;?>">

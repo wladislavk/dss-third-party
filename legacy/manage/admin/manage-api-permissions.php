@@ -50,10 +50,10 @@ require_once __DIR__ . '/manage-api-permission-resources.php';
                         {{ indexedUsers[model.doc_id] ? indexedUsers[model.doc_id].first_name : '' }}
                     </td>
                     <td valign="top">
-                        <a data-toggle="modal" title="" class="btn btn-primary btn-sm"
-                           data-original-title="Edit Group" v-on:click.prevent="editModelCallback(model)">
+                        <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Group" v-on:click.prevent="editModelCallback(model)">
                             Edit
-                            <span class="glyphicon glyphicon-pencil"></span></a>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
                         <button class="btn btn-danger btn-sm"  v-on:click.prevent="deleteModelCallback(model)">Delete</button>
                     </td>
                 </tr>

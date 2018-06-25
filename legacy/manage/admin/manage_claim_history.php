@@ -16,6 +16,8 @@ $rec_disp = 20;
  */
 $sort_by = $sort_by === 'last_action' ? 'insuranceid' : $sort_by;
 
+$db = new Db();
+
 /**
  * Only include this subquery if requested in ordering
  * This query returns wrong values for some reference ids
@@ -38,12 +40,12 @@ $sql = "SELECT e.*,
     $lastActionColumnWithComma
     i.status
     FROM dental_claim_electronic e
-        JOIN dental_insurance i ON i.insuranceid = e.claimid
-        LEFT JOIN dental_users u ON u.userid = i.docid
-        LEFT JOIN dental_patients p ON p.patientid = i.patientid
-        LEFT JOIN dental_user_company uc ON uc.userid = i.docid
-        LEFT JOIN companies c ON uc.companyid = c.id
-    ";
+    JOIN dental_insurance i ON i.insuranceid = e.claimid
+    LEFT JOIN dental_users u ON u.userid = i.docid
+    LEFT JOIN dental_patients p ON p.patientid = i.patientid
+    LEFT JOIN dental_user_company uc ON uc.userid = i.docid
+    LEFT JOIN companies c ON uc.companyid = c.id
+";
 
 if (is_billing($_SESSION['admin_access'])) {
     $sql .= " WHERE u.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'";
@@ -76,118 +78,102 @@ if ($references) {
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	Electronic Claim History 
+    Electronic Claim History
 </div>
 <br />
 <br />
-
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
-	<?php if($total_rec > $rec_disp) {?>
-	<tr bgcolor="#ffffff">
-		<td align="right" colspan="15" class="bp">
-			Pages:
-			<?php
-            paging($no_pages,$index_val,"sort_by=".$sort_by."&sort_dir=".$sort_dir);
-			?>
-		</td>
-	</tr>
-	<?php } ?>
-<?php
+    <?php if($total_rec > $rec_disp) {?>
+        <tr bgcolor="#ffffff">
+            <td align="right" colspan="15" class="bp">
+                Pages:
+                <?php
+                paging($no_pages,$index_val,"sort_by=".$sort_by."&sort_dir=".$sort_dir);
+                ?>
+            </td>
+        </tr>
+    <?php } ?>
+    <?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?sort_by=%s&sort_dir=%s";
-?>
-	<tr class="tr_bg_h">
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'insuranceid', $sort_dir) ?>" width="10%">
-                        <a href="<?php echo sprintf($sort_qs, 'insuranceid', get_sort_dir($sort_by, 'insuranceid', $sort_dir))?>">
-			Claim ID</a>
-		</td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'adddate', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">
-			Added
-		</td>
-<td valign="top" class="col_head" width="20%">
-    <div title="Sorting by this column is not available">
-			Last Action
-        </div>
-		</td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">
-			Status	
-		</td>       
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'pat_name', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'pat_name', get_sort_dir($sort_by, 'pat_name', $sort_dir))?>">
-			Patient Name
-		</td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'account_name', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'account_name', get_sort_dir($sort_by, 'account_name', $sort_dir))?>">
-                        Account 
+    ?>
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'insuranceid', $sort_dir) ?>" width="10%">
+            <a href="<?php echo sprintf($sort_qs, 'insuranceid', get_sort_dir($sort_by, 'insuranceid', $sort_dir))?>">Claim ID</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'adddate', $sort_dir) ?>" width="20%">
+            <a href="<?php echo sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">Added</a>
+        </td>
+        <td valign="top" class="col_head" width="20%">
+            <div title="Sorting by this column is not available">Last Action</div>
+        </td>
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">
+            <a href="<?php echo sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">Status</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'pat_name', $sort_dir) ?>" width="20%">
+            <a href="<?php echo sprintf($sort_qs, 'pat_name', get_sort_dir($sort_by, 'pat_name', $sort_dir))?>">Patient Name</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'account_name', $sort_dir) ?>" width="20%">
+            <a href="<?php echo sprintf($sort_qs, 'account_name', get_sort_dir($sort_by, 'account_name', $sort_dir))?>">Account</a>
+        </td>
+        <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'company_name', $sort_dir) ?>" width="20%">
+            <a href="<?php echo sprintf($sort_qs, 'company_name', get_sort_dir($sort_by, 'company_name', $sort_dir))?>">Company</a>
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Action
+        </td>
+    </tr>
+    <?php if(!count($my)) { ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="10" align="center">
+                No Records
+            </td>
+        </tr>
+        <?php
+    } else {
+        foreach($my as $myarray) {
+            ?>
+            <tr>
+                <td valign="top">
+                    <?php echo  $myarray['claimid']; ?>
                 </td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'company_name', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'company_name', get_sort_dir($sort_by, 'company_name', $sort_dir))?>">
-			Company		
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Action
-		</td>
-	</tr>
-	<?php if(!count($my))
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<?php 
-	}
-	else
-	{
-		foreach($my as $myarray)
-		{
-		?>
-			<tr>
-				<td valign="top">
-					<?php echo  $myarray['claimid']; ?>
-				</td>
-				<td valign="top">
-					<?php echo  $myarray['adddate']; ?>
-				</td>
-				<td valign="top">
-					<?= st(
-                        isset($myarray['last_action']) ?
-                            $myarray['last_action'] : (
-                                isset($lastActions[$myarray['reference_id']]) ?
-                                    $lastActions[$myarray['last_action']] : ''
-                            )
+                <td valign="top">
+                    <?php echo  $myarray['adddate']; ?>
+                </td>
+                <td valign="top">
+                    <?= st(isset($myarray['last_action']) ?
+                            $myarray['last_action'] :
+                            (isset($lastActions[$myarray['reference_id']]) ? $lastActions[$myarray['last_action']] : '')
                     ) ?>
-				</td>
-				<td valign="top">
-					<?php echo $dss_claim_status_labels[$myarray['status']]; ?>
-				</td>
-				
-				<td valign="top">
-					<?php echo $myarray['pat_name']; ?>
-				</td>
-                                <td valign="top" align="center">
-                                        <?php echo $myarray["account_name"]; ?>
-                                </td>
-			 	<td valign="top" align="center">
-                                        <?php echo $myarray["company_name"]; ?>
-				</td>			
-				<td valign="top">
-					<a href="view_claim_history.php?id=<?php echo $myarray['id']; ?>" title="Edit" class="btn btn-primary btn-sm">
-						View
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-
-					<a href="../insurance_check_status.php?id=<?php echo $myarray['id']; ?>" class="btn btn-info" title="payment status">
-						Payment Status
-					</a>
-				</td>
-			</tr>
-	<?php 	}
-	}?>
+                </td>
+                <td valign="top">
+                    <?php echo $dss_claim_status_labels[$myarray['status']]; ?>
+                </td>
+                <td valign="top">
+                    <?php echo $myarray['pat_name']; ?>
+                </td>
+                <td valign="top" align="center">
+                    <?php echo $myarray["account_name"]; ?>
+                </td>
+                <td valign="top" align="center">
+                    <?php echo $myarray["company_name"]; ?>
+                </td>
+                <td valign="top">
+                    <a href="view_claim_history.php?id=<?php echo $myarray['id']; ?>" title="Edit" class="btn btn-primary btn-sm">
+                        View
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a href="../insurance_check_status.php?id=<?php echo $myarray['id']; ?>" class="btn btn-info" title="payment status">
+                        Payment Status
+                    </a>
+                </td>
+            </tr>
+            <?php
+        }
+    } ?>
 </table>
 
 <div id="popupContact">
@@ -196,5 +182,5 @@ if ($references) {
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

@@ -36,7 +36,8 @@ require_once __DIR__ . '/../includes/constants.inc';
                 </th>
                 <th valign="top" class="col_head header1" width="15%">
                     Action
-                </th></tr>
+                </th>
+            </tr>
             </thead>
             <tbody>
             <tr v-repeat="company: companies">
@@ -61,7 +62,8 @@ require_once __DIR__ . '/../includes/constants.inc';
                 <td valign="top">
                     <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Company" v-on="click: editCompany(company, $index)">
                         Edit
-                        <span class="glyphicon glyphicon-pencil"></span></a>
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
                     <button class="btn btn-danger btn-sm"  v-on="click: deleteCompany(company)">Delete</button>
                 </td>
             </tr>

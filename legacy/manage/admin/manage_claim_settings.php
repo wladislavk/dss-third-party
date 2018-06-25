@@ -11,6 +11,7 @@ if(isset($_POST["margins_submit"]) || isset($_POST['margins_test'])) {
         claim_margin_left = '".$db->escape($_POST['claim_margin_left'])."'
         WHERE adminid='".$_SESSION['adminuserid']."'";
     mysqli_query($con,$in_sql);
+
     if(isset($_POST['margins_test'])) { ?>
         <script type="text/javascript">
             window.open("claim_margin_test.php");
@@ -54,9 +55,7 @@ $practice = mysqli_fetch_assoc($p_q);
         <li>Repeat steps 1-4 until your test claim shows the data aligned within the center of the CMS 1500 form boxes.</li>
         <li>Your printer is now calibrated for the CMS 1500 form.</li>
     </ol>
-
     <p>NOTE: Make sure that "Page Scaling" is set to NONE in your print settings when you print the PDF test file, or you will experience alignment issues.</p>
-
     <p>If you wish to reset the claim back to original settings click "Reset Margins".</p>
 </div>
 <div class="half" style="margin-left: 20px;">

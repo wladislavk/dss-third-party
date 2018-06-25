@@ -87,10 +87,7 @@ $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $rdi = st($q2_myarray['rdi']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
-$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-$sum_myarray = $db->getRow($sum_sql);
 
-$sti_o2_1 = st($sum_myarray['sti_o2_1']);
 if(st($pat_myarray['gender']) == 'Female') {
     $s_h =  "she";
     $h_h1 =  "her";
@@ -100,6 +97,10 @@ if(st($pat_myarray['gender']) == 'Female') {
     $h_h1 =  "him";
     $m_m = "Mr.";
 }
+
+include_once 'includes/get_sti_o2.php';
+$sti_o2_1 = getStiO2($db, $_GET['pid']);
+
 ?>
 <br />
 <span class="admin_head">

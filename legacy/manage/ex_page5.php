@@ -104,7 +104,7 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
         $joint_exam_arr = '~' . $joint_exam_arr;
     }
 
-    $sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
+    $sql = "select summaryid from dental_summary where patientid='".$_GET['pid']."'";
     $num = $db->getNumberRows($sql);
 
     if ($num == 0) {

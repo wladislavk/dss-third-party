@@ -299,6 +299,7 @@ $bmi = $db->getColumn("SELECT bmi
     FROM dental_patients
     WHERE patientid = '$patientId'", 'bmi');
 
+// Reason seeking treatment
 $reason_seeking_tx = $db->getColumn("SELECT chief_complaint_text
     FROM dental_q_page1_pivot
     WHERE patientid = '$patientId'", 'chief_complaint_text');
@@ -435,14 +436,22 @@ if ($franchisee_info['user_type'] == DSS_USER_TYPE_SOFTWARE) {
     $header_space = true;
 }
 
-$loc_r = $db->getColumn("SELECT location
-    FROM dental_summary_pivot
-    WHERE patientid = '$patientId'", 'location');
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$patientId";
+$maxIdRow = $db->getRow($maxIdSql);
+$locationId = 0;
+if ($maxIdRow && $maxIdRow['max_summaryid']) {
+    $maxId = $maxIdRow['max_summaryid'];
+    $locationSql = "SELECT `location` FROM `dental_summary` WHERE `summaryid`=$maxId";
+    $locationRow = $db->getRow($locationSql);
+    if ($locationRow) {
+        $locationId = $locationRow['location'];
+    }
+}
 
-if ($patientId && !empty($loc_r)) {
+if ($patientId && !empty($locationId)) {
     $location_query = "SELECT *
         FROM dental_locations
-        WHERE id = '$loc_r'
+        WHERE id = '$locationId'
         AND docid = '$docId'";
 } else {
     $location_query = "SELECT *

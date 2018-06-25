@@ -18,7 +18,7 @@ class Db
         'OR',
     ];
 
-    // Perfom query
+    // Perform query
     public function __construct()
     {
         $this->totalTime = 0;
@@ -43,7 +43,6 @@ class Db
             if ($this->SHOW_TIMESTAMP) {
                 echo 'Query Time: ' . $time . '<br>';
             }
-
             if ($this->SHOW_TOTAL_TIME) {
                 echo 'Total Query Time: ' . $this->totalTime . '<br>';
             }

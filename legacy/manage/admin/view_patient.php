@@ -11,10 +11,9 @@ include "../includes/similar.php";
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript" src="/manage/admin/js/view_patient.js"></script>
 <?php
-function trigger_letter1and2($pid)
+function trigger_letter1and2()
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $letter1id = "1";
     $letter2id = "2";
@@ -44,8 +43,6 @@ function trigger_letter1and2($pid)
         }
     } 
     if (count($recipients) > 0) {
-        $recipients_list = implode(',', $recipients);
-
         //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
         if ($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE) {
             if (!is_numeric($letter1)) {
@@ -60,7 +57,7 @@ function trigger_letter1and2($pid)
     }
 }
 
-function trigger_letter3($pid)
+function trigger_letter3()
 {
     if (!is_numeric($letter)) {
         echo $letter;
@@ -226,12 +223,15 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $db->query("UPDATE dental_patients set email='".$db->escape($_POST['email'])."' WHERE parent_patientid='".$db->escape($_POST["ed"])."'");
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='".$_GET['pid']."';";
-            $escapedLocation = $db->escape( $_POST['location']);
-            if ($db->getNumberRows($ds_sql) > 0) {
-                $summaryRow = $db->getRow($ds_sql);
-                $summaryId = $summaryRow['summaryid'];
-                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
+            $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
+            $maxIdRow = $db->getRow($maxIdSql);
+            $maxId = 0;
+            if ($maxIdRow && $maxIdRow['max_summaryid']) {
+                $maxId = $maxIdRow['max_summaryid'];
+            }
+            $escapedLocation = $db->escape($_POST['location']);
+            if ($maxId) {
+                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$maxId";
             } else {
                 $loc_query = "INSERT INTO dental_summary SET location='$escapedLocation', patientid='".$_GET['pid']."';";
             }
@@ -294,10 +294,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             $db->query($sql);
         }
 
-        trigger_letter1and2($_POST['ed']);
+        trigger_letter1and2();
 
         if ($_POST['introletter'] == 1) {
-            trigger_letter3($_POST['ed']);
+            trigger_letter3();
         }
 
         if (isset($_POST['add_ref_but'])) { ?>
@@ -492,7 +492,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
 		    $db->query($loc_query);
 		}
 
-   		trigger_letter1and2($pid);
+   		trigger_letter1and2();
 
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST["use_patient_portal"]) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
@@ -505,10 +505,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             }
         }
         if ($_POST['introletter'] == 1) {
-            trigger_letter3($pid);
+            trigger_letter3();
         }
         $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
-        $flowinsert = $db->query($flowinsertqry);
+        $db->query($flowinsertqry);
 
         $stepid = '1';
         $segmentid = '1';
@@ -560,8 +560,6 @@ if (isset($msg) && $msg != '') {
     $lastname = $_POST['lastname'];
     $preferred_name = $_POST['preferred_name'];
     $salutation = $_POST['salutation'];
-    $group_no = $_POST['group_no'];
-    $plan_no = $_POST['plan_no'];
     $dob = $_POST['dob'];
     $add1 = $_POST['add1'];
     $add2= $_POST['add2'];
@@ -582,34 +580,17 @@ if (isset($msg) && $msg != '') {
     $best_number = $_POST['best_number'];
     $email = $_POST['email'];
     $patient_notes = $_POST['patient_notes'];
-    $p_d_party = $_POST["p_d_party"];
-    $p_d_relation = $_POST["p_d_relation"];
-    $p_d_other = $_POST["p_d_other"];
-    $p_d_employer = $_POST["p_d_employer"];
-    $p_d_ins_co = $_POST["p_d_ins_co"];
-    $p_d_ins_id = $_POST["p_d_ins_id"];
-    $s_d_party = $_POST["s_d_party"];
-    $s_d_relation = $_POST["s_d_relation"];
-    $s_d_other = $_POST["s_d_other"];
-    $s_d_employer = $_POST["s_d_employer"];
-    $s_d_ins_co = $_POST["s_d_ins_co"];
-    $s_d_ins_id = $_POST["s_d_ins_id"];
     $p_m_partyfname = $_POST["p_m_partyfname"];
     $p_m_partymname = $_POST["p_m_partymname"];
     $p_m_partylname = $_POST["p_m_partylname"];
     $p_m_relation = $_POST["p_m_relation"];
-    $p_m_other = $_POST["p_m_other"];
-    $p_m_employer = $_POST["p_m_employer"];
     $p_m_ins_co = $_POST["p_m_ins_co"];
     $p_m_ins_id = $_POST["p_m_ins_id"];
-    $p_m_ins_payer_id = $_POST['p_m_ins_payer_id'];
     $has_s_m_ins = $_POST["s_m_ins"];
     $s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
     $s_m_partylname = $_POST["s_m_partylname"];
     $s_m_relation = $_POST["s_m_relation"];
-    $s_m_other = $_POST["s_m_other"];
-    $s_m_employer = $_POST["s_m_employer"];
     $s_m_ins_co = $_POST["s_m_ins_co"];
     $s_m_ins_id = $_POST["s_m_ins_id"];
     $p_m_ins_grp = $_POST["p_m_ins_grp"];
@@ -649,16 +630,8 @@ if (isset($msg) && $msg != '') {
     $docmdother2 = $_POST["docmdother2"];
     $docmdother3 = $_POST["docmdother3"];
     $emp_fax = $_POST["emp_fax"];
-    $plan_name = $_POST["plan_name"];
-    $group_number = $_POST["group_number"];
-    $ins_type = $_POST["ins_type"];
     $status = $_POST["status"];
     $use_patient_portal = $_POST["use_patient_portal"];
-    $accept_assignment = $_POST["accept_assignment"];
-    $print_signature = $_POST["print_signature"];
-    $medical_insurance = $_POST["medical_insurance"];
-    $mark_yes = $_POST["mark_yes"];
-    $inactive = $_POST["inactive"];
     $partner_name = $_POST["partner_name"];
     $emergency_name = $_POST["emergency_name"];
     $emergency_relationship = $_POST["emergency_relationship"];
@@ -679,8 +652,6 @@ if (isset($msg) && $msg != '') {
     $lastname = st($themyarray['lastname']);
     $preferred_name = st($themyarray['preferred_name']);
     $salutation = st($themyarray['salutation']);
-    $group_no = st($themyarray['group_no']);
-    $plan_no = st($themyarray['plan_no']);
     $dob = st($themyarray['dob']);
     $add1 = st($themyarray['add1']);
     $add2 = st($themyarray['add2']);
@@ -701,24 +672,10 @@ if (isset($msg) && $msg != '') {
     $best_number = st($themyarray['best_number']);
     $email = st($themyarray['email']);
     $patient_notes = st($themyarray['patient_notes']);
-    $p_d_party = st($themyarray["p_d_party"]);
-    $p_d_relation = st($themyarray["p_d_relation"]);
-    $p_d_other = st($themyarray["p_d_other"]);
-    $p_d_employer = st($themyarray["p_d_employer"]);
-    $p_d_ins_co = st($themyarray["p_d_ins_co"]);
-    $p_d_ins_id = st($themyarray["p_d_ins_id"]);
-    $s_d_party = st($themyarray["s_d_party"]);
-    $s_d_relation = st($themyarray["s_d_relation"]);
-    $s_d_other = st($themyarray["s_d_other"]);
-    $s_d_employer = st($themyarray["s_d_employer"]);
-    $s_d_ins_co = st($themyarray["s_d_ins_co"]);
-    $s_d_ins_id = st($themyarray["s_d_ins_id"]);
     $p_m_partyfname = st($themyarray["p_m_partyfname"]);
     $p_m_partymname = st($themyarray["p_m_partymname"]);
     $p_m_partylname = st($themyarray["p_m_partylname"]);
     $p_m_relation = st($themyarray["p_m_relation"]);
-    $p_m_other = st($themyarray["p_m_other"]);
-    $p_m_employer = st($themyarray["p_m_employer"]);
     $p_m_ins_co = st($themyarray["p_m_ins_co"]);
     $p_m_ins_id = st($themyarray["p_m_ins_id"]);
     $p_m_eligible_payer_id = st($themyarray["p_m_eligible_payer_id"]);
@@ -728,8 +685,6 @@ if (isset($msg) && $msg != '') {
     $s_m_partymname = st($themyarray["s_m_partymname"]);
     $s_m_partylname = st($themyarray["s_m_partylname"]);
     $s_m_relation = st($themyarray["s_m_relation"]);
-    $s_m_other = st($themyarray["s_m_other"]);
-    $s_m_employer = st($themyarray["s_m_employer"]);
     $s_m_ins_co = st($themyarray["s_m_ins_co"]);
     $s_m_ins_id = st($themyarray["s_m_ins_id"]);
     $p_m_ins_grp = st($themyarray["p_m_ins_grp"]);
@@ -762,15 +717,8 @@ if (isset($msg) && $msg != '') {
     $emp_zip = st($themyarray["emp_zip"]);
     $emp_phone = st($themyarray["emp_phone"]);
     $emp_fax = st($themyarray["emp_fax"]);
-    $plan_name = st($themyarray["plan_name"]);
-    $group_number = st($themyarray["group_number"]);
-    $ins_type = st($themyarray["ins_type"]);
     $status = st($themyarray["status"]);
     $use_patient_portal = st($themyarray["use_patient_portal"]);
-    $accept_assignment = st($themyarray["accept_assignment"]);
-    $print_signature = st($themyarray["print_signature"]);
-    $medical_insurance = st($themyarray["medical_insurance"]);
-    $mark_yes = st($themyarray["mark_yes"]);
 
     $docsleep = st($themyarray["docsleep"]);
     if ($docsleep) {
@@ -856,14 +804,12 @@ if (isset($msg) && $msg != '') {
         $docmdother3_name = "";
     }
 
-    $inactive = st($themyarray["inactive"]);
     $partner_name = st($themyarray["partner_name"]);
     $emergency_name = st($themyarray["emergency_name"]);
     $emergency_relationship = st($themyarray["emergency_relationship"]);
     $emergency_number = st($themyarray["emergency_number"]);
     $referred_source = st($themyarray["referred_source"]);
     $referred_by = st($themyarray["referred_by"]);
-    $referred_notes = st($themyarray["referred_notes"]);
 
     if ($referred_source == DSS_REFERRED_PATIENT) {
         $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
@@ -872,8 +818,8 @@ if (isset($msg) && $msg != '') {
     } elseif ($referred_source == DSS_REFERRED_PHYSICIAN) {
         $rsql = "SELECT dc.lastname, dc.firstname, dct.contacttype 
             FROM dental_contact dc
-			LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
-			WHERE contactid=".$referred_by;
+            LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
+            WHERE contactid=".$referred_by;
         $r = $db->getRow($rsql);
         $referred_name = $r['lastname'].", ".$r['firstname'];
         if ($r['contacttype'] != '') {
@@ -884,20 +830,15 @@ if (isset($msg) && $msg != '') {
     $copyreqdate = st($themyarray["copyreqdate"]);
     $preferredcontact = st($themyarray["preferredcontact"]);
     $referred_notes = st($themyarray["referred_notes"]);
-    $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-    $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
+    $maxIdRow = $db->getRow($maxIdSql);
+    $maxId = $maxIdRow['max_summaryid'];
+    $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
     $loc_r = $db->getRow($loc_sql);
     $location = $loc_r['location'];
-    $but_text = "Add ";
 }
 	
-if ($themyarray["userid"] != '') {
-    $but_text = "Save/Update ";
-} else {
-    $but_text = "Add ";
-}
-
 // Check if required information is filled out
 $complete_info = 0;
 if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
@@ -1419,14 +1360,6 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                                 <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
-                            <span>
-                                <?php
-                                $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-                                $itype_my = $db->getRow($itype_sql);
-                                if (!empty($itype_my)) {
-                                    $image = $itype_my;
-                                } ?>
-                            </span>
                         </div>
                         <div> </div>
                     </li>
@@ -1598,14 +1531,6 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             <span>
                                 <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
-                            </span>
-                            <span>
-                                <?php
-                                $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-                                $itype_my = $db->getRow($itype_sql);
-                                if (!empty($itype_my)) {
-                                    $image = $itype_my;
-                                } ?>
                             </span>
                         </div>
                         <div> </div>

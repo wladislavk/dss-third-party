@@ -15,6 +15,7 @@ if ($_GET['backoffice'] == '1') {
 $db = new Db();
 
 $letterid = $db->escape( !empty($_GET['lid']) ? $_GET['lid'] : '');
+
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 
@@ -209,8 +210,11 @@ $bmi_result = $db->getRow($bmi_query);
 $bmi = $bmi_result['bmi'];
 
 // Reason seeking treatment
-$reason_query = "SELECT reason_seeking_tx FROM dental_summary_pivot WHERE patientid = '".$patientid."';";
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$patientid";
+$maxIdRow = $db->getRow($maxIdSql);
+$maxId = $maxIdRow['max_summaryid'];
 
+$reason_query = "SELECT reason_seeking_tx FROM dental_summary WHERE summaryid = $maxId";
 $reason_result = $db->getRow($reason_query);
 $reason_seeking_tx = $reason_result['reason_seeking_tx'];
 

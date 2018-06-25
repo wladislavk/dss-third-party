@@ -366,9 +366,17 @@ function retrieveMailerData($patientId)
         FROM dental_patients
         WHERE patientid = '$patientId'");
 
-    $locationId = $db->getColumn("SELECT location
-        FROM dental_summary_pivot
-        WHERE patientid = '$patientId'", 'location');
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$patientId";
+    $maxIdRow = $db->getRow($maxIdSql);
+    $locationId = 0;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $locationSql = "SELECT `location` FROM `dental_summary` WHERE `summaryid`=$maxId";
+        $locationRow = $db->getRow($locationSql);
+        if ($locationRow) {
+            $locationId = $locationRow['location'];
+        }
+    }
 
     if ($locationId) {
         $locationId = intval($locationId);
@@ -1307,7 +1315,7 @@ define('EXAM_QUESTIONNAIRE_TABLES', [
     'dental_exam_pain_tmd',
     'dental_exam_evaluation_management',
     'dental_exam_assessment_plan',
-    'dental_summary_pivot',
+    'dental_summary',
     'dental_q_page2_surgery_pivot',
     'dental_q_sleep_pivot',
     'dental_thorton_pivot',

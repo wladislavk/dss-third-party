@@ -31,9 +31,12 @@ $q2_myarray = $db->getRow($q2_sql);
 $cpap = st($q2_myarray['cpap']);
 $nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 $percent_night_cpap = st($q2_myarray['percent_night_cpap']);
-$sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
+$maxIdRow = $db->getRow($maxIdSql);
+$maxId = $maxIdRow['max_summaryid'];
+$sql = "select * from dental_summary where summaryid=$maxId";
 $myarray = $db->getRow($sql);
+
 $summaryid = st($myarray['summaryid']);
 $patient_name = st($myarray['patient_name']);
 $patient_dob = st($myarray['patient_dob']);
@@ -47,7 +50,6 @@ $history_surgery = st($myarray['history_surgery']);
 $tried_cpap = st($myarray['tried_cpap']);
 $cpap_date = st($myarray['cpap_date']);
 $problem_cpap = st($myarray['problem_cpap']);
-$wearing_cpap = st($myarray['wearing_cpap']);
 $max_translation_from = st($myarray['max_translation_from']);
 $max_translation_to = st($myarray['max_translation_to']);
 $max_translation_equal = st($myarray['max_translation_equal']);

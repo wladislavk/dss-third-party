@@ -73,14 +73,18 @@ if (isset($_POST['device_submit'])) {
         ";
         $db->query($ex_ins_sql);
     }
-    $sql = "select * from dental_summary_pivot where patientid=$pid";
-    $row = $db->getRow($sql);
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
+    $maxIdRow = $db->getRow($maxIdSql);
+    $maxId = 0;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+    }
     $initialTitration1Escaped = $db->escape($_POST['initial_device_titration_1']);
     $initialTitrationHEscaped = $db->escape($_POST['initial_device_titration_equal_h']);
     $initialTitrationVEscaped = $db->escape($_POST['initial_device_titration_equal_v']);
     $echovisionVerEscaped = $db->escape($_POST['optimum_echovision_ver']);
     $echovisionHorEscaped = $db->escape($_POST['optimum_echovision_hor']);
-    if (!$row) {
+    if (!$maxId) {
         $ins_sql = " insert into dental_summary set 
             patientid = '".$db->escape($_GET['pid'])."',
             initial_device_titration_1 = '$initialTitration1Escaped',
@@ -100,7 +104,7 @@ if (isset($_POST['device_submit'])) {
             initial_device_titration_equal_v = '$initialTitrationVEscaped',
             optimum_echovision_ver = '$echovisionVerEscaped',
             optimum_echovision_hor = '$echovisionHorEscaped'
-            where summaryid = {$row['summaryid']}";
+            where summaryid = {$maxId}";
         $db->query($ed_sql);
     }
 }
@@ -129,13 +133,25 @@ if ($imp_r) {
     $dentaldevice_date = st(($myarrayex['dentaldevice_date'] != '') ? date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])) : '');
 }
 
-$sqls = "select * from dental_summary_pivot where patientid='$pid'";
-$myarrays = $db->getRow($sqls);
-$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
-$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
-$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
-$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
-$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+$initial_device_titration_1 = '';
+$initial_device_titration_equal_h = '';
+$initial_device_titration_equal_v = '';
+$optimum_echovision_hor = '';
+$optimum_echovision_ver = '';
+if ($pid) {
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
+    $maxIdRow = $db->getRow($maxIdSql);
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from dental_summary where summaryid=$maxId";
+        $myarrays = $db->getRow($sqls);
+        $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
+        $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
+        $initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
+        $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
+        $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+    }
+}
 ?>
 <div style="margin-bottom:6px">
     <?php

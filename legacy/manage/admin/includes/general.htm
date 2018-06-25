@@ -285,7 +285,9 @@ class MDReferralFilter
 // Function to Create Letters
 function create_letter($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $pat_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_topatient = null, $cc_md_list = null, $cc_md_referral_list = null, $cc_pat_referral_list = null, $font_size = null, $font_family = null)
 {
+    $con = $GLOBALS['con'];
     $db = new Db();
+
     if(isset($_SESSION['docid'])){
         $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
         $l_r = $db->getRow($l_sql);
@@ -429,7 +431,9 @@ function create_letter($templateid, $pid = null, $info_id = null, $topatient = n
 // Function to Create Letters
 function create_welcome_letter($templateid, $md_list, $docid)
 {
+    $con = $GLOBALS['con'];
     $db = new Db();
+
     $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
     $let_r = $db->getRow($let_sql);
 
@@ -477,9 +481,11 @@ function create_welcome_letter($templateid, $md_list, $docid)
 function save_letter($letterid, $parent = null, $type, $recipientid, $template = null, $update_send = null, $font_size = null, $font_family = null)
 {
     $db = new Db();
+
     if (!isset($letterid)) {
         return false;
     }
+
     // Enable/Disable email
     if ($preferred == "email") {
         $sql = "SELECT templateid, send_method FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
@@ -710,12 +716,19 @@ function create_letter_pdf($letterid)
     $logo = $result['logo'];
     $user_type = $result['user_type'];
 
-    $loc_sql = "SELECT location FROM dental_summary_pivot where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
-    $loc_r = $db->getRow($loc_sql);
-    if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
-        $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($GLOBALS['con'],$loc_r['location'])."' AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".mysqli_real_escape_string($GLOBALS['con'], $patientid);
+    $maxIdRow = $db->getRow($maxIdSql);
+    $locationId = 0;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
+        $loc_r = $db->getRow($loc_sql);
+        $locationId = $loc_r['location'];
+    }
+    if ($patientid != '' && $locationId != '' && $locationId != '0') {
+        $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape($locationId)."' AND docid='".$db->escape($docid)."'";
     }else{
-        $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
+        $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".$db->escape($docid)."'";
     }
 
     $loc_r2 = $db->getRow($location_query);
@@ -1136,7 +1149,7 @@ function deliver_letter($letterid, $message)
             }
             $letter_result = $db->query($letter_query);
             if (!$letter_result) {
-                return mysqli_error($con);
+                return $db->error();
             }
             if ($send_method == 'paper') {
                 return "paper";

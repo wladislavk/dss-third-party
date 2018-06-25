@@ -28,8 +28,8 @@ if($pat_myarray['patientid'] == '') {
 }
 
 $ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
-
 $ref_myarray = $db->getRow($ref_sql);
+
 $referring_physician = st($ref_myarray['referring_physician']);
 $a_arr = explode(' ',$referring_physician);
 if(st($pat_myarray['dob']) != '' ) {
@@ -66,10 +66,12 @@ $medications_disp = '';
 foreach($medications_arr as $val) {
     if(trim($val) != "") {
         $medications_sql = "select * from dental_medications where medicationsid='".trim($val)."' and status=1 ";
-
         $medications_myarray = $db->getRow($medications_sql);
+
         if(st($medications_myarray['medications']) != '') {
-            if($medications_disp != '') $medications_disp .= ', ';
+            if($medications_disp != '') {
+                $medications_disp .= ', ';
+            }
             $medications_disp .= st($medications_myarray['medications']);
         }
     }
@@ -84,10 +86,11 @@ $rdi = st($q2_myarray['rdi']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
-$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
 
-$sum_myarray = $db->getRow($sum_sql);
-$sti_o2_1 = st($sum_myarray['sti_o2_1']);
+include_once 'includes/get_sti_o2.php';
+
+$sti_o2_1 = getStiO2($db, $_GET['pid']);
+
 if(st($pat_myarray['gender']) == 'Female') {
     $s_h =  "she";
 } else {

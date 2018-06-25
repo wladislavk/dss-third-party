@@ -412,12 +412,15 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         }
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='$patientId'";
-            $ds_q = $db->getRow($ds_sql);
-            $escapedLocation = $db->escape( $_POST['location']);
-            if ($ds_q) {
-                $summaryId = $ds_q['summaryid'];
-                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
+            $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
+            $maxIdRow = $db->getRow($maxIdSql);
+            $maxId = 0;
+            if ($maxIdRow && $maxIdRow['max_summaryid']) {
+                $maxId = $maxIdRow['max_summaryid'];
+            }
+            $escapedLocation = $db->escape($_POST['location']);
+            if ($maxId) {
+                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$maxId";
             } else {
                 $loc_query = "INSERT INTO dental_summary SET location='$escapedLocation', patientid='$patientId'";
             }
@@ -1079,9 +1082,15 @@ if (isset($msg) && $msg != '') {
     $preferredcontact = st($themyarray["preferredcontact"]);
     $referred_notes = st($themyarray["referred_notes"]);
 
-    $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
-    $loc_r = $db->getRow($loc_sql);
-    $location = $loc_r['location'];
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
+    $maxIdRow = $db->getRow($maxIdSql);
+    $location = -1;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $loc_sql = "SELECT `location` from `dental_summary` WHERE `summaryid`=$maxId";
+        $loc_r = $db->getRow($loc_sql);
+        $location = $loc_r['location'];
+    }
 }
 
 $salutationDefault = '';
@@ -1249,7 +1258,6 @@ if (isset($msg) && $msg != '') { ?>
                     return result;
                 }
             }
-
             if (
                 trim(fa.p_m_partyfname.value) != "" ||
                 trim(fa.p_m_partylname.value) != "" ||
@@ -1292,7 +1300,6 @@ if (isset($msg) && $msg != '') { ?>
         return false;
     }
 </script>
-
 <?php
 $notifications = find_patient_notifications($patientId);
 foreach ($notifications as $not) { ?>

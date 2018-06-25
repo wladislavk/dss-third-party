@@ -535,9 +535,12 @@ $cpap = st($q2_myarray['cpap']);
 $nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 $percent_night_cpap = st($q2_myarray['percent_night_cpap']);
 
-$sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-
+$maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
+$maxIdRow = $db->getRow($maxIdSql);
+$maxId = $maxIdRow['max_summaryid'];
+$sql = "select * from dental_summary where summaryid=$maxId";
 $myarray = $db->getRow($sql);
+
 $summaryid = st($myarray['summaryid']);
 $symptoms_osa = st($myarray['symptoms_osa']);
 $snoring = st($myarray['snoring']);

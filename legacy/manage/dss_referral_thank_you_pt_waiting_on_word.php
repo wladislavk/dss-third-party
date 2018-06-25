@@ -12,6 +12,7 @@ include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
+$db = new Db();
 $pat_myarray = $db->getRow($pat_sql);
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
@@ -93,10 +94,9 @@ $sleeplab_sql = "select * from dental_sleeplab where status=1 and sleeplabid='".
 
 $sleeplab_myarray = $db->getRow($sleeplab_sql);
 $sleeplab_name = st($sleeplab_myarray['company']);
-$sum_sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
 
-$sum_myarray = $db->getRow($sum_sql);
-$sti_o2_1 = st($sum_myarray['sti_o2_1']);
+include_once 'includes/get_sti_o2.php';
+$sti_o2_1 = getStiO2($db, $_GET['pid']);
 
 if (st($pat_myarray['gender']) == 'Female') {
     $h_h =  "Her";

@@ -106,7 +106,7 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
         $joint_exam_arr = '~' . $joint_exam_arr;
     }
 
-    $sql = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
+    $sql = "select summaryid from dental_summary where patientid='".$_GET['pid']."'";
     $num = $db->getNumberRows($sql);
 
     if ($num == 0) {
@@ -235,15 +235,6 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
         trigger_error("Die called", E_USER_ERROR);
     }
 }
-
-$sqls = "select * from dental_summary_pivot where patientid='".$_GET['pid']."'";
-$myarrays = $db->getRow($sqls);
-
-$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
-$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
-$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
-$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
-$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);

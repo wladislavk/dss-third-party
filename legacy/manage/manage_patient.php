@@ -408,45 +408,35 @@ function querySections($section = 'all')
 function joinList($section = 'all')
 {
     $joinSections = [
-        'allergens-check' => 'LEFT JOIN (
-            SELECT patientid, MAX(q_page3id) AS max_id
-            FROM dental_q_page3_pivot
-            GROUP BY patientid
-        ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
-        LEFT JOIN dental_q_page3_pivot allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
+        'allergens-check' => 'LEFT JOIN dental_q_page3_pivot allergens_check ON allergens_check.patientid = p.patientid',
         'summary' => 'LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid',
         'rx-lomn' => 'LEFT JOIN (
-            SELECT pid AS patientid, MAX(id) AS max_id
-            FROM dental_flow_pg1
-            GROUP BY pid
-        ) rx_lomn_pivot ON rx_lomn_pivot.patientid = p.patientid
-        LEFT JOIN dental_flow_pg1 rx_lomn ON rx_lomn.id = rx_lomn_pivot.max_id',
+                SELECT pid AS patientid, MAX(id) AS max_id
+                FROM dental_flow_pg1
+                GROUP BY pid
+            ) rx_lomn_pivot ON rx_lomn_pivot.patientid = p.patientid
+            LEFT JOIN dental_flow_pg1 rx_lomn ON rx_lomn.id = rx_lomn_pivot.max_id',
         'next-visit' => 'LEFT JOIN (
-            SELECT patientid, MAX(id) AS max_id
-            FROM dental_flow_pg2_info
-            WHERE appointment_type = 0
-            GROUP BY patientid
-        ) next_visit_pivot ON next_visit_pivot.patientid = p.patientid
-        LEFT JOIN dental_flow_pg2_info next_visit ON next_visit.id = next_visit_pivot.max_id',
+                SELECT patientid, MAX(id) AS max_id
+                FROM dental_flow_pg2_info
+                WHERE appointment_type = 0
+                GROUP BY patientid
+            ) next_visit_pivot ON next_visit_pivot.patientid = p.patientid
+            LEFT JOIN dental_flow_pg2_info next_visit ON next_visit.id = next_visit_pivot.max_id',
         'last-dates' => 'LEFT JOIN (
-            SELECT base_last_dates.patientid, MAX(base_last_dates.id) AS max_id, base_last_dates.segmentid
-            FROM dental_flow_pg2_info base_last_dates
-                INNER JOIN (
-                    SELECT patientid, max(date_completed) AS max_date
-                    FROM dental_flow_pg2_info
-                    GROUP BY patientid
-                ) pivot_last_dates ON pivot_last_dates.patientid = base_last_dates.patientid
-                    AND pivot_last_dates.max_date = base_last_dates.date_completed
-            GROUP BY base_last_dates.patientid
-        ) last_dates_pivot ON last_dates_pivot.patientid = p.patientid
-        LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id',
-        'device' => 'LEFT JOIN (
-            SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
-            FROM dental_ex_page5_pivot
-            GROUP BY patientid
-        ) device_pivot ON device_pivot.patientid = p.patientid
-        LEFT JOIN dental_ex_page5_pivot device_date ON device_date.ex_page5id = device_pivot.max_id
-        LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice',
+                SELECT base_last_dates.patientid, MAX(base_last_dates.id) AS max_id, base_last_dates.segmentid
+                FROM dental_flow_pg2_info base_last_dates
+                    INNER JOIN (
+                        SELECT patientid, max(date_completed) AS max_date
+                        FROM dental_flow_pg2_info
+                        GROUP BY patientid
+                    ) pivot_last_dates ON pivot_last_dates.patientid = base_last_dates.patientid
+                        AND pivot_last_dates.max_date = base_last_dates.date_completed
+                GROUP BY base_last_dates.patientid
+            ) last_dates_pivot ON last_dates_pivot.patientid = p.patientid
+            LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id',
+        'device' => 'LEFT JOIN dental_ex_page5_pivot device_date ON device_date.patientid = p.patientid
+            LEFT JOIN dental_device device ON device.deviceid = device_date.dentaldevice',
     ];
 
     return itemSelector($joinSections, $section);

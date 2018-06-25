@@ -150,11 +150,9 @@ $message = '';
 if (!empty($_GET['msg'])) {
     $message = e($_GET['msg']);
     $json = json_decode($_GET['msg'], true);
-
     if (is_string($json)) {
         $message = e($json);
     }
-
     if (is_array($json)) {
         $message = '';
         array_walk_recursive($json, 'e');
@@ -279,10 +277,10 @@ if (!empty($_GET['msg'])) {
 <?php
 $sql = "SELECT p.*
     FROM dental_patients p
-        $leftJoinDuplicates
+    $leftJoinDuplicates
     WHERE p.docid = '$docId'
-        AND p.status = '3'
-        AND IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0) = 0
+    AND p.status = '3'
+    AND IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0) = 0
     ";
 
 if ($isSelectPatient) {

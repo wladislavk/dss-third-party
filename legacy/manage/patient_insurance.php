@@ -32,31 +32,32 @@ if(isset($_REQUEST['useid'])){
     <?php
 } elseif(isset($_REQUEST['createid'])) {
     $s = "INSERT INTO dental_contact (
-        company,
-        add1,
-        add2,
-        city,
-        state,
-        zip,
-        phone1,
-        docid,
-        contacttypeid) 
-    SELECT 
-        company, 
-        address1,
-        address2,
-        city,
-        state,
-        zip,
-        phone,
-        '".$db->escape( $_SESSION['docid'])."',
-        '11'
-    FROM dental_patient_insurance
-    WHERE id='".$db->escape( $_REQUEST['createid'])."'";
-
+            company,
+            add1,
+            add2,
+            city,
+            state,
+            zip,
+            phone1,
+            docid,
+            contacttypeid) 
+        SELECT 
+            company, 
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            phone,
+            '".$db->escape( $_SESSION['docid'])."',
+            '11'
+        FROM dental_patient_insurance
+        WHERE id='".$db->escape( $_REQUEST['createid'])."'";
     $pc_id = $db->getInsertId($s);
+
     $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape( $_REQUEST['createid'])."'";
     $pcr = $db->getRow($pcsql);
+
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
         case '1':

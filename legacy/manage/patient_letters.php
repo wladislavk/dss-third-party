@@ -452,60 +452,58 @@ if ($patient_info) {
                     <td class="col_head <?php echo ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?php echo $patientid;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
                 </tr>
                 <?php
-                    $i = $page_limit * $page2;
-                    $end = $i + $page_limit;
-                    while ($i < count($sent_letters) && $i < $end) {
-                        $userid = $sent_letters[$i]['userid'];
-                        $url = $sent_letters[$i]['url'];
-                        $subject = $sent_letters[$i]['subject'];
-                        $sentto = $sent_letters[$i]['sentto'];
-                        $method = $sent_letters[$i]['send_method'];
-                        $generated = date('m/d/Y', $sent_letters[$i]['generated_date']);
-                        $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
-                        $total_contacts = $sent_letters[$i]['total_contacts'];
-                        $id = $sent_letters[$i]['id'];
-                ?>
-                        <tr>
-                            <td><?php echo  $userid; ?></td>
-                            <td>
-                                <a href="<?php echo  $url; ?>"><?php echo  $subject; ?></a>
-                            </td>
-                            <td>
-                                <?php if($total_contacts > 1) { ?>
-                                    <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle();return false;"><?php echo  $sentto; ?></a>
-                                    <div style="display:none;" id="contacts_<?php echo  $id; ?>">
-                                        <?php foreach ($sent_letters[$i]['patient'] as $pat) { ?>
-                                                <br />
+                $i = $page_limit * $page2;
+                $end = $i + $page_limit;
+                while ($i < count($sent_letters) && $i < $end) {
+                    $userid = $sent_letters[$i]['userid'];
+                    $url = $sent_letters[$i]['url'];
+                    $subject = $sent_letters[$i]['subject'];
+                    $sentto = $sent_letters[$i]['sentto'];
+                    $method = $sent_letters[$i]['send_method'];
+                    $generated = date('m/d/Y', $sent_letters[$i]['generated_date']);
+                    $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
+                    $total_contacts = $sent_letters[$i]['total_contacts'];
+                    $id = $sent_letters[$i]['id'];
+                    ?>
+                    <tr>
+                        <td><?php echo  $userid; ?></td>
+                        <td>
+                            <a href="<?php echo  $url; ?>"><?php echo  $subject; ?></a>
+                        </td>
+                        <td>
+                            <?php if($total_contacts > 1) { ?>
+                                <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle();return false;"><?php echo  $sentto; ?></a>
+                                <div style="display:none;" id="contacts_<?php echo  $id; ?>">
+                                    <?php foreach ($sent_letters[$i]['patient'] as $pat) { ?>
+                                        <br />
                                         <?php
-                                                echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
-                                            }
-                                            foreach ($sent_letters[$i]['mds'] as $md) {
+                                        echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
+                                    }
+                                    foreach ($sent_letters[$i]['mds'] as $md) {
                                         ?>
-                                                <br />
+                                        <br />
                                         <?php
-                                                echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
-                                            }
-                                            foreach ($sent_letters[$i]['md_referrals'] as $md_referral) {
+                                        echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
+                                    }
+                                    foreach ($sent_letters[$i]['md_referrals'] as $md_referral) {
                                         ?>
-                                                <br />
+                                        <br />
                                         <?php
-                                                echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
-                                            }
-                                        ?>
-                                    </div>
-                                <?php } else {
-                                    echo $sentto;
-                                }
-                                ?>
-                            </td>
-                            <td><?php echo $method; ?></td>
-                            <td><?php echo $generated; ?></td>
-                            <td><?php echo $delivered; ?></td>
-                        </tr>
-                <?php
+                                        echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
+                                    } ?>
+                                </div>
+                            <?php } else {
+                                echo $sentto;
+                            }
+                            ?>
+                        </td>
+                        <td><?php echo $method; ?></td>
+                        <td><?php echo $generated; ?></td>
+                        <td><?php echo $delivered; ?></td>
+                    </tr>
+                    <?php
                     $i++;
-                }
-                ?>
+                } ?>
             </table>
         </div>
     <?php

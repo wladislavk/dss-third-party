@@ -75,29 +75,29 @@ if(isset($_REQUEST['deleteid'])){
     if($_REQUEST['createtype']=='yes'){
         $sql3 = "SELECT c.contactid
             FROM dental_contact c
-                $leftJoinDuplicates
+            $leftJoinDuplicates
             WHERE c.docid = '$docId'
-                AND c.status = '3'
-                AND $sumTotalsConditional > 0";
+            AND c.status = '3'
+            AND $sumTotalsConditional > 0";
         $sql4 = "SELECT c.contactid
             FROM dental_contact c
-                $leftJoinDuplicates
+            $leftJoinDuplicates
             WHERE c.docid = '$docId'
-                AND c.status = '4'
-                AND $sumTotalsConditional > 0";
+            AND c.status = '4'
+            AND $sumTotalsConditional > 0";
     }elseif($_REQUEST['createtype']=='no'){
         $sql3 = "SELECT c.contactid
             FROM dental_contact c
-                $leftJoinDuplicates
+            $leftJoinDuplicates
             WHERE c.docid = '$docId'
-                AND c.status = '3'
-                AND $sumTotalsConditional = 0";
+            AND c.status = '3'
+            AND $sumTotalsConditional = 0";
         $sql4 = "SELECT c.contactid
             FROM dental_contact c
-                $leftJoinDuplicates
+            $leftJoinDuplicates
             WHERE c.docid = '$docId'
-                AND c.status = '4'
-                AND $sumTotalsConditional = 0";
+            AND c.status = '4'
+            AND $sumTotalsConditional = 0";
     }
     $q3 = $db->getResults($sql3);
     $ids3 = [];
@@ -125,18 +125,18 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['deletetype'])){
     if($_REQUEST['deletetype']=='yes'){
         $sql = "SELECT c.contactid
-                FROM dental_contact c
-                    $leftJoinDuplicates
-                WHERE c.docid = '$docId'
-                    AND c.status IN (3, 4)
-                    AND $sumTotalsConditional > 0";
+            FROM dental_contact c
+            $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+            AND c.status IN (3, 4)
+            AND $sumTotalsConditional > 0";
     }elseif($_REQUEST['deletetype']=='no'){
         $sql = "SELECT c.contactid
-                FROM dental_contact c
-                    $leftJoinDuplicates
-                WHERE c.docid = '$docId'
-                    AND c.status IN (3, 4)
-                    AND $sumTotalsConditional = 0";
+            FROM dental_contact c
+            $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+            AND c.status IN (3, 4)
+            AND $sumTotalsConditional = 0";
     }
     $q = $db->getResults($sql);
     $ids = [];
@@ -153,10 +153,10 @@ if(isset($_REQUEST['deleteid'])){
 }
 $sql = "SELECT c.*
     FROM dental_contact c
-        $leftJoinDuplicates
+    $leftJoinDuplicates
     WHERE c.docid = '$docId'
-        AND c.status IN (3, 4)
-        AND $sumTotalsConditional > 0
+    AND c.status IN (3, 4)
+    AND $sumTotalsConditional > 0
     ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
 
@@ -165,11 +165,9 @@ $message = '';
 if (!empty($_GET['msg'])) {
     $message = e($_GET['msg']);
     $json = json_decode($_GET['msg'], true);
-
     if (is_string($json)) {
         $message = e($json);
     }
-
     if (is_array($json)) {
         $message = '';
 
@@ -178,7 +176,6 @@ if (!empty($_GET['msg'])) {
         if (!empty($json['errors'])) {
             $message .= '<ul><li>' . join('</li><li>', $json['errors']) . '.</li></ul>';
         }
-
         if (!empty($json['inserted'])) {
             $message .= "{$json['inserted']} new contacts.";
         }
@@ -303,10 +300,10 @@ if (!empty($_GET['msg'])) {
 <?php
 $sql = "SELECT c.*
     FROM dental_contact c
-        $leftJoinDuplicates
+    $leftJoinDuplicates
     WHERE c.docid = '$docId'
-        AND c.status IN (3, 4)
-        AND $sumTotalsConditional = 0
+    AND c.status IN (3, 4)
+    AND $sumTotalsConditional = 0
     ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
 ?>
@@ -336,47 +333,48 @@ $my = $db->getResults($sql);
             Action
         </td>
     </tr>
-        <?php if(count($my) == 0){ ?>
-    <tr class="tr_bg">
-        <td valign="top" class="col_head" colspan="5" align="center">
-            No Records
-        </td>
-    </tr>
+    <?php if(count($my) == 0){ ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="5" align="center">
+                No Records
+            </td>
+        </tr>
         <?php
-        } else {
-            foreach ($my as $myarray) { ?>
-    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
-        <td valign="top">
-            <?php echo st($myarray["firstname"]);?>&nbsp;
-            <?php echo st($myarray["lastname"]);?>
-        </td>
-        <td valign="top">
-            <?php echo st($myarray["company"]);?>
-        </td>
-        <td valign="top">
-            <?php echo st($myarray["add1"]); ?>
-            <?php echo st($myarray["add2"]); ?>
-            <?php echo st($myarray["city"]); ?>,
-            <?php echo st($myarray["state"]); ?>
-            <?php echo st($myarray["zip"]); ?>
-        </td>
-        <td valign="top">
-            <?php echo format_phone($myarray["phone1"]); ?>
-        </td>
-        <td valign="top">
-            <a href="pending_contacts.php?createid=<?php echo $myarray["contactid"]; ?>" class="editlink" title="EDIT">
-                Create
-            </a>
-            <a href="pending_contacts.php?deleteid=<?php echo $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
-                Delete
-            </a>
-            <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
-                View
-            </a>
-        </td>
-    </tr>
-        <?php }
-        }?>
+    } else {
+        foreach ($my as $myarray) { ?>
+            <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
+                <td valign="top">
+                    <?php echo st($myarray["firstname"]);?>&nbsp;
+                    <?php echo st($myarray["lastname"]);?>
+                </td>
+                <td valign="top">
+                    <?php echo st($myarray["company"]);?>
+                </td>
+                <td valign="top">
+                    <?php echo st($myarray["add1"]); ?>
+                    <?php echo st($myarray["add2"]); ?>
+                    <?php echo st($myarray["city"]); ?>,
+                    <?php echo st($myarray["state"]); ?>
+                    <?php echo st($myarray["zip"]); ?>
+                </td>
+                <td valign="top">
+                    <?php echo format_phone($myarray["phone1"]); ?>
+                </td>
+                <td valign="top">
+                    <a href="pending_contacts.php?createid=<?php echo $myarray["contactid"]; ?>" class="editlink" title="EDIT">
+                        Create
+                    </a>
+                    <a href="pending_contacts.php?deleteid=<?php echo $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
+                        Delete
+                    </a>
+                    <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
+                        View
+                    </a>
+                </td>
+            </tr>
+            <?php
+        }
+    } ?>
 </table>
 <?php
 
@@ -399,36 +397,36 @@ function similarContacts ($id)
     $s2 = "SELECT firstname, lastname, company, add1, city, state, zip, phone1
         FROM dental_contact
         WHERE docid = '$docId'
-            AND status IN (1, 2)
-            AND contactid != '$id'
-            AND (
+        AND status IN (1, 2)
+        AND contactid != '$id'
+        AND (
+            (
+                IFNULL(company, '') != ''
+                AND IFNULL(company, '') = '{$r['company']}'
+            )
+            OR (
                 (
-                    IFNULL(company, '') != ''
-                    AND IFNULL(company, '') = '{$r['company']}'
+                    IFNULL(firstname, '') != ''
+                    OR IFNULL(lastname, '') != ''
                 )
-                OR (
-                    (
-                        IFNULL(firstname, '') != ''
-                        OR IFNULL(lastname, '') != ''
-                    )
-                    AND IFNULL(firstname, '') = '{$r['firstname']}'
-                    AND IFNULL(lastname, '') = '{$r['lastname']}'
+                AND IFNULL(firstname, '') = '{$r['firstname']}'
+                AND IFNULL(lastname, '') = '{$r['lastname']}'
+            )
+            OR (
+                (
+                    IFNULL(add1, '') != ''
+                    OR IFNULL(city, '') != ''
+                    OR IFNULL(state, '') != ''
+                    OR IFNULL(zip, '') != ''
                 )
-                OR (
-                    (
-                        IFNULL(add1, '') != ''
-                        OR IFNULL(city, '') != ''
-                        OR IFNULL(state, '') != ''
-                        OR IFNULL(zip, '') != ''
-                    )
-                    AND IFNULL(add1, '') = '{$r['add1']}'
-                    AND IFNULL(city, '') = '{$r['city']}'
-                    AND IFNULL(state, '') = '{$r['state']}'
-                    AND IFNULL(zip, '') = '{$r['zip']}'
-                )
-            )";
-
+                AND IFNULL(add1, '') = '{$r['add1']}'
+                AND IFNULL(city, '') = '{$r['city']}'
+                AND IFNULL(state, '') = '{$r['state']}'
+                AND IFNULL(zip, '') = '{$r['zip']}'
+            )
+        )";
     $q2 = $db->getResults($s2);
+
     $docs = [];
     $c = 0;
 

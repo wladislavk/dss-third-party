@@ -26,11 +26,11 @@ if ($referralType == $referralTypePhysician) {
             '$referralTypePhysician' AS referral_type,
             ct.contacttype
         FROM dental_contact dc
-            INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
-            INNER JOIN dental_patients p ON dc.contactid = p.referred_by
+        INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
+        INNER JOIN dental_patients p ON dc.contactid = p.referred_by
         WHERE dc.docid = '$docId'
-            AND p.referred_source = '$referralTypePhysician'
-            AND dc.contactid = '$referralId'";
+        AND p.referred_source = '$referralTypePhysician'
+        AND dc.contactid = '$referralId'";
 } else {
     $referralQuery = "SELECT
             dp.patientid AS contactid,
@@ -45,10 +45,10 @@ if ($referralType == $referralTypePhysician) {
             '$referralTypePatient' AS referral_type,
             'Patient' AS contacttype
         FROM dental_patients dp
-            INNER JOIN dental_patients p ON dp.patientid = p.referred_by
+        INNER JOIN dental_patients p ON dp.patientid = p.referred_by
         WHERE p.docid = '$docId'
-            AND p.referred_source = '$referralTypePatient'
-            AND dp.patientid = '$referralId'";
+        AND p.referred_source = '$referralTypePatient'
+        AND dp.patientid = '$referralId'";
 }
 
 $referralData = $db->getRow($referralQuery);
@@ -66,11 +66,11 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT *
     FROM dental_patients
     WHERE docid = '$docId'
-        AND referred_by = '$referralId'
-        AND referred_source = '$referralType'
+    AND referred_by = '$referralId'
+    AND referred_source = '$referralType'
     ORDER BY adddate DESC";
-
 $total_rec = $db->getNumberRows($sql);
+
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;

@@ -3,8 +3,7 @@ namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
-{
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
 	$del_sql = "delete from dental_ins_type where ins_typeid='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
 	
@@ -33,17 +32,12 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
 
-if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
-{
-	foreach($_POST['sortby'] as $val)
-	{
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
+	foreach($_POST['sortby'] as $val) {
 		$smyarray = mysqli_fetch_array($my);
-		
-		if($val == '' || is_numeric($val) === false)
-		{
+		if($val == '' || is_numeric($val) === false) {
 			$val = 999;
 		}
-		
 		$up_sort_sql = "update dental_ins_type set sortby='".s_for($val)."' where ins_typeid='".$smyarray["ins_typeid"]."'";
 		mysqli_query($con,$up_sort_sql);
 	}

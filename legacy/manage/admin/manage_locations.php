@@ -3,25 +3,27 @@ namespace Ds3\Libraries\Legacy;
 
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]))
-{
-	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+$db = new Db();
+
+if(!empty($_REQUEST["delid"])) {
+    $del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."'";
+    mysqli_query($con,$del_sql);
+
+    $msg= "Deleted Successfully";
+    ?>
+    <script type="text/javascript">
+        window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST['did'])){
-  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".$db->escape($_REQUEST['docid'])."'";
-  mysqli_query($con,$d_sql);
-  $d_sql = "UPDATE dental_locations set default_location=1 where id='".$db->escape($_REQUEST['did'])."' AND docid='".$db->escape($_REQUEST['docid'])."'";
-  mysqli_query($con,$d_sql);
+    $d_sql = "UPDATE dental_locations set default_location=0 where docid='".$db->escape($_REQUEST['docid'])."'";
+    mysqli_query($con,$d_sql);
+
+    $d_sql = "UPDATE dental_locations set default_location=1 where id='".$db->escape($_REQUEST['did'])."' AND docid='".$db->escape($_REQUEST['docid'])."'";
+    mysqli_query($con,$d_sql);
 }
 
 $rec_disp = 20;
@@ -35,102 +37,97 @@ $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_locations where docid='".$_GET['docid']."' order by location";
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
+
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = mysqli_query($con,$sql);
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	Manage Contact
+    Manage Contact
 </div>
 <br />
 <br />
 &nbsp;
 <a href="manage_users.php" class="btn btn-danger pull-right" title="DELETE" >
-	<b>&lt;&lt; Back</b></a>
+    <b>&lt;&lt; Back</b>
+</a>
 
 <div align="right">
-	<button onclick="loadPopup('add_location.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
-		Add New Location
-		<span class="glyphicon glyphicon-plus">
-	</button>
-	&nbsp;&nbsp;
+    <button onclick="loadPopup('add_location.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
+        Add New Location
+        <span class="glyphicon glyphicon-plus">
+    </button>
+    &nbsp;&nbsp;
 </div>
 
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered table-hover">
-	<?php if($total_rec > $rec_disp) {?>
-	<tr bgcolor="#ffffff">
-		<td align="right" colspan="15" class="bp">
-			Pages:
-			<?php
-            paging($no_pages,$index_val,"");
-			?>
-		</td>
-	</tr>
-	<?php }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="60%">
-			Location
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Action
-		</td>
-	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<?php
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if(!empty($myarray["status"]) && $myarray["status"] == 1)
-			{
-				$tr_class = "tr_active";
-			}
-			else
-			{
-				$tr_class = "tr_inactive";
-			}
-		?>
-			<tr class="<?=$tr_class;?>">
-				<td valign="top">
-					<?=st($myarray["location"]);?>
-				</td>
-				<td valign="top">
-					<a href="Javascript:;"  onclick="loadPopup('add_location.php?ed=<?=$myarray["id"];?>&docid=<?=$_GET['docid']?>');" title="Edit" class="btn btn-primary btn-sm">
-						Edit
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-					|
-					<?php if($myarray['default_location']==1){ ?>
-						Default Location
-					<?php }else{ ?>
-					   <a href="manage_locations.php?docid=<?= $_GET['docid']; ?>&did=<?= $myarray['id']; ?>"  class="editlink" title="MAKE DEFAULT">
-                                                Make Default 
-                                          </a>
-                    			<?php } ?>
-				</td>
-			</tr>
-	<?php }
-	}?>
-</table>
+    <table class="table table-bordered table-hover">
+        <?php if($total_rec > $rec_disp) {?>
+            <tr bgcolor="#ffffff">
+                <td align="right" colspan="15" class="bp">
+                    Pages:
+                    <?php
+                    paging($no_pages,$index_val,"");
+                    ?>
+                </td>
+            </tr>
+        <?php } ?>
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head" width="60%">
+                Location
+            </td>
+            <td valign="top" class="col_head" width="10%">
+                Action
+            </td>
+        </tr>
+        <?php if(mysqli_num_rows($my) == 0) { ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="10" align="center">
+                    No Records
+                </td>
+            </tr>
+            <?php
+        } else {
+            while($myarray = mysqli_fetch_array($my)) {
+                if(!empty($myarray["status"]) && $myarray["status"] == 1) {
+                    $tr_class = "tr_active";
+                } else {
+                    $tr_class = "tr_inactive";
+                }
+                ?>
+                <tr class="<?=$tr_class;?>">
+                    <td valign="top">
+                        <?=st($myarray["location"]);?>
+                    </td>
+                    <td valign="top">
+                        <a href="Javascript:;"  onclick="loadPopup('add_location.php?ed=<?=$myarray["id"];?>&docid=<?=$_GET['docid']?>');" title="Edit" class="btn btn-primary btn-sm">
+                            Edit
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        |
+                        <?php if($myarray['default_location']==1){ ?>
+                            Default Location
+                        <?php }else{ ?>
+                            <a href="manage_locations.php?docid=<?= $_GET['docid']; ?>&did=<?= $myarray['id']; ?>"  class="editlink" title="MAKE DEFAULT">
+                                Make Default
+                            </a>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?php
+            }
+        } ?>
+    </table>
 </form>
-
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
@@ -138,5 +135,5 @@ $my = mysqli_query($con,$sql);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

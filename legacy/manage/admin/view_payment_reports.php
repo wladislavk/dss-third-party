@@ -16,11 +16,12 @@ $table_style = 'class="table table-hover table-bordered table-condensed hidden"'
 
 $multipleViews = true;
 
+$db = new Db();
+
 $reports = $db->getResults("SELECT payment_id, adddate
     FROM dental_payment_reports
     WHERE claimid = '$claimId'
     ORDER BY adddate DESC");
-
 ?>
 <script>
     $(document).ready(function() {

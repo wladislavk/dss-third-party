@@ -11,6 +11,8 @@ include_once '../includes/general_functions.php';
     }
 </style>
 <?php
+$db = new Db();
+
 $sql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
 $q = mysqli_query($con,$sql);
 $pat = mysqli_fetch_assoc($q);
@@ -567,9 +569,7 @@ $other_complaint = st($myarray['other_complaint']);
                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                 $complaint_my = mysqli_query($con, $complaint_sql);
                 while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
-                    if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
-                        $chk = '';
-                    } else { ?>
+                    if (@array_search($complaint_myarray['complaintid'], $compid) !== false) { ?>
                         <li><?php echo  $complaint_myarray['complaint']; ?></li>
                         <?php
                     }
@@ -896,7 +896,6 @@ $pmyarray = mysqli_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
-$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 $family_bp = st($myarray["family_bp"]);

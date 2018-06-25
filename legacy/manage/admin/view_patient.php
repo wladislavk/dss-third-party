@@ -25,7 +25,7 @@ function trigger_letter1and2()
     $mdcontacts[] = $_POST['docmdother'];
     $mdcontacts[] = $_POST['docmdother2'];
     $mdcontacts[] = $_POST['docmdother3'];
-    $recipients	= [];
+    $recipients = [];
     foreach ($mdcontacts as $contact) {
         if ($contact != "Not Set") {
             $letter_query = "SELECT md_list 
@@ -485,14 +485,14 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             adddate=now(),
             ip_address='".$_SERVER['REMOTE_ADDR']."',
             preferredcontact='".s_for($_POST["preferredcontact"])."';";
-		$pid = $db->getInsertId($ins_sql);
+        $pid = $db->getInsertId($ins_sql);
 
-		if (isset($_POST['location'])) {
-		    $loc_query = "INSERT INTO dental_summary SET location='".$db->escape($_POST['location'])."', patientid='".$_GET['pid']."';";
-		    $db->query($loc_query);
-		}
+        if (isset($_POST['location'])) {
+            $loc_query = "INSERT INTO dental_summary SET location='".$db->escape($_POST['location'])."', patientid='".$_GET['pid']."';";
+            $db->query($loc_query);
+        }
 
-   		trigger_letter1and2();
+        trigger_letter1and2();
 
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST["use_patient_portal"]) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
@@ -838,7 +838,7 @@ if (isset($msg) && $msg != '') {
     $loc_r = $db->getRow($loc_sql);
     $location = $loc_r['location'];
 }
-	
+
 // Check if required information is filled out
 $complete_info = 0;
 if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
@@ -865,7 +865,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
         $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'], ' ') + 1));
     } else {
-	    $firstname = ucfirst($_GET['search']);
+        $firstname = ucfirst($_GET['search']);
     }
 }
 ?>
@@ -1072,11 +1072,12 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>
-                            	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
-                                	<option value="">Select</option>
+                                <select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
+                                    <option value="">Select</option>
                                     <option value="Male" <?php if ($gender == 'Male') echo " selected";?>>Male</option>
                                     <option value="Female" <?php if ($gender == 'Female') echo " selected";?>>Female</option>
-                                </select><span id="req_0" class="req">*</span>
+                                </select>
+                                <span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
                             <span style="width:150px">
@@ -1158,7 +1159,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                     <li id="foli8" class="complex">
                         <div>
                             <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
+                                <textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
                             </span>
                         </div>
@@ -1825,7 +1826,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <tr>
             <td colspan="2" align="right">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="patientsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["patientid"]?>" />

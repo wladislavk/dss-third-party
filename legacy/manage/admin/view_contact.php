@@ -14,7 +14,7 @@ $thesql = "select c.*, ct.contacttype from dental_contact c
     where c.contactid='".$_REQUEST["ed"]."'";
 $themy = mysqli_query($con,$thesql);
 $themyarray = mysqli_fetch_array($themy);
-	
+
 $salutation = st($themyarray['salutation']);
 $firstname = st($themyarray['firstname']);
 $middlename = st($themyarray['middlename']);

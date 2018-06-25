@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $sql = "SELECT * FROM dental_patients where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
@@ -78,7 +80,8 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
         echo $r['preferred_name']." - "; 
     } else {
         echo $r['firstname'] . " - ";
-    } ?>
+    }
+    ?>
     <small>
         <?php
         $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
@@ -122,7 +125,6 @@ $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='
 $imp_q = mysqli_query($con, $imp_s);
 $imp_r = mysqli_fetch_assoc($imp_q);
 ?>
-
 <?php if ($imp_r['segmentid']=='4') { ?>
     <div class="alert alert-info text-center">
         Not delivered. Impressions taken <?php echo ($imp_r['date_completed']) ? date('m/d/Y', strtotime($imp_r['date_completed'])) : ''; ?>
@@ -196,7 +198,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 
                 if ($complaintid != '') {
                     $comp_arr1 = explode('~', $complaintid);
-                    
                     foreach ($comp_arr1 as $i => $val) {
                         $comp_arr2 = explode('|', $val);
                         $compid[$i] = $comp_arr2[0];
@@ -206,7 +207,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 ?>
             </li>
         </ul>
-        
         <?php if ($complaintid != '' || !empty($compid) && in_array('0', $compid)) { ?>
             <h4>Other Complaints</h4>
             <ul class="list-group">
@@ -214,7 +214,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 if ($complaintid != '') {
                     $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                     $complaint_my = mysqli_query($con,$complaint_sql);
-
                     while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
                         if (@array_search($complaint_myarray['complaintid'], $compid) !== false) { ?>
                             <li class="list-group-item"><?php echo $complaint_myarray['complaint']; ?></li>
@@ -222,14 +221,12 @@ $last_r = mysqli_fetch_assoc($last_q);
                         }
                     }
                 }
-                
                 if ($other_complaint != '' && in_array('0', $compid)) { ?>
                     <li class="list-group-item"><?php echo $other_complaint; ?></li>
                     <?php
                 } ?>
             </ul>
         <?php } ?>
-        
         <h4>Partners</h4>
         <ul class="list-group">
             <li class="list-group-item">
@@ -247,7 +244,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 </li>
             <?php } ?>
         </ul>
-        
         <h4>History</h4>
         <ul class="list-group">
             <li class="list-group-item">
@@ -347,9 +343,9 @@ $last_r = mysqli_fetch_assoc($last_q);
                     $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                         LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
-                    
                     $referredby_my = mysqli_query($con, $referredby_sql);
                     $referredby_myarray = mysqli_fetch_array($referredby_my);
+
                     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
                     $referredbythis .= " - " . $referredby_myarray['contacttype'];
                     
@@ -358,8 +354,8 @@ $last_r = mysqli_fetch_assoc($last_q);
                     $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
                     $referredby_my = mysqli_query($con,$referredby_sql);
                     $referredby_myarray = mysqli_fetch_array($referredby_my);
+
                     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-                    
                     echo $referredbythis . " - Patient";
                 } else {
                     echo (!empty($dss_referred_labels[$rs]) ? $dss_referred_labels[$rs] : '').": ".$r['referred_notes'];
@@ -440,10 +436,10 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Type:</strong>
                 <?php echo $baseline_sleepstudy['sleeptesttype']; ?>
-	            <?php if ($baseline_sleepstudy['filename'] != '') { ?>
-	                - <a href="/manage/admin/display_file.php?f=<?php echo $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
-	           <?php } ?>
-	        </li>
+                <?php if ($baseline_sleepstudy['filename'] != '') { ?>
+                    - <a href="/manage/admin/display_file.php?f=<?php echo $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
+                <?php } ?>
+            </li>
             <li class="list-group-item">
                 <strong>Most Recent:</strong>
                 <?php if ($baseline_sleepstudy['date'] != '') { ?>
@@ -498,7 +494,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 STR_TO_DATE(ss.date, '%m%d%Y'),
                 STR_TO_DATE(ss.date, '%m%d%y')
             ) DESC, ss.id DESC";
-        
         $result = mysqli_query($con,$sleepstudies);
         $sleepstudy = mysqli_fetch_assoc($result);
         ?>

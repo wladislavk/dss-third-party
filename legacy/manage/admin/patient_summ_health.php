@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$db = new Db();
+
 $sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
@@ -670,7 +672,6 @@ $weight = st($bmi_myarray['weight']);
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
-    $ex_page2id = st($myarray['ex_page2id']);
     $mallampati = st($myarray['mallampati']);
     $tonsils = st($myarray['tonsils']);
     $tonsils_grade = st($myarray['tonsils_grade']);

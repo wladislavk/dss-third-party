@@ -64,7 +64,6 @@ if (!empty($_GET['own']) && $_GET['own'] == 1) {
     }
 </script>
 <?php
-$todaysdate = date("m/d/Y");
 if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     $exam_date = ($_POST['exam_date'] != '') ? date('Y-m-d', strtotime($_POST['exam_date'])) : '';
     $ess = $_POST['ess'];
@@ -196,10 +195,6 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     }
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con, $pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
-
 $sql = "select p1.*, s.analysis from dental_q_page1_pivot p1 
     LEFT JOIN dental_q_sleep_pivot s ON s.patientid=p1.patientid
     where p1.patientid='".$_GET['pid']."'";
@@ -232,8 +227,8 @@ if ($complaintid != '') {
         $compid[$i] = $comp_arr2[0];
         $compseq[$i] = (!empty($comp_arr2[1]) ? $comp_arr2[1] : '');
     }
-} ?>
-
+}
+?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
@@ -332,10 +327,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                         $my = mysqli_query($con,$sql);
                         $myarray = mysqli_fetch_array($my);
 
-                        $q_sleepid = st($myarray['q_sleepid']);
                         $epworthid = st($myarray['epworthid']);
-                        $analysis = st($myarray['analysis']);
-
                         if ($epworthid != '') {
                             $epworth_arr1 = split('~',$epworthid);
                             foreach ($epworth_arr1 as $i => $val) {
@@ -769,5 +761,4 @@ if (mysqli_num_rows($patient_q) == 0) {
 <br />
 <?php include "../includes/form_bottom.htm";?>
 <br />
-
 <?php include "includes/bottom.htm";?>

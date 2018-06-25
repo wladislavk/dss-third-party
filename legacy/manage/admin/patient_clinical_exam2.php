@@ -23,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
     $blood_pressure = $_POST['blood_pressure'];
     $pulse = $_POST['pulse'];
@@ -59,7 +61,7 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $pat_sql = "UPDATE dental_patients SET
             feet = '".s_for($feet)."',
@@ -90,7 +92,7 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
             additional_paragraph = '".s_for($additional_paragraph)."',
             tongue = '".s_for($tongue_arr)."'
             where ex_page1id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $pat_sql = "UPDATE dental_patients SET
             feet = '".s_for($feet)."',
@@ -154,7 +156,7 @@ $tongue = st($myarray['tongue']);
 <br />
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">

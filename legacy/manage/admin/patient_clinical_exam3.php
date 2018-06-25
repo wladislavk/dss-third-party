@@ -23,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
     $mallampati = $_POST['mallampati'];
     $tonsils = $_POST['tonsils'];
@@ -40,7 +42,7 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
     if ($tonsils_arr != '') {
         $tonsils_arr = '~' . $tonsils_arr;
     }
-	
+
     if ($_POST['ed'] == '') {
         $ins_sql = "insert into dental_ex_page2 set 
             patientid = '".s_for($_GET['pid'])."',
@@ -52,7 +54,7 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $msg = "Added Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -74,7 +76,7 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
             tonsils = '".s_for($tonsils_arr)."',
             tonsils_grade = '".s_for($tonsils_grade)."'
             where ex_page2id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>

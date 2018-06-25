@@ -17,6 +17,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_GET['own']) && $_GET['own'] == 1) {
     $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     $c_q = mysqli_query($con, $c_sql);
@@ -240,8 +242,6 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
         window.location = 'manage_patient.php';
@@ -418,9 +418,9 @@ if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $ex
         $patient_q = mysqli_query($con,$patient_sql);
         $pat_row = mysqli_fetch_assoc($patient_q);
         if (mysqli_num_rows($patient_q) == 0) {
-    		$showEdits = false;
+            $showEdits = false;
         } else {
-           $showEdits = true;
+            $showEdits = true;
         } ?>
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr>

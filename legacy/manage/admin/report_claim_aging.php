@@ -16,6 +16,8 @@ if (isset($_GET['bc'])) {
     $andBillingIdConditional = " AND NOT COALESCE(i.p_m_billing_id, 0) ";
 }
 
+$db = new Db();
+
 if (is_super($_SESSION['admin_access'])) {
     $sql = "SELECT
             p.firstname,
@@ -23,7 +25,7 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(u.first_name, ' ', u.last_name) AS doc_name,
             p.patientid
         FROM dental_patients p
-            LEFT JOIN dental_users u ON u.userid = p.docid
+        LEFT JOIN dental_users u ON u.userid = p.docid
         WHERE (
             SELECT (
                 SUM(
@@ -48,11 +50,11 @@ if (is_super($_SESSION['admin_access'])) {
             )
             FROM dental_insurance i
             WHERE i.patientid = p.patientid
-                AND i.mailed_date IS NOT NULL
-                $andBillingIdConditional
+            AND i.mailed_date IS NOT NULL
+            $andBillingIdConditional
         ) > 0
         $andDocIdConditional
-    ORDER BY p.lastname ASC, p.firstname ASC";
+        ORDER BY p.lastname ASC, p.firstname ASC";
 } elseif (is_software($_SESSION['admin_access'])) {
     $adminCompanyId = intval($_SESSION['admincompanyid']);
 
@@ -62,10 +64,10 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(u.first_name, ' ', u.last_name) AS doc_name,
             p.patientid
         FROM dental_patients p
-            JOIN dental_users u ON u.userid = p.docid
-            JOIN dental_user_company uc ON uc.userid = u.userid
+        JOIN dental_users u ON u.userid = p.docid
+        JOIN dental_user_company uc ON uc.userid = u.userid
         WHERE uc.companyid = '$adminCompanyId'
-            $andDocIdConditional
+        $andDocIdConditional
         ORDER BY p.lastname, p.firstname";
 } elseif (is_billing($_SESSION['admin_access'])) {
     $adminUserId = intval($_SESSION['adminuserid']);
@@ -109,17 +111,16 @@ $my = $db->getResults($sql);
     <select name="fid">
         <option value="">Any</option>
         <?php
-
         $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-
-        if ($franchisees) foreach ($franchisees as $row) {
-            $selected = $row['userid'] == $fid ? 'selected' : '';
-
-            ?>
-            <option value="<?= $row['userid'] ?>" <?= $selected ?>>
-                [<?= $row['userid'] ?>] <?= e($row['first_name'] . ' ' . $row['last_name']) ?>
-            </option>
-      <?php } ?>
+        if ($franchisees) {
+            foreach ($franchisees as $row) {
+                $selected = $row['userid'] == $fid ? 'selected' : '';
+                ?>
+                <option value="<?= $row['userid'] ?>" <?= $selected ?>>
+                    [<?= $row['userid'] ?>] <?= e($row['first_name'] . ' ' . $row['last_name']) ?>
+                </option>
+            <?php }
+        } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
     <input type="submit" value="Filter List"/>
@@ -170,7 +171,6 @@ $my = $db->getResults($sql);
     <tbody>
         <?php
         $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
-
         foreach ($my as $r) {
             $pat_total = 0;
             ?>
@@ -190,8 +190,7 @@ $my = $db->getResults($sql);
                     $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
 
                     $claimCharges = [];
-                    $claimChargesResults =
-                        getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid'], $andBillingIdConditional);
+                    $claimChargesResults = getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid'], $andBillingIdConditional);
 
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];
@@ -244,4 +243,4 @@ $my = $db->getResults($sql);
 </table>
 <?php include '../report_claim_aging_breakdown.php'; ?>
 <br /><br />
-<?php  include "includes/bottom.htm"; ?>
+<?php include "includes/bottom.htm"; ?>

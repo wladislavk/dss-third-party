@@ -375,7 +375,8 @@ if ($jointid != '') {
                             <span class="ex_p5_3" style="padding-left:10px;" >
                                 3 - Severe
                             </span>
-                            <br />	<button onclick="setDefaults();return false;">Set all to 0</button>
+                            <br />
+                            <button onclick="setDefaults();return false;">Set all to 0</button>
                         </div>
                         <div id="topcb">
                             <span class="full">
@@ -503,7 +504,8 @@ if ($jointid != '') {
                                             </span>
                                         </td>
                                         <td valign="top">
-                                            <table width="100%" cellpadding="3" cellspacing="1">                                        	<?php
+                                            <table width="100%" cellpadding="3" cellspacing="1">
+                                                <?php
                                                 $joint_sql = "select * from dental_joint where status=1 order by sortby";
                                                 $joint_my = mysqli_query($con,$joint_sql);
                                                 while ($joint_myarray = mysqli_fetch_array($joint_my)) {
@@ -517,7 +519,7 @@ if ($jointid != '') {
                                                             <?php echo st($joint_myarray['joint']);?></span>
                                                         </td>
                                                         <td valign="top">
-                                                            <select class="jointdd" id="joint_<?php echo st($joint_myarray['jointid']);?>" name="joint_<?php echo st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
+                                                            <select id="joint_<?php echo st($joint_myarray['jointid']);?>" name="joint_<?php echo st($joint_myarray['jointid']);?>" class="jointdd field text addr tbox" style="width:60px;">
                                                                 <option value=""></option>
                                                                 <option value="L" <?php if ($chkJ == 'L') echo " selected";?> >
                                                                     L

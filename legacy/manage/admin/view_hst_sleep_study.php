@@ -8,6 +8,8 @@ $hstNights = !empty($hstNights) ? $hstNights : 1;
 $patientId = intval($patientData['patientid']);
 $docId = intval($patientData['docid']);
 
+$db = new Db();
+
 $hstData = !empty($hstData) ? $hstData : $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
 $insuranceType = $db->getColumn("SELECT p_m_ins_type
@@ -91,11 +93,21 @@ $testTypes = [
         margin: 0;
     }
 
-    .sleeplabstable tr { height: 28px; }
-    .yellow .odd, .yellow .even { background: #edeb46; }
-    .odd { background: #f9ffdf; }
-    .even { background: #e4ffcf; }
-    select { width: 140px; }
+    .sleeplabstable tr {
+        height: 28px;
+    }
+    .yellow .odd, .yellow .even {
+        background: #edeb46;
+    }
+    .odd {
+        background: #f9ffdf;
+    }
+    .even {
+        background: #e4ffcf;
+    }
+    select {
+        width: 140px;
+    }
 
     input.no-file-input {
         width: 110px;
@@ -238,10 +250,7 @@ $testTypes = [
                 <?php } ?>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" onchange="validateDate('date_<?= $n ?>');" maxlength="255"
-                            style="width: 100px;" tabindex="10" class="field text addr tbox calendar"
-                            name="studies[<?= $n ?>][date]" value="<?= e(array_get($study, 'date', date('m/d/Y'))) ?>"
-                            id="date_<?= $n ?>">
+                        <input type="text" onchange="validateDate('date_<?= $n ?>');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="studies[<?= $n ?>][date]" value="<?= e(array_get($study, 'date', date('m/d/Y'))) ?>" id="date_<?= $n ?>">
                     </td>
                 </tr>
                 <tr>
@@ -285,8 +294,7 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_doc]"
-                            value="<?= e(array_get($study, 'diagnosising_doc')) ?>" />
+                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_doc]" value="<?= e(array_get($study, 'diagnosising_doc')) ?>" />
                         <?php if ($insuranceType == 1) { ?>
                             <span class="req">*</span>
                         <?php } ?>
@@ -294,8 +302,7 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_npi]"
-                            value="<?= e(array_get($study, 'diagnosising_npi')) ?>" />
+                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_npi]" value="<?= e(array_get($study, 'diagnosising_npi')) ?>" />
                         <?php if ($insuranceType == 1) { ?>
                             <span class="req">*</span>
                         <?php } ?>
@@ -305,8 +312,7 @@ $testTypes = [
                     <td valign="top" class="odd">
                         <?php if ($study['filename']) { ?>
                             <div id="file_edit_<?= $n ?>">
-                                <a href="/manage/admin/display_file.php?f=<?= rawurlencode($study['filename']) ?>"
-                                    target="_blank" class="btn btn-info btn-xs">View</a>
+                                <a href="/manage/admin/display_file.php?f=<?= rawurlencode($study['filename']) ?>" target="_blank" class="btn btn-info btn-xs">View</a>
                                 <a href="#" class="btn btn-primary btn-xs">Edit</a>
                             </div>
                             <input type="file" class="no-file-input" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" style="display: none;" />
@@ -323,8 +329,7 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="studies[<?= $n ?>][ahisupine]"
-                            value="<?= e(array_get($study, 'ahisupine')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][ahisupine]" value="<?= e(array_get($study, 'ahisupine')) ?>" />
                     </td>
                 </tr>
                 <tr>
@@ -334,20 +339,17 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="studies[<?= $n ?>][rdisupine]"
-                            value="<?= e(array_get($study, 'rdisupine')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][rdisupine]" value="<?= e(array_get($study, 'rdisupine')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="studies[<?= $n ?>][o2nadir]"
-                            value="<?= e(array_get($study, 'o2nadir')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][o2nadir]" value="<?= e(array_get($study, 'o2nadir')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="studies[<?= $n ?>][t9002]"
-                            value="<?= e(array_get($study, 't9002')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][t9002]" value="<?= e(array_get($study, 't9002')) ?>" />
                     </td>
                 </tr>
                 <tr>
@@ -365,14 +367,12 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="studies[<?= $n ?>][devicesetting]"
-                            value="<?= e(array_get($study, 'devicesetting')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][devicesetting]" value="<?= e(array_get($study, 'devicesetting')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="studies[<?= $n ?>][notes]"
-                            value="<?= e(array_get($study, 'notes')) ?>" />
+                        <input type="text" name="studies[<?= $n ?>][notes]" value="<?= e(array_get($study, 'notes')) ?>" />
                     </td>
                 </tr>
             </table>

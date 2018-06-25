@@ -23,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
     $exam_teeth = $_POST['exam_teeth'];
     $other_exam_teeth = $_POST['other_exam_teeth'];
@@ -52,7 +54,6 @@ if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
     if ($exam_teeth_arr != '') {
         $exam_teeth_arr = '~' . $exam_teeth_arr;
     }
-
     if ($_POST['ed'] == '') {
         $ins_sql = "insert into dental_ex_page4 set 
             patientid = '".s_for($_GET['pid'])."',
@@ -76,7 +77,7 @@ if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $msg = "Added Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -88,7 +89,7 @@ if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
             <script type="text/javascript">
                 window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
             </script>
-		    <?php
+            <?php
         }
         trigger_error("Die called", E_USER_ERROR);
     } else {
@@ -110,7 +111,7 @@ if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
             deistema = '".s_for($deistema)."',
             crossbite = '".s_for($crossbite)."'
             where ex_page4id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -122,7 +123,7 @@ if (!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
             <script type="text/javascript">
                 window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
             </script>
-    		<?php
+            <?php
         }
         trigger_error("Die called", E_USER_ERROR);
     }

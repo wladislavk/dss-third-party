@@ -5,7 +5,6 @@ require_once('includes/general.htm');
 ?>
 <link rel="stylesheet" href="../css/letters.css" />
 <?php
-
 function userid_asc($a, $b)
 {
     return strcmp ($a['userid'], $b['userid']);
@@ -112,6 +111,8 @@ $page = '0';
 $page_limit = '10';
 $filter = "%";
 
+$db = new Db();
+
 if (isset($_GET['filter'])) {
     $filter = $db->escape( $_GET['filter']);
 }
@@ -213,6 +214,7 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $master_r['pat_referral_list'], $master_r['letterid']);
         
         if (!empty($contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])) {
+
         } elseif (!empty($master_contacts['patient']) && count($master_contacts['patient'])) {
             $contacts['patient'] = $master_contacts['patient'];
         }
@@ -236,7 +238,7 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         }
     }
     
-    $total_contacts = count(!empty($contacts['patient']) ? $contacts['patient'] : array()) + count(!empty($contacts['mds']) ? $contacts['mds'] : array()) + count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : array()) + count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : array());
+    $total_contacts = count(!empty($contacts['patient']) ? $contacts['patient'] : []) + count(!empty($contacts['mds']) ? $contacts['mds'] : []) + count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : []) + count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : []);
     $dental_letters[$key]['total_contacts'] = $total_contacts;
     
     if ($total_contacts > 1) {
@@ -245,11 +247,9 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         $dental_letters[$key]['mds'] = $contacts['mds'];
         $dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
         $dental_letters[$key]['pat_referrals'] = (!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : '');
-    }
-    else if ($total_contacts == 0) {
+    } else if ($total_contacts == 0) {
         $dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
-    }
-    else {
+    } else {
         // Patient: Salutation Lastname, Firstname
         $dental_letters[$key]['sentto'] = '';
         $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
@@ -374,7 +374,6 @@ $f_sql = "SELECT * FROM dental_faxes
     AND sfax_status=2
     AND patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
     AND viewed=0;";
-
 $f_q = mysqli_query($con,$f_sql);
 $f_num = mysqli_num_rows($f_q);
 
@@ -442,14 +441,11 @@ if ($f_num > 0) { ?>
         
         if ($pending_letters[$i]['sfax_status']=='2' AND $pending_letters[$i]['fax_viewed']=='0') {
             $alert = " bgcolor=\"#FFFF33\"";
-        }
-        else if (!empty($pending_letters[$i]['old'])) {
+        } else if (!empty($pending_letters[$i]['old'])) {
             $alert = " bgcolor=\"#FF9696\"";
-        }
-        else {
+        } else {
             $alert = null;
         }
-        
         ?>
         <tr <?= $alert; ?>>
             <td>
@@ -457,7 +453,6 @@ if ($f_num > 0) { ?>
             </td>
             <td>
                 <?php
-                
                 if ($total_contacts > 1) { ?>
                     <a href="#" class="btn btn-default btn-sm contacts-toggler">
                         <?= $sentto; ?>
@@ -470,21 +465,18 @@ if ($f_num > 0) { ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['mds'] as $md) { ?>
                             <p>
                                 <?= $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['md_referrals'] as $md_referral) { ?>
                             <p>
                                 <?= $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['pat_referrals'] as $md_referral) { ?>
                             <p>
                                 <?= $pat_referral['salutation']." ".$pat_referral['firstname']." ".$pat_referral['lastname']; ?>
@@ -492,46 +484,44 @@ if ($f_num > 0) { ?>
                             </p>
                         <?php } ?>
                     </div>
-                <?php }
-                else {
+                    <?php
+                } else {
                     echo $sentto;
                 } ?>
             </td>
             <td><?= $generated; ?></td>
         </tr>
         <?php
-        
         $i++;
     } ?>
 </table>
 <script type="text/javascript">
-function delete_pending_letter (lid, type, rid, par) {
-    $.ajax({
-        url: "includes/letter_delete.php",
-        type: "post",
-        data: {
-            lid: lid,
-            type: type,
-            rid: rid,
-            par: par
-        },
-        success: function(data){
-            var r = $.parseJSON(data);
-            
-            if (!r.error) {
-                window.location.reload();
-            }
-        },
-        failure: function(data){}
-    });
-}
+    function delete_pending_letter (lid, type, rid, par) {
+        $.ajax({
+            url: "includes/letter_delete.php",
+            type: "post",
+            data: {
+                lid: lid,
+                type: type,
+                rid: rid,
+                par: par
+            },
+            success: function(data){
+                var r = $.parseJSON(data);
+
+                if (!r.error) {
+                    window.location.reload();
+                }
+            },
+            failure: function(data){}
+        });
+    }
 </script>
 
 <h2>
     Sent Letters
     <small>Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters#sect_letters",$page1); ?></small>
 </h2>
-
 <table class="table table-bordered table-hover">
     <tr class="tr_bg_h">
         <th class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a></th>
@@ -543,7 +533,6 @@ function delete_pending_letter (lid, type, rid, par) {
         <th class="col_head <?= ($_REQUEST['sort2'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Mailed</a></th>
     </tr>
     <?php
-    
     $i = $page_limit * $page2;
     $end = $i + $page_limit;
     
@@ -576,7 +565,6 @@ function delete_pending_letter (lid, type, rid, par) {
             </td>
         </tr>
         <?php
-        
         $i++;
     } ?>
 </table>

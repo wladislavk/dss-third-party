@@ -28,7 +28,7 @@ include_once('includes/password.php');
                 </div>
             </div>
             <div style="height:116px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
-                <div style="font-size:24px; font-weight:bold; font-family:arial; color:#FFFFFF; padding-top:20px; margin-left:20px;">Dental Sleep Solutions &reg;<font style="color:#000; font-size:14px; font-weight:bolder;padding-left:110px;font-style:italic;">Practice Management</font></div>
+                <div style="font-size:24px; font-weight:bold; font-family:arial, sans-serif; color:#FFFFFF; padding-top:20px; margin-left:20px;">Dental Sleep Solutions &reg;<font style="color:#000; font-size:14px; font-weight:bolder;padding-left:110px;font-style:italic;">Practice Management</font></div>
                 <div style="margin-top:30px; margin-left:20px; float:left;"></div>
                 <div style="clear:both;"></div>
             </div>
@@ -43,6 +43,8 @@ include_once('includes/password.php');
             <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
                 <div style="clear:both;"></div>
                 <?php
+                $db = new Db();
+
                 if ($_POST['recoversub'] == 1) {
                     if ($_POST['password1'] == $_POST['password2']) {
                         $salt = create_salt();
@@ -111,4 +113,8 @@ include_once('includes/password.php');
                         </tr>
                     </table>
                 </form>
-                <?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>
+            </div>
+        </td>
+    </tr>
+</table>
+<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

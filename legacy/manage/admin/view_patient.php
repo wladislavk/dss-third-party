@@ -228,12 +228,15 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
         $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
 
         if (isset($_POST['location'])) {
-            $ds_sql = "SELECT * FROM dental_summary_pivot where patientid='".$_GET['pid']."';";
+            $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
+            $maxIdRow = $db->getRow($maxIdSql);
+            $maxId = 0;
+            if ($maxIdRow && $maxIdRow['max_summaryid']) {
+                $maxId = $maxIdRow['max_summaryid'];
+            }
             $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
-            if ($db->getNumberRows($ds_sql) > 0) {
-                $summaryRow = $db->getRow($ds_sql);
-                $summaryId = $summaryRow['summaryid'];
-                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$summaryId";
+            if ($maxId) {
+                $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$maxId";
             } else {
                 $loc_query = "INSERT INTO dental_summary SET location='$escapedLocation', patientid='".$_GET['pid']."';";
             }
@@ -895,20 +898,15 @@ if (isset($msg) && $msg != '') {
     $copyreqdate = st($themyarray["copyreqdate"]);
     $preferredcontact = st($themyarray["preferredcontact"]);
     $referred_notes = st($themyarray["referred_notes"]);
-    $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-    $loc_sql = "SELECT location from dental_summary_pivot WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
+    $maxIdRow = $db->getRow($maxIdSql);
+    $maxId = $maxIdRow['max_summaryid'];
+    $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
     $loc_r = $db->getRow($loc_sql);
     $location = $loc_r['location'];
-    $but_text = "Add ";
 }
 	
-if ($themyarray["userid"] != '') {
-    $but_text = "Save/Update ";
-} else {
-    $but_text = "Add ";
-}
-
 // Check if required information is filled out
 $complete_info = 0;
 if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {

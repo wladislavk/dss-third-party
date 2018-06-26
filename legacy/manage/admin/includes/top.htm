@@ -152,7 +152,6 @@ $letters_query = "SELECT COUNT(dental_letters.letterid) AS total
     FROM dental_letters
         $companyJoin
         JOIN dental_users u ON u.userid = dental_letters.docid
-        LEFT JOIN dental_patients on dental_letters.patientid = dental_patients.patientid
     WHERE $companyConditional
         AND (
             (

@@ -3,6 +3,7 @@ namespace Ds3\Libraries\Legacy;
 
 include "admin/includes/main_include.php";
 
+$db = new Db();
 $pat_sql = "select * from dental_patients where patientid='".s_for(((!empty($_GET['pid']) ? $_GET['pid'] : '')))."'";
 
 $pat_myarray = $db->getRow($pat_sql);
@@ -85,10 +86,9 @@ $sleeplab_sql = "select * from dental_sleeplab where status=1 and sleeplabid='".
 
 $sleeplab_myarray = $db->getRow($sleeplab_sql);
 $sleeplab_name = st($sleeplab_myarray['company']);
-$sum_sql = "select * from dental_summary_pivot where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
-$sum_myarray = $db->getRow($sum_sql);
-$sti_o2_1 = st($sum_myarray['sti_o2_1']);
+include_once 'includes/get_sti_o2.php';
+$sti_o2_1 = getStiO2($db, (!empty($_GET['pid']) ? $_GET['pid'] : ''));
 
 if(st($pat_myarray['gender']) == 'Female') {
     $h_h = "Her";

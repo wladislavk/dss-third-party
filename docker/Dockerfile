@@ -6,7 +6,7 @@ ENV _RH_HTTPD=/opt/rh/httpd24 \
 ENV _RH_PHP_D=/etc${_RH_PHP}/php.d
 
 # Set Timezone
-ENV TZ=America/New_York
+ENV TZ=${SYSTEM_TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -xe \
@@ -85,7 +85,7 @@ RUN set -xe \
     && rm -rf /opt/tmp \
 
     # Customize php setup
-    && echo $'short_open_tag = On\ndate.timezone = "America/New_York"' > "${_RH_PHP_D}/custom.ini"
+    && echo $'short_open_tag = On\ndate.timezone = "${SYSTEM_TZ}"' > "${_RH_PHP_D}/custom.ini"
 
 ENV \
     # Set variables exactly as in /opt/rh/rh-php56/enable, to do not source manually

@@ -64,8 +64,9 @@ RUN set -xe \
     # Instal composer using php 5.6
     && source ${_RH_PHP}/enable \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
+    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
+RUN set -xe \
     #
     # Install PHPUnit
     #

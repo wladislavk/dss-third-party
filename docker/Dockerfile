@@ -6,7 +6,7 @@ ENV _RH_HTTPD=/opt/rh/httpd24 \
 ENV _RH_PHP_D=/etc${_RH_PHP}/php.d
 
 # Set Timezone
-ENV TZ=${SYSTEM_TZ}
+ENV TZ=$SYSTEM_TZ
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -xe \

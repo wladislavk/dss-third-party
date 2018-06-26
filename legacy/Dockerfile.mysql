@@ -1,10 +1,6 @@
 # A custom mysql server image to provide a database with a preloaded data
 FROM mysql:5.6
 
-# Set Timezone
-ENV TZ=${SYSTEM_TZ}
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 # Load database Schema and Seed files to MySQL
 # Be careful to specify .sql.gz OR .sql depending on imported file
 COPY db_dev_SCHEMA_170607-2025.sql /docker-entrypoint-initdb.d/0000-dump.sql

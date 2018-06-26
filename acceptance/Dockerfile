@@ -3,7 +3,7 @@ FROM centos:7.3.1611
 WORKDIR /opt/app/acceptance
 
 # Set Timezone
-ENV TZ=${SYSTEM_TZ}
+ENV TZ=$SYSTEM_TZ
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \

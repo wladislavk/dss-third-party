@@ -14,7 +14,7 @@ services:
       MYSQL_DATABASE: homestead
       MYSQL_USER: homestead
       MYSQL_PASSWORD: secret
-      SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
+      TZ: "${SYSTEM_TZ:-America/New_York}"
     labels:
       - "traefik.enable=false"
     ports:

@@ -48,20 +48,19 @@ $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
         <td valign="top">
             <?php echo date('F d, Y')?><br><br>
             <strong>
-            <?php echo $name;?>
-            <?php if(st($pat_myarray['add1']) != '') { ?>
-                <br /><?php echo st($pat_myarray['add1']);?>
-            <?php } ?>
-
-            <?php if(st($pat_myarray['add2']) != '') { ?>
-                <br /><?php echo st($pat_myarray['add2']);?>
-            <?php } ?>
-            &nbsp;
-            <?php echo st($pat_myarray['city']);?>
-            &nbsp;
-            <?php echo st($pat_myarray['state']);?>
-            &nbsp;
-            <?php echo st($pat_myarray['zip']);?>
+                <?php echo $name;?>
+                <?php if(st($pat_myarray['add1']) != '') { ?>
+                    <br /><?php echo st($pat_myarray['add1']);?>
+                <?php } ?>
+                <?php if(st($pat_myarray['add2']) != '') { ?>
+                    <br /><?php echo st($pat_myarray['add2']);?>
+                <?php } ?>
+                &nbsp;
+                <?php echo st($pat_myarray['city']);?>
+                &nbsp;
+                <?php echo st($pat_myarray['state']);?>
+                &nbsp;
+                <?php echo st($pat_myarray['zip']);?>
             </strong>
             <br><br>
 

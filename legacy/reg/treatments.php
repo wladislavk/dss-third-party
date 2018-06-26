@@ -462,38 +462,37 @@ if ($comp['treatments'] == 0) {
                 <label class="lbl_a">Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)</label>
                 <table id="surgery_table">
                     <tr>
-                <th>Date</th>
-                <th>Surgeon</th>
-                <th>Surgery</th>
-                <th></th>
-            </tr>
-            <?php
-            $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
-            $s_q = mysqli_query($con, $s_sql);
-            $s_count = 0;
-            while ($s_row = mysqli_fetch_assoc($s_q)) { ?>
-                <tr id="surgery_row_<?= $s_count; ?>">
-                    <td>
-                        <input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" />
-                        <input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" />
-                    </td>
-                    <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
-                    <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
-                    <td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
-                </tr>
-                <?php
-                $s_count++;
-            } ?>
-            <tr id="surgery_row_<?= $s_count; ?>">
-                <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" /></td>
-                <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" /></td>
-                <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" /></td>
-                <td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
-            </tr>
-        </table>
-        <input type="hidden" id="num_surgery" name="num_surgery" value="<?= $s_count+1; ?>" />
-        <input type="button" onclick="add_surgery(); return false;" class="next btn btn_d" value="Add Surgery" />
-            </span>
+                        <th>Date</th>
+                        <th>Surgeon</th>
+                        <th>Surgery</th>
+                        <th></th>
+                    </tr>
+                    <?php
+                    $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
+                    $s_q = mysqli_query($con, $s_sql);
+                    $s_count = 0;
+                    while ($s_row = mysqli_fetch_assoc($s_q)) { ?>
+                        <tr id="surgery_row_<?= $s_count; ?>">
+                            <td>
+                                <input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" />
+                                <input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" />
+                            </td>
+                            <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
+                            <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
+                            <td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
+                        </tr>
+                        <?php
+                        $s_count++;
+                    } ?>
+                    <tr id="surgery_row_<?= $s_count; ?>">
+                        <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" /></td>
+                        <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" /></td>
+                        <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" /></td>
+                        <td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
+                    </tr>
+                </table>
+                <input type="hidden" id="num_surgery" name="num_surgery" value="<?= $s_count+1; ?>" />
+                <input type="button" onclick="add_surgery(); return false;" class="next btn btn_d" value="Add Surgery" />
             </div>
             <script type="text/javascript">
                 chk_s();

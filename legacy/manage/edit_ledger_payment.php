@@ -11,11 +11,11 @@ if(isset($_GET['delid'])){
     $del_sql = "delete FROM dental_ledger_payment WHERE id='".$_GET['delid']."' ;";
 
     $db->query($del_sql);
-?>
+    ?>
     <script type="text/javascript">
         parent.window.location = parent.window.location;
     </script>
-<?php
+    <?php
     trigger_error("Die called", E_USER_ERROR);
 }
 ?>
@@ -40,15 +40,15 @@ if(isset($_GET['delid'])){
         <span style="float:left;font-weight:bold;">Amount</span>
     </div>
     <?php
-        $sql = "SELECT * FROM dental_ledger_payment WHERE id='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
+    $sql = "SELECT * FROM dental_ledger_payment WHERE id='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
 
-        $p_sql = $db->getResults($sql);
-        if ($p_sql) foreach ($p_sql as $p){
-    ?>
+    $p_sql = $db->getResults($sql);
+    if ($p_sql) {
+        foreach ($p_sql as $p){
+            ?>
             <div style="margin-left:9px; margin-top: 10px; width:98%;color: #fff;">
                 <span style="margin: 0 10px 0 0; float:left;width:100px;">
-                    <input type="text" style="width:90px"
-                        name="payments[<?= $p['id'] ?>][payment_date]" value="<?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?>" />
+                    <input type="text" style="width:90px" name="payments[<?= $p['id'] ?>][payment_date]" value="<?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?>" />
                 </span>
                 <span style="margin: 0 10px 0 0; float:left;width:100px;">
                     <input type="text" style="width:90px" name="payments[<?= $p['id'] ?>][entry_date]" value="<?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?>" />
@@ -79,6 +79,7 @@ if(isset($_GET['delid'])){
             </div>
             <?php
         }
+    }
     ?>
     <div id="FormFields" style="margin: 20px 10px;"></div>
     <input type="hidden" name="id" value="<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>">

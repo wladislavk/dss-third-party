@@ -116,13 +116,11 @@ $otherGuidance = [
                 &mdash;
                 <small>
                     Do you wish to evaluate?
-                    <input type="radio" name="cervical[evaluate]" id="cervical-evaluate-yes" v-bind:value="1"
-                           v-model="form.cervical.evaluate">
+                    <input type="radio" name="cervical[evaluate]" id="cervical-evaluate-yes" v-bind:value="1" v-model="form.cervical.evaluate">
                     <label for="cervical-evaluate-yes">
                         (Y)
                     </label>
-                    <input type="radio" name="cervical[evaluate]" id="cervical-evaluate-no" v-bind:value="0"
-                           v-model="form.cervical.evaluate">
+                    <input type="radio" name="cervical[evaluate]" id="cervical-evaluate-no" v-bind:value="0" v-model="form.cervical.evaluate">
                     <label for="cervical-evaluate-no">
                         (N)
                     </label>
@@ -250,13 +248,11 @@ $otherGuidance = [
                 &mdash;
                 <small>
                     Do you wish to evaluate?
-                    <input type="radio" name="morphology[evaluate]" id="morphology-evaluate-yes" v-bind:value="1"
-                           v-model="form.morphology.evaluate">
+                    <input type="radio" name="morphology[evaluate]" id="morphology-evaluate-yes" v-bind:value="1" v-model="form.morphology.evaluate">
                     <label for="morphology-evaluate-yes">
                         (Y)
                     </label>
-                    <input type="radio" name="morphology[evaluate]" id="morphology-evaluate-no" v-bind:value="0"
-                           v-model="form.morphology.evaluate">
+                    <input type="radio" name="morphology[evaluate]" id="morphology-evaluate-no" v-bind:value="0" v-model="form.morphology.evaluate">
                     <label for="morphology-evaluate-no">
                         (N)
                     </label>
@@ -434,45 +430,37 @@ $otherGuidance = [
         </tr>
         <tr v-show="form.cranial_nerve.evaluate">
             <td>
-                <input type="checkbox" id="cranial-nerve-trigeminal"
-                       name="cranial_nerve[trigeminal]" v-model="form.cranial_nerve.trigeminal" />
+                <input type="checkbox" id="cranial-nerve-trigeminal" name="cranial_nerve[trigeminal]" v-model="form.cranial_nerve.trigeminal" />
                 <label for="cranial-nerve-trigeminal">V Trigeminal</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-abducens"
-                       name="cranial_nerve[abducens]" v-model="form.cranial_nerve.abducens" />
+                <input type="checkbox" id="cranial-nerve-abducens" name="cranial_nerve[abducens]" v-model="form.cranial_nerve.abducens" />
                 <label for="cranial-nerve-abducens">VI Abducens</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-facial"
-                       name="cranial_nerve[facial]" v-model="form.cranial_nerve.facial" />
+                <input type="checkbox" id="cranial-nerve-facial" name="cranial_nerve[facial]" v-model="form.cranial_nerve.facial" />
                 <label for="cranial-nerve-facial">VII Facial</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-acoustic"
-                       name="cranial_nerve[acoustic]" v-model="form.cranial_nerve.acoustic" />
+                <input type="checkbox" id="cranial-nerve-acoustic" name="cranial_nerve[acoustic]" v-model="form.cranial_nerve.acoustic" />
                 <label for="cranial-nerve-acoustic">VIII Acoustic</label>
             </td>
         </tr>
         <tr v-show="form.cranial_nerve.evaluate">
             <td>
-                <input type="checkbox" id="cranial-nerve-glossopharyngeal"
-                       name="cranial_nerve[glossopharyngeal]" v-model="form.cranial_nerve.glossopharyngeal" />
+                <input type="checkbox" id="cranial-nerve-glossopharyngeal" name="cranial_nerve[glossopharyngeal]" v-model="form.cranial_nerve.glossopharyngeal" />
                 <label for="cranial-nerve-glossopharyngeal">IX Glossopharyngeal</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-vagus"
-                       name="cranial_nerve[vagus]" v-model="form.cranial_nerve.vagus" />
+                <input type="checkbox" id="cranial-nerve-vagus" name="cranial_nerve[vagus]" v-model="form.cranial_nerve.vagus" />
                 <label for="cranial-nerve-vagus">X Vagus</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-accessory"
-                       name="cranial_nerve[accessory]" v-model="form.cranial_nerve.accessory" />
+                <input type="checkbox" id="cranial-nerve-accessory" name="cranial_nerve[accessory]" v-model="form.cranial_nerve.accessory" />
                 <label for="cranial-nerve-accessory">XI Accessory</label>
             </td>
             <td>
-                <input type="checkbox" id="cranial-nerve-hypoglossal"
-                       name="cranial_nerve[hypoglossal]" v-model="form.cranial_nerve.hypoglossal" />
+                <input type="checkbox" id="cranial-nerve-hypoglossal" name="cranial_nerve[hypoglossal]" v-model="form.cranial_nerve.hypoglossal" />
                 <label for="cranial-nerve-hypoglossal">XII Hypoglossal</label>
             </td>
         </tr>
@@ -566,13 +554,11 @@ $otherGuidance = [
                 &mdash;
                 <small>
                     Do you wish to make additional notes?
-                    <input type="radio" name="other[evaluate]" id="other-evaluate-yes" v-bind:value="1"
-                           v-model="form.other.evaluate">
+                    <input type="radio" name="other[evaluate]" id="other-evaluate-yes" v-bind:value="1" v-model="form.other.evaluate">
                     <label for="other-evaluate-yes">
                         (Y)
                     </label>
-                    <input type="radio" name="other[evaluate]" id="other-evaluate-no" v-bind:value="0"
-                           v-model="form.other.evaluate">
+                    <input type="radio" name="other[evaluate]" id="other-evaluate-no" v-bind:value="0" v-model="form.other.evaluate">
                     <label for="other-evaluate-no">
                         (N)
                     </label>

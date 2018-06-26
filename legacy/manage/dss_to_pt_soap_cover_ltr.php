@@ -103,14 +103,14 @@ $template = "<p>%todays_date%</p>
 <form action="/manage/dss_to_pt_soap_cover_ltr.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
     <input type="hidden" name="numletters" value="<?php echo $numletters?>" />
     <?php
-    if ($_POST != array()) {
+    if ($_POST != []) {
         foreach ($_POST['duplicate_letter'] as $key => $value) {
             $dupekey = $key;
         }
         // Check for updated templates
         foreach ($letter_contacts as $key => $contact) {
-            $search = array();
-            $replace = array();
+            $search = [];
+            $replace = [];
             $search[] = '%todays_date%';
             $replace[] = "<strong>" . $todays_date . "</strong>";
             $search[] = '%patient_fullname%';
@@ -163,8 +163,8 @@ $template = "<p>%todays_date%</p>
 
     foreach ($letter_contacts as $key => $contact) {
         // Token search and replace arrays
-        $search = array();
-        $replace = array();
+        $search = [];
+        $replace = [];
         $search[] = '%todays_date%';
         $replace[] = "<strong>" . $todays_date . "</strong>";
         $search[] = '%patient_fullname%';
@@ -209,7 +209,7 @@ $template = "<p>%todays_date%</p>
             $recipientid = $contact['id'];
             if ($_GET['backoffice'] == '1') {
                 $message = $letter[$key];
-                $search= array("<strong>","</strong>");
+                $search= ["<strong>","</strong>"];
                 $message = str_replace($search, "", $message);
                 deliver_letter($letterid, $message);
             } else {
@@ -234,15 +234,15 @@ $template = "<p>%todays_date%</p>
             $recipientid = $contact['id'];
             $letterid = delete_letter($letterid, $type, $recipientid, $new_template[$key]);
             if ($parent) {
-?>
+                ?>
                 <script type="text/javascript">
-                    window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
+                    window.location = '<?php echo ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
                 </script>
-<?php
+                <?php
             }
             continue;
         }
-?>
+        ?>
         <div align="right">
             <button class="addButton" onclick="edit_letter('letter<?php echo $key?>');return false;" >
                 Edit Letter
@@ -278,13 +278,12 @@ $template = "<p>%todays_date%</p>
             <input type="submit" name="delete_letter[<?php echo $key?>]" class="addButton" value="Delete" />
             &nbsp;&nbsp;&nbsp;&nbsp;
         </div>
-
         <hr width="90%" />
-<?php
+        <?php
     }
-?>
-        <br><br€>
-        </form>
+    ?>
+    <br /><br />
+</form>
         </td>
     </tr>
 </table>

@@ -41,7 +41,7 @@ $franchisee_name = $franchisee_result['name'];
 // Get Patient Information
 $patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob FROM dental_patients WHERE patientid = '".$patientid."';";
 $patient_result = $db->getResults($patient_query);
-$patient_info = array();
+$patient_info = [];
 if ($patient_result ) foreach ($patient_result as $row) {
     $patient_info = $row;
 }

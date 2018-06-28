@@ -43,17 +43,17 @@ services:
       DOCKER_USED: 1
       API_CONTAINER: "api"
       VUE_CONTAINER: "vue"
-      LEGACY_PATH: /opt/rh/httpd24/root/var/www/html/legacy
-      PHP_PATH: /opt/rh/rh-php56/root/bin/php
+      LEGACY_PATH: /var/www/html/legacy
+      PHP_PATH: /usr/bin/php
       DB_HOST: db
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
       DUAL_APP: "${DUAL_APP:-0}"
     volumes:
-      - "${ROOT_PATH:-..}/legacy:/opt/rh/httpd24/root/var/www/html/legacy"
-      - "${ROOT_PATH:-..}/loader:/opt/rh/httpd24/root/var/www/html/loader"
-      - "${ROOT_PATH:-..}/docker/images:/opt/rh/httpd24/root/var/www/shared/q_file"
+      - "${ROOT_PATH:-..}/legacy:/var/www/html/legacy"
+      - "${ROOT_PATH:-..}/loader:/var/www/html/loader"
+      - "${ROOT_PATH:-..}/docker/images:/var/www/shared/q_file"
     labels:
       - "traefik.port=80"
       - "traefik.backend=loader"

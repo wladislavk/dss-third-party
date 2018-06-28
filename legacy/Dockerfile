@@ -3,20 +3,20 @@ FROM 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
 ARG LEGACY_DIR
 ARG LOADER_DIR
 
-ENV LEGACY_PATH=${DOCUMENT_ROOT}/legacy LOADER_PATH=${DOCUMENT_ROOT}/loader
+ENV LEGACY_PATH=${DOCUMENT_ROOT}/legacy
+ENV LOADER_PATH=${DOCUMENT_ROOT}/loader
 ENV SHARED_PATH=${LEGACY_PATH}/../../shared
 ENV FILES_PATH=${SHARED_PATH}/q_file
+ENV ETC_HTTPD=/etc/apache2
+
 WORKDIR $LOADER_PATH
 
 # Copy composer manifest before the rest source codes. To be able to install
 # all requirements and cache this build step. Use --no-autoloader --no-scripts
 # because there is no app source code yet.
 COPY $LOADER_DIR/composer* $LOADER_PATH/
-COPY $LEGACY_DIR/composer* $LEGACY_PATH/
-RUN set -x \
-    && source /opt/rh/rh-php56/enable \
-    && composer install --no-autoloader --no-scripts -d $LOADER_PATH \
-    && composer install --no-autoloader --no-scripts -d $LEGACY_PATH
+
+RUN composer install --no-autoloader --no-scripts -d $LOADER_PATH
 
 # Copy the project's source code.
 COPY $LEGACY_DIR $LEGACY_PATH
@@ -30,17 +30,15 @@ RUN set -x \
     && mkdir $FILES_PATH \
     && ln -s $FILES_PATH $LEGACY_PATH/manage/letterpdfs \
     && ln -s $FILES_PATH $LEGACY_PATH/manage/upload \
-    # Do composer install again to apply autoloader and scripts sections.
-    && source /opt/rh/rh-php56/enable \
-    && composer install -d $LOADER_PATH \
-    && composer install -d $LEGACY_PATH \
+    # Do composer install again to apply autoloader section.
+    && composer install --no-scripts -d $LOADER_PATH \
     # Fix permissions
-    && chown -R apache ${DOCUMENT_ROOT} \
-    && chown -R apache ${SHARED_PATH}
+    && chown -R www-data ${DOCUMENT_ROOT} \
+    && chown -R www-data ${SHARED_PATH}
 
 # Custom apache configs for the project
 # NOTE this config is here so as not create extra files in the legacy codebase
-RUN echo -e '\
+RUN /bin/echo -e '\
 ErrorLog "/dev/stdout"\n\
 CustomLog "/dev/stdout" common\n\
 <VirtualHost *:80>\n\
@@ -51,4 +49,6 @@ CustomLog "/dev/stdout" common\n\
     # Files from folder "assets" will not be aliased\n\
     AliasMatch "^/(.*\.)(css|js|map|json|bmp|cur|gif|jpg|jpeg|png|tif|swf|svg|pdf|eot|ttf|woff|xml)$" "${LEGACY_PATH}/$1$2"\n\
 </VirtualHost>\n\
-' > ${ETC_HTTPD}/conf.d/app.conf
+' > ${ETC_HTTPD}/sites-available/000-default.conf
+
+RUN a2enmod rewrite

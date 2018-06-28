@@ -13,15 +13,15 @@ class FTSSamples
     private $securityToken;
     private $apiKey;
 
-    public function __construct(\Ds3\Libraries\Legacy\Db $db)
+    public function __construct($companyId)
     {
         $con = $GLOBALS['con'];
-        $this->db = $db;
+        $this->db = new \Ds3\Libraries\Legacy\Db();
 
         $this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
         $this->securityContext = ""; //<--- Required but leave blank exactly as it is here
 
-        $key_sql = "SELECT * FROM companies WHERE id='".$this->db->escape( $_SESSION['companyid'])."'";
+        $key_sql = "SELECT * FROM companies WHERE id='".$this->db->escape($companyId)."'";
         $key_q = mysqli_query($con, $key_sql);
         $keys = mysqli_fetch_assoc($key_q);
 

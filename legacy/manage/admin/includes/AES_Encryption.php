@@ -74,9 +74,6 @@ class AES_Encryption
         'ZERO'		 => 'ZERO',
     );
 
-    private $padCrypt_url   = 'http://dev.strategystar.net/2011/10/php-cryptography-padding-ansi-x-923-iso-10126-pkcs7-bit-zero/';
-    private $aesEncrypt_url = 'http://dev.strategystar.net/';
-
     /***
      * String $key        = Your secret key that you will use to encrypt/decrypt
      * String $initVector = Your secret vector that you will use to encrypt/decrypt if using CBC, CFB, OFB, or a STREAM algorhitm that requires an IV
@@ -144,41 +141,9 @@ class AES_Encryption
         return $encrypted_text;
     }
 
-    /***
-     * String $text = The text that you want to decrypt
-     **/
-    public function decrypt($text)
-    {
-        mcrypt_generic_init($this->cipher, $this->key, $this->initVector);
-        $decrypted_text = mdecrypt_generic($this->cipher, $text);
-        mcrypt_generic_deinit($this->cipher);
-        return $this->unpad($decrypted_text);
-    }
-
-    /***
-     * Use this function to export the key, init_vector, padding, and mode
-     * This information is necessary to later decrypt an encrypted message
-     **/
-    public function getConfiguration()
-    {
-        return array(
-            'key' 			=> $this->key,
-            'init_vector'   => $this->initVector,
-            'padding' 		=> $this->padding,
-            'mode' 			=> $this->mode,
-            'encryption'	=> $this->encryption . ' Bit',
-            'block_size'	=> $this->block_size,
-        );
-    }
-
     private function pad($text, $block_size)
     {
         return call_user_func_array(array('padCrypt', 'pad_'.$this->allowed_paddings[$this->padding]), array($text, $block_size));
-    }
-
-    private function unpad($text)
-    {
-        return call_user_func_array(array('padCrypt', 'unpad_'.$this->allowed_paddings[$this->padding]), array($text));
     }
 
     public function __destruct()

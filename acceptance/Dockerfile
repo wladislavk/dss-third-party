@@ -41,6 +41,10 @@ RUN yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
 
 RUN yum install -y mysql-community-client
 
+# Customize php setup
+RUN set -xe \
+    && /bin/echo 'date.timezone='"${SYSTEM_TZ}" > "/etc/php.d/custom.ini"
+
 COPY composer.json ./
 COPY composer.lock ./
 RUN composer install --no-scripts --no-autoloader

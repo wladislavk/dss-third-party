@@ -1,8 +1,0 @@
-{
-    "name": "root/ds3-private01",
-    "type": "project",
-    "require": {
-        "php": ">=7.2",
-        "tymon/jwt-auth": "^0.5.4"
-    }
-}

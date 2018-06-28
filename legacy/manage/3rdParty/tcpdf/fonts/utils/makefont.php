@@ -61,9 +61,6 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 		$version = PHP_VERSION;
 		define('PHP_VERSION_ID', (($version{0} * 10000) + ($version{2} * 100) + $version{4}));
 	}
-	if (PHP_VERSION_ID < 50300) {
-		@set_magic_quotes_runtime(0);
-	}
 	ini_set('auto_detect_line_endings', '1');
 	if (!file_exists($fontfile)) {
 		trigger_error('Error: file not found: '.$fontfile, E_USER_ERROR);

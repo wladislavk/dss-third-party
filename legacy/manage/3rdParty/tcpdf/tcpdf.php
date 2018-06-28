@@ -7753,9 +7753,6 @@ class TCPDF {
 			$version = PHP_VERSION;
 			define('PHP_VERSION_ID', (($version{0} * 10000) + ($version{2} * 100) + $version{4}));
 		}
-		if (PHP_VERSION_ID < 50300) {
-			@set_magic_quotes_runtime($mqr);
-		}
 	}
 
 	/**

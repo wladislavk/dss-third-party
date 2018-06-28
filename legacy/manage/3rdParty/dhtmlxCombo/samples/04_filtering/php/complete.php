@@ -4,9 +4,9 @@
 	require_once('../../common/config.php');
 	print("<?xml version=\"1.0\"?>");
 
-	$link = mysql_pconnect($mysql_host, $mysql_user, $mysql_pasw);
+	$link = mysqli_connect($mysql_host, $mysql_user, $mysql_pasw);
 
-	$db = mysql_select_db ($mysql_db);
+	$db = mysqli_select_db($link, $mysql_db);
 
 
 	if (!isset($_GET["pos"])) $_GET["pos"]=0;
@@ -14,16 +14,17 @@
 	//Create database and table if doesn't exists
 		//mysql_create_db($mysql_db,$link);
 		$sql = "Select * from Countries";
-	 	$res = mysql_query ($sql);
+	 	$res = mysqli_query($link, $sql);
 		if(!$res){
 			$sql = "CREATE TABLE Countries (item_id INT UNSIGNED not null AUTO_INCREMENT,item_nm VARCHAR (200),item_cd VARCHAR (15),PRIMARY KEY ( item_id ))";
-			$res = mysql_query ($sql);
+			$res = mysqli_query($link, $sql);
 			populateDBRendom();
-		}else{
-			
 		}
+
 	//populate db with 10000 records
-	function populateDBRendom(){
+	function populateDBRendom()
+    {
+        global $link;
 		$filename = getcwd()."/../../common/countries.txt";
 		$handle = fopen ($filename, "r");
 		$contents = fread ($handle, filesize ($filename));
@@ -32,8 +33,8 @@
 		for($i=0;$i<count($arWords);$i++){
 			$nm = $arWords[$i];
 			$cd = rand(123456,987654);
-			$sql = "INsert into Countries(item_nm,item_cd) Values('".$nm."','".$cd."')";
-			mysql_query ($sql);
+			$sql = "Insert into Countries(item_nm,item_cd) Values('".$nm."','".$cd."')";
+			mysqli_query($link, $sql);
 			if($i==9999)
 				break;
 		}
@@ -41,7 +42,7 @@
 	}
 
 	getDataFromDB($_GET["mask"]);
-	mysql_close($link);
+	mysqli_close($link);
 
 
 

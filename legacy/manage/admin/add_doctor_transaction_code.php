@@ -12,7 +12,7 @@ include '../includes/constants.inc';
 $db = new Db();
 
 if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1) {
-    $op_arr = split("\n",trim($_POST['transaction_code']));
+    $op_arr = explode("\n",trim($_POST['transaction_code']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {

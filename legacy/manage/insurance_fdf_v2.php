@@ -43,7 +43,7 @@ $patient_phone_code = strtoupper($claimData['patient_phone_code']);
 $patient_phone = strtoupper($claimData['patient_phone']);
 $patient_relation_insured = strtoupper($claimData['patient_relation_insured']);
 $patient_status = strtoupper($claimData['patient_status']);
-$patient_status_array = split('~', $patient_status);
+$patient_status_array = explode('~', $patient_status);
 
 $insured_id_number = preg_replace("/[^A-Za-z0-9 ]/", '', $claimData['insured_id_number']);
 $insured_firstname = strtoupper($claimData['insured_firstname']);

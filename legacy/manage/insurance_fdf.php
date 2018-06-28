@@ -62,7 +62,7 @@ if (!empty($myarray)) {
 
     $patient_relation_insured = st($myarray['patient_relation_insured']);
     $patient_status = st($myarray['patient_status']);
-    $patient_status_array = split('~', $patient_status);
+    $patient_status_array = explode('~', $patient_status);
     $patient_phone_code = st($myarray['patient_phone_code']);
     $patient_phone = st($myarray['patient_phone']);
     $employment = st($myarray['employment']);

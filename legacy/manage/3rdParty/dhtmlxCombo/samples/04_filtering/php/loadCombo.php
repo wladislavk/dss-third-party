@@ -27,9 +27,9 @@
 		$filename = getcwd()."/../../common/100000words.txt";
 		$handle = fopen ($filename, "r");
 		$contents = fread ($handle, filesize ($filename));
-		$arWords = split(",",$contents);
+		$arWords = explode(",",$contents);
 		if(count($arWords)<2)
-			$arWords = split("\n",$contents);
+			$arWords = explode("\n",$contents);
 		//print(count($arWords));
 		for($i=0;$i<count($arWords);$i++){
 			$nm = $arWords[$i];

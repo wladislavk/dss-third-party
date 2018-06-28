@@ -27,7 +27,7 @@
 		$filename = getcwd()."/../../common/countries.txt";
 		$handle = fopen ($filename, "r");
 		$contents = fread ($handle, filesize ($filename));
-		$arWords = split("\r\n",$contents);
+		$arWords = explode("\r\n",$contents);
 		//print(count($arWords));
 		for($i=0;$i<count($arWords);$i++){
 			$nm = $arWords[$i];

@@ -36,24 +36,24 @@ Feature: Device Selector
     Then I see device list:
       | name                 | quantity |
       | SUAD Ultra Elite     | 34       |
-      | SUAD Hard            | 33       |
       | Narval               | 33       |
-      | SUAD Thermo          | 33       |
       | Dorsal Hard          | 33       |
+      | SUAD Hard            | 33       |
+      | SUAD Thermo          | 33       |
       | Dorsal Flex          | 30       |
       | TAP 3 Durasoft       | 29       |
-      | TAP Elite Thermacryl | 28       |
       | Full Breath          | 28       |
+      | TAP Elite Thermacryl | 28       |
       | Dorsal Reverse Flex  | 27       |
-      | EMA                  | 27       |
       | TAP 3 Thermacryl     | 27       |
+      | EMA                  | 27       |
       | TAP Elite Durasoft   | 26       |
       | Herbst               | 26       |
       | Dorsal Reverse Hard  | 10       |
-      | None                 | 0        |
       | Respire              | 0        |
-      | PM Positioner Thermo | 0        |
       | Lamberg Sleepwell    | 0        |
+      | PM Positioner Thermo | 0        |
+      | None                 | 0        |
     When I click on checkbox next to device selection slider "Bruxism"
     And I click on checkbox next to device selection slider "Tongue"
     And I click "Sort Devices" link
@@ -67,17 +67,17 @@ Feature: Device Selector
      | Dorsal Flex          | 34.5     |
      | Dorsal Reverse Flex  | 32.25    |
      | TAP 3 Durasoft       | 32       |
-     | TAP Elite Thermacryl | 31       |
      | Full Breath          | 31       |
+     | TAP Elite Thermacryl | 31       |
      | Herbst               | 30.5     |
-     | EMA                  | 30       |
      | TAP 3 Thermacryl     | 30       |
+     | EMA                  | 30       |
      | TAP Elite Durasoft   | 29       |
      | Dorsal Reverse Hard  | 11.5     |
-     | None                 | 0        |
      | Respire              | 0        |
-     | PM Positioner Thermo | 0        |
      | Lamberg Sleepwell    | 0        |
+     | PM Positioner Thermo | 0        |
+     | None                 | 0        |
     # @todo: looks like Mink does not provide an API to test sliders. Selenium does though, so we can make additions to Mink code
     # When I move device selection slider for "Bruxism" to "Mod"
     # And I move device selection slider for "Tongue" to "Large/Scalloped"

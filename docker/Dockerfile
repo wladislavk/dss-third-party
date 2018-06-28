@@ -1,13 +1,14 @@
 FROM centos:6.9
 
+ARG SYSTEM_TZ
+
 # Directories for custom php and httpd packages
 ENV _RH_HTTPD=/opt/rh/httpd24 \
     _RH_PHP=/opt/rh/rh-php56
 ENV _RH_PHP_D=/etc${_RH_PHP}/php.d
 
 # Set Timezone
-ENV TZ=$SYSTEM_TZ
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/${SYSTEM_TZ} /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 RUN set -xe \
     yum update -y \

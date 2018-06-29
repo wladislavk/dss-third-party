@@ -39,6 +39,7 @@ services:
       args:
         LEGACY_DIR: legacy
         LOADER_DIR: loader
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
     env_file: ../loader/.env.example
     environment:

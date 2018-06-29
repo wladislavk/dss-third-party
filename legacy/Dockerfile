@@ -2,6 +2,7 @@ FROM 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
 
 ARG LEGACY_DIR
 ARG LOADER_DIR
+ARG SYSTEM_TZ
 
 ENV LEGACY_PATH=${DOCUMENT_ROOT}/legacy
 ENV LOADER_PATH=${DOCUMENT_ROOT}/loader
@@ -9,6 +10,9 @@ ENV SHARED_PATH=${LEGACY_PATH}/../../shared
 ENV FILES_PATH=${SHARED_PATH}/q_file
 
 WORKDIR $LOADER_PATH
+
+# Set Timezone
+RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 # Copy composer manifest before the rest source codes. To be able to install
 # all requirements and cache this build step. Use --no-autoloader --no-scripts

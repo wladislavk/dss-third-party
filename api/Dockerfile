@@ -78,7 +78,7 @@ RUN set -xe \
 
 # Customize php setup
 RUN set -xe \
-    && /bin/echo 'date.timezone="${SYSTEM_TZ_ENV}"' > "${_RH_PHP_D}/mods-available/custom.ini" \
+    && /bin/echo 'date.timezone='"${SYSTEM_TZ}" > "${_RH_PHP_D}/mods-available/custom.ini" \
     && ln -s "${_RH_PHP_D}/mods-available/custom.ini" "${_RH_PHP_D}/apache2/conf.d/40-custom.ini"
 
 ENV \

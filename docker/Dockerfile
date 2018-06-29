@@ -7,8 +7,6 @@ ENV _RH_HTTPD=/opt/rh/httpd24 \
     _RH_PHP=/opt/rh/rh-php56
 ENV _RH_PHP_D=/etc${_RH_PHP}/php.d
 
-ENV SYSTEM_TZ_ENV=$SYSTEM_TZ
-
 # Set Timezone
 RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
@@ -81,7 +79,7 @@ RUN set -xe \
     && mv phpunit.phar /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit \
     && rm -rf /opt/tmp \
     # Customize php setup
-    && echo $'short_open_tag = On\ndate.timezone = "${SYSTEM_TZ_ENV}"' > "${_RH_PHP_D}/custom.ini"
+    && echo $'short_open_tag = On\ndate.timezone = '"${SYSTEM_TZ}" > "${_RH_PHP_D}/custom.ini"
 
 ENV \
     # Set variables exactly as in /opt/rh/rh-php56/enable, to do not source manually

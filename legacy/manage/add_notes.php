@@ -6,12 +6,13 @@
 $db = new Db();
 $docId = (int)$_SESSION['docid'];
 
-$isSoapAuthorized = $db->getNumberRows("SELECT doc_id
-    FROM dental_api_permissions permission
-        LEFT JOIN dental_api_permission_resource_groups api_group ON api_group.id = permission.group_id
-    WHERE permission.doc_id = '$docId'
+$involvedPermissions = $db->getNumberRows("SELECT DISTINCT g.id
+    FROM dental_api_permission_resource_groups g
+    JOIN dental_api_permissions p ON p.group_id = g.id
+    WHERE g.slug IN ('soap-notes')
+    AND p.doc_id = $docId
 ");
-
+$isSoapAuthorized = $involvedPermissions === 1;
 $isSoapAuthorized = $isSoapAuthorized && !empty($_GET['soap']);
 $conditionalNot = 'NOT';
 
@@ -330,12 +331,15 @@ if (!empty($_GET['forced'])) {
 					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			$themyarray = $db->getRow($thesql);
             $notes = $themyarray['notes'];
+            $soapNotes = [];
 
             if (count($themyarray)) {
                 try {
-                    $notes = json_decode($themyarray['notes'], true);
-                    $isSoapAuthorized = true;
+                    $soapNotes = json_decode($themyarray['notes'], true);
                 } catch (\Exception $e) { /* Fall through */ }
+            }
+            if (!empty($soapNotes)) {
+                $isSoapAuthorized = true;
             }
 
             if (!is_null($currentNote)) {
@@ -442,19 +446,19 @@ if (!empty($_GET['forced'])) {
                             <input <?= $soapDisabled ?> type="hidden" name="is_soap" value="<?= $isSoapAuthorized ?>">
                             <strong>Subjective</strong>
                             <textarea <?= $soapDisabled ?> id="subjective" name="soap_notes[subjective]" class="tbox"
-                                      style="width:100%; height:60px;"><?= e($notes['subjective']) ?></textarea>
+                                      style="width:100%; height:60px;"><?= e($soapNotes['subjective']) ?></textarea>
 
                             <strong>Objective</strong>
                             <textarea <?= $soapDisabled ?> id="objective" name="soap_notes[objective]" class="tbox"
-                                      style="width:100%; height:60px;"><?= e($notes['objective']) ?></textarea>
+                                      style="width:100%; height:60px;"><?= e($soapNotes['objective']) ?></textarea>
 
                             <strong>Assessment</strong>
                             <textarea <?= $soapDisabled ?> id="assessment" name="soap_notes[assessment]" class="tbox"
-                                      style="width:100%; height:60px;"><?= e($notes['assessment']) ?></textarea>
+                                      style="width:100%; height:60px;"><?= e($soapNotes['assessment']) ?></textarea>
 
                             <strong>Plan</strong>
                             <textarea <?= $soapDisabled ?> id="plan" name="soap_notes[plan]" class="tbox"
-                                      style="width:100%; height:60px;"><?= e($notes['plan']) ?></textarea>
+                                      style="width:100%; height:60px;"><?= e($soapNotes['plan']) ?></textarea>
                         </div>
 		            </td>
 		        </tr>

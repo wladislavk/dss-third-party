@@ -96,7 +96,8 @@ if ($_POST['q_page1sub'] == 1) {
             <?php
             trigger_error("Die called", E_USER_ERROR);
         } else {
-            $qPage1IdSelected = mysqli_fetch_field($exist_q);
+            $qPage1Result = mysqli_fetch_assoc($exist_q);
+            $qPage1IdSelected = $qPage1Result['q_page1id'];
             $ed_sql = "update dental_q_page1 set 
                 chief_complaint_text = '".s_for($chief_complaint_text)."',
                 complaintid = '".s_for($comp_arr)."',

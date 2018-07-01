@@ -58,7 +58,8 @@ if ($_POST['q_sleepsub'] == 1) {
                 patientid='".$_SESSION['pid']."'";
             mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         } else {
-            $qPage1Id = mysqli_fetch_field($exist_q);
+            $qPage1Result = mysqli_fetch_assoc($exist_q);
+            $qPage1Id = $qPage1Result['q_page1id'];
             $ed_sql = "update dental_q_page1 set
                 ess='$newEss',
                 tss='$newTss'
@@ -100,7 +101,8 @@ if ($_POST['q_sleepsub'] == 1) {
                 patientid='".$_SESSION['pid']."'";
             mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         } else {
-            $qPage1Id = mysqli_fetch_field($exist_q);
+            $qPage1Result = mysqli_fetch_assoc($exist_q);
+            $qPage1Id = $qPage1Result['q_page1id'];
             $ed_sql = "update dental_q_page1 set
                 ess='$newEss',
                 tss='$newTss'

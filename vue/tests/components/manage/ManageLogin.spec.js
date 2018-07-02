@@ -1,7 +1,6 @@
 import moxios from 'moxios'
 import store from '../../../src/store'
 import ManageLoginComponent from '../../../src/components/manage/ManageLogin.vue'
-import Alerter from '../../../src/services/Alerter'
 import http from '../../../src/services/http'
 import endpoints from '../../../src/endpoints'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
@@ -11,11 +10,6 @@ import TestCase from '../../cases/ComponentTestCase'
 describe('ManageLogin component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
-
-    this.alert = ''
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      this.alert = text
-    })
 
     store.state.main[symbols.state.mainToken] = ''
 
@@ -83,7 +77,7 @@ describe('ManageLogin component', () => {
     moxios.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('')
+      expect(this.testCase.alertText).toBe('')
       expect(vm.focusUser).toBe(false)
       expect(vm.focusPassword).toBe(false)
       expect(vm.$router.currentRoute.name).toBe('dashboard')
@@ -126,7 +120,7 @@ describe('ManageLogin component', () => {
     vm.$nextTick(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('Username is Required')
+      expect(this.testCase.alertText).toBe('Username is Required')
       expect(vm.focusUser).toBe(true)
       expect(vm.focusPassword).toBe(false)
       expect(vm.$router.currentRoute.name).toBe('login')
@@ -145,7 +139,7 @@ describe('ManageLogin component', () => {
     vm.$nextTick(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('Password is Required')
+      expect(this.testCase.alertText).toBe('Password is Required')
       expect(vm.focusUser).toBe(false)
       expect(vm.focusPassword).toBe(true)
       expect(vm.$router.currentRoute.name).toBe('login')

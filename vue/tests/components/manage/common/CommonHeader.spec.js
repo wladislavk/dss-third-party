@@ -1,8 +1,6 @@
 import store from '../../../../src/store'
 import CommonHeaderComponent from '../../../../src/components/manage/common/CommonHeader.vue'
 import symbols from '../../../../src/symbols'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
-import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('CommonHeader component', () => {
@@ -52,10 +50,6 @@ describe('CommonHeader component', () => {
   })
 
   it('clicks buttons', function (done) {
-    let redirectUrl = ''
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      redirectUrl = ProcessWrapper.getLegacyRoot() + url
-    })
     const vm = this.testCase.mount()
 
     const addTaskButton = vm.$el.querySelector('button#add_task_button')
@@ -72,7 +66,7 @@ describe('CommonHeader component', () => {
       const addPatientButton = vm.$el.querySelector('button#add_patient_button')
       addPatientButton.click()
       vm.$nextTick(() => {
-        expect(redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php')
+        expect(this.testCase.redirectUrl).toBe('manage/add_patient.php')
         done()
       })
     })

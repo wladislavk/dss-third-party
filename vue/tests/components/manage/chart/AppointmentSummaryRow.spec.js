@@ -7,7 +7,6 @@ import {
   INITIAL_CONTACT_ID,
   NON_COMPLIANT_ID
 } from '../../../../src/constants/chart'
-import Alerter from '../../../../src/services/Alerter'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -171,13 +170,6 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step', function (done) {
-    let isAlerted = false
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake(() => {
-      isAlerted = true
-    })
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
     const endpoint = endpoints.appointmentSummaries.destroy + '/1'
     moxios.stubRequest(http.formUrl(endpoint), {
       status: 200,
@@ -198,7 +190,7 @@ describe('AppointmentSummaryRow component', () => {
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     moxios.wait(() => {
-      expect(isAlerted).toBe(false)
+      expect(this.testCase.alertText).toBe('')
       expect(moxios.requests.count()).toBe(1)
       expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoint))
       done()
@@ -206,9 +198,7 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step without confirmation', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
     const props = {
       patientId: 42,
       elementId: 1,
@@ -228,10 +218,6 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step with sent letters', function (done) {
-    let isAlerted = false
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake(() => {
-      isAlerted = true
-    })
     const props = {
       patientId: 42,
       elementId: 1,
@@ -246,7 +232,7 @@ describe('AppointmentSummaryRow component', () => {
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     vm.$nextTick(() => {
-      expect(isAlerted).toBe(true)
+      expect(this.testCase.alertText).not.toBe('')
       done()
     })
   })

@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import symbols from '../../../../../src/symbols'
 import DeviceResultsComponent from '../../../../../src/components/manage/modal/device-selector/DeviceResults.vue'
 import store from '../../../../../src/store'
-import Alerter from '../../../../../src/services/Alerter'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
 import TestCase from '../../../../cases/ComponentTestCase'
@@ -78,15 +77,6 @@ describe('DeviceResults component', () => {
         message: 'foo'
       }
     })
-    let alertText = ''
-    let confirmText = ''
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      alertText = text
-    })
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
-      confirmText = text
-      return true
-    })
     const props = {
       patientName: 'John'
     }
@@ -97,20 +87,14 @@ describe('DeviceResults component', () => {
     expect(firstLink).not.toBeNull()
     firstLink.click()
     moxios.wait(() => {
-      expect(confirmText).toBe('Do you want to select SUAD Ultra Elite for John')
-      expect(alertText).toBe('foo')
+      expect(this.testCase.confirmText).toBe('Do you want to select SUAD Ultra Elite for John')
+      expect(this.testCase.alertText).toBe('foo')
       done()
     })
   })
 
   it('should update device without confirmation', function (done) {
-    let alertText = ''
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      alertText = text
-    })
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
     const props = {
       patientName: 'John'
     }
@@ -120,7 +104,7 @@ describe('DeviceResults component', () => {
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
     firstLink.click()
     vm.$nextTick(() => {
-      expect(alertText).toBe('')
+      expect(this.testCase.alertText).toBe('')
       done()
     })
   })

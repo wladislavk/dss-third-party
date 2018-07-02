@@ -1,7 +1,6 @@
 import store from '../../../../src/store'
 import PatientMenuElementComponent from '../../../../src/components/manage/patients/PatientMenuElement.vue'
 import symbols from '../../../../src/symbols'
-import LocationWrapper from 'src/wrappers/LocationWrapper'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientMenuElement component', () => {
@@ -24,10 +23,6 @@ describe('PatientMenuElement component', () => {
   })
 
   it('shows normal element', function (done) {
-    let destination = ''
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      destination = url
-    })
     const propsData = {
       patientId: 42,
       elementLink: 'foo',
@@ -42,16 +37,12 @@ describe('PatientMenuElement component', () => {
     expect(link.className).toBe('')
     link.click()
     vm.$nextTick(() => {
-      expect(destination).toBe('foo')
+      expect(this.testCase.redirectUrl).toBe('foo')
       done()
     })
   })
 
   it('shows element with parsed link', function (done) {
-    let destination = ''
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      destination = url
-    })
     store.state.patients[symbols.state.patientId] = 1
 
     const propsData = {
@@ -65,7 +56,7 @@ describe('PatientMenuElement component', () => {
     const link = vm.$el.querySelector('a')
     link.click()
     vm.$nextTick(() => {
-      expect(destination).toBe('foo1')
+      expect(this.testCase.redirectUrl).toBe('foo1')
       done()
     })
   })

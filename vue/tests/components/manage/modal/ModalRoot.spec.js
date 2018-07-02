@@ -1,7 +1,6 @@
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import ModalRootComponent from '../../../../src/components/manage/modal/ModalRoot.vue'
-import Alerter from '../../../../src/services/Alerter'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ModalRoot component', () => {
@@ -76,9 +75,6 @@ describe('ModalRoot component', () => {
 
   it('closes pop-up on click at background', function (done) {
     store.state.main[symbols.state.popupEdit] = true
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
     const componentData = {
       name: 'addTask',
       params: {
@@ -100,9 +96,7 @@ describe('ModalRoot component', () => {
 
   it('closes pop-up without confirmation', function (done) {
     store.commit(symbols.mutations.popupEdit, {value: true})
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
     const componentData = {
       name: 'addTask',
       params: {

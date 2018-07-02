@@ -1,9 +1,7 @@
 import store from '../../../../src/store'
 import ChartButtonsComponent from '../../../../src/components/manage/chart/ChartButtons.vue'
 import symbols from '../../../../src/symbols'
-import Alerter from '../../../../src/services/Alerter'
 import { DSS_CONSTANTS, HST_STATUSES } from '../../../../src/constants/main'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ChartButtons component', () => {
@@ -36,10 +34,6 @@ describe('ChartButtons component', () => {
   it('clicks order button', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
     store.state.patients[symbols.state.incompleteHomeSleepTests] = [1, DSS_CONSTANTS.DSS_HST_REQUESTED]
-    let alertText = ''
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((alert) => {
-      alertText = alert
-    })
     const props = {
       patientId: 42
     }
@@ -53,20 +47,13 @@ describe('ChartButtons component', () => {
     firstLink.click()
     vm.$nextTick(() => {
       const expectedAlert = 'Patient has existing HST with status ' + HST_STATUSES[DSS_CONSTANTS.DSS_HST_REQUESTED] + '. Only one HST can be requested at a time.'
-      expect(alertText).toBe(expectedAlert)
+      expect(this.testCase.alertText).toBe(expectedAlert)
       done()
     })
   })
 
   it('clicks request button', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
-    let redirectUrl = ''
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      redirectUrl = url
-    })
     const props = {
       patientId: 42
     }
@@ -79,20 +66,14 @@ describe('ChartButtons component', () => {
     expect(firstLink.textContent).toBe('Request HST')
     firstLink.click()
     vm.$nextTick(() => {
-      expect(redirectUrl).toBe('manage/hst_request_co.php?ed=42')
+      expect(this.testCase.redirectUrl).toBe('manage/hst_request_co.php?ed=42')
       done()
     })
   })
 
   it('clicks request button without confirmation', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
-    let redirectUrl = ''
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      redirectUrl = url
-    })
+    this.testCase.confirmDialog = false
     const props = {
       patientId: 42
     }
@@ -104,7 +85,7 @@ describe('ChartButtons component', () => {
     const firstLink = links[0]
     firstLink.click()
     vm.$nextTick(() => {
-      expect(redirectUrl).toBe('')
+      expect(this.testCase.redirectUrl).toBe('')
       done()
     })
   })

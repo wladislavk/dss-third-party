@@ -2,7 +2,6 @@ import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import RightMenuComponent from '../../../../src/components/manage/common/RightTopMenu.vue'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
-import Alerter from '../../../../src/services/Alerter'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('RightTopMenu component', () => {
@@ -46,15 +45,11 @@ describe('RightTopMenu component', () => {
   })
 
   it('logs out', function (done) {
-    let alertText = ''
-    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      alertText = text
-    })
     const vm = this.testCase.mount()
     const logoutButton = vm.$el.querySelector('a#logout')
     logoutButton.click()
     vm.$nextTick(() => {
-      expect(alertText).toBe('Logout successfully')
+      expect(this.testCase.alertText).toBe('Logout successfully')
       expect(vm.$router.currentRoute.name).toBe('main-login')
       done()
     })

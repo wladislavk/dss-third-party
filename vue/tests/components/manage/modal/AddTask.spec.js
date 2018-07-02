@@ -4,8 +4,6 @@ import AddTaskComponent from '../../../../src/components/manage/modal/AddTask.vu
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import symbols from '../../../../src/symbols'
-import Alerter from '../../../../src/services/Alerter'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AddTask component', () => {
@@ -183,15 +181,6 @@ describe('AddTask component', () => {
   })
 
   it('deletes task', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
-    // @todo: uncomment after this page is migrated
-    // let redirected = false
-    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake(() => {
-      // @todo: uncomment after this page is migrated
-      // redirected = true
-    })
     const taskId = 1
     const taskData = {
       id: 1,
@@ -221,16 +210,14 @@ describe('AddTask component', () => {
       moxios.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
         // @todo: uncomment after this page is migrated
-        // expect(redirected).toBe(true)
+        // expect(this.testCase.redirectUrl).not.toBe('')
         done()
       })
     })
   })
 
   it('deletes task without confirmation', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
     const taskId = 1
     const taskData = {
       id: 1,

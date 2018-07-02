@@ -4,7 +4,6 @@ import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
-import Alerter from '../../../../src/services/Alerter'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskElement component', () => {
@@ -143,7 +142,6 @@ describe('TaskElement component', () => {
   })
 
   it('should delete task', function (done) {
-    spyOn(Alerter, 'isConfirmed').and.returnValue(true)
     moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/1'), {
       status: 200,
       responseText: {

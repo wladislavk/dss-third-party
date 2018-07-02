@@ -4,7 +4,6 @@ import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
-import Alerter from '../../../../../src/services/Alerter'
 import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('ReasonRow component', () => {
@@ -91,11 +90,6 @@ describe('ReasonRow component', () => {
         data: []
       }
     })
-    let confirmation = false
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      confirmation = true
-      return true
-    })
     const props = {
       patientId: 42,
       elementId: 1,
@@ -116,7 +110,7 @@ describe('ReasonRow component', () => {
         delay_reason: 'dental work'
       }
       expect(JSON.parse(request.config.data)).toEqual(expectedData)
-      expect(confirmation).toBe(false)
+      expect(this.testCase.confirmText).toBe('')
       done()
     })
   })
@@ -127,11 +121,6 @@ describe('ReasonRow component', () => {
       responseText: {
         data: []
       }
-    })
-    let confirmation = false
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      confirmation = true
-      return true
     })
     const props = {
       patientId: 42,
@@ -149,7 +138,7 @@ describe('ReasonRow component', () => {
       expect(moxios.requests.count()).toBe(2)
       const request = moxios.requests.at(0)
       expect(request.config.data).not.toBeUndefined()
-      expect(confirmation).toBe(true)
+      expect(this.testCase.confirmText).not.toBe('')
       done()
     })
   })

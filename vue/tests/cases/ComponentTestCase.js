@@ -7,6 +7,8 @@ import LegacyHref from '../../src/directives/LegacyHref'
 import UnescapeFilter from '../../src/filters/Unescape'
 import moxios from 'moxios'
 import sinon from 'sinon'
+import LocationWrapper from 'src/wrappers/LocationWrapper'
+import Alerter from 'src/services/Alerter'
 
 export default class ComponentTestCase {
   constructor () {
@@ -18,12 +20,31 @@ export default class ComponentTestCase {
     this.routes = []
     this.propsData = {}
     this.renderChildren = false
+    this.redirectUrl = ''
+    this.alertText = ''
+    this.confirmText = ''
+    this.confirmDialog = true
+
+    this._makeStubs()
 
     Vue.use(VueRouter)
     Vue.use(VueVisible)
     Vue.use(VueMoment)
     Vue.directive('legacy-href', LegacyHref)
     Vue.filter('unescape', UnescapeFilter)
+  }
+
+  _makeStubs () {
+    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+      this.redirectUrl = url
+    })
+    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+      this.alertText = text
+    })
+    this.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
+      this.confirmText = text
+      return this.confirmDialog
+    })
   }
 
   reset () {

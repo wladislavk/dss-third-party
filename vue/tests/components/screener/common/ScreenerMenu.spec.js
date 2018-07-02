@@ -1,6 +1,5 @@
 import store from '../../../../src/store'
 import ScreenerMenuComponent from '../../../../src/components/screener/common/ScreenerMenu.vue'
-import Alerter from '../../../../src/services/Alerter'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -54,10 +53,6 @@ describe('ScreenerMenu component', () => {
   })
 
   it('logs out the user', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
-
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
@@ -76,9 +71,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('logs out without confirmation', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
 
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
@@ -98,10 +91,6 @@ describe('ScreenerMenu component', () => {
   })
 
   it('resets screener', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
-
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
@@ -120,9 +109,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('resets without confirmation', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
 
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'

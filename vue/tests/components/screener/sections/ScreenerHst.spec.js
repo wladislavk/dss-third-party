@@ -4,7 +4,6 @@ import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerHstComponent from '../../../../src/components/screener/sections/ScreenerHst.vue'
 import store from '../../../../src/store'
-import Alerter from '../../../../src/services/Alerter'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerHST', () => {
@@ -82,8 +81,6 @@ describe('ScreenerHST', () => {
   })
 
   it('should send HST request', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'alert')
-
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
@@ -123,8 +120,6 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if company is not set', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'alert')
-
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
@@ -146,8 +141,6 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if contact data is not set', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'alert')
-
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
@@ -175,8 +168,6 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if ajax request returned 400', function (done) {
-    this.testCase.sandbox.stub(Alerter, 'alert')
-
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 400,
       responseText: {

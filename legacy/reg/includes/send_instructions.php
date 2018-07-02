@@ -6,6 +6,8 @@ require_once __DIR__ . '/../../manage/includes/constants.inc';
 
 $action = $_POST['type'];
 
+$db = new Db();
+
 $patientId = $db->getColumn("SELECT patientid
     FROM dental_patients
     WHERE email = '" . $db->escape($_POST['email']) . "'

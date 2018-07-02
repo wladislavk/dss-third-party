@@ -1,23 +1,27 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Legal Documents	
+    Legal Documents
 </span>
 <br />
 <br />
 &nbsp;
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+    <b><?php echo $_GET['msg'];?></b>
 </div>
 
 <div class="fullwidth">
-<?php include 'legal_hipaa.php';
-include 'legal_user.php'; ?>
+<?php
+include 'legal_hipaa.php';
+include 'legal_user.php';
+?>
 </div>
 
 <div id="popupContact" style="width:750px;height:460px">
@@ -26,8 +30,5 @@ include 'legal_user.php'; ?>
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
-<? include "includes/bottom.htm";?>
-
-
-
+<br /><br />
+<?php include "includes/bottom.htm";?>

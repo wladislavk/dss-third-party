@@ -11,15 +11,17 @@ include_once '../includes/general_functions.php';
     }
 </style>
 <?php
-$sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$db = new Db();
+
+$sql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
 $q = mysqli_query($con,$sql);
 $pat = mysqli_fetch_assoc($q);
 
-$p_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['p_m_ins_co'])."'";
+$p_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $pat['p_m_ins_co'])."'";
 $p_q = mysqli_query($con,$p_sql);
 $p_ins = mysqli_fetch_assoc($p_q);
 
-$s_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['s_m_ins_co'])."'";
+$s_sql = "SELECT * FROM dental_contact where contactid='".$db->escape( $pat['s_m_ins_co'])."'";
 $s_q = mysqli_query($con,$s_sql);
 $s_ins = mysqli_fetch_assoc($s_q);
 ?>
@@ -192,7 +194,7 @@ if ($pat['has_s_m_ins'] == 'Yes') { ?>
 <div class="space">Medical Contacts:</div>
 <?php
 if ($pat['docpcp']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docpcp'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docpcp'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -217,7 +219,7 @@ if ($pat['docpcp']) {
 
 <?php
 if ($pat['docent']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docent'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docent'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -242,7 +244,7 @@ if ($pat['docent']) {
 
 <?php
 if ($pat['docsleep']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docsleep'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docsleep'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -267,7 +269,7 @@ if ($pat['docsleep']) {
 
 <?php
 if ($pat['docdentist']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docdentist'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docdentist'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -291,7 +293,7 @@ if ($pat['docdentist']) {
 }
 
 if ($pat['docmdother']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -315,7 +317,7 @@ if ($pat['docmdother']) {
 }
 
 if ($pat['docmdother2']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother2'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother2'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -339,7 +341,7 @@ if ($pat['docmdother2']) {
 }
 
 if ($pat['docmdother3']) {
-    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con, $pat['docmdother3'])."'";
+    $doc_sql = "SELECT * FROM dental_contact WHERE contactid='".$db->escape( $pat['docmdother3'])."'";
     $doc_q = mysqli_query($con, $doc_sql);
     $doc = mysqli_fetch_assoc($doc_q);
     ?>
@@ -369,7 +371,6 @@ $sql = "select * from dental_q_sleep_pivot where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_sleepid = st($myarray['q_sleepid']);
 $epworthid = st($myarray['epworthid']);
 $analysis = st($myarray['analysis']);
 
@@ -398,7 +399,6 @@ if ($epworthid != '') {
     <?php
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = mysqli_query($con, $epworth_sql);
-    $epworth_number = mysqli_num_rows($epworth_my);
     while ($epworth_myarray = mysqli_fetch_array($epworth_my)) {
         if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
             $chk = '';
@@ -411,10 +411,10 @@ if ($epworthid != '') {
             </td>
             <td valign="top" class="frmdata">
                 <select id="epworth_<?php echo st($epworth_myarray['epworthid']);?>" name="epworth_<?php echo st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
-                    <option value="0" <? if ($chk == '0') echo " selected";?>>0</option>
-                    <option value="1" <? if ($chk == 1) echo " selected";?>>1</option>
-                    <option value="2" <? if ($chk == 2) echo " selected";?>>2</option>
-                    <option value="3" <? if ($chk == 3) echo " selected";?>>3</option>
+                    <option value="0" <?php if ($chk == '0') echo " selected";?>>0</option>
+                    <option value="1" <?php if ($chk == 1) echo " selected";?>>1</option>
+                    <option value="2" <?php if ($chk == 2) echo " selected";?>>2</option>
+                    <option value="3" <?php if ($chk == 3) echo " selected";?>>3</option>
                 </select>
             </td>
         </tr>
@@ -435,7 +435,6 @@ $sql = "select * from dental_thorton_pivot where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$thortonid = st($myarray['thortonid']);
 $snore_1 = st($myarray['snore_1']);
 $snore_2 = st($myarray['snore_2']);
 $snore_3 = st($myarray['snore_3']);
@@ -541,11 +540,6 @@ $sql = "select * from dental_q_page1_pivot where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
-$ess = st($myarray['ess']);
-$tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
 ?>
@@ -553,7 +547,7 @@ $other_complaint = st($myarray['other_complaint']);
 <div class="box">
     <strong>Reason for seeking tx:</strong>
     <?php
-    $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
     $c_q = mysqli_query($con, $c_sql);
     $c_r = mysqli_fetch_assoc($c_q);
     echo $c_r['chief_complaint_text'];
@@ -574,11 +568,8 @@ $other_complaint = st($myarray['other_complaint']);
             if ($complaintid != '') {
                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                 $complaint_my = mysqli_query($con, $complaint_sql);
-                $complaint_number = mysqli_num_rows($complaint_my);
                 while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
-                    if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
-                        $chk = '';
-                    } else { ?>
+                    if (@array_search($complaint_myarray['complaintid'], $compid) !== false) { ?>
                         <li><?php echo  $complaint_myarray['complaint']; ?></li>
                         <?php
                     }
@@ -626,26 +617,15 @@ $other_complaint = st($myarray['other_complaint']);
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
 
-    $q_page2id = st($myarray['q_page2id']);
     $polysomnographic = st($myarray['polysomnographic']);
     $sleep_center_name_text = st($myarray['sleep_center_name_text']);
     $sleep_study_on = st($myarray['sleep_study_on']);
-    $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-    $rdi = st($myarray['rdi']);
-    $ahi = st($myarray['ahi']);
     $cpap = st($myarray['cpap']);
     $cur_cpap = st($myarray['cur_cpap']);
     $intolerance = st($myarray['intolerance']);
     $other_intolerance = st($myarray['other_intolerance']);
-    $other = st($myarray['other']);
-    $affidavit = st($myarray['affidavit']);
-    $type_study = st($myarray['type_study']);
     $nights_wear_cpap = st($myarray['nights_wear_cpap']);
     $percent_night_cpap = st($myarray['percent_night_cpap']);
-    $custom_diagnosis = st($myarray['custom_diagnosis']);
-    $sleep_study_by = st($myarray['sleep_study_by']);
-    $triedquittried = st($myarray['triedquittried']);
-    $timesovertime = st($myarray['timesovertime']);
 
     if ($cpap == '') {
         $cpap = 'No';
@@ -849,7 +829,7 @@ if (
         </div>
         <?php
     }
-    $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+    $s_sql = "SELECT * FROM dental_q_page2_surgery_pivot WHERE patientid='".$db->escape($_REQUEST['pid'])."'";
     $s_q = mysqli_query($con,$s_sql);
     $s_num = mysqli_num_rows($s_q);
     if ($s_num != 0) { ?>
@@ -897,43 +877,25 @@ $sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_page3id = st($myarray['q_page3id']);
-$allergens = st($myarray['allergens']);
 $other_allergens = st($myarray['other_allergens']);
-$medications = st($myarray['medications']);
 $other_medications = st($myarray['other_medications']);
-$history = st($myarray['history']);
 $other_history = st($myarray['other_history']);
 $dental_health = st($myarray['dental_health']);
-$injurytohead = st($myarray['injurytohead']);
-$injurytoface = st($myarray['injurytoface']);
-$injurytoneck = st($myarray['injurytoneck']);
-$injurytoteeth = st($myarray['injurytoteeth']);
-$injurytomouth = st($myarray['injurytomouth']);
 $drymouth = st($myarray['drymouth']);
 $removable = st($myarray['removable']);
 $year_completed = st($myarray['year_completed']);
-$tmj = st($myarray['tmj']);
-$gum_problems = st($myarray['gum_problems']);
-$dental_pain = st($myarray['dental_pain']);
-$dental_pain_describe = st($myarray['dental_pain_describe']);
 $completed_future = st($myarray['completed_future']);
 $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
-$jawjointsurgery = st($myarray['jawjointsurgery']);
-$no_allergens = st($myarray['no_allergens']);
-$no_medications = st($myarray['no_medications']);
-$no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$psql = "SELECT * FROM dental_patients where patientid='".$db->escape($_GET['pid'])."'";
 $pmy = mysqli_query($con,$psql);
 $pmyarray = mysqli_fetch_array($pmy);
 
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
-$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 $family_bp = st($myarray["family_bp"]);

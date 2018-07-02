@@ -12,6 +12,8 @@ $iid = (int)array_get($_REQUEST, 'iid', 0);
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $adminCompanyId = (int)$_SESSION['admincompanyid'];
 
+$db = new Db();
+
 if ($fid) {
     $account_name = $db->getColumn("SELECT CONCAT(last_name, ' ', first_name) AS name
         FROM dental_users
@@ -56,7 +58,6 @@ function insert_preauth_row($patient_id)
         JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' 
         JOIN dental_q_page2_pivot q2 ON p.patientid = q2.patientid
         WHERE p.patientid = '$patient_id'";
-
     $my_array = $db->getRow($sql);
 
     $sql = "INSERT INTO dental_insurance_preauth (
@@ -94,7 +95,7 @@ function insert_preauth_row($patient_id)
         '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-    $my = $db->query($sql);
+    $db->query($sql);
 }
 
 if (!empty($_REQUEST['gen_preauth']) && $_REQUEST['gen_preauth'] == 1) {
@@ -478,7 +479,7 @@ $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php
 
 include __DIR__ . '/includes/bottom.htm';

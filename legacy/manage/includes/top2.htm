@@ -1,124 +1,106 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-
-include_once('admin/includes/main_include.php');
-include_once("includes/sescheck.php");
-include_once('includes/constants.inc');
-include_once('includes/authorization_functions.php');
-include_once('includes/general_functions.php');
-include_once('includes/notifications.php');
-include_once('includes/patient_changes.php');
-
-  if( $_SESSION['userid'] == '') {
-?>
-
-  	<script type="text/javascript">
-  		alert("Members Area, Please Login");
-  		window.location = "login.php";
-  	</script>
-
 <?php
-  }
+namespace Ds3\Libraries\Legacy;
 
-  if($_SESSION['loginid'] <> '') {
+include_once __DIR__ . '../admin/includes/main_include.php';
+include_once __DIR__ . "/sescheck.php";
+include_once __DIR__ . '/constants.inc';
+include_once __DIR__ . '/general_functions.php';
+include_once __DIR__ . '/patient_changes_functions.php';
+
+if( $_SESSION['userid'] == '') {
+    ?>
+    <script type="text/javascript">
+        alert("Members Area, Please Login");
+        window.location = "login.php";
+    </script>
+    <?php
+}
+
+$db = new Db();
+
+if($_SESSION['loginid'] <> '') {
     $cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
     $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
     $db->query($cur_ins_sql);
-  }
+}
 
-  if (strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false) {
-  	$unload = 0 ;
-  } else {
-  	$unload = 1 ;
-  }
+// Count letters
+$docid = $_SESSION['docid'];
 
-  // Count letters
-  $docid = $_SESSION['docid'];
+$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' ORDER BY generated_date ASC;";
 
-  $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' ORDER BY generated_date ASC;";
+$pending_letters = $db->getNumberRows($dental_letters_query);
 
-  $pending_letters = $db->getNumberRows($dental_letters_query);
-  $generated_date = $db->getRow($dental_letters_query);
+$seconds_per_day = 86400;
 
-  $seconds_per_day = 86400;
+$dental_letters_query = "SELECT letterid FROM dental_letters 
+        LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid 
+        WHERE (dental_letters.status = '1' OR dental_letters.delivered=1) AND
+    mailed_date IS NULL AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."'";
+$unmailed_letters = $db->getNumberRows($dental_letters_query);
 
-  if ($generated_date == 0) {
-  	$oldest_letter = 0;
-  } else {
-  	$oldest_letter = floor((time() - $generated_date['generated_date']) / $seconds_per_day);
-  }
+// Count Claims
+$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
 
-  $dental_letters_query = "SELECT letterid FROM dental_letters 
-			LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid 
-			WHERE (dental_letters.status = '1' OR dental_letters.delivered=1) AND
-        mailed_date IS NULL AND	dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."'";
+$num_pending_claims = $db->getNumberRows($claim_query);
 
-  $unmailed_letters = $db->getNumberRows($dental_letters_query);
-
-  // Count Claims
-  $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
-
-  $num_pending_claims = $db->getNumberRows($claim_query);
-
-  $claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
+$claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
       JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
       JOIN dental_users user ON user.userid = ledger.docid
       JOIN dental_patients p ON p.patientid = ledger.patientid
       WHERE ledger.status = " . DSS_TRXN_PENDING ." AND ledger.docid = " . $_SESSION['docid'] . " AND trxn_code.docid = " . $_SESSION['docid'] . " AND trxn_code.type = " . DSS_TRXN_TYPE_MED;
+$num_pending_claims = $db->getNumberRows($claim_query);
 
-  $num_pending_claims = $db->getNumberRows($claim_query);
+// Count Claims
+$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
 
-  // Count Claims
-  $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
+$num_pending_claims = $db->getNumberRows($claim_query);
 
-  $num_pending_claims = $db->getNumberRows($claim_query);
-
-  $claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
+$claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
       JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
       JOIN dental_users user ON user.userid = ledger.docid
       JOIN dental_patients p ON p.patientid = ledger.patientid
       WHERE ledger.status = " . DSS_TRXN_PENDING ." AND ledger.docid = " . $_SESSION['docid'] . " AND trxn_code.docid = " . $_SESSION['docid'] . " AND p.p_m_dss_file = '2'
       AND trxn_code.type = " . DSS_TRXN_TYPE_MED;
+$num_pending_nodss_claims = $db->getNumberRows($claim_query);
 
-  $num_pending_nodss_claims = $db->getNumberRows($claim_query);
+$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
 
-  $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
+$num_unmailed_claims = $db->getNumberRows($claim_query);
 
-  $num_unmailed_claims = $db->getNumberRows($claim_query);
+// Count Preauths
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
 
-  // Count Preauths
-  $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
+$num_preauth = $db->getNumberRows($preauth_query);
 
-  $num_preauth = $db->getNumberRows($preauth_query);
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_PENDING.";";
 
-  $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_PENDING.";";
+$num_pending_preauth = $db->getNumberRows($preauth_query);
 
-  $num_pending_preauth = $db->getNumberRows($preauth_query);
+$pc_query = "SELECT * FROM dental_patient_contacts pc inner join dental_patients p on p.patientid=pc.patientid WHERE p.docid = '".$docid."'";
 
-  $pc_query = "SELECT * FROM dental_patient_contacts pc inner join dental_patients p on p.patientid=pc.patientid WHERE p.docid = '".$docid."'";
+$num_pc = $db->getNumberRows($pc_query);
 
-  $num_pc = $db->getNumberRows($pc_query);
+$pi_query = "SELECT * FROM dental_patient_insurance pi inner join dental_patients p on p.patientid=pi.patientid WHERE p.docid = '".$docid."'";
 
-  $pi_query = "SELECT * FROM dental_patient_insurance pi inner join dental_patients p on p.patientid=pi.patientid WHERE p.docid = '".$docid."'";
+$num_pi = $db->getNumberRows($pi_query);
 
-  $num_pi = $db->getNumberRows($pi_query);
+$c_query = "SELECT * FROM dental_patients p2 inner join dental_patients p on p.patientid=p2.parent_patientid WHERE p.docid = '".$docid."'";
 
-  $c_query = "SELECT * FROM dental_patients p2 inner join dental_patients p on p.patientid=p2.parent_patientid WHERE p.docid = '".$docid."'";
+$num_c = $db->getNumberRows($c_query);
 
-  $num_c = $db->getNumberRows($c_query);
+$bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.docid = '".$docid."'";
 
-  $bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.docid = '".$docid."'";
+$num_bounce = $db->getNumberRows($bounce_query);
 
-  $num_bounce = $db->getNumberRows($bounce_query);
-
-  $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from ( select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc ) as n LEFT JOIN dental_users u on u.userid=n.signed_id
+$unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from ( select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc ) as n LEFT JOIN dental_users u on u.userid=n.signed_id
     LEFT JOIN dental_notes p ON p.notesid = n.parentid group by n.parentid order by n.procedure_date DESC, n.adddate desc) as m where m.signed_on IS NULL OR m.signed_on = ''
-    ";
+";
+$num_unsigned = $db->getNumberRows($unsigned_query);
 
-  $num_unsigned = $db->getNumberRows($unsigned_query);
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
 
-  $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
-
-  $num_rejected_preauth = $db->getNumberRows($preauth_query);
+$num_rejected_preauth = $db->getNumberRows($preauth_query);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -177,9 +159,9 @@ include_once('includes/patient_changes.php');
     $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".$_GET['pid']."' LIMIT 1;";
 
     $stepquery = $db->getRow($getstepqrysql);
-    $stepquery = array($stepquery['steparray']);
+    $stepquery = [$stepquery['steparray']];
 
-		if ($db->getNumberRows($getstepqrysql) > 0) {
+    if ($db->getNumberRows($getstepqrysql) > 0) {
       $step = explode(",",$stepquery['0']);
       $step_json = json_encode($step);
       $hideallblocks = 1;
@@ -214,13 +196,13 @@ include_once('includes/patient_changes.php');
     
     $my = $db->getResults($sql);
     foreach ($my as $myarray) {
-			$premed = $myarray['premedcheck'];
+        $premed = $myarray['premedcheck'];
 
       if ($premed) {
         $title .= "Pre-medication: " . $myarray['premed']."\n";
       }
 
-      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid=".$db->escape($_GET['pid']);
 
       $myq3array = $db->getRow($sqlq3);
       $allergen = $myq3array['allergenscheck'];
@@ -239,8 +221,8 @@ include_once('includes/patient_changes.php');
       <td colspan="2" align="right" ></td>
     </tr>
     <tr>
-	    <td valign='top' height="400">
-	      <div class="suckertreemenu2">
+        <td valign='top' height="400">
+          <div class="suckertreemenu2">
           <ul id="topmenu">
             <li><a href="#">Manage Settings</a>
               <ul style="z-index:5001;margin-top:-20px;">
@@ -264,12 +246,12 @@ include_once('includes/patient_changes.php');
                 </li>
 
                 <?php 
-            			$s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
-            			$sq = $db->getResults($s);
-            		  foreach ($sq as $c) {
+                        $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+                        $sq = $db->getResults($s);
+                      foreach ($sq as $c) {
                 ?>
 
-			            <li>
+                <li>
                     <a class="submenu_item" href="view_documents.php?cat=<?php echo  $c['categoryid'];?>"><?php echo  $c['name']; ?></a>
                   </li>
 
@@ -281,7 +263,7 @@ include_once('includes/patient_changes.php');
                 <li>
                   <a class="submenu_item" href="manage_claim_setup.php">Claim Setup</a>
                 </li>
-	              <li>
+                  <li>
                   <a class="submenu_item" href="manage_profile.php">Profile</a>
                 </li>
                 <li>
@@ -292,18 +274,18 @@ include_once('includes/patient_changes.php');
                   <li>
                     <a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a>
                   </li>
-	              <?php } ?>
+                  <?php } ?>
 
                 <li>
                   <a class="submenu_item" href="manage_staff.php">Staff</a>
                 </li>
-      		      <li>
+                  <li>
                   <a class="submenu_item" href="manage_user_forms.php">Forms</a>
                 </li>
-      		      <li>
+                  <li>
                   <a class="submenu_item" href="manage_manuals.php">Manuals</a>
                 </li>
-      		      <li>
+                  <li>
                   <a class="submenu_item" href="manage_locations.php">Locations</a>
                 </li>
                 <li>
@@ -313,7 +295,7 @@ include_once('includes/patient_changes.php');
                   <a class="menu_item" href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a>
                 </li>
               </ul>
-	          </li>
+              </li>
 
             <li>
               <a href="logout.php">Sign Out</a>
@@ -330,7 +312,7 @@ include_once('includes/patient_changes.php');
               JOIN dental_users du ON dt.responsibleid=du.userid
               LEFT JOIN dental_patients p ON p.patientid=dt.patientid
               WHERE (dt.status = '0' OR dt.status IS NULL) AND
-              dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+              dt.responsibleid='".$db->escape($_SESSION['userid'])."'";
 
           $num_tasks = $db->getNumberRows($task_sql);
         ?>
@@ -572,13 +554,13 @@ include_once('includes/patient_changes.php');
               <div id="patient_search_div">
                 <input type="text" id="patient_search"  style="width:200px;" value="Patient Search" name="q" autocomplete="off" />
 
-	              <br />
+              <br />
 
-              	<div id="search_hints"  class="search_hints" style="display:none;">
-              		<ul id="patient_list">
-              			<li class="template" style="display:none">Doe, John S</li>
-              		</ul>
-              	</div>
+                <div id="search_hints"  class="search_hints" style="display:none;">
+                    <ul id="patient_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                    </ul>
+                </div>
               </div> 
 
               <button onclick="window.location='add_patient.php'" style="margin-top:27px;">+ Add Patient</button>
@@ -588,12 +570,12 @@ include_once('includes/patient_changes.php');
 
             <?php
               $logo_sql = "SELECT c.logo FROM companies c
-        			   JOIN dental_user_company uc ON uc.companyid = c.id
-        			   WHERE uc.userid='".$_SESSION['userid']."'";
+                   JOIN dental_user_company uc ON uc.companyid = c.id
+                   WHERE uc.userid='".$_SESSION['userid']."'";
 
               $logo_r = $db->getRow($logo_sql);
 
-              if($logo_r['logo'] != '') {
+              if ($logo_r['logo'] != '') {
             ?>
 
               <div style="float:right;margin:13px 15px 0 0;"><img src="q_file/<?php echo $logo_r['logo']; ?>" /></div> 
@@ -610,7 +592,7 @@ include_once('includes/patient_changes.php');
                 <div id="patient_name_div" <?php echo  (strlen($thename)>20) ? 'style="font-size:14px"' : ''; ?>>
                   <?php echo  $thename; ?>
 
-		              <?php
+                      <?php
                     if ($premed == 1 || $allergen == 1) {
                       echo "<a href=\"q_page3.php?pid=".$_GET['pid']."\" title=\"".$title."\" style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*Med</a>";
                     }
@@ -618,7 +600,7 @@ include_once('includes/patient_changes.php');
 
                   <?php
                     $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt JOIN dental_users du ON dt.responsibleid=du.userid LEFT JOIN dental_patients p ON p.patientid=dt.patientid WHERE (dt.status = '0' OR
-                      dt.status IS NULL) AND (du.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') AND dt.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+                      dt.status IS NULL) AND (du.docid='".$db->escape($_SESSION['docid'])."' OR du.userid='".$db->escape($_SESSION['docid'])."') AND dt.patientid='".$db->escape($_GET['pid'])."'";
 
                     $t_num_sql = $t_sql;
                     $num_pat_tasks = $db->getNumberRows($t_num_sql);
@@ -824,7 +806,6 @@ include_once('includes/patient_changes.php');
               </li>
 
               <?php
-                $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
                 $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
               ?>
 
@@ -927,8 +908,6 @@ include_once('includes/patient_changes.php');
           $my = $db->getResults($sql);
           foreach ($my as $myarray) {
             $thename = $myarray['firstname']." ".$myarray['lastname'];
-            if ($myarray["premedcheck"] == 1) {
-            }
           }
         ?>
       </div>
@@ -939,24 +918,23 @@ include_once('includes/patient_changes.php');
 
     <?php
       if (isset($_GET['pid'])) {
-	      $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+          $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
 
-        $n = $db->getNumberRows($q);
-        $pat = $db->getRow($q);
-				$n = num_patient_changes($_GET['pid']);
+          $pat = $db->getRow($s);
+          $n = num_patient_changes($_GET['pid']);
                                 
         $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
           p.firstname as patfirstname, p.lastname as patlastname
           FROM dental_patient_contacts pc 
           INNER JOIN dental_patients p ON pc.patientid=p.patientid
           WHERE p.docid='".$_SESSION['docid']."' AND
-          p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+          p.patientid='".$db->escape($_GET['pid'])."'";
 
         $total_contacts = $db->getNumberRows($contacts_sql);
 
         $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
           WHERE p.docid='".$_SESSION['docid']."' AND
-          p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+          p.patientid='".$db->escape($_GET['pid'])."'";
 
         $total_insurance = $db->getNumberRows($insurance_sql);
 
@@ -966,17 +944,17 @@ include_once('includes/patient_changes.php');
             <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
           </a>
     <?php } 
-        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".$db->escape($_GET['pid'])."'";
 
         $exist_row = $db->getRow($exist_sql);
 
-	      if ($exist_row['symptoms_status'] == 2 || $exist_row['treatments_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2) {
+          if ($exist_row['symptoms_status'] == 2 || $exist_row['treatments_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2) {
     ?>
           <a class="warning" href="q_page1.php?pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
             <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-          </a>	  
+          </a>
     <?php }
-      $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+      $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".$db->escape($_GET['pid'])."'";
 
       if ($db->getNumberRows($email_sql)>0) { 
     ?>
@@ -986,7 +964,7 @@ include_once('includes/patient_changes.php');
     <?php }
       }
 
-      $sql = "SELECT use_letters from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+      $sql = "SELECT use_letters from dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
 
       $r = $db->getRow($sql);
       $use_letters = ($r['use_letters']=='1');

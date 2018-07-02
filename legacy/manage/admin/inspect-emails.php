@@ -11,6 +11,8 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
+$db = new Db();
+
 if (!empty($_POST['truncate'])) {
     $db->query("TRUNCATE dental_email_log");
 } elseif (!empty($_POST['older'])) {
@@ -50,9 +52,13 @@ require_once __DIR__ . '/includes/top.htm';
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <style type="text/css">
-    pre { max-height: 300px; }
+    pre {
+        max-height: 300px;
+    }
 
-    table { table-layout: fixed; }
+    table {
+        table-layout: fixed;
+    }
 
     td[rowspan] {
         position: relative;
@@ -71,15 +77,12 @@ require_once __DIR__ . '/includes/top.htm';
         $('form [name=truncate]').click(function(){
             return confirm('Are you sure you want to remove ALL the logs?');
         });
-
         $('.table.table-condensed a').click(function() {
             var $this = $(this),
                 $tr = $this.closest('tr').nextUntil('tr.json').last().nextUntil('tr:not(.json)');
-
             if (!$tr.length) {
                 return false;
             }
-
             $tr.each(function(){
                 var $this = $(this);
 
@@ -89,9 +92,7 @@ require_once __DIR__ . '/includes/top.htm';
                     });
                 }
             });
-
             $tr.toggleClass('hidden');
-
             return false;
         });
     });
@@ -106,7 +107,7 @@ require_once __DIR__ . '/includes/top.htm';
     <p class="lead text-center">There are no email logs.</p>
 <?php } ?>
 
-    <p class="text-right">Pages: <?php paging($totalPages, $page, "count=$count") ?></p>
+<p class="text-right">Pages: <?php paging($totalPages, $page, "count=$count") ?></p>
 <table class="table table-condensed table-bordered">
     <colgroup>
         <col width="15%" />
@@ -116,44 +117,44 @@ require_once __DIR__ . '/includes/top.htm';
         <col width="25%" />
     </colgroup>
     <tbody>
-        <?php foreach ($results as $email) { ?>
-            <tr>
-                <td rowspan="4">
-                    <?= e($email['created_at']) ?>
-                    <a href="#" title="Toggle email view" class="btn btn-success btn-sm">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <th>From</th>
-                <td colspan="3"><code><?= e($email['from']) ?></code></td>
-            </tr>
-            <tr>
-                <th>To</th>
-                <td colspan="3"><code><?= e($email['to']) ?></code></td>
-            </tr>
-            <tr>
-                <th>Subject</th>
-                <td colspan="3"><code><?= e($email['subject']) ?></code></td>
-            </tr>
-            <tr class="json hidden">
-                <th>Headers</th>
-                <td colspan="4"><pre class="on-demand"><?= e($email['headers']) ?></pre></td>
-            </tr>
-            <tr class="json hidden">
-                <th>Full Body</th>
-                <td colspan="4"><pre><?= e($email['body']) ?></pre></td>
-            </tr>
-            <tr class="json hidden">
-                <th>Text Version</th>
-                <td colspan="4"><pre><?= e($email['text']) ?></pre></td>
-            </tr>
-            <tr class="json hidden">
-                <th>HTML Version</th>
-                <td colspan="4"><?= $email['html'] ?></td>
-            </tr>
-        <?php } ?>
+    <?php foreach ($results as $email) { ?>
+        <tr>
+            <td rowspan="4">
+                <?= e($email['created_at']) ?>
+                <a href="#" title="Toggle email view" class="btn btn-success btn-sm">
+                    <i class="fa fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>From</th>
+            <td colspan="3"><code><?= e($email['from']) ?></code></td>
+        </tr>
+        <tr>
+            <th>To</th>
+            <td colspan="3"><code><?= e($email['to']) ?></code></td>
+        </tr>
+        <tr>
+            <th>Subject</th>
+            <td colspan="3"><code><?= e($email['subject']) ?></code></td>
+        </tr>
+        <tr class="json hidden">
+            <th>Headers</th>
+            <td colspan="4"><pre class="on-demand"><?= e($email['headers']) ?></pre></td>
+        </tr>
+        <tr class="json hidden">
+            <th>Full Body</th>
+            <td colspan="4"><pre><?= e($email['body']) ?></pre></td>
+        </tr>
+        <tr class="json hidden">
+            <th>Text Version</th>
+            <td colspan="4"><pre><?= e($email['text']) ?></pre></td>
+        </tr>
+        <tr class="json hidden">
+            <th>HTML Version</th>
+            <td colspan="4"><?= $email['html'] ?></td>
+        </tr>
+    <?php } ?>
     </tbody>
 </table>
 <?php

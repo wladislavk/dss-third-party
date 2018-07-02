@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include_once('../admin/includes/main_include.php');
 include_once('../includes/constants.inc');
 include("../includes/sescheck.php");
@@ -7,9 +8,8 @@ include_once('../includes/general_functions.php');
 
 $deviceArray = [];
 
-if (!isset($db) || !$db instanceof Db) {
-    exit;
-}
+$db = new Db();
+
 $deviceSql = <<<SQL
 SELECT d.deviceid device_id, d.device name, d.image_path FROM dental_device d
 SQL;

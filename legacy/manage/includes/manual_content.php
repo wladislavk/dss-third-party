@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="css/manual.css" type="text/css" media="screen" />
-
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<html>
+<head>
+    <link rel="stylesheet" href="css/manual.css" type="text/css" media="screen" />
 </head>
 
 <body lang=EN-US link=blue vlink=purple>
@@ -2825,5 +2829,5 @@ Top]</a></p>
 <p class=MsoNormal style='text-align:justify'>&nbsp;</p>
 
 </div>
-
-
+</body>
+</html>

@@ -4,13 +4,15 @@ namespace Ds3\Libraries\Legacy;
 include_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 
+$db = new Db();
+
 if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
     if (empty($_POST['password1'])) {
         $msg = 'The password cannot be empty';
     } elseif ($_POST['password1'] == $_POST['password2']) {
         $salt = create_salt();
         $pass = gen_password($_POST['password1'], $salt);
-        $up_sql = "UPDATE dental_users SET password='".mysqli_real_escape_string($con, $pass)."', salt='".$salt."', recover_hash='' WHERE userid = '".mysqli_real_escape_string($con, $_POST['userid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
+        $up_sql = "UPDATE dental_users SET password='".$db->escape( $pass)."', salt='".$salt."', recover_hash='' WHERE userid = '".$db->escape( $_POST['userid'])."' AND recover_hash='".$db->escape( $_POST['hash'])."'";
 
         $db->query($up_sql);?>
         <script type="text/javascript">
@@ -33,8 +35,7 @@ if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
             NOW() <= $validInterval AS valid
         FROM dental_users
         WHERE username = '$username'
-            AND recover_hash = '$recoverHash'";
-
+        AND recover_hash = '$recoverHash'";
     $check_myarray = $db->getRow($check_sql);
 
     if (empty($check_myarray['valid'])) {
@@ -76,7 +77,7 @@ if (!empty($_GET['msg'])) {
 <body>
 <div id="login_container">
     <div id="form-container">
-    <FORM name="loginfrm" method="post">
+    <form name="loginfrm" method="post">
         <input type="hidden" name="recoversub" value="1">
         <input type="hidden" name="hash" value="<?= e($_GET['rh']) ?>" />
         <input type="hidden" name="userid" value="<?= e($check_myarray ? $check_myarray['userid'] : '') ?>" />
@@ -120,6 +121,6 @@ if (!empty($_GET['msg'])) {
                 </td>
             </tr>
         </table>
-    </FORM>
+    </form>
     </div>
 </div>

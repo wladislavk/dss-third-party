@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
+
+$db = new Db();
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
@@ -7,13 +11,13 @@ include "includes/top.htm";
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Forms
+    Manage Forms
 </span>
 <br/>
 <br/>
 <?php if (isset($_GET['msg'])) { ?>
     <div align="center" class="red">
-        <b><? echo $_GET['msg']; ?></b>
+        <b><?php echo $_GET['msg']; ?></b>
     </div>
 <?php } ?>
 
@@ -33,7 +37,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -101,7 +105,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -125,7 +129,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -149,7 +153,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -261,7 +265,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -285,7 +289,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -309,7 +313,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = $db->getResults($loc_sql);
                 $num_loc = count($loc_q);
                 if ($num_loc > 1) {
@@ -333,7 +337,7 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <?php
-                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='" . $db->escape( $_SESSION['docid']) . "'";
                 $loc_q = mysqli_query($con, $loc_sql);
                 $num_loc = mysqli_num_rows($loc_q);
                 if ($num_loc > 1) {
@@ -343,8 +347,8 @@ include "includes/top.htm";
                            class="editlink">
                             View <?= $loc_r['location']; ?><br/>
                         </a>
-                    <?php } ?>
-                <?php } else { ?>
+                    <?php }
+                } else { ?>
                     <a href="view_user_form.php?file=proof_of_delivery&did=<?= $_SESSION['docid']; ?>" class="editlink">
                         View
                     </a>
@@ -375,7 +379,6 @@ include "includes/top.htm";
         </tr>
     </table>
 </form>
-
 
 <div id="popupContact">
     <a id="popupContactClose">

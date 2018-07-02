@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
 <h3>HIPAA AGREEMENT</h3>
 <h4>Dental Sleep Solutions Franchising, LLC, User Agreement</h4>
 <p>(Effective January 1, 2013)</p>
@@ -70,4 +72,3 @@ o amend this Agreement from time to time as is necessary for Covered Entity to c
 5. Notice to Business Associate. Any notice required under this Agreement to be given Business
 Associate shall be made in writing to:<br />
 Dental Sleep Solutions Franchising LLC, 3090 East Bay Drive, Suite 205, Holmes Beach, Florida 34217<br />
-

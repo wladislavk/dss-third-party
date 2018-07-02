@@ -28,15 +28,15 @@ require_once __DIR__ . '/includes/form-backup-setup.php';
 
 if ($patient_info) {
     if (!$isHistoricView && !empty($_GET['own']) && $_GET['own'] == 1) {
-        $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+        $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
         $c_q = mysqli_query($con, $c_sql);
         $changed = mysqli_num_rows($c_q);
 
-        $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+        $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
         $db->query($own_sql);
 
         if ($_GET['own_completed'] == 1) {
-            $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
             if ($db->getNumberRows($q1_sql) == 0) {
                 $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
                 $db->query($ed_sql);
@@ -61,8 +61,7 @@ if ($patient_info) {
     <script type="text/javascript" src="js/q_page1.js?v=20171219"></script>
     <script type="text/javascript" src="/manage/js/form_top.js?v=20180404"></script>
     <?php
-	$todaysdate = date("m/d/Y");
-	if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
+    if (!$isHistoricView && !empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
         $exam_date = ($_POST['exam_date'] != '') ? date('Y-m-d', strtotime($_POST['exam_date'])) : '';
         $ess = $_POST['ess'];
         $tss = $_POST['tss'];
@@ -198,7 +197,6 @@ if ($patient_info) {
 
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -207,7 +205,7 @@ if ($patient_info) {
         trigger_error("Die called", E_USER_ERROR);
     }
 
-    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".$db->escape( $_GET['pid'])."'";
     $exist_row = $db->getRow($exist_sql);
 
     if ($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0) { ?>
@@ -245,7 +243,6 @@ if ($patient_info) {
             $andNullConditional";
         $myarray = $db->getRow($sql);
 
-        $q_page1id = st($myarray['q_page1id']);
         $exam_date = st($myarray['exam_date']);
         $ess = st($myarray['ess']);
         $tss = st($myarray['tss']);
@@ -253,19 +250,15 @@ if ($patient_info) {
         $chief_complaint_text = st($myarray['chief_complaint_text']);
         $complaintid = st($myarray['complaintid']);
         $other_complaint = st($myarray['other_complaint']);
-        $additional_paragraph = st($myarray['additional_paragraph']);
         $energy_level = st($myarray['energy_level']);
         $snoring_sound = st($myarray['snoring_sound']);
         $wake_night = st($myarray['wake_night']);
-        $breathing_night = st($myarray['breathing_night']);
         $morning_headaches = st($myarray['morning_headaches']);
         $hours_sleep = st($myarray['hours_sleep']);
         $quit_breathing = st($myarray['quit_breathing']);
         $bed_time_partner = st($myarray['bed_time_partner']);
         $sleep_same_room = st($myarray['sleep_same_room']);
         $told_you_snore = st($myarray['told_you_snore']);
-        $main_reason = st($myarray['main_reason']);
-        $main_reason_other = st($myarray['main_reason_other']);
         $sleep_qual = st($myarray['sleep_qual']);
 
         if ($complaintid != '') {
@@ -406,9 +399,7 @@ if ($patient_info) {
                                         $andNullConditional";
                                     $myarray = $db->getRow($sql);
 
-                                    $q_sleepid = st($myarray['q_sleepid']);
                                     $epworthid = st($myarray['epworthid']);
-                                    $analysis = st($myarray['analysis']);
 
                                     if ($epworthid != '') {
                                         $epworth_arr1 = explode('~', $epworthid);
@@ -421,7 +412,6 @@ if ($patient_info) {
 
                                     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                     $epworth_my = $db->getResults($epworth_sql);
-                                    $epworth_number = count($epworth_my);
 
                                     foreach ($epworth_my as $epworth_myarray) {
                                         if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
@@ -447,7 +437,6 @@ if ($patient_info) {
                                         $andNullConditional";
                                     $myarray = $db->getRow($sql);
 
-                                    $thortonid = st($myarray['thortonid']);
                                     $snore_1 = st($myarray['snore_1']);
                                     $snore_2 = st($myarray['snore_2']);
                                     $snore_3 = st($myarray['snore_3']);
@@ -490,7 +479,6 @@ if ($patient_info) {
                                 <?php
                                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                                 $complaint_my = $db->getResults($complaint_sql);
-                                $complaint_number = count($complaint_my);
                                 ?>
                                 <span class="form_info">
                                     Please check any other complaints below.
@@ -812,7 +800,7 @@ if ($patient_info) {
         <div id="backgroundPopup"></div>
         <br /><br />
         <?php
-	} //end symptom status check
+    } //end symptom status check
 } else {  // end pt info check
     echo "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 } ?>

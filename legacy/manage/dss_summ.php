@@ -1,19 +1,23 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 
+$db = new Db();
+
 if (isset($_REQUEST['del_note'])) {
     $s = "UPDATE dental_notes SET status=0 
-          WHERE parentid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'
-          	OR notesid='".mysqli_real_escape_string($con, $_REQUEST['del_note'])."'";
+          WHERE parentid='".$db->escape( $_REQUEST['del_note'])."'
+          OR notesid='".$db->escape( $_REQUEST['del_note'])."'";
     $db->query($s);
 }
 
 if (isset($_REQUEST['sid'])) {
-    $s = "UPDATE dental_notes SET signed_id='".mysqli_real_escape_string($con, $_SESSION['userid'])."', signed_on=now() 
-          WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'
-          	AND notesid='".mysqli_real_escape_string($con, $_REQUEST['sid'])."'
-            AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $s = "UPDATE dental_notes SET signed_id='".$db->escape( $_SESSION['userid'])."', signed_on=now() 
+          WHERE patientid='".$db->escape( $_REQUEST['pid'])."'
+          AND notesid='".$db->escape( $_REQUEST['sid'])."'
+          AND docid='".$db->escape( $_SESSION['docid'])."'";
     $db->query($s);
     if (isset($_REQUEST['return'])) {
         if ($_REQUEST['return']=='unsigned') {
@@ -59,8 +63,8 @@ $dental_letters_query = "
     JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
     WHERE dental_letters.status = '0' 
     AND dental_letters.deleted = '0' 
-    AND dental_patients.docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'
-    AND dental_letters.patientid= '".mysqli_real_escape_string($con, (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : ''))."';
+    AND dental_patients.docid = '".$db->escape( $_SESSION['docid'])."'
+    AND dental_letters.patientid= '".$db->escape( (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : ''))."';
 ";
 
 $pending_letters = $db->getNumberRows($dental_letters_query);
@@ -96,7 +100,7 @@ if (!isset($patientId)) {
             <?php include 'summ_treatment.php'; ?>
         </div>
         <div id="sect_health" style="display: none">
-            <?php include 'summ_health.php'; ?>		
+            <?php include 'summ_health.php'; ?>
         </div>
         <div id="sect_letters" style="display: none">
             <?php include 'summ_letters.php'; ?>

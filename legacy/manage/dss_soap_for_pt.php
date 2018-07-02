@@ -18,11 +18,6 @@ if ($pat_myarray['patientid'] == '') {
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-$ref_myarray = $db->getRow($ref_sql);
-
-$referring_physician = st($ref_myarray['referring_physician']);
-$a_arr = explode(" ", $referring_physician);
 if (st($pat_myarray['dob']) != '') {
     $dob_y = date('Y', strtotime(st($pat_myarray['dob'])));
     $cur_y = date('Y');
@@ -30,9 +25,6 @@ if (st($pat_myarray['dob']) != '') {
 } else {
     $age = 'N/A';
 }
-
-$q1_sql = "select * from dental_q_page1_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-$q1_myarray = $db->getRow($q1_sql);
 
 $q3_sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q3_myarray = $db->getRow($q3_sql);
@@ -72,25 +64,16 @@ foreach($medications_arr as $val) {
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q2_myarray = $db->getRow($q2_sql);
 
-$polysomnographic = st($q2_myarray['polysomnographic']);
-$sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
-$rdi = st($q2_myarray['rdi']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
 
 if (st($pat_myarray['gender']) == 'Female') {
-    $h_h = "her";
     $s_h = "she";
-    $h_h1 = "her";
-    $m_s = "Mrs.";
 } else {
-    $h_h = "his";
     $s_h = "he";
-    $h_h1 = "him";
-    $m_s = "Mr.";
 }
 ?>
 <br />

@@ -11,10 +11,9 @@ include "../includes/similar.php";
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript" src="/manage/admin/js/view_patient.js"></script>
 <?php
-function trigger_letter1and2($pid)
+function trigger_letter1and2()
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $letter1id = "1";
     $letter2id = "2";
@@ -26,7 +25,7 @@ function trigger_letter1and2($pid)
     $mdcontacts[] = $_POST['docmdother'];
     $mdcontacts[] = $_POST['docmdother2'];
     $mdcontacts[] = $_POST['docmdother3'];
-    $recipients	= [];
+    $recipients = [];
     foreach ($mdcontacts as $contact) {
         if ($contact != "Not Set") {
             $letter_query = "SELECT md_list 
@@ -35,7 +34,7 @@ function trigger_letter1and2($pid)
                 AND templateid IN(".$letter1id.",".$letter2id.")";
             $letter_result = $db->getRow($letter_query);
             if (empty($letter_result) && !empty($contact)) {
-                $c_sql = "select * from dental_contact where contactid='".mysqli_real_escape_string($con,$contact)."' and status=1";
+                $c_sql = "select * from dental_contact where contactid='".$db->escape($contact)."' and status=1";
                 $c_q = $db->getRow($c_sql);
                 if (!empty($c_q)) {
                     $recipients[] = $contact;
@@ -44,8 +43,6 @@ function trigger_letter1and2($pid)
         }
     } 
     if (count($recipients) > 0) {
-        $recipients_list = implode(',', $recipients);
-
         //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
         if ($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE) {
             if (!is_numeric($letter1)) {
@@ -60,12 +57,10 @@ function trigger_letter1and2($pid)
     }
 }
 
-function trigger_letter3($pid)
+function trigger_letter3()
 {
-    $letterid = '3';
-    $topatient = '1';
     if (!is_numeric($letter)) {
-        print $letter;
+        echo $letter;
         trigger_error("Die called", E_USER_ERROR);
     } else {
         return $letter;
@@ -85,7 +80,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
     $use_patient_portal = $_POST['use_patient_portal'];
     if ($_POST["ed"] != "") { //existing patient (update)
         $s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
-            WHERE patientid=".mysqli_real_escape_string($con, $_GET['pid']);
+            WHERE patientid=".$db->escape( $_GET['pid']);
         $s_r = $db->getRow($s_sql);
         $old_referred_by = $s_r['referred_by'];
         $old_referred_source = $s_r['referred_source'];
@@ -95,7 +90,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             sendRemEmail($_POST['ed'], $_POST['email']); //send reminder email
         } elseif(!isset($_POST['sendReg']) && $s_r['registration_status'] == 1 && trim($_POST['email']) != trim($s_r['email'])) {
             if ($doc_patient_portal && $use_patient_portal) {
-                sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered
+                sendRegEmail($_POST['ed'], $_POST['email']); //send reg email if email is updated and not registered
             }
         }
         $ed_sql = "update dental_patients 
@@ -173,7 +168,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
             p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
             p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-            p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+            p_m_eligible_payer_name = '".$db->escape($p_m_eligible_payer_name)."',
             has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
             s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
             s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -225,7 +220,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             preferredcontact = '".s_for($_POST["preferredcontact"])."'
             where patientid='".$_POST["ed"]."'";
         $db->query($ed_sql);
-        $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+        $db->query("UPDATE dental_patients set email='".$db->escape($_POST['email'])."' WHERE parent_patientid='".$db->escape($_POST["ed"])."'");
 
         if (isset($_POST['location'])) {
             $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".$_GET['pid'];
@@ -234,7 +229,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             if ($maxIdRow && $maxIdRow['max_summaryid']) {
                 $maxId = $maxIdRow['max_summaryid'];
             }
-            $escapedLocation = mysqli_real_escape_string($con, $_POST['location']);
+            $escapedLocation = $db->escape($_POST['location']);
             if ($maxId) {
                 $loc_query = "UPDATE dental_summary SET location='$escapedLocation' WHERE summaryid=$maxId";
             } else {
@@ -243,11 +238,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             $db->query($loc_query);
         }
 
-        $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+        $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".$db->escape($_POST['ed'])."'";
         $l = $db->getRow($lsql);
 
         $login = $l['login'];
-        $pass = $l['password'];
         if ($login == '') {
             $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
             $clogin = ereg_replace("[^A-Za-z]", "", $clogin);
@@ -268,12 +262,12 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             } else {
                 $login = strtolower($clogin);
             }
-            $ilsql = "UPDATE dental_patients set login='".mysqli_real_escape_string($con,$login)."'  WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+            $ilsql = "UPDATE dental_patients set login='".$db->escape($login)."'  WHERE patientid='".$db->escape($_POST['ed'])."'";
             $db->query($ilsql);
         }
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']);
+                sendRegEmail($_POST['ed'], $_POST['email'], $s_r['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');
@@ -293,17 +287,17 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
 
         if ($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]) {
             if ($_POST['referred_by']) {
-                $sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysqli_real_escape_string($con,$_POST['ed']);
+                $sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".$db->escape($_POST['ed']);
             } else {
-                $sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con, $_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+                $sql = "DELETE FROM dental_letters where patientid=".$db->escape( $_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
             }
             $db->query($sql);
         }
 
-        trigger_letter1and2($_POST['ed']);
+        trigger_letter1and2();
 
         if ($_POST['introletter'] == 1) {
-            trigger_letter3($_POST['ed']);
+            trigger_letter3();
         }
 
         if (isset($_POST['add_ref_but'])) { ?>
@@ -375,7 +369,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             preferred_name = '".s_for($_POST["preferred_name"])."',
             login = '".$login."',
             salt = '".$salt."',
-            password = '".mysqli_real_escape_string($con, $password)."',
+            password = '".$db->escape( $password)."',
             salutation = '".s_for($_POST["salutation"])."',
             member_no = '".s_for($_POST['member_no'])."',
             group_no = '".s_for($_POST['group_no'])."',
@@ -421,7 +415,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
             p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
             p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-            p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+            p_m_eligible_payer_name = '".$db->escape($p_m_eligible_payer_name)."',
             has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
             s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
             s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -491,18 +485,18 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             adddate=now(),
             ip_address='".$_SERVER['REMOTE_ADDR']."',
             preferredcontact='".s_for($_POST["preferredcontact"])."';";
-		$pid = $db->getInsertId($ins_sql);
+        $pid = $db->getInsertId($ins_sql);
 
-		if (isset($_POST['location'])) {
-		    $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
-		    $db->query($loc_query);
-		}
+        if (isset($_POST['location'])) {
+            $loc_query = "INSERT INTO dental_summary SET location='".$db->escape($_POST['location'])."', patientid='".$_GET['pid']."';";
+            $db->query($loc_query);
+        }
 
-   		trigger_letter1and2($pid);
+        trigger_letter1and2();
 
         if (isset($_POST['sendReg']) && $doc_patient_portal && $_POST["use_patient_portal"]) {
             if (trim($_POST['email']) != '' && trim($_POST['cell_phone']) != '') {
-                sendRegEmail($pid, $_POST['email'], $login);
+                sendRegEmail($pid, $_POST['email']);
             } else { ?>
                 <script type="text/javascript">
                     alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');
@@ -511,14 +505,10 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             }
         }
         if ($_POST['introletter'] == 1) {
-            trigger_letter3($pid);
+            trigger_letter3();
         }
         $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
-        $flowinsert = $db->query($flowinsertqry);
-        if(!empty($flowinsert)){
-            $referred_result = $db->query($referredbyqry);
-            $message = "Successfully updated flowsheet!2";
-        }
+        $db->query($flowinsertqry);
 
         $stepid = '1';
         $segmentid = '1';
@@ -534,7 +524,7 @@ if (!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1) {
             (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) 
             VALUES 
             ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
-        $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
+        $db->query($flow_pg2_info_query);
 
         $sim = similar_patients($pid);
         if (count($sim) > 0) { ?>
@@ -570,10 +560,6 @@ if (isset($msg) && $msg != '') {
     $lastname = $_POST['lastname'];
     $preferred_name = $_POST['preferred_name'];
     $salutation = $_POST['salutation'];
-    $login = $_POST['login'];
-    $member_no = $_POST['member_no'];
-    $group_no = $_POST['group_no'];
-    $plan_no = $_POST['plan_no'];
     $dob = $_POST['dob'];
     $add1 = $_POST['add1'];
     $add2= $_POST['add2'];
@@ -594,34 +580,17 @@ if (isset($msg) && $msg != '') {
     $best_number = $_POST['best_number'];
     $email = $_POST['email'];
     $patient_notes = $_POST['patient_notes'];
-    $p_d_party = $_POST["p_d_party"];
-    $p_d_relation = $_POST["p_d_relation"];
-    $p_d_other = $_POST["p_d_other"];
-    $p_d_employer = $_POST["p_d_employer"];
-    $p_d_ins_co = $_POST["p_d_ins_co"];
-    $p_d_ins_id = $_POST["p_d_ins_id"];
-    $s_d_party = $_POST["s_d_party"];
-    $s_d_relation = $_POST["s_d_relation"];
-    $s_d_other = $_POST["s_d_other"];
-    $s_d_employer = $_POST["s_d_employer"];
-    $s_d_ins_co = $_POST["s_d_ins_co"];
-    $s_d_ins_id = $_POST["s_d_ins_id"];
     $p_m_partyfname = $_POST["p_m_partyfname"];
     $p_m_partymname = $_POST["p_m_partymname"];
     $p_m_partylname = $_POST["p_m_partylname"];
     $p_m_relation = $_POST["p_m_relation"];
-    $p_m_other = $_POST["p_m_other"];
-    $p_m_employer = $_POST["p_m_employer"];
     $p_m_ins_co = $_POST["p_m_ins_co"];
     $p_m_ins_id = $_POST["p_m_ins_id"];
-    $p_m_ins_payer_id = $_POST['p_m_ins_payer_id'];
     $has_s_m_ins = $_POST["s_m_ins"];
     $s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
     $s_m_partylname = $_POST["s_m_partylname"];
     $s_m_relation = $_POST["s_m_relation"];
-    $s_m_other = $_POST["s_m_other"];
-    $s_m_employer = $_POST["s_m_employer"];
     $s_m_ins_co = $_POST["s_m_ins_co"];
     $s_m_ins_id = $_POST["s_m_ins_id"];
     $p_m_ins_grp = $_POST["p_m_ins_grp"];
@@ -661,16 +630,8 @@ if (isset($msg) && $msg != '') {
     $docmdother2 = $_POST["docmdother2"];
     $docmdother3 = $_POST["docmdother3"];
     $emp_fax = $_POST["emp_fax"];
-    $plan_name = $_POST["plan_name"];
-    $group_number = $_POST["group_number"];
-    $ins_type = $_POST["ins_type"];
     $status = $_POST["status"];
     $use_patient_portal = $_POST["use_patient_portal"];
-    $accept_assignment = $_POST["accept_assignment"];
-    $print_signature = $_POST["print_signature"];
-    $medical_insurance = $_POST["medical_insurance"];
-    $mark_yes = $_POST["mark_yes"];
-    $inactive = $_POST["inactive"];
     $partner_name = $_POST["partner_name"];
     $emergency_name = $_POST["emergency_name"];
     $emergency_relationship = $_POST["emergency_relationship"];
@@ -682,7 +643,7 @@ if (isset($msg) && $msg != '') {
     $preferredcontact = $_POST["preferredcontact"];
     $location = $_POST["location"];
 } else {
-    $docsql = "SELECT use_patient_portal, username FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $themyarray['docid'])."'";
+    $docsql = "SELECT use_patient_portal, username FROM dental_users WHERE userid='".$db->escape( $themyarray['docid'])."'";
     $docr = $db->getRow($docsql);
     $doc_patient_portal = $docr['use_patient_portal'];
     $doc_username = $docr['username'];
@@ -691,10 +652,6 @@ if (isset($msg) && $msg != '') {
     $lastname = st($themyarray['lastname']);
     $preferred_name = st($themyarray['preferred_name']);
     $salutation = st($themyarray['salutation']);
-    $login = st($themyarray['login']);
-    $member_no = st($themyarray['member_no']);
-    $group_no = st($themyarray['group_no']);
-    $plan_no = st($themyarray['plan_no']);
     $dob = st($themyarray['dob']);
     $add1 = st($themyarray['add1']);
     $add2 = st($themyarray['add2']);
@@ -715,24 +672,10 @@ if (isset($msg) && $msg != '') {
     $best_number = st($themyarray['best_number']);
     $email = st($themyarray['email']);
     $patient_notes = st($themyarray['patient_notes']);
-    $p_d_party = st($themyarray["p_d_party"]);
-    $p_d_relation = st($themyarray["p_d_relation"]);
-    $p_d_other = st($themyarray["p_d_other"]);
-    $p_d_employer = st($themyarray["p_d_employer"]);
-    $p_d_ins_co = st($themyarray["p_d_ins_co"]);
-    $p_d_ins_id = st($themyarray["p_d_ins_id"]);
-    $s_d_party = st($themyarray["s_d_party"]);
-    $s_d_relation = st($themyarray["s_d_relation"]);
-    $s_d_other = st($themyarray["s_d_other"]);
-    $s_d_employer = st($themyarray["s_d_employer"]);
-    $s_d_ins_co = st($themyarray["s_d_ins_co"]);
-    $s_d_ins_id = st($themyarray["s_d_ins_id"]);
     $p_m_partyfname = st($themyarray["p_m_partyfname"]);
     $p_m_partymname = st($themyarray["p_m_partymname"]);
     $p_m_partylname = st($themyarray["p_m_partylname"]);
     $p_m_relation = st($themyarray["p_m_relation"]);
-    $p_m_other = st($themyarray["p_m_other"]);
-    $p_m_employer = st($themyarray["p_m_employer"]);
     $p_m_ins_co = st($themyarray["p_m_ins_co"]);
     $p_m_ins_id = st($themyarray["p_m_ins_id"]);
     $p_m_eligible_payer_id = st($themyarray["p_m_eligible_payer_id"]);
@@ -742,8 +685,6 @@ if (isset($msg) && $msg != '') {
     $s_m_partymname = st($themyarray["s_m_partymname"]);
     $s_m_partylname = st($themyarray["s_m_partylname"]);
     $s_m_relation = st($themyarray["s_m_relation"]);
-    $s_m_other = st($themyarray["s_m_other"]);
-    $s_m_employer = st($themyarray["s_m_employer"]);
     $s_m_ins_co = st($themyarray["s_m_ins_co"]);
     $s_m_ins_id = st($themyarray["s_m_ins_id"]);
     $p_m_ins_grp = st($themyarray["p_m_ins_grp"]);
@@ -776,15 +717,8 @@ if (isset($msg) && $msg != '') {
     $emp_zip = st($themyarray["emp_zip"]);
     $emp_phone = st($themyarray["emp_phone"]);
     $emp_fax = st($themyarray["emp_fax"]);
-    $plan_name = st($themyarray["plan_name"]);
-    $group_number = st($themyarray["group_number"]);
-    $ins_type = st($themyarray["ins_type"]);
     $status = st($themyarray["status"]);
     $use_patient_portal = st($themyarray["use_patient_portal"]);
-    $accept_assignment = st($themyarray["accept_assignment"]);
-    $print_signature = st($themyarray["print_signature"]);
-    $medical_insurance = st($themyarray["medical_insurance"]);
-    $mark_yes = st($themyarray["mark_yes"]);
 
     $docsleep = st($themyarray["docsleep"]);
     if ($docsleep) {
@@ -870,14 +804,12 @@ if (isset($msg) && $msg != '') {
         $docmdother3_name = "";
     }
 
-    $inactive = st($themyarray["inactive"]);
     $partner_name = st($themyarray["partner_name"]);
     $emergency_name = st($themyarray["emergency_name"]);
     $emergency_relationship = st($themyarray["emergency_relationship"]);
     $emergency_number = st($themyarray["emergency_number"]);
     $referred_source = st($themyarray["referred_source"]);
     $referred_by = st($themyarray["referred_by"]);
-    $referred_notes = st($themyarray["referred_notes"]);
 
     if ($referred_source == DSS_REFERRED_PATIENT) {
         $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
@@ -886,8 +818,8 @@ if (isset($msg) && $msg != '') {
     } elseif ($referred_source == DSS_REFERRED_PHYSICIAN) {
         $rsql = "SELECT dc.lastname, dc.firstname, dct.contacttype 
             FROM dental_contact dc
-			LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
-			WHERE contactid=".$referred_by;
+            LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
+            WHERE contactid=".$referred_by;
         $r = $db->getRow($rsql);
         $referred_name = $r['lastname'].", ".$r['firstname'];
         if ($r['contacttype'] != '') {
@@ -906,7 +838,7 @@ if (isset($msg) && $msg != '') {
     $loc_r = $db->getRow($loc_sql);
     $location = $loc_r['location'];
 }
-	
+
 // Check if required information is filled out
 $complete_info = 0;
 if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
@@ -933,7 +865,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
         $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'], ' ') + 1));
     } else {
-	    $firstname = ucfirst($_GET['search']);
+        $firstname = ucfirst($_GET['search']);
     }
 }
 ?>
@@ -1140,11 +1072,12 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>
-                            	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
-                                	<option value="">Select</option>
+                                <select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
+                                    <option value="">Select</option>
                                     <option value="Male" <?php if ($gender == 'Male') echo " selected";?>>Male</option>
                                     <option value="Female" <?php if ($gender == 'Female') echo " selected";?>>Female</option>
-                                </select><span id="req_0" class="req">*</span>
+                                </select>
+                                <span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
                             <span style="width:150px">
@@ -1226,7 +1159,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                     <li id="foli8" class="complex">
                         <div>
                             <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
+                                <textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
                             </span>
                         </div>
@@ -1374,7 +1307,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <?php
         $api_sql = "SELECT use_eligible_api 
             FROM dental_users
-            WHERE userid='".mysqli_real_escape_string($con, (!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
+            WHERE userid='".$db->escape( (!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
         $api_r = $db->getRow($api_sql);
         if ($api_r['use_eligible_api'] == 1) { ?>
             <tr>
@@ -1404,8 +1337,8 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             No
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-                            <input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if ($p_m_same_address != '2') echo "checked='checked'";?>> Yes
-                            <input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if ($p_m_same_address == '2') echo "checked='checked'";?>> No
+                            <input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <?php if ($p_m_same_address != '2') echo "checked='checked'";?>> Yes
+                            <input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <?php if ($p_m_same_address == '2') echo "checked='checked'";?>> No
                         </label>
                         <div>
                             <span>
@@ -1427,14 +1360,6 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             <span>
                                 <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
-                            </span>
-                            <span>
-                                <?php
-                                $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-                                $itype_my = $db->getRow($itype_sql);
-                                if (!empty($itype_my)) {
-                                    $image = $itype_my;
-                                } ?>
                             </span>
                         </div>
                         <div> </div>
@@ -1608,14 +1533,6 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                                 <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
-                            <span>
-                                <?php
-                                $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-                                $itype_my = $db->getRow($itype_sql);
-                                if (!empty($itype_my)) {
-                                    $image = $itype_my;
-                                } ?>
-                            </span>
                         </div>
                         <div> </div>
                     </li>
@@ -1720,7 +1637,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <tr>
             <td class="frmhead" colspan="2">
                 <table id="contactmds" style="float:left;">
-                    <tr height="35">
+                    <tr>
                         <td>
                             <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
                             <ul>
@@ -1741,7 +1658,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1761,7 +1678,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1781,7 +1698,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1801,7 +1718,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35">
+                    <tr>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1821,7 +1738,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35" id="docmdother2_tr" <?php echo ($docmdother2 == '') ? 'style="display:none;"' : ''; ?>>
+                    <tr id="docmdother2_tr" <?php echo ($docmdother2 == '') ? 'style="display:none;"' : ''; ?>>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1841,7 +1758,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35" id="docmdother3_tr" <?php echo ($docmdother3 == '') ? 'style="display:none;"' : ''; ?>>
+                    <tr id="docmdother3_tr" <?php echo ($docmdother3 == '') ? 'style="display:none;"' : ''; ?>>
                         <td>
                             <ul>
                                 <li id="foli8" class="complex">
@@ -1909,7 +1826,7 @@ if (isset($_GET['search']) && $_GET['search'] != '') {
         <tr>
             <td colspan="2" align="right">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="patientsub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["patientid"]?>" />

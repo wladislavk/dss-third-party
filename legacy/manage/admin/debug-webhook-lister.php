@@ -9,7 +9,8 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function shuffleString ($string, $replacement='') {
+function shuffleString ($string, $replacement = '')
+{
     if (!is_string($string)) {
         return $string;
     }
@@ -28,7 +29,8 @@ function shuffleString ($string, $replacement='') {
     return $string;
 }
 
-function applyFilter (&$parent, $rules) {
+function applyFilter(&$parent, $rules)
+{
     $isArray = is_array($parent);
     $isObject = is_object($parent);
 
@@ -55,7 +57,8 @@ function applyFilter (&$parent, $rules) {
     }
 }
 
-function filteredJsonDecode ($json) {
+function filteredJsonDecode($json)
+{
     $filterRules = [
         'type_code' => function ($self, &$parent) {
             if (!preg_match('/^TJ|PQ$/', $parent->type_code)) {
@@ -131,6 +134,8 @@ $eligibleTypes = [
     'payer_status',
     'payer_updated',
 ];
+
+$db = new Db();
 
 foreach ($eligibleTypes as $eventType) {
     $results = $db->getResults("SELECT response

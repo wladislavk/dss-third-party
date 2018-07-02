@@ -40,7 +40,7 @@ if (!function_exists('questionnaireCompletedSections')) {
                 OR parent_patientid = '$patientId'";
         $q3 = $db->getNumberRows($s) > 0 ? 1 : 0;
 
-        $comp = array();
+        $comp = [];
         $comp['symptoms'] = $q1;
         $comp['epworth'] = $qs;
         $comp['treatments'] = $q2;

@@ -1,5 +1,4 @@
 <?php
-
 namespace Ds3\Libraries\Legacy;
 
 $docId = (int)$_SESSION['docid'];
@@ -10,21 +9,19 @@ $patientId = (int)$_GET['pid'];
 <p id="soap-permissions-note-buttons" class=" soap-permissions" style="text-align: right; padding: 0 12px;"
    v-bind:doc-id="<?= $docId ?>" v-bind:patient-id="<?= $patientId ?>">
     <button v-cloak v-show="isSoapAuthorized"
-        class="addButton" onclick="Javascript: loadPopup('add_notes.php?soap=1&pid=<?= $patientId ?>');">
+        class="addButton" onclick="loadPopup('add_notes.php?soap=1&pid=<?= $patientId ?>');">
         + Add SOAP Note
     </button>
     &nbsp;
-    <button  class="addButton" onclick="Javascript: loadPopup('add_notes.php?pid=<?= $patientId ?>');">
+    <button  class="addButton" onclick="loadPopup('add_notes.php?pid=<?= $patientId ?>');">
         + Add New Progress Note
     </button>
 </p>
 
 <div class="clear"></div>
 <?php
-$sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name from dental_notes n
-        LEFT JOIN dental_users u on u.userid=n.signed_id
-        where n.docid='".$_SESSION['docid']."' and n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ";
-$sql .= " order by n.adddate DESC";
+$db = new Db();
+
 $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where docid='".$_SESSION['docid']."' and status IN (1,2) and patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate desc
@@ -45,46 +42,43 @@ include 'partials/patient_notes.php'; ?>
 
 <script type="text/javascript">
     function sign_notes() {
-      if (!confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?')) {
-        return false;
-      }
-      sign_arr = new Array();
-      i = 0;
-      $('.sign_chbx:checked').each(function () {
-        sign_arr[i++] = $(this).val();
-      });
-      $.ajax({
-        url: "includes/sign_notes.php",
-        type: "post",
-        data: {ids: sign_arr.join(',')},
-        success: function (data) {
-          var r = $.parseJSON(data);
-          if (!r.error) {
-            $('.sign_chbx:checked').each(function () {
-              id = $(this).val();
-              $('#note_'+id).css('backgroundColor', '');
-              $('#note_edit_'+id).remove();
-            });
-          }
-        },
-        failure: function (data) {
-          //alert('fail');
+        if (!confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?')) {
+            return false;
         }
-      });
+        sign_arr = new Array();
+        i = 0;
+        $('.sign_chbx:checked').each(function () {
+            sign_arr[i++] = $(this).val();
+        });
+        $.ajax({
+            url: "includes/sign_notes.php",
+            type: "post",
+            data: {ids: sign_arr.join(',')},
+            success: function (data) {
+                var r = $.parseJSON(data);
+                if (!r.error) {
+                    $('.sign_chbx:checked').each(function () {
+                        id = $(this).val();
+                        $('#note_'+id).css('backgroundColor', '');
+                        $('#note_edit_'+id).remove();
+                    });
+                }
+            },
+            failure: function (data) {}
+        });
     }
 
-    function add_note (pid) {
-      $.ajax({
-        url:'create_draft_note.php?pid='+pid,
-        complete: function (response) {
-          note_id = response['responseText'].replace(/\s*\<.*?\>\s*/g, ''); //strips all things in <>
-          console.log(note_id);
-          loadPopup('add_notes.php?pid='+pid+'&ed='+note_id);
-        },
-        error: function () {
-          alert("There was an error creating the note");
-        }
-      });
+    function add_note(pid) {
+        $.ajax({
+            url:'create_draft_note.php?pid='+pid,
+            complete: function (response) {
+                note_id = response['responseText'].replace(/\s*\<.*?\>\s*/g, ''); //strips all things in tags
+                loadPopup('add_notes.php?pid='+pid+'&ed='+note_id);
+            },
+            error: function () {
+                alert("There was an error creating the note");
+            }
+        });
     }
 </script>
 

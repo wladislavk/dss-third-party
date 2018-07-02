@@ -28,29 +28,15 @@ if ($num_face == 0) { ?>
 $sql = "select * from dental_q_page1_pivot where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$energy_level = st($myarray['energy_level']);
-$snoring_sound = st($myarray['snoring_sound']);
-$wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
-$morning_headaches = st($myarray['morning_headaches']);
-$hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
-$told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
-$sleep_qual = st($myarray['sleep_qual']);
 
-if(isset($_POST['device_submit'])){
+if (isset($_POST['device_submit'])) {
     $sql = "select * from dental_ex_page5_pivot where patientid='$pid'";
     $row = $db->getRow($sql);
     if ($_POST['ir_max'] !='' && $_POST['ir_min'] != '') {
@@ -85,7 +71,7 @@ if(isset($_POST['device_submit'])){
                 adddate = now(),
                 ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'
         ";
-        $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ex_ins_sql);
     }
     $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
     $maxIdRow = $db->getRow($maxIdSql);
@@ -111,7 +97,7 @@ if(isset($_POST['device_submit'])){
             adddate = now(),
             ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         $db->query($ins_sql);
-  	} else {
+    } else {
         $ed_sql = "update dental_summary set 
             initial_device_titration_1 = '$initialTitration1Escaped',
             initial_device_titration_equal_h = '$initialTitrationHEscaped',
@@ -120,7 +106,7 @@ if(isset($_POST['device_submit'])){
             optimum_echovision_hor = '$echovisionHorEscaped'
             where summaryid = {$maxId}";
         $db->query($ed_sql);
-  	}
+    }
 }
 
 $sqlex = "select * from dental_ex_page5_pivot where patientid='$pid'";
@@ -245,7 +231,6 @@ if ($imp_r['segmentid'] == '4') { ?>
             if ($complaintid != '') {
                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                 $complaint_my = $db->getResults($complaint_sql);
-                $complaint_number = count($complaint_my);
                 foreach ($complaint_my as $complaint_myarray) {
                     if (@array_search($complaint_myarray['complaintid'], $compid) !== false) {
                         ?>
@@ -519,26 +504,15 @@ $segments[1] = "Initial Contact";
 $sql = "select * from dental_q_page2_pivot where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
-        $q_page2id = st($myarray['q_page2id']);
         $polysomnographic = st($myarray['polysomnographic']);
         $sleep_center_name_text = st($myarray['sleep_center_name_text']);
         $sleep_study_on = st($myarray['sleep_study_on']);
-        $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-        $rdi = st($myarray['rdi']);
-        $ahi = st($myarray['ahi']);
         $cpap = st($myarray['cpap']);
         $cur_cpap = st($myarray['cur_cpap']);
         $intolerance = st($myarray['intolerance']);
         $other_intolerance = st($myarray['other_intolerance']);
-        $other = st($myarray['other']);
-        $affidavit = st($myarray['affidavit']);
-        $type_study = st($myarray['type_study']);
         $nights_wear_cpap = st($myarray['nights_wear_cpap']);
         $percent_night_cpap = st($myarray['percent_night_cpap']);
-        $custom_diagnosis = st($myarray['custom_diagnosis']);
-        $sleep_study_by = st($myarray['sleep_study_by']);
-        $triedquittried = st($myarray['triedquittried']);
-        $timesovertime = st($myarray['timesovertime']);
 
         if ($cpap == '') {
             $cpap = 'No';
@@ -627,7 +601,7 @@ $myarray = $db->getRow($sql);
             <br />
             <div class="cpap_options">
                 <span class="cpap_other_text">
-                    <span style="color:#000000; padding-top:0px;">
+                    <span style="color:#000000; padding-top:0;">
                         <strong>Other Items</strong>
                         <br />
                     </span>
@@ -651,7 +625,7 @@ $myarray = $db->getRow($sql);
 <script src="js/summ_summ.js" type="text/javascript"></script>
 
 <form id="rom_form" action="" method="POST">
-    <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
+    <table width="100%" align="center" border="1" cellpadding="7" cellspacing="0">
         <tr valign="top">
             <td width="17%" height="4">
                 ROM:&nbsp;&nbsp;

@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include('includes/top.htm');
 include('includes/formatters.php');
 

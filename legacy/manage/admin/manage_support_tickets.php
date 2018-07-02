@@ -14,13 +14,13 @@ if (
     trigger_error("Die called", E_USER_ERROR);
 }
 
+$db = new Db();
+
 if (isset($_GET['rid'])) {
     $ticketId = intval($_GET['rid']);
-
     $db->query("UPDATE dental_support_tickets SET viewed = 0 WHERE id = '$ticketId' AND create_type = 1");
     $db->query("UPDATE dental_support_responses SET viewed = 0 WHERE ticket_id = '$ticketId' AND response_type = 1");
 }
-
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -37,34 +37,24 @@ $currentOffset = $currentPage * $showPerPage;
 
 $queryString = [];
 $searchConditionals = [];
-$andSearchConditional = '';
 
 if ($showClosed) {
     $queryString['closed'] = 1;
 }
-
 if ($showPerPage != $countDefault) {
     $queryString['count'] = $showPerPage;
 }
-
 if (isset($_GET['catid'])) {
     $queryString['catid'] = intval($_GET['catid']);
 }
-
 if (isset($_GET['title']) && trim($_GET['title'])) {
     $queryString['title'] = trim($_GET['title']);
     $searchConditional['title'] = $queryString['title'];
 }
-
 if (isset($_GET['account']) && trim($_GET['account'])) {
     $queryString['account'] = trim($_GET['account']);
     $searchConditional['account'] = $queryString['account'];
 }
-
-if ($searchConditionals) {
-
-}
-
 if (!$showClosed) {
     $sql = "SELECT
             t.*,
@@ -97,36 +87,32 @@ if (!$showClosed) {
             ) AS ticket_attachment,
             response.last_response
         FROM dental_support_tickets t
-            LEFT JOIN dental_users u ON u.userid = t.userid
-            LEFT JOIN dental_users a ON a.userid = t.docid
-            LEFT JOIN dental_user_company uc ON uc.userid = t.docid
-            LEFT JOIN companies c ON c.id = uc.companyid
-            LEFT JOIN companies c2 ON c2.id = t.company_id
-            LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
-            LEFT JOIN (
-                    SELECT MAX(r2.adddate) AS last_response, r2.ticket_id
-                    FROM dental_support_responses r2
-                    GROUP BY r2.ticket_id
-                ) response ON response.ticket_id=t.id
+        LEFT JOIN dental_users u ON u.userid = t.userid
+        LEFT JOIN dental_users a ON a.userid = t.docid
+        LEFT JOIN dental_user_company uc ON uc.userid = t.docid
+        LEFT JOIN companies c ON c.id = uc.companyid
+        LEFT JOIN companies c2 ON c2.id = t.company_id
+        LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
+        LEFT JOIN (
+            SELECT MAX(r2.adddate) AS last_response, r2.ticket_id
+            FROM dental_support_responses r2
+            GROUP BY r2.ticket_id
+        ) response ON response.ticket_id=t.id
         WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.")
-        ";
+    ";
 
     if (!is_super($_SESSION['admin_access'])) {
         $sql .= " AND t.company_id = '" . intval($_SESSION['admincompanyid']) . "' ";
     }
-
     if ($queryString['catid']) {
         $sql .= " AND t.category_id = '{$queryString['catid']}' ";
     }
-
     if (strlen($queryString['title'])) {
         $sql .= " AND t.title LIKE '%" . $db->escape($queryString['title']) . "%' ";
     }
-
     if (strlen($queryString['account'])) {
         $sql .= " AND CONCAT(a.first_name, ' ', a.last_name) LiKE '%" . $db->escape($queryString['account']) . "%' ";
     }
-
     $totalSql = preg_replace(
         '/^select[\s\r\t\n]+[\s\S]+?[\s\r\t\n]from[\s\r\t\n]+(dental_support_tickets[\s\r\t\n]+t)/i',
         'SELECT COUNT(t.id) AS total FROM $1',
@@ -138,7 +124,6 @@ if (!$showClosed) {
 
     $sql .= " ORDER BY COALESCE(response.last_response, t.adddate) DESC LIMIT $currentOffset, $showPerPage";
     $ticketList = $db->getResults($sql);
-
     ?>
     <div class="page-header">
         Manage Support Tickets
@@ -149,12 +134,10 @@ if (!$showClosed) {
     <form action="?" method="get">
         <input type="hidden" name="catid" value="<?= intval($queryString['catid']) ?>" />
         <label for="search_title">Title:</label>
-        <input id="search_title" class="form-control input-sm input-inline" type="text" name="title"
-               value="<?= e($queryString['title']) ?>" />
+        <input id="search_title" class="form-control input-sm input-inline" type="text" name="title" value="<?= e($queryString['title']) ?>" />
         &nbsp;
         <label for="search_account">Account:</label>
-        <input id="search_account" class="form-control input-sm input-inline" type="text" name="account"
-               value="<?= e($queryString['account']) ?>" />
+        <input id="search_account" class="form-control input-sm input-inline" type="text" name="account" value="<?= e($queryString['account']) ?>" />
         &nbsp;
         <input class="btn btn-primary btn-sm" type="submit" value="Search" />
         <a href="manage_support_tickets.php?closed=1" class="btn btn-success pull-right" style="margin-left:5px">
@@ -197,7 +180,7 @@ if (!$showClosed) {
             </th>
             <th valign="top" class="col_head" width="15%">
                 Action
-            </td>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -216,7 +199,6 @@ if (!$showClosed) {
                 }
 
                 $latest = $myarray['last_response'] != '' ? $myarray['last_response'] : $myarray['adddate'];
-
                 ?>
                 <tr class="<?php echo   (is_admin($_SESSION['admin_access']) && $myarray['company_id']!=0)?'low ':''; ?><?php echo  (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
                     <td valign="top">
@@ -250,7 +232,8 @@ if (!$showClosed) {
                     <td valign="top">
                         <a href="view_support_ticket.php?ed=<?php echo $myarray["id"];?>" title="View Ticket" class="btn btn-primary btn-sm">
                             View
-                            <span class="glyphicon glyphicon-pencil"></span></a>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
                         <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>
                             <a href="?rid=<?php echo  $myarray['id']; ?>" class="btn btn-default btn-sm">
                                 Mark Unread
@@ -259,8 +242,9 @@ if (!$showClosed) {
                         <?php } ?>
                     </td>
                 </tr>
-            <?php     }
-        }?>
+                <?php
+            }
+        } ?>
         </tbody>
     </table>
     <a href="manage_support_tickets.php?closed=1" class="btn btn-success pull-right" style="margin-left:5px">
@@ -299,14 +283,14 @@ if (!$showClosed) {
                 LIMIT 1
             ) AS response_attachment
         FROM dental_support_tickets t
-            LEFT JOIN dental_users u ON u.userid = t.userid
-            LEFT JOIN dental_users a ON a.userid = t.docid
-            LEFT JOIN dental_user_company uc ON uc.userid = t.docid
-            LEFT JOIN companies c ON c.id = uc.companyid
-            LEFT JOIN companies c2 ON c2.id = t.company_id
-            LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
+        LEFT JOIN dental_users u ON u.userid = t.userid
+        LEFT JOIN dental_users a ON a.userid = t.docid
+        LEFT JOIN dental_user_company uc ON uc.userid = t.docid
+        LEFT JOIN companies c ON c.id = uc.companyid
+        LEFT JOIN companies c2 ON c2.id = t.company_id
+        LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
         WHERE t.status IN (".DSS_TICKET_STATUS_CLOSED.")
-        ";
+    ";
 
     if (is_billing($_SESSION['admin_access'])) {
         $companyId = $db->getColumn("SELECT companyid
@@ -314,15 +298,12 @@ if (!$showClosed) {
             WHERE adminid = '" . intval($_SESSION['adminuserid']) . "'", 'companyid', 0);
         $sql .= " AND t.company_id = '$companyId' ";
     }
-
     if ($queryString['catid']) {
         $sql .= " AND category_id = '{$queryString['catid']}' ";
     }
-
     if (strlen($queryString['title'])) {
         $sql .= " AND t.title LIKE '%" . $db->escape($queryString['title']) . "%' ";
     }
-
     if (strlen($queryString['account'])) {
         $sql .= " AND CONCAT(a.first_name, ' ', a.last_name) LiKE '%" . $db->escape($queryString['account']) . "%' ";
     }
@@ -338,7 +319,6 @@ if (!$showClosed) {
 
     $sql .= " ORDER BY t.adddate DESC LIMIT $currentOffset, $showPerPage";
     $ticketList = $db->getResults($sql);
-
     ?>
     <div class="page-header">
         Resolved
@@ -433,7 +413,8 @@ if (!$showClosed) {
                     <td valign="top">
                         <a href="view_support_ticket.php?ed=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
                             View
-                            <span class="glyphicon glyphicon-pencil"></span></a>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
                         <?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
                             <a href="?rid=<?php echo  $myarray['id']; ?>" class="btn btn-default btn-sm">
                                 Unread

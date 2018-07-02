@@ -4,7 +4,6 @@ namespace Ds3\Libraries\Legacy;
 include '../../admin/includes/main_include.php';
 include '../../includes/constants.inc';
 include_once '../../includes/general_functions.php';
-include_once '../../includes/notifications.php';
 include_once '../../admin/includes/password.php';
 include '../../includes/edx_functions.php';
 include_once '../../includes/help_functions.php';
@@ -12,6 +11,8 @@ include_once '../../includes/help_functions.php';
 $userId = intval($_POST['userid']);
 
 linkRequestData('dental_patients', $userId);
+
+$db = new Db();
 
 $sql = "UPDATE dental_users set
         first_name = '".$db->escape($_POST['first_name'])."',
@@ -93,4 +94,4 @@ if (count($loc_q) > 0) {
 $db->query($loc_sql);
 
 edx_user_update($userId, NULL);
-help_user_update($userId, NULL);
+help_user_update($userId);

@@ -4,23 +4,13 @@ namespace Ds3\Libraries\Legacy;
 class ClaimFormHelper
 {
     /**
-     * Default transform method, applied to list of source paths
-     * with no methods specified
-     *
-     * @returns string|null
-     */
-    public static function concatenate () {
-        $arguments = func_get_args();
-        return count($arguments) ? join(' ', $arguments) : null;
-    }
-
-    /**
      * Map relationship for insured and patient, between paper form and e-file
      *
      * @param string $search Either the name (paper form) or the code (e-file) of the relationship to locate
      * @return array [name, code]
      */
-    public static function mapRelationship ($search) {
+    public static function mapRelationship($search)
+    {
         $map = [
             'self'   => '',
             'spouse' => '01',
@@ -40,7 +30,8 @@ class ClaimFormHelper
      * @param string $search Option in paper form (key) or option in e-file (value)
      * @return array [(name in paper form), (name in e-file)]
      */
-    public static function mapAcceptAssignment ($search) {
+    public static function mapAcceptAssignment($search)
+    {
         $map = [
             'yes' => 'a',
             'no' => 'c'
@@ -59,7 +50,8 @@ class ClaimFormHelper
      * @param string|number $phone
      * @return string
      */
-    public static function getCodeFromPhone ($codeOrPhone, $phone='') {
+    public static function getCodeFromPhone($codeOrPhone, $phone = '')
+    {
         list($code, $number) = parsePhoneNumber($codeOrPhone, $phone);
         return $code;
     }
@@ -71,7 +63,8 @@ class ClaimFormHelper
      * @param string|number $phone
      * @return string
      */
-    public static function getNumberFromPhone ($codeOrPhone, $phone='') {
+    public static function getNumberFromPhone($codeOrPhone, $phone = '')
+    {
         list($code, $number) = parsePhoneNumber($codeOrPhone, $phone);
         return $number;
     }
@@ -82,7 +75,8 @@ class ClaimFormHelper
      * @param string $code
      * @return string
      */
-    public static function getRelationshipFromCode ($code) {
+    public static function getRelationshipFromCode($code)
+    {
         list($relationship, $code) = self::mapRelationship($code);
         return $relationship;
     }
@@ -93,7 +87,8 @@ class ClaimFormHelper
      * @param string $code
      * @return string
      */
-    public static function getAssignmentFromCode ($code) {
+    public static function getAssignmentFromCode($code)
+    {
         list($assignment, $code) = self::mapAcceptAssignment($code);
         return $assignment;
     }
@@ -102,7 +97,8 @@ class ClaimFormHelper
      * @param string $location
      * @return string
      */
-    public static function getCityFromLocation ($location) {
+    public static function getCityFromLocation($location)
+    {
         $parsed = parseCityStateZip($location);
         return $parsed['city'];
     }
@@ -111,7 +107,8 @@ class ClaimFormHelper
      * @param string $location
      * @return string
      */
-    public static function getStateFromLocation ($location) {
+    public static function getStateFromLocation($location)
+    {
         $parsed = parseCityStateZip($location);
         return $parsed['stateCode'];
     }
@@ -120,7 +117,8 @@ class ClaimFormHelper
      * @param string $location
      * @return string
      */
-    public static function getZipFromLocation ($location) {
+    public static function getZipFromLocation($location)
+    {
         $parsed = parseCityStateZip($location);
         return $parsed['zip'];
     }
@@ -132,7 +130,8 @@ class ClaimFormHelper
      *
      * @return mixed
      */
-    public static function isAny () {
+    public static function isAny()
+    {
         $arguments = func_get_args();
         $argument = '';
 
@@ -155,7 +154,8 @@ class ClaimFormHelper
      * @param string $value
      * @return bool
      */
-    public static function isSsn ($value) {
+    public static function isSsn($value)
+    {
         $value = strtolower($value);
         return $value === 'ssn' || $value === 'sy';
     }
@@ -167,7 +167,8 @@ class ClaimFormHelper
      * @param int|bool $ein
      * @return string
      */
-    public static function ssnOrEin ($ssn, $ein) {
+    public static function ssnOrEin($ssn, $ein)
+    {
         return $ssn || !$ein ? 'ssn' : 'ein';
     }
 
@@ -177,7 +178,8 @@ class ClaimFormHelper
      * @param string $value
      * @return bool
      */
-    public static function isEin ($value) {
+    public static function isEin($value)
+    {
         $value = strtolower($value);
         return $value === 'ein' || $value === 'ei';
     }
@@ -188,7 +190,8 @@ class ClaimFormHelper
      * @param string|number|bool $value
      * @return bool
      */
-    public static function isChecked ($value) {
+    public static function isChecked($value)
+    {
         if (is_string($value)) {
             $value = strtolower(trim($value));
 
@@ -204,7 +207,8 @@ class ClaimFormHelper
      * @param mixed $value
      * @return bool
      */
-    public static function isDefined ($value) {
+    public static function isDefined($value)
+    {
         return !is_null($value);
     }
 
@@ -216,7 +220,8 @@ class ClaimFormHelper
      * @param mixed $default
      * @return string|mixed
      */
-    public static function arraySearch (array $haystack, $search, $default) {
+    public static function arraySearch(array $haystack, $search, $default)
+    {
         if (array_key_exists($search, $haystack)) {
             $found = $search;
         } else if (array_search($search, $haystack)) {
@@ -265,7 +270,8 @@ class ClaimFormDataMapperHelper
      * @param array $map
      * @return array
      */
-    public static function map ($data, $map) {
+    public static function map($data, $map)
+    {
         // Expand any "service line" or "diagnosis pointer" counters
         $map = self::expandMap($map);
         $mapped = [];
@@ -319,7 +325,8 @@ class ClaimFormDataMapperHelper
      * @param array $map
      * @return array
      */
-    public static function expandMap ($map) {
+    public static function expandMap($map)
+    {
         $expandedMap = [];
 
         foreach ($map as $destinationPath=>$sourcePaths) {
@@ -402,7 +409,8 @@ class ClaimFormDataMapperHelper
      * @param int $end
      * @return array
      */
-    private static function expandCounter ($destinationPath, $sourcePaths, $marker='%sl', $start=0, $end=5) {
+    private static function expandCounter($destinationPath, $sourcePaths, $marker = '%sl', $start = 0, $end = 5)
+    {
         $expanded = [];
         $escapedMarker = preg_quote($marker);
         $pregMarker = "/
@@ -468,7 +476,7 @@ class ClaimFormDataMapperHelper
              * $map['service_line_1'] = ['claim.service_lines.1'];
              *      ...
              */
-            for ($n=$start;$n<=$end;$n++) {
+            for ($n = $start; $n <= $end; $n++) {
                 $destination = self::replaceCounter($marker, [$n, $destinationMatch], $destinationPath);
 
                 if (!isset($expanded[$destination])) {
@@ -477,7 +485,7 @@ class ClaimFormDataMapperHelper
 
                 foreach ($sourcePaths as $source) {
                     preg_match($pregMarker, $source, $sourceMatch);
-                    $expanded[$destination] []= self::replaceCounter($marker, [$n, $sourceMatch], $source);
+                    $expanded[$destination][] = self::replaceCounter($marker, [$n, $sourceMatch], $source);
                 }
             }
         }
@@ -500,7 +508,8 @@ class ClaimFormDataMapperHelper
      * @param string $target
      * @return string
      */
-    private static function replaceCounter ($marker, $replaceConditions, $target) {
+    private static function replaceCounter($marker, $replaceConditions, $target)
+    {
         list($index, $match) = $replaceConditions;
 
         $search = ['{' . $marker . '}'];
@@ -1176,19 +1185,19 @@ if (!empty($_GET['insid']) && (count($_POST) || isset($_GET['json']))) {
 
         var_dump($row);
     } elseif (isset($_GET['compare-forms'])) { ?>
-<html>
-<head>
-    <title>
-        Claim Forms Comparison Tool
-    </title>
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/js/claim-form-mock.js"></script>
-    <script>
-        $(document).ready(function(){
-            compareSideBySide();
-        });
-    </script>
-</head>
-</html>
+        <html>
+        <head>
+            <title>
+                Claim Forms Comparison Tool
+            </title>
+            <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+            <script type="text/javascript" src="/manage/js/claim-form-mock.js"></script>
+            <script>
+                $(document).ready(function(){
+                    compareSideBySide();
+                });
+            </script>
+        </head>
+        </html>
     <?php }
 }

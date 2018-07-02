@@ -493,7 +493,7 @@ if ($_POST['summarysub'] == 1) {
             ep_tr_2 = '".s_for($ep_tr_2)."',
             ep_tr_3 = '".s_for($ep_tr_3)."',
             ep_tr_4 = '".s_for($ep_tr_4)."',
-            ep_tr_5 = '".s_for($ep_tr_5)."'		
+            ep_tr_5 = '".s_for($ep_tr_5)."'
             where summaryid = '".s_for($_POST['ed'])."'";
         $db->query($ed_sql);
         $msg = "Edited Successfully";
@@ -509,8 +509,6 @@ if ($_POST['summarysub'] == 1) {
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
 $pat_myarray = $db->getRow($pat_sql);
-$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
@@ -746,8 +744,8 @@ if ($epworthid != '') {
 $ep_e_1 = $ep_total;
 
 $ts_sql = "select * from dental_thorton_pivot where patientid='".$_GET['pid']."'";
-	
 $ts_myarray = $db->getRow($ts_sql);
+
 $ep_ts_1 = st($ts_myarray['snore_1']) + st($ts_myarray['snore_2']) + st($ts_myarray['snore_3']) + st($ts_myarray['snore_4']) + st($ts_myarray['snore_5']);
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
 

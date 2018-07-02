@@ -18,6 +18,10 @@ describe('SectionHeader component', () => {
     }
     store.state.screener.contactData = contactData
 
+    this.props = {
+      title: 'My title'
+    }
+
     this.testCase.setComponent(SectionHeaderComponent)
   })
 
@@ -26,10 +30,7 @@ describe('SectionHeader component', () => {
   })
 
   it('should display full name and title', function () {
-    const propsData = {
-      title: 'My title'
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const heading = vm.$el.querySelector('h5')
@@ -42,12 +43,9 @@ describe('SectionHeader component', () => {
   })
 
   it('should display bottom margin and no assessment', function () {
-    const propsData = {
-      title: 'My title',
-      bottomMargin: true,
-      assessment: false
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.bottomMargin = true
+    this.props.assessment = false
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const heading = vm.$el.querySelector('h5')

@@ -5,6 +5,10 @@ describe('ScreenerNavigation component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      sectionNumber: 2
+    }
+
     this.testCase.setComponent(ScreenerNavigationComponent)
   })
 
@@ -13,10 +17,7 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('shows navigation link', function () {
-    const propsData = {
-      sectionNumber: 2
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el
@@ -25,11 +26,8 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('shows link with custom ID', function () {
-    const propsData = {
-      sectionNumber: 2,
-      customId: 'foo'
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.customId = 'foo'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el
@@ -37,11 +35,8 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('shows disabled link', function () {
-    const propsData = {
-      sectionNumber: 2,
-      disabled: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.disabled = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el
@@ -49,11 +44,8 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('shows large link', function () {
-    const propsData = {
-      sectionNumber: 2,
-      large: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.large = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el
@@ -61,11 +53,8 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('shows link with additional class', function () {
-    const propsData = {
-      sectionNumber: 2,
-      additionalClass: 'additional'
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.additionalClass = 'additional'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el

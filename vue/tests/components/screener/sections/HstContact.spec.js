@@ -7,7 +7,15 @@ describe('HstContact component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    const props = {
+      name: 'first_name',
+      label: 'First Name',
+      value: 'John',
+      className: 'foo'
+    }
+
     this.testCase.setComponent(HstContactComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -15,13 +23,6 @@ describe('HstContact component', () => {
   })
 
   it('shows and updates contact', function (done) {
-    const props = {
-      name: 'first_name',
-      label: 'First Name',
-      value: 'John',
-      className: 'foo'
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const storedContacts = store.state.screener[symbols.state.storedContactData]

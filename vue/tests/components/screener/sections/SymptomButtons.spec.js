@@ -7,6 +7,11 @@ describe('SymptomButtons component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      name: 'foo',
+      weight: 5
+    }
+
     this.testCase.setComponent(SymptomButtonsComponent)
   })
 
@@ -15,11 +20,7 @@ describe('SymptomButtons component', () => {
   })
 
   it('shows and switches buttons', function () {
-    const propsData = {
-      name: 'foo',
-      weight: 5
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const buttons = vm.$el.querySelectorAll('input')
@@ -31,11 +32,7 @@ describe('SymptomButtons component', () => {
   })
 
   it('updates symptoms', function (done) {
-    const propsData = {
-      name: 'foo',
-      weight: 5
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const buttons = vm.$el.querySelectorAll('input')
@@ -57,12 +54,8 @@ describe('SymptomButtons component', () => {
   })
 
   it('updates cpap', function (done) {
-    const propsData = {
-      name: 'foo',
-      weight: 5,
-      cpap: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.cpap = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const buttons = vm.$el.querySelectorAll('input')

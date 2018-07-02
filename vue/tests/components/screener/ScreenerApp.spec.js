@@ -33,6 +33,7 @@ describe('ScreenerApp component', () => {
     const vm = this.testCase.getVM()
     expect(vm.$router.currentRoute.name).not.toBe('screener-login')
     vm.$mount()
+
     expect(vm.$router.currentRoute.name).toBe('screener-login')
   })
 

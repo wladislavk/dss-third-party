@@ -1,22 +1,16 @@
-import Vue from 'vue'
 import moxios from 'moxios'
-import store from '../../../../../src/store'
 import SleepStudyRowComponent from '../../../../../src/components/manage/chart/summary-rows/SleepStudyRow.vue'
 import { BASELINE_TEST_ID } from '../../../../../src/constants/chart'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('SleepStudyRow component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(SleepStudyRowComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(SleepStudyRowComponent)
   })
 
   afterEach(function () {
@@ -30,7 +24,9 @@ describe('SleepStudyRow component', () => {
       segmentId: BASELINE_TEST_ID,
       studyType: 'PSG Baseline'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     expect(selector.id).toBe('study_type_1')
     expect(selector.getAttribute('name')).toBe('data[1][study_type]')
@@ -48,7 +44,9 @@ describe('SleepStudyRow component', () => {
       segmentId: 99,
       studyType: ''
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     expect(selector.value).toBe('')
   })
@@ -66,7 +64,9 @@ describe('SleepStudyRow component', () => {
       segmentId: BASELINE_TEST_ID,
       studyType: 'PSG Baseline'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     selector.value = 'HST Baseline'
     selector.dispatchEvent(new Event('change'))
@@ -95,7 +95,9 @@ describe('SleepStudyRow component', () => {
       segmentId: BASELINE_TEST_ID,
       studyType: 'PSG Baseline'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     selector.value = ''
     selector.dispatchEvent(new Event('change'))

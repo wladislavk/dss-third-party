@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
@@ -7,21 +6,17 @@ import store from '../../../../src/store'
 import TaskMenuComponent from '../../../../src/components/manage/tasks/TaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskMenu component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    Vue.component('task-data', {
-      template: '<div class="task_data"></div>'
-    })
     store.state.tasks[symbols.state.tasks] = []
-    const Component = Vue.extend(TaskMenuComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+
+    this.testCase.setComponent(TaskMenuComponent)
+    this.testCase.setChildComponents(['task-data'])
 
     moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
       status: 200,
@@ -45,11 +40,12 @@ describe('TaskMenu component', () => {
   })
 
   it('should show HTML', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(function () {
       const taskCount = vm.$el.querySelector('span#task_count')
       expect(taskCount.textContent).toBe('2')
-      const children = vm.$el.querySelectorAll('div.task_data')
+      const children = vm.$el.querySelectorAll('div.task-data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')
       expect(viewAllButton.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/manage_tasks.php')
@@ -58,7 +54,8 @@ describe('TaskMenu component', () => {
   })
 
   it('should fire onMouseEnter and onMouseLeave', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(function () {
       const taskMenu = vm.$el
       const taskList = vm.$el.querySelector('div#task_list')

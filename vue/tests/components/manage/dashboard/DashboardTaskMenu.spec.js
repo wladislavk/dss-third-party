@@ -1,26 +1,18 @@
-import Vue from 'vue'
-import LegacyHref from '../../../../src/directives/LegacyHref'
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
-import store from '../../../../src/store'
 import DashboardTaskMenuComponent from '../../../../src/components/manage/dashboard/DashboardTaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('DashboardTaskMenu component', () => {
   beforeEach(function () {
     moxios.install()
-    Vue.directive('legacy-href', LegacyHref)
-    Vue.component('task-data', {
-      template: '<div class="task_data"></div>'
-    })
-    const Component = Vue.extend(DashboardTaskMenuComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(DashboardTaskMenuComponent)
+    this.testCase.setChildComponents(['task-data'])
 
     moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
       status: 200,
@@ -44,9 +36,9 @@ describe('DashboardTaskMenu component', () => {
   })
 
   it('should show HTML', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
     moxios.wait(function () {
-      const children = vm.$el.querySelectorAll('div.task_data')
+      const children = vm.$el.querySelectorAll('div.task-data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')
       expect(viewAllButton.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/manage_tasks.php')

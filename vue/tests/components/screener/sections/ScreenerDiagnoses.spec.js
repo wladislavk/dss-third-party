@@ -1,30 +1,23 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerDiagnosesComponent from '../../../../src/components/screener/sections/ScreenerDiagnoses.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDiagnoses', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerDiagnosesComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-results',
         path: '/results'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerDiagnosesComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
@@ -33,7 +26,8 @@ describe('ScreenerDiagnoses', () => {
   })
 
   it('should display existing fields', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const allLabels = vm.$el.querySelectorAll('div#sect4 > div.field')
     expect(allLabels.length).toBe(8)
 
@@ -70,7 +64,8 @@ describe('ScreenerDiagnoses', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect4_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
@@ -144,7 +139,8 @@ describe('ScreenerDiagnoses', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect4_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 

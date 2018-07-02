@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import moment from 'moment'
 import store from '../../../../src/store'
@@ -7,9 +6,13 @@ import symbols from '../../../../src/symbols'
 import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerSectionTwo component', () => {
   beforeEach(function () {
+    moxios.install()
+    this.testCase = new TestCase()
+
     store.state.flowsheet[symbols.state.trackerStepsNext] = [
       {
         id: 1,
@@ -22,15 +25,7 @@ describe('TrackerSectionTwo component', () => {
     ]
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
 
-    moxios.install()
-
-    const Component = Vue.extend(TrackerSectionTwoComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(TrackerSectionTwoComponent)
   })
 
   afterEach(function () {
@@ -41,7 +36,9 @@ describe('TrackerSectionTwo component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.className).toBe('sched_div current_step')
     const stepSelector = rootDiv.querySelector('select#next_step')
@@ -64,7 +61,9 @@ describe('TrackerSectionTwo component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const midnight = moment(moment().format('MM/DD/YYYY'), 'MM/DD/YYYY')
     const inTenDays = midnight.add(10, 'days')
     store.state.flowsheet[symbols.state.futureAppointment] = {
@@ -97,7 +96,9 @@ describe('TrackerSectionTwo component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const datePicker = vm.$el.querySelector('input#next_step_date')
     expect(datePicker.getAttribute('disabled')).toBe('disabled')
     const stepSelector = vm.$el.querySelector('select#next_step')
@@ -140,7 +141,9 @@ describe('TrackerSectionTwo component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const stepSelector = vm.$el.querySelector('select#next_step')
     expect(stepSelector.value).toBe('1')
     stepSelector.value = '2'
@@ -176,7 +179,9 @@ describe('TrackerSectionTwo component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const trackerNotes = vm.$el.querySelector('input#tracker-notes')
     expect(trackerNotes.value).toBe('')
     trackerNotes.value = 'foo'

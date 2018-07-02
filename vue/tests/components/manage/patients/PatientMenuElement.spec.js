@@ -1,33 +1,24 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import sinon from 'sinon'
 import store from '../../../../src/store'
 import PatientMenuElementComponent from '../../../../src/components/manage/patients/PatientMenuElement.vue'
 import symbols from '../../../../src/symbols'
 import LocationWrapper from 'src/wrappers/LocationWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientMenuElement component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientId] = 0
 
-    const Component = Vue.extend(PatientMenuElementComponent)
-    const Router = new VueRouter({
-      mode: 'history',
-      routes: [
-        {
-          name: 'route',
-          path: '/route'
-        }
-      ]
-    })
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        router: Router,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(PatientMenuElementComponent)
+    this.testCase.setRoutes([
+      {
+        name: 'route',
+        path: '/route'
+      }
+    ])
   })
 
   afterEach(function () {
@@ -44,7 +35,9 @@ describe('PatientMenuElement component', () => {
       elementLink: 'foo',
       elementName: 'bar'
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.className).toBe('')
     const link = vm.$el.querySelector('a')
     expect(link.textContent).toBe('bar')
@@ -68,7 +61,9 @@ describe('PatientMenuElement component', () => {
       elementLink: 'foo%d',
       elementName: 'bar'
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     link.click()
     vm.$nextTick(() => {
@@ -84,7 +79,9 @@ describe('PatientMenuElement component', () => {
       elementName: 'bar',
       elementActive: 'route'
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     vm.$router.push({ name: 'route' })
     vm.$nextTick(() => {
@@ -100,7 +97,9 @@ describe('PatientMenuElement component', () => {
       elementName: 'bar',
       elementActiveLike: ['som', 'rou']
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     vm.$router.push({ name: 'route' })
     vm.$nextTick(() => {
@@ -116,7 +115,9 @@ describe('PatientMenuElement component', () => {
       elementName: 'bar',
       lastElement: true
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.className).toBe('last')
   })
 })

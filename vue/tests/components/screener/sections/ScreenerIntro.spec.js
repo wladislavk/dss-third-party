@@ -1,25 +1,19 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import symbols from '../../../../src/symbols'
 import ScreenerIntroComponent from '../../../../src/components/screener/sections/ScreenerIntro.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerIntro', () => {
   beforeEach(function () {
-    const routes = [
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(ScreenerIntroComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-epworth',
         path: '/epworth'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerIntroComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
@@ -27,7 +21,8 @@ describe('ScreenerIntro', () => {
   })
 
   it('should display existing fields', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const allLabels = vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
     expect(allLabels.length).toBe(3)
 
@@ -43,7 +38,8 @@ describe('ScreenerIntro', () => {
   })
 
   it('should update data when all fields are set', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect1_next')
 
     expect(nextButton.classList.contains('disabled')).toBe(false)
@@ -91,7 +87,8 @@ describe('ScreenerIntro', () => {
   })
 
   it('should throw error when some fields are not set', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect1_next')
     const firstNameInput = vm.$el.querySelector('input#first_name')
     firstNameInput.value = 'Jill'

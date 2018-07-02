@@ -1,10 +1,12 @@
-import Vue from 'vue'
 import DeviceSliderComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSlider.vue'
 import store from '../../../../../src/store'
 import symbols from '../../../../../src/symbols'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceSlider component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     this.props = {
       id: 13,
       name: 'Comfort',
@@ -14,17 +16,12 @@ describe('DeviceSlider component', () => {
     }
     store.state.dashboard[symbols.state.deviceGuideSettingOptions] = [this.props]
 
-    const Component = Vue.extend(DeviceSliderComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        propsData: this.props
-      }).$mount()
-    }
+    this.testCase.setComponent(DeviceSliderComponent)
+    this.testCase.setPropsData(this.props)
   })
 
   it('shows device settings', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     const rootDiv = vm.$el
     expect(rootDiv.id).toBe('setting_13')
@@ -36,7 +33,8 @@ describe('DeviceSlider component', () => {
 
   it('changes label when the slider is moved', function (done) {
     store.state.dashboard[symbols.state.deviceGuideResults] = ['foo', 'bar']
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const newValue = 'Very Important'
     vm.moveSlider(newValue)
     vm.$nextTick(() => {
@@ -50,7 +48,8 @@ describe('DeviceSlider component', () => {
   it('resets results when the checkbox is clicked', function (done) {
     store.state.dashboard[symbols.state.deviceGuideSettingOptions] = [this.props]
     store.state.dashboard[symbols.state.deviceGuideResults] = ['foo', 'bar']
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const checkbox = vm.$el.querySelector('input.imp_chk')
     checkbox.checked = true
     const changeEvent = new Event('change')

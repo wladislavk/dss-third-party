@@ -1,34 +1,28 @@
-import Vue from 'vue'
-import VueMoment from 'vue-moment'
-import LegacyHref from '../../../../src/directives/LegacyHref'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
-import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 import Alerter from '../../../../src/services/Alerter'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskElement component', () => {
   beforeEach(function () {
     moxios.install()
-    Vue.directive('legacy-href', LegacyHref)
-    Vue.use(VueMoment)
-    const Component = Vue.extend(TaskElementComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
-    this.task = {
-      id: 1,
-      patientid: 2,
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(TaskElementComponent)
+
+    this.props = {
+      taskId: 1,
+      patientId: 2,
       task: 'task 1',
-      due_date: '2016-03-02 10:53:00',
-      firstname: '',
-      lastname: ''
+      dueDate: new Date('2016-03-02 10:53:00'),
+      firstName: '',
+      lastName: '',
+      hasDueDate: false,
+      isPatient: false
     }
   })
 
@@ -37,12 +31,9 @@ describe('TaskElement component', () => {
   })
 
   it('should display base HTML', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const input = vm.$el.querySelector('input')
     expect(input.getAttribute('value')).toBe('1')
     expect(input.getAttribute('class')).toBe('task_status task_status_general')
@@ -52,12 +43,10 @@ describe('TaskElement component', () => {
   })
 
   it('should display HTML for patient', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
+    this.props.isPatient = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const input = vm.$el.querySelector('input')
     expect(input.getAttribute('class')).toBe('task_status')
     const taskContent = vm.$el.querySelector('div.task_content')
@@ -65,25 +54,20 @@ describe('TaskElement component', () => {
   })
 
   it('should display HTML for due date', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: true,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.props.hasDueDate = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const dueDateSpan = vm.$el.querySelector('span.task_due_date')
     expect(dueDateSpan.textContent).toBe('03 02 - ')
   })
 
   it('should display HTML for first name and last name', function () {
-    this.task.firstname = 'John'
-    this.task.lastname = 'Doe'
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.props.firstName = 'John'
+    this.props.lastName = 'Doe'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const nameSpan = vm.$el.querySelector('span.task_name')
     expect(nameSpan.textContent.trim()).toBe('(John Doe)')
     const nameLink = nameSpan.querySelector('a.task_name_link')
@@ -91,12 +75,11 @@ describe('TaskElement component', () => {
   })
 
   it('should fire onMouseEnter and onMouseLeave', function (done) {
-    const propsData = {
-      task: this.task,
-      dueDate: true,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
+    this.props.isPatient = true
+    this.props.hasDueDate = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const li = vm.$el
     const taskExtra = li.querySelector('div.task_extra')
     expect(taskExtra.style.display).toBe('none')
@@ -127,12 +110,9 @@ describe('TaskElement component', () => {
       }
     })
 
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     vm.$store.commit(symbols.mutations.setTasks, [
       {
         id: 1
@@ -178,12 +158,8 @@ describe('TaskElement component', () => {
       }
     })
 
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
 
     const deleteLink = vm.$el.querySelector('a.task_delete')
     deleteLink.click()

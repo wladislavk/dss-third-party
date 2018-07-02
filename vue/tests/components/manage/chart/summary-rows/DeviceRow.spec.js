@@ -1,14 +1,15 @@
 import moxios from 'moxios'
-import Vue from 'vue'
 import store from '../../../../../src/store'
 import DeviceRowComponent from '../../../../../src/components/manage/chart/summary-rows/DeviceRow.vue'
 import symbols from '../../../../../src/symbols'
 import http from '../../../../../src/services/http'
 import endpoints from '../../../../../src/endpoints'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceRow component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
     store.state.flowsheet[symbols.state.devices] = [
       {
@@ -25,13 +26,7 @@ describe('DeviceRow component', () => {
       }
     ]
 
-    const Component = Vue.extend(DeviceRowComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(DeviceRowComponent)
   })
 
   afterEach(function () {
@@ -44,7 +39,9 @@ describe('DeviceRow component', () => {
       elementId: 1,
       deviceId: 2
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     expect(selector.id).toBe('dentaldevice_1')
     const options = selector.querySelectorAll('option')
@@ -75,7 +72,9 @@ describe('DeviceRow component', () => {
       elementId: 1,
       deviceId: 2
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const selector = vm.$el
       expect(selector.value).toBe('3')
@@ -95,7 +94,9 @@ describe('DeviceRow component', () => {
       elementId: 1,
       deviceId: 2
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     selector.value = '1'
     selector.dispatchEvent(new Event('change'))
@@ -117,7 +118,9 @@ describe('DeviceRow component', () => {
       elementId: 1,
       deviceId: 2
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el
     selector.value = ''
     selector.dispatchEvent(new Event('change'))

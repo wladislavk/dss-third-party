@@ -1,30 +1,23 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerResultsComponent from '../../../../src/components/screener/sections/ScreenerResults.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerResults', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerResultsComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-doctor',
         path: '/doctor'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerResultsComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
@@ -50,7 +43,7 @@ describe('ScreenerResults', () => {
     ]
     store.dispatch(symbols.actions.getDoctorData)
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const riskDiv = vm.$el.querySelector('div.risk_desc')
@@ -64,7 +57,8 @@ describe('ScreenerResults', () => {
   })
 
   it('should route to next page', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect5_next')
     nextButton.click()
     expect(vm.$router.currentRoute.name).toBe('screener-doctor')

@@ -1,13 +1,13 @@
-import Vue from 'vue'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
-import store from '../../../../src/store'
 import EdxCertificateComponent from '../../../../src/components/manage/education/EdxCertificate.vue'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('EdxCertificate component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
     moxios.stubRequest(http.formUrl(endpoints.edxCertificates.byUser), {
       status: 200,
@@ -33,12 +33,7 @@ describe('EdxCertificate component', () => {
       }
     })
 
-    const Component = Vue.extend(EdxCertificateComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(EdxCertificateComponent)
   })
 
   afterEach(function () {
@@ -46,7 +41,8 @@ describe('EdxCertificate component', () => {
   })
 
   it('should show certificate links', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const children = vm.$el.querySelectorAll('ul li a')
       expect(children.length).toEqual(2)

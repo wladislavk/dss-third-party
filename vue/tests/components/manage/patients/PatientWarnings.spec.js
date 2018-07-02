@@ -1,34 +1,39 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import PatientWarningsComponent from '../../../../src/components/manage/patients/PatientWarnings.vue'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientWarnings component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.totalSubPatients] = 0
     store.state.patients[symbols.state.questionnaireStatuses].symptoms = 0
     store.state.patients[symbols.state.isEmailBounced] = false
     store.state.patients[symbols.state.rejectedClaimsForCurrentPatient] = []
     store.state.patients[symbols.state.incompleteHomeSleepTests] = []
 
-    const Component = Vue.extend(PatientWarningsComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(PatientWarningsComponent)
   })
 
   it('shows empty data', function () {
-    const vm = this.mount({ patientId: 1 })
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.children.length).toBe(0)
   })
 
   it('shows patient changes', function () {
     store.state.patients[symbols.state.totalSubPatients] = 3
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     expect(vm.$el.children.length).toBe(1)
     const firstChild = vm.$el.children[0]
     expect(firstChild.getAttribute('href')).toContain('patient_changes.php?pid=1')
@@ -37,8 +42,12 @@ describe('PatientWarnings component', () => {
 
   it('shows questionnaire changes', function () {
     store.state.patients[symbols.state.questionnaireStatuses].symptoms = 2
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     expect(vm.$el.children.length).toBe(1)
     const firstChild = vm.$el.children[0]
     expect(firstChild.getAttribute('href')).toContain('q_page1.php?pid=1&addtopat=1')
@@ -47,8 +56,12 @@ describe('PatientWarnings component', () => {
 
   it('shows bounced emails', function () {
     store.state.patients[symbols.state.isEmailBounced] = true
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     expect(vm.$el.children.length).toBe(1)
     const firstChild = vm.$el.children[0]
     expect(firstChild.getAttribute('href')).toContain('add_patient.php?ed=1&pid=1&addtopat=1')
@@ -66,8 +79,12 @@ describe('PatientWarnings component', () => {
         addDate: new Date('12/11/2017')
       }
     ]
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     expect(vm.$el.children.length).toBe(1)
     const firstChild = vm.$el.children[0]
     const claims = firstChild.querySelectorAll('span')
@@ -101,8 +118,12 @@ describe('PatientWarnings component', () => {
         rejectedReason: 'reason'
       }
     ]
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     expect(vm.$el.children.length).toBe(1)
     const firstChild = vm.$el.children[0]
     const subComponents = firstChild.children

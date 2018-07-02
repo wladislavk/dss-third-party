@@ -1,7 +1,5 @@
 import moxios from 'moxios'
 import sinon from 'sinon'
-import Vue from 'vue'
-import store from '../../../../src/store'
 import AppointmentSummaryRowComponent from '../../../../src/components/manage/chart/AppointmentSummaryRow.vue'
 import {
   BASELINE_TEST_ID,
@@ -13,28 +11,21 @@ import {
 import Alerter from '../../../../src/services/Alerter'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AppointmentSummaryRow component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
 
-    Vue.component('sleep-study-row', {
-      template: '<div class="sleep-study-row"></div>'
-    })
-    Vue.component('reason-row', {
-      template: '<div class="reason-row"></div>'
-    })
-    Vue.component('device-row', {
-      template: '<div class="device-row"></div>'
-    })
-    const Component = Vue.extend(AppointmentSummaryRowComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    const childComponents = [
+      'sleep-study-row',
+      'reason-row',
+      'device-row'
+    ]
+    this.testCase.setComponent(AppointmentSummaryRowComponent)
+    this.testCase.setChildComponents(childComponents)
   })
 
   afterEach(function () {
@@ -50,7 +41,9 @@ describe('AppointmentSummaryRow component', () => {
       dateCompleted: new Date('2016-01-02'),
       studyType: 'foo'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.id).toBe('completed_row_1')
     const title = vm.$el.querySelector('span.title')
     expect(title.innerText).toBe('Baseline Sleep Test')
@@ -83,7 +76,9 @@ describe('AppointmentSummaryRow component', () => {
       delayReason: 'delay reason',
       nonComplianceReason: 'non-compliance reason'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const subComponent = vm.$el.querySelector('td.form-inline div.reason-row')
     expect(subComponent).not.toBeNull()
     expect(subComponent.getAttribute('patient-id')).toBe('42')
@@ -100,7 +95,9 @@ describe('AppointmentSummaryRow component', () => {
       dateCompleted: new Date('2016-01-02'),
       nonComplianceReason: 'non-compliance reason'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const subComponent = vm.$el.querySelector('td.form-inline div.reason-row')
     expect(subComponent).not.toBeNull()
     expect(subComponent.getAttribute('patient-id')).toBe('42')
@@ -117,7 +114,9 @@ describe('AppointmentSummaryRow component', () => {
       dateCompleted: new Date('2016-01-02'),
       deviceId: 5
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const subComponent = vm.$el.querySelector('td.form-inline div.device-row')
     expect(subComponent).not.toBeNull()
     expect(subComponent.getAttribute('patient-id')).toBe('42')
@@ -134,7 +133,9 @@ describe('AppointmentSummaryRow component', () => {
       deviceId: 5,
       letterCount: 2
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const lettersLink = vm.$el.querySelector('td.letters a')
     expect(lettersLink).not.toBeNull()
     expect(lettersLink.getAttribute('href')).toContain('dss_summ.php?sect=letters&pid=42')
@@ -150,7 +151,9 @@ describe('AppointmentSummaryRow component', () => {
       segmentId: 99,
       dateCompleted: new Date('2016-01-02')
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const title = vm.$el.querySelector('span.title')
     expect(title.innerText).toBe('')
     const subComponent = vm.$el.querySelector('td.form-inline div')
@@ -164,7 +167,9 @@ describe('AppointmentSummaryRow component', () => {
       segmentId: INITIAL_CONTACT_ID,
       dateCompleted: new Date('2016-01-02')
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     expect(deleteButton).toBeNull()
   })
@@ -191,7 +196,9 @@ describe('AppointmentSummaryRow component', () => {
       dateCompleted: new Date('2016-01-02'),
       studyType: 'foo'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     moxios.wait(() => {
@@ -213,7 +220,9 @@ describe('AppointmentSummaryRow component', () => {
       dateCompleted: new Date('2016-01-02'),
       studyType: 'foo'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     vm.$nextTick(() => {
@@ -235,7 +244,9 @@ describe('AppointmentSummaryRow component', () => {
       studyType: 'foo',
       lettersSent: true
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     vm.$nextTick(() => {

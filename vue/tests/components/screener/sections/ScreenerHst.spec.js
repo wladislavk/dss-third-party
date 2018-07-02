@@ -1,6 +1,4 @@
 import sinon from 'sinon'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
@@ -8,13 +6,16 @@ import symbols from '../../../../src/symbols'
 import ScreenerHstComponent from '../../../../src/components/screener/sections/ScreenerHst.vue'
 import store from '../../../../src/store'
 import Alerter from '../../../../src/services/Alerter'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerHST', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerHstComponent)
+    this.testCase.setRoutes([
       {
         name: 'start',
         path: '/'
@@ -23,17 +24,8 @@ describe('ScreenerHST', () => {
         name: 'screener-intro',
         path: '/intro'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerHstComponent)
-    this.mount = function () {
-      const vm = new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-      vm.$router.push({name: 'start'})
-      return vm
-    }
+    ])
+    this.testCase.setActiveRoute('start')
 
     const sessionData = {
       docId: 2,
@@ -76,7 +68,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should display existing data', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const companyDivs = vm.$el.querySelectorAll('div.company_div')
@@ -102,7 +94,7 @@ describe('ScreenerHST', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
@@ -143,7 +135,7 @@ describe('ScreenerHST', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
@@ -166,7 +158,7 @@ describe('ScreenerHST', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       store.commit(symbols.mutations.addStoredContact, {name: 'dob', value: ''})
@@ -195,7 +187,7 @@ describe('ScreenerHST', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')

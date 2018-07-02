@@ -1,26 +1,20 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import sinon from 'sinon'
-import store from '../../../../../src/store'
 import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
 import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
 import Alerter from '../../../../../src/services/Alerter'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('ReasonRow component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(ReasonRowComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(ReasonRowComponent)
   })
 
   afterEach(function () {
@@ -35,7 +29,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'deciding'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.id).toBe('delay_reason_1')
     expect(selector.getAttribute('name')).toBe('data[1][delay_reason]')
@@ -57,7 +53,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'other'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     expect(link.style.display).toBe('')
   })
@@ -69,7 +67,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: ''
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.value).toBe('insurance')
   })
@@ -81,7 +81,9 @@ describe('ReasonRow component', () => {
       segmentId: 99,
       reason: ''
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.value).toBe('')
   })
@@ -104,7 +106,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'deciding'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
@@ -139,7 +143,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'other'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
@@ -159,7 +165,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'deciding'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
@@ -176,7 +184,9 @@ describe('ReasonRow component', () => {
       segmentId: DELAYING_ID,
       reason: 'other'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     link.click()
     vm.$nextTick(() => {

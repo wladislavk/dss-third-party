@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import sinon from 'sinon'
 import moxios from 'moxios'
 import store from '../../../src/store'
@@ -9,7 +7,7 @@ import http from '../../../src/services/http'
 import endpoints from '../../../src/endpoints'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../src/symbols'
-import LegacyHref from '../../../src/directives/LegacyHref'
+import TestCase from '../../cases/ComponentTestCase'
 
 describe('ManageLogin component', () => {
   beforeEach(function () {
@@ -19,40 +17,27 @@ describe('ManageLogin component', () => {
       this.alert = text
     })
     moxios.install()
+    this.testCase = new TestCase()
 
     store.state.main[symbols.state.mainToken] = ''
 
-    Vue.directive('legacy-href', LegacyHref)
-    Vue.component('site-seal', {
-      template: '<div class="site-seal"></div>'
-    })
-    Vue.use(VueRouter)
-    const Component = Vue.extend(ManageLoginComponent)
-    const Router = new VueRouter({
-      routes: [
-        {
-          name: 'login',
-          path: '/login'
-        },
-        {
-          name: 'dashboard',
-          path: '/'
-        },
-        {
-          name: 'screener-root',
-          path: '/screener'
-        }
-      ]
-    })
-    this.mount = function () {
-      const vm = new Component({
-        store: store,
-        router: Router
-      }).$mount()
-      vm.$router.push({name: 'login'})
-      vm.$mount()
-      return vm
-    }
+    this.testCase.setComponent(ManageLoginComponent)
+    this.testCase.setChildComponents(['site-seal'])
+    this.testCase.setRoutes([
+      {
+        name: 'login',
+        path: '/login'
+      },
+      {
+        name: 'dashboard',
+        path: '/'
+      },
+      {
+        name: 'screener-root',
+        path: '/screener'
+      }
+    ])
+    this.testCase.setActiveRoute('login')
   })
 
   afterEach(function () {
@@ -88,7 +73,8 @@ describe('ManageLogin component', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
@@ -114,7 +100,8 @@ describe('ManageLogin component', () => {
       responseText: {}
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
@@ -132,7 +119,8 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in without username', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const passwordInput = vm.$el.querySelector('input#password')
     passwordInput.value = 'password'
     passwordInput.dispatchEvent(new Event('change'))
@@ -150,7 +138,8 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in without password', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
@@ -175,7 +164,8 @@ describe('ManageLogin component', () => {
       }
     })
     store.state.main[symbols.state.mainToken] = 'token'
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('dashboard')
       done()

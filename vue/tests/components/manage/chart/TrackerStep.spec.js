@@ -1,21 +1,15 @@
 import moxios from 'moxios'
-import Vue from 'vue'
-import store from '../../../../src/store'
 import TrackerStepComponent from '../../../../src/components/manage/chart/TrackerStep.vue'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerStep component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(TrackerStepComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(TrackerStepComponent)
   })
 
   afterEach(function () {
@@ -31,7 +25,9 @@ describe('TrackerStep component', () => {
       completed: false,
       last: false
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('')
     const link = root.querySelector('a')
@@ -49,7 +45,9 @@ describe('TrackerStep component', () => {
       completed: true,
       last: false
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('completed_step')
   })
@@ -63,7 +61,9 @@ describe('TrackerStep component', () => {
       completed: false,
       last: false
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     expect(link).toBeNull()
     const span = vm.$el.querySelector('span')
@@ -80,7 +80,9 @@ describe('TrackerStep component', () => {
       completed: false,
       last: true
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('last')
   })
@@ -100,7 +102,9 @@ describe('TrackerStep component', () => {
       completed: false,
       last: false
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     link.click()
     moxios.wait(() => {

@@ -1,29 +1,21 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import PatientRootComponent from '../../../../src/components/manage/patients/PatientRoot.vue'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientRoot component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientId] = 0
 
-    const Component = Vue.extend(PatientRootComponent)
-    const Router = new VueRouter({
-      mode: 'history',
-      routes: [
-        {
-          name: 'route',
-          path: '/route'
-        }
-      ]
-    })
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: Router
-      }).$mount()
-    }
+    this.testCase.setComponent(PatientRootComponent)
+    this.testCase.setRoutes([
+      {
+        name: 'route',
+        path: '/route'
+      }
+    ])
   })
 
   it('updates patient ID', function () {

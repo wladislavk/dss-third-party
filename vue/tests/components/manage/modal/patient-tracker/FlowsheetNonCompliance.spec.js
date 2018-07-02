@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import store from '../../../../../src/store'
 import symbols from '../../../../../src/symbols'
@@ -6,9 +5,13 @@ import FlowsheetNonComplianceComponent from '../../../../../src/components/manag
 import http from '../../../../../src/services/http'
 import endpoints from '../../../../../src/endpoints'
 import { NON_COMPLIANT_ID } from '../../../../../src/constants/chart'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetNonCompliance component', () => {
   beforeEach(function () {
+    moxios.install()
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientName] = 'John Doe'
     store.state.main[symbols.state.modal] = {
       name: symbols.modals.flowsheetNonCompliance,
@@ -18,29 +21,22 @@ describe('FlowsheetNonCompliance component', () => {
       }
     }
 
-    moxios.install()
-
-    const Component = Vue.extend(FlowsheetNonComplianceComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(FlowsheetNonComplianceComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-
     store.state.patients[symbols.state.patientName] = ''
     store.state.main[symbols.state.modal] = {
       name: '',
       params: {}
     }
+
+    moxios.uninstall()
   })
 
   it('shows modal', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const header = vm.$el.querySelector('h2')
     expect(header.textContent).toBe('What is the reason John Doe is non-compliant?')
     const treatmentOptions = vm.$el.querySelectorAll('option')
@@ -55,7 +51,8 @@ describe('FlowsheetNonCompliance component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'lost device'
     selector.dispatchEvent(new Event('change'))
@@ -85,7 +82,8 @@ describe('FlowsheetNonCompliance component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'other'
     selector.dispatchEvent(new Event('change'))

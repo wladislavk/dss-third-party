@@ -1,14 +1,15 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import DeviceSelectorComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSelector.vue'
 import store from '../../../../../src/store'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
 import symbols from '../../../../../src/symbols'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceSelector component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
     moxios.stubRequest(http.formUrl(endpoints.guideSettingOptions.settingIds), {
       status: 200,
@@ -30,12 +31,7 @@ describe('DeviceSelector component', () => {
 
     store.state.main[symbols.state.modal].params.patientName = ''
 
-    const Component = Vue.extend(DeviceSelectorComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(DeviceSelectorComponent)
   })
 
   afterEach(function () {
@@ -43,7 +39,8 @@ describe('DeviceSelector component', () => {
   })
 
   it('shows device selector', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const deviceSelectorTitle = vm.$el.querySelector('h2#device-selector-title')
       const expectedTitle = 'Device C-Lect'
@@ -56,7 +53,8 @@ describe('DeviceSelector component', () => {
 
   it('shows device selector for patient', function (done) {
     store.state.main[symbols.state.modal].params.patientName = 'John'
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const deviceSelectorTitle = vm.$el.querySelector('h2#device-selector-title')
       const expectedTitle = 'Device C-Lect for John?'
@@ -66,7 +64,8 @@ describe('DeviceSelector component', () => {
   })
 
   it('shows and hides instructions', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const instructionDiv = vm.$el.querySelector('div#instructions')
     expect(instructionDiv.style.display).toBe('none')
     const showLink = vm.$el.querySelector('a#ins_show')

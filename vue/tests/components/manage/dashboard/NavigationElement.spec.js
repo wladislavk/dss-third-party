@@ -1,33 +1,22 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
 import symbols from '../../../../src/symbols'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('NavigationElement component', () => {
   beforeEach(function () {
-    Vue.use(VueVisible)
-    Vue.use(VueRouter)
-    const Component = Vue.extend(NavigationElementComponent)
-    const Router = new VueRouter({
-      mode: 'history',
-      routes: [
-        {
-          name: 'foo',
-          path: '/bar'
-        }
-      ]
-    })
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData,
-        router: Router
-      }).$mount()
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(NavigationElementComponent)
+    this.testCase.setRoutes([
+      {
+        name: 'foo',
+        path: '/bar'
+      }
+    ])
   })
 
   it('should display link without children', function () {
@@ -37,7 +26,9 @@ describe('NavigationElement component', () => {
         name: 'Element name'
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.className).toBe('')
     expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
@@ -54,7 +45,9 @@ describe('NavigationElement component', () => {
         name: 'Element name'
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.getAttribute('href')).toBe('/bar')
   })
@@ -67,7 +60,9 @@ describe('NavigationElement component', () => {
         blank: true
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.getAttribute('target')).toBe('_blank')
   })
@@ -80,7 +75,9 @@ describe('NavigationElement component', () => {
         legacy: false
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.getAttribute('href')).toBe('/foo')
   })
@@ -91,7 +88,9 @@ describe('NavigationElement component', () => {
         name: 'Element name'
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.getAttribute('href')).toBe('#')
   })
@@ -112,7 +111,9 @@ describe('NavigationElement component', () => {
         ]
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.className).toBe('mainfoldericon')
     const list = vm.$el.querySelector('ul')
@@ -138,7 +139,9 @@ describe('NavigationElement component', () => {
       },
       firstLevel: false
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.className).toBe('subfoldericon')
     const list = vm.$el.querySelector('ul')
@@ -167,7 +170,9 @@ describe('NavigationElement component', () => {
         childName: 'name'
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.getAttribute('href')).toBe('#')
     const list = vm.$el.querySelector('ul')
@@ -194,7 +199,9 @@ describe('NavigationElement component', () => {
         ]
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const list = vm.$el.querySelector('ul')
     expect(list.style.visibility).toBe('hidden')
     const mouseOverEvent = new Event('mouseover')
@@ -218,7 +225,9 @@ describe('NavigationElement component', () => {
         action: symbols.actions.disablePopupEdit
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     link.click()
     vm.$nextTick(() => {
@@ -235,7 +244,9 @@ describe('NavigationElement component', () => {
         populator: symbols.populators.populateClaims
       }
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('li > a')
     expect(link.textContent).toBe('Element name (3)')
   })

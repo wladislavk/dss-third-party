@@ -1,21 +1,17 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import store from '../../../../src/store'
 import ScreenerDoctorResultsComponent from '../../../../src/components/screener/sections/ScreenerDoctorResults.vue'
 import symbols from '../../../../src/symbols'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDoctorResults component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(ScreenerDoctorResultsComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(ScreenerDoctorResultsComponent)
 
     const epworthMockData = [
       {
@@ -71,7 +67,7 @@ describe('ScreenerDoctorResults component', () => {
     }
     store.commit(symbols.mutations.coMorbidity, coMorbidityData)
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const epworthProps = {

@@ -1,11 +1,13 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import TrackerSectionOneComponent from '../../../../src/components/manage/chart/TrackerSectionOne.vue'
 import symbols from '../../../../src/symbols'
 import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerSectionOne component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.flowsheet[symbols.state.trackerSteps] = [
       {
         id: 1,
@@ -43,17 +45,8 @@ describe('TrackerSectionOne component', () => {
     store.state.flowsheet[symbols.state.lastTrackerSegment] = 5
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
 
-    Vue.component('tracker-step', {
-      template: '<div class="tracker-step"></div>'
-    })
-
-    const Component = Vue.extend(TrackerSectionOneComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(TrackerSectionOneComponent)
+    this.testCase.setChildComponents(['tracker-step'])
   })
 
   afterEach(function () {
@@ -64,7 +57,9 @@ describe('TrackerSectionOne component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.className).toBe('treatment_list')
     const arrowDiv = rootDiv.querySelector('div.arrow_div')
@@ -98,7 +93,9 @@ describe('TrackerSectionOne component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.className).toBe('treatment_list current_step')
   })

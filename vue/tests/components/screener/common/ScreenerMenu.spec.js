@@ -1,44 +1,31 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import sinon from 'sinon'
 import store from '../../../../src/store'
 import ScreenerMenuComponent from '../../../../src/components/screener/common/ScreenerMenu.vue'
 import Alerter from '../../../../src/services/Alerter'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerMenu component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(ScreenerMenuComponent)
-    const Router = new VueRouter({
-      routes: [
-        {
-          name: 'screener-login',
-          path: '/login'
-        },
-        {
-          name: 'screener-intro',
-          path: '/intro'
-        },
-        {
-          name: 'screener-epworth',
-          path: '/epworth'
-        }
-      ]
-    })
-    this.mount = function (isIntro) {
-      const vm = new Component({
-        store: store,
-        router: Router
-      }).$mount()
-      if (isIntro) {
-        vm.$router.push({ name: 'screener-intro' })
-      } else {
-        vm.$router.push({ name: 'screener-epworth' })
+    this.testCase.setComponent(ScreenerMenuComponent)
+    this.testCase.setRoutes([
+      {
+        name: 'screener-login',
+        path: '/login'
+      },
+      {
+        name: 'screener-intro',
+        path: '/intro'
+      },
+      {
+        name: 'screener-epworth',
+        path: '/epworth'
       }
-      return vm
-    }
+    ])
+    this.testCase.setActiveRoute('screener-epworth')
   })
 
   afterEach(function () {
@@ -47,7 +34,8 @@ describe('ScreenerMenu component', () => {
   })
 
   it('shows menu', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const firstItem = vm.$el.querySelector('li:first-child')
       expect(firstItem.style.display).toBe('')
@@ -56,8 +44,9 @@ describe('ScreenerMenu component', () => {
   })
 
   it('shows menu for intro', function (done) {
-    const isIntro = true
-    const vm = this.mount(isIntro)
+    this.testCase.setActiveRoute('screener-intro')
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const firstItem = vm.$el.querySelector('li:first-child')
       expect(firstItem.style.display).toBe('none')
@@ -73,7 +62,8 @@ describe('ScreenerMenu component', () => {
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const logoutLink = vm.$el.querySelector('a#logout_link')
       logoutLink.click()
@@ -94,7 +84,8 @@ describe('ScreenerMenu component', () => {
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const logoutLink = vm.$el.querySelector('a#logout_link')
       logoutLink.click()
@@ -115,7 +106,8 @@ describe('ScreenerMenu component', () => {
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const resetLink = vm.$el.querySelector('a#reset_link')
       resetLink.click()
@@ -136,7 +128,8 @@ describe('ScreenerMenu component', () => {
     store.state.screener[symbols.state.screenerToken] = 'token'
     store.state.screener[symbols.state.doctorName] = 'John'
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     vm.$nextTick(() => {
       const resetLink = vm.$el.querySelector('a#reset_link')
       resetLink.click()

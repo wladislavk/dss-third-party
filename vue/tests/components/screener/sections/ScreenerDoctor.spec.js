@@ -1,15 +1,16 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerDoctorComponent from '../../../../src/components/screener/sections/ScreenerDoctor.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDoctor component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerDoctorComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-hst',
         path: '/hst'
@@ -18,15 +19,7 @@ describe('ScreenerDoctor component', () => {
         name: 'screener-intro',
         path: '/intro'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerDoctorComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
@@ -34,7 +27,8 @@ describe('ScreenerDoctor component', () => {
   })
 
   it('should display results', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const riskImage = vm.$el.querySelector('div#risk_image_doc > img').getAttribute('src')
       expect(riskImage).toContain('screener-low_risk')
@@ -51,7 +45,8 @@ describe('ScreenerDoctor component', () => {
   })
 
   it('should route to intro', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     expect(store.state.screener[symbols.state.showFancybox]).toBe(false)
     const link = vm.$el.querySelector('a#fancy-reg')
     link.click()
@@ -59,7 +54,8 @@ describe('ScreenerDoctor component', () => {
   })
 
   it('should route to HST', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a#sect6_next')
     link.click()
     expect(vm.$router.currentRoute.name).toBe('screener-hst')

@@ -1,34 +1,30 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import PatientHeaderComponent from '../../../../src/components/manage/patients/PatientHeader.vue'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientHeader component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.showAllWarnings] = true
 
-    const Component = Vue.extend(PatientHeaderComponent)
-    const Router = new VueRouter({
-      mode: 'history',
-      routes: [
-        {
-          name: 'patient-tracker',
-          path: '/tracker'
-        }
-      ]
-    })
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        router: Router,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(PatientHeaderComponent)
+    this.testCase.setRoutes([
+      {
+        name: 'patient-tracker',
+        path: '/tracker'
+      }
+    ])
   })
 
   it('hides and shows warnings', function (done) {
-    const vm = this.mount({ patientId: 1 })
+    const props = {
+      patientId: 1
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const showWarningsButton = vm.$el.querySelector('a#show_patient_warnings')
     const hideWarningsButton = vm.$el.querySelector('a#hide_patient_warnings')
     expect(showWarningsButton.style.display).toBe('none')

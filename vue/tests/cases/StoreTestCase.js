@@ -1,6 +1,6 @@
 import store from '../../src/store'
 
-export default class {
+export default class StoreTestCase {
   constructor () {
     this.mutations = []
     this.actions = []

@@ -1,30 +1,23 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerEpworthComponent from '../../../../src/components/screener/sections/ScreenerEpworth.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerEpworth', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerEpworthComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-symptoms',
         path: '/symptoms'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerEpworthComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
 
     this.mockData = [
       {
@@ -55,7 +48,7 @@ describe('ScreenerEpworth', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const allLabels = vm.$el.querySelectorAll('div.dp66 > div.sepH_b')
@@ -86,7 +79,7 @@ describe('ScreenerEpworth', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const nextButton = vm.$el.querySelector('a#sect2_next')
@@ -143,7 +136,7 @@ describe('ScreenerEpworth', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
     moxios.wait(() => {
       const nextButton = vm.$el.querySelector('a#sect2_next')

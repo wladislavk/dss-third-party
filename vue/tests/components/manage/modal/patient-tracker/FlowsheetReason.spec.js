@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import moxios from 'moxios'
 import store from '../../../../../src/store'
 import FlowsheetReasonComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetReason.vue'
@@ -6,9 +5,13 @@ import symbols from 'src/symbols'
 import { DELAYING_ID } from 'src/constants/chart'
 import http from 'src/services/http'
 import endpoints from 'src/endpoints'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetReason component', () => {
   beforeEach(function () {
+    moxios.install()
+    this.testCase = new TestCase()
+
     store.state.flowsheet[symbols.state.appointmentSummaries] = [
       {
         id: 1,
@@ -28,29 +31,22 @@ describe('FlowsheetReason component', () => {
       }
     }
 
-    moxios.install()
-
-    const Component = Vue.extend(FlowsheetReasonComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(FlowsheetReasonComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-
     store.state.flowsheet[symbols.state.appointmentSummaries] = []
     store.state.main[symbols.state.modal] = {
       name: '',
       params: {}
     }
+
+    moxios.uninstall()
   })
 
   it('shows reason', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const header = vm.$el.querySelector('td.cat_head')
     expect(header.textContent).toBe('Reason for Delaying Treatment')
     const textarea = vm.$el.querySelector('textarea')
@@ -59,8 +55,8 @@ describe('FlowsheetReason component', () => {
 
   it('shows reason without summary', function () {
     store.state.main[symbols.state.modal].params.flowId = 99
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     const textarea = vm.$el.querySelector('textarea')
     expect(textarea.value).toBe('')
   })
@@ -70,7 +66,8 @@ describe('FlowsheetReason component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const textarea = vm.$el.querySelector('textarea')
     textarea.value = 'new reason'
     textarea.dispatchEvent(new Event('change'))
@@ -100,7 +97,8 @@ describe('FlowsheetReason component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const textarea = vm.$el.querySelector('textarea')
     textarea.value = ''
     textarea.dispatchEvent(new Event('change'))

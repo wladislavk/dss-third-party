@@ -1,17 +1,13 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import SymptomButtonsComponent from '../../../../src/components/screener/sections/SymptomButtons.vue'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('SymptomButtons component', () => {
   beforeEach(function () {
-    const Component = Vue.extend(SymptomButtonsComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(SymptomButtonsComponent)
   })
 
   it('shows and switches buttons', function () {
@@ -19,7 +15,9 @@ describe('SymptomButtons component', () => {
       name: 'foo',
       weight: 5
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const buttons = vm.$el.querySelectorAll('input')
     const labels = vm.$el.querySelectorAll('label')
     expect(buttons[0].name).toBe('foo')
@@ -33,7 +31,9 @@ describe('SymptomButtons component', () => {
       name: 'foo',
       weight: 5
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const buttons = vm.$el.querySelectorAll('input')
     const labels = vm.$el.querySelectorAll('label')
     const storedSymptoms = store.state.screener[symbols.state.storedSymptoms]
@@ -58,7 +58,9 @@ describe('SymptomButtons component', () => {
       weight: 5,
       cpap: true
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     const buttons = vm.$el.querySelectorAll('input')
     buttons[0].click()
     vm.$nextTick(() => {

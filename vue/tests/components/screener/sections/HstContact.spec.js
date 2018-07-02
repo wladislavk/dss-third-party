@@ -1,18 +1,13 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import HstContactComponent from '../../../../src/components/screener/sections/HstContact.vue'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('HstContact component', () => {
   beforeEach(function () {
-    const Component = Vue.extend(HstContactComponent)
-    this.mount = function (propsData) {
-      const vm = new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-      return vm
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(HstContactComponent)
   })
 
   it('shows and updates contact', function (done) {
@@ -22,7 +17,8 @@ describe('HstContact component', () => {
       value: 'John',
       className: 'foo'
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
 
     const storedContacts = store.state.screener[symbols.state.storedContactData]
     expect(storedContacts).toEqual({})

@@ -1,25 +1,17 @@
 import QueryStringComposer from 'qs'
 import moxios from 'moxios'
-import Vue from 'vue'
-import store from '../../../../src/store'
 import AppointmentSummaryComponent from '../../../../src/components/manage/chart/AppointmentSummary.vue'
 import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AppointmentSummary component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    Vue.component('appointment-summary-row', {
-      template: '<div class="summary-row"></div>'
-    })
-    const Component = Vue.extend(AppointmentSummaryComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(AppointmentSummaryComponent)
+    this.testCase.setChildComponents(['appointment-summary-row'])
   })
 
   afterEach(function () {
@@ -97,9 +89,11 @@ describe('AppointmentSummary component', () => {
     const propsData = {
       patientId: patientId
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
-      const rows = vm.$el.querySelectorAll('div.summary-row')
+      const rows = vm.$el.querySelectorAll('div.appointment-summary-row')
       expect(rows.length).toBe(2)
       const firstRow = rows[0]
       expect(firstRow.getAttribute('patient-id')).toBe('' + patientId)
@@ -191,15 +185,17 @@ describe('AppointmentSummary component', () => {
     const propsData = {
       patientId: oldPatientId
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
-      let row = vm.$el.querySelector('div.summary-row')
+      let row = vm.$el.querySelector('div.appointment-summary-row')
       expect(row.getAttribute('patient-id')).toBe('' + oldPatientId)
       expect(row.getAttribute('element-id')).toBe('1')
       vm.$props.patientId = newPatientId
       vm.$forceUpdate()
       moxios.wait(() => {
-        let row = vm.$el.querySelector('div.summary-row')
+        let row = vm.$el.querySelector('div.appointment-summary-row')
         expect(row.getAttribute('patient-id')).toBe('' + newPatientId)
         expect(row.getAttribute('element-id')).toBe('2')
         done()

@@ -1,21 +1,15 @@
-import Vue from 'vue'
-import LegacyHref from '../../../../src/directives/LegacyHref'
 import store from '../../../../src/store'
 import NotificationLinkComponent from '../../../../src/components/manage/dashboard/NotificationLink.vue'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
 import symbols from '../../../../src/symbols'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('NotificationLink component', () => {
   beforeEach(function () {
-    Vue.directive('legacy-href', LegacyHref)
-    const Component = Vue.extend(NotificationLinkComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(NotificationLinkComponent)
   })
 
   it('should display link without children', function () {
@@ -25,7 +19,9 @@ describe('NotificationLink component', () => {
       linkLabel: 'My link',
       linkUrl: 'foo'
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.style.display).toBe('')
     expect(vm.$el.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
     const expectedClass = 'notification count_3 bad_count'
@@ -45,7 +41,9 @@ describe('NotificationLink component', () => {
       linkLabel: 'My link',
       hasChildren: true
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.getAttribute('href')).toBe('#')
     const arrowRight = vm.$el.querySelector('div.arrow_right')
     expect(arrowRight).not.toBeNull()
@@ -57,7 +55,9 @@ describe('NotificationLink component', () => {
       linkCount: NOTIFICATION_NUMBERS.patientChanges,
       linkLabel: 'My link'
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.style.display).toBe('')
     const expectedClass = 'notification count_0 good_count'
     expect(vm.$el.className).toBe(expectedClass)
@@ -72,7 +72,9 @@ describe('NotificationLink component', () => {
       linkLabel: 'My link',
       showAll: false
     }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.style.display).toBe('none')
   })
 })

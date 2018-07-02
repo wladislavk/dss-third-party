@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import sinon from 'sinon'
 import moxios from 'moxios'
 import symbols from '../../../../../src/symbols'
@@ -7,11 +6,14 @@ import store from '../../../../../src/store'
 import Alerter from '../../../../../src/services/Alerter'
 import endpoints from '../../../../../src/endpoints'
 import http from '../../../../../src/services/http'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceResults component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
+
     this.fakeData = [
       {
         name: 'SUAD Ultra Elite',
@@ -28,13 +30,7 @@ describe('DeviceResults component', () => {
     ]
     store.commit(symbols.mutations.deviceGuideResults, this.fakeData)
 
-    const Component = Vue.extend(DeviceResultsComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(DeviceResultsComponent)
   })
 
   afterEach(function () {
@@ -43,9 +39,12 @@ describe('DeviceResults component', () => {
   })
 
   it('should show correct device results', function () {
-    const vm = this.mount({
+    const props = {
       patientName: 'John'
-    })
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
     expect(deviceResultsItems.length).toBe(2)
     const firstResult = deviceResultsItems[0]
@@ -60,9 +59,12 @@ describe('DeviceResults component', () => {
   })
 
   it('should show device results without patient', function () {
-    const vm = this.mount({
+    const props = {
       patientName: ''
-    })
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
     expect(deviceResultsItems.length).toBe(2)
     const firstResult = deviceResultsItems[0]
@@ -89,9 +91,12 @@ describe('DeviceResults component', () => {
       confirmText = text
       return true
     })
-    const vm = this.mount({
+    const props = {
       patientName: 'John'
-    })
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
     expect(firstLink).not.toBeNull()
     firstLink.click()
@@ -110,9 +115,12 @@ describe('DeviceResults component', () => {
     this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
-    const vm = this.mount({
+    const props = {
       patientName: 'John'
-    })
+    }
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
     firstLink.click()
     vm.$nextTick(() => {
@@ -129,7 +137,8 @@ describe('DeviceResults component', () => {
         data: this.fakeData
       }
     })
-    const vm = this.mount({})
+    const vm = this.testCase.mount()
+
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
     expect(deviceResultsItems.length).toBe(0)
     const sortDevicesButton = vm.$el.querySelector('div#sort-devices-button > a')
@@ -142,7 +151,8 @@ describe('DeviceResults component', () => {
   })
 
   it('should reset device results', function (done) {
-    const vm = this.mount({})
+    const vm = this.testCase.mount()
+
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
     expect(deviceResultsItems.length).toBe(2)
     const resetLink = vm.$el.querySelector('a#reset-link')

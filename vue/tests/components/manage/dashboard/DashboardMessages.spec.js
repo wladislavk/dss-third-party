@@ -1,21 +1,15 @@
-import Vue from 'vue'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
-import store from '../../../../src/store'
 import DashboardMessagesComponent from '../../../../src/components/manage/dashboard/DashboardMessages.vue'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('DashboardMessages component', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(DashboardMessagesComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(DashboardMessagesComponent)
   })
 
   afterEach(function () {
@@ -39,7 +33,7 @@ describe('DashboardMessages component', () => {
       }
     })
 
-    const vm = this.mount({})
+    const vm = this.testCase.mount()
 
     moxios.wait(function () {
       const items = vm.$el.querySelectorAll('div.task_menu > ul > li')

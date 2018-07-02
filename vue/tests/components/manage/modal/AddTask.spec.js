@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import sinon from 'sinon'
 import moxios from 'moxios'
 import store from '../../../../src/store'
@@ -8,11 +7,14 @@ import http from '../../../../src/services/http'
 import symbols from '../../../../src/symbols'
 import Alerter from '../../../../src/services/Alerter'
 import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AddTask component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
+
     const users = [
       {
         userid: 1,
@@ -40,15 +42,7 @@ describe('AddTask component', () => {
     store.state.main[symbols.state.modal].name = 'addTask'
     store.state.main[symbols.state.userInfo].plainUserId = 1
 
-    const Component = Vue.extend(AddTaskComponent)
-    this.mount = function (taskId) {
-      if (taskId) {
-        store.state.main[symbols.state.modal].params.id = taskId
-      }
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(AddTaskComponent)
   })
 
   afterEach(function () {
@@ -57,7 +51,8 @@ describe('AddTask component', () => {
   })
 
   it('shows HTML for new task', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
@@ -98,7 +93,9 @@ describe('AddTask component', () => {
         data: taskData
       }
     })
-    const vm = this.mount(taskId)
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
@@ -133,7 +130,9 @@ describe('AddTask component', () => {
         data: taskData
       }
     })
-    const vm = this.mount(taskId)
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task (John Doe)')
@@ -146,7 +145,8 @@ describe('AddTask component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const taskInput = vm.$el.querySelector('input#task')
       taskInput.value = 'new task'
@@ -171,7 +171,8 @@ describe('AddTask component', () => {
   })
 
   it('edits task with validation error', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
@@ -215,7 +216,9 @@ describe('AddTask component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount(taskId)
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()
@@ -248,7 +251,9 @@ describe('AddTask component', () => {
         data: taskData
       }
     })
-    const vm = this.mount(taskId)
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()

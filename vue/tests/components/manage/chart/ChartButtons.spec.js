@@ -1,28 +1,23 @@
 import sinon from 'sinon'
 import moxios from 'moxios'
-import Vue from 'vue'
 import store from '../../../../src/store'
 import ChartButtonsComponent from '../../../../src/components/manage/chart/ChartButtons.vue'
 import symbols from '../../../../src/symbols'
 import Alerter from '../../../../src/services/Alerter'
 import { DSS_CONSTANTS, HST_STATUSES } from '../../../../src/constants/main'
 import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ChartButtons component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
+    this.testCase = new TestCase()
 
     store.state.main[symbols.state.companyData] = []
     store.state.patients[symbols.state.incompleteHomeSleepTests] = []
 
-    const Component = Vue.extend(ChartButtonsComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(ChartButtonsComponent)
   })
 
   afterEach(function () {
@@ -34,7 +29,9 @@ describe('ChartButtons component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(1)
     const link = links[0]
@@ -51,7 +48,9 @@ describe('ChartButtons component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(2)
     const firstLink = links[0]
@@ -76,7 +75,9 @@ describe('ChartButtons component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(2)
     const firstLink = links[0]
@@ -100,7 +101,9 @@ describe('ChartButtons component', () => {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(props)
+    const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(2)
     const firstLink = links[0]

@@ -1,13 +1,16 @@
 import moxios from 'moxios'
-import Vue from 'vue'
 import store from '../../../../src/store'
 import ImpressionDeviceComponent from '../../../../src/components/manage/modal/ImpressionDevice.vue'
 import symbols from '../../../../src/symbols'
 import http from 'src/services/http'
 import endpoints from 'src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ImpressionDevice component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+    moxios.install()
+
     store.state.flowsheet[symbols.state.devices] = []
     store.state.patients[symbols.state.patientId] = 42
     store.state.patients[symbols.state.patientName] = 'John Doe'
@@ -19,19 +22,10 @@ describe('ImpressionDevice component', () => {
       }
     }
 
-    moxios.install()
-
-    const Component = Vue.extend(ImpressionDeviceComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(ImpressionDeviceComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-
     store.state.patients[symbols.state.patientId] = 0
     store.state.patients[symbols.state.patientName] = ''
     store.state.flowsheet[symbols.state.devices] = []
@@ -39,6 +33,8 @@ describe('ImpressionDevice component', () => {
       name: '',
       params: {}
     }
+
+    moxios.uninstall()
   })
 
   it('shows devices', function (done) {
@@ -57,7 +53,8 @@ describe('ImpressionDevice component', () => {
         ]
       }
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const header = vm.$el.querySelector('h2')
     expect(header.textContent).toBe('What device will you make for John Doe?')
     const helpMeLink = vm.$el.querySelector('a')
@@ -98,7 +95,8 @@ describe('ImpressionDevice component', () => {
       status: 200,
       responseText: {}
     })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     moxios.wait(() => {
       const deviceSelect = vm.$el.querySelector('select')
       deviceSelect.value = '2'

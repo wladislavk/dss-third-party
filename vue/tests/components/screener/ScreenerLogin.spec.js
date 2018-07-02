@@ -1,34 +1,28 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../src/endpoints'
 import http from '../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../src/symbols'
 import ScreenerLoginComponent from '../../../src/components/screener/ScreenerLogin.vue'
 import store from '../../../src/store'
+import TestCase from '../../cases/ComponentTestCase'
 
 describe('ScreenerLogin', () => {
   beforeEach(function () {
     moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerLoginComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-intro',
         path: '/intro'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerLoginComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
+
     moxios.uninstall()
   })
 
@@ -49,7 +43,8 @@ describe('ScreenerLogin', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('input'))
@@ -80,7 +75,8 @@ describe('ScreenerLogin', () => {
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('input'))
@@ -99,8 +95,8 @@ describe('ScreenerLogin', () => {
   })
 
   it('should redirect if token is set', function (done) {
-    const vm = this.mount()
     store.commit(symbols.mutations.screenerToken, 'token')
+    const vm = this.testCase.mount()
 
     vm.$nextTick(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-intro')

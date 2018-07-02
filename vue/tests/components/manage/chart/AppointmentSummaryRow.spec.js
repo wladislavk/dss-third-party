@@ -15,6 +15,12 @@ describe('AppointmentSummaryRow component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      patientId: 42,
+      elementId: 1,
+      dateCompleted: new Date('2016-01-02')
+    }
+
     const childComponents = [
       'sleep-study-row',
       'reason-row',
@@ -29,14 +35,9 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows sleep study row', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      dateCompleted: new Date('2016-01-02'),
-      studyType: 'foo'
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = BASELINE_TEST_ID
+    this.props.studyType = 'foo'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.id).toBe('completed_row_1')
@@ -63,15 +64,9 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows reason row with delay', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      dateCompleted: new Date('2016-01-02'),
-      delayReason: 'delay reason',
-      nonComplianceReason: 'non-compliance reason'
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = DELAYING_ID
+    this.props.delayReason = 'delay reason'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const subComponent = vm.$el.querySelector('td.form-inline div.reason-row')
@@ -83,14 +78,9 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows reason row with non-compliance', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: NON_COMPLIANT_ID,
-      dateCompleted: new Date('2016-01-02'),
-      nonComplianceReason: 'non-compliance reason'
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = NON_COMPLIANT_ID
+    this.props.nonComplianceReason = 'non-compliance reason'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const subComponent = vm.$el.querySelector('td.form-inline div.reason-row')
@@ -102,14 +92,9 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows device row', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: IMPRESSIONS_ID,
-      dateCompleted: new Date('2016-01-02'),
-      deviceId: 5
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = IMPRESSIONS_ID
+    this.props.deviceId = 5
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const subComponent = vm.$el.querySelector('td.form-inline div.device-row')
@@ -120,15 +105,10 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows row with letters', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: IMPRESSIONS_ID,
-      dateCompleted: new Date('2016-01-02'),
-      deviceId: 5,
-      letterCount: 2
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = IMPRESSIONS_ID
+    this.props.deviceId = 5
+    this.props.letterCount = 2
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const lettersLink = vm.$el.querySelector('td.letters a')
@@ -140,13 +120,8 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows row without segment data', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: 99,
-      dateCompleted: new Date('2016-01-02')
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = 99
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const title = vm.$el.querySelector('span.title')
@@ -156,13 +131,8 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('shows row that cannot be deleted', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: INITIAL_CONTACT_ID,
-      dateCompleted: new Date('2016-01-02')
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = INITIAL_CONTACT_ID
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
@@ -177,14 +147,9 @@ describe('AppointmentSummaryRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      dateCompleted: new Date('2016-01-02'),
-      studyType: 'foo'
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = BASELINE_TEST_ID
+    this.props.studyType = 'foo'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
@@ -199,14 +164,9 @@ describe('AppointmentSummaryRow component', () => {
 
   it('deletes step without confirmation', function (done) {
     this.testCase.confirmDialog = false
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      dateCompleted: new Date('2016-01-02'),
-      studyType: 'foo'
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = BASELINE_TEST_ID
+    this.props.studyType = 'foo'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
@@ -218,15 +178,10 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step with sent letters', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      dateCompleted: new Date('2016-01-02'),
-      studyType: 'foo',
-      lettersSent: true
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = BASELINE_TEST_ID
+    this.props.studyType = 'foo'
+    this.props.lettersSent = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')

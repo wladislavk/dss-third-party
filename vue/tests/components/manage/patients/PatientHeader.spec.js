@@ -9,6 +9,10 @@ describe('PatientHeader component', () => {
 
     store.state.patients[symbols.state.showAllWarnings] = true
 
+    const props = {
+      patientId: 1
+    }
+
     this.testCase.setComponent(PatientHeaderComponent)
     this.testCase.setRoutes([
       {
@@ -16,6 +20,7 @@ describe('PatientHeader component', () => {
         path: '/tracker'
       }
     ])
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -23,10 +28,6 @@ describe('PatientHeader component', () => {
   })
 
   it('hides and shows warnings', function (done) {
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const showWarningsButton = vm.$el.querySelector('a#show_patient_warnings')

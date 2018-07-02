@@ -15,7 +15,12 @@ describe('PatientInnerMenu component', () => {
     store.state.patients[symbols.state.premedCheck] = 0
     store.state.patients[symbols.state.allergen] = false
 
+    const props = {
+      patientId: 1
+    }
+
     this.testCase.setComponent(PatientInnerMenuComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -23,10 +28,6 @@ describe('PatientInnerMenu component', () => {
   })
 
   it('shows menu', function () {
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameDiv = vm.$el
@@ -42,10 +43,6 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with medicare', function () {
     store.state.patients[symbols.state.medicare] = true
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameDiv = vm.$el
@@ -57,10 +54,6 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with long patient name', function () {
     store.state.patients[symbols.state.patientName] = 'Benedict J. Cumberbatch'
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameDiv = vm.$el
@@ -70,10 +63,6 @@ describe('PatientInnerMenu component', () => {
   it('shows menu with notes', function () {
     store.state.patients[symbols.state.displayAlert] = true
     store.state.patients[symbols.state.headerAlertText] = 'foo&bar'
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
@@ -86,10 +75,6 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with premedcheck', function () {
     store.state.patients[symbols.state.premedCheck] = 1
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
@@ -103,10 +88,6 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with allergen', function () {
     store.state.patients[symbols.state.allergen] = true
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const patientNameSpan = vm.$el.querySelector('span.patient_name')

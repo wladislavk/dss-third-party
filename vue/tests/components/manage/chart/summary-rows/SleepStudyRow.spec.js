@@ -9,6 +9,12 @@ describe('SleepStudyRow component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: BASELINE_TEST_ID
+    }
+
     this.testCase.setComponent(SleepStudyRowComponent)
   })
 
@@ -17,13 +23,8 @@ describe('SleepStudyRow component', () => {
   })
 
   it('shows sleep studies', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      studyType: 'PSG Baseline'
-    }
-    this.testCase.setPropsData(props)
+    this.props.studyType = 'PSG Baseline'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el
@@ -37,13 +38,9 @@ describe('SleepStudyRow component', () => {
   })
 
   it('shows without sleep study data', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: 99,
-      studyType: ''
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = 99
+    this.props.studyType = ''
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el
@@ -57,13 +54,8 @@ describe('SleepStudyRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      studyType: 'PSG Baseline'
-    }
-    this.testCase.setPropsData(props)
+    this.props.studyType = 'PSG Baseline'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el
@@ -88,13 +80,8 @@ describe('SleepStudyRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: BASELINE_TEST_ID,
-      studyType: 'PSG Baseline'
-    }
-    this.testCase.setPropsData(props)
+    this.props.studyType = 'PSG Baseline'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el

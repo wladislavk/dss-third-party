@@ -24,7 +24,12 @@ describe('TrackerSectionTwo component', () => {
     ]
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
 
+    const props = {
+      patientId: 42
+    }
+
     this.testCase.setComponent(TrackerSectionTwoComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -32,10 +37,6 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('shows with empty data', function () {
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const rootDiv = vm.$el
@@ -57,10 +58,6 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('shows with pre-set future appointment', function (done) {
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const midnight = moment(moment().format('MM/DD/YYYY'), 'MM/DD/YYYY')
@@ -92,10 +89,6 @@ describe('TrackerSectionTwo component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const datePicker = vm.$el.querySelector('input#next_step_date')
@@ -137,10 +130,6 @@ describe('TrackerSectionTwo component', () => {
       dateScheduled: null,
       dateUntil: null
     }
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const stepSelector = vm.$el.querySelector('select#next_step')
@@ -175,10 +164,6 @@ describe('TrackerSectionTwo component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const trackerNotes = vm.$el.querySelector('input#tracker-notes')

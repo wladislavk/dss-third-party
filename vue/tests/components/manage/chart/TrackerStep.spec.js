@@ -8,6 +8,15 @@ describe('TrackerStep component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      stepId: 3,
+      patientId: 42,
+      name: 'foo',
+      section: 1,
+      completed: false,
+      last: false
+    }
+
     this.testCase.setComponent(TrackerStepComponent)
   })
 
@@ -16,15 +25,7 @@ describe('TrackerStep component', () => {
   })
 
   it('shows normal step', function () {
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: false
-    }
-    this.testCase.setPropsData(props)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const root = vm.$el
@@ -36,15 +37,8 @@ describe('TrackerStep component', () => {
   })
 
   it('shows completed step', function () {
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: true,
-      last: false
-    }
-    this.testCase.setPropsData(props)
+    this.props.completed = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const root = vm.$el
@@ -52,15 +46,8 @@ describe('TrackerStep component', () => {
   })
 
   it('shows first step', function () {
-    const props = {
-      stepId: 1,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: false
-    }
-    this.testCase.setPropsData(props)
+    this.props.stepId = 1
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -71,15 +58,8 @@ describe('TrackerStep component', () => {
   })
 
   it('shows last step', function () {
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: true
-    }
-    this.testCase.setPropsData(props)
+    this.props.last = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const root = vm.$el
@@ -93,15 +73,7 @@ describe('TrackerStep component', () => {
         data: []
       }
     })
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: false
-    }
-    this.testCase.setPropsData(props)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')

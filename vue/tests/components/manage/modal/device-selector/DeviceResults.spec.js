@@ -26,6 +26,10 @@ describe('DeviceResults component', () => {
     ]
     store.commit(symbols.mutations.deviceGuideResults, this.fakeData)
 
+    this.props = {
+      patientName: 'John'
+    }
+
     this.testCase.setComponent(DeviceResultsComponent)
   })
 
@@ -34,10 +38,7 @@ describe('DeviceResults component', () => {
   })
 
   it('should show correct device results', function () {
-    const props = {
-      patientName: 'John'
-    }
-    this.testCase.setPropsData(props)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
@@ -54,10 +55,8 @@ describe('DeviceResults component', () => {
   })
 
   it('should show device results without patient', function () {
-    const props = {
-      patientName: ''
-    }
-    this.testCase.setPropsData(props)
+    this.props.patientName = ''
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
@@ -77,10 +76,7 @@ describe('DeviceResults component', () => {
         message: 'foo'
       }
     })
-    const props = {
-      patientName: 'John'
-    }
-    this.testCase.setPropsData(props)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
@@ -95,10 +91,7 @@ describe('DeviceResults component', () => {
 
   it('should update device without confirmation', function (done) {
     this.testCase.confirmDialog = false
-    const props = {
-      patientName: 'John'
-    }
-    this.testCase.setPropsData(props)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')

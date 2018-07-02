@@ -25,7 +25,14 @@ describe('DeviceRow component', () => {
       }
     ]
 
+    const props = {
+      patientId: 42,
+      elementId: 1,
+      deviceId: 2
+    }
+
     this.testCase.setComponent(DeviceRowComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -33,12 +40,6 @@ describe('DeviceRow component', () => {
   })
 
   it('shows devices', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      deviceId: 2
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el
@@ -66,12 +67,6 @@ describe('DeviceRow component', () => {
         default: true
       }
     ]
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      deviceId: 2
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     vm.$nextTick(() => {
@@ -88,12 +83,6 @@ describe('DeviceRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      deviceId: 2
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el
@@ -112,12 +101,6 @@ describe('DeviceRow component', () => {
   })
 
   it('updates to empty data', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      deviceId: 2
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el

@@ -13,6 +13,16 @@ describe('TaskData component', () => {
         props: TaskElementData.props
       }
     ]
+    this.props = {
+      tasks: [
+        { id: 1, task: 'Task 1' },
+        { id: 2, task: 'Task 2' }
+      ],
+      taskCode: 'code',
+      taskType: 'type',
+      isPatient: false
+    }
+
     this.testCase.setComponent(TaskDataComponent)
     this.testCase.setChildComponents(childComponents)
   })
@@ -22,29 +32,15 @@ describe('TaskData component', () => {
   })
 
   it('should not display data without tasks', function () {
-    const propsData = {
-      tasks: [],
-      taskCode: 'code',
-      taskType: 'type',
-      isPatient: false
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.tasks = []
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.textContent.trim()).toBe('')
   })
 
   it('should display data without patient', function () {
-    const propsData = {
-      tasks: [
-        { id: 1, task: 'Task 1' },
-        { id: 2, task: 'Task 2' }
-      ],
-      taskCode: 'code',
-      taskType: 'type',
-      isPatient: false
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const header = vm.$el.querySelector('h4')
@@ -61,17 +57,9 @@ describe('TaskData component', () => {
   })
 
   it('should display data with patient and date', function () {
-    const propsData = {
-      tasks: [
-        { id: 1, task: 'Task 1' },
-        { id: 2, task: 'Task 2' }
-      ],
-      taskCode: 'code',
-      taskType: 'type',
-      isPatient: true,
-      hasDueDate: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.isPatient = true
+    this.props.hasDueDate = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const header = vm.$el.querySelector('h4')
@@ -85,17 +73,8 @@ describe('TaskData component', () => {
   })
 
   it('should display data with red header', function () {
-    const propsData = {
-      tasks: [
-        { id: 1, task: 'Task 1' },
-        { id: 2, task: 'Task 2' }
-      ],
-      taskCode: 'code',
-      taskType: 'type',
-      isPatient: false,
-      redHeader: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.redHeader = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const header = vm.$el.querySelector('h4')

@@ -10,6 +10,12 @@ describe('ReasonRow component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID
+    }
+
     this.testCase.setComponent(ReasonRowComponent)
   })
 
@@ -18,13 +24,8 @@ describe('ReasonRow component', () => {
   })
 
   it('shows reasons', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -42,13 +43,8 @@ describe('ReasonRow component', () => {
   })
 
   it('shows other reason', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -56,13 +52,8 @@ describe('ReasonRow component', () => {
   })
 
   it('shows without current reason', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: ''
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = ''
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -70,13 +61,9 @@ describe('ReasonRow component', () => {
   })
 
   it('shows without current reason and reason data', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: 99,
-      reason: ''
-    }
-    this.testCase.setPropsData(props)
+    this.props.segmentId = 99
+    this.props.reason = ''
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -90,13 +77,8 @@ describe('ReasonRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -122,13 +104,8 @@ describe('ReasonRow component', () => {
         data: []
       }
     })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -144,13 +121,8 @@ describe('ReasonRow component', () => {
   })
 
   it('updates to empty data', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
@@ -163,13 +135,8 @@ describe('ReasonRow component', () => {
   })
 
   it('opens flowsheet modal', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    this.testCase.setPropsData(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -186,9 +153,5 @@ describe('ReasonRow component', () => {
       expect(vm.$store.state.main[symbols.state.modal]).toEqual(expectedModal)
       done()
     })
-  })
-
-  afterEach(function () {
-    moxios.uninstall()
   })
 })

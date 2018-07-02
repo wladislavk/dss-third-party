@@ -13,7 +13,12 @@ describe('PatientWarnings component', () => {
     store.state.patients[symbols.state.rejectedClaimsForCurrentPatient] = []
     store.state.patients[symbols.state.incompleteHomeSleepTests] = []
 
+    const props = {
+      patientId: 1
+    }
+
     this.testCase.setComponent(PatientWarningsComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -21,10 +26,6 @@ describe('PatientWarnings component', () => {
   })
 
   it('shows empty data', function () {
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(0)
@@ -32,10 +33,6 @@ describe('PatientWarnings component', () => {
 
   it('shows patient changes', function () {
     store.state.patients[symbols.state.totalSubPatients] = 3
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(1)
@@ -46,10 +43,6 @@ describe('PatientWarnings component', () => {
 
   it('shows questionnaire changes', function () {
     store.state.patients[symbols.state.questionnaireStatuses].symptoms = 2
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(1)
@@ -60,10 +53,6 @@ describe('PatientWarnings component', () => {
 
   it('shows bounced emails', function () {
     store.state.patients[symbols.state.isEmailBounced] = true
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(1)
@@ -83,10 +72,6 @@ describe('PatientWarnings component', () => {
         addDate: new Date('12/11/2017')
       }
     ]
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(1)
@@ -122,10 +107,6 @@ describe('PatientWarnings component', () => {
         rejectedReason: 'reason'
       }
     ]
-    const props = {
-      patientId: 1
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.children.length).toBe(1)

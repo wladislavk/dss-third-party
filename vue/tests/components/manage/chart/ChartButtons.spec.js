@@ -11,7 +11,12 @@ describe('ChartButtons component', () => {
     store.state.main[symbols.state.companyData] = []
     store.state.patients[symbols.state.incompleteHomeSleepTests] = []
 
+    const props = {
+      patientId: 42
+    }
+
     this.testCase.setComponent(ChartButtonsComponent)
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -19,10 +24,6 @@ describe('ChartButtons component', () => {
   })
 
   it('shows without HST company', function () {
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const links = vm.$el.querySelectorAll('a')
@@ -34,10 +35,6 @@ describe('ChartButtons component', () => {
   it('clicks order button', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
     store.state.patients[symbols.state.incompleteHomeSleepTests] = [1, DSS_CONSTANTS.DSS_HST_REQUESTED]
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const links = vm.$el.querySelectorAll('a')
@@ -54,10 +51,6 @@ describe('ChartButtons component', () => {
 
   it('clicks request button', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const links = vm.$el.querySelectorAll('a')
@@ -74,10 +67,6 @@ describe('ChartButtons component', () => {
   it('clicks request button without confirmation', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
     this.testCase.confirmDialog = false
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const links = vm.$el.querySelectorAll('a')

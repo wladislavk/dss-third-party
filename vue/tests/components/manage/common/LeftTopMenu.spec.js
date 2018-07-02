@@ -19,6 +19,7 @@ describe('LeftTopMenu component', () => {
 
   it('shows menu without snoozle', function () {
     const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(1)
   })
@@ -27,6 +28,7 @@ describe('LeftTopMenu component', () => {
     store.state.main[symbols.state.userInfo].useCourse = 1
     store.state.main[symbols.state.docInfo].useCourseStaff = 1
     const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('a')
     expect(links.length).toBe(3)
   })

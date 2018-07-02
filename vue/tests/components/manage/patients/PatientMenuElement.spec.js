@@ -9,6 +9,12 @@ describe('PatientMenuElement component', () => {
 
     store.state.patients[symbols.state.patientId] = 0
 
+    this.props = {
+      patientId: 42,
+      elementLink: 'foo',
+      elementName: 'bar'
+    }
+
     this.testCase.setComponent(PatientMenuElementComponent)
     this.testCase.setRoutes([
       {
@@ -23,12 +29,7 @@ describe('PatientMenuElement component', () => {
   })
 
   it('shows normal element', function (done) {
-    const propsData = {
-      patientId: 42,
-      elementLink: 'foo',
-      elementName: 'bar'
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.className).toBe('')
@@ -45,12 +46,8 @@ describe('PatientMenuElement component', () => {
   it('shows element with parsed link', function (done) {
     store.state.patients[symbols.state.patientId] = 1
 
-    const propsData = {
-      patientId: 42,
-      elementLink: 'foo%d',
-      elementName: 'bar'
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.elementLink = 'foo%d'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -62,13 +59,8 @@ describe('PatientMenuElement component', () => {
   })
 
   it('shows active element', function (done) {
-    const propsData = {
-      patientId: 42,
-      elementLink: 'foo',
-      elementName: 'bar',
-      elementActive: 'route'
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.elementActive = 'route'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -80,13 +72,8 @@ describe('PatientMenuElement component', () => {
   })
 
   it('shows active element with pattern', function (done) {
-    const propsData = {
-      patientId: 42,
-      elementLink: 'foo',
-      elementName: 'bar',
-      elementActiveLike: ['som', 'rou']
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.elementActiveLike = ['som', 'rou']
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     const link = vm.$el.querySelector('a')
@@ -98,13 +85,8 @@ describe('PatientMenuElement component', () => {
   })
 
   it('shows last element', function () {
-    const propsData = {
-      patientId: 42,
-      elementLink: 'foo',
-      elementName: 'bar',
-      lastElement: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.lastElement = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.className).toBe('last')

@@ -45,8 +45,13 @@ describe('TrackerSectionOne component', () => {
     store.state.flowsheet[symbols.state.lastTrackerSegment] = 5
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
 
+    const props = {
+      patientId: 42
+    }
+
     this.testCase.setComponent(TrackerSectionOneComponent)
     this.testCase.setChildComponents(['tracker-step'])
+    this.testCase.setPropsData(props)
   })
 
   afterEach(function () {
@@ -54,10 +59,6 @@ describe('TrackerSectionOne component', () => {
   })
 
   it('shows tracker steps', function () {
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const rootDiv = vm.$el
@@ -90,10 +91,6 @@ describe('TrackerSectionOne component', () => {
       dateScheduled: new Date('2016-01-01'),
       dateUntil: null
     }
-    const props = {
-      patientId: 42
-    }
-    this.testCase.setPropsData(props)
     const vm = this.testCase.mount()
 
     const rootDiv = vm.$el

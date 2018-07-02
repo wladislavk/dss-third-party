@@ -9,6 +9,11 @@ describe('NotificationLink component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
+    this.props = {
+      linkCount: NOTIFICATION_NUMBERS.patientChanges,
+      linkLabel: 'My link'
+    }
+
     this.testCase.setComponent(NotificationLinkComponent)
   })
 
@@ -18,12 +23,8 @@ describe('NotificationLink component', () => {
 
   it('should display link without children', function () {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 3
-    const propsData = {
-      linkCount: NOTIFICATION_NUMBERS.patientChanges,
-      linkLabel: 'My link',
-      linkUrl: 'foo'
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.linkUrl = 'foo'
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.style.display).toBe('')
@@ -40,12 +41,8 @@ describe('NotificationLink component', () => {
 
   it('should display link with children', function () {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 3
-    const propsData = {
-      linkCount: NOTIFICATION_NUMBERS.patientChanges,
-      linkLabel: 'My link',
-      hasChildren: true
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.hasChildren = true
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.getAttribute('href')).toBe('#')
@@ -55,11 +52,7 @@ describe('NotificationLink component', () => {
 
   it('should display link with zero number', function () {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 0
-    const propsData = {
-      linkCount: NOTIFICATION_NUMBERS.patientChanges,
-      linkLabel: 'My link'
-    }
-    this.testCase.setPropsData(propsData)
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.style.display).toBe('')
@@ -71,12 +64,8 @@ describe('NotificationLink component', () => {
 
   it('should not display anything if zero number and showAll is false', function () {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 0
-    const propsData = {
-      linkCount: NOTIFICATION_NUMBERS.patientChanges,
-      linkLabel: 'My link',
-      showAll: false
-    }
-    this.testCase.setPropsData(propsData)
+    this.props.showAll = false
+    this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()
 
     expect(vm.$el.style.display).toBe('none')

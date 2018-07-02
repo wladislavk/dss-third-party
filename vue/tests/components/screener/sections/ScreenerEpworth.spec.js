@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerEpworthComponent from '../../../../src/components/screener/sections/ScreenerEpworth.vue'
@@ -18,20 +17,23 @@ describe('ScreenerEpworth', () => {
       }
     ])
 
-    this.mockData = [
-      {
-        epworthid: 1,
-        epworth: 'foo'
-      },
-      {
-        epworthid: 2,
-        epworth: 'bar'
-      },
-      {
-        epworthid: 3,
-        epworth: 'baz'
-      }
-    ]
+    this.testCase.stubRequest({
+      url: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby',
+      response: [
+        {
+          epworthid: 1,
+          epworth: 'foo'
+        },
+        {
+          epworthid: 2,
+          epworth: 'bar'
+        },
+        {
+          epworthid: 3,
+          epworth: 'baz'
+        }
+      ]
+    })
   })
 
   afterEach(function () {
@@ -39,13 +41,6 @@ describe('ScreenerEpworth', () => {
   })
 
   it('should display existing fields', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
-      status: 200,
-      responseText: {
-        data: this.mockData
-      }
-    })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {
@@ -70,13 +65,6 @@ describe('ScreenerEpworth', () => {
   })
 
   it('should update data when all fields are set', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
-      status: 200,
-      responseText: {
-        data: this.mockData
-      }
-    })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {
@@ -127,13 +115,6 @@ describe('ScreenerEpworth', () => {
   })
 
   it('should throw error when some fields are not set', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
-      status: 200,
-      responseText: {
-        data: this.mockData
-      }
-    })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {

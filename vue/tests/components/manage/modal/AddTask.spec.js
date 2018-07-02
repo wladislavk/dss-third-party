@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import AddTaskComponent from '../../../../src/components/manage/modal/AddTask.vue'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -10,34 +9,29 @@ describe('AddTask component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
-    const users = [
-      {
-        userid: 1,
-        first_name: 'John',
-        last_name: 'Doe'
-      },
-      {
-        userid: 2,
-        first_name: 'Jane',
-        last_name: 'Jones'
-      }
-    ]
-    moxios.stubRequest(http.formUrl(endpoints.users.responsible), {
-      status: 200,
-      responseText: {
-        data: users
-      }
-    })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
-    })
     store.state.main[symbols.state.modal].name = 'addTask'
     store.state.main[symbols.state.userInfo].plainUserId = 1
 
     this.testCase.setComponent(AddTaskComponent)
+
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
+    })
+    this.testCase.stubRequest({
+      url: endpoints.users.responsible,
+      response: [
+        {
+          userid: 1,
+          first_name: 'John',
+          last_name: 'Doe'
+        },
+        {
+          userid: 2,
+          first_name: 'Jane',
+          last_name: 'Jones'
+        }
+      ]
+    })
   })
 
   afterEach(function () {
@@ -72,19 +66,16 @@ describe('AddTask component', () => {
 
   it('shows HTML for existing task', function (done) {
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
     store.state.main[symbols.state.modal].params.id = taskId
@@ -109,19 +100,16 @@ describe('AddTask component', () => {
 
   it('shows HTML for existing task with patient', function (done) {
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: 'John',
-      lastname: 'Doe'
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: 'John',
+        lastname: 'Doe'
       }
     })
     store.state.main[symbols.state.modal].params.id = taskId
@@ -135,9 +123,8 @@ describe('AddTask component', () => {
   })
 
   it('edits task', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.store), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.tasks.store
     })
     const vm = this.testCase.mount()
 
@@ -182,24 +169,20 @@ describe('AddTask component', () => {
 
   it('deletes task', function (done) {
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/' + taskId), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.tasks.destroy + '/' + taskId
     })
     store.state.main[symbols.state.modal].params.id = taskId
     const vm = this.testCase.mount()
@@ -219,19 +202,16 @@ describe('AddTask component', () => {
   it('deletes task without confirmation', function (done) {
     this.testCase.confirmDialog = false
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
     store.state.main[symbols.state.modal].params.id = taskId

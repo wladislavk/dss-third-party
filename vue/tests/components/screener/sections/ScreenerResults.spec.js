@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerResultsComponent from '../../../../src/components/screener/sections/ScreenerResults.vue'
@@ -24,10 +23,10 @@ describe('ScreenerResults', () => {
   })
 
   it('should display results', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.users.show + '/1'), {
-      status: 200,
-      responseText: {
-        data: { first_name: 'Jane' }
+    this.testCase.stubRequest({
+      url: endpoints.users.show + '/1',
+      response: {
+        first_name: 'Jane'
       }
     })
 

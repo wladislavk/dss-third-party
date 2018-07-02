@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import DeviceSelectorComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSelector.vue'
 import store from '../../../../../src/store'
 import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
 import symbols from '../../../../../src/symbols'
 import TestCase from '../../../../cases/ComponentTestCase'
 
@@ -10,28 +9,26 @@ describe('DeviceSelector component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
 
-    moxios.stubRequest(http.formUrl(endpoints.guideSettingOptions.settingIds), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: '1',
-            name: 'foo',
-            labels: ['first', 'second']
-          },
-          {
-            id: '2',
-            name: 'bar',
-            labels: ['third', 'fourth']
-          }
-        ]
-      }
-    })
-
     store.state.main[symbols.state.modal].params.patientName = ''
 
     this.testCase.setComponent(DeviceSelectorComponent)
     this.testCase.skipChildren(['deviceSlider'])
+
+    this.testCase.stubRequest({
+      url: endpoints.guideSettingOptions.settingIds,
+      response: [
+        {
+          id: '1',
+          name: 'foo',
+          labels: ['first', 'second']
+        },
+        {
+          id: '2',
+          name: 'bar',
+          labels: ['third', 'fourth']
+        }
+      ]
+    })
   })
 
   afterEach(function () {

@@ -45,10 +45,16 @@ export default {
 
   formUrl (path) {
     let apiPath = ProcessWrapper.getApiPath()
+    let resultingPath = path
     if (apiPath.charAt(apiPath.length - 1) === '/' && path.charAt(0) === '/') {
-      path = path.substr(1)
+      resultingPath = path.substr(1)
     }
-    return apiPath + path
+    return apiPath + resultingPath
+  },
+
+  deformUrl (url) {
+    const apiPath = ProcessWrapper.getApiPath()
+    return '/' + url.replace(apiPath, '')
   },
 
   _addToken (config) {

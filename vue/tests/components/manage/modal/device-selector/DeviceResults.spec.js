@@ -104,11 +104,9 @@ describe('DeviceResults component', () => {
 
   it('should retrieve device results', function (done) {
     store.commit(symbols.mutations.deviceGuideResults, [])
-    moxios.stubRequest(http.formUrl(endpoints.guideDevices.withImages), {
-      status: 200,
-      responseText: {
-        data: this.fakeData
-      }
+    this.testCase.stubRequest({
+      url: endpoints.guideDevices.withImages,
+      response: this.fakeData
     })
     const vm = this.testCase.mount()
 

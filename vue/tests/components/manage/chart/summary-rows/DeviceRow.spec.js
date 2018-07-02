@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import store from '../../../../../src/store'
 import DeviceRowComponent from '../../../../../src/components/manage/chart/summary-rows/DeviceRow.vue'
 import symbols from '../../../../../src/symbols'
-import http from '../../../../../src/services/http'
 import endpoints from '../../../../../src/endpoints'
 import TestCase from '../../../../cases/ComponentTestCase'
 
@@ -77,11 +76,8 @@ describe('DeviceRow component', () => {
   })
 
   it('updates device', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     const vm = this.testCase.mount()
 

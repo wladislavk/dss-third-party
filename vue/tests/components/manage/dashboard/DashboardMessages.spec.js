@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import DashboardMessagesComponent from '../../../../src/components/manage/dashboard/DashboardMessages.vue'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -16,20 +15,18 @@ describe('DashboardMessages component', () => {
   })
 
   it('should show tasks', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.memos.current), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: 1,
-            memo: 'memo 1'
-          },
-          {
-            id: 2,
-            memo: '<b>memo 2</b>'
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.memos.current,
+      response: [
+        {
+          id: 1,
+          memo: 'memo 1'
+        },
+        {
+          id: 2,
+          memo: '<b>memo 2</b>'
+        }
+      ]
     })
 
     const vm = this.testCase.mount()

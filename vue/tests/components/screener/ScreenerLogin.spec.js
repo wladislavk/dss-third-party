@@ -1,5 +1,4 @@
 import endpoints from '../../../src/endpoints'
-import http from '../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../src/symbols'
 import ScreenerLoginComponent from '../../../src/components/screener/ScreenerLogin.vue'
@@ -30,13 +29,11 @@ describe('ScreenerLogin', () => {
         token: 'token'
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.users.current), {
-      status: 200,
-      responseText: {
-        data: {
-          userid: 1,
-          docid: 2
-        }
+    this.testCase.stubRequest({
+      url: endpoints.users.current,
+      response: {
+        userid: 1,
+        docid: 2
       }
     })
 

@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerDiagnosesComponent from '../../../../src/components/screener/sections/ScreenerDiagnoses.vue'
@@ -55,11 +54,8 @@ describe('ScreenerDiagnoses', () => {
     ]
     store.commit(symbols.mutations.setEpworthProps, epworthProps)
 
-    moxios.stubRequest(http.formUrl(endpoints.screeners.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.screeners.store
     })
 
     const vm = this.testCase.mount()
@@ -130,13 +126,10 @@ describe('ScreenerDiagnoses', () => {
   })
 
   it('should throw error when server returns 400', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.screeners.store), {
-      status: 400,
-      responseText: {
-        errors: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.screeners.store,
+      status: 400
     })
-
     const vm = this.testCase.mount()
 
     const nextButton = vm.$el.querySelector('a#sect4_next')

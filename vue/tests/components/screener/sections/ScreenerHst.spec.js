@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerHstComponent from '../../../../src/components/screener/sections/ScreenerHst.vue'
@@ -38,22 +37,20 @@ describe('ScreenerHST', () => {
     store.commit(symbols.mutations.addStoredContact, { name: 'class', value: 'foo' })
     store.commit(symbols.mutations.contactData)
 
-    moxios.stubRequest(http.formUrl(endpoints.companies.homeSleepTest), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: 1,
-            name: 'First',
-            logo: 'first.png'
-          },
-          {
-            id: 2,
-            name: 'Second',
-            logo: ''
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.companies.homeSleepTest,
+      response: [
+        {
+          id: 1,
+          name: 'First',
+          logo: 'first.png'
+        },
+        {
+          id: 2,
+          name: 'Second',
+          logo: ''
+        }
+      ]
     })
   })
 
@@ -79,13 +76,9 @@ describe('ScreenerHST', () => {
   })
 
   it('should send HST request', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {
@@ -118,13 +111,9 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if company is not set', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {
@@ -139,13 +128,9 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if contact data is not set', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {
@@ -166,13 +151,10 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if ajax request returned 400', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 400,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store,
+      status: 400
     })
-
     const vm = this.testCase.mount()
 
     moxios.wait(() => {

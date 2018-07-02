@@ -1,6 +1,5 @@
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import DashboardTaskMenuComponent from '../../../../src/components/manage/dashboard/DashboardTaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
@@ -13,20 +12,18 @@ describe('DashboardTaskMenu component', () => {
     this.testCase.setComponent(DashboardTaskMenuComponent)
     this.testCase.setChildComponents(['task-data'])
 
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: 1,
-            type: TASK_TYPES.OVERDUE
-          },
-          {
-            id: 2,
-            type: TASK_TYPES.THIS_WEEK
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index,
+      response: [
+        {
+          id: 1,
+          type: TASK_TYPES.OVERDUE
+        },
+        {
+          id: 2,
+          type: TASK_TYPES.THIS_WEEK
+        }
+      ]
     })
   })
 

@@ -10,6 +10,7 @@ import LegacyHref from '../../src/directives/LegacyHref'
 import UnescapeFilter from '../../src/filters/Unescape'
 import LocationWrapper from '../../src/wrappers/LocationWrapper'
 import Alerter from '../../src/services/Alerter'
+import http from 'src/services/http'
 
 export default class ComponentTestCase {
   constructor () {
@@ -49,6 +50,40 @@ export default class ComponentTestCase {
       this.confirmText = text
       return this.confirmDialog
     })
+  }
+
+  stubRequest (requestData) {
+    let responseData = []
+    let status = 200
+    if (requestData.hasOwnProperty('response')) {
+      responseData = requestData.response
+    }
+    if (requestData.hasOwnProperty('status')) {
+      status = requestData.status
+    }
+    moxios.stubRequest(http.formUrl(requestData.url), {
+      status: status,
+      responseText: {
+        data: responseData
+      }
+    })
+  }
+
+  getRequestResults () {
+    const results = []
+    const resultsNumber = moxios.requests.count()
+    for (let i = 0; i < resultsNumber; i++) {
+      const currentRequest = moxios.requests.at(i)
+      const newResult = {
+        url: http.deformUrl(currentRequest.url)
+      }
+      let currentRequestData = currentRequest.config.data
+      if (currentRequestData) {
+        newResult.body = JSON.parse(currentRequestData)
+      }
+      results.push(newResult)
+    }
+    return results
   }
 
   setComponent (component) {

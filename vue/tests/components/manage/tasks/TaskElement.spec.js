@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
@@ -95,17 +94,11 @@ describe('TaskElement component', () => {
   })
 
   it('should update task to active', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.update + '/1'
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
     })
 
     this.testCase.setPropsData(this.props)
@@ -125,14 +118,19 @@ describe('TaskElement component', () => {
     input.click()
     moxios.wait(() => {
       expect(input.checked).toBe(true)
-      expect(moxios.requests.count()).toBe(2)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.update + '/1'))
-      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
-      const firstRequest = moxios.requests.at(0)
-      const expectedRequest = {
-        status: 1
-      }
-      expect(JSON.parse(firstRequest.config.data)).toEqual(expectedRequest)
+      const requestResults = this.testCase.getRequestResults()
+      const expectedResults = [
+        {
+          url: endpoints.tasks.update + '/1',
+          body: {
+            status: 1
+          }
+        },
+        {
+          url: endpoints.tasks.index
+        }
+      ]
+      expect(requestResults).toEqual(expectedResults)
       input.click()
       vm.$nextTick(() => {
         expect(input.checked).toBe(true)
@@ -142,17 +140,11 @@ describe('TaskElement component', () => {
   })
 
   it('should delete task', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/1'), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.destroy + '/1'
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
     })
 
     this.testCase.setPropsData(this.props)
@@ -161,9 +153,10 @@ describe('TaskElement component', () => {
     const deleteLink = vm.$el.querySelector('a.task_delete')
     deleteLink.click()
     moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.destroy + '/1'))
-      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      expect(requestResults[0].url).toBe(endpoints.tasks.destroy + '/1')
+      expect(requestResults[1].url).toBe(endpoints.tasks.index)
       done()
     })
   })

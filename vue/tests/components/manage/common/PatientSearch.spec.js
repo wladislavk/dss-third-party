@@ -1,6 +1,4 @@
-import moxios from 'moxios'
 import PatientSearchComponent from '../../../../src/components/manage/common/PatientSearch.vue'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -16,11 +14,8 @@ describe('PatientSearch component', () => {
   })
 
   it('shows options without matches', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.patients.list), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.patients.list
     })
     const vm = this.testCase.mount()
 
@@ -47,22 +42,20 @@ describe('PatientSearch component', () => {
   })
 
   it('shows options with matches', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.patients.list), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            patientId: 1,
-            firstname: 'John',
-            lastname: 'Doe'
-          },
-          {
-            patientId: 2,
-            firstname: 'John',
-            lastname: 'Little'
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.patients.list,
+      response: [
+        {
+          patientId: 1,
+          firstname: 'John',
+          lastname: 'Doe'
+        },
+        {
+          patientId: 2,
+          firstname: 'John',
+          lastname: 'Little'
+        }
+      ]
     })
     const vm = this.testCase.mount()
 

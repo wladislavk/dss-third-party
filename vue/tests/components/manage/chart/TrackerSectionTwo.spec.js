@@ -83,11 +83,8 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('creates new appointment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
     const vm = this.testCase.mount()
 
@@ -112,17 +109,11 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('updates existing appointment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.destroy + '/10'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.destroy + '/10'
     })
     store.state.flowsheet[symbols.state.futureAppointment] = {
       id: 10,
@@ -158,11 +149,8 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('updates tracker notes', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.patientSummaries.updateTrackerNotes), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.patientSummaries.updateTrackerNotes
     })
     const vm = this.testCase.mount()
 

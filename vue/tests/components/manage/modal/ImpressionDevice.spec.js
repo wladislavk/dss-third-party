@@ -2,8 +2,8 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import ImpressionDeviceComponent from '../../../../src/components/manage/modal/ImpressionDevice.vue'
 import symbols from '../../../../src/symbols'
-import http from 'src/services/http'
-import endpoints from 'src/endpoints'
+import http from '../../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ImpressionDevice component', () => {
@@ -29,20 +29,18 @@ describe('ImpressionDevice component', () => {
   })
 
   it('shows devices', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.devices.byStatus), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            deviceid: '1',
-            device: 'first'
-          },
-          {
-            deviceid: '2',
-            device: 'second'
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.devices.byStatus,
+      response: [
+        {
+          deviceid: '1',
+          device: 'first'
+        },
+        {
+          deviceid: '2',
+          device: 'second'
+        }
+      ]
     })
     const vm = this.testCase.mount()
 
@@ -63,28 +61,24 @@ describe('ImpressionDevice component', () => {
   })
 
   it('selects a device', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.devices.byStatus), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            deviceid: '2',
-            device: 'first'
-          },
-          {
-            deviceid: '3',
-            device: 'second'
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.devices.byStatus,
+      response: [
+        {
+          deviceid: '2',
+          device: 'first'
+        },
+        {
+          deviceid: '3',
+          device: 'second'
+        }
+      ]
     })
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
-    moxios.stubRequest(http.formUrl(endpoints.tmjClinicalExams.storeForPatient), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.tmjClinicalExams.storeForPatient
     })
     const vm = this.testCase.mount()
 

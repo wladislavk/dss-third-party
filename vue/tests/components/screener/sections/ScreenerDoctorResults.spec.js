@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import ScreenerDoctorResultsComponent from '../../../../src/components/screener/sections/ScreenerDoctorResults.vue'
 import symbols from '../../../../src/symbols'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -12,29 +11,25 @@ describe('ScreenerDoctorResults component', () => {
 
     this.testCase.setComponent(ScreenerDoctorResultsComponent)
 
-    const epworthMockData = [
-      {
-        epworthid: 1,
-        epworth: 'foo',
-        selected: 1
-      },
-      {
-        epworthid: 2,
-        epworth: 'bar',
-        selected: 0
-      },
-      {
-        epworthid: 3,
-        epworth: 'baz',
-        selected: 4
-      }
-    ]
-
-    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
-      status: 200,
-      responseText: {
-        data: epworthMockData
-      }
+    this.testCase.stubRequest({
+      url: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby',
+      response: [
+        {
+          epworthid: 1,
+          epworth: 'foo',
+          selected: 1
+        },
+        {
+          epworthid: 2,
+          epworth: 'bar',
+          selected: 0
+        },
+        {
+          epworthid: 3,
+          epworth: 'baz',
+          selected: 4
+        }
+      ]
     })
   })
 

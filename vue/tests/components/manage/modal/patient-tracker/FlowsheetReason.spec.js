@@ -55,9 +55,8 @@ describe('FlowsheetReason component', () => {
   })
 
   it('updates reason', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     const vm = this.testCase.mount()
 
@@ -86,9 +85,8 @@ describe('FlowsheetReason component', () => {
   })
 
   it('updates with empty data', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     const vm = this.testCase.mount()
 

@@ -55,11 +55,9 @@ describe('FlowsheetStudyType component', () => {
   it('selects study type', function (done) {
     store.state.main[symbols.state.modal].params.segmentId = BASELINE_TEST_ID
 
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
-
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')

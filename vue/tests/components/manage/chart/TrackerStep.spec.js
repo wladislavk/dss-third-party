@@ -67,11 +67,8 @@ describe('TrackerStep component', () => {
   })
 
   it('adds new step', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
     this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()

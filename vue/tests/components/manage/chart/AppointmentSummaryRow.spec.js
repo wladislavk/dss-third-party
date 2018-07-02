@@ -140,12 +140,8 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step', function (done) {
-    const endpoint = endpoints.appointmentSummaries.destroy + '/1'
-    moxios.stubRequest(http.formUrl(endpoint), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.destroy + '/1'
     })
     this.props.segmentId = BASELINE_TEST_ID
     this.props.studyType = 'foo'
@@ -157,7 +153,7 @@ describe('AppointmentSummaryRow component', () => {
     moxios.wait(() => {
       expect(this.testCase.alertText).toBe('')
       expect(moxios.requests.count()).toBe(1)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoint))
+      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.appointmentSummaries.destroy + '/1'))
       done()
     })
   })

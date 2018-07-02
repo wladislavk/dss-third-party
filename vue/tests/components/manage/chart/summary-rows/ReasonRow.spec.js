@@ -3,7 +3,6 @@ import ReasonRowComponent from '../../../../../src/components/manage/chart/summa
 import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
 import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
 import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('ReasonRow component', () => {
@@ -71,11 +70,8 @@ describe('ReasonRow component', () => {
   })
 
   it('updates reason', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     this.props.reason = 'deciding'
     this.testCase.setPropsData(this.props)
@@ -98,11 +94,8 @@ describe('ReasonRow component', () => {
   })
 
   it('updates reason and erases description', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     this.props.reason = 'other'
     this.testCase.setPropsData(this.props)

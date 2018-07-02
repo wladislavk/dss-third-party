@@ -1,7 +1,6 @@
 import moxios from 'moxios'
 import store from '../../../src/store'
 import ManageLoginComponent from '../../../src/components/manage/ManageLogin.vue'
-import http from '../../../src/services/http'
 import endpoints from '../../../src/endpoints'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../src/symbols'
@@ -43,25 +42,17 @@ describe('ManageLogin component', () => {
         token: 'token'
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.users.check), {
-      status: 200,
-      responseText: {
-        data: {
-          type: 'foo'
-        }
+    this.testCase.stubRequest({
+      url: endpoints.users.check,
+      response: {
+        type: 'foo'
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.loginDetails.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.loginDetails.store
     })
-    moxios.stubRequest(http.formUrl(endpoints.users.current), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.users.current
     })
 
     const vm = this.testCase.mount()
@@ -148,11 +139,8 @@ describe('ManageLogin component', () => {
   })
 
   it('redirects if token exists', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.loginDetails.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.loginDetails.store
     })
     store.state.main[symbols.state.mainToken] = 'token'
     const vm = this.testCase.mount()

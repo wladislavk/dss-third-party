@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import SleepStudyRowComponent from '../../../../../src/components/manage/chart/summary-rows/SleepStudyRow.vue'
 import { BASELINE_TEST_ID } from '../../../../../src/constants/chart'
 import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
 import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('SleepStudyRow component', () => {
@@ -48,11 +47,8 @@ describe('SleepStudyRow component', () => {
   })
 
   it('updates sleep study', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     this.props.studyType = 'PSG Baseline'
     this.testCase.setPropsData(this.props)
@@ -74,11 +70,8 @@ describe('SleepStudyRow component', () => {
   })
 
   it('updates to empty data', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
     this.props.studyType = 'PSG Baseline'
     this.testCase.setPropsData(this.props)

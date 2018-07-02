@@ -38,7 +38,7 @@ export default {
     }
   },
   components: {
-    // vueSlider: VueSliderComponent
+    vueSlider: VueSliderComponent
   },
   methods: {
     checkSetting (event) {

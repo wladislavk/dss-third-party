@@ -36,6 +36,7 @@ describe('DashboardTaskMenu component', () => {
 
   it('should show HTML', function (done) {
     const vm = this.testCase.mount()
+
     moxios.wait(function () {
       const children = vm.$el.querySelectorAll('div.task-data')
       expect(children.length).toBe(6)

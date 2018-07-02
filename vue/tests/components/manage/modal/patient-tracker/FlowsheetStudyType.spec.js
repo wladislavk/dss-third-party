@@ -25,12 +25,6 @@ describe('FlowsheetStudyType component', () => {
   })
 
   afterEach(function () {
-    store.state.patients[symbols.state.patientName] = ''
-    store.state.main[symbols.state.modal] = {
-      name: '',
-      params: {}
-    }
-
     this.testCase.reset()
   })
 

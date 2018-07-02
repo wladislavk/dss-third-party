@@ -30,6 +30,7 @@ describe('RightTopMenu component', () => {
 
   it('shows menu without support tickets', function () {
     const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('ul#topmenu2 > li')
     expect(links[0].textContent).toBe('Notifications(0)')
     expect(links[1].textContent.trim()).toBe('Support')
@@ -39,6 +40,7 @@ describe('RightTopMenu component', () => {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingLetters] = 2
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.supportTickets] = 3
     const vm = this.testCase.mount()
+
     const links = vm.$el.querySelectorAll('ul#topmenu2 > li')
     expect(links[0].textContent).toBe('Notifications(2)')
     expect(links[1].textContent.trim()).toBe('Support (3)')
@@ -46,6 +48,7 @@ describe('RightTopMenu component', () => {
 
   it('logs out', function (done) {
     const vm = this.testCase.mount()
+
     const logoutButton = vm.$el.querySelector('a#logout')
     logoutButton.click()
     vm.$nextTick(() => {

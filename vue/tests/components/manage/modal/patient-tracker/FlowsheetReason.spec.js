@@ -34,12 +34,6 @@ describe('FlowsheetReason component', () => {
   })
 
   afterEach(function () {
-    store.state.flowsheet[symbols.state.appointmentSummaries] = []
-    store.state.main[symbols.state.modal] = {
-      name: '',
-      params: {}
-    }
-
     this.testCase.reset()
   })
 

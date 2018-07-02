@@ -25,14 +25,6 @@ describe('ImpressionDevice component', () => {
   })
 
   afterEach(function () {
-    store.state.patients[symbols.state.patientId] = 0
-    store.state.patients[symbols.state.patientName] = ''
-    store.state.flowsheet[symbols.state.devices] = []
-    store.state.main[symbols.state.modal] = {
-      name: '',
-      params: {}
-    }
-
     this.testCase.reset()
   })
 

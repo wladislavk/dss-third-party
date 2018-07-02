@@ -58,8 +58,6 @@ describe('ScreenerHST', () => {
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
-
     this.testCase.reset()
   })
 

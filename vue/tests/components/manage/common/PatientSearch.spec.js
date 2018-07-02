@@ -23,6 +23,7 @@ describe('PatientSearch component', () => {
       }
     })
     const vm = this.testCase.mount()
+
     const searchInput = vm.$el.querySelector('input#patient_search')
     const searchHints = vm.$el.querySelector('div#search_hints')
     const patientList = vm.$el.querySelector('ul#patient_list')
@@ -64,6 +65,7 @@ describe('PatientSearch component', () => {
       }
     })
     const vm = this.testCase.mount()
+
     const searchInput = vm.$el.querySelector('input#patient_search')
     const searchHints = vm.$el.querySelector('div#search_hints')
     searchInput.value = 'John'

@@ -1,7 +1,6 @@
 import symbols from '../../../../src/symbols'
 import SectionHeaderComponent from '../../../../src/components/screener/common/SectionHeader.vue'
 import store from '../../../../src/store'
-import { INITIAL_CONTACT_DATA } from '../../../../src/constants/screener'
 import TestCase from '../../../cases/ComponentTestCase'
 
 describe('SectionHeader component', () => {
@@ -23,8 +22,6 @@ describe('SectionHeader component', () => {
   })
 
   afterEach(function () {
-    store.state.screener.contactData = INITIAL_CONTACT_DATA
-
     this.testCase.reset()
   })
 

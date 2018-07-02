@@ -1,4 +1,4 @@
-FROM node:9.11-alpine
+FROM node:8.11-alpine
 
 RUN set -x \
   && sed -i 's,v[0-9]\.[0-9],v3.6,g' /etc/apk/repositories \

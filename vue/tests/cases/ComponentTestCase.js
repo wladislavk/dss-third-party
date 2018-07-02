@@ -51,7 +51,7 @@ export default class ComponentTestCase {
   }
 
   reset () {
-    // store.state = this.originalState
+    // store.replaceState(this.originalState)
     moxios.uninstall()
     this.sandbox.restore()
   }

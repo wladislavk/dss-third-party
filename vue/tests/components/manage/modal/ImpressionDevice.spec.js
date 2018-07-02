@@ -2,7 +2,6 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import ImpressionDeviceComponent from '../../../../src/components/manage/modal/ImpressionDevice.vue'
 import symbols from '../../../../src/symbols'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -90,20 +89,24 @@ describe('ImpressionDevice component', () => {
         const submitButton = vm.$el.querySelector('input')
         submitButton.click()
         moxios.wait(() => {
-          expect(moxios.requests.count()).toBe(4)
-          const firstRequest = moxios.requests.at(1)
-          expect(firstRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.update + '/1'))
-          const expectedFirstData = {
-            device_id: 2
+          const requestResults = this.testCase.getRequestResults()
+          expect(requestResults.length).toBe(4)
+          const expectedSecond = {
+            url: endpoints.appointmentSummaries.update + '/1',
+            body: {
+              device_id: 2
+            }
           }
-          expect(JSON.parse(firstRequest.config.data)).toEqual(expectedFirstData)
-          const secondRequest = moxios.requests.at(3)
-          expect(secondRequest.url).toBe(http.formUrl(endpoints.tmjClinicalExams.storeForPatient))
-          const expectedSecondData = {
-            dentaldevice: 2,
-            patientid: 42
+          expect(requestResults[1]).toEqual(expectedSecond)
+          const expectedFourth = {
+            url: endpoints.tmjClinicalExams.storeForPatient,
+            body: {
+              dentaldevice: 2,
+              patientid: 42
+            }
           }
-          expect(JSON.parse(secondRequest.config.data)).toEqual(expectedSecondData)
+          expect(requestResults[3]).toEqual(expectedFourth)
+
           const expectedModal = {
             name: '',
             params: {}

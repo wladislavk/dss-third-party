@@ -55,16 +55,24 @@ export default class ComponentTestCase {
   stubRequest (requestData) {
     let responseData = []
     let status = 200
+    let dataKey = 'data'
     if (requestData.hasOwnProperty('response')) {
       responseData = requestData.response
     }
     if (requestData.hasOwnProperty('status')) {
       status = requestData.status
     }
-    moxios.stubRequest(http.formUrl(requestData.url), {
+    if (requestData.hasOwnProperty('dataKey')) {
+      dataKey = requestData.dataKey
+    }
+    let url = http.formUrl(requestData.url)
+    if (requestData.hasOwnProperty('rawUrl') && requestData.rawUrl) {
+      url = requestData.url
+    }
+    moxios.stubRequest(url, {
       status: status,
       responseText: {
-        data: responseData
+        [dataKey]: responseData
       }
     })
   }

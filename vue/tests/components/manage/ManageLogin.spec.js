@@ -36,11 +36,11 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in successfully', function (done) {
-    moxios.stubRequest(ProcessWrapper.getApiRoot() + 'auth', {
-      status: 200,
-      responseText: {
-        token: 'token'
-      }
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      dataKey: 'token',
+      response: 'token'
     })
     this.testCase.stubRequest({
       url: endpoints.users.check,
@@ -77,11 +77,11 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in with wrong password', function (done) {
-    moxios.stubRequest(ProcessWrapper.getApiRoot() + 'auth', {
-      status: 403,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      status: 403
     })
-
     const vm = this.testCase.mount()
 
     const usernameInput = vm.$el.querySelector('input#username')

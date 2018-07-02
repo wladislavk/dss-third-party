@@ -1,6 +1,5 @@
 import moxios from 'moxios'
 import TrackerStepComponent from '../../../../src/components/manage/chart/TrackerStep.vue'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -76,15 +75,17 @@ describe('TrackerStep component', () => {
     const link = vm.$el.querySelector('a')
     link.click()
     moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 3,
-        patient_id: 42,
-        appt_type: 1
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 3,
+          patient_id: 42,
+          appt_type: 1
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })

@@ -3,7 +3,6 @@ import store from '../../../../../src/store'
 import FlowsheetReasonComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetReason.vue'
 import symbols from 'src/symbols'
 import { DELAYING_ID } from 'src/constants/chart'
-import http from 'src/services/http'
 import endpoints from 'src/endpoints'
 import TestCase from '../../../../cases/ComponentTestCase'
 
@@ -67,13 +66,16 @@ describe('FlowsheetReason component', () => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       moxios.wait(() => {
-        expect(moxios.requests.count()).toBe(2)
-        const firstRequest = moxios.requests.at(0)
-        expect(firstRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.update + '/1'))
-        const expectedData = {
-          reason: 'new reason'
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).toBe(2)
+        const expectedFirst = {
+          url: endpoints.appointmentSummaries.update + '/1',
+          body: {
+            reason: 'new reason'
+          }
         }
-        expect(JSON.parse(firstRequest.config.data)).toEqual(expectedData)
+        expect(requestResults[0]).toEqual(expectedFirst)
+
         const expectedModal = {
           name: '',
           params: {}
@@ -97,13 +99,15 @@ describe('FlowsheetReason component', () => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       moxios.wait(() => {
-        expect(moxios.requests.count()).toBe(2)
-        const firstRequest = moxios.requests.at(0)
-        expect(firstRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.update + '/1'))
-        const expectedData = {
-          reason: 'foo'
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).toBe(2)
+        const expectedFirst = {
+          url: endpoints.appointmentSummaries.update + '/1',
+          body: {
+            reason: 'foo'
+          }
         }
-        expect(JSON.parse(firstRequest.config.data)).toEqual(expectedData)
+        expect(requestResults[0]).toEqual(expectedFirst)
         done()
       })
     })

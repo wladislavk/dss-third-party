@@ -4,7 +4,6 @@ import store from '../../../../src/store'
 import TrackerSectionTwoComponent from '../../../../src/components/manage/chart/TrackerSectionTwo.vue'
 import symbols from '../../../../src/symbols'
 import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -95,15 +94,17 @@ describe('TrackerSectionTwo component', () => {
     stepSelector.dispatchEvent(new Event('change'))
     moxios.wait(() => {
       expect(datePicker.getAttribute('disabled')).toBeNull()
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 2,
-        patient_id: 42,
-        appt_type: 0
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 2,
+          patient_id: 42,
+          appt_type: 0
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })
@@ -128,17 +129,21 @@ describe('TrackerSectionTwo component', () => {
     stepSelector.value = '2'
     stepSelector.dispatchEvent(new Event('change'))
     moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(3)
-      const deleteRequest = moxios.requests.at(0)
-      expect(deleteRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.destroy + '/10'))
-      const addRequest = moxios.requests.at(1)
-      expect(addRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 2,
-        patient_id: 42,
-        appt_type: 0
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(3)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.destroy + '/10'
       }
-      expect(JSON.parse(addRequest.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
+      const expectedSecond = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 2,
+          patient_id: 42,
+          appt_type: 0
+        }
+      }
+      expect(requestResults[1]).toEqual(expectedSecond)
       done()
     })
   })
@@ -159,14 +164,16 @@ describe('TrackerSectionTwo component', () => {
     trackerNotes.value = 'foo'
     trackerNotes.dispatchEvent(new Event('change'))
     moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.patientSummaries.updateTrackerNotes))
-      const expectedData = {
-        patient_id: 42,
-        tracker_notes: 'foo'
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.patientSummaries.updateTrackerNotes,
+        body: {
+          patient_id: 42,
+          tracker_notes: 'foo'
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })

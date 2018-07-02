@@ -7,7 +7,6 @@ import {
   INITIAL_CONTACT_ID,
   NON_COMPLIANT_ID
 } from '../../../../src/constants/chart'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -152,8 +151,14 @@ describe('AppointmentSummaryRow component', () => {
     deleteButton.click()
     moxios.wait(() => {
       expect(this.testCase.alertText).toBe('')
-      expect(moxios.requests.count()).toBe(1)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.appointmentSummaries.destroy + '/1'))
+
+      const requestResults = this.testCase.getRequestResults()
+      const expectedResults = [
+        {
+          url: endpoints.appointmentSummaries.destroy + '/1'
+        }
+      ]
+      expect(requestResults).toEqual(expectedResults)
       done()
     })
   })

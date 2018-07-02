@@ -3,7 +3,6 @@ import symbols from '../../../../../src/symbols'
 import DeviceResultsComponent from '../../../../../src/components/manage/modal/device-selector/DeviceResults.vue'
 import store from '../../../../../src/store'
 import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
 import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceResults component', () => {
@@ -70,11 +69,10 @@ describe('DeviceResults component', () => {
   })
 
   it('should update device', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tmjClinicalExams.updateFlowDevice + '/' + 13), {
-      status: 200,
-      responseText: {
-        message: 'foo'
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tmjClinicalExams.updateFlowDevice + '/' + 13,
+      dataKey: 'message',
+      response: 'foo'
     })
     this.testCase.setPropsData(this.props)
     const vm = this.testCase.mount()

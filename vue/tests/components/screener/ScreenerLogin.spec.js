@@ -4,6 +4,7 @@ import symbols from '../../../src/symbols'
 import ScreenerLoginComponent from '../../../src/components/screener/ScreenerLogin.vue'
 import store from '../../../src/store'
 import TestCase from '../../cases/ComponentTestCase'
+import ProcessWrapper from 'src/wrappers/ProcessWrapper'
 
 describe('ScreenerLogin', () => {
   beforeEach(function () {
@@ -23,11 +24,11 @@ describe('ScreenerLogin', () => {
   })
 
   it('should log in properly', function (done) {
-    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
-      status: 200,
-      responseText: {
-        token: 'token'
-      }
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      dataKey: 'token',
+      response: 'token'
     })
     this.testCase.stubRequest({
       url: endpoints.users.current,
@@ -62,13 +63,13 @@ describe('ScreenerLogin', () => {
   })
 
   it('should log in unsuccessfully', function (done) {
-    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
       status: 403,
-      responseText: {
-        error: 'error'
-      }
+      dataKey: 'error',
+      response: 'error'
     })
-
     const vm = this.testCase.mount()
 
     const usernameInput = vm.$el.querySelector('input#username')

@@ -14,7 +14,7 @@
   "dependencies": {
     "accounting": "^0.4.1",
     "awesome-mask": "^0.5.4",
-    "axios": "^0.16.2",
+    "axios": "^0.17.1",
     "jquery": "^3.1.1",
     "jquery-mask-plugin": "^1.14.12",
     "jquery-ui": "1.10.5",
@@ -32,7 +32,7 @@
     "vue-slider-component": "^2.5.9",
     "vue-visible": "^1.0.2",
     "vuejs-datepicker": "^0.9.20",
-    "vuex": "^2.4.1"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.5",
@@ -85,15 +85,14 @@
     "vue-loader": "^13.0.5",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.16",
-    "vuenit": "^1.1.1",
-    "webpack": "^3.10.0",
+    "webpack": "^3.12.0",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.19.1",
     "webpack-merge": "^4.1"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 5.0.0"
   }
 }

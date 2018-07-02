@@ -8,7 +8,6 @@ $apiToken = apiToken();
 if (isset($_SESSION['pid']) && isset($_SESSION['patient_docid'])) {
     $apiToken = patientApiToken();
 }
-
 ?>
 <input type="hidden" id="dom-api-token" value="<?= $apiToken ?>" />
 <script>

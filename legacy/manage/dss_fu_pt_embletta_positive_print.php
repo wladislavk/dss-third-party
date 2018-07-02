@@ -8,26 +8,12 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $db = new Db();
 $pat_myarray = $db->getRow($pat_sql);
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
         window.location = 'manage_patient.php';
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
-}
-
-$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
-$ref_myarray = $db->getRow($ref_sql);
-
-$referring_physician = st($ref_myarray['referring_physician']);
-$a_arr = explode(' ',$referring_physician);
-if (st($pat_myarray['dob']) != '' ) {
-    $dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
-    $cur_y = date('Y');
-    $age = $cur_y - $dob_y;
-} else {
-    $age = 'N/A';
 }
 
 $q3_sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
@@ -63,29 +49,6 @@ foreach ($medications_arr as $val) {
             $medications_disp .= st($medications_myarray['medications']);
         }
     }
-}
-
-$q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
-$q2_myarray = $db->getRow($q2_sql);
-
-$polysomnographic = st($q2_myarray['polysomnographic']);
-$sleep_center_name = st($q2_myarray['sleep_center_name']);
-$sleep_study_on = st($q2_myarray['sleep_study_on']);
-$confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
-$rdi = st($q2_myarray['rdi']);
-$ahi = st($q2_myarray['ahi']);
-$type_study = st($q2_myarray['type_study']);
-$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
-if (st($pat_myarray['gender']) == 'Female') {
-    $h_h = "her";
-    $s_h = "she";
-    $h_h1 = "her";
-    $m_m = "Mrs.";
-} else {
-    $h_h = "his";
-    $s_h = "he";
-    $h_h1 = "him";
-    $m_m = "Mr.";
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -1,13 +1,16 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php $file = basename($_SERVER['PHP_SELF']) ?>
-    <?php
-    $thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-        $themyarray = $db->getRow($thesql);
-$docsql = "SELECT username, first_name, last_name, practice FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$themyarray['docid'])."'";
+$file = basename($_SERVER['PHP_SELF']);
 
+$db = new Db();
+
+$thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
+$themyarray = $db->getRow($thesql);
+
+$docsql = "SELECT username, first_name, last_name, practice FROM dental_users WHERE userid='".$db->escape($themyarray['docid'])."'";
 $docr = $db->getRow($docsql);
-
- ?>
+?>
 <script>
     jQuery(function($){
         document.title = '';

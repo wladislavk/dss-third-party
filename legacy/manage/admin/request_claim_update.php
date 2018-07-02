@@ -11,6 +11,8 @@ require_once __DIR__ . '/../includes/claim_functions.php';
 $claimId = intval($_GET['insid']);
 $redirect = !empty($_GET['redirect']) || empty($_GET['embed']);
 
+$db = new Db();
+
 $eClaimData = $db->getRow("SELECT *
     FROM dental_claim_electronic
     WHERE claimid = '$claimId'

@@ -51,7 +51,8 @@ if (
 }
 
 if ($loggedIn) {
-    $db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'");
+    $db = new Db();
+    $db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid='" . $db->escape($_SESSION['userid']) . "'");
 } else {
     header('Location: login.php?goto=' . urlencode($_SERVER['REQUEST_URI']));
     trigger_error("Die called", E_USER_ERROR);

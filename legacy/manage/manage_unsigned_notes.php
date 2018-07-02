@@ -4,7 +4,9 @@ namespace Ds3\Libraries\Legacy;
 include 'includes/top.htm';
 include_once 'includes/constants.inc';
 
-$sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+$db = new Db();
+
+$sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape( $_SESSION['userid']) . "'";
 
 $sign_r = $db->getRow($sign_sql);
 $user_sign = $sign_r['sign_notes'];
@@ -20,16 +22,17 @@ $unsigned_query = "select distinct(patientid) from (select n.*, u.name signed_na
     where m.signed_on IS NULL OR m.signed_on = ''
 ";
 $unsigned_res = $db->getResults($unsigned_query);
+$num_unsigned = count($unsigned_res);
 ?>
-<h2 style="margin-left:20px;">Unsigned Progress Notes (<?php echo  $num_unsigned; ?>)</h2>
+<h2 style="margin-left:20px;">Unsigned Progress Notes (<?php echo $num_unsigned; ?>)</h2>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <script type="text/javascript" src="js/manage_unsigned_notes.js"></script>
     <?php
     foreach ($unsigned_res as $unsigned_r) {
-        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1_pivot q on q.patientid=p.patientid where p.patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid']);
+        $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1_pivot q on q.patientid=p.patientid where p.patientid=".$db->escape( $unsigned_r['patientid']);
         $p_r = $db->getRow($p_sql);
 
-        $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysqli_real_escape_string($con, $unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
+        $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$db->escape( $unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
         $itype = $db->getRow($itype_sql);
         $patient_photo = $itype['image_file'];
         ?>
@@ -40,12 +43,12 @@ $unsigned_res = $db->getResults($unsigned_query);
                     <img src="display_file.php?f=<?php echo $patient_photo; ?>" style="float:left;" />
                     <div style="float:left;padding-left:10px;">
                         <?php echo $p_r['firstname'] . " " . $p_r['lastname']; ?> - <?php echo $p_r['dob']; ?><br />
-            		    REASON FOR SEEKING TX: <?php echo $p_r['chief_complaint_text']; ?><br />
-            		    <?php echo $p_r['add1'];?><br />
+                        REASON FOR SEEKING TX: <?php echo $p_r['chief_complaint_text']; ?><br />
+                        <?php echo $p_r['add1'];?><br />
                         <?php echo $p_r['add2'];?><br />
                         <?php echo $p_r['city']. " ".$p_r['state']." ".$p_r['zip'];?>
-        		    </div>
-            	</div>
+                    </div>
+                </div>
             </td>
         </tr>
         <?php

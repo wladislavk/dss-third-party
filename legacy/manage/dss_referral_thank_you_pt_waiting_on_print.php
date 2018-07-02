@@ -4,9 +4,10 @@ namespace Ds3\Libraries\Legacy;
 include "admin/includes/main_include.php";
 
 $db = new Db();
-$pat_sql = "select * from dental_patients where patientid='".s_for(((!empty($_GET['pid']) ? $_GET['pid'] : '')))."'";
 
+$pat_sql = "select * from dental_patients where patientid='".s_for(((!empty($_GET['pid']) ? $_GET['pid'] : '')))."'";
 $pat_myarray = $db->getRow($pat_sql);
+
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 if ($pat_myarray['patientid'] == '') { ?>
@@ -69,7 +70,6 @@ foreach ($medications_arr as $val) {
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
 $q2_myarray = $db->getRow($q2_sql);
-$polysomnographic = st($q2_myarray['polysomnographic']);
 $sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
@@ -94,12 +94,10 @@ if(st($pat_myarray['gender']) == 'Female') {
     $h_h = "Her";
     $s_h = "She";
     $h_h1 = "her";
-    $m_s = "Mrs.";
 } else {
     $h_h = "His";
     $s_h = "He";
     $h_h1 = "him";
-    $m_s = "Mr.";
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -130,7 +128,7 @@ if(st($pat_myarray['gender']) == 'Female') {
                         Re: <strong><?php echo $name?></strong> <br>
                         DOB: <strong><?php echo st($pat_myarray['dob'])?></strong><br><br>
                         Dear Dr. <strong><?php echo $a_arr[0];?></strong>,<br><br>
-                        Thank you for referring <strong><?php echo $name;?></strong> to our office. As you recall, <strong><?php echo $name1?></strong> is a <strong><?php echo $age;?></strong> year old <strong><?php echo $pat_myarray['gender']?></strong> with a prior medical history that includes <strong><?php echo $history_disp;?></strong>.  <strong><?php echo $h_h;?></strong> medications include <strong><?php echo $medications_disp?></strong>.  <strong><?php echo $name1?></strong> had a <strong>sleep test <?php echo $type_study;?></strong> done at the <strong><?php echo $sleeplab_name?></strong> on <strong><?php echo date('F d, Y',strtotime($sleep_study_on))?></strong> which showed an AHI of <strong><?php echo $ahi?></strong> <? if($rdi <> '') {?>, RDI of <strong><?php echo $rdi?></strong> <? }?> and low O2 of <strong><?php echo $sti_o2_1;?></strong>; <strong><?php echo $s_h;?></strong> was diagnosed with <strong><?php echo $confirmed_diagnosis;?> <?php echo $custom_diagnosis;?></strong>.  You referred <strong><?php echo $h_h1;?></strong> to me for treatment with a dental sleep device.<br><br>
+                        Thank you for referring <strong><?php echo $name;?></strong> to our office. As you recall, <strong><?php echo $name1?></strong> is a <strong><?php echo $age;?></strong> year old <strong><?php echo $pat_myarray['gender']?></strong> with a prior medical history that includes <strong><?php echo $history_disp;?></strong>.  <strong><?php echo $h_h;?></strong> medications include <strong><?php echo $medications_disp?></strong>.  <strong><?php echo $name1?></strong> had a <strong>sleep test <?php echo $type_study;?></strong> done at the <strong><?php echo $sleeplab_name?></strong> on <strong><?php echo date('F d, Y',strtotime($sleep_study_on))?></strong> which showed an AHI of <strong><?php echo $ahi?></strong> <?php if($rdi != '') {?>, RDI of <strong><?php echo $rdi?></strong> <?php }?> and low O2 of <strong><?php echo $sti_o2_1;?></strong>; <strong><?php echo $s_h;?></strong> was diagnosed with <strong><?php echo $confirmed_diagnosis;?> <?php echo $custom_diagnosis;?></strong>.  You referred <strong><?php echo $h_h1;?></strong> to me for treatment with a dental sleep device.<br><br>
                         Oral evaluation of <strong><?php echo $name1?></strong> revealed no contraindications to wearing a dental sleep device. <?php echo $h_h;?> mandibular range of motion is good at <strong><?php echo $protrusion_equal?></strong> mm protrusive ROM. Her TMJ is <strong>???</strong>. <br><br>
                         Overall, I do believe <strong><?php echo $name1?></strong> is a good candidate for Dental Device Therapy. However, <strong><?php echo $s_h;?></strong> is waiting to begin treatment due to <strong>???</strong>. <br><br>
                         Thank you again for your confidence and the referral. We will keep you updated on <?php echo $h_h?> treatment as it progresses. <br /><br />

@@ -9,18 +9,13 @@ require_once __DIR__ . '/../includes/constants.inc';
 </div>
 
 <input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
-
 <div id="company-manager">
-
     <button type="button" class="btn btn-success pull-right" v-on="click: newCompany();">
         Add Company
         <span class="glyphicon glyphicon-plus"></span>
     </button>
-
     <br /><br />
-
     <div id="companies">
-
         <table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <thead>
             <tr class="tr_bg_h">
@@ -41,7 +36,8 @@ require_once __DIR__ . '/../includes/constants.inc';
                 </th>
                 <th valign="top" class="col_head header1" width="15%">
                     Action
-                </th></tr>
+                </th>
+            </tr>
             </thead>
             <tbody>
             <tr v-repeat="company: companies">
@@ -66,14 +62,14 @@ require_once __DIR__ . '/../includes/constants.inc';
                 <td valign="top">
                     <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Company" v-on="click: editCompany(company, $index)">
                         Edit
-                        <span class="glyphicon glyphicon-pencil"></span></a>
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
                     <button class="btn btn-danger btn-sm"  v-on="click: deleteCompany(company)">Delete</button>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-
 
     <div id="responsive" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -187,7 +183,6 @@ require_once __DIR__ . '/../includes/constants.inc';
             </div>
         </div>
     </div>
-
 </div>
 
 <br /><br />

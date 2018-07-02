@@ -10,8 +10,8 @@ $companyType = $db->escape(DSS_COMPANY_TYPE_SOFTWARE);
 $companyDetails = $db->getRow("SELECT name
     FROM companies
     WHERE id = '$companyId'
-        AND company_type = '$companyType'
-    ");
+    AND company_type = '$companyType'
+");
 $companyExists = false;
 $companyName = '<Invalid Software Company>';
 $listUpdated = false;
@@ -25,13 +25,10 @@ if (isset($_POST['user_sub']) && $companyExists) {
     $listUpdated = true;
     $users = $_POST['user'];
 
-    $db->query("DELETE FROM dental_user_company
-        WHERE companyid = '$companyId'
-    ");
+    $db->query("DELETE FROM dental_user_company WHERE companyid = '$companyId'");
 
     if (count($users)) {
         $userIds = $db->escapeList($users);
-
         $db->query("INSERT INTO dental_user_company (userid, companyid)
             SELECT userid, '$companyId'
             FROM dental_users user
@@ -48,18 +45,17 @@ $sql = "SELECT
         user.last_name,
         company_pivot.companyid = '$companyId' AS company_client
     FROM dental_users user
-		LEFT JOIN dental_user_company company_pivot ON company_pivot.userid = user.userid
-		LEFT JOIN companies company ON company.id = company_pivot.companyid
-            AND company.company_type = '$companyType'
-	WHERE user.docid = 0
-	ORDER BY company_pivot.companyid = '$companyId' DESC,
-	    user.last_name ASC,
-	    user.first_name ASC,
-	    user.username ASC
-	";
+    LEFT JOIN dental_user_company company_pivot ON company_pivot.userid = user.userid
+    LEFT JOIN companies company ON company.id = company_pivot.companyid
+    AND company.company_type = '$companyType'
+    WHERE user.docid = 0
+    ORDER BY company_pivot.companyid = '$companyId' DESC,
+        user.last_name ASC,
+        user.first_name ASC,
+        user.username ASC
+";
 
 $users = $db->getResults($sql);
-
 ?>
 <style>
     .well.inline-block {

@@ -28,14 +28,13 @@ for ($lowerLimit = 0; $lowerLimit <= 120; $lowerLimit += 30) {
     $currentBalance = ledgerBalance($docId, $patientIds, true, [$mailingDateConditional]);
 
     foreach ($currentBalance as $each) {
-        $balances [$each['patientid']] [$lowerLimit]= $each['balance'];
+        $balances[$each['patientid']][$lowerLimit] = $each['balance'];
     }
 
-    $totals [$lowerLimit]= array_sum(array_pluck($balances, $lowerLimit));
+    $totals[$lowerLimit] = array_sum(array_pluck($balances, $lowerLimit));
 }
 
 $grandTotal = array_sum($totals);
-
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -87,11 +86,9 @@ $grandTotal = array_sum($totals);
     </thead>
     <tbody>
         <?php
-
         foreach($my as $r) {
             $patientId = $r['patientid'];
             $patientTotal = $r['balance'];
-
             ?>
             <tr>
                 <td valign="top">
@@ -113,7 +110,6 @@ $grandTotal = array_sum($totals);
                     </td>
                     <?php
                 }
-
                 ?>
                 <td valign="top">
                     $<?= number_format($patientTotal, 2) ?>

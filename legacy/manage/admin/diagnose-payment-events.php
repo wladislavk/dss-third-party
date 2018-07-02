@@ -11,7 +11,8 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-function getPaymentAmountFromEligibleResponse (\stdClass $event) {
+function getPaymentAmountFromEligibleResponse(\stdClass $event)
+{
     if (!is_object($event)) {
         return null;
     }
@@ -27,11 +28,11 @@ function getPaymentAmountFromEligibleResponse (\stdClass $event) {
         'Claim Amt Pt Resp' => object_get($event, 'details.claim.amount.patient_responsibility'),
         'Claim Amt Total Coverage' => object_get($event, 'details.claim.amount.total_coverage'),
 
-        'Service Lines' => []
+        'Service Lines' => [],
     ];
 
     foreach (object_get($event, 'details.claim.service_lines') as $transaction) {
-        $report['Service Lines'] []= [
+        $report['Service Lines'][] = [
             'Procedure Code' => object_get($transaction, 'procedure_code'),
             'Amt Billed' => object_get($transaction, 'amount.billed'),
             'Amt Paid' => object_get($transaction, 'amount.paid'),
@@ -43,7 +44,8 @@ function getPaymentAmountFromEligibleResponse (\stdClass $event) {
     return $report;
 }
 
-function getPaymentsArray ($limit=50) {
+function getPaymentsArray($limit)
+{
     $db = new Db();
     $limit = intval($limit);
     $limit = $limit > 5 ? $limit : 50;
@@ -51,20 +53,20 @@ function getPaymentsArray ($limit=50) {
     $results = [];
     $unparsedResults = $db->getResults("SELECT eligible.response
         FROM dental_eligible_response eligible
-            JOIN dental_claim_electronic eclaim ON eclaim.reference_id = eligible.reference_id
+        JOIN dental_claim_electronic eclaim ON eclaim.reference_id = eligible.reference_id
         WHERE LENGTH(eligible.reference_id)
-            AND eligible.event_type = 'payment_report'
+        AND eligible.event_type = 'payment_report'
         ORDER BY eligible.id DESC
         LIMIT $limit");
 
     foreach ($unparsedResults as $json) {
-        $results []= json_decode($json['response']);
+        $results[] = json_decode($json['response']);
     }
-
     return $results;
 }
 
-function getReferencedClaims (Array $referenceIds) {
+function getReferencedClaims(array $referenceIds)
+{
     $db = new Db();
 
     $referenceIds = $db->escapeList($referenceIds);
@@ -82,7 +84,7 @@ function getReferencedClaims (Array $referenceIds) {
         GROUP BY eligible.reference_id");
 
     foreach ($unorderedReferencedClaims as $each) {
-        $referencedClaims [$each['reference_id']] = $each['claims'];
+        $referencedClaims[$each['reference_id']] = $each['claims'];
     }
 
     return $referencedClaims;
@@ -97,25 +99,22 @@ $jsonArray = getPaymentsArray($limit);
 
 foreach ($jsonArray as $json) {
     $amount = getPaymentAmountFromEligibleResponse($json);
-    $referenceIds []= $amount['Reference ID'];
+    $referenceIds[] = $amount['Reference ID'];
 
     if ($getGrouped) {
         $paymentTraceId = $amount['Payment Trace ID'];
-
         if (!isset($results[$paymentTraceId])) {
             $results[$paymentTraceId] = [];
         }
-
-        $results[$paymentTraceId] []= [$json, $amount];
+        $results[$paymentTraceId][] = [$json, $amount];
     } else {
-        $results []= [$json, $amount];
+        $results[] = [$json, $amount];
     }
 }
 
 $referencedClaims = getReferencedClaims($referenceIds);
 
 require_once __DIR__ . '/includes/top.htm';
-
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <style type="text/css">
@@ -141,9 +140,7 @@ require_once __DIR__ . '/includes/top.htm';
                     hljs.highlightBlock(this);
                 });
             }
-
             $tr.toggleClass('hidden');
-
             return false;
         });
     });
@@ -183,11 +180,9 @@ require_once __DIR__ . '/includes/top.htm';
 
                 $lines = $report['Service Lines'];
                 $referenceId = $report['Reference ID'];
-                $linkedClaims = array_key_exists($referenceId, $referencedClaims) ?
-                    $referencedClaims[$referenceId] : '';
+                $linkedClaims = array_key_exists($referenceId, $referencedClaims) ? $referencedClaims[$referenceId] : '';
 
                 unset($report['Service Lines']);
-
                 ?>
                 <tr>
                     <td><a href="#" title="Toggle JSON">#</a></td>

@@ -11,13 +11,14 @@ require_once __DIR__ . '/includes/constants.inc';
 if (empty($_GET['did']) || $_GET['did'] != $_SESSION['docid']) { ?>
     <h2>You are not authorized to view this file.</h2>
     <?php
-
     trigger_error('Die called', E_USER_ERROR);
 }
 
+$db = new Db();
+
 $loc = (isset($_GET['locid'])) ? $_GET['locid'] . '_' : '';
 $filename = "../../../shared/q_file/" . (!empty($_GET['file']) ? $_GET['file'] : '') . "_" . $loc . (!empty($_GET['did']) ? $_GET['did'] : '') . ".pdf";
-$sql = "SELECT updated_at FROM dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+$sql = "SELECT updated_at FROM dental_users WHERE userid='" . $db->escape( $_SESSION['docid']) . "'";
 
 $r = $db->getRow($sql);
 
@@ -69,7 +70,6 @@ if (!empty($_GET['file'])) {
         }
     } elseif ($_GET['file'] == "financial_agreement_oon") {
         $output = "financial_agreement_oon";
-
         if (!file_exists($filename) || $recreate) {
             update_financial_agreement_oon_form($_GET['did']);
         }

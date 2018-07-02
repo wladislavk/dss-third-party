@@ -1,6 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 session_start();
+
 require dirname(__FILE__) . '/includes/sescheck.php';
 
 $basepath = dirname(__FILE__) . '/../../../../shared/q_file';
@@ -11,7 +13,7 @@ $exists = file_exists($basepath . '/' . $filename);
 
 if ($exists) {
     $filetype = mime_content_type($basepath . '/' . $filename);
-} else if (!empty($_GET['type']) && $_GET['type'] === 'image') {
+} elseif (!empty($_GET['type']) && $_GET['type'] === 'image') {
     $filetype = 'image/gif';
 }
 
@@ -29,8 +31,7 @@ switch ($filetype) {
         if ($exists) {
             header('Content-Type: ' . $filetype);
             readfile($basepath . '/' . $filename);
-        }
-        else {
+        } else {
             header('Content-type: image/gif');
             echo base64_decode('R0lGODlhAQABAAAAACw=');
         }

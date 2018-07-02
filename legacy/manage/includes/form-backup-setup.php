@@ -186,8 +186,6 @@ list($targetId, $historyList) = call_user_func(function () use (
     return [$targetId, $historyList];
 });
 
-$isListEmpty = sizeof($historyList) < 2;
-
 if (isset($_POST['kill_switch']) && $_POST['kill_switch'] === 'bulk-backup') {
     trigger_error('Die called', E_USER_ERROR);
 }

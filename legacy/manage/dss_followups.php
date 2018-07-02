@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'admin/includes/main_include.php';
 include_once 'includes/sescheck.php';
 
@@ -134,11 +136,11 @@ if (isset($_POST['submitaddfu'])) {
                     adddate=now(),
                     ip_address='".$_SERVER['REMOTE_ADDR']."'
             ";
-  		    $db->query($i);
-  	    }
+            $db->query($i);
+        }
         $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".$db->escape($id)."'";
         $db->query($d);
-  	    for ($thorntonid = 1; $thorntonid <= 5; $thorntonid++) {
+        for ($thorntonid = 1; $thorntonid <= 5; $thorntonid++) {
             $i = "
                 INSERT INTO dentalsummfu_tss SET
                     thorntonid='".$thorntonid."',

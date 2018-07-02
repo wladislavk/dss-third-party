@@ -3,12 +3,14 @@ namespace Ds3\Libraries\Legacy;
 
 $patientId = (int)array_get($_GET, 'pid');
 
+$db = new Db();
+
 $s_lab_query = "SELECT COUNT(id) AS total
     FROM dental_summ_sleeplab
     WHERE patiendid = '$patientId'";
-if (isset($db) && $db instanceof Db) {
-    $num_labs = $db->getColumn($s_lab_query, 'total', 0);
-}
+
+$num_labs = $db->getColumn($s_lab_query, 'total', 0);
+
 if (isset($_POST['submitnewsleeplabsumm'])) {
     $num_labs++;
 }

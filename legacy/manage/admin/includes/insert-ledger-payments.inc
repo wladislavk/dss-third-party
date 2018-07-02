@@ -3,7 +3,6 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/main_include.php';
 require_once __DIR__ . '/../../includes/constants.inc';
-require_once __DIR__ . '/../../includes/authorization_functions.php';
 require_once __DIR__ . '/../../includes/claim_functions.php';
 require_once __DIR__ . '/claim_functions.php';
 require_once __DIR__ . '/ledger-functions.php';
@@ -16,20 +15,12 @@ if ($is_front_office) {
     require_once __DIR__ . '/sescheck.php';
 }
 
-if (!authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)) { ?>
-    <script type="text/javascript">
-        alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
-        history.go(-1);
-    </script>
-    <?php
-
-    trigger_error('Die called', E_USER_ERROR);
-}
-
 $alertMessages = [];
 
 $newStatus = false;
 $secondaryStatus = false;
+
+$db = new Db();
 
 $claimId = intval($_POST['claimid']);
 $patientId = intval($_POST['patientid']);
@@ -42,11 +33,9 @@ $patientData = $db->getRow("SELECT *
     FROM dental_patients p
     WHERE p.patientid = '$patientId'");
 
-$isPending = ClaimFormData::isStatus('pending', $claimData['status']);
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
 
-$amountPayment = getLedgerPaymentAmount($claimId, DSS_TRXN_PAYER_PRIMARY);
 $possiblePaymentAmount = 0;
 $paymentsAdded = [];
 
@@ -134,7 +123,6 @@ if ($_POST['dispute'] == 1) { // Dispute
                 $secondaryStatus = DSS_CLAIM_SEC_PENDING;
             }
         }
-
         uploadInsuranceFile($_FILES['attachment']['name'], $_FILES['attachment']['tmp_name'], [
             'claimid' => $claimId,
             'claimtype' => $statusType,
@@ -181,24 +169,24 @@ if ($newStatus !== false) {
 }
 
 if ($secondaryStatus !== false && empty($_POST['empty-claim'])) {
-    $alertMessages []= 'Primary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
+    $alertMessages[] = 'Primary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
 
     ClaimFormData::createSecondaryClaim($patientId, $userId, $claimId, $secondaryStatus);
 }
 
 if ($_POST['payments'] && !$paymentsAdded) {
     if ($possiblePaymentAmount >= 0.005) {
-        $alertMessages [] = 'It was not possible to add any payments due technical reasons. Please verify the amounts and try again.';
+        $alertMessages[] = 'It was not possible to add any payments due technical reasons. Please verify the amounts and try again.';
         error_log('Insert Ledger Payments: could not add ledger payments.');
     } else {
-        $alertMessages [] = 'No payment value entered, so no value will be displayed. If you selected additional actions they will be applied now.';
+        $alertMessages[] = 'No payment value entered, so no value will be displayed. If you selected additional actions they will be applied now.';
     }
 } elseif ($paymentsAdded) {
-    $alertMessages []= count($paymentsAdded) . ' payment(s) added successfully.';
+    $alertMessages[] = count($paymentsAdded) . ' payment(s) added successfully.';
 } elseif ($_POST['empty-claim']) {
-    $alertMessages []= 'There were no payments to add. The claim has been forcefully closed.';
+    $alertMessages[] = 'There were no payments to add. The claim has been forcefully closed.';
 } else {
-    $alertMessages []= 'There were no payments to add. Please verify the amounts and try again.';
+    $alertMessages[] = 'There were no payments to add. Please verify the amounts and try again.';
 }
 
 ?>

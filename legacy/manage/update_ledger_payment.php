@@ -8,7 +8,7 @@ require_once __DIR__ . '/admin/includes/claim_functions.php';
 require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 if (isset($_POST['payments']) && is_array($_POST['payments'])) {
-    updateLedgerPayments($_POST['payments'], 0, 0, $_SESSION['userid'], $_SESSION['adminid']);
+    updateLedgerPayments($_POST['payments'], $_SESSION['userid'], $_SESSION['adminid']);
 }
 
 ?>

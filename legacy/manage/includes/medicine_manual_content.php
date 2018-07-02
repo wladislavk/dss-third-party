@@ -1,11 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><html>
-
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<html>
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=utf-8">
-<meta name=Generator content="Microsoft Word 14 (filtered)">
-
-<link rel="stylesheet" href="css/medicine_manual.css" type="text/css" media="screen" />
-
+    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+    <meta name=Generator content="Microsoft Word 14 (filtered)">
+    <link rel="stylesheet" href="css/medicine_manual.css" type="text/css" media="screen" />
 </head>
 
 <body lang=EN-US link=blue vlink=purple>

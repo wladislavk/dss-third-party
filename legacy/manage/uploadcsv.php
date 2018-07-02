@@ -18,7 +18,6 @@ if (isset($_POST['submitbut'])) {
             window.location = "?msg=<?= urlencode('The file cpuld not be uploaded.') ?>";
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
 
@@ -31,7 +30,6 @@ if (isset($_POST['submitbut'])) {
             window.location = "?msg=<?= urlencode('The file does not have a .csv extension.') ?>";
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
 
@@ -42,16 +40,13 @@ if (isset($_POST['submitbut'])) {
     $report = $csvProcessor->saveCsvContents(
         $tmpName, $patientProcessor, (int)$_SESSION['docid'], $_SERVER['REMOTE_ADDR'], true
     );
-
     ?>
     <script type="text/javascript">
         window.location = "pending_patient.php?msg=<?= urlencode(json_encode($report)) ?>";
     </script>
     <?php
-
     trigger_error('Die called', E_USER_ERROR);
 }
-
 ?>
 <div style="width:90%; margin-left:5%;">
     <?php if (!empty($_GET['msg'])) { ?>
@@ -65,5 +60,4 @@ if (isset($_POST['submitbut'])) {
 </div>
 <br /><br />
 <?php
-
 require_once __DIR__ . '/includes/bottom.htm';

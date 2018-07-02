@@ -6,13 +6,15 @@ require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
 require_once __DIR__ . '/includes/access.php';
 
+$db = new Db();
+
 $isSaveStudy = !empty($_POST['hst_id']);
 $errorMessages = [];
 
 // If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
-if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024 * 1024) && !$_FILES) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
-    $errorMessages []= $maxFileSizeExceeded;
+    $errorMessages[] = $maxFileSizeExceeded;
 
     // Abort any action
     $isSaveStudy = false;
@@ -82,7 +84,7 @@ if ($isSaveStudy) {
 
                             $db->query("UPDATE dental_q_image SET $imageData
                                 WHERE imageid = '$imageId'
-                                    AND patientid = '$patientId'");
+                                AND patientid = '$patientId'");
 
                             if (file_exists('../../../../shared/q_file/' . $banner1)) {
                                 unlink('../../../../shared/q_file/' . $banner1);
@@ -109,8 +111,6 @@ if ($isSaveStudy) {
             }
 
             /**
-             * @see DSS-365
-             *
              * This column name has a typo
              */
             $study['patiendid'] = $patientId;
@@ -132,8 +132,7 @@ if ($isSaveStudy) {
 
         if ($sleepStudyIds) {
             $db->query("DELETE FROM dental_hst_sleeplab WHERE hst_id = '$hstId'");
-            $db->query("INSERT INTO dental_hst_sleeplab (hst_id, sleep_id)
-                VALUES ('$hstId', '" . join("'), ('$hstId', '", $sleepStudyIds) . "')");
+            $db->query("INSERT INTO dental_hst_sleeplab (hst_id, sleep_id) VALUES ('$hstId', '" . join("'), ('$hstId', '", $sleepStudyIds) . "')");
         }
     }
 
@@ -188,8 +187,6 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$patientD
 $doctorData = $doctorData ?: [];
 
 /**
- * @see DSS-365
- *
  * Copy/paste here and in /manage/admin/view_hst_sleep_study.php
  */
 $hstNights = intval($hstData['hst_nights']);
@@ -199,9 +196,7 @@ $sleepStudies = $db->getResults("SELECT *
         SELECT sleep_study_id
         FROM dental_hst
         WHERE id = '$hstId'
-
-        UNION
-
+    UNION
         SELECT sleep_id
         FROM dental_hst_sleeplab
         WHERE hst_id = '$hstId'
@@ -223,22 +218,22 @@ if ($errorMessages) {
 
 ?>
 <style>
-.readonly {
-  background-color: #cccccc;
-}
+    .readonly {
+        background-color: #cccccc;
+    }
 
-.sub-question {
-  border: 1px black solid;
-  margin-top: 10px;
-  margin-left: 20px;
-  padding: 10px;
-  display: none;
-}
+    .sub-question {
+        border: 1px black solid;
+        margin-top: 10px;
+        margin-left: 20px;
+        padding: 10px;
+        display: none;
+    }
 
-.question-indent {
-  margin-top: 10px;
-  margin-left: 20px;
-}
+    .question-indent {
+        margin-top: 10px;
+        margin-left: 20px;
+    }
 </style>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
@@ -250,62 +245,56 @@ if ($errorMessages) {
     Patient: <code><?= e($patientData['firstname'] . ' ' . $patientData['lastname']) ?></code>
     Requested: <code><?= e($hstData['adddate']) ?></code>
 </p>
-<a href="/manage/admin/hst_request.php?hst_id=<?= $hstData['id'] ?><?=
-        isset($_REQUEST['ret_status']) ? '&amp;status=' . e($_REQUEST['ret_status']) : ''
-    ?>" title="View HST Form" class="btn btn-primary btn-sm">
+<a href="/manage/admin/hst_request.php?hst_id=<?= $hstData['id'] ?><?=isset($_REQUEST['ret_status']) ? '&amp;status=' . e($_REQUEST['ret_status']) : ''?>" title="View HST Form" class="btn btn-primary btn-sm">
     HST Form
     <span class="glyphicon glyphicon-eye-open"></span>
 </a>
+<br /><br />
 
-	<br /><br />
-	
-	<?php if(!empty($msg)) {?>
+<?php if(!empty($msg)) {?>
     <div align="center" class="text-danger">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
+<?php }?>
+<form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">
         <tr>
             <td class="cat_head" width="30%">
-               HST for <?= $hstData['patient_firstname']; ?> <?= $hstData['patient_lastname']; ?> 
+                HST for <?= $hstData['patient_firstname']; ?> <?= $hstData['patient_lastname']; ?>
             </td>
-	    <td class="cat_head" width="35%">
-		HST
-	    </td>
-	    <td class="cat_head" width="35%">
- 		Patient
-	    </td>
+            <td class="cat_head" width="35%">
+                HST
+            </td>
+            <td class="cat_head" width="35%">
+                Patient
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Patient's Insurance Company
             </td>
             <td valign="top" class="frmdata">
-	  <select name="ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
-          <option value="">Select Insurance Company</option>
-<?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
-                            $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
-                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
-                            ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($hstData['ins_co_id'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
-                                
-                                <?php } ?>
-</select>
+                <select name="ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
+                    <option value="">Select Insurance Company</option>
+                    <?php
+                    $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
+                    $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
+                    while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
+                        ?>
+                        <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($hstData['ins_co_id'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
+                    <?php } ?>
+                </select>
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-          <select name="pat_ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
-<?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
-                            $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
-                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
-                            ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($patientData['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
-
-                                <?php } ?>
-</select>
+                <select name="pat_ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
+                    <?php
+                    $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
+                    $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
+                    while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){ ?>
+                        <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($patientData['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
+                    <?php } ?>
+                </select>
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -314,13 +303,11 @@ if ($errorMessages) {
                 Patient's First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_firstname" value="<?=$hstData['patient_firstname']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
+                <input type="text" name="patient_firstname" value="<?=$hstData['patient_firstname']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_firstname" value="<?=$patientData['firstname']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_firstname" value="<?=$patientData['firstname']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -329,13 +316,11 @@ if ($errorMessages) {
                 Patient's Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_lastname" value="<?=$hstData['patient_lastname']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
+                <input type="text" name="patient_lastname" value="<?=$hstData['patient_lastname']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_lastname" value="<?=$patientData['lastname']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_lastname" value="<?=$patientData['lastname']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -344,13 +329,11 @@ if ($errorMessages) {
                 Patient's Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add1" value="<?=$hstData['patient_add1'];?>"
-                       class="tbox readonly form-control input-sm input-inline"readonly />
-                <span class="text-danger">*</span>				
+                <input type="text" name="patient_add1" value="<?=$hstData['patient_add1'];?>" class="tbox readonly form-control input-sm input-inline"readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add1" value="<?=$patientData['add1'];?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_add1" value="<?=$patientData['add1'];?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -359,12 +342,10 @@ if ($errorMessages) {
                 Patient's Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add2" value="<?=$hstData['patient_add2'];?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_add2" value="<?=$hstData['patient_add2'];?>" class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add2" value="<?=$patientData['add2'];?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_add2" value="<?=$patientData['add2'];?>" class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -372,45 +353,37 @@ if ($errorMessages) {
                 Patient's City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hstData['patient_city']?>" name="patient_city"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" value="<?=$patientData['city']?>" name="pat_patient_city"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" value="<?=$hstData['patient_city']?>" name="patient_city" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
-
+            <td valign="top" class="frmdata">
+                <input type="text" value="<?=$patientData['city']?>" name="pat_patient_city" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Patient's State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hstData['patient_state']?>" name="patient_state"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" value="<?=$patientData['state']?>" name="pat_patient_state"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" value="<?=$hstData['patient_state']?>" name="patient_state" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
-
+            <td valign="top" class="frmdata">
+                <input type="text" value="<?=$patientData['state']?>" name="pat_patient_state" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Patient's Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_zip" value="<?= $hstData['patient_zip']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
+                <input type="text" name="patient_zip" value="<?= $hstData['patient_zip']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_zip" value="<?= $patientData['zip']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_zip" value="<?= $patientData['zip']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -419,13 +392,11 @@ if ($errorMessages) {
                 Patient's Home Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_home_phone" value="<?= $hstData['patient_home_phone']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_home_phone" value="<?= $hstData['patient_home_phone']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_home_phone" value="<?= $patientData['home_phone']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_home_phone" value="<?= $patientData['home_phone']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -434,13 +405,11 @@ if ($errorMessages) {
                 Patient's Cell Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_cell_phone" value="<?= $hstData['patient_cell_phone']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_cell_phone" value="<?= $hstData['patient_cell_phone']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_cell_phone" value="<?= $patientData['cell_phone']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_cell_phone" value="<?= $patientData['cell_phone']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -448,59 +417,48 @@ if ($errorMessages) {
             <td valign="top" class="frmhead">
                 Patient's Work Phone
             </td>
+            <td valign="top" class="frmdata"> </td>
             <td valign="top" class="frmdata">
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_work_phone" value="<?= $patientData['work_phone']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_work_phone" value="<?= $patientData['work_phone']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
-
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Patient's Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_email" value="<?= $hstData['patient_email']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_email" value="<?= $hstData['patient_email']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_email" value="<?= $patientData['email']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_email" value="<?= $patientData['email']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
-
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$hstData['patient_ins_group_id']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_group_id" value="<?=$patientData['p_m_ins_grp']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_ins_group_id" value="<?=$hstData['patient_ins_group_id']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
-
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_ins_group_id" value="<?=$patientData['p_m_ins_grp']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$hstData['patient_ins_id']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
+                <input type="text" name="patient_ins_id" value="<?=$hstData['patient_ins_id']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_id" value="<?=$patientData['p_m_ins_id']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="pat_patient_ins_id" value="<?=$patientData['p_m_ins_id']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -509,16 +467,13 @@ if ($errorMessages) {
                 Patient's DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$hstData['patient_dob']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
-                <span class="text-danger">*</span>				
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_dob" value="<?=$patientData['dob']?>"
-                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <input type="text" name="patient_dob" value="<?=$hstData['patient_dob']?>" class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
-
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_dob" value="<?=$patientData['dob']?>" class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
+            </td>
         </tr>
         <tr>
             <td valign="top" class="frmhead" width="30%">
@@ -528,18 +483,18 @@ if ($errorMessages) {
                 <textarea name="office_notes" class="form-control input-sm"><?= $hstData['office_notes']; ?></textarea>
             </td>
         </tr>
-
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Status
             </td>
             <td valign="top" class="frmdata">
                 <select id="status" name="status" class="tbox form-control input-sm input-inline">
-			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hstData['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
-			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hstData['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
-                        <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hstData['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
-                        <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hstData['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
-                        <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hstData['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
+                    <option value="<?= DSS_HST_PENDING; ?>" <?= ($hstData['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
+                    <option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hstData['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
+                    <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hstData['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
+                    <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hstData['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
+                    <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hstData['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
+                </select>
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -563,26 +518,23 @@ if ($errorMessages) {
             </td>
         </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <span class="text-danger">
                     * Required Fields
                 </span><br />
-		<?php
-		if(isset($_REQUEST['ret_status']) && $_REQUEST['ret_status'] != ''){
-		?><input type="hidden" name="ret_status" value="<?= $_REQUEST['ret_status'] ?>"/><?php
-		}
-		?>
+                <?php if(isset($_REQUEST['ret_status']) && $_REQUEST['ret_status'] != ''){ ?>
+                    <input type="hidden" name="ret_status" value="<?= $_REQUEST['ret_status'] ?>"/>
+                <?php } ?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
                 <?php if ($hstData['status'] >= 0) { ?>
-                  <input type="submit" value="Save HST" <?= ($hstData['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
+                    <input type="submit" value="Save HST" <?= ($hstData['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
                 <?php } ?>
-	  </td><td align="right">
             </td>
+            <td align="right"> </td>
         </tr>
     </table>
-    </form>
+</form>
 <?php
-
 if ($hstData['status'] != DSS_HST_REQUESTED) {
     $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
     $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
@@ -590,27 +542,27 @@ if ($hstData['status'] != DSS_HST_REQUESTED) {
     $authorizedName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
         FROM dental_users
         WHERE userid = '{$hstData['authorized_id']}'", 'name');
-
     ?>
     <h1>Home Sleep Test Request</h1>
     <h3>Patient: <?= e($patientName ?: 'NOT SPECIFIED') ?></h3>
     <h3>DOB: <?= $patientDOB ?: 'NOT SPECIFIED' ?></h3>
     <h3>Requested by: <?= e($authorizedName ?: 'NOT SPECIFIED') ?></h3>
     <p>&nbsp;</p>
-    <p>Dr. <?= e($authorizedName ?: 'NOT SPECIFIED') ?> has electronically requested a Home Sleep Test for
-        <?= e($patientName ?: 'NOT SPECIFIED') ?> for Obstructive Sleep Apnea (OSA).</p>
+    <p>
+        Dr. <?= e($authorizedName ?: 'NOT SPECIFIED') ?> has electronically requested a Home Sleep Test for
+        <?= e($patientName ?: 'NOT SPECIFIED') ?> for Obstructive Sleep Apnea (OSA).
+    </p>
     <p>Authorized on: <?= $authorizedDate ?: 'NOT SPECIFIED' ?></p>
 <?php } ?>
-  <script type="text/javascript">
+<script type="text/javascript">
     $('#status').change( function() {
-      s = $(this).val();
-      $('.status').hide();
-      $('.status_'+s).show();
+        s = $(this).val();
+        $('.status').hide();
+        $('.status_' + s).show();
     });
-
     $(document).ready(function(){
-      $('.status').hide();
-      $('.status_<?=$hstData['status'];?>').show();
+        $('.status').hide();
+        $('.status_<?=$hstData['status'];?>').show();
     });
-  </script>
+</script>
 <?php include 'includes/bottom.htm'; ?>

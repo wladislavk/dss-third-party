@@ -5,14 +5,10 @@ $filename = !empty($_GET['f']) ? $_GET['f'] : '';
 $isLetter = array_get($_GET, 'type') === 'letter';
 
 /**
- * @see DSS-337
- *
  * Don't check for session info if the file is a logo
  */
 if (!preg_match('/^user_logo_\d+\.(gif|jpg|jpeg|png)$/', $filename)) {
     /**
-     * @see DSS-534
-     *
      * Letters should allow BO users to access this script
      */
     session_start();
@@ -35,7 +31,7 @@ $exists = file_exists($basepath . '/' . $filename);
 
 if ($exists) {
     $filetype = mime_content_type($basepath . '/' . $filename);
-} else if (!empty($_GET['type']) && $_GET['type'] === 'image') {
+} elseif (!empty($_GET['type']) && $_GET['type'] === 'image') {
     $filetype = 'image/gif';
 }
 
@@ -54,8 +50,7 @@ switch ($filetype) {
 
         if ($exists) {
             readfile($basepath . '/' . $filename);
-        }
-        else {
+        } else {
             echo base64_decode('R0lGODlhAQABAAAAACw=');
         }
         break;

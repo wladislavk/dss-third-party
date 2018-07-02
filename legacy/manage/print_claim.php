@@ -1,8 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('includes/constants.inc');
 include_once('admin/includes/main_include.php');
 
-$s = "SELECT primary_fdf, secondary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+$db = new Db();
+
+$s = "SELECT primary_fdf, secondary_fdf FROM dental_insurance i WHERE i.insuranceid='".$db->escape( $_GET['insid'])."'";
 
 $r = $db->getRow($s);
 $file = $r['primary_fdf'] ?: $r['secondary_fdf'];
@@ -25,7 +29,8 @@ if ($exitStatus) {
 include_once '3rdParty/tcpdf/tcpdf.php';
 include_once '3rdParty/fpdi/fpdi.php';
 
-class PDF extends \FPDI {
+class PDF extends \FPDI
+{
     /**
      * "Remembers" the template id of the imported page
      */
@@ -34,7 +39,8 @@ class PDF extends \FPDI {
     /**
      * include a background template for every page
      */
-    function Header() {
+    function Header()
+    {
         $db = new Db();
 
         if (is_null($this->_tplIdx)) {

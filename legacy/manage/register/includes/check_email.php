@@ -1,10 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../../admin/includes/main_include.php';
 require_once '../../includes/checkemail.php';
+
 $e = checkUserEmail($_REQUEST['email'], $_REQUEST['id']);
 if($e==0){
-  echo 'true';//'{"success":true}';
+  echo 'true';
 }else{
-  echo 'false';//'{"error":false}';
+  echo 'false';
 }
-?>

@@ -3,7 +3,8 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../admin/includes/main_include.php';
 
-function similar_doctors($id){
+function similar_doctors($id)
+{
     $db = new Db();
 
     $id = intval($id);
@@ -42,7 +43,7 @@ function similar_doctors($id){
             )";
 
     $q2 = $db->getResults($s2);
-    $docs = array();
+    $docs = [];
     $c = 0;
 
     foreach ($q2 as $r2) {
@@ -56,7 +57,8 @@ function similar_doctors($id){
     return $docs;
 }
 
-function similar_contacts($id){
+function similar_contacts($id)
+{
     $db = new Db();
 
     $id = intval($id);
@@ -102,7 +104,7 @@ function similar_contacts($id){
             )";
 
     $q2 = $db->getResults($s2);
-    $docs = array();
+    $docs = [];
     $c = 0;
 
     foreach ($q2 as $r2) {
@@ -117,8 +119,8 @@ function similar_contacts($id){
     return $docs;
 }
 
-
-function similar_patients($id){
+function similar_patients($id)
+{
     $db = new Db();
 
     $id = intval($id);
@@ -162,7 +164,7 @@ function similar_patients($id){
             )";
 
     $q2 = $db->getResults($s2);
-    $docs = array();
+    $docs = [];
     $c = 0;
 
     foreach ($q2 as $r2) {
@@ -176,7 +178,8 @@ function similar_patients($id){
     return $docs;
 }
 
-function similar_insurance($id){
+function similar_insurance($id)
+{
     $db = new Db();
 
     $id = intval($id);
@@ -215,7 +218,7 @@ function similar_insurance($id){
             )";
 
     $q2 = $db->getResults($s2);
-    $docs = array();
+    $docs = [];
     $c = 0;
     if ($q2) {
         foreach($q2 as $r2){

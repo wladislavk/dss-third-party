@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once("admin/includes/general.htm");
@@ -23,7 +25,7 @@ $contacts = [
             (!empty($contactinfo['patient'][0]['lastname']) ? $contactinfo['patient'][0]['lastname'] : ''),
         'email' => !empty($contactinfo['patient'][0]['email']) ? $contactinfo['patient'][0]['email'] : '',
         'fax' => !empty($contactinfo['patient'][0]['fax']) ? $contactinfo['patient'][0]['fax'] : '',
-    ]
+    ],
 ];
 
 if ($contactinfo) foreach ($contactinfo['md_referrals'] as $md) {
@@ -36,6 +38,8 @@ if ($contactinfo) foreach ($contactinfo['md_referrals'] as $md) {
         'status' => $md['status'],
     ];
 }
+
+$db = new Db();
 
 $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3
     FROM dental_patients
@@ -66,12 +70,10 @@ foreach ($row as $contactType => $contactId) {
             dental_contact.fax,
             dental_contact.status
         FROM dental_contact
-            LEFT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid
+        LEFT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid
         WHERE dental_contact.contactid = '$contactId'
-        ";
-
+    ";
     $md = $db->getRow($sql);
-
     if (!$md) {
         continue;
     }

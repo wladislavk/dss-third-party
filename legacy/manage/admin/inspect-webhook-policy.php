@@ -19,16 +19,17 @@ $count = intval($count);
 
 $page = $page >= 0 ? $page : 0;
 $count = $count >= 5 ? $count : 100;
+$offset = $page * $count;
 
-$offset = $page*$count;
+$db = new Db();
+
 $totalCount = $db->getColumn("SELECT COUNT(id) AS total FROM dental_webhook_policy_log", 'total', 0);
-
-$totalPages = ceil($totalCount/$count);
+$totalPages = ceil($totalCount / $count);
 
 $results = $db->getResults("SELECT log.*, claim.docid, doctor.username, claim.patientid
     FROM dental_webhook_policy_log log
-        LEFT JOIN dental_insurance claim ON claim.insuranceid = log.claimid
-        LEFT JOIN dental_users doctor ON doctor.userid = claim.docid
+    LEFT JOIN dental_insurance claim ON claim.insuranceid = log.claimid
+    LEFT JOIN dental_users doctor ON doctor.userid = claim.docid
     ORDER BY id DESC
     LIMIT $offset, $count");
 
@@ -37,9 +38,13 @@ require_once __DIR__ . '/includes/top.htm';
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <style type="text/css">
-    pre { max-height: 300px; }
+    pre {
+        max-height: 300px;
+    }
 
-    table { table-layout: fixed; }
+    table {
+        table-layout: fixed;
+    }
 
     td[rowspan] {
         position: relative;
@@ -74,14 +79,14 @@ require_once __DIR__ . '/includes/top.htm';
         <col width="26%" />
     </colgroup>
     <thead>
-        <tr>
-            <th>Event date</th>
-            <th>Claim ID</th>
-            <th>User</th>
-            <th>Status at time of event</th>
-            <th>Status not applied</th>
-            <th>Actions</th>
-        </tr>
+    <tr>
+        <th>Event date</th>
+        <th>Claim ID</th>
+        <th>User</th>
+        <th>Status at time of event</th>
+        <th>Status not applied</th>
+        <th>Actions</th>
+    </tr>
     </thead>
     <tbody>
     <?php foreach ($results as $log) { ?>
@@ -119,5 +124,5 @@ require_once __DIR__ . '/includes/top.htm';
     </tbody>
 </table>
 <?php
-
 require_once __DIR__ . '/includes/bottom.htm';
+?>

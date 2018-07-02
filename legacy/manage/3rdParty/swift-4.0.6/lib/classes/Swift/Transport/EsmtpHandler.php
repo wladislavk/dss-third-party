@@ -38,13 +38,13 @@ interface Swift_Transport_EsmtpHandler
   public function afterEhlo(Swift_Transport_SmtpAgent $agent);
   
   /**
-   * Get params which are appended to MAIL FROM:<>.
+   * Get params which are appended to MAIL FROM:
    * @return string[]
    */
   public function getMailParams();
   
   /**
-   * Get params which are appended to RCPT TO:<>.
+   * Get params which are appended to RCPT TO:
    * @return string[]
    */
   public function getRcptParams();

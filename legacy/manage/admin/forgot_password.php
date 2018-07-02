@@ -1,8 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 include('includes/main_include.php');
 include_once('includes/password.php');
 include_once '../includes/constants.inc';
+
+$db = new Db();
 
 if ($_POST["emailsub"] == 1) {
     $validInterval = 'DATE_ADD(recover_time, INTERVAL 1 HOUR)';
@@ -11,8 +16,8 @@ if ($_POST["emailsub"] == 1) {
             first_name, last_name,
             recover_hash,
             NOW() <= $validInterval AS valid
-		FROM admin
-		WHERE email = '" . $db->escape($_POST['email']) . "'";
+        FROM admin
+        WHERE email = '" . $db->escape($_POST['email']) . "'";
     $check_myarray = $db->getRow($check_sql);
 
     if ($check_myarray) {
@@ -36,26 +41,23 @@ if ($_POST["emailsub"] == 1) {
 
         ?>
         <script type="text/javascript">
-                window.location.replace('index.php?msg=Email sent');
+            window.location.replace('index.php?msg=Email sent');
         </script>
-    <? } else {
+    <?php } else {
         $msg='Email address not found';
         ?>
         <script type="text/javascript">
-                window.location.replace('forgot_password.php?msg=<?=$msg;?>');
+            window.location.replace('forgot_password.php?msg=<?=$msg;?>');
         </script>
-    <? }
+    <?php }
 
     trigger_error("Die called", E_USER_ERROR);
 }
-
 ?>
-
 <?php require_once dirname(__FILE__) . '/includes/login_top.htm'; ?>
-
 <!-- BEGIN LOGO -->
 <div class="logo">
-    <h1  style="color:#ffffff;font-size:30px; margin:9px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>
+    <h1 style="color:#ffffff;font-size:30px; margin:9px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>
 </div>
 <!-- END LOGO -->
 
@@ -65,7 +67,6 @@ if ($_POST["emailsub"] == 1) {
             <?= htmlspecialchars($_GET['msg']) ?>
         </div>
     <?php } ?>
-
     <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" class="form-horizontal">
         <h3 class="form-title">Password Recovery</h3>
         <div class="form-group">

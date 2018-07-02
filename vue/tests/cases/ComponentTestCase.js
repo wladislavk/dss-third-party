@@ -2,13 +2,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
+import moxios from 'moxios'
+import sinon from 'sinon'
+import lodash from 'lodash'
 import store from '../../src/store'
 import LegacyHref from '../../src/directives/LegacyHref'
 import UnescapeFilter from '../../src/filters/Unescape'
-import moxios from 'moxios'
-import sinon from 'sinon'
-import LocationWrapper from 'src/wrappers/LocationWrapper'
-import Alerter from 'src/services/Alerter'
+import LocationWrapper from '../../src/wrappers/LocationWrapper'
+import Alerter from '../../src/services/Alerter'
 
 export default class ComponentTestCase {
   constructor () {
@@ -32,6 +33,8 @@ export default class ComponentTestCase {
     Vue.use(VueMoment)
     Vue.directive('legacy-href', LegacyHref)
     Vue.filter('unescape', UnescapeFilter)
+
+    this.originalState = lodash.cloneDeep(store.state)
   }
 
   _makeStubs () {
@@ -48,6 +51,7 @@ export default class ComponentTestCase {
   }
 
   reset () {
+    // store.state = this.originalState
     moxios.uninstall()
     this.sandbox.restore()
   }
@@ -105,6 +109,9 @@ export default class ComponentTestCase {
     }
   }
 
+  /**
+   * @returns {Vue}
+   */
   getVM () {
     const Component = Vue.extend(this.component)
     const Router = new VueRouter({
@@ -126,6 +133,9 @@ export default class ComponentTestCase {
     return vm
   }
 
+  /**
+   * @returns {Vue}
+   */
   mount () {
     const vm = this.getVM()
     vm.$mount()

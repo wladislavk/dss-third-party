@@ -31,6 +31,7 @@ describe('DeviceSelector component', () => {
     store.state.main[symbols.state.modal].params.patientName = ''
 
     this.testCase.setComponent(DeviceSelectorComponent)
+    this.testCase.skipChildren(['deviceSlider'])
   })
 
   afterEach(function () {

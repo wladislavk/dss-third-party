@@ -21,6 +21,7 @@ export default class ComponentTestCase {
     this.routes = []
     this.propsData = {}
     this.renderChildren = false
+    this.skippedChildren = []
     this.redirectUrl = ''
     this.alertText = ''
     this.confirmText = ''
@@ -50,12 +51,6 @@ export default class ComponentTestCase {
     })
   }
 
-  reset () {
-    // store.replaceState(this.originalState)
-    moxios.uninstall()
-    this.sandbox.restore()
-  }
-
   setComponent (component) {
     this.component = component
   }
@@ -74,6 +69,18 @@ export default class ComponentTestCase {
 
   setRenderChildren (renderChildren) {
     this.renderChildren = renderChildren
+  }
+
+  skipChildren (skippedComponents) {
+    if (!this.component) {
+      return
+    }
+    this.skippedChildren = skippedComponents
+    for (let componentName of skippedComponents) {
+      this.component.components[componentName] = {
+        template: '<div class="' + componentName + '"></div>'
+      }
+    }
   }
 
   setChildComponents (components) {
@@ -123,7 +130,7 @@ export default class ComponentTestCase {
       router: Router,
       propsData: this.propsData
     }
-    if (this.renderChildren) {
+    if (this.renderChildren || this.skippedChildren.length) {
       properties.components = this.component.components
     }
     const vm = new Component(properties)
@@ -140,5 +147,11 @@ export default class ComponentTestCase {
     const vm = this.getVM()
     vm.$mount()
     return vm
+  }
+
+  reset () {
+    store.replaceState(this.originalState)
+    moxios.uninstall()
+    this.sandbox.restore()
   }
 }

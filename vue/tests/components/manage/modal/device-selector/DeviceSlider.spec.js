@@ -17,7 +17,7 @@ describe('DeviceSlider component', () => {
     store.state.dashboard[symbols.state.deviceGuideSettingOptions] = [this.props]
 
     this.testCase.setComponent(DeviceSliderComponent)
-    this.testCase.setChildComponents(['vue-slider'])
+    this.testCase.skipChildren(['vueSlider'])
     this.testCase.setPropsData(this.props)
   })
 

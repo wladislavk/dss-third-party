@@ -9,7 +9,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetReason component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.flowsheet[symbols.state.appointmentSummaries] = [
@@ -41,7 +40,7 @@ describe('FlowsheetReason component', () => {
       params: {}
     }
 
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows reason', function () {

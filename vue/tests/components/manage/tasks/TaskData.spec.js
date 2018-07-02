@@ -5,6 +5,7 @@ import TestCase from '../../../cases/ComponentTestCase'
 describe('TaskData component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
+
     const childComponents = [
       {
         name: 'task-element',
@@ -14,6 +15,10 @@ describe('TaskData component', () => {
     ]
     this.testCase.setComponent(TaskDataComponent)
     this.testCase.setChildComponents(childComponents)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
   })
 
   it('should not display data without tasks', function () {

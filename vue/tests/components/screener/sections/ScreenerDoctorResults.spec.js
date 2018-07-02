@@ -8,7 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDoctorResults component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerDoctorResultsComponent)
@@ -41,7 +40,8 @@ describe('ScreenerDoctorResults component', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+
+    this.testCase.reset()
   })
 
   it('shows results', function (done) {

@@ -9,7 +9,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetStudyType component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.patients[symbols.state.patientName] = 'John Doe'
@@ -32,7 +31,7 @@ describe('FlowsheetStudyType component', () => {
       params: {}
     }
 
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows titration types', function () {

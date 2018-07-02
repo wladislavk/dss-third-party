@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
@@ -10,8 +9,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerHST', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerHstComponent)
@@ -63,8 +60,8 @@ describe('ScreenerHST', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
-    this.sandbox.restore()
+
+    this.testCase.reset()
   })
 
   it('should display existing data', function (done) {
@@ -85,7 +82,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should send HST request', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
+    this.testCase.sandbox.stub(Alerter, 'alert')
 
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
@@ -126,7 +123,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if company is not set', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
+    this.testCase.sandbox.stub(Alerter, 'alert')
 
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
@@ -149,7 +146,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if contact data is not set', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
+    this.testCase.sandbox.stub(Alerter, 'alert')
 
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
@@ -178,7 +175,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if ajax request returned 400', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
+    this.testCase.sandbox.stub(Alerter, 'alert')
 
     moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 400,

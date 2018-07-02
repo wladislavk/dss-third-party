@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import moxios from 'moxios'
 import store from '../../../../src/store'
 import AddTaskComponent from '../../../../src/components/manage/modal/AddTask.vue'
@@ -11,8 +10,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AddTask component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     const users = [
@@ -46,8 +43,7 @@ describe('AddTask component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows HTML for new task', function (done) {
@@ -187,12 +183,12 @@ describe('AddTask component', () => {
   })
 
   it('deletes task', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
     // @todo: uncomment after this page is migrated
     // let redirected = false
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake(() => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake(() => {
       // @todo: uncomment after this page is migrated
       // redirected = true
     })
@@ -232,7 +228,7 @@ describe('AddTask component', () => {
   })
 
   it('deletes task without confirmation', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
     const taskId = 1

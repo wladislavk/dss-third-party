@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import moxios from 'moxios'
 import store from '../../../src/store'
 import ManageLoginComponent from '../../../src/components/manage/ManageLogin.vue'
@@ -11,13 +10,12 @@ import TestCase from '../../cases/ComponentTestCase'
 
 describe('ManageLogin component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
+
     this.alert = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
       this.alert = text
     })
-    moxios.install()
-    this.testCase = new TestCase()
 
     store.state.main[symbols.state.mainToken] = ''
 
@@ -41,8 +39,7 @@ describe('ManageLogin component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('logs in successfully', function (done) {

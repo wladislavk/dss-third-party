@@ -8,6 +8,10 @@ describe('ScreenerNavigation component', () => {
     this.testCase.setComponent(ScreenerNavigationComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows navigation link', function () {
     const propsData = {
       sectionNumber: 2

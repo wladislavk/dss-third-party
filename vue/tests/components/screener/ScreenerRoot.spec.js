@@ -22,6 +22,8 @@ describe('ScreenerRoot', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
+
+    this.testCase.reset()
   })
 
   it('should go to login if no token present', function (done) {

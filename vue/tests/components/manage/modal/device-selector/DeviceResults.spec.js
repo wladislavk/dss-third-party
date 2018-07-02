@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import moxios from 'moxios'
 import symbols from '../../../../../src/symbols'
 import DeviceResultsComponent from '../../../../../src/components/manage/modal/device-selector/DeviceResults.vue'
@@ -10,8 +9,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceResults component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     this.fakeData = [
@@ -34,8 +31,7 @@ describe('DeviceResults component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('should show correct device results', function () {
@@ -84,10 +80,10 @@ describe('DeviceResults component', () => {
     })
     let alertText = ''
     let confirmText = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
       alertText = text
     })
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
       confirmText = text
       return true
     })
@@ -109,10 +105,10 @@ describe('DeviceResults component', () => {
 
   it('should update device without confirmation', function (done) {
     let alertText = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
       alertText = text
     })
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
     const props = {

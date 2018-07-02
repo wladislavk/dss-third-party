@@ -1,5 +1,4 @@
 import moxios from 'moxios'
-import sinon from 'sinon'
 import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
 import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
@@ -10,16 +9,13 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('ReasonRow component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ReasonRowComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows reasons', function () {
@@ -96,7 +92,7 @@ describe('ReasonRow component', () => {
       }
     })
     let confirmation = false
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       confirmation = true
       return true
     })
@@ -133,7 +129,7 @@ describe('ReasonRow component', () => {
       }
     })
     let confirmation = false
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       confirmation = true
       return true
     })

@@ -18,6 +18,10 @@ describe('PatientHeader component', () => {
     ])
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('hides and shows warnings', function (done) {
     const props = {
       patientId: 1

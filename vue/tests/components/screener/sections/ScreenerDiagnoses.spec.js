@@ -8,7 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDiagnoses', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerDiagnosesComponent)
@@ -22,7 +21,8 @@ describe('ScreenerDiagnoses', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+
+    this.testCase.reset()
   })
 
   it('should display existing fields', function () {

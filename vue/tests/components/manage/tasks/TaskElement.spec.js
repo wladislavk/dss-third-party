@@ -9,7 +9,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskElement component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(TaskElementComponent)
@@ -27,7 +26,7 @@ describe('TaskElement component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should display base HTML', function () {

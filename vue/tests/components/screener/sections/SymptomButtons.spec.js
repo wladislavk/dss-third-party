@@ -10,6 +10,10 @@ describe('SymptomButtons component', () => {
     this.testCase.setComponent(SymptomButtonsComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows and switches buttons', function () {
     const propsData = {
       name: 'foo',

@@ -8,7 +8,6 @@ import TestCase from '../../cases/ComponentTestCase'
 
 describe('ScreenerLogin', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerLoginComponent)
@@ -23,7 +22,7 @@ describe('ScreenerLogin', () => {
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
 
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should log in properly', function (done) {

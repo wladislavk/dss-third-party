@@ -6,14 +6,13 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientSearch component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(PatientSearchComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows options without matches', function (done) {

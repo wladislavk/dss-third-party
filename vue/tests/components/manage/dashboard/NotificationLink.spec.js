@@ -12,6 +12,10 @@ describe('NotificationLink component', () => {
     this.testCase.setComponent(NotificationLinkComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('should display link without children', function () {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 3
     const propsData = {

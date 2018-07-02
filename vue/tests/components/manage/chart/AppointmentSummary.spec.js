@@ -7,7 +7,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AppointmentSummary component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(AppointmentSummaryComponent)
@@ -15,7 +14,7 @@ describe('AppointmentSummary component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows summary rows', function (done) {

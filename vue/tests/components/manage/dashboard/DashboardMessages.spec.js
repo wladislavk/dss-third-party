@@ -6,14 +6,13 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('DashboardMessages component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(DashboardMessagesComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should show tasks', function (done) {

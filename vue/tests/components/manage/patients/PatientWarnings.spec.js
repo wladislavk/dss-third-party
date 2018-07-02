@@ -16,6 +16,10 @@ describe('PatientWarnings component', () => {
     this.testCase.setComponent(PatientWarningsComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows empty data', function () {
     const props = {
       patientId: 1

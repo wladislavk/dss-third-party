@@ -20,6 +20,10 @@ describe('DeviceSlider component', () => {
     this.testCase.setPropsData(this.props)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows device settings', function () {
     const vm = this.testCase.mount()
 

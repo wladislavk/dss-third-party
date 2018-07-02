@@ -12,6 +12,10 @@ describe('WelcomeText component', () => {
     this.testCase.setComponent(WelcomeTextComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows welcome text', function () {
     store.state.main[symbols.state.userInfo].username = 'John'
     const vm = this.testCase.mount()

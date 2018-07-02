@@ -5,7 +5,12 @@ import TestCase from '../../../cases/ComponentTestCase'
 describe('EducationVideos component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
+
     this.testCase.setComponent(EducationVideosComponent)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
   })
 
   it('shows videos', function () {

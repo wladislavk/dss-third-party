@@ -8,7 +8,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceSelector component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     moxios.stubRequest(http.formUrl(endpoints.guideSettingOptions.settingIds), {
@@ -35,7 +34,7 @@ describe('DeviceSelector component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows device selector', function (done) {

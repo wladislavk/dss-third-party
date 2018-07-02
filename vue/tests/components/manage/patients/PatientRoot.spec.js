@@ -18,6 +18,10 @@ describe('PatientRoot component', () => {
     ])
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('updates patient ID', function () {
     // @todo: check why beforeRouteUpdate() does not fire
     /*

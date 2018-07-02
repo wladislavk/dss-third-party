@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import PatientMenuElementComponent from '../../../../src/components/manage/patients/PatientMenuElement.vue'
 import symbols from '../../../../src/symbols'
@@ -7,7 +6,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientMenuElement component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
 
     store.state.patients[symbols.state.patientId] = 0
@@ -22,12 +20,12 @@ describe('PatientMenuElement component', () => {
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows normal element', function (done) {
     let destination = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
       destination = url
     })
     const propsData = {
@@ -51,7 +49,7 @@ describe('PatientMenuElement component', () => {
 
   it('shows element with parsed link', function (done) {
     let destination = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
       destination = url
     })
     store.state.patients[symbols.state.patientId] = 1

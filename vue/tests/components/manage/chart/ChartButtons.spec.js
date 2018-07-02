@@ -1,5 +1,3 @@
-import sinon from 'sinon'
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import ChartButtonsComponent from '../../../../src/components/manage/chart/ChartButtons.vue'
 import symbols from '../../../../src/symbols'
@@ -10,8 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ChartButtons component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.main[symbols.state.companyData] = []
@@ -21,8 +17,7 @@ describe('ChartButtons component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows without HST company', function () {
@@ -42,7 +37,7 @@ describe('ChartButtons component', () => {
     store.state.main[symbols.state.companyData] = [1, 2]
     store.state.patients[symbols.state.incompleteHomeSleepTests] = [1, DSS_CONSTANTS.DSS_HST_REQUESTED]
     let alertText = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((alert) => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((alert) => {
       alertText = alert
     })
     const props = {
@@ -65,11 +60,11 @@ describe('ChartButtons component', () => {
 
   it('clicks request button', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
     let redirectUrl = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
       redirectUrl = url
     })
     const props = {
@@ -91,11 +86,11 @@ describe('ChartButtons component', () => {
 
   it('clicks request button without confirmation', function (done) {
     store.state.main[symbols.state.companyData] = [1, 2]
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
     let redirectUrl = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
       redirectUrl = url
     })
     const props = {

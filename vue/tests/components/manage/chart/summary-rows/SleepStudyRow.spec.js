@@ -7,14 +7,13 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('SleepStudyRow component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(SleepStudyRowComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows sleep studies', function () {

@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import ScreenerMenuComponent from '../../../../src/components/screener/common/ScreenerMenu.vue'
 import Alerter from '../../../../src/services/Alerter'
@@ -7,7 +6,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerMenu component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerMenuComponent)
@@ -30,7 +28,8 @@ describe('ScreenerMenu component', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    this.sandbox.restore()
+
+    this.testCase.reset()
   })
 
   it('shows menu', function (done) {
@@ -55,7 +54,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('logs out the user', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
 
@@ -77,7 +76,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('logs out without confirmation', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
 
@@ -99,7 +98,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('resets screener', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
 
@@ -121,7 +120,7 @@ describe('ScreenerMenu component', () => {
   })
 
   it('resets without confirmation', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
 

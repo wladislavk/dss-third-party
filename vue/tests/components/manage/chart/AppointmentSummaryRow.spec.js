@@ -1,5 +1,4 @@
 import moxios from 'moxios'
-import sinon from 'sinon'
 import AppointmentSummaryRowComponent from '../../../../src/components/manage/chart/AppointmentSummaryRow.vue'
 import {
   BASELINE_TEST_ID,
@@ -15,8 +14,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AppointmentSummaryRow component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     const childComponents = [
@@ -29,8 +26,7 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows sleep study row', function (done) {
@@ -176,10 +172,10 @@ describe('AppointmentSummaryRow component', () => {
 
   it('deletes step', function (done) {
     let isAlerted = false
-    this.sandbox.stub(Alerter, 'alert').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake(() => {
       isAlerted = true
     })
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
     const endpoint = endpoints.appointmentSummaries.destroy + '/1'
@@ -210,7 +206,7 @@ describe('AppointmentSummaryRow component', () => {
   })
 
   it('deletes step without confirmation', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
     const props = {
@@ -233,7 +229,7 @@ describe('AppointmentSummaryRow component', () => {
 
   it('deletes step with sent letters', function (done) {
     let isAlerted = false
-    this.sandbox.stub(Alerter, 'alert').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake(() => {
       isAlerted = true
     })
     const props = {

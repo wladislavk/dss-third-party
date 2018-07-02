@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import ModalRootComponent from '../../../../src/components/manage/modal/ModalRoot.vue'
@@ -7,7 +6,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ModalRoot component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
 
     store.state.main[symbols.state.popupEdit] = false
@@ -22,7 +20,7 @@ describe('ModalRoot component', () => {
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('does not display if no component', function () {
@@ -78,7 +76,7 @@ describe('ModalRoot component', () => {
 
   it('closes pop-up on click at background', function (done) {
     store.state.main[symbols.state.popupEdit] = true
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
     const componentData = {
@@ -102,7 +100,7 @@ describe('ModalRoot component', () => {
 
   it('closes pop-up without confirmation', function (done) {
     store.commit(symbols.mutations.popupEdit, {value: true})
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+    this.testCase.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return false
     })
     const componentData = {

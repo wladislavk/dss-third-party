@@ -8,7 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerEpworth', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerEpworthComponent)
@@ -37,7 +36,8 @@ describe('ScreenerEpworth', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+
+    this.testCase.reset()
   })
 
   it('should display existing fields', function (done) {

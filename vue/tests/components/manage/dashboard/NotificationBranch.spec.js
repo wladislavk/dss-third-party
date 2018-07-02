@@ -54,6 +54,10 @@ describe('NotificationBranch component', () => {
     })
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('should display links', function () {
     store.state.main[symbols.state.docInfo] = {
       useEligibleApi: 1

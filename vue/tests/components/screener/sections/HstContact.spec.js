@@ -10,6 +10,10 @@ describe('HstContact component', () => {
     this.testCase.setComponent(HstContactComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows and updates contact', function (done) {
     const props = {
       name: 'first_name',

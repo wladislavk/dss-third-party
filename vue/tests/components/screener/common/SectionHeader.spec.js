@@ -24,6 +24,8 @@ describe('SectionHeader component', () => {
 
   afterEach(function () {
     store.state.screener.contactData = INITIAL_CONTACT_DATA
+
+    this.testCase.reset()
   })
 
   it('should display full name and title', function () {

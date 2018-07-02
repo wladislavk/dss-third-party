@@ -1,5 +1,3 @@
-import moxios from 'moxios'
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import RightMenuComponent from '../../../../src/components/manage/common/RightTopMenu.vue'
@@ -9,8 +7,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('RightTopMenu component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingLetters] = 0
@@ -30,8 +26,7 @@ describe('RightTopMenu component', () => {
   })
 
   afterEach(function () {
-    this.sandbox.restore()
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows menu without support tickets', function () {
@@ -52,7 +47,7 @@ describe('RightTopMenu component', () => {
 
   it('logs out', function (done) {
     let alertText = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+    this.testCase.sandbox.stub(Alerter, 'alert').callsFake((text) => {
       alertText = text
     })
     const vm = this.testCase.mount()

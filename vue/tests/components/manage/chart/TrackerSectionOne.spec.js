@@ -51,6 +51,8 @@ describe('TrackerSectionOne component', () => {
 
   afterEach(function () {
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
+
+    this.testCase.reset()
   })
 
   it('shows tracker steps', function () {

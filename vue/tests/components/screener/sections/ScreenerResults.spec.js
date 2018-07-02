@@ -8,7 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerResults', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerResultsComponent)
@@ -22,7 +21,8 @@ describe('ScreenerResults', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+
+    this.testCase.reset()
   })
 
   it('should display results', function (done) {

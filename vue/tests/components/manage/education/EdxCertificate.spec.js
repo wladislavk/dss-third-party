@@ -6,7 +6,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('EdxCertificate component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     moxios.stubRequest(http.formUrl(endpoints.edxCertificates.byUser), {
@@ -37,7 +36,7 @@ describe('EdxCertificate component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should show certificate links', function (done) {

@@ -15,6 +15,10 @@ describe('DashboardNavigation component', () => {
     this.testCase.setChildComponents(childComponents)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('should display menu', function () {
     const vm = this.testCase.mount()
 

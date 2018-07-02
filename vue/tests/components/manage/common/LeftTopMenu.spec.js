@@ -13,6 +13,10 @@ describe('LeftTopMenu component', () => {
     this.testCase.setComponent(LeftMenuComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows menu without snoozle', function () {
     const vm = this.testCase.mount()
     const links = vm.$el.querySelectorAll('a')

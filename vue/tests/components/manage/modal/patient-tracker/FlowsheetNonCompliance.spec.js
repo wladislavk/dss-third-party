@@ -9,7 +9,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetNonCompliance component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.patients[symbols.state.patientName] = 'John Doe'
@@ -31,7 +30,7 @@ describe('FlowsheetNonCompliance component', () => {
       params: {}
     }
 
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows modal', function () {

@@ -18,6 +18,8 @@ describe('ScreenerIntro', () => {
 
   afterEach(function () {
     store.commit(symbols.mutations.restoreInitialScreener)
+
+    this.testCase.reset()
   })
 
   it('should display existing fields', function () {

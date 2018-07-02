@@ -27,6 +27,10 @@ describe('DashboardNotifications component', () => {
     this.testCase.setChildComponents(childComponents)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('should display notifications', function () {
     const vm = this.testCase.mount()
 

@@ -6,14 +6,13 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerStep component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(TrackerStepComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows normal step', function () {

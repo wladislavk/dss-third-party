@@ -8,7 +8,6 @@ import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceRow component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.flowsheet[symbols.state.devices] = [
@@ -30,7 +29,7 @@ describe('DeviceRow component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows devices', function () {

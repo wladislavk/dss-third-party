@@ -5,9 +5,14 @@ import VueVisible from 'vue-visible'
 import store from '../../src/store'
 import LegacyHref from '../../src/directives/LegacyHref'
 import UnescapeFilter from '../../src/filters/Unescape'
+import moxios from 'moxios'
+import sinon from 'sinon'
 
 export default class ComponentTestCase {
   constructor () {
+    this.sandbox = sinon.createSandbox()
+    moxios.install()
+
     this.component = null
     this.activeRoute = null
     this.routes = []
@@ -19,6 +24,11 @@ export default class ComponentTestCase {
     Vue.use(VueMoment)
     Vue.directive('legacy-href', LegacyHref)
     Vue.filter('unescape', UnescapeFilter)
+  }
+
+  reset () {
+    moxios.uninstall()
+    this.sandbox.restore()
   }
 
   setComponent (component) {

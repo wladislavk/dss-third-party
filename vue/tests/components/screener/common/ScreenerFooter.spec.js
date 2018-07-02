@@ -8,6 +8,10 @@ describe('ScreenerFooter component', () => {
     this.testCase.setComponent(ScreenerFooterComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('displays current year', function () {
     const vm = this.testCase.mount()
 

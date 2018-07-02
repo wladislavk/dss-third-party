@@ -8,7 +8,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('DashboardTaskMenu component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(DashboardTaskMenuComponent)
@@ -32,7 +31,7 @@ describe('DashboardTaskMenu component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should show HTML', function (done) {

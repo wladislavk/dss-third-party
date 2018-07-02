@@ -19,6 +19,10 @@ describe('NavigationElement component', () => {
     ])
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('should display link without children', function () {
     const props = {
       menuItem: {

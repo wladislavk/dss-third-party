@@ -10,7 +10,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskMenu component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.tasks[symbols.state.tasks] = []
@@ -36,7 +35,7 @@ describe('TaskMenu component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should show HTML', function (done) {

@@ -9,7 +9,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 describe('ImpressionDevice component', () => {
   beforeEach(function () {
     this.testCase = new TestCase()
-    moxios.install()
 
     store.state.flowsheet[symbols.state.devices] = []
     store.state.patients[symbols.state.patientId] = 42
@@ -34,7 +33,7 @@ describe('ImpressionDevice component', () => {
       params: {}
     }
 
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows devices', function (done) {

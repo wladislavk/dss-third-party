@@ -6,7 +6,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDoctor component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     this.testCase.setComponent(ScreenerDoctorComponent)
@@ -23,7 +22,7 @@ describe('ScreenerDoctor component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should display results', function (done) {

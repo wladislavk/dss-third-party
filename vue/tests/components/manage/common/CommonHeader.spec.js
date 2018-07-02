@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import CommonHeaderComponent from '../../../../src/components/manage/common/CommonHeader.vue'
 import symbols from '../../../../src/symbols'
@@ -8,7 +7,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('CommonHeader component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
 
     store.commit(symbols.mutations.patientId, 0)
@@ -33,7 +31,7 @@ describe('CommonHeader component', () => {
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows header', function () {
@@ -55,7 +53,7 @@ describe('CommonHeader component', () => {
 
   it('clicks buttons', function (done) {
     let redirectUrl = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+    this.testCase.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
       redirectUrl = ProcessWrapper.getLegacyRoot() + url
     })
     const vm = this.testCase.mount()

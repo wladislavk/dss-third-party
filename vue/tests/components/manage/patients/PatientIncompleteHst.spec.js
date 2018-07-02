@@ -19,6 +19,10 @@ describe('PatientIncompleteHst component', () => {
     }
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows warning', function () {
     this.testCase.setPropsData(this.propsData)
     const vm = this.testCase.mount()

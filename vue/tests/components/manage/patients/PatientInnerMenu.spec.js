@@ -18,6 +18,10 @@ describe('PatientInnerMenu component', () => {
     this.testCase.setComponent(PatientInnerMenuComponent)
   })
 
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
   it('shows menu', function () {
     const props = {
       patientId: 1

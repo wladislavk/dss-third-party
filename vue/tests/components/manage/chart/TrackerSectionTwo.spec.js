@@ -10,7 +10,6 @@ import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerSectionTwo component', () => {
   beforeEach(function () {
-    moxios.install()
     this.testCase = new TestCase()
 
     store.state.flowsheet[symbols.state.trackerStepsNext] = [
@@ -29,7 +28,7 @@ describe('TrackerSectionTwo component', () => {
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows with empty data', function () {

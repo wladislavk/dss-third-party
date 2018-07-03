@@ -20,7 +20,6 @@ default:
                 - Contexts\DeviceSelector
                 - Contexts\Education
                 - Contexts\PatientChart
-                - Contexts\Profile
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
                 - Contexts\Tracker
@@ -42,6 +41,7 @@ default:
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
                 - Contexts\PatientUploadDw
+                - Contexts\Profile
                 - Contexts\ProgressNotes
                 - Contexts\Scheduler
                 - Contexts\Staff

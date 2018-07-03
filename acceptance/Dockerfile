@@ -1,10 +1,11 @@
 FROM centos:7.3.1611
 
+ARG SYSTEM_TZ
+
 WORKDIR /opt/app/acceptance
 
 # Set Timezone
-ENV TZ=America/New_York
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
     && rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
@@ -39,6 +40,10 @@ RUN wget http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 RUN yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
 
 RUN yum install -y mysql-community-client
+
+# Customize php setup
+RUN set -xe \
+    && /bin/echo 'date.timezone='"${SYSTEM_TZ}" > "/etc/php.d/custom.ini"
 
 COPY composer.json ./
 COPY composer.lock ./

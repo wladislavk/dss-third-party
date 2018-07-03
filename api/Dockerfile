@@ -1,13 +1,16 @@
 FROM debian:9.3
 
+ARG SYSTEM_TZ
+
 # Directories for custom php and httpd packages
 ENV _RH_HTTPD=/etc/apache2 \
     _RH_PHP=/php/7.2
 ENV _RH_PHP_D=/etc${_RH_PHP}
 
+ENV SYSTEM_TZ_ENV=$SYSTEM_TZ
+
 # Set Timezone
-ENV TZ=America/New_York
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 RUN set -xe \
     && apt-get update
@@ -75,7 +78,7 @@ RUN set -xe \
 
 # Customize php setup
 RUN set -xe \
-    && /bin/echo 'date.timezone="America/New_York"' > "${_RH_PHP_D}/mods-available/custom.ini" \
+    && /bin/echo 'date.timezone='"${SYSTEM_TZ}" > "${_RH_PHP_D}/mods-available/custom.ini" \
     && ln -s "${_RH_PHP_D}/mods-available/custom.ini" "${_RH_PHP_D}/apache2/conf.d/40-custom.ini"
 
 ENV \

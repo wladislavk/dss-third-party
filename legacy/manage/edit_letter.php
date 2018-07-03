@@ -205,9 +205,6 @@ $q2_myarray = $db->getRow("SELECT
 $completed_study_date = st($q2_myarray['date']);
 $completed_diagnosis = st($q2_myarray['ins_diagnosis'] . " " . $q2_myarray['description']);
 $completed_ahi = st($q2_myarray['ahi']);
-$completed_rdi = st($q2_myarray['rdi']);
-$completed_o2sat90 = st($q2_myarray['t9002']);
-$completed_o2nadir = st($q2_myarray['o2nadir']);
 $completed_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 
 if ($q2_myarray == '0') {
@@ -413,9 +410,7 @@ $sign = $db->getRow("SELECT *
     LIMIT 1");
 $signature_file = "signature_{$userId}_{$sign['id']}.png";
 
-/**
- * Doctor related information
- */
+// Doctor related information
 $companyId = $db->getColumn("SELECT companyid FROM dental_user_company WHERE userid = '$docId'", 'companyid');
 
 $franchisee_info = $db->getRow("SELECT
@@ -580,19 +575,14 @@ foreach ($master_q as $master_r) {
         WHERE l.letterid = '$letterid'";
 
     $row = $db->getRow($letter_query);
-    $letterRow = $row;
 
     $templateid = $row['templateid'];
     $patientid = $row['patientid'];
     $topatient = $row['topatient'];
-    $cc_topatient = $row['cc_topatient'];
     $md_list = $row['md_list'];
     $md_referral_list = $row['md_referral_list'];
     $pat_referral_list = $row['pat_referral_list'];
 
-    $mds = explode(",", $md_list);
-    $md_referrals = explode(",", $md_referral_list);
-    $pat_referrals = explode(",", $pat_referral_list);
     $altered_template = html_entity_decode($row['template'], ENT_COMPAT | ENT_IGNORE, "UTF-8");
 
     $method = $row['send_method'];
@@ -697,7 +687,6 @@ foreach ($master_q as $master_r) {
     }
 
     if ($source == DSS_REFERRED_PHYSICIAN) {
-        $md_referral = get_mdreferralids($_GET['pid']);
         $ref_info = get_contact_info('', '', $md_referral_list, $source);
         if (!empty($ref_info['md_referrals'])) {
             if (is_physician($ref_info['md_referrals'][0]['contacttypeid'])) {
@@ -800,7 +789,6 @@ foreach ($master_q as $master_r) {
     $header .= $indent_address == '1' ? $letterIndentedAddress : $letterUnindentedAddress;
     $header .= "<br />";
 
-    $orig_header = $header;
     $template = $header . $template;
     $orig_template = $header . $orig_template;
 
@@ -1834,7 +1822,7 @@ foreach ($master_q as $master_r) {
                     <?php
                     $letter_approve = true;
                 } else {
-                    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+                    send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
 
                     if (!$parent) { ?>
                         <script type="text/javascript">
@@ -1890,7 +1878,6 @@ foreach ($master_q as $master_r) {
                 }
 
                 $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method, $font_size, $font_family);
-                $num_contacts = num_letter_contacts($_GET['lid']);
 
                 if ($_POST['send_letter'][$cur_letter_num] != null) {
                     create_letter_pdf($saveletterid);
@@ -1919,7 +1906,7 @@ foreach ($master_q as $master_r) {
 
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
-                delete_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+                delete_letter($letterid, $type, $recipientid, $new_template[$cur_letter_num]);
 
                 if ($parent) {
                     if (isset($_REQUEST['goto']) && $_REQUEST['goto'] != '') {
@@ -2129,7 +2116,7 @@ foreach ($master_q as $master_r) {
                     <?php if (!(!empty($_GET['backoffice']) && $_GET['backoffice'] == "1" && $_SESSION['admin_access'] != 1)) { ?>
                         <input type="submit" name="delete_letter[<?php echo $cur_letter_num ?>]" class="addButton" value="Delete"/>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div style="float:right;">
                     <input type="submit" style="display:none;" name="save_letter[<?php echo $cur_letter_num ?>]" class="addButton edit_letter<?php echo $cur_letter_num ?>" value="Save Changes"/>
@@ -2285,8 +2272,9 @@ function preProcessReplacements($replacements)
                 break;
             case substr($each, 0, 3) === '<p>':
                 $each = preg_replace('@^<p>([\s\S]*)</p>$@i', '$1', $each);
-                $paragraph = true;
-            // fallthrough
+                $each = preg_split('@<br */?>@i', $each);
+                $each['paragraph'] = true;
+                break;
             default:
                 $each = preg_split('@<br */?>@i', $each);
 
@@ -2353,7 +2341,7 @@ function processReplacements($replacements)
             unset($each['paragraph']);
         }
 
-        $replacement = array_map(e, $each);
+        $replacement = array_map('e', $each);
         $replacement = join('<br />', $replacement);
 
         if ($paragraph) {

@@ -1,47 +1,53 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include "includes/top.htm";?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "includes/top.htm";
+?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
 if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] != 1 && !empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] != 1 && !empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] != 1 && !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] != 1 && empty($_GET['pid'])){?>
-	<script type="text/javascript">
-		window.location = 'ledger.php';
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+    <script type="text/javascript">
+        window.location = 'ledger.php';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'service_date';
-  $_REQUEST['sortdir'] = 'asc';
+    $_REQUEST['sort'] = 'service_date';
+    $_REQUEST['sortdir'] = 'asc';
 }
 
 if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
-  $start_date = $_REQUEST['start_date'];
-  $end_date = $_REQUEST['end_date'];
+    $start_date = $_REQUEST['start_date'];
+    $end_date = $_REQUEST['end_date'];
 }elseif(!empty($_REQUEST['dailysub'])){
-  $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy'])); 
-  $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
 }elseif(!empty($_REQUEST['weeklysub'])){
-  $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-  $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
 }elseif(!empty($_REQUEST['monthlysub'])){
-  $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-  $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+    $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
+    $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
 }elseif(!empty($_REQUEST['rangesub'])){
-  $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
-  $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
+    $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
+    $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
 }else{
-  $start_date = false;
-  $end_date = false;
+    $start_date = false;
+    $end_date = false;
 }
 
 $rec_disp = 200;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
+
+$db = new Db();
 
 if(isset($_GET['pid'])&& $_GET['pid']!=''){
     $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
@@ -49,42 +55,36 @@ if(isset($_GET['pid'])&& $_GET['pid']!=''){
     $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
 }
 
-
 $sql .= " order by service_date";
-$total_rec = $db->getNumberRows($sql);
-$no_pages = $total_rec/$rec_disp;
-
 $sql .= " limit ".$i_val.",".$rec_disp.";";
+
 $my = $db->getResults($sql);
 $num_users = count($my);
-
-//echo $sql; 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Ledger Report
-<?php 
-if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){
-    echo '(<i>' . date('m-d-Y', strtotime($start_date)) . '</i>)';
-}
-if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1 || !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] == 1){
-    echo '(<i>' . date('m-d-Y', strtotime($start_date))?> - <?php echo date('m-d-Y', strtotime($end_date)) . '</i>)';
-}
-if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1){
-    echo '(<i>' . date('m-Y', strtotime($start_date)) . '</i>)';
-}
-if(!empty($_GET['pid'])){
-    echo '(<i>' . $thename . '</i>)';
-}?>
-	
+    Ledger Report
+    <?php
+    if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){
+        echo '(<i>' . date('m-d-Y', strtotime($start_date)) . '</i>)';
+    }
+    if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1 || !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] == 1){
+        echo '(<i>' . date('m-d-Y', strtotime($start_date))?> - <?php echo date('m-d-Y', strtotime($end_date)) . '</i>)';
+    }
+    if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1){
+        echo '(<i>' . date('m-Y', strtotime($start_date)) . '</i>)';
+    }
+    if(!empty($_GET['pid'])){
+        echo '(<i>' . $thename . '</i>)';
+    }?>
 </span>
 <div>
     &nbsp;&nbsp;
     <a href="ledger.php" class="editlink" title="EDIT">
-    	<b>&lt;&lt;Back</b>
+        <b>&lt;&lt;Back</b>
     </a>
 </div>
 
@@ -93,11 +93,11 @@ if(!empty($_GET['pid'])){
 <link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 
 <div align="right">
-	<button onclick="Javascript: window.location='print_ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
-		Print Ledger Report
-	</button>
-	&nbsp;&nbsp;
-    <button onclick="Javascript: window.location='export_ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
+    <button onclick="window.location='print_ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
+        Print Ledger Report
+    </button>
+    &nbsp;&nbsp;
+    <button onclick="window.location='export_ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
         Export
     </button>
     &nbsp;&nbsp;
@@ -105,65 +105,61 @@ if(!empty($_GET['pid'])){
 
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
-		</td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
-		</td>
+    <tr class="tr_bg_h">
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
+        </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
+        </td>
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
             <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Adjustments</a>
         </td>
-		<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
-			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
-		</td>
-	</tr>
-	<?php if($num_users == 0){ ?>
-	<tr class="tr_bg">
-		<td valign="top" class="col_head" colspan="10" align="center">
-			No Records
-		</td>
-	</tr>
-	<?php 
-	}else{
-		$tot_charge = 0;
-		$tot_credit = 0;
-		$tot_adj = 0;
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
+            <a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
+        </td>
+    </tr>
+    <?php if($num_users == 0){ ?>
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="10" align="center">
+                No Records
+            </td>
+        </tr>
+        <?php
+    }else{
+        $tot_charge = 0;
+        $tot_credit = 0;
+        $tot_adj = 0;
 
         if(isset($_GET['pid'])){
             $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
-            $npsql = " AND n.patientid = '".$_GET['pid']."'";
-            $ipsql = " AND i.patientid = '".$_GET['pid']."'";
         }else{
-            $ipsql = $lpsql = $npsql= "";
+            $lpsql = "";
         }
         
         if($start_date){
             $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-            $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
-            $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
             $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
         }else{
-            $p_date = $i_date = $n_date = $l_date = '';
+            $p_date = $l_date = '';
         }
 
         $andPatientConditional = $lpsql;
@@ -191,16 +187,14 @@ if(!empty($_GET['pid'])){
                 '' AS payment_type,
                 dl.primary_claim_id
             FROM dental_ledger dl 
-                JOIN dental_patients pat ON dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid = p.userid 
+            JOIN dental_patients pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid = p.userid 
             WHERE dl.docid = '$docId'
-          	    AND IFNULL(dl.paid_amount, 0) = 0
-        	    $andServiceDateConditional
-                $andPatientConditional
+            AND IFNULL(dl.paid_amount, 0) = 0
+            $andServiceDateConditional
+            $andPatientConditional
             GROUP BY dl.ledgerid
-        
         UNION
-        
             SELECT
                 'ledger_paid',
                 dl.ledgerid,
@@ -216,21 +210,18 @@ if(!empty($_GET['pid'])){
                 pat.lastname,
                 CONCAT(pat.lastname, ' ', pat.firstname),
                 tc.type,
-        		'',
+                '',
                 dl.primary_claim_id
             FROM dental_ledger dl 
-                JOIN dental_patients pat ON dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid = p.userid 
-                LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-                LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-                    AND tc.docid = '$docId'
+            JOIN dental_patients pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid = p.userid 
+            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+            LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code AND tc.docid = '$docId'
             WHERE dl.docid = '$docId'
-                AND dl.paid_amount != 0
-                $andServiceDateConditional
-                $andPatientConditional
-        
+            AND dl.paid_amount != 0
+            $andServiceDateConditional
+            $andPatientConditional
         UNION
-        
             SELECT
                 'ledger_payment',
                 dlp.id,
@@ -244,23 +235,19 @@ if(!empty($_GET['pid'])){
                 pat.patientid,
                 pat.firstname,
                 pat.lastname,
-        		CONCAT(pat.lastname, ' ', pat.firstname),
+                CONCAT(pat.lastname, ' ', pat.firstname),
                 dlp.payer,
                 dlp.payment_type,
-        		''
-        	FROM dental_ledger dl
-                JOIN dental_patients pat on dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid = p.userid 
-                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+                ''
+            FROM dental_ledger dl
+            JOIN dental_patients pat on dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid = p.userid 
+            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
             WHERE dl.docid = '$docId'
-                AND dlp.amount != 0
-                $andPaymentDateConditional
-                $andPatientConditional
+            AND dlp.amount != 0
+            $andPaymentDateConditional
+            $andPatientConditional
         ";
-
-
-        if(!empty($_REQUEST['dailysub']) || !empty($_REQUEST['weeklysub']) || !empty($_REQUEST['monthlysub']) || !empty($_REQUEST['rangesub']))
-            //$newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 
         if(isset($_REQUEST['sort'])){
             if($_REQUEST['sort']=='patient'){
@@ -268,7 +255,7 @@ if(!empty($_GET['pid'])){
             }elseif($_REQUEST['sort']=='producer'){
                 $newquery .= " ORDER BY name ".$_REQUEST['sortdir'];
             }else{
-                $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
+                $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
             }
         }
         $runquery = $db->getResults($newquery);
@@ -278,11 +265,6 @@ if(!empty($_GET['pid'])){
 
             $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 
-            if($myarray["status"] == 1){
-                $tr_class = "tr_active";
-            } else {
-                $tr_class = "tr_inactive";
-            }
             $tr_class = "tr_active";?>
     <tr onclick="window.location = 'manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo $myarray['ledger']; ?>">
         <td valign="top" width="10%">
@@ -342,53 +324,49 @@ if(!empty($_GET['pid'])){
             }elseif($myarray['ledger'] == 'claim'){
                 echo $dss_claim_status_labels[$myarray["status"]];
             }
-		}?>       	
-		</td>
-	</tr>
-<?php 	
-    }?> 
-	<tr>
-		<td valign="top" colspan="5" align="right">
-			<b>Total</b>
-		</td>
-		<td valign="top" align="right">
-<?php
+        }?>
+        </td>
+    </tr>
+    <?php
+    } ?>
+    <tr>
+        <td valign="top" colspan="5" align="right">
+            <b>Total</b>
+        </td>
+        <td valign="top" align="right">
+            <?php
+            if (!isset($tot_charge)) {
+                $tot_charge = 0;
+            }
 
-    if (!isset($tot_charge)) {
-        $tot_charge = 0;
-    }
+            if (!isset($tot_credit)) {
+                $tot_credit = 0;
+            }
 
-    if (!isset($tot_credit)) {
-        $tot_credit = 0;
-    }
-
-    if (!isset($tot_adj)) {
-        $tot_adj = 0;  
-    }
-
-    ?>
+            if (!isset($tot_adj)) {
+                $tot_adj = 0;
+            }
+            ?>
             <b>
-    			<?php echo "$".number_format($tot_charge,2); ?>
-    			&nbsp;
-			</b>
-		</td>
-		<td valign="top" align="right">
-			<b>
-    			<?php echo "$".number_format($tot_credit,2);?>
-    			&nbsp;
-			</b>
-		</td>
+                <?php echo "$".number_format($tot_charge,2); ?>
+                &nbsp;
+            </b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+                <?php echo "$".number_format($tot_credit,2);?>
+                &nbsp;
+            </b>
+        </td>
         <td valign="top" align="right">
             <b>
                 <?php echo "$".number_format($tot_adj,2);?>
                 &nbsp;
             </b>
         </td>
-		<td valign="top">&nbsp;
-			
-		</td>
-	</tr>
-	<tr>
+        <td valign="top">&nbsp;</td>
+    </tr>
+    <tr>
         <td valign="top" colspan="5" align="right">
             <b>Balance</b>
         </td>
@@ -411,5 +389,5 @@ if(!empty($_GET['pid'])){
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

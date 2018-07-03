@@ -1,12 +1,15 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 
 if(!empty($_SERVER['HTTPS'])){
-$path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
+    $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
-$path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
+    $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 }
 
 $xfdf_file_path = "../fdf_test.fdf";
@@ -23,12 +26,11 @@ if ($exitStatus) {
     error_log("PDFtk exit status: $exitStatus");
 }
 
-
 require_once '../3rdParty/tcpdf/tcpdf.php';
 require_once '../3rdParty/fpdi/fpdi.php';
 
-
-class PDF extends \FPDI {
+class PDF extends \FPDI
+{
     /**
      * "Remembers" the template id of the imported page
      */
@@ -38,15 +40,16 @@ class PDF extends \FPDI {
     /**
      * include a background template for every page
      */
-    function Header() {
+    function Header()
+    {
         if (is_null($this->_tplIdx)) {
             $this->setSourceFile($this->_template);
             $this->_tplIdx = $this->importPage(1);
         }
 
-	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
-	$d_q = mysqli_query($con, $d_sql);
-	$d_r = mysqli_fetch_assoc($d_q);
+        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".$db->escape( $_SESSION['adminuserid'])."'";
+        $d_q = mysqli_query($con, $d_sql);
+        $d_r = mysqli_fetch_assoc($d_q);
 
         $this->useTemplate($this->_tplIdx, $d_r['claim_margin_left'], $d_r['claim_margin_top']);
         
@@ -66,6 +69,3 @@ $pdf->setFontSubsetting(false);
 $pdf->AddPage();
 
 $pdf->Output('margin_test.pdf', 'D');
-
-?>
-

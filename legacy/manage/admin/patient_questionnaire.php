@@ -17,14 +17,16 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_GET['own']) && $_GET['own'] == 1) {
-    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     $c_q = mysqli_query($con, $c_sql);
     $changed = mysqli_num_rows($c_q);
-    $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     mysqli_query($con, $own_sql);
     if ($_GET['own_completed'] == 1) {
-        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
         $q1_q = mysqli_query($con, $q1_sql);
         if (mysqli_num_rows($q1_q) == 0) {
             $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
@@ -62,7 +64,6 @@ if (!empty($_GET['own']) && $_GET['own'] == 1) {
     }
 </script>
 <?php
-$todaysdate = date("m/d/Y");
 if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     $exam_date = ($_POST['exam_date'] != '') ? date('Y-m-d', strtotime($_POST['exam_date'])) : '';
     $ess = $_POST['ess'];
@@ -194,12 +195,6 @@ if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     }
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con, $pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 $sql = "select p1.*, s.analysis from dental_q_page1_pivot p1 
     LEFT JOIN dental_q_sleep_pivot s ON s.patientid=p1.patientid
     where p1.patientid='".$_GET['pid']."'";
@@ -214,19 +209,15 @@ $analysis = $myarray['analysis'];
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
 $energy_level = st($myarray['energy_level']);
 $snoring_sound = st($myarray['snoring_sound']);
 $wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
 $morning_headaches = st($myarray['morning_headaches']);
 $hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
 $told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
 if ($complaintid != '') {
@@ -236,8 +227,8 @@ if ($complaintid != '') {
         $compid[$i] = $comp_arr2[0];
         $compseq[$i] = (!empty($comp_arr2[1]) ? $comp_arr2[1] : '');
     }
-} ?>
-
+}
+?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
@@ -281,7 +272,7 @@ if ($complaintid != '') {
 
 <div style="clear:both;"></div>
 <?php
-$patient_sql = "SELECT * FROM dental_q_page1_pivot WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$patient_sql = "SELECT * FROM dental_q_page1_pivot WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
 $patient_q = mysqli_query($con,$patient_sql);
 $pat_row = mysqli_fetch_assoc($patient_q);
 if (mysqli_num_rows($patient_q) == 0) {
@@ -319,7 +310,7 @@ if (mysqli_num_rows($patient_q) == 0) {
             } ?>
             > 5 indicates snoring is significantly affecting quality of life.
             <?php
-            $sleep_sql = "SELECT * FROM dental_q_sleep_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            $sleep_sql = "SELECT * FROM dental_q_sleep_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
             $sleep_q = mysqli_query($con, $sleep_sql);
             if (mysqli_num_rows($sleep_q) == 0) { ?>
                 <br />
@@ -336,10 +327,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                         $my = mysqli_query($con,$sql);
                         $myarray = mysqli_fetch_array($my);
 
-                        $q_sleepid = st($myarray['q_sleepid']);
                         $epworthid = st($myarray['epworthid']);
-                        $analysis = st($myarray['analysis']);
-
                         if ($epworthid != '') {
                             $epworth_arr1 = split('~',$epworthid);
                             foreach ($epworth_arr1 as $i => $val) {
@@ -347,11 +335,10 @@ if (mysqli_num_rows($patient_q) == 0) {
                                 $epid[$i] = $epworth_arr2[0];
                                 $epseq[$i] = $epworth_arr2[1];
                             }
-            			}
+                        }
 
                         $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                         $epworth_my = mysqli_query($con,$epworth_sql);
-                        $epworth_number = mysqli_num_rows($epworth_my);
 
                         while ($epworth_myarray = mysqli_fetch_array($epworth_my)) {
                             if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
@@ -359,12 +346,12 @@ if (mysqli_num_rows($patient_q) == 0) {
                             } else {
                                 $chk = $epseq[@array_search($epworth_myarray['epworthid'], $epid)];
                             } ?>
-					        <?php echo $chk; ?>
-					        -
-					        <?php echo st($epworth_myarray['epworth']);?>
-					        <br />
-					        <?php
-					    } ?>
+                            <?php echo $chk; ?>
+                            -
+                            <?php echo st($epworth_myarray['epworth']);?>
+                            <br />
+                            <?php
+                        } ?>
                         <?php echo $ess; ?> - Total
                     </div>
                     <div style="width:48%; float:left;">
@@ -373,7 +360,6 @@ if (mysqli_num_rows($patient_q) == 0) {
                         $sql = "select * from dental_thorton_pivot where patientid='".$_GET['pid']."'";
                         $my = mysqli_query($con,$sql);
                         $myarray = mysqli_fetch_array($my);
-                        $thortonid = st($myarray['thortonid']);
                         $snore_1 = st($myarray['snore_1']);
                         $snore_2 = st($myarray['snore_2']);
                         $snore_3 = st($myarray['snore_3']);
@@ -405,8 +391,8 @@ if (mysqli_num_rows($patient_q) == 0) {
     </tr>
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <span class="form_info">Subjective</span>
                     <br />
                     <label class="desc" id="title0" for="Field0">
@@ -417,8 +403,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                     </label>
                     <?php 
                     $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-                    $complaint_my = mysqli_query($con,$complaint_sql);
-                    $complaint_number = mysqli_num_rows($complaint_my);
+                    $complaint_my = mysqli_query($con, $complaint_sql);
                     ?>
                     <span class="form_info">
                         Please check any other complaints below.
@@ -503,8 +488,8 @@ if (mysqli_num_rows($patient_q) == 0) {
                     </div>
                     <div id="other_complaints">
                         <span>
-                        	<span style="color:#000000; padding-top:0px;">
-                            	Additional Complaints<br />
+                            <span style="color:#000000; padding-top:0;">
+                                Additional Complaints<br />
                             </span>
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_complaint;?></textarea>
@@ -515,7 +500,7 @@ if (mysqli_num_rows($patient_q) == 0) {
                     </div>
                     <br />
                 </li>
-           	</ul>
+            </ul>
             <script type="text/javascript">
                 function chk_other_comp() {
                     if ($('#complaint_0').is(':checked')) {
@@ -530,20 +515,20 @@ if (mysqli_num_rows($patient_q) == 0) {
     </tr>
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
+            <ul>
+                <li id="foli8" class="complex">
                     <label class="desc" id="title0" for="Field0">
                         Subjective Signs/Symptoms
                     </label>
                     <div>
-                    	<span class="full">
-                        	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
-                            	<tr>
-                                	<td valign="top" width="60%">
-                                    	Rate your overall energy level 0 -10 (10 being the highest) 
+                        <span class="full">
+                            <table width="100%" cellpadding="3" cellspacing="1" border="0">
+                                <tr>
+                                    <td valign="top" width="60%">
+                                        Rate your overall energy level 0 -10 (10 being the highest)
                                     </td>
                                     <td valign="top">
-                                    	<select name="energy_level" id="energy_level" class="field text addr tbox" style="width:150px;">
+                                        <select name="energy_level" id="energy_level" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <?php for ($i = 0; $i < 11; $i++) { ?>
                                                 <option value="<?php echo $i;?>" <?php if ($energy_level != '' && $energy_level == $i) echo " selected";?>><?php echo $i;?></option>
@@ -575,16 +560,16 @@ if (mysqli_num_rows($patient_q) == 0) {
                                         Have you been told you snore?
                                     </td>
                                     <td valign="top">
-                                    	<select name="told_you_snore" id="told_you_snore" class="field text addr tbox" style="width:150px;">
+                                        <select name="told_you_snore" id="told_you_snore" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Yes" <?php if ($told_you_snore== 'Yes') echo " selected";?>>
-                                            	Yes
+                                                Yes
                                             </option>
                                             <option value="No" <?php if ($told_you_snore == 'No') echo " selected";?>>
-                                            	No
+                                                No
                                             </option>
                                             <option value="Sometimes" <?php if ($told_you_snore == 'Sometimes') echo " selected";?>>
-                                            	Sometimes
+                                                Sometimes
                                             </option>
                                             <option value="Don't know" <?php if ($told_you_snore == "Don't know") echo " selected";?>>
                                                 Don't know
@@ -596,11 +581,11 @@ if (mysqli_num_rows($patient_q) == 0) {
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td valign="top">
-                                    	Rate the sound of your snoring 0 -10 (10 being the highest) 
+                                    <td valign="top">
+                                        Rate the sound of your snoring 0 -10 (10 being the highest)
                                     </td>
                                     <td valign="top">
-                                    	<select name="snoring_sound" id="snoring_sound" class="field text addr tbox" style="width:150px;">
+                                        <select name="snoring_sound" id="snoring_sound" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <?php for ($i = 0; $i < 11; $i++) { ?>
                                                 <option value="<?php echo $i;?>" <?php if ($snoring_sound == $i && $snoring_sound != '') echo " selected";?>><?php echo $i;?></option>
@@ -613,11 +598,11 @@ if (mysqli_num_rows($patient_q) == 0) {
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td valign="top">
-                                    	On average how many times per night do you wake up?  
+                                    <td valign="top">
+                                        On average how many times per night do you wake up?
                                     </td>
                                     <td valign="top">
-                                    	<select name="wake_night" id="wake_night" class="field text addr tbox" style="width:150px;">
+                                        <select name="wake_night" id="wake_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <?php for ($i = 0; $i < 11; $i++) { ?>
                                                 <option value="<?php echo $i;?>" <?php if ($wake_night != '' && $wake_night == $i) echo " selected";?>><?php echo $i;?></option>
@@ -629,11 +614,11 @@ if (mysqli_num_rows($patient_q) == 0) {
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td valign="top">
-                                    	On average how many hours of sleep do you get per night?
+                                    <td valign="top">
+                                        On average how many hours of sleep do you get per night?
                                     </td>
                                     <td valign="top">
-                                    	<select name="hours_sleep" id="hours_sleep" class="field text addr tbox" style="width:150px;">
+                                        <select name="hours_sleep" id="hours_sleep" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <?php for ($i = 0; $i < 16; $i++) { ?>
                                                 <option value="<?php echo $i;?>" <?php if ($hours_sleep == $i && $hours_sleep != '') echo " selected";?>><?php echo $i;?></option>
@@ -673,20 +658,20 @@ if (mysqli_num_rows($patient_q) == 0) {
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td valign="top">
-                                    	Do you have a bed time partner?
+                                    <td valign="top">
+                                        Do you have a bed time partner?
                                     </td>
                                     <td valign="top">
-                                    	<select name="bed_time_partner" id="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
+                                        <select name="bed_time_partner" id="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
                                             <option value=""></option>
                                             <option value="Yes" <?php if ($bed_time_partner== 'Yes') echo " selected";?>>
-                                            	Yes
+                                                Yes
                                             </option>
                                             <option value="No" <?php if ($bed_time_partner == 'No') echo " selected";?>>
-                                            	No
+                                                No
                                             </option>
                                             <option value="Sometimes" <?php if($bed_time_partner == 'Sometimes') echo " selected";?>>
-                                            	Sometimes
+                                                Sometimes
                                             </option>
                                         </select>
                                         <?php
@@ -699,16 +684,16 @@ if (mysqli_num_rows($patient_q) == 0) {
                                         If yes do they sleep in the same room?
                                     </td>
                                     <td valign="top">
-                                    	<select name="sleep_same_room" id="sleep_same_room" class="field text addr tbox" style="width:150px;">
+                                        <select name="sleep_same_room" id="sleep_same_room" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Yes" <?php if($sleep_same_room== 'Yes') echo " selected";?>>
-                                            	Yes
+                                                Yes
                                             </option>
                                             <option value="No" <?php if($sleep_same_room == 'No') echo " selected";?>>
-                                            	No
+                                                No
                                             </option>
                                             <option value="Sometimes" <?php if($sleep_same_room == 'Sometimes') echo " selected";?>>
-                                            	Sometimes
+                                                Sometimes
                                             </option>
                                         </select>
                                         <?php
@@ -717,29 +702,29 @@ if (mysqli_num_rows($patient_q) == 0) {
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td valign="top">
-                                    	How many times per night does your bedtime partner notice you quit breathing?
+                                    <td valign="top">
+                                        How many times per night does your bedtime partner notice you quit breathing?
                                     </td>
                                     <td valign="top">
-                                    	<select name="quit_breathing" id="quit_breathing" class="field text addr tbox" style="width:150px;">
+                                        <select name="quit_breathing" id="quit_breathing" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Several times per night" <?php if($quit_breathing== 'Several times per night') echo " selected";?>>
-                                            	Several times per night
+                                                Several times per night
                                             </option>
                                             <option value="One time per night" <?php if($quit_breathing == 'One time per night') echo " selected";?>>
-                                            	One time per night
+                                                One time per night
                                             </option>
                                             <option value="Several times per week" <?php if($quit_breathing == 'Several times per week') echo " selected";?>>
-                                            	Several times per week
+                                                Several times per week
                                             </option>
                                             <option value="Occasionally" <?php if($quit_breathing == 'Occasionally') echo " selected";?>>
-                                            	Occasionally
+                                                Occasionally
                                             </option>
                                             <option value="Seldom" <?php if($quit_breathing == 'Seldom') echo " selected";?>>
-                                            	Seldom
+                                                Seldom
                                             </option>
                                             <option value="Never" <?php if($quit_breathing == 'Never') echo " selected";?>>
-                                            	Never
+                                                Never
                                             </option>
                                         </select>
                                         <?php
@@ -776,5 +761,4 @@ if (mysqli_num_rows($patient_q) == 0) {
 <br />
 <?php include "../includes/form_bottom.htm";?>
 <br />
-
 <?php include "includes/bottom.htm";?>

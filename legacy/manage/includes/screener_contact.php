@@ -1,25 +1,28 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once '../admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	if (!empty($_REQUEST['id'])) {
-		$id = $_REQUEST['id'];
-	} else {
-		$id = '';
-	}
+include_once '../admin/includes/main_include.php';
 
-	if (!empty($_REQUEST['c'])) {
-		$c = $_REQUEST['c'];
-	} else {
-		$c = '';
-	}
-	
-	$s = "UPDATE dental_screener SET contacted = '".mysqli_real_escape_string($con,$c)."'
-		  WHERE id='".mysqli_real_escape_string($con,$id)."'";
+if (!empty($_REQUEST['id'])) {
+    $id = $_REQUEST['id'];
+} else {
+    $id = '';
+}
 
-	echo $s;
-	if($db->query($s)){
-		echo '{"success":true}';
-	}else{
-		echo '{"error":true}';
-	}
-?>
+if (!empty($_REQUEST['c'])) {
+    $c = $_REQUEST['c'];
+} else {
+    $c = '';
+}
+
+$db = new Db();
+
+$s = "UPDATE dental_screener SET contacted = '".$db->escape($c)."'
+      WHERE id='".$db->escape($id)."'";
+
+echo $s;
+if($db->query($s)){
+    echo '{"success":true}';
+}else{
+    echo '{"error":true}';
+}

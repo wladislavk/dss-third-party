@@ -5,7 +5,6 @@ include_once '../admin/includes/main_include.php';
 include_once '../includes/constants.inc';
 include "../includes/sescheck.php";
 include_once '../includes/general_functions.php';
-
 ?>
 <script type="text/javascript" src="../admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -13,7 +12,7 @@ $db = new Db();
 if (isset($_REQUEST['submit'])) {
     $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
-    $dentalDeviceRequest = mysqli_real_escape_string($con, $_REQUEST['dentaldevice']);
+    $dentalDeviceRequest = $db->escape( $_REQUEST['dentaldevice']);
     if ($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 
             dentaldevice='".$dentalDeviceRequest."', 
@@ -27,11 +26,11 @@ if (isset($_REQUEST['submit'])) {
         $exPage5Id = $exPage5IdRow['ex_page5id'];
         $sqlex = "update dental_ex_page5 set dentaldevice='".$dentalDeviceRequest."' where ex_page5id=$exPage5Id";
     }
+    $db->query($sqlex);
 
-    $qex = $db->query($sqlex);
     $flow_sql = "UPDATE dental_flow_pg2_info SET
-        device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
-        WHERE id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
+        device_id='".$db->escape($_REQUEST['dentaldevice'])."'
+        WHERE id='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."'";
     $db->query($flow_sql);
 ?>
     <script type="text/javascript">
@@ -52,7 +51,7 @@ if (isset($_REQUEST['submit'])) {
 </head>
 <body>
 <?php
-$s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$s = "SELECT * FROM dental_patients where patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $r = $db->getRow($s);
 ?>
 <h2 style="margin-top:20px;">What device will you make for <?php echo $r['firstname']." ".$r['lastname']; ?>?</h2>

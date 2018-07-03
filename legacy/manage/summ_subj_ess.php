@@ -4,10 +4,11 @@ namespace Ds3\Libraries\Legacy;
 include_once 'admin/includes/main_include.php';
 include_once 'admin/includes/general.htm';
 
+$db = new Db();
+
 if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = $db->getResults($epworth_sql);
-    $epworth_arr = '';
     foreach ($epworth_my as $epworth_myarray) {
         if ($_POST['epworth_'.$epworth_myarray['epworthid']] != '') { ?>
             <script type="text/javascript">
@@ -16,7 +17,6 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
             <?php
         }
     }
-	
     $ess_score = 0;
     foreach ($_POST as $index => $value) {
         if (preg_match('/^epworth_\d+$/', $index)) {
@@ -28,14 +28,11 @@ if (!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
         parent.update_ess_total('<?php echo $_REQUEST['id']; ?>', '<?php echo $ess_score; ?>');
     </script>
     <?php
-    $msg = " Edited Successfully";
     trigger_error("Die called", E_USER_ERROR);
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if (empty($pat_myarray['patientid'])) { ?>
     <script type="text/javascript">
@@ -48,14 +45,11 @@ if (empty($pat_myarray['patientid'])) { ?>
 $sql = "select * from dental_q_sleep_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
-$q_sleepid = st($myarray['q_sleepid']);
 $epworthid = st($myarray['epworthid']);
-$analysis = st($myarray['analysis']);
 
 if ($epworthid != '') {
     $epworth_arr1 = explode('~', $epworthid);
-    foreach($epworth_arr1 as $i => $val)
-    {
+    foreach($epworth_arr1 as $i => $val) {
         $epworth_arr2 = explode('|', $val);
         $epid[$i] = $epworth_arr2[0];
         $epseq[$i] = (!empty($epworth_arr2[1]) ? $epworth_arr2[1] : '');
@@ -99,12 +93,11 @@ if ($epworthid != '') {
                                 <?php
                                 $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                 $epworth_my = $db->getResults($epworth_sql);
-                                $epworth_number = count($epworth_my);
                                 foreach ($epworth_my as $epworth_myarray) {
                                     $a_sql = "SELECT answer 
                                         FROM dentalsummfu_ess
                                         WHERE epworthid='".$epworth_myarray['epworthid']."' 
-                                        AND followupid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."';";
+                                        AND followupid='".$db->escape((!empty($_GET['id']) ? $_GET['id'] : ''))."';";
                                     $a = $db->getRow($a_sql);
                                     $chk = $a['answer']; ?>
                                     <tr>
@@ -113,10 +106,10 @@ if ($epworthid != '') {
                                         </td>
                                         <td valign="top" class="frmdata">
                                             <select id="epworth_<?php echo st($epworth_myarray['epworthid']);?>" name="epworth_<?php echo st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
-                                                <option value="0" <? if ($chk == '0') echo " selected";?>>0</option>
-                                                <option value="1" <? if ($chk == 1) echo " selected";?>>1</option>
-                                                <option value="2" <? if ($chk == 2) echo " selected";?>>2</option>
-                                                <option value="3" <? if ($chk == 3) echo " selected";?>>3</option>
+                                                <option value="0" <?php if ($chk == '0') echo " selected";?>>0</option>
+                                                <option value="1" <?php if ($chk == 1) echo " selected";?>>1</option>
+                                                <option value="2" <?php if ($chk == 2) echo " selected";?>>2</option>
+                                                <option value="3" <?php if ($chk == 3) echo " selected";?>>3</option>
                                             </select>
                                         </td>
                                     </tr>

@@ -1,12 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 class Db
 {
-	public $SHOW_QUERY = false;
-	public $SHOW_TIMESTAMP = false;
-	public $SHOW_TOTAL_TIME = false;
-	private $totalTime;
-	public $con;
+    public $SHOW_QUERY = false;
+    public $SHOW_TIMESTAMP = false;
+    public $SHOW_TOTAL_TIME = false;
+    private $totalTime;
+    public $con;
 
     /**
      * @var array List of allowed separators for escapeAssignmentList()
@@ -17,121 +18,127 @@ class Db
         'OR',
     ];
 
-	// Perfom query
-	public function __construct()
-	{
-		$this->totalTime = 0;
-		$this->con = $GLOBALS['con'];
-	}
+    // Perform query
+    public function __construct()
+    {
+        $this->totalTime = 0;
+        $this->con = $GLOBALS['con'];
+    }
 
-	public function resetTotalTime()
-	{
-		$this->totalTime = 0;
-	}
+    public function resetTotalTime()
+    {
+        $this->totalTime = 0;
+    }
 
-	public function query($query_string)
-	{
-		if($query_string) {
-			$time = microtime(TRUE);
+    public function query($query_string)
+    {
+        if ($query_string) {
+            $time = microtime(true);
 
-			$result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . mysqli_error($this->con), E_USER_ERROR);
+            $result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . $this->error(), E_USER_ERROR);
 
-			$time = microtime(TRUE) - $time;
-			$this->totalTime += $time;
+            $time = microtime(true) - $time;
+            $this->totalTime += $time;
 
-			if( $this->SHOW_TIMESTAMP ) {
-				echo 'Query Time: ' . $time .  '<br>';
-			}
+            if ($this->SHOW_TIMESTAMP) {
+                echo 'Query Time: ' . $time . '<br>';
+            }
+            if ($this->SHOW_TOTAL_TIME) {
+                echo 'Total Query Time: ' . $this->totalTime . '<br>';
+            }
+            if ($this->SHOW_QUERY) {
+                echo '<pre>' . $query_string . '</pre><br><hr>';
+            }
 
-			if( $this->SHOW_TOTAL_TIME ) {
-				echo 'Total Query Time: ' . $this->totalTime .  '<br>';
-			}
-			if( $this->SHOW_QUERY ) {
-				echo '<pre>' . $query_string . '</pre><br><hr>';
-			}
+            return $result;
+        }
+        return null;
+    }
 
-			return $result;
-		}
-	}
-
-	// Get the first result row
-	public function getRow($query_string)
-	{
-		if( $query_string ) {
-			$result = $this->query($query_string);
-			if ($result) {
-				return mysqli_fetch_assoc($result);
-			}
-		}
-		return null;
-	}
+    // Get the first result row
+    public function getRow($query_string)
+    {
+        if ($query_string) {
+            $result = $this->query($query_string);
+            if ($result) {
+                $return = mysqli_fetch_assoc($result);
+                return $return;
+            }
+        }
+        return null;
+    }
 
     /**
      * Return column from the first row of the result
      *
      * @param string $queryString
      * @param string $columnName
-     * @param mixed  $defaultValue
+     * @param mixed $defaultValue
      * @return mixed
      */
-    public function getColumn ($queryString, $columnName, $defaultValue=null) {
+    public function getColumn($queryString, $columnName, $defaultValue = null)
+    {
         $row = $this->getRow($queryString);
 
         return $row ? array_get($row, $columnName, $defaultValue) : $defaultValue;
     }
 
-	public function getResults($query_string)
-	{
-		if( $query_string ) {
-			$return = array();
-			$result = $this->query($query_string);
-			if ($result) {
-				while ($row = mysqli_fetch_assoc($result)) {
-					$return[] = $row;
-				}
-			}
-			return $return;
-		}
-	}
+    public function getResults($query_string)
+    {
+        if ($query_string) {
+            $return = [];
+            $result = $this->query($query_string);
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $return[] = $row;
+                }
+            }
+            return $return;
+        }
+        return null;
+    }
 
-	// Get count of result rows
-	public function getNumberRows($query_string)
-	{
-		if( $query_string ) {
-			$result = $this->query($query_string);
-			if ($result) {
-				$return = mysqli_num_rows($result);
-			} else {
-				$return = 0;
-			}
-			return $return;
-		}
-	}
+    // Get count of result rows
+    public function getNumberRows($query_string)
+    {
+        if ($query_string) {
+            $result = $this->query($query_string);
+            if ($result) {
+                $return = mysqli_num_rows($result);
+            } else {
+                $return = 0;
+            }
+            return $return;
+        }
+        return null;
+    }
 
-	public function getInsertId($query_string)
-	{
-		if( $query_string ) {
-			$result = $this->query($query_string);
-			$insert_id = $result ? mysqli_insert_id($this->con) : 0;
-			return $insert_id;
-		}
-	}
+    public function getInsertId($query_string)
+    {
+        if ($query_string) {
+            $result = $this->query($query_string);
+            $insert_id = $result ? mysqli_insert_id($this->con) : 0;
+            return $insert_id;
+        }
+        return 0;
+    }
 
-	public function getAffectedRows ($query) {
-		if ($query) {
-			$this->query($query);
-			return mysqli_affected_rows($this->con);
-		}
+    public function getAffectedRows($query)
+    {
+        if ($query) {
+            $this->query($query);
+            return mysqli_affected_rows($this->con);
+        }
+        return false;
+    }
 
-		return false;
-	}
+    public function escape($string)
+    {
+        return mysqli_real_escape_string($this->con, $string);
+    }
 
-	public function escape($string)
-	{
-		return mysqli_real_escape_string($this->con, $string);
-	}
-
-    public function escapeList (Array $values, $isIdentifier=false) {
+    public function escapeList(array $values, $isIdentifier = false)
+    {
         $db = $this;
         $delimiter = $isIdentifier ? "`" : "'";
 
@@ -142,7 +149,8 @@ class Db
         return join(', ', $values);
     }
 
-    public function escapeAssignmentList (Array $values, $separator=',') {
+    public function escapeAssignmentList(array $values, $separator = ',')
+    {
         $db = $this;
         $separator = in_array($separator, $this->allowedSeparators) ? " $separator " : ',';
 
@@ -159,7 +167,8 @@ class Db
      * @param string $tableName
      * @return mixed
      */
-    public function getColumnNames ($tableName) {
+    public function getColumnNames($tableName)
+    {
         $tableName = $this->escape($tableName);
         $columns = $this->getResults("SELECT column_name FROM information_schema.columns WHERE table_name = '$tableName'");
 
@@ -174,7 +183,8 @@ class Db
      * @param string $historyTable
      * @return string
      */
-    public function backupColumns ($sourceTable, $historyTable) {
+    public function backupColumns($sourceTable, $historyTable)
+    {
         $sourceColumns = $this->getColumnNames($sourceTable);
         $historyColumns = $this->getColumnNames($historyTable);
 
@@ -191,8 +201,19 @@ class Db
      * @param string $tableName
      * @return string
      */
-    public function primaryKey ($tableName) {
+    public function primaryKey($tableName)
+    {
         $tableName = $this->escape($tableName);
         return $this->getColumn("SHOW KEYS FROM $tableName WHERE Key_name = 'PRIMARY'", 'Column_name');
+    }
+
+    public function error()
+    {
+        return mysqli_error($this->con);
+    }
+
+    public function errorNumber()
+    {
+        return mysqli_errno($this->con);
     }
 }

@@ -16,6 +16,8 @@ if (isset($_GET['bc'])) {
     $andBillingIdConditional = " AND NOT COALESCE(i.p_m_billing_id, 0) ";
 }
 
+$db = new Db();
+
 if (is_super($_SESSION['admin_access'])) {
     $sql = "SELECT
             p.firstname,
@@ -23,7 +25,7 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(u.first_name, ' ', u.last_name) AS doc_name,
             p.patientid
         FROM dental_patients p
-            LEFT JOIN dental_users u ON u.userid = p.docid
+        LEFT JOIN dental_users u ON u.userid = p.docid
         WHERE (
             SELECT (
                 SUM(
@@ -48,11 +50,11 @@ if (is_super($_SESSION['admin_access'])) {
             )
             FROM dental_insurance i
             WHERE i.patientid = p.patientid
-                AND i.mailed_date IS NOT NULL
-                $andBillingIdConditional
+            AND i.mailed_date IS NOT NULL
+            $andBillingIdConditional
         ) > 0
         $andDocIdConditional
-    ORDER BY p.lastname ASC, p.firstname ASC";
+        ORDER BY p.lastname ASC, p.firstname ASC";
 } elseif (is_software($_SESSION['admin_access'])) {
     $adminCompanyId = intval($_SESSION['admincompanyid']);
 
@@ -62,10 +64,10 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(u.first_name, ' ', u.last_name) AS doc_name,
             p.patientid
         FROM dental_patients p
-            JOIN dental_users u ON u.userid = p.docid
-            JOIN dental_user_company uc ON uc.userid = u.userid
+        JOIN dental_users u ON u.userid = p.docid
+        JOIN dental_user_company uc ON uc.userid = u.userid
         WHERE uc.companyid = '$adminCompanyId'
-            $andDocIdConditional
+        $andDocIdConditional
         ORDER BY p.lastname, p.firstname";
 } elseif (is_billing($_SESSION['admin_access'])) {
     $adminUserId = intval($_SESSION['adminuserid']);
@@ -90,23 +92,6 @@ if (is_super($_SESSION['admin_access'])) {
 }
 
 $my = $db->getResults($sql);
-$total_rec = count($my);
-
-$claimChargesQuery = "SELECT
-        insuranceid,
-        COALESCE(
-            CONVERT(
-                REPLACE(IF(primary_claim_id, 0, total_charge), ',', ''),
-                DECIMAL(11, 2)
-            ), 0
-        ) AS total_charge
-    FROM dental_insurance
-    ";
-
-$ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
-    FROM dental_ledger dl
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-    ";
 
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
@@ -126,17 +111,16 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
     <select name="fid">
         <option value="">Any</option>
         <?php
-
         $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-
-        if ($franchisees) foreach ($franchisees as $row) {
-            $selected = $row['userid'] == $fid ? 'selected' : '';
-
-            ?>
-            <option value="<?= $row['userid'] ?>" <?= $selected ?>>
-                [<?= $row['userid'] ?>] <?= e($row['first_name'] . ' ' . $row['last_name']) ?>
-            </option>
-      <?php } ?>
+        if ($franchisees) {
+            foreach ($franchisees as $row) {
+                $selected = $row['userid'] == $fid ? 'selected' : '';
+                ?>
+                <option value="<?= $row['userid'] ?>" <?= $selected ?>>
+                    [<?= $row['userid'] ?>] <?= e($row['first_name'] . ' ' . $row['last_name']) ?>
+                </option>
+            <?php }
+        } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
     <input type="submit" value="Filter List"/>
@@ -186,12 +170,9 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
     </thead>
     <tbody>
         <?php
-
         $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
-
         foreach ($my as $r) {
             $pat_total = 0;
-
             ?>
             <tr>
                 <td valign="top">
@@ -209,29 +190,23 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
                     $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
 
                     $claimCharges = [];
-                    $claimChargesResults =
-                        getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid'], $andBillingIdConditional);
+                    $claimChargesResults = getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid'], $andBillingIdConditional);
 
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];
                     }
-
                     if ($claimCharges) {
                         $p_total = getLedgerPaymentAmount($claimCharges['insuranceid']);
                     }
-
                     $pat_total += $c_total - $p_total;
                     ${"total_{$lowerLimit}{$upperLimit}"} += $c_total - $p_total;
-
                     ?>
                     <td valign="top">
                         $<?= number_format($c_total - $p_total, 2) ?>
                     </td>
                 <?php
                 }
-
                 $grand_total += $pat_total;
-
                 ?>
                 <td valign="top">
                     $<?= number_format($pat_total, 2) ?>
@@ -266,9 +241,6 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
         </tr>
     </tfoot>
 </table>
-
 <?php include '../report_claim_aging_breakdown.php'; ?>
-
 <br /><br />
-
-<?php  include "includes/bottom.htm"; ?>
+<?php include "includes/bottom.htm"; ?>

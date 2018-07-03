@@ -1,46 +1,31 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$db = new Db();
 
 $sql = "select * from dental_q_page3_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-$my = mysqli_query($con,$sql);
+$my = mysqli_query($con, $sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_page3id = st($myarray['q_page3id']);
-$allergens = st($myarray['allergens']);
 $other_allergens = st($myarray['other_allergens']);
-$medications = st($myarray['medications']);
 $other_medications = st($myarray['other_medications']);
-$history = st($myarray['history']);
 $other_history = st($myarray['other_history']);
 $dental_health = st($myarray['dental_health']);
-$injurytohead = st($myarray['injurytohead']);
-$injurytoface = st($myarray['injurytoface']);
-$injurytoneck = st($myarray['injurytoneck']);
-$injurytoteeth = st($myarray['injurytoteeth']);
-$injurytomouth = st($myarray['injurytomouth']);
 $drymouth = st($myarray['drymouth']);
 $removable = st($myarray['removable']);
 $year_completed = st($myarray['year_completed']);
-$tmj = st($myarray['tmj']);
-$gum_problems = st($myarray['gum_problems']);
-$dental_pain = st($myarray['dental_pain']);
-$dental_pain_describe = st($myarray['dental_pain_describe']);
 $completed_future = st($myarray['completed_future']);
 $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
-$jawjointsurgery = st($myarray['jawjointsurgery']);
-$no_allergens = st($myarray['no_allergens']);
-$no_medications = st($myarray['no_medications']);
-$no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$psql = "SELECT * FROM dental_patients where patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pmy = mysqli_query($con,$psql);
 $pmyarray = mysqli_fetch_array($pmy);
 
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
-$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 
@@ -388,12 +373,10 @@ $drymouth_text = $myarray['drymouth_text'];
             $my = mysqli_query($con,$sql);
             $myarray = mysqli_fetch_array($my);
 
-            $ex_page4id = st($myarray['ex_page4id']);
             $exam_teeth = st($myarray['exam_teeth']);
             $other_exam_teeth = st($myarray['other_exam_teeth']);
             $caries = st($myarray['caries']);
             $where_facets = st($myarray['where_facets']);
-            $missing = st($myarray['missing']);
             $cracked_fractured = st($myarray['cracked_fractured']);
             $old_worn_inadequate_restorations = st($myarray['old_worn_inadequate_restorations']);
             $dental_class_right = st($myarray['dental_class_right']);
@@ -546,7 +529,6 @@ $sql = "select * from dental_ex_page1_pivot where patientid='".(!empty($_GET['pi
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$ex_page1id = st($myarray['ex_page1id']);
 $blood_pressure = st($myarray['blood_pressure']);
 $pulse = st($myarray['pulse']);
 $neck_measurement = st($myarray['neck_measurement']);
@@ -690,7 +672,6 @@ $weight = st($bmi_myarray['weight']);
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
-    $ex_page2id = st($myarray['ex_page2id']);
     $mallampati = st($myarray['mallampati']);
     $tonsils = st($myarray['tonsils']);
     $tonsils_grade = st($myarray['tonsils_grade']);
@@ -812,7 +793,6 @@ $weight = st($bmi_myarray['weight']);
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
-    $ex_page3id = st($myarray['ex_page3id']);
     $maxilla = st($myarray['maxilla']);
     $other_maxilla = st($myarray['other_maxilla']);
     $mandible = st($myarray['mandible']);
@@ -981,33 +961,19 @@ $weight = st($bmi_myarray['weight']);
     $my = mysqli_query($con,$sql);
     $myarray = mysqli_fetch_array($my);
     
-    $ex_page5id = st($myarray['ex_page5id']);
     $palpationid = st($myarray['palpationid']);
     $palpationRid = st($myarray['palpationRid']);
     $additional_paragraph_pal = st($myarray['additional_paragraph_pal']);
     $joint_exam = st($myarray['joint_exam']);
     $jointid = st($myarray['jointid']);
     $i_opening_from = st($myarray['i_opening_from']);
-    $i_opening_to = st($myarray['i_opening_to']);
-    $i_opening_equal = st($myarray['i_opening_equal']);
     $protrusion_from = st($myarray['protrusion_from']);
     $protrusion_to = st($myarray['protrusion_to']);
-    $protrusion_equal = st($myarray['protrusion_equal']);
     $l_lateral_from = st($myarray['l_lateral_from']);
-    $l_lateral_to = st($myarray['l_lateral_to']);
-    $l_lateral_equal = st($myarray['l_lateral_equal']);
     $r_lateral_from = st($myarray['r_lateral_from']);
-    $r_lateral_to = st($myarray['r_lateral_to']);
-    $r_lateral_equal = st($myarray['r_lateral_equal']);
     $deviation_from = st($myarray['deviation_from']);
-    $deviation_to = st($myarray['deviation_to']);
-    $deviation_equal = st($myarray['deviation_equal']);
     $deflection_from = st($myarray['deflection_from']);
-    $deflection_to = st($myarray['deflection_to']);
-    $deflection_equal = st($myarray['deflection_equal']);
     $range_normal = st($myarray['range_normal']);
-    $normal = st($myarray['normal']);
-    $other_range_motion = st($myarray['other_range_motion']);
     $additional_paragraph_rm = st($myarray['additional_paragraph_rm']);
     $screening_aware = st($myarray['screening_aware']);
     $screening_normal = st($myarray['screening_normal']);
@@ -1275,11 +1241,11 @@ $weight = st($bmi_myarray['weight']);
                 </tr>
             <?php } ?>
         </table>
-        <? if ($range_normal == 1) { ?>
+        <?php if ($range_normal == 1) { ?>
             Within normal limits
             <br /><br />
             NOTE: (Normal range of motion has been noted Vertical 40 - 50mm,  Lateral 12mm, Protrusive 9mm)
-        <? } ?>
+        <?php } ?>
     </div>
     <br />
     <?php if ($additional_paragraph_rm != '') { ?>
@@ -1294,11 +1260,11 @@ $weight = st($bmi_myarray['weight']);
     <h4>Craniomandibular Screening</h4>
     <div>
         <span>
-            <? if ($screening_aware == 1) { ?>
+            <?php if ($screening_aware == 1) { ?>
                 Patient is aware of a temporomandibular disorder
                 <br /><br>
             <?php } ?>
-            <? if ($screening_normal == 1) { ?>
+            <?php if ($screening_normal == 1) { ?>
                 Within normal limits
             <?php } ?>
         </span>

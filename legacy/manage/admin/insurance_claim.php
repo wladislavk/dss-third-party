@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once '../includes/constants.inc';
 require_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';

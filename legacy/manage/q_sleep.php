@@ -181,7 +181,6 @@ if ($patient_info) { ?>
     $pat_sql = "select * from dental_patients where patientid = '$patientId'";
    
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -224,7 +223,6 @@ if ($patient_info) { ?>
         <input type="hidden" name="q_sleepsub" value="1" />
         <input type="hidden" name="ed" value="<?php echo $q_sleepid;?>" />
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
-
         <div align="right">
             <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
             <input type="submit" name="q_sleepbtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
@@ -257,7 +255,6 @@ if ($patient_info) { ?>
                                     <?php
                                     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
                                     $epworth_my = $db->getResults($epworth_sql);
-                                    $epworth_number = count($epworth_my);
                                     foreach ($epworth_my as $epworth_myarray) {
                                         if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
                                             $chk = '';

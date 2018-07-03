@@ -1,7 +1,9 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$db = new Db();
+
+$sql = "SELECT * FROM dental_patients where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q = mysqli_query($con,$sql);
 $r = mysqli_fetch_assoc($q);
 
@@ -22,27 +24,13 @@ $sql = "select * from dental_q_page1_pivot where patientid='".(!empty($_GET['pid
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$energy_level = st($myarray['energy_level']);
-$snoring_sound = st($myarray['snoring_sound']);
-$wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
-$morning_headaches = st($myarray['morning_headaches']);
-$hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
-$told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
-$sleep_qual = st($myarray['sleep_qual']);
 
 $sqlex = "select * from dental_ex_page5_pivot where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myex = mysqli_query($con,$sqlex);
@@ -58,7 +46,7 @@ $protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_q = mysqli_query($con,$imp_s);
 $imp_r = mysqli_fetch_assoc($imp_q);
 
@@ -92,7 +80,8 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
         echo $r['preferred_name']." - "; 
     } else {
         echo $r['firstname'] . " - ";
-    } ?>
+    }
+    ?>
     <small>
         <?php
         $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
@@ -132,11 +121,10 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 </div>
 
 <?php
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_q = mysqli_query($con, $imp_s);
 $imp_r = mysqli_fetch_assoc($imp_q);
 ?>
-
 <?php if ($imp_r['segmentid']=='4') { ?>
     <div class="alert alert-info text-center">
         Not delivered. Impressions taken <?php echo ($imp_r['date_completed']) ? date('m/d/Y', strtotime($imp_r['date_completed'])) : ''; ?>
@@ -170,7 +158,6 @@ $imp_r = mysqli_fetch_assoc($imp_q);
     <?php
 }
 
-$last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
 $last_q = mysqli_query($con, $last_sql);
 $last_r = mysqli_fetch_assoc($last_q);
@@ -203,7 +190,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Reason for seeking tx:</strong>
                 <?php
-                $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='".$db->escape( !empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                 $c_q = mysqli_query($con,$c_sql);
                 $c_r = mysqli_fetch_assoc($c_q);
                 
@@ -211,7 +198,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 
                 if ($complaintid != '') {
                     $comp_arr1 = explode('~', $complaintid);
-                    
                     foreach ($comp_arr1 as $i => $val) {
                         $comp_arr2 = explode('|', $val);
                         $compid[$i] = $comp_arr2[0];
@@ -221,7 +207,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 ?>
             </li>
         </ul>
-        
         <?php if ($complaintid != '' || !empty($compid) && in_array('0', $compid)) { ?>
             <h4>Other Complaints</h4>
             <ul class="list-group">
@@ -229,25 +214,19 @@ $last_r = mysqli_fetch_assoc($last_q);
                 if ($complaintid != '') {
                     $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                     $complaint_my = mysqli_query($con,$complaint_sql);
-                    $complaint_number = mysqli_num_rows($complaint_my);
-                    
                     while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
-                        if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
-                            $chk = '';
-                        } else { ?>
+                        if (@array_search($complaint_myarray['complaintid'], $compid) !== false) { ?>
                             <li class="list-group-item"><?php echo $complaint_myarray['complaint']; ?></li>
                             <?php
                         }
                     }
                 }
-                
                 if ($other_complaint != '' && in_array('0', $compid)) { ?>
                     <li class="list-group-item"><?php echo $other_complaint; ?></li>
                     <?php
                 } ?>
             </ul>
         <?php } ?>
-        
         <h4>Partners</h4>
         <ul class="list-group">
             <li class="list-group-item">
@@ -263,9 +242,8 @@ $last_r = mysqli_fetch_assoc($last_q);
                     How many times per night does your bedtime partner notice you quit breathing?
                     <?php echo $quit_breathing;?>
                 </li>
-            <? } ?>
+            <?php } ?>
         </ul>
-        
         <h4>History</h4>
         <ul class="list-group">
             <li class="list-group-item">
@@ -351,7 +329,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Next appt:</strong>
                 <?php
-                $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_scheduled DESC";
+                $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_scheduled DESC";
                 $next_q = mysqli_query($con,$next_sql);
                 $next_r = mysqli_fetch_assoc($next_q);
                 ?>
@@ -365,9 +343,9 @@ $last_r = mysqli_fetch_assoc($last_q);
                     $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                         LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
-                    
                     $referredby_my = mysqli_query($con, $referredby_sql);
                     $referredby_myarray = mysqli_fetch_array($referredby_my);
+
                     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
                     $referredbythis .= " - " . $referredby_myarray['contacttype'];
                     
@@ -376,8 +354,8 @@ $last_r = mysqli_fetch_assoc($last_q);
                     $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
                     $referredby_my = mysqli_query($con,$referredby_sql);
                     $referredby_myarray = mysqli_fetch_array($referredby_my);
+
                     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-                    
                     echo $referredbythis . " - Patient";
                 } else {
                     echo (!empty($dss_referred_labels[$rs]) ? $dss_referred_labels[$rs] : '').": ".$r['referred_notes'];
@@ -446,7 +424,6 @@ $last_r = mysqli_fetch_assoc($last_q);
                 ORDER BY ss.id ASC;";
             
             $result = mysqli_query($con,$sleepstudies);
-            $numsleepstudy = mysqli_num_rows($result);
             $baseline_sleepstudy = mysqli_fetch_assoc($result);
         }
         ?>
@@ -459,13 +436,13 @@ $last_r = mysqli_fetch_assoc($last_q);
             <li class="list-group-item">
                 <strong>Type:</strong>
                 <?php echo $baseline_sleepstudy['sleeptesttype']; ?>
-	            <?php if ($baseline_sleepstudy['filename'] != '') { ?>
-	                - <a href="/manage/admin/display_file.php?f=<?php echo $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
-	           <?php } ?>
-	        </li>
+                <?php if ($baseline_sleepstudy['filename'] != '') { ?>
+                    - <a href="/manage/admin/display_file.php?f=<?php echo $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
+                <?php } ?>
+            </li>
             <li class="list-group-item">
                 <strong>Most Recent:</strong>
-                <? if ($baseline_sleepstudy['date'] != '') { ?>
+                <?php if ($baseline_sleepstudy['date'] != '') { ?>
                     <?php echo time_ago_format(date('U') - strtotime($baseline_sleepstudy['date'])); ?> ago - <?php echo date('m/d/Y', strtotime($baseline_sleepstudy['date'])); ?>
                 <?php } ?>
             </li>
@@ -517,9 +494,7 @@ $last_r = mysqli_fetch_assoc($last_q);
                 STR_TO_DATE(ss.date, '%m%d%Y'),
                 STR_TO_DATE(ss.date, '%m%d%y')
             ) DESC, ss.id DESC";
-        
         $result = mysqli_query($con,$sleepstudies);
-        $numsleepstudy = mysqli_num_rows($result);
         $sleepstudy = mysqli_fetch_assoc($result);
         ?>
         <h4>Recent Titration</h4>
@@ -569,27 +544,16 @@ $last_r = mysqli_fetch_assoc($last_q);
         $my = mysqli_query($con, $sql);
         $myarray = mysqli_fetch_array($my);
         
-        $q_page2id = st($myarray['q_page2id']);
         $polysomnographic = st($myarray['polysomnographic']);
         $sleep_center_name_text = st($myarray['sleep_center_name_text']);
         $sleep_study_on = st($myarray['sleep_study_on']);
-        $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-        $rdi = st($myarray['rdi']);
-        $ahi = st($myarray['ahi']);
         $cpap = st($myarray['cpap']);
         $cur_cpap = st($myarray['cur_cpap']);
         $intolerance = st($myarray['intolerance']);
         $other_intolerance = st($myarray['other_intolerance']);
-        $other = st($myarray['other']);
-        $affidavit = st($myarray['affidavit']);
-        $type_study = st($myarray['type_study']);
         $nights_wear_cpap = st($myarray['nights_wear_cpap']);
         $percent_night_cpap = st($myarray['percent_night_cpap']);
-        $custom_diagnosis = st($myarray['custom_diagnosis']);
-        $sleep_study_by = st($myarray['sleep_study_by']);
-        $triedquittried = st($myarray['triedquittried']);
-        $timesovertime = st($myarray['timesovertime']);
-        
+
         if ($cpap == '') {
             $cpap = 'No';
         }

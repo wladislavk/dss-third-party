@@ -1,30 +1,20 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include __DIR__ . '/../admin/includes/main_include.php';
 include_once __DIR__ . '/sescheck.php';
 include_once __DIR__ . '/constants.inc';
-include __DIR__ . '/authorization_functions.php';
 include_once __DIR__ . '/general_functions.php';
-include __DIR__ . '/notifications.php';
-include __DIR__ . '/patient_changes.php';
+include __DIR__ . '/patient_changes_functions.php';
 include __DIR__ . '/claim_functions.php';
 include __DIR__ . '/edx_functions.php';
 include __DIR__ . '/help_functions.php';
 include __DIR__ . '/../admin/includes/claim_functions.php';
 
-function redirectToLogin()
-{ ?>
-    <script type="text/javascript">
-        alert("Members Area, Please Login");
-        window.location = "login.php";
-    </script>
-    <?php
-}
+$db = new Db();
 
-$sql = "SELECT homepage from dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-if (isset($db) && $db instanceof Db) {
-    $r = $db->getRow($sql);
-}
+$sql = "SELECT homepage from dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
+$r = $db->getRow($sql);
 
 if ($r['homepage'] != '1') {
     include_once 'top2.htm';
@@ -49,16 +39,6 @@ if ($r['homepage'] != '1') {
         $db->query($cur_ins_sql);
     }
 
-    $unload = 1;
-    if (
-        strpos($_SERVER['PHP_SELF'], 'q_page') === false &&
-        strpos($_SERVER['PHP_SELF'], 'ex_page') === false &&
-        strpos($_SERVER['PHP_SELF'], 'q_sleep') === false &&
-        strpos($_SERVER['PHP_SELF'], 'q_image') === false
-    ) {
-        $unload = 0;
-    }
-
     $docid = intval($_SESSION['docid']);
 
     $dental_letters_query = "
@@ -74,16 +54,8 @@ if ($r['homepage'] != '1') {
         )
         ORDER BY generated_date ASC;
     ";
-
-    $generated_date = $db->getRow($dental_letters_query);
     $pending_letters = $db->getNumberRows($dental_letters_query);
     $seconds_per_day = 86400;
-
-    $oldest_letter = 0;
-    if ($generated_date != 0) {
-        $timestamp = strtotime($generated_date['generated_date']);
-        $oldest_letter = floor((time() - $timestamp) / $seconds_per_day);
-    }
 
     $dental_letters_query = "
         SELECT COUNT(letterid) AS total
@@ -477,7 +449,7 @@ if ($r['homepage'] != '1') {
         if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
             $getstepqrysql = "
                 SELECT * FROM dental_flow_pg2 
-                WHERE patientid='".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' 
+                WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' 
                 LIMIT 1;
             ";
 
@@ -529,8 +501,8 @@ if ($r['homepage'] != '1') {
         $title = '';
         $sql = "
             select * from dental_patients 
-            where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
-            AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
+            where docid='".$db->escape($_SESSION['docid'])."' 
+            AND patientid='".$db->escape($_GET['pid'])."'
         ";
         $my = $db->getResults($sql);
         foreach ($my as $myarray) {
@@ -545,7 +517,7 @@ if ($r['homepage'] != '1') {
                 $title .= "Pre-medication: " . $myarray['premed']."\n";
             }
 
-            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid='".$db->escape($_GET['pid'])."'";
 
             $myq3array = $db->getRow($sqlq3);
             $allergen = $myq3array['allergenscheck'];
@@ -572,7 +544,7 @@ if ($r['homepage'] != '1') {
                     JOIN dental_users du ON dt.responsibleid=du.userid
                     LEFT JOIN dental_patients p ON p.patientid=dt.patientid
                     WHERE (dt.status = '0' OR dt.status IS NULL) 
-                    AND dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'
+                    AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
                 ";
                 $num_tasks = $db->getNumberRows($task_sql);
                 $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce + $num_unsigned + $num_pending_duplicates;
@@ -603,7 +575,7 @@ if ($r['homepage'] != '1') {
                     JOIN dental_users du ON dt.responsibleid=du.userid
                     LEFT JOIN dental_patients p ON p.patientid=dt.patientid
                     WHERE (dt.status = '0' OR dt.status IS NULL) 
-                    AND dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'
+                    AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
                 ";
                 $num_tasks = $db->getNumberRows($task_sql); ?>
                 <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
@@ -615,12 +587,12 @@ if ($r['homepage'] != '1') {
                         $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
                         if (date('N') == 7) {
                             $this_sun = date('Y-m-d');
-                            $next_mon = date('Y-m-d',  strtotime("next Tuesday"));
-                            $next_sun = date('Y-m-d',  strtotime("next Sunday"));
+                            $next_mon = date('Y-m-d', strtotime("next Tuesday"));
+                            $next_sun = date('Y-m-d', strtotime("next Sunday"));
                         } else {
-                            $this_sun = date('Y-m-d',  strtotime("next Sunday"));
-                            $next_mon = date('Y-m-d',  strtotime("next Monday"));
-                            $next_sun = date('Y-m-d',  strtotime("next Sunday + 1 week"));
+                            $this_sun = date('Y-m-d', strtotime("next Sunday"));
+                            $next_mon = date('Y-m-d', strtotime("next Monday"));
+                            $next_sun = date('Y-m-d', strtotime("next Sunday + 1 week"));
                         }
 
                         $tw_sql = $task_sql . " AND dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND '".$this_sun."'";
@@ -796,7 +768,7 @@ if ($r['homepage'] != '1') {
                 </div>
                 <?php
                 if ($_SESSION['docid'] == $_SESSION['userid']) {
-                    $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+                    $course_sql = "SELECT use_course FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
                     $course_r = $db->getRow($course_sql);
                     if ($course_r['use_course'] == 1) { ?>
                         <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
@@ -807,7 +779,7 @@ if ($r['homepage'] != '1') {
                     $course_sql = "
                         SELECT s.use_course, d.use_course_staff FROM dental_users s
                         JOIN dental_users d ON d.userid = s.docid
-                        WHERE s.userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'
+                        WHERE s.userid='".$db->escape($_SESSION['userid'])."'
                     ";
                     $course_r = $db->getRow($course_sql);
                     if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1) { ?>
@@ -883,10 +855,10 @@ if ($r['homepage'] != '1') {
                                 LEFT JOIN dental_patients p ON p.patientid=dt.patientid 
                                 WHERE (dt.status = '0' OR dt.status IS NULL) 
                                 AND (
-                                    du.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
-                                    OR du.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
+                                    du.docid='".$db->escape($_SESSION['docid'])."' 
+                                    OR du.userid='".$db->escape($_SESSION['docid'])."'
                                 ) 
-                                AND dt.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'
+                                AND dt.patientid='".$db->escape($_GET['pid'])."'
                             ";
                             $t_num_sql = $t_sql;
                             $num_pat_tasks = $db->getNumberRows($t_num_sql);
@@ -1087,9 +1059,9 @@ if ($r['homepage'] != '1') {
                         <div id="patient_warnings" <?= (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid']) ? 'style="display:none;"' : '';?>>
                         <?php
                         if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
-                            $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+                            $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
                             $pat = $db->getRow($s);
-                            $n = count($pat);
+
                             $n = num_patient_changes($_GET['pid']);
                             $contacts_sql = "
                                 SELECT 
@@ -1107,16 +1079,16 @@ if ($r['homepage'] != '1') {
                                     p.lastname as patlastname
                                 FROM dental_patient_contacts pc 
                                 INNER JOIN dental_patients p ON pc.patientid=p.patientid
-                                WHERE p.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
-                                AND p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'
+                                WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
+                                AND p.patientid='".$db->escape($_GET['pid'])."'
                             ";
                             $total_contacts = $db->getNumberRows($contacts_sql);
                             $insurance_sql = "
                                 SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname 
                                 FROM dental_patient_insurance pi 
                                 INNER JOIN dental_patients p ON pi.patientid=p.patientid 
-                                WHERE p.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
-                                AND p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'
+                                WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
+                                AND p.patientid='".$db->escape($_GET['pid'])."'
                             ";
                             $total_insurance = $db->getNumberRows($insurance_sql);
                             if (($n + $total_contacts + $total_insurance) > 0) { ?>
@@ -1128,7 +1100,7 @@ if ($r['homepage'] != '1') {
                             $exist_sql = "
                                 SELECT symptoms_status, treatments_status, history_status 
                                 FROM dental_patients 
-                                WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
+                                WHERE patientid='".$db->escape($_GET['pid'])."'
                             ";
                             $exist_row = $db->getRow($exist_sql);
                             if (
@@ -1146,7 +1118,7 @@ if ($r['homepage'] != '1') {
                                 </a>
                                 <?php
                             }
-                            $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+                            $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".$db->escape($_GET['pid'])."'";
                             if ($db->getNumberRows($email_sql) > 0) { ?>
                                 <a class="warning" href="add_patient.php?ed=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1">
                                     <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
@@ -1156,7 +1128,7 @@ if ($r['homepage'] != '1') {
                             $rc_sql = "
                                 SELECT * FROM dental_insurance WHERE 
                                 (status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
-                                AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
+                                AND patientid='".$db->escape($_GET['pid'])."'
                             ";
                             $rc_q = $db->getResults($rc_sql);
                             $rc_num = count($rc_q);
@@ -1183,7 +1155,7 @@ if ($r['homepage'] != '1') {
                                         AND (viewed IS NULL OR viewed = 0)
                                     )
                                 )
-                                AND patient_id = '".mysqli_real_escape_string($con,$_GET['pid'])."'
+                                AND patient_id = '".$db->escape($_GET['pid'])."'
                             ";
                             $rc_q = $db->getResults($rc_sql);
                             $pat_hst_num_uncompleted = count($rc_q);
@@ -1222,7 +1194,7 @@ if ($r['homepage'] != '1') {
                     </div>
                     <?php
                 }
-                $sql = "SELECT use_letters from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
+                $sql = "SELECT use_letters from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
                 $r = $db->getRow($sql);
                 $use_letters = ($r['use_letters'] == '1');
     // closing html tags missing

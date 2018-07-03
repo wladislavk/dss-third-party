@@ -6,9 +6,8 @@ require_once __DIR__ . '/admin/includes/report-claim-functions.php';
 
 $isBackOffice = !empty($is_back_office) || empty($is_front_office);
 
-for ($lowerLimit=0; $lowerLimit<=120; $lowerLimit+=30) {
+for ($lowerLimit = 0; $lowerLimit <= 120; $lowerLimit += 30) {
     $upperLimit = $lowerLimit == 120 ? 0 : $lowerLimit + 29;
-
     ?>
     <span class="<?= $isBackOffice ? 'lead' : 'admin_head' ?>">
         <?= $lowerLimit . ($upperLimit ? "-$upperLimit" : '+') ?> Days

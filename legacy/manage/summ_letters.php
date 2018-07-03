@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'includes/patient_info.php';
 include_once 'admin/includes/general.htm';
 ?>
@@ -36,10 +38,10 @@ if (isset($patient_info) && $patient_info) {
             return ($word_lista[0] < $word_listb[0]) ? -1 : 1;
         }
         if (is_numeric($word_lista[0])) {
-  		    return -1;
+            return -1;
         }
         if (is_numeric($word_listb[0])) {
-  		    return 1;
+            return 1;
         }
         return strcmp($a['sentto'], $b['sentto']);
     }
@@ -107,11 +109,12 @@ if (isset($patient_info) && $patient_info) {
 
     $page = '0';
     $page_limit = '10';
-    $column = 'letterid';
     $filter = "%";
 
+    $db = new Db();
+
     if (isset($_GET['filter'])) {
-        $filter = mysqli_real_escape_string($con, $_GET['filter']);
+        $filter = $db->escape( $_GET['filter']);
     }
 
     if (!isset($_REQUEST['sort'])) {
@@ -204,38 +207,34 @@ if (isset($patient_info) && $patient_info) {
 
     if ($dental_letters) {
         foreach ($dental_letters as $key => $letter) {
-    	    // Get Correspondence Column
+            // Get Correspondence Column
             $subject = '';
-    	    if ($letter['template_type'] == '0') {
-    	        foreach ($templates as $template) {
-    	            if ($template['id'] == $letter['templateid']) {
-    	                $subject = $template['name'];
+            if ($letter['template_type'] == '0') {
+                foreach ($templates as $template) {
+                    if ($template['id'] == $letter['templateid']) {
+                        $subject = $template['name'];
                     }
                 }
-    	    } else {
+            } else {
                 foreach ($customTemplates as $template) {
                     if ($template['id'] == $letter['templateid']) {
                         $subject = $template['name'];
                     }
                 }
-    	    }
-    	    $dental_letters[$key]['id'] = $letter['letterid'];
-    	    $dental_letters[$key]['mailed'] = $letter['mailed_date'];
-    	    $dental_letters[$key]['mailed_once'] = $letter['mailed_once'];
-    	    if (!empty($letter['pdf_path']) && $letter['status'] != 0) {
-    		    $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
-    	    } else {
-    		    $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
-    	    }
-    	    $dental_letters[$key]['subject'] = $subject;
-    	    if ($letter['templateid'] == 99) {
-    		    $dental_letters[$key]['subject'] = "User Generated";
-    	    }
-    	    // Get Recipients for Sent to Column
-            if (isset($referredSources[$letter['patientid']])) {
-                $source = $referredSources[$letter['patientid']];
             }
-    	    $contacts = get_contact_info(
+            $dental_letters[$key]['id'] = $letter['letterid'];
+            $dental_letters[$key]['mailed'] = $letter['mailed_date'];
+            $dental_letters[$key]['mailed_once'] = $letter['mailed_once'];
+            if (!empty($letter['pdf_path']) && $letter['status'] != 0) {
+                $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
+            } else {
+                $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
+            }
+            $dental_letters[$key]['subject'] = $subject;
+            if ($letter['templateid'] == 99) {
+                $dental_letters[$key]['subject'] = "User Generated";
+            }
+            $contacts = get_contact_info(
                 (($letter['topatient'] == "1") ? $letter['patientid'] : ''),
                 $letter['md_list'],
                 $letter['md_referral_list'],
@@ -276,17 +275,17 @@ if (isset($patient_info) && $patient_info) {
                     }
                 }
             }
-     	    $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null)) + count((!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : null));
+            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null)) + count((!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : null));
             $dental_letters[$key]['total_contacts'] = $total_contacts;
-    	    if ($total_contacts > 1) {
-    		    $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
-    		    $dental_letters[$key]['patient'] = (!empty($contacts['patient']) ? $contacts['patient'] : '');
-    		    $dental_letters[$key]['mds'] = (!empty($contacts['mds']) ? $contacts['mds'] : '');
-    		    $dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
-    		    $dental_letters[$key]['pat_referrals'] = (!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : '');
-    	    } elseif ($total_contacts == 0) {
-    		    $dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
-    	    } else {
+            if ($total_contacts > 1) {
+                $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
+                $dental_letters[$key]['patient'] = (!empty($contacts['patient']) ? $contacts['patient'] : '');
+                $dental_letters[$key]['mds'] = (!empty($contacts['mds']) ? $contacts['mds'] : '');
+                $dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
+                $dental_letters[$key]['pat_referrals'] = (!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : '');
+            } elseif ($total_contacts == 0) {
+                $dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
+            } else {
                 // Patient: Salutation Lastname, Firstname
                 $dental_letters[$key]['sentto'] = '';
                 $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
@@ -409,8 +408,8 @@ if (isset($patient_info) && $patient_info) {
         SELECT * FROM dental_faxes 
         WHERE sfax_completed=1 
         AND sfax_status=2 
-        AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' 
-        AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
+        AND patientid='".$db->escape( $_GET['pid'])."' 
+        AND docid='".$db->escape( $_SESSION['docid'])."' 
         AND viewed=0;
     ";
     $f_num = $db->getNumberRows($f_sql);
@@ -423,7 +422,7 @@ if (isset($patient_info) && $patient_info) {
     <div style="padding-left: 15px;">
         <h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
         <?php
-        $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+        $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
         $let_r = $db->getRow($let_sql);
         if ($let_r['use_letters']) { ?>
             <div style="float: right;margin:20px 40px 0 0;">
@@ -475,7 +474,6 @@ if (isset($patient_info) && $patient_info) {
         $i = $page_limit * $page1;
         $end = $i + $page_limit;
         while ($i < count($pending_letters) && $i < $end) {
-            $userid = $pending_letters[$i]['userid'];
             $url = $pending_letters[$i]['url'];
             $id = $pending_letters[$i]['id'];
             $subject = $pending_letters[$i]['subject'];
@@ -574,9 +572,7 @@ if (isset($patient_info) && $patient_info) {
                 $id = $sent_letters[$i]['id'];
                 $mailed = $sent_letters[$i]['mailed'];
                 $alert = null;
-                if (!empty($sent_letters[$i]['old'])) {
-                    $alert = " bgcolor=\"#FF9696\"";
-                } ?>
+                ?>
                 <tr>
                     <td><?= $userid ?></td>
                     <td><a href="<?= $url ?>"><?= $subject ?></a></td>

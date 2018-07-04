@@ -47,10 +47,11 @@ if (isset($my)) { ?>
                     if ($user['userid'] == $dentalNote['userid']) {
                         $theUser = $user;
                     }
+                }
                 $tr_class = "tr_active";
 
                 try {
-                    $soapNote = json_decode($myarray['notes'], true);
+                    $soapNote = json_decode($dentalNote['notes'], true);
                 } catch (\Exception $e) {
                     $soapNote = null;
                 }
@@ -136,5 +137,4 @@ if (isset($my)) { ?>
         ?>
     </table>
     <?php
-    }
 } ?>

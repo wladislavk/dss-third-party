@@ -801,7 +801,7 @@ $joints = $db->getResults("SELECT *
 <br /><br />
 <?php include __DIR__ . '/includes/vue-setup.htm'; ?>
 <link rel="stylesheet" href="/assets/css/components/muscle-palpation-selector.css" />
-<script type="text/javascript" src="/assets/app/components/muscle-palpation-selector.js?v=20180502"></script>
+<script type="text/javascript" src="/assets/app/components/muscle-palpation-selector.js?v=20180701"></script>
 <script type="text/javascript" src="/assets/app/patient/exams/tmj-rom.js?v=20180406"></script>
 <script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <?php include "includes/bottom.htm";?>

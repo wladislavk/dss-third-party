@@ -103,14 +103,15 @@ class DoctorPalpationsController extends BaseRestController
     {
         $this->validate($this->request, $this->request->storeRules());
         $dataArray = $this->request->payload();
-
+        $docId = $this->user()->normalizedDocId();
         $this->repository
-            ->deleteWhere([$this->filterByDoctorKey => $this->user()->docid])
+            ->deleteWhere([$this->filterByDoctorKey => $docId])
         ;
 
         foreach ($dataArray['palpation'] as $each) {
             $data = [
                 'palpationid' => $each['palpationid'],
+                'doc_id' => $docId,
                 'sortby' => $each['sortby'],
             ];
             /** @var \DentalSleepSolutions\Eloquent\Models\AbstractModel $resource */

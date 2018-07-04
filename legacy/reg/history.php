@@ -213,7 +213,8 @@ if ($_POST['q_page3sub'] == 1) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $qPage3Id = mysqli_fetch_field($exist_q);
+        $qPage3Result = mysqli_fetch_assoc($exist_q);
+        $qPage3Id = $qPage3Result['q_page3id'];
         $ed_sql = "update dental_q_page3 set 
             allergens = '".s_for($allergens_arr)."',
             allergenscheck = '".s_for($allergenscheck)."',

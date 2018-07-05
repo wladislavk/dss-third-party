@@ -41,8 +41,7 @@ RUN set -x \
     && composer install -d $LOADER_PATH \
     # Fix permissions
     && chown -R apache ${DOCUMENT_ROOT} \
-    && chown -R apache ${SHARED_PATH} \
-    && chmod -R 0777 $LEGACY_PATH/manage/3rdParty/tcpdf/cache
+    && chown -R apache ${SHARED_PATH}
 
 # Custom apache configs for the project
 # NOTE this config is here so as not create extra files in the legacy codebase
@@ -58,3 +57,14 @@ CustomLog "/dev/stdout" common\n\
     AliasMatch "^/(.*\.)(css|js|map|json|bmp|cur|gif|jpg|jpeg|png|tif|swf|svg|pdf|eot|ttf|woff|xml)$" "${LEGACY_PATH}/$1$2"\n\
 </VirtualHost>\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
+
+# Create entrypoint script, make it executable
+RUN /bin/echo -e "#!/bin/bash\n\
+set -e\n\
+chmod -R 0777 ${LEGACY_PATH}/manage/3rdParty/tcpdf/cache\n\
+chmod -R 0777 ${LOADER_PATH}/storage\n\
+exec "$@"  -D FOREGROUND\n\
+" > /usr/sbin/docker-entrypoint.sh \
+    && chmod +x /usr/sbin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/sbin/docker-entrypoint.sh"]

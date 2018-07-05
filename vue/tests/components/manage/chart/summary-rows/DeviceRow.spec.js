@@ -85,13 +85,14 @@ describe('DeviceRow component', () => {
     selector.value = '1'
     selector.dispatchEvent(new Event('change'))
     moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.config.data).not.toBeUndefined()
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const firstRequest = requestResults[0]
+      expect(firstRequest.hasOwnProperty('body')).toBe(true)
       const expectedData = {
         device_id: '1'
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(firstRequest.body).toEqual(expectedData)
       done()
     })
   })

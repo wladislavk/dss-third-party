@@ -73,7 +73,10 @@ describe('ScreenerDiagnoses', () => {
     nextButton.click()
 
     moxios.wait(() => {
-      const request = moxios.requests.mostRecent()
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).not.toBe(0)
+      const lastRequest = requestResults[requestResults.length - 1]
+      expect(lastRequest.hasOwnProperty('body')).toBe(true)
       const expectedRequest = {
         docid: 0,
         userid: 0,
@@ -116,7 +119,7 @@ describe('ScreenerDiagnoses', () => {
         rx_heartburn: 0,
         rx_afib: 0
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedRequest)
+      expect(lastRequest.body).toEqual(expectedRequest)
 
       expect(nextButton.classList.contains('disabled')).toBe(true)
       expect(vm.$router.currentRoute.name).toBe('screener-results')

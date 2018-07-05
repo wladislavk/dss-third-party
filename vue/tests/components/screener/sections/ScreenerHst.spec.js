@@ -89,8 +89,10 @@ describe('ScreenerHST', () => {
       submitButton.click()
 
       moxios.wait(() => {
-        const request = moxios.requests.mostRecent()
-        expect(request.config.data).not.toBeUndefined()
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).not.toBe(0)
+        const lastRequest = requestResults[requestResults.length - 1]
+        expect(lastRequest.hasOwnProperty('body')).toBe(true)
         const expectedData = {
           screener_id: 1,
           doc_id: 2,
@@ -102,7 +104,7 @@ describe('ScreenerHST', () => {
           patient_email: 'foo@bar.com',
           patient_dob: '08/25/1985'
         }
-        expect(JSON.parse(request.config.data)).toEqual(expectedData)
+        expect(lastRequest.body).toEqual(expectedData)
         expect(store.state.screener[symbols.state.contactData][0].value).toBe('')
         expect(vm.$router.currentRoute.name).toBe('screener-intro')
         done()

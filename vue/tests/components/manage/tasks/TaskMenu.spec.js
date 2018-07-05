@@ -38,7 +38,7 @@ describe('TaskMenu component', () => {
   it('should show HTML', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(function () {
+    moxios.wait(() => {
       const taskCount = vm.$el.querySelector('span#task_count')
       expect(taskCount.textContent).toBe('2')
       const children = vm.$el.querySelectorAll('div.task-data')
@@ -52,7 +52,7 @@ describe('TaskMenu component', () => {
   it('should fire onMouseEnter and onMouseLeave', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(function () {
+    moxios.wait(() => {
       const taskMenu = vm.$el
       const taskList = vm.$el.querySelector('div#task_list')
       expect(taskList.style.display).toBe('none')

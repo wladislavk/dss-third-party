@@ -1,13 +1,14 @@
 FROM debian:9.3
 
+ARG SYSTEM_TZ
+
 # Directories for custom php and httpd packages
 ENV _RH_HTTPD=/etc/apache2 \
     _RH_PHP=/php/7.2
 ENV _RH_PHP_D=/etc${_RH_PHP}
 
 # Set Timezone
-ENV TZ=America/New_York
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 RUN set -xe \
     && apt-get update
@@ -72,7 +73,9 @@ RUN set -xe \
     && gpg --verify phpunit.phar.asc phpunit.phar \
     # Install and cleanup
     && mv phpunit.phar /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit \
-    && rm -rf /opt/tmp
+    && rm -rf /opt/tmp \
+    # Customize php setup
+    && echo $'short_open_tag = On\ndate.timezone = '"${SYSTEM_TZ}" > "${_RH_PHP_D}/custom.ini"
 
 ENV \
     # Set variables exactly as in /opt/rh/rh-php72/enable, to do not source manually

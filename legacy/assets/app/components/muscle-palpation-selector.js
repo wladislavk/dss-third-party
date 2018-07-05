@@ -168,7 +168,7 @@ var MusclePalpationSelectorComponent = Vue.extend({
       }
 
       this.updateOrder = false
-      this.$http.post(this.apiEndPoints.order, data, {})
+      this.$http.post(this.apiEndPoints.order + '/bulk', data, {})
     },
     setToValueCallback: function (value) {
       var muscles = this.$get('filteredMuscles')

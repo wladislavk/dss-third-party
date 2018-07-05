@@ -9,7 +9,7 @@ return [
     'lanApiUrl' => env('LAN_API_URL', 'http://api/'),
     'domain' => env('APP_URL_NAME', 'DentalSleepSolutions.com'),
     'name' => env('APP_NAME', 'Dental Sleep Solutions'),
-    'timezone' => 'US/Eastern',
+    'timezone' => env('SYSTEM_TZ_ENV', 'US/Eastern'),
     'locale' => 'en',
     'fallback_locale' => 'en',
     'key' => env('APP_KEY'),

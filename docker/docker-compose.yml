@@ -9,19 +9,27 @@ services:
     build: 
       context: ../legacy
       dockerfile: Dockerfile.mysql
+      args:
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_DATABASE: homestead
       MYSQL_USER: homestead
       MYSQL_PASSWORD: secret
+      TZ: "${SYSTEM_TZ:-America/New_York}"
     labels:
       - "traefik.enable=false"
     ports:
       - "${MYSQL_PORT:-3306}:3306"
 
   baseimage:
-    build: .
+    build:
+      context: .
+      args:
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
+    environment:
+      SYSTEM_TZ_ENV: "${SYSTEM_TZ:-America/New_York}"
     command: bash -c 'yum list installed | grep -e php56 -e mcrypt -e pdf -e httpd24'
     labels:
       - "traefik.enable=false"
@@ -33,6 +41,7 @@ services:
       args:
         LEGACY_DIR: legacy
         LOADER_DIR: loader
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
     env_file: ../loader/.env.example
     environment:
@@ -63,6 +72,8 @@ services:
     build:
       context: ../api
       dockerfile: Dockerfile
+      args:
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     env_file: ../api/.env.example
     environment:
       DB_HOST: db
@@ -99,6 +110,8 @@ services:
     build:
       context: ../acceptance
       dockerfile: Dockerfile
+      args:
+        SYSTEM_TZ: "${SYSTEM_TZ:-America/New_York}"
     environment:
       NODE_ENV: development
       PORT: 80
@@ -149,7 +162,7 @@ services:
     image: "selenium/standalone-chrome:2.53.1"
     # shm_size: 1g
     environment:
-      TZ: 'US/Eastern'
+      TZ: "${SYSTEM_TZ:-America/New_York}"
     volumes:
       - "/dev/shm:/dev/shm"
     ports:

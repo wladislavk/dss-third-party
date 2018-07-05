@@ -5,9 +5,6 @@
 window.successAction = null
 window.errorAction = null
 window.userTimeZone = moment.tz.guess()
-window.systemTimeZone = 'America/New_York'
-
-moment.tz.setDefault(window.systemTimeZone)
 
 var apiToken = $('#dom-api-token').val()
 

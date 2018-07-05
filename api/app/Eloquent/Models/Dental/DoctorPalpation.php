@@ -43,6 +43,7 @@ class DoctorPalpation extends AbstractModel
      */
     protected $fillable = [
         'palpationid',
+        'doc_id',
         'sortby',
     ];
 

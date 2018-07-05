@@ -834,9 +834,12 @@ if (isset($msg) && $msg != '') {
     $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".(!empty($_GET['pid']) ? $_GET['pid'] : -1);
     $maxIdRow = $db->getRow($maxIdSql);
     $maxId = $maxIdRow['max_summaryid'];
-    $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
-    $loc_r = $db->getRow($loc_sql);
-    $location = $loc_r['location'];
+    $location = -1;
+    if ($maxId) {
+        $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
+        $loc_r = $db->getRow($loc_sql);
+        $location = $loc_r['location'];
+    }
 }
 
 // Check if required information is filled out

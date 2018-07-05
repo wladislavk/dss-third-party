@@ -716,14 +716,16 @@ function create_letter_pdf($letterid)
     $logo = $result['logo'];
     $user_type = $result['user_type'];
 
-    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=".mysqli_real_escape_string($GLOBALS['con'], $patientid);
-    $maxIdRow = $db->getRow($maxIdSql);
     $locationId = 0;
-    if ($maxIdRow && $maxIdRow['max_summaryid']) {
-        $maxId = $maxIdRow['max_summaryid'];
-        $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
-        $loc_r = $db->getRow($loc_sql);
-        $locationId = $loc_r['location'];
+    if ($patientid) {
+        $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=" . mysqli_real_escape_string($GLOBALS['con'], $patientid);
+        $maxIdRow = $db->getRow($maxIdSql);
+        if ($maxIdRow && $maxIdRow['max_summaryid']) {
+            $maxId = $maxIdRow['max_summaryid'];
+            $loc_sql = "SELECT location FROM dental_summary where summaryid=$maxId";
+            $loc_r = $db->getRow($loc_sql);
+            $locationId = $loc_r['location'];
+        }
     }
     if ($patientid != '' && $locationId != '' && $locationId != '0') {
         $location_query = "SELECT * FROM dental_locations WHERE id='".$db->escape($locationId)."' AND docid='".$db->escape($docid)."'";

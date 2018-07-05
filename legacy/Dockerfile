@@ -41,7 +41,8 @@ RUN set -x \
     && composer install -d $LOADER_PATH \
     # Fix permissions
     && chown -R apache ${DOCUMENT_ROOT} \
-    && chown -R apache ${SHARED_PATH}
+    && chown -R apache ${SHARED_PATH} \
+    && chmod -R 0777 $LEGACY_PATH/manage/3rdParty/tcpdf/cache
 
 # Custom apache configs for the project
 # NOTE this config is here so as not create extra files in the legacy codebase

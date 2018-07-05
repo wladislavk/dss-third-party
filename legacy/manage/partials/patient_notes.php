@@ -47,6 +47,7 @@ if (isset($my)) { ?>
                     if ($user['userid'] == $dentalNote['userid']) {
                         $theUser = $user;
                     }
+                }
                 $tr_class = "tr_active";
 
                 try {
@@ -135,6 +136,5 @@ if (isset($my)) { ?>
         }
     } ?>
     </table>
-<?php
-}
-?>
+    <?php
+} ?>

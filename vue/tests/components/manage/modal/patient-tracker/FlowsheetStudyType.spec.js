@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import symbols from '../../../../../src/symbols'
 import FlowsheetStudyTypeComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetStudyType.vue'
@@ -65,7 +64,7 @@ describe('FlowsheetStudyType component', () => {
     vm.$nextTick(() => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const requestResults = this.testCase.getRequestResults()
         expect(requestResults.length).toBe(2)
         const expectedFirst = {

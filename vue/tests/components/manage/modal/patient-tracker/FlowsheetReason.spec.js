@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import FlowsheetReasonComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetReason.vue'
 import symbols from 'src/symbols'
@@ -65,7 +64,7 @@ describe('FlowsheetReason component', () => {
     vm.$nextTick(() => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const requestResults = this.testCase.getRequestResults()
         expect(requestResults.length).toBe(2)
         const expectedFirst = {
@@ -98,7 +97,7 @@ describe('FlowsheetReason component', () => {
     vm.$nextTick(() => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const requestResults = this.testCase.getRequestResults()
         expect(requestResults.length).toBe(2)
         const expectedFirst = {

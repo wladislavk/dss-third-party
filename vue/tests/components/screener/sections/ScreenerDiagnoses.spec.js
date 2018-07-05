@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerDiagnosesComponent from '../../../../src/components/screener/sections/ScreenerDiagnoses.vue'
 import store from '../../../../src/store'
@@ -72,7 +71,7 @@ describe('ScreenerDiagnoses', () => {
 
     nextButton.click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).not.toBe(0)
       const lastRequest = requestResults[requestResults.length - 1]
@@ -141,7 +140,7 @@ describe('ScreenerDiagnoses', () => {
     const cpapButtonId = store.state.screener[symbols.state.cpap].name + '1'
     vm.$el.querySelector('input#' + cpapButtonId).click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
       expect(store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(0)
       done()

@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import TrackerStepComponent from '../../../../src/components/manage/chart/TrackerStep.vue'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -74,7 +73,7 @@ describe('TrackerStep component', () => {
 
     const link = vm.$el.querySelector('a')
     link.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
       const expectedFirst = {

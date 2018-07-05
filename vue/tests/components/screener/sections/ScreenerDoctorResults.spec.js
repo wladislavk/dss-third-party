@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import ScreenerDoctorResultsComponent from '../../../../src/components/screener/sections/ScreenerDoctorResults.vue'
 import symbols from '../../../../src/symbols'
@@ -62,7 +61,7 @@ describe('ScreenerDoctorResults component', () => {
 
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const epworthProps = {
         1: 1,
         2: 0,

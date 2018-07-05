@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import DeviceSelectorComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSelector.vue'
 import store from '../../../../../src/store'
 import endpoints from '../../../../../src/endpoints'
@@ -38,7 +37,7 @@ describe('DeviceSelector component', () => {
   it('shows device selector', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deviceSelectorTitle = vm.$el.querySelector('h2#device-selector-title')
       const expectedTitle = 'Device C-Lect'
       expect(deviceSelectorTitle.textContent).toBe(expectedTitle)
@@ -52,7 +51,7 @@ describe('DeviceSelector component', () => {
     store.state.main[symbols.state.modal].params.patientName = 'John'
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deviceSelectorTitle = vm.$el.querySelector('h2#device-selector-title')
       const expectedTitle = 'Device C-Lect for John?'
       expect(deviceSelectorTitle.textContent).toBe(expectedTitle)

@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import AppointmentSummaryRowComponent from '../../../../src/components/manage/chart/AppointmentSummaryRow.vue'
 import {
   BASELINE_TEST_ID,
@@ -149,7 +148,7 @@ describe('AppointmentSummaryRow component', () => {
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.alertText).toBe('')
 
       const requestResults = this.testCase.getRequestResults()
@@ -173,7 +172,8 @@ describe('AppointmentSummaryRow component', () => {
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
     vm.$nextTick(() => {
-      expect(moxios.requests.count()).toBe(0)
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(0)
       done()
     })
   })

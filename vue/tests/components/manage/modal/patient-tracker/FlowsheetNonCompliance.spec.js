@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import symbols from '../../../../../src/symbols'
 import FlowsheetNonComplianceComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetNonCompliance.vue'
@@ -50,7 +49,7 @@ describe('FlowsheetNonCompliance component', () => {
     vm.$nextTick(() => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const requestResults = this.testCase.getRequestResults()
         expect(requestResults.length).toBe(2)
         const expectedFirst = {
@@ -83,7 +82,7 @@ describe('FlowsheetNonCompliance component', () => {
     vm.$nextTick(() => {
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const expectedModal = {
           name: symbols.modals.flowsheetReason,
           params: {

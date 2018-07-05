@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import EdxCertificateComponent from '../../../../src/components/manage/education/EdxCertificate.vue'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -39,7 +38,7 @@ describe('EdxCertificate component', () => {
   it('should show certificate links', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const children = vm.$el.querySelectorAll('ul li a')
       expect(children.length).toEqual(2)
       expect(children[0].getAttribute('href')).toEqual('http://some_url.com')

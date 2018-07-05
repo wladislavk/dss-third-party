@@ -192,6 +192,10 @@ export default class ComponentTestCase {
     return vm
   }
 
+  wait (callback) {
+    moxios.wait(callback)
+  }
+
   reset () {
     store.replaceState(this.originalState)
     moxios.uninstall()

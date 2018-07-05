@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import DashboardMessagesComponent from '../../../../src/components/manage/dashboard/DashboardMessages.vue'
 import TestCase from '../../../cases/ComponentTestCase'
 
@@ -31,7 +30,7 @@ describe('DashboardMessages component', () => {
 
     const vm = this.testCase.mount()
 
-    moxios.wait(function () {
+    this.testCase.wait(() => {
       const items = vm.$el.querySelectorAll('div.task_menu > ul > li')
       expect(items.length).toBe(2)
       expect(items[0].innerHTML).toBe('memo 1')

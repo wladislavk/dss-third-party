@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import moment from 'moment'
 import store from '../../../../src/store'
 import TrackerSectionTwoComponent from '../../../../src/components/manage/chart/TrackerSectionTwo.vue'
@@ -92,7 +91,7 @@ describe('TrackerSectionTwo component', () => {
     const stepSelector = vm.$el.querySelector('select#next_step')
     stepSelector.value = '2'
     stepSelector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(datePicker.getAttribute('disabled')).toBeNull()
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
@@ -128,7 +127,7 @@ describe('TrackerSectionTwo component', () => {
     expect(stepSelector.value).toBe('1')
     stepSelector.value = '2'
     stepSelector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(3)
       const expectedFirst = {
@@ -163,7 +162,7 @@ describe('TrackerSectionTwo component', () => {
     expect(trackerNotes.value).toBe('')
     trackerNotes.value = 'foo'
     trackerNotes.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
       const expectedFirst = {

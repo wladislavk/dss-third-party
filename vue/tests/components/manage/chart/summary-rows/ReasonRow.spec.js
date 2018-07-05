@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
 import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
@@ -80,14 +79,15 @@ describe('ReasonRow component', () => {
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.config.data).not.toBeUndefined()
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const firstRequest = requestResults[0]
+      expect(firstRequest.hasOwnProperty('body')).toBe(true)
       const expectedData = {
         delay_reason: 'dental work'
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(firstRequest.body).toEqual(expectedData)
       expect(this.testCase.confirmText).toBe('')
       done()
     })
@@ -104,10 +104,11 @@ describe('ReasonRow component', () => {
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.config.data).not.toBeUndefined()
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const firstRequest = requestResults[0]
+      expect(firstRequest.hasOwnProperty('body')).toBe(true)
       expect(this.testCase.confirmText).not.toBe('')
       done()
     })
@@ -122,7 +123,8 @@ describe('ReasonRow component', () => {
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
     vm.$nextTick(() => {
-      expect(moxios.requests.count()).toBe(0)
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(0)
       done()
     })
   })

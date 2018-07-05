@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerDoctorComponent from '../../../../src/components/screener/sections/ScreenerDoctor.vue'
 import store from '../../../../src/store'
@@ -28,7 +27,7 @@ describe('ScreenerDoctor component', () => {
   it('should display results', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const riskImage = vm.$el.querySelector('div#risk_image_doc > img').getAttribute('src')
       expect(riskImage).toContain('screener-low_risk')
 

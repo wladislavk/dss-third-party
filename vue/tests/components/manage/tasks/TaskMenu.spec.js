@@ -1,6 +1,5 @@
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import TaskMenuComponent from '../../../../src/components/manage/tasks/TaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
@@ -38,7 +37,7 @@ describe('TaskMenu component', () => {
   it('should show HTML', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const taskCount = vm.$el.querySelector('span#task_count')
       expect(taskCount.textContent).toBe('2')
       const children = vm.$el.querySelectorAll('div.task-data')
@@ -52,7 +51,7 @@ describe('TaskMenu component', () => {
   it('should fire onMouseEnter and onMouseLeave', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const taskMenu = vm.$el
       const taskList = vm.$el.querySelector('div#task_list')
       expect(taskList.style.display).toBe('none')

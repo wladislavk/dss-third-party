@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import ImpressionDeviceComponent from '../../../../src/components/manage/modal/ImpressionDevice.vue'
 import symbols from '../../../../src/symbols'
@@ -49,7 +48,7 @@ describe('ImpressionDevice component', () => {
     expect(helpMeLink.getAttribute('href')).toContain('manage/device_guide.php?pid=42&id=1')
     let deviceOptions = vm.$el.querySelectorAll('option')
     expect(deviceOptions.length).toBe(1)
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       deviceOptions = vm.$el.querySelectorAll('option')
       expect(deviceOptions.length).toBe(3)
       const firstDevice = deviceOptions[1]
@@ -81,14 +80,14 @@ describe('ImpressionDevice component', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deviceSelect = vm.$el.querySelector('select')
       deviceSelect.value = '2'
       deviceSelect.dispatchEvent(new Event('change'))
       vm.$nextTick(() => {
         const submitButton = vm.$el.querySelector('input')
         submitButton.click()
-        moxios.wait(() => {
+        this.testCase.wait(() => {
           const requestResults = this.testCase.getRequestResults()
           expect(requestResults.length).toBe(4)
           const expectedSecond = {

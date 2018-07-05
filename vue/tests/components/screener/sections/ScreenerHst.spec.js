@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerHstComponent from '../../../../src/components/screener/sections/ScreenerHst.vue'
 import store from '../../../../src/store'
@@ -61,7 +60,7 @@ describe('ScreenerHST', () => {
   it('should display existing data', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyDivs = vm.$el.querySelectorAll('div.company_div')
       expect(companyDivs.length).toBe(2)
       expect(companyDivs[0].querySelector('label').textContent).toBe('First')
@@ -81,14 +80,14 @@ describe('ScreenerHST', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const requestResults = this.testCase.getRequestResults()
         expect(requestResults.length).not.toBe(0)
         const lastRequest = requestResults[requestResults.length - 1]
@@ -118,7 +117,7 @@ describe('ScreenerHST', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
@@ -135,7 +134,7 @@ describe('ScreenerHST', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       store.commit(symbols.mutations.addStoredContact, {name: 'dob', value: ''})
       store.commit(symbols.mutations.contactData)
 
@@ -159,14 +158,14 @@ describe('ScreenerHST', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })

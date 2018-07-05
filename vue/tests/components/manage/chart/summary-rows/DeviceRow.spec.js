@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import DeviceRowComponent from '../../../../../src/components/manage/chart/summary-rows/DeviceRow.vue'
 import symbols from '../../../../../src/symbols'
@@ -84,7 +83,7 @@ describe('DeviceRow component', () => {
     const selector = vm.$el
     selector.value = '1'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
       const firstRequest = requestResults[0]
@@ -104,7 +103,8 @@ describe('DeviceRow component', () => {
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
     vm.$nextTick(() => {
-      expect(moxios.requests.count()).toBe(0)
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(0)
       done()
     })
   })

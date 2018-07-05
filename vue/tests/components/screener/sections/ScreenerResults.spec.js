@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerResultsComponent from '../../../../src/components/screener/sections/ScreenerResults.vue'
 import store from '../../../../src/store'
@@ -42,7 +41,7 @@ describe('ScreenerResults', () => {
 
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const riskDiv = vm.$el.querySelector('div.risk_desc')
       expect(riskDiv.id).toBe('risk_high')
       const riskImage = vm.$el.querySelector('div#risk_image > img').getAttribute('src')

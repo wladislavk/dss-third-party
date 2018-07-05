@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
@@ -116,7 +115,7 @@ describe('TaskElement component', () => {
     const input = vm.$el.querySelector('input')
     expect(input.checked).toBe(false)
     input.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(input.checked).toBe(true)
       const requestResults = this.testCase.getRequestResults()
       const expectedResults = [
@@ -152,7 +151,7 @@ describe('TaskElement component', () => {
 
     const deleteLink = vm.$el.querySelector('a.task_delete')
     deleteLink.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
       expect(requestResults[0].url).toBe(endpoints.tasks.destroy + '/1')

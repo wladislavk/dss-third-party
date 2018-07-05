@@ -1,5 +1,4 @@
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerEpworthComponent from '../../../../src/components/screener/sections/ScreenerEpworth.vue'
 import store from '../../../../src/store'
@@ -43,7 +42,7 @@ describe('ScreenerEpworth', () => {
   it('should display existing fields', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const allLabels = vm.$el.querySelectorAll('div.dp66 > div.sepH_b')
       expect(allLabels.length).toBe(3)
 
@@ -67,7 +66,7 @@ describe('ScreenerEpworth', () => {
   it('should update data when all fields are set', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const nextButton = vm.$el.querySelector('a#sect2_next')
       expect(nextButton.classList.contains('disabled')).toBe(false)
 
@@ -117,7 +116,7 @@ describe('ScreenerEpworth', () => {
   it('should throw error when some fields are not set', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const nextButton = vm.$el.querySelector('a#sect2_next')
       expect(nextButton.classList.contains('disabled')).toBe(false)
 

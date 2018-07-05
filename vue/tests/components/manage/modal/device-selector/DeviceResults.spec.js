@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import symbols from '../../../../../src/symbols'
 import DeviceResultsComponent from '../../../../../src/components/manage/modal/device-selector/DeviceResults.vue'
 import store from '../../../../../src/store'
@@ -80,7 +79,7 @@ describe('DeviceResults component', () => {
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
     expect(firstLink).not.toBeNull()
     firstLink.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.confirmText).toBe('Do you want to select SUAD Ultra Elite for John')
       expect(this.testCase.alertText).toBe('foo')
       done()
@@ -112,7 +111,7 @@ describe('DeviceResults component', () => {
     expect(deviceResultsItems.length).toBe(0)
     const sortDevicesButton = vm.$el.querySelector('div#sort-devices-button > a')
     sortDevicesButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
       expect(deviceResultsItems.length).toBe(2)
       done()

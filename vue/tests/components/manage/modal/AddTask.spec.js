@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import AddTaskComponent from '../../../../src/components/manage/modal/AddTask.vue'
 import endpoints from '../../../../src/endpoints'
@@ -41,7 +40,7 @@ describe('AddTask component', () => {
   it('shows HTML for new task', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
       const validationRow = vm.$el.querySelector('tr#validation-error')
@@ -81,7 +80,7 @@ describe('AddTask component', () => {
     store.state.main[symbols.state.modal].params.id = taskId
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
       const taskInput = vm.$el.querySelector('input#task')
@@ -115,7 +114,7 @@ describe('AddTask component', () => {
     store.state.main[symbols.state.modal].params.id = taskId
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task (John Doe)')
       done()
@@ -128,7 +127,7 @@ describe('AddTask component', () => {
     })
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const taskInput = vm.$el.querySelector('input#task')
       taskInput.value = 'new task'
       taskInput.dispatchEvent(new Event('change'))
@@ -142,7 +141,7 @@ describe('AddTask component', () => {
       responsible.dispatchEvent(new Event('change'))
       const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
         const validationRow = vm.$el.querySelector('tr#validation-error')
         expect(validationRow.style.display).toBe('none')
@@ -154,10 +153,10 @@ describe('AddTask component', () => {
   it('edits task with validation error', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('addTask')
         const validationRow = vm.$el.querySelector('tr#validation-error')
         expect(validationRow.style.display).toBe('')
@@ -187,10 +186,10 @@ describe('AddTask component', () => {
     store.state.main[symbols.state.modal].params.id = taskId
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
         // @todo: uncomment after this page is migrated
         // expect(this.testCase.redirectUrl).not.toBe('')
@@ -217,10 +216,10 @@ describe('AddTask component', () => {
     store.state.main[symbols.state.modal].params.id = taskId
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('addTask')
         done()
       })

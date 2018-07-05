@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import SleepStudyRowComponent from '../../../../../src/components/manage/chart/summary-rows/SleepStudyRow.vue'
 import { BASELINE_TEST_ID } from '../../../../../src/constants/chart'
 import endpoints from '../../../../../src/endpoints'
@@ -57,7 +56,7 @@ describe('SleepStudyRow component', () => {
     const selector = vm.$el
     selector.value = 'HST Baseline'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(2)
       const firstRequest = requestResults[0]
@@ -81,7 +80,7 @@ describe('SleepStudyRow component', () => {
     const selector = vm.$el
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(0)
       done()

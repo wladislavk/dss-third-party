@@ -1,6 +1,5 @@
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
-import moxios from 'moxios'
 import DashboardTaskMenuComponent from '../../../../src/components/manage/dashboard/DashboardTaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -34,7 +33,7 @@ describe('DashboardTaskMenu component', () => {
   it('should show HTML', function (done) {
     const vm = this.testCase.mount()
 
-    moxios.wait(function () {
+    this.testCase.wait(() => {
       const children = vm.$el.querySelectorAll('div.task-data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')

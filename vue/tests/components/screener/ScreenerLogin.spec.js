@@ -1,5 +1,4 @@
 import endpoints from '../../../src/endpoints'
-import moxios from 'moxios'
 import symbols from '../../../src/symbols'
 import ScreenerLoginComponent from '../../../src/components/screener/ScreenerLogin.vue'
 import store from '../../../src/store'
@@ -49,9 +48,9 @@ describe('ScreenerLogin', () => {
     const loginButton = vm.$el.querySelector('button#loginbut')
     loginButton.click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.screenerToken]).toBe('token')
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-intro')
         expect(store.state.screener[symbols.state.sessionData].userId).toBe(1)
         expect(store.state.screener[symbols.state.sessionData].docId).toBe(2)
@@ -81,7 +80,7 @@ describe('ScreenerLogin', () => {
     const loginButton = vm.$el.querySelector('button#loginbut')
     loginButton.click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.screenerToken]).toBe('')
       const errorDiv = vm.$el.querySelector('span.error')
       expect(errorDiv).not.toBeNull()

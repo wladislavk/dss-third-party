@@ -1,4 +1,3 @@
-import moxios from 'moxios'
 import store from '../../../src/store'
 import ManageLoginComponent from '../../../src/components/manage/ManageLogin.vue'
 import endpoints from '../../../src/endpoints'
@@ -65,7 +64,7 @@ describe('ManageLogin component', () => {
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
       expect(this.testCase.alertText).toBe('')
@@ -92,7 +91,7 @@ describe('ManageLogin component', () => {
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage.textContent).toBe('Username or password not found. This account may be inactive.')
       expect(vm.$router.currentRoute.name).toBe('login')
@@ -145,7 +144,7 @@ describe('ManageLogin component', () => {
     store.state.main[symbols.state.mainToken] = 'token'
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('dashboard')
       done()
     })

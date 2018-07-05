@@ -1,5 +1,4 @@
 import QueryStringComposer from 'qs'
-import moxios from 'moxios'
 import AppointmentSummaryComponent from '../../../../src/components/manage/chart/AppointmentSummary.vue'
 import endpoints from '../../../../src/endpoints'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -84,7 +83,7 @@ describe('AppointmentSummary component', () => {
     this.testCase.setPropsData(propsData)
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const rows = vm.$el.querySelectorAll('div.appointment-summary-row')
       expect(rows.length).toBe(2)
       const firstRow = rows[0]
@@ -164,13 +163,13 @@ describe('AppointmentSummary component', () => {
     this.testCase.setPropsData(propsData)
     const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       let row = vm.$el.querySelector('div.appointment-summary-row')
       expect(row.getAttribute('patient-id')).toBe('' + oldPatientId)
       expect(row.getAttribute('element-id')).toBe('1')
       vm.$props.patientId = newPatientId
       vm.$forceUpdate()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         let row = vm.$el.querySelector('div.appointment-summary-row')
         expect(row.getAttribute('patient-id')).toBe('' + newPatientId)
         expect(row.getAttribute('element-id')).toBe('2')

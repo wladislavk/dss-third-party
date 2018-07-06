@@ -70,18 +70,21 @@ describe('Dashboard module actions', () => {
     it('opens device selector', function () {
       DashboardModule.actions[symbols.actions.deviceSelectorModal](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.modal,
-          payload: {
-            name: symbols.modals.deviceSelector,
-            params: {
-              white: true
+      expect(this.testCase.getResults()).toEqual({
+        http: [],
+        mutations: [
+          {
+            type: symbols.mutations.modal,
+            payload: {
+              name: symbols.modals.deviceSelector,
+              params: {
+                white: true
+              }
             }
           }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+        ],
+        actions: []
+      })
     })
   })
 
@@ -509,16 +512,19 @@ describe('Dashboard module actions', () => {
 
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.moveGuideSettingSlider,
-          payload: {
-            id: 1,
-            value: 4
+      expect(this.testCase.getResults()).toEqual({
+        http: [],
+        mutations: [
+          {
+            type: symbols.mutations.moveGuideSettingSlider,
+            payload: {
+              id: 1,
+              value: 4
+            }
           }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+        ],
+        actions: []
+      })
     })
     it('leaves option unchanged if value not found', function () {
       const data = {
@@ -533,16 +539,19 @@ describe('Dashboard module actions', () => {
 
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.moveGuideSettingSlider,
-          payload: {
-            id: 1,
-            value: 0
+      expect(this.testCase.getResults()).toEqual({
+        http: [],
+        mutations: [
+          {
+            type: symbols.mutations.moveGuideSettingSlider,
+            payload: {
+              id: 1,
+              value: 0
+            }
           }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+        ],
+        actions: []
+      })
     })
   })
 })

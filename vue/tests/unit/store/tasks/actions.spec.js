@@ -20,19 +20,20 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({response: tasks})
 
       TasksModule.actions[symbols.actions.retrieveTasks](this.testCase.mocks)
-      const expectedData = [
-        { path: endpoints.tasks.index }
-      ]
-      const expectedMutations = [
-        {
-          type: symbols.mutations.setTasks,
-          payload: tasks
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.index }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.setTasks,
+              payload: tasks
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
@@ -41,22 +42,23 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({status: 401})
 
       TasksModule.actions[symbols.actions.retrieveTasks](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getTasks',
-            response: new Error({status: 401})
-          }
-        }
-      ]
 
-      const expectedData = [
-        { path: endpoints.tasks.index }
-      ]
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.index }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getTasks',
+                response: new Error({status: 401})
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -68,43 +70,49 @@ describe('Tasks module actions', () => {
         { id: 1 }
       ]
       this.testCase.stubRequest({response: tasks})
-
       const patientId = 2
+
       TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
 
-      const expectedData = [
-        { path: endpoints.tasks.indexForPatient + '/2' }
-      ]
-      const expectedMutations = [
-        {
-          type: symbols.mutations.setTasksForPatient,
-          payload: tasks
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.indexForPatient + '/2' }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.setTasksForPatient,
+              payload: tasks
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
 
     it('should retrieve patient tasks with error', function (done) {
       this.testCase.stubRequest({status: 401})
-
       const patientId = 2
+
       TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getPatientTasks',
-            response: new Error({status: 401})
-          }
-        }
-      ]
+
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.indexForPatient + '/2' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getPatientTasks',
+                response: new Error({status: 401})
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -134,29 +142,29 @@ describe('Tasks module actions', () => {
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
-      const expectedData = [
-        {
-          path: endpoints.tasks.store,
-          payload: {
-            task: 'test task',
-            due_date: '2014-01-03',
-            status: 0,
-            responsibleid: 3,
-            userid: 2,
-            patientid: 0
-          }
-        }
-      ]
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.store,
+              payload: {
+                task: 'test task',
+                due_date: '2014-01-03',
+                status: 0,
+                responsibleid: 3,
+                userid: 2,
+                patientid: 0
+              }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
@@ -168,22 +176,36 @@ describe('Tasks module actions', () => {
         responsible: 3,
         status: false
       }
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'addTask',
-            response: new Error()
-          }
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.store,
+              payload: {
+                task: 'test task',
+                due_date: '2014-01-03',
+                status: 0,
+                responsibleid: 3,
+                userid: 2,
+                patientid: undefined
+              }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'addTask',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -200,29 +222,29 @@ describe('Tasks module actions', () => {
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
-      const expectedData = [
-        {
-          path: endpoints.tasks.update + '/1',
-          payload: {
-            task: 'test task',
-            due_date: '2014-01-03',
-            status: 0,
-            responsibleid: 3,
-            userid: 2,
-            patientid: 4
-          }
-        }
-      ]
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.update + '/1',
+              payload: {
+                task: 'test task',
+                due_date: '2014-01-03',
+                status: 0,
+                responsibleid: 3,
+                userid: 2,
+                patientid: 4
+              }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
@@ -234,22 +256,36 @@ describe('Tasks module actions', () => {
         responsible: 3,
         status: false
       }
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'updateTask',
-            response: new Error()
-          }
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.update + '/1',
+              payload: {
+                task: 'test task',
+                due_date: '2014-01-03',
+                status: 0,
+                responsibleid: 3,
+                userid: 2,
+                patientid: undefined
+              }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'updateTask',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -318,40 +354,44 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({response: response})
 
       TasksModule.actions[symbols.actions.responsibleUsers](this.testCase.mocks)
-      const expectedData = [
-        {
-          path: endpoints.users.responsible
-        }
-      ]
-      const expectedMutations = [
-        {
-          type: symbols.mutations.responsibleUsers,
-          payload: response
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.responsible }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.responsibleUsers,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.responsibleUsers](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getResponsibleUsers',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.responsible }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getResponsibleUsers',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -372,41 +412,45 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({response: response})
 
       TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
-      const expectedData = [
-        {
-          path: endpoints.tasks.show + '/1'
-        }
-      ]
-      const expectedMutations = [
-        {
-          type: symbols.mutations.getTask,
-          payload: response
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.show + '/1' }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.getTask,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getTask',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.show + '/1' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getTask',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -419,22 +463,23 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
-      const expectedData = [
-        {
-          path: endpoints.tasks.update + '/1',
-          payload: { status: 1 }
-        }
-      ]
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.update + '/1',
+              payload: { status: 1 }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
@@ -444,39 +489,55 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasksForPatient,
-          payload: 2
-        },
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.update + '/1',
+              payload: { status: 1 }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasksForPatient,
+              payload: 2
+            },
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'updateTaskToActive',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tasks.update + '/1',
+              payload: { status: 1 }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'updateTaskToActive',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -489,19 +550,20 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
-      const expectedData = [
-        { path: endpoints.tasks.destroy + '/1' }
-      ]
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual(expectedData)
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.destroy + '/1' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
@@ -511,39 +573,49 @@ describe('Tasks module actions', () => {
       this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
-      const expectedActions = [
-        {
-          type: symbols.actions.retrieveTasksForPatient,
-          payload: 2
-        },
-        {
-          type: symbols.actions.retrieveTasks,
-          payload: {}
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.destroy + '/1' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.retrieveTasksForPatient,
+              payload: 2
+            },
+            {
+              type: symbols.actions.retrieveTasks,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'deleteTask',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.tasks.destroy + '/1' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'deleteTask',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })

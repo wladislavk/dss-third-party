@@ -20,14 +20,13 @@ describe('Main module actions', () => {
 
   describe('mainLogin action', () => {
     beforeEach(function () {
-      this.postData = []
       this.testCase.sandbox.stub(ProcessWrapper, 'getApiRoot').callsFake(() => {
         return 'root/'
       })
     })
     it('resolves login', function (done) {
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.postData.push({
+        this.testCase.postData.push({
           path: path,
           payload: payload
         })
@@ -43,26 +42,27 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
 
       this.testCase.wait(() => {
-        const expectedHttp = [
-          {
-            path: 'root/auth',
-            payload: {foo: 'bar'}
-          }
-        ]
-        expect(this.postData).toEqual(expectedHttp)
-        const expectedActions = [
-          {
-            type: symbols.actions.dualAppLogin,
-            payload: 'token'
-          }
-        ]
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: 'root/auth',
+              payload: credentials
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.dualAppLogin,
+              payload: 'token'
+            }
+          ]
+        })
         done()
       })
     })
     it('throws if auth fails', function (done) {
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.postData.push({
+        this.testCase.postData.push({
           path: path,
           payload: payload
         })
@@ -73,20 +73,21 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
 
       this.testCase.wait(() => {
-        const expectedHttp = [
-          {
-            path: 'root/auth',
-            payload: {foo: 'bar'}
-          }
-        ]
-        expect(this.postData).toEqual(expectedHttp)
-        const expectedActions = [
-          {
-            type: symbols.actions.handleErrors,
-            payload: {title: 'getToken', response: 'auth error'}
-          }
-        ]
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: 'root/auth',
+              payload: credentials
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {title: 'getToken', response: 'auth error'}
+            }
+          ]
+        })
         done()
       })
     })
@@ -105,55 +106,53 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
 
       this.testCase.wait(() => {
-        const expectedHttp = [
-          { path: endpoints.users.check }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
-            payload: 'token'
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedActions = [
-          {
-            type: symbols.actions.userInfo,
-            payload: {}
-          }
-        ]
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.check }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.mainToken,
+              payload: 'token'
+            }
+          ],
+          actions: [
+            {
+              type: symbols.actions.userInfo,
+              payload: {}
+            }
+          ]
+        })
         done()
       })
     })
     it('throws if check user fails', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
       const token = 'token'
 
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
 
       this.testCase.wait(() => {
-        const expectedHttp = [
-          { path: endpoints.users.check }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedActions = [
-          {
-            type: symbols.actions.handleErrors,
-            payload: {
-              title: 'getUserByToken',
-              response: new Error()
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.check }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.mainToken,
+              payload: ''
             }
-          }
-        ]
-        expect(this.testCase.actions).toEqual(expectedActions)
+          ],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getUserByToken',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -186,66 +185,73 @@ describe('Main module actions', () => {
         }
       }
       this.testCase.stubRequest({response: response})
+
       MainModule.actions[symbols.actions.userInfo](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.userInfo,
-          payload: {
-            userId: 'u_1',
-            plainUserId: 1,
-            docId: 2,
-            manageStaff: 3,
-            userType: 4,
-            useCourse: 5,
-            username: 'John'
-          }
-        },
-        {
-          type: symbols.mutations.docInfo,
-          payload: {
-            homepage: 6,
-            manageStaff: 7,
-            useEligibleApi: 8,
-            useLetters: 9,
-            usePatientPortal: 10,
-            usePaymentReports: 11,
-            useCourseStaff: 12
-          }
-        },
-        {
-          type: symbols.mutations.notificationNumbers,
-          payload: {
-            one: 1,
-            two: 2
-          }
-        }
-      ]
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.users.current }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.current }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.userInfo,
+              payload: {
+                userId: 'u_1',
+                plainUserId: 1,
+                docId: 2,
+                manageStaff: 3,
+                userType: 4,
+                useCourse: 5,
+                username: 'John'
+              }
+            },
+            {
+              type: symbols.mutations.docInfo,
+              payload: {
+                homepage: 6,
+                manageStaff: 7,
+                useEligibleApi: 8,
+                useLetters: 9,
+                usePatientPortal: 10,
+                usePaymentReports: 11,
+                useCourseStaff: 12
+              }
+            },
+            {
+              type: symbols.mutations.notificationNumbers,
+              payload: {
+                one: 1,
+                two: 2
+              }
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       MainModule.actions[symbols.actions.userInfo](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getCurrentUser',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.users.current }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getCurrentUser',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -254,15 +260,19 @@ describe('Main module actions', () => {
   describe('disablePopupEdit action', () => {
     it('disables popup edit', function (done) {
       MainModule.actions[symbols.actions.disablePopupEdit](this.testCase.mocks)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.popupEdit,
-          payload: {
-            value: false
+
+      expect(this.testCase.getResults()).toEqual({
+        http: [],
+        mutations: [
+          {
+            type: symbols.mutations.popupEdit,
+            payload: {
+              value: false
+            }
           }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+        ],
+        actions: []
+      })
       done()
     })
   })
@@ -283,6 +293,7 @@ describe('Main module actions', () => {
       }
 
       MainModule.actions[symbols.actions.handleErrors](this.testCase.mocks, payload)
+
       expect(dataRemoved).toEqual(['token'])
       expect(routes).toEqual(['/manage/login'])
     })
@@ -298,6 +309,7 @@ describe('Main module actions', () => {
       }
 
       MainModule.actions[symbols.actions.handleErrors](this.testCase.mocks, payload)
+
       expect(errorMessage).toBe('My title [status]: 400')
     })
     it('handles errors in production environment', function () {
@@ -327,35 +339,36 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
       this.testCase.wait(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.patientSearchList,
-            payload: [
-              {
-                id: 0,
-                name: 'No Matches',
-                patientType: 'no',
-                link: ''
-              },
-              {
-                id: 0,
-                name: 'Add patient with this name\u2026',
-                patientType: 'new',
-                link: 'add_patient.php?search=John'
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.patients.list,
+              payload: {
+                partial_name: 'John'
               }
-            ]
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.patients.list,
-            payload: {
-              partial_name: 'John'
             }
-          }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.patientSearchList,
+              payload: [
+                {
+                  id: 0,
+                  name: 'No Matches',
+                  patientType: 'no',
+                  link: ''
+                },
+                {
+                  id: 0,
+                  name: 'Add patient with this name\u2026',
+                  patientType: 'new',
+                  link: 'add_patient.php?search=John'
+                }
+              ]
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
@@ -381,45 +394,67 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
       this.testCase.wait(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.patientSearchList,
-            payload: [
-              {
-                id: 1,
-                name: 'John Doe',
-                patientType: 'json',
-                link: 'manage/add_patient.php?pid=1&ed=1',
-                route: {
-                  name: ''
-                }
-              },
-              {
-                id: 2,
-                name: 'John Little',
-                patientType: 'json',
-                link: '',
-                route: {
-                  name: 'patient-tracker',
-                  query: {
-                    pid: 2
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.patients.list,
+              payload: {
+                partial_name: 'John'
+              }
+            }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.patientSearchList,
+              payload: [
+                {
+                  id: 1,
+                  name: 'John Doe',
+                  patientType: 'json',
+                  link: 'manage/add_patient.php?pid=1&ed=1',
+                  route: {
+                    name: ''
+                  }
+                },
+                {
+                  id: 2,
+                  name: 'John Little',
+                  patientType: 'json',
+                  link: '',
+                  route: {
+                    name: 'patient-tracker',
+                    query: {
+                      pid: 2
+                    }
                   }
                 }
-              }
-            ]
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+              ]
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
       const searchTerm = 'John'
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
       this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.patients.list,
+              payload: {
+                partial_name: 'John'
+              }
+            }
+          ],
+          mutations: [],
+          actions: []
+        })
         expect(this.testCase.alertText).toBe('Could not select patient from database')
         done()
       })

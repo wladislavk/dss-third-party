@@ -42,65 +42,70 @@ describe('Patients module actions', () => {
 
       PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.patientId,
-          payload: 1
-        },
-        {
-          type: symbols.mutations.patientData,
-          payload: {
-            insuranceType: '2',
-            preMed: 'foo',
-            preMedCheck: '3',
-            alertText: 'alert',
-            displayAlert: '1',
-            firstName: 'John',
-            lastName: 'Doe',
-            questionnaireData: {
-              symptomsStatus: '4',
-              treatmentsStatus: '5',
-              historyStatus: '6'
-            },
-            isEmailBounced: '0',
-            patientContactsNumber: '7',
-            patientInsurancesNumber: '8',
-            subPatientsNumber: '9',
-            rejectedClaims: ['foo', 'bar'],
-            hasAllergen: '1',
-            otherAllergens: 'other',
-            hstStatus: '10',
-            incompleteHomeSleepTests: ['baz']
-          }
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.patients.patientData + '/1' }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.patients.patientData + '/1' }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.patientId,
+              payload: 1
+            },
+            {
+              type: symbols.mutations.patientData,
+              payload: {
+                insuranceType: '2',
+                preMed: 'foo',
+                preMedCheck: '3',
+                alertText: 'alert',
+                displayAlert: '1',
+                firstName: 'John',
+                lastName: 'Doe',
+                questionnaireData: {
+                  symptomsStatus: '4',
+                  treatmentsStatus: '5',
+                  historyStatus: '6'
+                },
+                isEmailBounced: '0',
+                patientContactsNumber: '7',
+                patientInsurancesNumber: '8',
+                subPatientsNumber: '9',
+                rejectedClaims: ['foo', 'bar'],
+                hasAllergen: '1',
+                otherAllergens: 'other',
+                hstStatus: '10',
+                incompleteHomeSleepTests: ['baz']
+              }
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('should handle error', function (done) {
       const patientId = 1
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getPatientByIdAndDocId',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.patients.patientData + '/1' }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getPatientByIdAndDocId',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -109,17 +114,21 @@ describe('Patients module actions', () => {
   describe('clearPatientData action', () => {
     it('clears patient data', function () {
       PatientsModule.actions[symbols.actions.clearPatientData](this.testCase.mocks)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.patientId,
-          payload: 0
-        },
-        {
-          type: symbols.mutations.clearPatientData,
-          payload: {}
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+
+      expect(this.testCase.getResults()).toEqual({
+        http: [],
+        mutations: [
+          {
+            type: symbols.mutations.patientId,
+            payload: 0
+          },
+          {
+            type: symbols.mutations.clearPatientData,
+            payload: {}
+          }
+        ],
+        actions: []
+      })
     })
   })
 })

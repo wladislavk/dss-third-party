@@ -44,9 +44,10 @@ describe('ScreenerApp component', () => {
     expect(vm.$router.currentRoute.name).toBe('screener-epworth')
     const logoutLink = vm.$el.querySelector('a#logout_link')
     expect(logoutLink).not.toBeNull()
-    spyOn(window, 'confirm').and.returnValue(true)
+    expect(this.testCase.confirmText).toBe('')
     logoutLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      expect(this.testCase.confirmText).not.toBe('')
       expect(vm.$router.currentRoute.name).toBe('screener-login')
       done()
     })
@@ -62,9 +63,10 @@ describe('ScreenerApp component', () => {
     const resetLink = vm.$el.querySelector('a#reset_link')
     let resetNav = vm.$el.querySelector('li#reset_nav')
     expect(resetNav.style.display).toBe('')
-    spyOn(window, 'confirm').and.returnValue(true)
+    expect(this.testCase.confirmText).toBe('')
     resetLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      expect(this.testCase.confirmText).not.toBe('')
       expect(vm.$router.currentRoute.name).toBe('screener-intro')
       resetNav = vm.$el.querySelector('li#reset_nav')
       expect(resetNav.style.display).toBe('none')

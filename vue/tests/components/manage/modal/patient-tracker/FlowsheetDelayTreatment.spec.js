@@ -38,15 +38,16 @@ describe('FlowsheetDelayTreatment component', () => {
   })
 
   it('sets treatment', function (done) {
-    this.testCase.stubRequest({
-      url: endpoints.appointmentSummaries.update + '/1'
-    })
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       this.testCase.wait(() => {
@@ -71,15 +72,16 @@ describe('FlowsheetDelayTreatment component', () => {
   })
 
   it('sets treatment with reason', function (done) {
-    this.testCase.stubRequest({
-      url: endpoints.appointmentSummaries.update + '/1'
-    })
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
     selector.value = 'other'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       this.testCase.wait(() => {

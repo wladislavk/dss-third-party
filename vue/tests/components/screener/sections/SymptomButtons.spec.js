@@ -39,12 +39,12 @@ describe('SymptomButtons component', () => {
     const labels = vm.$el.querySelectorAll('label')
     const storedSymptoms = store.state.screener[symbols.state.storedSymptoms]
     buttons[0].click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(labels[0].className).toContain('active')
       expect(labels[1].className).not.toContain('active')
       expect(storedSymptoms).toEqual({foo: 5})
       buttons[1].click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(labels[0].className).not.toContain('active')
         expect(labels[1].className).toContain('active')
         expect(storedSymptoms).toEqual({foo: 0})
@@ -60,7 +60,7 @@ describe('SymptomButtons component', () => {
 
     const buttons = vm.$el.querySelectorAll('input')
     buttons[0].click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const storedCpap = store.state.screener[symbols.state.storedCpap]
       expect(storedCpap).toEqual(5)
       done()

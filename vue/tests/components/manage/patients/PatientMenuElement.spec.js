@@ -37,7 +37,7 @@ describe('PatientMenuElement component', () => {
     expect(link.textContent).toBe('bar')
     expect(link.className).toBe('')
     link.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.redirectUrl).toBe('foo')
       done()
     })
@@ -52,7 +52,7 @@ describe('PatientMenuElement component', () => {
 
     const link = vm.$el.querySelector('a')
     link.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.redirectUrl).toBe('foo1')
       done()
     })
@@ -65,7 +65,7 @@ describe('PatientMenuElement component', () => {
 
     const link = vm.$el.querySelector('a')
     vm.$router.push({ name: 'route' })
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(link.className).toBe('nav_active')
       done()
     })
@@ -78,7 +78,7 @@ describe('PatientMenuElement component', () => {
 
     const link = vm.$el.querySelector('a')
     vm.$router.push({ name: 'route' })
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(link.className).toBe('nav_active')
       done()
     })

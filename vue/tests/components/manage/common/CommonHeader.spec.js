@@ -54,7 +54,7 @@ describe('CommonHeader component', () => {
 
     const addTaskButton = vm.$el.querySelector('button#add_task_button')
     addTaskButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const expectedModal = {
         name: symbols.modals.addTask,
         params: {
@@ -65,7 +65,7 @@ describe('CommonHeader component', () => {
       expect(vm.$store.state.main[symbols.mutations.modal]).toEqual(expectedModal)
       const addPatientButton = vm.$el.querySelector('button#add_patient_button')
       addPatientButton.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.redirectUrl).toBe('manage/add_patient.php')
         done()
       })

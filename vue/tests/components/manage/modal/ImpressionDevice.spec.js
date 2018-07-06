@@ -84,9 +84,11 @@ describe('ImpressionDevice component', () => {
       const deviceSelect = vm.$el.querySelector('select')
       deviceSelect.value = '2'
       deviceSelect.dispatchEvent(new Event('change'))
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         const submitButton = vm.$el.querySelector('input')
         submitButton.click()
+        this.testCase.waitForRequest = true
         this.testCase.wait(() => {
           const requestResults = this.testCase.getRequestResults()
           expect(requestResults.length).toBe(4)

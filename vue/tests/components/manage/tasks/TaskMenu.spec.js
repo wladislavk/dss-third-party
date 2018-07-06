@@ -58,10 +58,11 @@ describe('TaskMenu component', () => {
       const mouseEnterEvent = new Event('mouseenter')
       const mouseLeaveEvent = new Event('mouseleave')
       taskMenu.dispatchEvent(mouseEnterEvent)
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(taskList.style.display).toBe('')
         taskMenu.dispatchEvent(mouseLeaveEvent)
-        vm.$nextTick(() => {
+        this.testCase.wait(() => {
           expect(taskList.style.display).toBe('none')
           done()
         })

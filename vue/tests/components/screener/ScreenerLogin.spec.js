@@ -92,7 +92,7 @@ describe('ScreenerLogin', () => {
     store.commit(symbols.mutations.screenerToken, 'token')
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-intro')
       done()
     })

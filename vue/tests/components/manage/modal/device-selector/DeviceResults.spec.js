@@ -93,7 +93,7 @@ describe('DeviceResults component', () => {
 
     const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
     firstLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.alertText).toBe('')
       done()
     })
@@ -126,7 +126,7 @@ describe('DeviceResults component', () => {
     const resetLink = vm.$el.querySelector('a#reset-link')
     expect(resetLink).not.toBeNull()
     resetLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
       expect(deviceResultsItems.length).toBe(0)
       done()

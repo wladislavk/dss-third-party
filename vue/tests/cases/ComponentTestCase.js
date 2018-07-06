@@ -27,6 +27,9 @@ export default class ComponentTestCase {
     this.alertText = ''
     this.confirmText = ''
     this.confirmDialog = true
+    this.waitForRequest = false
+    this.fixedTimeout = 0
+    this.vm = null
 
     this._makeStubs()
 
@@ -75,6 +78,7 @@ export default class ComponentTestCase {
         [dataKey]: responseData
       }
     })
+    this.waitForRequest = true
   }
 
   getRequestResults () {
@@ -176,24 +180,35 @@ export default class ComponentTestCase {
     if (this.renderChildren || this.skippedChildren.length) {
       properties.components = this.component.components
     }
-    const vm = new Component(properties)
+    this.vm = new Component(properties)
     if (this.activeRoute) {
-      vm.$router.push({name: this.activeRoute})
+      this.vm.$router.push({name: this.activeRoute})
     }
-    return vm
+    return this.vm
   }
 
   /**
    * @returns {Vue}
    */
   mount () {
-    const vm = this.getVM()
-    vm.$mount()
-    return vm
+    this.vm = this.getVM()
+    this.vm.$mount()
+    return this.vm
   }
 
   wait (callback) {
-    moxios.wait(callback)
+    if (!this.vm) {
+      return
+    }
+    if (this.fixedTimeout) {
+      setTimeout(callback, this.fixedTimeout)
+      return
+    }
+    if (this.waitForRequest) {
+      moxios.wait(callback)
+      return
+    }
+    this.vm.$nextTick(callback)
   }
 
   reset () {

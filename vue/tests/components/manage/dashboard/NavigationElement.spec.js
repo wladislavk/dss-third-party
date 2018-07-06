@@ -211,10 +211,10 @@ describe('NavigationElement component', () => {
     const mouseOverEvent = new Event('mouseover')
     const mouseOutEvent = new Event('mouseout')
     vm.$el.dispatchEvent(mouseOverEvent)
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(list.style.visibility).toBe('visible')
       vm.$el.dispatchEvent(mouseOutEvent)
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(list.style.visibility).toBe('hidden')
         done()
       })
@@ -234,7 +234,7 @@ describe('NavigationElement component', () => {
 
     const link = vm.$el.querySelector('li > a')
     link.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(store.state.main[symbols.state.popupEdit]).toBe(false)
       done()
     })

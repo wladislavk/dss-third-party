@@ -82,10 +82,10 @@ describe('TaskElement component', () => {
     const mouseEnterEvent = new Event('mouseenter')
     const mouseLeaveEvent = new Event('mouseleave')
     li.dispatchEvent(mouseEnterEvent)
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(taskExtra.style.display).toBe('')
       li.dispatchEvent(mouseLeaveEvent)
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(taskExtra.style.display).toBe('none')
         done()
       })
@@ -131,7 +131,8 @@ describe('TaskElement component', () => {
       ]
       expect(requestResults).toEqual(expectedResults)
       input.click()
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(input.checked).toBe(true)
         done()
       })

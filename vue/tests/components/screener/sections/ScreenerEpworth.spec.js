@@ -82,7 +82,8 @@ describe('ScreenerEpworth', () => {
 
       nextButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         const epworthProps = store.state.screener[symbols.state.epworthProps]
         const expectedProps = [
           {
@@ -126,7 +127,8 @@ describe('ScreenerEpworth', () => {
 
       nextButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(nextButton.classList.contains('disabled')).toBe(false)
 
         const errorDivs = vm.$el.querySelectorAll('div.msg_error > div.error')

@@ -56,7 +56,7 @@ describe('ScreenerIntro', () => {
 
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const contactData = store.state.screener[symbols.state.contactData]
 
       let firstName
@@ -95,7 +95,7 @@ describe('ScreenerIntro', () => {
     firstNameInput.dispatchEvent(new Event('change'))
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
       const allLabels = vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
       expect(allLabels[0].className).not.toContain('error')

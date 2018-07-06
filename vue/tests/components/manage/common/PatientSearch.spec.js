@@ -7,6 +7,7 @@ describe('PatientSearch component', () => {
     this.testCase = new TestCase()
 
     this.testCase.setComponent(PatientSearchComponent)
+    this.testCase.fixedTimeout = 600
   })
 
   afterEach(function () {
@@ -28,7 +29,7 @@ describe('PatientSearch component', () => {
     const keyupEvent = new Event('keyup')
     keyupEvent.keyCode = 42
     searchInput.dispatchEvent(keyupEvent)
-    setTimeout(() => {
+    this.testCase.wait(() => {
       expect(searchHints.style.display).toBe('')
       expect(patientList.style.display).toBe('')
       const results = searchHints.querySelectorAll('li.template')
@@ -38,7 +39,7 @@ describe('PatientSearch component', () => {
       expect(results[1].className).toContain('create_new')
       expect(results[1].textContent).toBe('Add patient with this name\u2026')
       done()
-    }, 600)
+    })
   })
 
   it('shows options with matches', function (done) {
@@ -65,7 +66,7 @@ describe('PatientSearch component', () => {
     const keyupEvent = new Event('keyup')
     keyupEvent.keyCode = 42
     searchInput.dispatchEvent(keyupEvent)
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const results = searchHints.querySelectorAll('li.template')
       expect(results.length).toBe(2)
       expect(results[0].className).toContain('json_patient')
@@ -73,6 +74,6 @@ describe('PatientSearch component', () => {
       expect(results[1].className).toContain('json_patient')
       expect(results[1].textContent).toBe('Little, John')
       done()
-    }, 600)
+    })
   })
 })

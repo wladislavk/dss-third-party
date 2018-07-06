@@ -53,15 +53,16 @@ describe('FlowsheetStudyType component', () => {
   it('selects study type', function (done) {
     store.state.main[symbols.state.modal].params.segmentId = BASELINE_TEST_ID
 
-    this.testCase.stubRequest({
-      url: endpoints.appointmentSummaries.update + '/1'
-    })
     const vm = this.testCase.mount()
 
     const selector = vm.$el.querySelector('select')
     selector.value = 'PSG Baseline'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       this.testCase.wait(() => {

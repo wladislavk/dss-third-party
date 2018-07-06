@@ -42,7 +42,7 @@ describe('ChartButtons component', () => {
     const firstLink = links[0]
     expect(firstLink.textContent).toBe('Order HST')
     firstLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const expectedAlert = 'Patient has existing HST with status ' + HST_STATUSES[DSS_CONSTANTS.DSS_HST_REQUESTED] + '. Only one HST can be requested at a time.'
       expect(this.testCase.alertText).toBe(expectedAlert)
       done()
@@ -58,7 +58,7 @@ describe('ChartButtons component', () => {
     const firstLink = links[0]
     expect(firstLink.textContent).toBe('Request HST')
     firstLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.redirectUrl).toBe('manage/hst_request_co.php?ed=42')
       done()
     })
@@ -73,7 +73,7 @@ describe('ChartButtons component', () => {
     expect(links.length).toBe(2)
     const firstLink = links[0]
     firstLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.redirectUrl).toBe('')
       done()
     })

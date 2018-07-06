@@ -77,7 +77,7 @@ describe('ScreenerSymptoms', () => {
 
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const symptoms = store.state.screener[symbols.state.symptoms]
       for (let symptom of symptoms) {
         const answer = this.answers[symptom.name]
@@ -106,14 +106,13 @@ describe('ScreenerSymptoms', () => {
 
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
 
       const errorDivs = vm.$el.querySelectorAll('div.msg_error > div.error')
       expect(errorDivs.length).toBe(2)
       expect(errorDivs[0].textContent).toContain('Snore:')
       expect(errorDivs[1].textContent).toContain('Headaches:')
-
       done()
     })
   })

@@ -121,7 +121,8 @@ describe('ScreenerHST', () => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })
@@ -144,7 +145,8 @@ describe('ScreenerHST', () => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })

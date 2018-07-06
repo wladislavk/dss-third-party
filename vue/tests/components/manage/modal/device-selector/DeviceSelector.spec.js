@@ -67,12 +67,12 @@ describe('DeviceSelector component', () => {
     const showLink = vm.$el.querySelector('a#ins_show')
     expect(showLink.style.display).toBe('')
     showLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(instructionDiv.style.display).toBe('')
       expect(showLink.style.display).toBe('none')
       const hideLink = instructionDiv.querySelector('a')
       hideLink.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(instructionDiv.style.display).toBe('none')
         expect(showLink.style.display).toBe('')
         done()

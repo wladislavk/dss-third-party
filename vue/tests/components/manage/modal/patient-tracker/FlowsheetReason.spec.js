@@ -53,15 +53,16 @@ describe('FlowsheetReason component', () => {
   })
 
   it('updates reason', function (done) {
-    this.testCase.stubRequest({
-      url: endpoints.appointmentSummaries.update + '/1'
-    })
     const vm = this.testCase.mount()
 
     const textarea = vm.$el.querySelector('textarea')
     textarea.value = 'new reason'
     textarea.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       this.testCase.wait(() => {
@@ -86,15 +87,16 @@ describe('FlowsheetReason component', () => {
   })
 
   it('updates with empty data', function (done) {
-    this.testCase.stubRequest({
-      url: endpoints.appointmentSummaries.update + '/1'
-    })
     const vm = this.testCase.mount()
 
     const textarea = vm.$el.querySelector('textarea')
     textarea.value = ''
     textarea.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
       this.testCase.wait(() => {

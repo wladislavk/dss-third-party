@@ -35,7 +35,7 @@ describe('ScreenerDoctor component', () => {
       expect(resultsDiv.style.display).toBe('none')
       const resultsButton = vm.$el.querySelector('a#sect_results_next')
       resultsButton.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(resultsDiv.style.display).toBe('')
         done()
       })

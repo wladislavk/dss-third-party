@@ -55,7 +55,7 @@ describe('AppointmentSummaryRow component', () => {
     expect(deleteButton).not.toBeNull()
     const datepickerInput = vm.$el.querySelector('input#completed_date_1')
     expect(datepickerInput).not.toBeNull()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(datepickerInput.value).toBe('01/02/2016')
       done()
     })
@@ -171,7 +171,7 @@ describe('AppointmentSummaryRow component', () => {
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(0)
       done()
@@ -187,7 +187,7 @@ describe('AppointmentSummaryRow component', () => {
 
     const deleteButton = vm.$el.querySelector('a.deleteButton')
     deleteButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.alertText).not.toBe('')
       done()
     })

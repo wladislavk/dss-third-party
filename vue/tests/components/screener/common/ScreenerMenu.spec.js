@@ -32,7 +32,7 @@ describe('ScreenerMenu component', () => {
   it('shows menu', function (done) {
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const firstItem = vm.$el.querySelector('li:first-child')
       expect(firstItem.style.display).toBe('')
       done()
@@ -43,7 +43,7 @@ describe('ScreenerMenu component', () => {
     this.testCase.setActiveRoute('screener-intro')
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const firstItem = vm.$el.querySelector('li:first-child')
       expect(firstItem.style.display).toBe('none')
       done()
@@ -56,10 +56,10 @@ describe('ScreenerMenu component', () => {
 
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const logoutLink = vm.$el.querySelector('a#logout_link')
       logoutLink.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-login')
         expect(store.state.screener[symbols.state.doctorName]).toBe('')
         expect(store.state.screener[symbols.state.screenerToken]).toBe('')
@@ -76,10 +76,10 @@ describe('ScreenerMenu component', () => {
 
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const logoutLink = vm.$el.querySelector('a#logout_link')
       logoutLink.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-epworth')
         expect(store.state.screener[symbols.state.doctorName]).toBe('John')
         expect(store.state.screener[symbols.state.screenerToken]).toBe('token')
@@ -94,10 +94,10 @@ describe('ScreenerMenu component', () => {
 
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const resetLink = vm.$el.querySelector('a#reset_link')
       resetLink.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-intro')
         expect(store.state.screener[symbols.state.doctorName]).toBe('')
         expect(store.state.screener[symbols.state.screenerToken]).toBe('token')
@@ -114,10 +114,10 @@ describe('ScreenerMenu component', () => {
 
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const resetLink = vm.$el.querySelector('a#reset_link')
       resetLink.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-epworth')
         expect(store.state.screener[symbols.state.doctorName]).toBe('John')
         expect(store.state.screener[symbols.state.screenerToken]).toBe('token')

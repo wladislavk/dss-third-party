@@ -31,7 +31,7 @@ describe('FancyboxScreener', () => {
     expect(store.state.screener[symbols.state.showFancybox]).toBe(true)
     const closeLink = vm.$el.querySelector('a#fancybox-close')
     closeLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.showFancybox]).toBe(false)
       done()
     })
@@ -42,7 +42,7 @@ describe('FancyboxScreener', () => {
 
     const finishLink = vm.$el.querySelector('a#finish_ok')
     finishLink.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.showFancybox]).toBe(false)
       expect(store.state.screener[symbols.state.sessionData]).toEqual({ docId: 1, userId: 2 })
       expect(store.state.screener[symbols.state.screenerToken]).toBe('token')

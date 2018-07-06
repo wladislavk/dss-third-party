@@ -42,7 +42,7 @@ describe('DeviceSlider component', () => {
 
     const newValue = 'Very Important'
     vm.moveSlider(newValue)
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       // we cannot use HTML because it gets refreshed during the re-rendering of the parent component
       expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checkedOption).toBe(2)
       expect(store.state.dashboard[symbols.state.deviceGuideResults]).toEqual([])
@@ -59,12 +59,12 @@ describe('DeviceSlider component', () => {
     checkbox.checked = true
     const changeEvent = new Event('change')
     checkbox.dispatchEvent(changeEvent)
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(store.state.dashboard[symbols.state.deviceGuideResults]).toEqual([])
       expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checked).toBe(true)
       checkbox.checked = false
       checkbox.dispatchEvent(changeEvent)
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checked).toBe(false)
         done()
       })

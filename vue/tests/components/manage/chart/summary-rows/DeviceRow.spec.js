@@ -67,7 +67,7 @@ describe('DeviceRow component', () => {
     ]
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const selector = vm.$el
       expect(selector.value).toBe('3')
       done()
@@ -102,7 +102,7 @@ describe('DeviceRow component', () => {
     const selector = vm.$el
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(0)
       done()

@@ -35,11 +35,11 @@ describe('PatientHeader component', () => {
     expect(showWarningsButton.style.display).toBe('none')
     expect(hideWarningsButton.style.display).toBe('')
     hideWarningsButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(showWarningsButton.style.display).toBe('')
       expect(hideWarningsButton.style.display).toBe('none')
       showWarningsButton.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(showWarningsButton.style.display).toBe('none')
         expect(hideWarningsButton.style.display).toBe('')
         done()

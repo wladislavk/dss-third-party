@@ -65,13 +65,13 @@ describe('DashboardNotifications component', () => {
     const firstComponent = componentsWithoutChildren[0]
     expect(firstComponent.getAttribute('data-show-all')).toBeNull()
     showAllButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(showAllButton.style.display).toBe('none')
       expect(showActiveButton.style.display).toBe('')
       expect(componentWithChildren.getAttribute('data-show-all')).toBe('true')
       expect(firstComponent.getAttribute('data-show-all')).toBe('true')
       showActiveButton.click()
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(showAllButton.style.display).toBe('')
         expect(showActiveButton.style.display).toBe('none')
         done()

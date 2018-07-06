@@ -36,7 +36,7 @@ describe('HstContact component', () => {
 
     input.value = 'Jane'
     input.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(storedContacts).toEqual({hst_first_name: 'Jane'})
       done()
     })

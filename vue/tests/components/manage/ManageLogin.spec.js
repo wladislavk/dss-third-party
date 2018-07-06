@@ -107,7 +107,7 @@ describe('ManageLogin component', () => {
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
       expect(this.testCase.alertText).toBe('Username is Required')
@@ -126,7 +126,7 @@ describe('ManageLogin component', () => {
     usernameInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
       expect(this.testCase.alertText).toBe('Password is Required')

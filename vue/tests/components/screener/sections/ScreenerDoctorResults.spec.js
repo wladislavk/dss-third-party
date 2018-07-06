@@ -67,8 +67,10 @@ describe('ScreenerDoctorResults component', () => {
         2: 0,
         3: 4
       }
+      // todo: direct store modification should not occur after mount
       store.commit(symbols.mutations.modifyEpworthProps, epworthProps)
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         const contactDivs = vm.$el.querySelectorAll('div.contact_div')
         expect(contactDivs.length).toBe(3)
         expect(contactDivs[0].querySelector('label').textContent).toBe('First name:')

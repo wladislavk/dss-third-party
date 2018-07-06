@@ -28,7 +28,7 @@ describe('ScreenerRoot', () => {
     const vm = this.testCase.mount()
 
     expect(document.title).toBe('Dental Sleep Solutions :: Screener')
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-login')
       done()
     })
@@ -38,7 +38,7 @@ describe('ScreenerRoot', () => {
     store.commit(symbols.mutations.screenerToken, 'token')
     const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-main')
       done()
     })

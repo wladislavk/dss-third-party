@@ -51,7 +51,7 @@ describe('RightTopMenu component', () => {
 
     const logoutButton = vm.$el.querySelector('a#logout')
     logoutButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(this.testCase.alertText).toBe('Logout successfully')
       expect(vm.$router.currentRoute.name).toBe('main-login')
       done()

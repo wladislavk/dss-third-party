@@ -66,7 +66,7 @@ describe('TrackerSectionTwo component', () => {
       dateScheduled: new Date(inTenDays.format('YYYY-MM-DD HH:mm')),
       dateUntil: null
     }
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.className).toBe('sched_div')
       const stepSelector = rootDiv.querySelector('select#next_step')

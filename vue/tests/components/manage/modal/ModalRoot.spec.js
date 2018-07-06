@@ -16,6 +16,9 @@ describe('ModalRoot component', () => {
     this.testCase.setComponent(ModalRootComponent)
     this.testCase.setChildComponents(['add-task'])
     this.testCase.setRenderChildren(true)
+
+    // nextTick does not work for some reason
+    this.testCase.fixedTimeout = 100
   })
 
   afterEach(function () {
@@ -65,12 +68,11 @@ describe('ModalRoot component', () => {
 
     const closeButton = vm.$el.querySelector('a#popupContactClose')
     closeButton.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up on click at background', function (done) {
@@ -86,12 +88,11 @@ describe('ModalRoot component', () => {
 
     const background = vm.$el.querySelector('div#backgroundPopup')
     background.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up without confirmation', function (done) {
@@ -108,12 +109,11 @@ describe('ModalRoot component', () => {
 
     const background = vm.$el.querySelector('div#backgroundPopup')
     background.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up on key press', function (done) {
@@ -129,11 +129,10 @@ describe('ModalRoot component', () => {
     const keyupEvent = new Event('keyup')
     keyupEvent.keyCode = 27
     window.dispatchEvent(keyupEvent)
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 })

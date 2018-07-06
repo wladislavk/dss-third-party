@@ -122,7 +122,7 @@ describe('ReasonRow component', () => {
     const selector = vm.$el.querySelector('select')
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const requestResults = this.testCase.getRequestResults()
       expect(requestResults.length).toBe(0)
       done()
@@ -136,7 +136,7 @@ describe('ReasonRow component', () => {
 
     const link = vm.$el.querySelector('a')
     link.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const expectedModal = {
         name: symbols.modals.flowsheetReason,
         params: {

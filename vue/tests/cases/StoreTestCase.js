@@ -48,6 +48,14 @@ export default class StoreTestCase extends BaseTestCase {
     })
   }
 
+  getResults () {
+    return {
+      http: this.postData,
+      mutations: this.mutations,
+      actions: this.actions
+    }
+  }
+
   stubRequest (requestData) {
     let status = 200
     if (requestData.hasOwnProperty('status')) {
@@ -91,5 +99,12 @@ export default class StoreTestCase extends BaseTestCase {
         return Promise.resolve(result)
       })
     }
+  }
+
+  stubErrorRequest () {
+    const requestData = {
+      status: 500
+    }
+    this.stubRequest(requestData)
   }
 }

@@ -24,38 +24,43 @@ describe('Dashboard module actions', () => {
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.documentCategories,
-          payload: response
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.documentCategories.active }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.documentCategories.active }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.documentCategories,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDocumentCategories',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.documentCategories.active }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getDocumentCategories',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -64,6 +69,7 @@ describe('Dashboard module actions', () => {
   describe('deviceSelectorModal action', () => {
     it('opens device selector', function () {
       DashboardModule.actions[symbols.actions.deviceSelectorModal](this.testCase.mocks)
+
       const expectedMutations = [
         {
           type: symbols.mutations.modal,
@@ -89,38 +95,43 @@ describe('Dashboard module actions', () => {
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.memos,
-          payload: response
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.memos.current }
-        ]
-        expect(this.testCase.postData).toEqual(expectedHttp)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.memos.current }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.memos,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getCurrentMemos',
-            response: new Error()
-          }
-        }
-      ]
 
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.memos.current }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getCurrentMemos',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -277,34 +288,43 @@ describe('Dashboard module actions', () => {
       this.testCase.stubRequest({response: response})
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.deviceGuideSettingOptions,
-          payload: response
-        }
-      ]
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(this.testCase.postData).toEqual([
-          { path: endpoints.guideSettingOptions.settingIds }
-        ])
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.guideSettingOptions.settingIds }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.deviceGuideSettingOptions,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
+
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDeviceGuideSettingOptions',
-            response: new Error()
-          }
-        }
-      ]
+
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: endpoints.guideSettingOptions.settingIds }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getDeviceGuideSettingOptions',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -357,42 +377,51 @@ describe('Dashboard module actions', () => {
       this.testCase.stubRequest({response: response})
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.deviceGuideResults,
-          payload: response
-        }
-      ]
-
       this.testCase.wait(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
         let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
         expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
-        const expectedRequestSettings = [
-          { path: expectedPath }
-        ]
-        expect(this.testCase.postData).toEqual(expectedRequestSettings)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: expectedPath }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.deviceGuideResults,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({status: 500})
+      this.testCase.stubErrorRequest()
+
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: []
       })
 
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDeviceGuideResults',
-            response: new Error()
-          }
-        }
-      ]
+
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
+        expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            { path: expectedPath }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'getDeviceGuideResults',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -423,7 +452,9 @@ describe('Dashboard module actions', () => {
     it('handles error', function (done) {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
-      this.testCase.stubRequest({status: 500})
+
+      this.testCase.stubErrorRequest()
+
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID
       }

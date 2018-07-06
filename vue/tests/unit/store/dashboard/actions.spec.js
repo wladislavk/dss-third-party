@@ -20,10 +20,7 @@ describe('Dashboard module actions', () => {
         { id: 1 },
         { id: 2 }
       ]
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
 
@@ -44,10 +41,7 @@ describe('Dashboard module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
       const expectedActions = [
@@ -91,10 +85,7 @@ describe('Dashboard module actions', () => {
         { id: 1 },
         { id: 2 }
       ]
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
 
@@ -115,10 +106,7 @@ describe('Dashboard module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
       const expectedActions = [
@@ -286,10 +274,7 @@ describe('Dashboard module actions', () => {
           number: 5
         }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
 
       const expectedMutations = [
@@ -307,10 +292,7 @@ describe('Dashboard module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
       const expectedActions = [
         {
@@ -372,10 +354,7 @@ describe('Dashboard module actions', () => {
         ]
       })
 
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
 
       const expectedMutations = [
@@ -397,10 +376,7 @@ describe('Dashboard module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: []
       })
@@ -427,10 +403,7 @@ describe('Dashboard module actions', () => {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
 
-      this.testCase.stubRequest({
-        method: 'put',
-        message: 'Successfully updated.'
-      })
+      this.testCase.stubRequest({message: 'Successfully updated.'})
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID
       }
@@ -450,10 +423,7 @@ describe('Dashboard module actions', () => {
     it('handles error', function (done) {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
-      this.testCase.stubRequest({
-        method: 'put',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID
       }

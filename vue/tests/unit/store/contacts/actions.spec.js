@@ -17,10 +17,7 @@ describe('Contacts Module actions', () => {
       const response = {
         foo: 'bar'
       }
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
 
@@ -51,10 +48,7 @@ describe('Contacts Module actions', () => {
     })
 
     it('should not set contact if promise resolves without data', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        message: 'foo'
-      })
+      this.testCase.stubRequest({message: 'foo'})
 
       ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
 
@@ -73,10 +67,7 @@ describe('Contacts Module actions', () => {
     })
 
     it('should handle error if promise rejects', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 404
-      })
+      this.testCase.stubRequest({status: 404})
 
       ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
 

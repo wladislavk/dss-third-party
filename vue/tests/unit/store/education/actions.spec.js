@@ -32,10 +32,7 @@ describe('Education module actions', () => {
           number_ce: '1'
         }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       EducationModule.actions[symbols.actions.getEdxCertificatesData](this.testCase.mocks)
 
@@ -74,10 +71,7 @@ describe('Education module actions', () => {
     })
 
     it('should handle error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       EducationModule.actions[symbols.actions.getEdxCertificatesData](this.testCase.mocks)
       const expectedActions = [

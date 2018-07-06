@@ -16,7 +16,6 @@ describe('Screener module actions', () => {
   describe('getDoctorData action', () => {
     it('should set doctor data', function (done) {
       this.testCase.stubRequest({
-        method: 'get',
         response: {
           first_name: 'John'
         }
@@ -106,9 +105,7 @@ describe('Screener module actions', () => {
           selected: 3
         }
       })
-      this.testCase.stubRequest({
-        method: 'post'
-      })
+      this.testCase.stubRequest({})
 
       ScreenerModule.actions[symbols.actions.submitScreener](this.testCase.mocks)
 
@@ -229,10 +226,7 @@ describe('Screener module actions', () => {
         { id: 1 },
         { id: 2 }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       this.testCase.setState({
         token: 'token'
       })
@@ -269,9 +263,7 @@ describe('Screener module actions', () => {
 
   describe('submitHST action', () => {
     it('should submit home sleep request to API', function (done) {
-      this.testCase.stubRequest({
-        method: 'post'
-      })
+      this.testCase.stubRequest({})
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.screenerId]: 1,
@@ -346,14 +338,11 @@ describe('Screener module actions', () => {
       }
       let outcome
       const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, payload)
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
+      promise.then((response) => {
+        outcome = response
+      }).catch((error) => {
+        outcome = error
+      })
 
       this.testCase.wait(() => {
         const expectedMutations = [
@@ -391,14 +380,11 @@ describe('Screener module actions', () => {
       })
       let outcome
       const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
+      promise.then((response) => {
+        outcome = response
+      }).catch((error) => {
+        outcome = error
+      })
 
       this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
@@ -412,14 +398,11 @@ describe('Screener module actions', () => {
       this.response = Promise.reject(new Error())
       let outcome
       const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
+      promise.then((response) => {
+        outcome = response
+      }).catch((error) => {
+        outcome = error
+      })
 
       this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
@@ -437,10 +420,7 @@ describe('Screener module actions', () => {
         userid: 1,
         docid: 2
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token'
       })
@@ -467,10 +447,7 @@ describe('Screener module actions', () => {
       })
     })
     it('should throw error while setting session data', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token'
       })

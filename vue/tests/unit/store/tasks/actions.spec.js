@@ -17,10 +17,7 @@ describe('Tasks module actions', () => {
       const tasks = [
         { id: 1 }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: tasks
-      })
+      this.testCase.stubRequest({response: tasks})
 
       TasksModule.actions[symbols.actions.retrieveTasks](this.testCase.mocks)
       const expectedData = [
@@ -41,10 +38,7 @@ describe('Tasks module actions', () => {
     })
 
     it('should retrieve tasks with error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 401
-      })
+      this.testCase.stubRequest({status: 401})
 
       TasksModule.actions[symbols.actions.retrieveTasks](this.testCase.mocks)
       const expectedActions = [
@@ -73,10 +67,7 @@ describe('Tasks module actions', () => {
       const tasks = [
         { id: 1 }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: tasks
-      })
+      this.testCase.stubRequest({response: tasks})
 
       const patientId = 2
       TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
@@ -99,10 +90,7 @@ describe('Tasks module actions', () => {
     })
 
     it('should retrieve patient tasks with error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 401
-      })
+      this.testCase.stubRequest({status: 401})
 
       const patientId = 2
       TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
@@ -142,9 +130,7 @@ describe('Tasks module actions', () => {
         status: false,
         patientId: 0
       }
-      this.testCase.stubRequest({
-        method: 'post'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
@@ -182,10 +168,7 @@ describe('Tasks module actions', () => {
         responsible: 3,
         status: false
       }
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
@@ -213,9 +196,7 @@ describe('Tasks module actions', () => {
         status: false,
         patientId: 4
       }
-      this.testCase.stubRequest({
-        method: 'put'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
@@ -253,10 +234,7 @@ describe('Tasks module actions', () => {
         responsible: 3,
         status: false
       }
-      this.testCase.stubRequest({
-        method: 'put',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
 
@@ -337,10 +315,7 @@ describe('Tasks module actions', () => {
         { id: 1 },
         { id: 2 }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       TasksModule.actions[symbols.actions.responsibleUsers](this.testCase.mocks)
       const expectedData = [
@@ -362,10 +337,7 @@ describe('Tasks module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.responsibleUsers](this.testCase.mocks)
       const expectedActions = [
@@ -397,10 +369,7 @@ describe('Tasks module actions', () => {
         firstname: 'John',
         lastname: 'Doe'
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
       const expectedData = [
@@ -423,10 +392,7 @@ describe('Tasks module actions', () => {
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
       const expectedActions = [
@@ -450,9 +416,7 @@ describe('Tasks module actions', () => {
     it('updates status without patient', function (done) {
       const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
-      this.testCase.stubRequest({
-        method: 'put'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
       const expectedData = [
@@ -477,9 +441,7 @@ describe('Tasks module actions', () => {
     it('updates status with patient', function (done) {
       const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
-      this.testCase.stubRequest({
-        method: 'put'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
       const expectedActions = [
@@ -500,10 +462,7 @@ describe('Tasks module actions', () => {
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({
-        method: 'put',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
       const expectedActions = [
@@ -527,9 +486,7 @@ describe('Tasks module actions', () => {
     it('deletes task', function (done) {
       const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
-      this.testCase.stubRequest({
-        method: 'delete'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
       const expectedData = [
@@ -551,9 +508,7 @@ describe('Tasks module actions', () => {
     it('deletes task for patient', function (done) {
       const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
-      this.testCase.stubRequest({
-        method: 'delete'
-      })
+      this.testCase.stubRequest({})
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
       const expectedActions = [
@@ -574,10 +529,7 @@ describe('Tasks module actions', () => {
     })
     it('handles error', function (done) {
       const taskId = 1
-      this.testCase.stubRequest({
-        method: 'delete',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
       const expectedActions = [

@@ -3,6 +3,8 @@ import BaseTestCase from './BaseTestCase'
 import http from 'src/services/http'
 
 export default class StoreTestCase extends BaseTestCase {
+  methods = ['get', 'post', 'put', 'delete']
+
   constructor () {
     super()
 
@@ -55,10 +57,6 @@ export default class StoreTestCase extends BaseTestCase {
     if (status < 200 || status >= 300) {
       error = true
     }
-    let method = 'post'
-    if (requestData.hasOwnProperty('method')) {
-      method = requestData.method
-    }
     let response = {}
     if (requestData.hasOwnProperty('response')) {
       response = requestData.response
@@ -75,21 +73,23 @@ export default class StoreTestCase extends BaseTestCase {
         }
       }
     }
-    this.sandbox.stub(http, method).callsFake((path, data) => {
-      const newPostObject = {
-        path: path
-      }
-      if (data) {
-        newPostObject.payload = data
-      }
-      this.postData.push(newPostObject)
-      if (error) {
-        if (status !== 500) {
-          return Promise.reject(new Error({ status: status }))
+    for (let method of this.methods) {
+      this.sandbox.stub(http, method).callsFake((path, data) => {
+        const newPostObject = {
+          path: path
         }
-        return Promise.reject(new Error())
-      }
-      return Promise.resolve(result)
-    })
+        if (data) {
+          newPostObject.payload = data
+        }
+        this.postData.push(newPostObject)
+        if (error) {
+          if (status !== 500) {
+            return Promise.reject(new Error({ status: status }))
+          }
+          return Promise.reject(new Error())
+        }
+        return Promise.resolve(result)
+      })
+    }
   }
 }

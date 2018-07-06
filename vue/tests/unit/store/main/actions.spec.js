@@ -96,10 +96,10 @@ describe('Main module actions', () => {
 
   describe('dualAppLogin action', () => {
     it('approves login', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        response: { type: 'OK' }
-      })
+      const response = {
+        type: 'OK'
+      }
+      this.testCase.stubRequest({response: response})
       const token = 'token'
 
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
@@ -127,10 +127,7 @@ describe('Main module actions', () => {
       })
     })
     it('throws if check user fails', function (done) {
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       const token = 'token'
 
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
@@ -188,10 +185,7 @@ describe('Main module actions', () => {
           two: 2
         }
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       MainModule.actions[symbols.actions.userInfo](this.testCase.mocks)
 
       const expectedMutations = [
@@ -237,10 +231,7 @@ describe('Main module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       MainModule.actions[symbols.actions.userInfo](this.testCase.mocks)
       const expectedActions = [
@@ -331,10 +322,7 @@ describe('Main module actions', () => {
   describe('patientSearchList action', () => {
     it('shows list without patients', function (done) {
       const searchTerm = 'John'
-      this.testCase.stubRequest({
-        method: 'post',
-        response: []
-      })
+      this.testCase.stubRequest({response: []})
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
@@ -385,10 +373,7 @@ describe('Main module actions', () => {
           patient_info: 1
         }
       ]
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       this.testCase.sandbox.stub(NameComposer, 'composeName').callsFake((element) => {
         return element.name
       })
@@ -430,10 +415,7 @@ describe('Main module actions', () => {
     })
     it('handles error', function (done) {
       const searchTerm = 'John'
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 

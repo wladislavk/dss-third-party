@@ -27,10 +27,7 @@ describe('Flowsheet module actions', () => {
           name: 'bar'
         }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
 
       const expectedMutations = [
@@ -71,10 +68,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -112,10 +106,7 @@ describe('Flowsheet module actions', () => {
         ]
       })
       const response = ['foo', 'bar']
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
 
       const expectedMutations = [
@@ -139,10 +130,7 @@ describe('Flowsheet module actions', () => {
       this.testCase.setState({
         [symbols.state.appointmentSummaries]: []
       })
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -167,10 +155,7 @@ describe('Flowsheet module actions', () => {
         segmentId: CONSULT_ID
       }
       const response = { id: 12 }
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedMutations = [
         {
@@ -222,10 +207,7 @@ describe('Flowsheet module actions', () => {
         segmentId: 99
       }
       const response = { id: 12 }
-      this.testCase.stubRequest({
-        method: 'post',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedMutations = [
         {
@@ -244,10 +226,7 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         segmentId: CONSULT_ID
       }
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedActions = [
         {
@@ -451,9 +430,7 @@ describe('Flowsheet module actions', () => {
 
   describe('updateAppointmentSummary action', () => {
     it('updates appointment summary', function (done) {
-      this.testCase.stubRequest({
-        method: 'put'
-      })
+      this.testCase.stubRequest({})
       const payload = {
         id: 10,
         patientId: 11,
@@ -484,10 +461,7 @@ describe('Flowsheet module actions', () => {
         patientId: 11,
         data: { foo: 'bar' }
       }
-      this.testCase.stubRequest({
-        method: 'put',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, payload)
       const expectedActions = [
         {
@@ -507,9 +481,7 @@ describe('Flowsheet module actions', () => {
 
   describe('deleteAppointmentSummary action', () => {
     it('deletes appointment summary', function (done) {
-      this.testCase.stubRequest({
-        method: 'delete'
-      })
+      this.testCase.stubRequest({})
       const id = 10
       FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
       const expectedMutations = [
@@ -529,10 +501,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const id = 10
-      this.testCase.stubRequest({
-        method: 'delete',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
       const expectedActions = [
         {
@@ -556,10 +525,7 @@ describe('Flowsheet module actions', () => {
         { deviceid: '1' },
         { deviceid: '2' }
       ]
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.devicesByStatus](this.testCase.mocks)
       const expectedMutations = [
         {
@@ -577,10 +543,7 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.devicesByStatus](this.testCase.mocks)
       const expectedActions = [
         {
@@ -606,10 +569,7 @@ describe('Flowsheet module actions', () => {
         final_segment: '2',
         last_segment: '0'
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedMutations = [
         {
@@ -642,10 +602,7 @@ describe('Flowsheet module actions', () => {
         final_segment: '2',
         last_segment: '3'
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -660,10 +617,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -695,10 +649,7 @@ describe('Flowsheet module actions', () => {
         first: firstSection,
         second: secondSection
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.trackerSteps](this.testCase.mocks)
       const expectedMutations = [
         {
@@ -730,10 +681,7 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.trackerSteps](this.testCase.mocks)
       const expectedActions = [
         {
@@ -755,10 +703,7 @@ describe('Flowsheet module actions', () => {
     it('sets tracker steps', function (done) {
       const lastSegment = 18
       const response = ['foo', 'bar']
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
       const expectedMutations = [
         {
@@ -779,10 +724,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const lastSegment = 18
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
       const expectedActions = [
         {
@@ -804,10 +746,7 @@ describe('Flowsheet module actions', () => {
     it('retrieves patient tracker notes', function (done) {
       const patientId = 42
       const response = ['foo', 'bar']
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
       const expectedMutations = [
         {
@@ -826,10 +765,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -853,9 +789,7 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         trackerNotes: 'notes'
       }
-      this.testCase.stubRequest({
-        method: 'put'
-      })
+      this.testCase.stubRequest({})
       FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
       const expectedActions = [
         {
@@ -883,10 +817,7 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         trackerNotes: 'notes'
       }
-      this.testCase.stubRequest({
-        method: 'put',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
       const expectedActions = [
         {
@@ -907,10 +838,7 @@ describe('Flowsheet module actions', () => {
   describe('futureAppointment action', () => {
     it('sets future appointment without data', function (done) {
       const patientId = 42
-      this.testCase.stubRequest({
-        method: 'get',
-        response: null
-      })
+      this.testCase.stubRequest({response: null})
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedMutations = []
       const expectedActions = [
@@ -932,10 +860,7 @@ describe('Flowsheet module actions', () => {
     it('sets future appointment with data', function (done) {
       const patientId = 42
       const response = { id: '1' }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedMutations = [
         {
@@ -950,10 +875,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedActions = [
         {
@@ -977,9 +899,7 @@ describe('Flowsheet module actions', () => {
         segmentId: 2,
         patientId: 42
       }
-      this.testCase.stubRequest({
-        method: 'post'
-      })
+      this.testCase.stubRequest({})
       FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
       const expectedActions = [
         {
@@ -1008,10 +928,7 @@ describe('Flowsheet module actions', () => {
         segmentId: 2,
         patientId: 42
       }
-      this.testCase.stubRequest({
-        method: 'post',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
       const expectedActions = [
         {
@@ -1031,9 +948,7 @@ describe('Flowsheet module actions', () => {
 
   describe('deleteFutureAppointment action', () => {
     it('deletes future appointment', function (done) {
-      this.testCase.stubRequest({
-        method: 'delete'
-      })
+      this.testCase.stubRequest({})
       const id = 10
       FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
       const expectedMutations = [
@@ -1055,10 +970,7 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const id = 10
-      this.testCase.stubRequest({
-        method: 'delete',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
       FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
       const expectedActions = [
         {

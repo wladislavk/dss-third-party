@@ -38,10 +38,7 @@ describe('Patients module actions', () => {
         hst_status: '10',
         incomplete_hsts: ['baz']
       }
-      this.testCase.stubRequest({
-        method: 'get',
-        response: response
-      })
+      this.testCase.stubRequest({response: response})
 
       PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
 
@@ -89,10 +86,7 @@ describe('Patients module actions', () => {
     })
     it('should handle error', function (done) {
       const patientId = 1
-      this.testCase.stubRequest({
-        method: 'get',
-        status: 500
-      })
+      this.testCase.stubRequest({status: 500})
 
       PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
       const expectedActions = [

@@ -242,7 +242,9 @@ describe('Dashboard module actions', () => {
         swalData.push(data)
         func(isConfirm)
       })
+
       DashboardModule.actions[symbols.actions.dataImportModal]()
+
       const expectedData = [
         {
           title: '',
@@ -286,6 +288,7 @@ describe('Dashboard module actions', () => {
         }
       ]
       this.testCase.stubRequest({response: response})
+
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
 
       this.testCase.wait(() => {
@@ -437,12 +440,21 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
       this.testCase.wait(() => {
-        expect(this.testCase.postData).toEqual([
-          {
-            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-            payload: { patient_id: PATIENT_ID }
-          }
-        ])
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+              payload: { patient_id: PATIENT_ID }
+            }
+          ],
+          mutations: [
+            {
+              type: symbols.mutations.resetModal,
+              payload: {}
+            }
+          ],
+          actions: []
+        })
         expect(this.testCase.alertText).toBe('Successfully updated.')
         done()
       })
@@ -456,18 +468,28 @@ describe('Dashboard module actions', () => {
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID
       }
+
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'updateFlowDevice',
-            response: new Error()
-          }
-        }
-      ]
+
       this.testCase.wait(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+        expect(this.testCase.getResults()).toEqual({
+          http: [
+            {
+              path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+              payload: { patient_id: PATIENT_ID }
+            }
+          ],
+          mutations: [],
+          actions: [
+            {
+              type: symbols.actions.handleErrors,
+              payload: {
+                title: 'updateFlowDevice',
+                response: new Error()
+              }
+            }
+          ]
+        })
         done()
       })
     })
@@ -484,7 +506,9 @@ describe('Dashboard module actions', () => {
           7: 'bar'
         }
       }
+
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+
       const expectedMutations = [
         {
           type: symbols.mutations.moveGuideSettingSlider,
@@ -506,7 +530,9 @@ describe('Dashboard module actions', () => {
           7: 'bar'
         }
       }
+
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+
       const expectedMutations = [
         {
           type: symbols.mutations.moveGuideSettingSlider,

@@ -1,6 +1,4 @@
-import sinon from 'sinon'
 import TestCase from '../../../cases/StoreTestCase'
-import http from '../../../../src/services/http'
 import symbols from '../../../../src/symbols'
 import FlowsheetModule from '../../../../src/store/flowsheet'
 import endpoints from '../../../../src/endpoints'
@@ -9,37 +7,29 @@ import { INITIAL_FUTURE_APPOINTMENT } from 'src/constants/chart'
 
 describe('Flowsheet module actions', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   describe('appointmentSummariesByPatient action', () => {
     it('retrieves appointment summaries', function (done) {
       const patientId = 42
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            {
-              id: 1,
-              name: 'foo'
-            },
-            {
-              id: 2,
-              name: 'bar'
-            }
-          ]
+      const response = [
+        {
+          id: 1,
+          name: 'foo'
+        },
+        {
+          id: 2,
+          name: 'bar'
         }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      ]
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
 
@@ -75,14 +65,15 @@ describe('Flowsheet module actions', () => {
         const expectedHttp = [
           { path: endpoints.appointmentSummaries.byPatient + '/' + patientId }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -120,24 +111,17 @@ describe('Flowsheet module actions', () => {
           }
         ]
       })
-      const postData = []
-      const result = {
-        data: {
-          data: ['foo', 'bar']
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = ['foo', 'bar']
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
 
       const expectedMutations = [
         {
           type: symbols.mutations.appointmentSummaryLetters,
-          payload: ['foo', 'bar']
+          payload: response
         }
       ]
       setTimeout(() => {
@@ -146,7 +130,7 @@ describe('Flowsheet module actions', () => {
         const expectedHttp = [
           { path: expectedUrl }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -155,8 +139,9 @@ describe('Flowsheet module actions', () => {
       this.testCase.setState({
         [symbols.state.appointmentSummaries]: []
       })
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -181,18 +166,10 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         segmentId: CONSULT_ID
       }
-      const postData = []
-      const result = {
-        data: {
-          data: { id: 12 }
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve(result)
+      const response = { id: 12 }
+      this.testCase.stubRequest({
+        method: 'post',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedMutations = [
@@ -235,7 +212,7 @@ describe('Flowsheet module actions', () => {
             }
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -244,13 +221,10 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         segmentId: 99
       }
-      const result = {
-        data: {
-          data: { id: 12 }
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
+      const response = { id: 12 }
+      this.testCase.stubRequest({
+        method: 'post',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedMutations = [
@@ -270,8 +244,9 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         segmentId: CONSULT_ID
       }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'post',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
       const expectedActions = [
@@ -476,13 +451,8 @@ describe('Flowsheet module actions', () => {
 
   describe('updateAppointmentSummary action', () => {
     it('updates appointment summary', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'put').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve()
+      this.testCase.stubRequest({
+        method: 'put'
       })
       const payload = {
         id: 10,
@@ -504,7 +474,7 @@ describe('Flowsheet module actions', () => {
             payload: { foo: 'bar' }
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -514,8 +484,9 @@ describe('Flowsheet module actions', () => {
         patientId: 11,
         data: { foo: 'bar' }
       }
-      this.sandbox.stub(http, 'put').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'put',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, payload)
       const expectedActions = [
@@ -536,12 +507,8 @@ describe('Flowsheet module actions', () => {
 
   describe('deleteAppointmentSummary action', () => {
     it('deletes appointment summary', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'delete').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve()
+      this.testCase.stubRequest({
+        method: 'delete'
       })
       const id = 10
       FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
@@ -558,14 +525,15 @@ describe('Flowsheet module actions', () => {
             path: endpoints.appointmentSummaries.destroy + '/10'
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const id = 10
-      this.sandbox.stub(http, 'delete').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'delete',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
       const expectedActions = [
@@ -586,45 +554,34 @@ describe('Flowsheet module actions', () => {
 
   describe('devicesByStatus action', () => {
     it('retrieves devices', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            { deviceid: '1' },
-            { deviceid: '2' }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = [
+        { deviceid: '1' },
+        { deviceid: '2' }
+      ]
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.devicesByStatus](this.testCase.mocks)
       const expectedMutations = [
         {
           type: symbols.mutations.devices,
-          payload: [
-            { deviceid: '1' },
-            { deviceid: '2' }
-          ]
+          payload: response
         }
       ]
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.devices.byStatus
-          }
+          { path: endpoints.devices.byStatus }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.devicesByStatus](this.testCase.mocks)
       const expectedActions = [
@@ -646,21 +603,14 @@ describe('Flowsheet module actions', () => {
   describe('finalTrackerRank action', () => {
     it('sets tracker rank', function (done) {
       const patientId = 42
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            final_rank: '1',
-            final_segment: '2',
-            last_segment: '0'
-          }
-        }
+      const response = {
+        final_rank: '1',
+        final_segment: '2',
+        last_segment: '0'
       }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedMutations = [
@@ -681,27 +631,22 @@ describe('Flowsheet module actions', () => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual([])
         const expectedHttp = [
-          {
-            path: endpoints.appointmentSummaries.finalRank + '/42'
-          }
+          { path: endpoints.appointmentSummaries.finalRank + '/42' }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('sets tracker rank for last segment', function (done) {
       const patientId = 42
-      const result = {
-        data: {
-          data: {
-            final_rank: '1',
-            final_segment: '2',
-            last_segment: '3'
-          }
-        }
+      const response = {
+        final_rank: '1',
+        final_segment: '2',
+        last_segment: '3'
       }
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -717,8 +662,9 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -739,26 +685,21 @@ describe('Flowsheet module actions', () => {
 
   describe('trackerSteps action', () => {
     it('sets tracker steps', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            first: [
-              { id: '1' },
-              { id: '2' }
-            ],
-            second: [
-              { id: '3' },
-              { id: '4' }
-            ]
-          }
-        }
+      const firstSection = [
+        { id: '1' },
+        { id: '2' }
+      ]
+      const secondSection = [
+        { id: '3' },
+        { id: '4' }
+      ]
+      const response = {
+        first: firstSection,
+        second: secondSection
       }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.trackerSteps](this.testCase.mocks)
       const expectedMutations = [
@@ -769,20 +710,14 @@ describe('Flowsheet module actions', () => {
         {
           type: symbols.mutations.trackerSteps,
           payload: {
-            data: [
-              { id: '1' },
-              { id: '2' }
-            ],
+            data: firstSection,
             section: 1
           }
         },
         {
           type: symbols.mutations.trackerSteps,
           payload: {
-            data: [
-              { id: '3' },
-              { id: '4' }
-            ],
+            data: secondSection,
             section: 2
           }
         }
@@ -790,17 +725,16 @@ describe('Flowsheet module actions', () => {
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.flowsheetSteps.bySection
-          }
+          { path: endpoints.flowsheetSteps.bySection }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.trackerSteps](this.testCase.mocks)
       const expectedActions = [
@@ -822,23 +756,16 @@ describe('Flowsheet module actions', () => {
   describe('trackerStepsNext action', () => {
     it('sets tracker steps', function (done) {
       const lastSegment = 18
-      const postData = []
-      const result = {
-        data: {
-          data: ['foo', 'bar']
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = ['foo', 'bar']
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
       const expectedMutations = [
         {
           type: symbols.mutations.trackerStepsNext,
-          payload: ['foo', 'bar']
+          payload: response
         }
       ]
       setTimeout(() => {
@@ -848,14 +775,15 @@ describe('Flowsheet module actions', () => {
             path: endpoints.flowsheetSteps.byNextStep + '/18'
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const lastSegment = 18
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
       const expectedActions = [
@@ -877,23 +805,16 @@ describe('Flowsheet module actions', () => {
   describe('patientTrackerNotes action', () => {
     it('retrieves patient tracker notes', function (done) {
       const patientId = 42
-      const postData = []
-      const result = {
-        data: {
-          data: ['foo', 'bar']
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = ['foo', 'bar']
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
       const expectedMutations = [
         {
           type: symbols.mutations.patientTrackerNotes,
-          payload: ['foo', 'bar']
+          payload: response
         }
       ]
       setTimeout(() => {
@@ -903,14 +824,15 @@ describe('Flowsheet module actions', () => {
             path: endpoints.patientSummaries.getTrackerNotes + '/42'
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -935,13 +857,8 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         trackerNotes: 'notes'
       }
-      const postData = []
-      this.sandbox.stub(http, 'put').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve()
+      this.testCase.stubRequest({
+        method: 'put'
       })
       FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
       const expectedActions = [
@@ -961,7 +878,7 @@ describe('Flowsheet module actions', () => {
             }
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -970,8 +887,9 @@ describe('Flowsheet module actions', () => {
         patientId: 42,
         trackerNotes: 'notes'
       }
-      this.sandbox.stub(http, 'put').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'put',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
       const expectedActions = [
@@ -993,17 +911,9 @@ describe('Flowsheet module actions', () => {
   describe('futureAppointment action', () => {
     it('sets future appointment without data', function (done) {
       const patientId = 42
-      const postData = []
-      const result = {
-        data: {
-          data: null
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: null
       })
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedMutations = []
@@ -1017,25 +927,18 @@ describe('Flowsheet module actions', () => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
-          {
-            path: endpoints.appointmentSummaries.futureAppointment + '/42'
-          }
+          { path: endpoints.appointmentSummaries.futureAppointment + '/42' }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('sets future appointment with data', function (done) {
       const patientId = 42
-      const result = {
-        data: {
-          data: {
-            id: '1'
-          }
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.resolve(result)
+      const response = { id: '1' }
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedMutations = [
@@ -1051,8 +954,9 @@ describe('Flowsheet module actions', () => {
     })
     it('handles error', function (done) {
       const patientId = 42
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
       const expectedActions = [
@@ -1077,13 +981,8 @@ describe('Flowsheet module actions', () => {
         segmentId: 2,
         patientId: 42
       }
-      const postData = []
-      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve()
+      this.testCase.stubRequest({
+        method: 'post'
       })
       FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
       const expectedActions = [
@@ -1104,7 +1003,7 @@ describe('Flowsheet module actions', () => {
             }
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -1113,8 +1012,9 @@ describe('Flowsheet module actions', () => {
         segmentId: 2,
         patientId: 42
       }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'post',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
       const expectedActions = [
@@ -1135,12 +1035,8 @@ describe('Flowsheet module actions', () => {
 
   describe('deleteFutureAppointment action', () => {
     it('deletes future appointment', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'delete').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve()
+      this.testCase.stubRequest({
+        method: 'delete'
       })
       const id = 10
       FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
@@ -1157,14 +1053,15 @@ describe('Flowsheet module actions', () => {
             path: endpoints.appointmentSummaries.destroy + '/10'
           }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const id = 10
-      this.sandbox.stub(http, 'delete').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'delete',
+        status: 500
       })
       FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
       const expectedActions = [

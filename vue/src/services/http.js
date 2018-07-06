@@ -3,21 +3,6 @@ import ProcessWrapper from '../wrappers/ProcessWrapper'
 
 export default {
   token: '',
-  request (method, path, data, config) {
-    if (!this.hasOwnProperty(method)) {
-      throw new Error(`HTTP method ${method} not found`)
-    }
-    return new Promise((resolve, reject) => {
-      this[method](path, data, config).then((response) => {
-        if (response.error) {
-          throw new Error(response.error)
-        }
-        resolve(response)
-      }).catch((error) => {
-        reject(new Error(error))
-      })
-    })
-  },
 
   get (path, data, config) {
     config = config || {}

@@ -3,19 +3,16 @@ import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
 import moxios from 'moxios'
-import sinon from 'sinon'
 import lodash from 'lodash'
 import store from '../../src/store'
 import LegacyHref from '../../src/directives/LegacyHref'
 import UnescapeFilter from '../../src/filters/Unescape'
-import LocationWrapper from '../../src/wrappers/LocationWrapper'
-import Alerter from '../../src/services/Alerter'
-import http from 'src/services/http'
+import http from '../../src/services/http'
+import BaseTestCase from './BaseTestCase'
 
-export default class ComponentTestCase {
+export default class ComponentTestCase extends BaseTestCase {
   constructor () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
+    super()
 
     this.component = null
     this.activeRoute = null
@@ -23,15 +20,8 @@ export default class ComponentTestCase {
     this.propsData = {}
     this.renderChildren = false
     this.skippedChildren = []
-    this.redirectUrl = ''
-    this.alertText = ''
-    this.confirmText = ''
-    this.confirmDialog = true
     this.waitForRequest = false
-    this.fixedTimeout = 0
     this.vm = null
-
-    this._makeStubs()
 
     Vue.use(VueRouter)
     Vue.use(VueVisible)
@@ -42,17 +32,9 @@ export default class ComponentTestCase {
     this.originalState = lodash.cloneDeep(store.state)
   }
 
-  _makeStubs () {
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      this.redirectUrl = url
-    })
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      this.alertText = text
-    })
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
-      this.confirmText = text
-      return this.confirmDialog
-    })
+  _initialize () {
+    super._initialize()
+    moxios.install()
   }
 
   stubRequest (requestData) {
@@ -214,6 +196,6 @@ export default class ComponentTestCase {
   reset () {
     store.replaceState(this.originalState)
     moxios.uninstall()
-    this.sandbox.restore()
+    super.reset()
   }
 }

@@ -1,40 +1,28 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import sinon from 'sinon'
 import symbols from '../../../../src/symbols'
 import SwalWrapper from '../../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../../src/store/dashboard'
 import TestCase from '../../../cases/StoreTestCase'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
-import Alerter from '../../../../src/services/Alerter'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   describe('documentCategories action', () => {
     it('retrieves document categories', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({
+        method: 'post',
+        response: response
       })
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
@@ -42,10 +30,7 @@ describe('Dashboard module actions', () => {
       const expectedMutations = [
         {
           type: symbols.mutations.documentCategories,
-          payload: [
-            { id: 1 },
-            { id: 2 }
-          ]
+          payload: response
         }
       ]
       setTimeout(() => {
@@ -53,13 +38,14 @@ describe('Dashboard module actions', () => {
         const expectedHttp = [
           { path: endpoints.documentCategories.active }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'post',
+        status: 500
       })
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
@@ -100,20 +86,13 @@ describe('Dashboard module actions', () => {
 
   describe('memos action', () => {
     it('retrieves memos', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({
+        method: 'post',
+        response: response
       })
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
@@ -121,10 +100,7 @@ describe('Dashboard module actions', () => {
       const expectedMutations = [
         {
           type: symbols.mutations.memos,
-          payload: [
-            { id: 1 },
-            { id: 2 }
-          ]
+          payload: response
         }
       ]
       setTimeout(() => {
@@ -132,13 +108,14 @@ describe('Dashboard module actions', () => {
         const expectedHttp = [
           { path: endpoints.memos.current }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'post',
+        status: 500
       })
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
@@ -163,7 +140,7 @@ describe('Dashboard module actions', () => {
     beforeEach(function () {
       this.swalData = []
       this.inputValue = ''
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         let result = null
         if (func) {
           result = func(this.inputValue)
@@ -171,24 +148,20 @@ describe('Dashboard module actions', () => {
         this.swalData.push({data: data, result: result})
       })
       this.inputError = ''
-      this.sandbox.stub(SwalWrapper, 'showInputError').callsFake((text) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'showInputError').callsFake((text) => {
         this.inputError = text
       })
       this.closed = false
-      this.sandbox.stub(SwalWrapper, 'close').callsFake(() => {
+      this.testCase.sandbox.stub(SwalWrapper, 'close').callsFake(() => {
         this.closed = true
       })
     })
     it('exports with good password', function () {
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
-      })
       this.inputValue = '1234'
       DashboardModule.actions[symbols.actions.exportMDModal]()
       expect(this.closed).toBe(true)
       expect(this.inputError).toBe('')
-      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
+      expect(this.testCase.redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
       const expectedSwal = [
         {
           data: {
@@ -264,13 +237,9 @@ describe('Dashboard module actions', () => {
     it('imports data with confirmation', function () {
       const swalData = []
       const isConfirm = true
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         swalData.push(data)
         func(isConfirm)
-      })
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
       })
       DashboardModule.actions[symbols.actions.dataImportModal]()
       const expectedData = [
@@ -287,77 +256,58 @@ describe('Dashboard module actions', () => {
         }
       ]
       expect(swalData).toEqual(expectedData)
-      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
+      expect(this.testCase.redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
     })
     it('imports data without confirmation', function () {
       const isConfirm = false
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         func(isConfirm)
       })
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
-      })
       DashboardModule.actions[symbols.actions.dataImportModal]()
-      expect(destination).toBe('')
+      expect(this.testCase.redirectUrl).toBe('')
     })
   })
 
   describe('getDeviceGuideSettingOptions action', () => {
     it('retrieves device guide setting options', function (done) {
-      const result = {
-        data: {
-          data: [
-            {
-              id: 13,
-              labels: ['Not Important', 'Neutral', 'Very Important'],
-              name: 'Comfort',
-              number: 3
-            },
-            {
-              id: 3,
-              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-              name: 'Bruxism',
-              number: 5
-            }
-          ]
+      const response = [
+        {
+          id: 13,
+          labels: ['Not Important', 'Neutral', 'Very Important'],
+          name: 'Comfort',
+          number: 3
+        },
+        {
+          id: 3,
+          labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+          name: 'Bruxism',
+          number: 5
         }
-      }
-      let getPath = ''
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        getPath = path
-        return Promise.resolve(result)
+      ]
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
 
       const expectedMutations = [
         {
           type: symbols.mutations.deviceGuideSettingOptions,
-          payload: [
-            {
-              id: 13,
-              labels: ['Not Important', 'Neutral', 'Very Important'],
-              name: 'Comfort',
-              number: 3
-            },
-            {
-              id: 3,
-              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-              name: 'Bruxism',
-              number: 5
-            }
-          ]
+          payload: response
         }
       ]
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(getPath).toEqual(endpoints.guideSettingOptions.settingIds)
+        expect(this.testCase.postData).toEqual([
+          { path: endpoints.guideSettingOptions.settingIds }
+        ])
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
       const expectedActions = [
@@ -378,30 +328,26 @@ describe('Dashboard module actions', () => {
 
   describe('getDeviceGuideResults action', () => {
     it('retrieves device guide results', function (done) {
-      const result = {
-        data: {
-          data: [
-            {
-              name: 'SUAD Ultra Elite',
-              id: 13,
-              value: 34,
-              imagePath: 'dental_device_13.gif'
-            },
-            {
-              name: 'SUAD Hard',
-              id: 14,
-              value: 33,
-              imagePath: 'dental_device_14.gif'
-            },
-            {
-              name: 'Narval',
-              id: 7,
-              value: 33,
-              imagePath: 'dental_device_7.gif'
-            }
-          ]
+      const response = [
+        {
+          name: 'SUAD Ultra Elite',
+          id: 13,
+          value: 34,
+          imagePath: 'dental_device_13.gif'
+        },
+        {
+          name: 'SUAD Hard',
+          id: 14,
+          value: 33,
+          imagePath: 'dental_device_14.gif'
+        },
+        {
+          name: 'Narval',
+          id: 7,
+          value: 33,
+          imagePath: 'dental_device_7.gif'
         }
-      }
+      ]
 
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: [
@@ -424,19 +370,16 @@ describe('Dashboard module actions', () => {
         ]
       })
 
-      let requestSettings = {}
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        requestSettings = {
-          path: path
-        }
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
 
       const expectedMutations = [
         {
           type: symbols.mutations.deviceGuideResults,
-          payload: result.data.data
+          payload: response
         }
       ]
 
@@ -444,16 +387,17 @@ describe('Dashboard module actions', () => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
         expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
-        const expectedRequestSettings = {
-          path: expectedPath
-        }
-        expect(requestSettings).toEqual(expectedRequestSettings)
+        const expectedRequestSettings = [
+          { path: expectedPath }
+        ]
+        expect(this.testCase.postData).toEqual(expectedRequestSettings)
         done()
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: []
@@ -480,21 +424,10 @@ describe('Dashboard module actions', () => {
     it('updates a flow device', function (done) {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
-      const response = {
-        data: { message: 'Successfully updated.' }
-      }
 
-      let requestSettings = {}
-      this.sandbox.stub(http, 'put').callsFake((path, data) => {
-        requestSettings = {
-          path: path,
-          data: data
-        }
-        return Promise.resolve(response)
-      })
-      let alertText = ''
-      this.sandbox.stub(Alerter, 'alert').callsFake((message) => {
-        alertText = message
+      this.testCase.stubRequest({
+        method: 'put',
+        message: 'Successfully updated.'
       })
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID
@@ -502,22 +435,22 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
       setTimeout(() => {
-        const expectedRequestSettings = {
-          path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-          data: {
-            patient_id: PATIENT_ID
+        expect(this.testCase.postData).toEqual([
+          {
+            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+            payload: { patient_id: PATIENT_ID }
           }
-        }
-        expect(requestSettings).toEqual(expectedRequestSettings)
-        expect(alertText).toBe('Successfully updated.')
+        ])
+        expect(this.testCase.alertText).toBe('Successfully updated.')
         done()
       }, 100)
     })
     it('handles error', function (done) {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
-      this.sandbox.stub(http, 'put').callsFake(() => {
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'put',
+        status: 500
       })
       this.testCase.rootState.patients = {
         [symbols.state.patientId]: PATIENT_ID

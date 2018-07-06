@@ -1,36 +1,25 @@
 import axios from 'axios'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import sinon from 'sinon'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/StoreTestCase'
 import ScreenerModule from '../../../../src/store/screener'
 
 describe('Screener module actions', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   describe('getDoctorData action', () => {
     it('should set doctor data', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            first_name: 'John'
-          }
+      this.testCase.stubRequest({
+        method: 'get',
+        response: {
+          first_name: 'John'
         }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
@@ -51,11 +40,9 @@ describe('Screener module actions', () => {
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.users.show + '/1'
-          }
+          { path: endpoints.users.show + '/1' }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
@@ -119,12 +106,8 @@ describe('Screener module actions', () => {
           selected: 3
         }
       })
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
+      this.testCase.stubRequest({
+        method: 'post'
       })
       ScreenerModule.actions[symbols.actions.submitScreener](this.testCase.mocks)
       setTimeout(() => {
@@ -155,7 +138,7 @@ describe('Screener module actions', () => {
             }
           }
         ]
-        expect(postData).toEqual(expectedPost)
+        expect(this.testCase.postData).toEqual(expectedPost)
         done()
       }, 100)
     })
@@ -238,24 +221,13 @@ describe('Screener module actions', () => {
 
   describe('setEpworthProps action', () => {
     it('should set epworth props', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            {
-              id: 1
-            },
-            {
-              id: 2
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       this.testCase.setState({
         token: 'token'
@@ -263,9 +235,7 @@ describe('Screener module actions', () => {
       ScreenerModule.actions[symbols.actions.setEpworthProps](this.testCase.mocks)
       setTimeout(() => {
         const expectedPost = [
-          {
-            path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'
-          }
+          { path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby' }
         ]
         const expectedMutations = [
           {
@@ -284,7 +254,7 @@ describe('Screener module actions', () => {
             ]
           }
         ]
-        expect(postData).toEqual(expectedPost)
+        expect(this.testCase.postData).toEqual(expectedPost)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
       }, 100)
@@ -293,12 +263,8 @@ describe('Screener module actions', () => {
 
   describe('submitHST action', () => {
     it('should submit home sleep request to API', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
+      this.testCase.stubRequest({
+        method: 'post'
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
@@ -343,7 +309,7 @@ describe('Screener module actions', () => {
         }
       ]
       setTimeout(() => {
-        expect(postData).toEqual(expectedPost)
+        expect(this.testCase.postData).toEqual(expectedPost)
         done()
       }, 100)
     })
@@ -353,7 +319,7 @@ describe('Screener module actions', () => {
     beforeEach(function () {
       this.postData = []
       this.response = null
-      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
+      this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
         this.postData.push({
           path: path,
           payload: payload
@@ -456,20 +422,13 @@ describe('Screener module actions', () => {
 
   describe('setSessionData action', () => {
     it('should set session data', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            userid: 1,
-            docid: 2
-          }
-        }
+      const response = {
+        userid: 1,
+        docid: 2
       }
-      this.sandbox.stub(http, 'request').callsFake((method, path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
+      this.testCase.stubRequest({
+        method: 'get',
+        response: response
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token'
@@ -490,21 +449,16 @@ describe('Screener module actions', () => {
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.users.current
-          }
+          { path: endpoints.users.current }
         ]
-        expect(postData).toEqual(expectedHttp)
+        expect(this.testCase.postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
     it('should throw error while setting session data', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.reject(new Error())
+      this.testCase.stubRequest({
+        method: 'get',
+        status: 500
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token'

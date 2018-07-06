@@ -37,14 +37,14 @@ describe('Screener module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.users.show + '/1' }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -109,8 +109,10 @@ describe('Screener module actions', () => {
       this.testCase.stubRequest({
         method: 'post'
       })
+
       ScreenerModule.actions[symbols.actions.submitScreener](this.testCase.mocks)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedPost = [
           {
             path: endpoints.screeners.store,
@@ -140,7 +142,7 @@ describe('Screener module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedPost)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -196,7 +198,9 @@ describe('Screener module actions', () => {
       const payload = {
         id: 1
       }
+
       ScreenerModule.actions[symbols.actions.parseScreenerResults](this.testCase.mocks, payload)
+
       const expectedMutations = [
         {
           type: symbols.mutations.screenerId,
@@ -232,8 +236,10 @@ describe('Screener module actions', () => {
       this.testCase.setState({
         token: 'token'
       })
+
       ScreenerModule.actions[symbols.actions.setEpworthProps](this.testCase.mocks)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedPost = [
           { path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby' }
         ]
@@ -257,7 +263,7 @@ describe('Screener module actions', () => {
         expect(this.testCase.postData).toEqual(expectedPost)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -291,7 +297,9 @@ describe('Screener module actions', () => {
           }
         ]
       }
+
       ScreenerModule.actions[symbols.actions.submitHst](this.testCase.mocks, payload)
+
       const expectedPost = [
         {
           path: endpoints.homeSleepTests.store,
@@ -308,10 +316,10 @@ describe('Screener module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedPost)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -346,7 +354,8 @@ describe('Screener module actions', () => {
           outcome = error
         }
       )
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedMutations = [
           {
             type: symbols.mutations.screenerToken,
@@ -372,7 +381,7 @@ describe('Screener module actions', () => {
         expect(this.postData).toEqual(expectedPostData)
         expect(outcome instanceof Error).toBe(false)
         done()
-      }, 100)
+      })
     })
     it('should handle token retrieval failure', function (done) {
       this.response = Promise.resolve({
@@ -390,13 +399,14 @@ describe('Screener module actions', () => {
           outcome = error
         }
       )
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
         expect(this.testCase.actions).toEqual([])
         expect(outcome instanceof Error).toBe(true)
         expect(outcome.message).toBe('No token retrieved')
         done()
-      }, 100)
+      })
     })
     it('should handle authentication failure', function (done) {
       this.response = Promise.reject(new Error())
@@ -410,13 +420,14 @@ describe('Screener module actions', () => {
           outcome = error
         }
       )
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
         expect(this.testCase.actions).toEqual([])
         expect(outcome instanceof Error).toBe(true)
         expect(outcome.message).toBe('Authentication failed')
         done()
-      }, 100)
+      })
     })
   })
 
@@ -446,14 +457,14 @@ describe('Screener module actions', () => {
 
       ScreenerModule.actions[symbols.actions.setSessionData](this.testCase.mocks)
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.users.current }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('should throw error while setting session data', function (done) {
       this.testCase.stubRequest({

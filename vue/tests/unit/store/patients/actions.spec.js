@@ -78,14 +78,14 @@ describe('Patients module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.patients.patientData + '/1' }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('should handle error', function (done) {
       const patientId = 1
@@ -105,10 +105,10 @@ describe('Patients module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 

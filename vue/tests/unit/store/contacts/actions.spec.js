@@ -42,12 +42,12 @@ describe('Contacts Module actions', () => {
           payload: { contact_id: 1 }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedHttp)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
 
     it('should not set contact if promise resolves without data', function (done) {
@@ -65,11 +65,11 @@ describe('Contacts Module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
 
     it('should handle error if promise rejects', function (done) {
@@ -90,11 +90,11 @@ describe('Contacts Module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual([])
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 })

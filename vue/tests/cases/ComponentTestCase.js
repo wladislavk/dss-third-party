@@ -183,7 +183,7 @@ export default class ComponentTestCase extends BaseTestCase {
       return
     }
     if (this.fixedTimeout) {
-      setTimeout(callback, this.fixedTimeout)
+      super.wait(callback)
       return
     }
     if (this.waitForRequest) {

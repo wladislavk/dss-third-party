@@ -39,8 +39,10 @@ describe('Main module actions', () => {
         return Promise.resolve(result)
       })
       const credentials = {foo: 'bar'}
+
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedHttp = [
           {
             path: 'root/auth',
@@ -56,7 +58,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('throws if auth fails', function (done) {
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
@@ -67,8 +69,10 @@ describe('Main module actions', () => {
         return Promise.reject('auth error')
       })
       const credentials = {foo: 'bar'}
+
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedHttp = [
           {
             path: 'root/auth',
@@ -84,7 +88,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     // @todo: devise a way to test it
     it('throws with 422 status', function () {})
@@ -97,8 +101,10 @@ describe('Main module actions', () => {
         response: { type: 'OK' }
       })
       const token = 'token'
+
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedHttp = [
           { path: endpoints.users.check }
         ]
@@ -118,7 +124,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('throws if check user fails', function (done) {
       this.testCase.stubRequest({
@@ -126,8 +132,10 @@ describe('Main module actions', () => {
         status: 500
       })
       const token = 'token'
+
       MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         const expectedHttp = [
           { path: endpoints.users.check }
         ]
@@ -150,7 +158,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     // @todo: devise a way to test it
     it('throws if account suspended', function () {})
@@ -219,14 +227,14 @@ describe('Main module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.users.current }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -245,10 +253,10 @@ describe('Main module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -330,7 +338,7 @@ describe('Main module actions', () => {
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         const expectedMutations = [
           {
             type: symbols.mutations.patientSearchList,
@@ -361,7 +369,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('shows list with patients', function (done) {
       const searchTerm = 'John'
@@ -387,7 +395,7 @@ describe('Main module actions', () => {
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         const expectedMutations = [
           {
             type: symbols.mutations.patientSearchList,
@@ -418,7 +426,7 @@ describe('Main module actions', () => {
         ]
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const searchTerm = 'John'
@@ -429,10 +437,10 @@ describe('Main module actions', () => {
 
       MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.alertText).toBe('Could not select patient from database')
         done()
-      }, 100)
+      })
     })
   })
 })

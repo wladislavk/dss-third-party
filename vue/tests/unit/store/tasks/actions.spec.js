@@ -33,11 +33,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
 
     it('should retrieve tasks with error', function (done) {
@@ -60,11 +60,11 @@ describe('Tasks module actions', () => {
       const expectedData = [
         { path: endpoints.tasks.index }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -91,11 +91,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
 
     it('should retrieve patient tasks with error', function (done) {
@@ -115,10 +115,10 @@ describe('Tasks module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -168,11 +168,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('should add new task with error', function (done) {
       const data = {
@@ -199,10 +199,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('should edit existing task', function (done) {
       const data = {
@@ -239,11 +239,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('should edit existing task with error', function (done) {
       const data = {
@@ -270,10 +270,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('should trigger error if task is not set', function (done) {
       const data = {
@@ -287,10 +287,11 @@ describe('Tasks module actions', () => {
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
         message = reason.message
       })
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(message).toBe('Task is required')
         done()
-      }, 100)
+      })
     })
     it('should trigger error if date is not set', function (done) {
       const data = {
@@ -304,10 +305,11 @@ describe('Tasks module actions', () => {
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
         message = reason.message
       })
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(message).toBe('Date is required')
         done()
-      }, 100)
+      })
     })
     it('should trigger error if user is not set', function (done) {
       const data = {
@@ -321,10 +323,11 @@ describe('Tasks module actions', () => {
       TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
         message = reason.message
       })
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(message).toBe('User is required')
         done()
-      }, 100)
+      })
     })
   })
 
@@ -352,11 +355,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -375,10 +378,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -412,11 +415,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const taskId = 1
@@ -436,10 +439,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -465,11 +468,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('updates status with patient', function (done) {
       const taskId = 1
@@ -490,10 +493,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const taskId = 1
@@ -513,10 +516,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -539,11 +542,11 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual(expectedData)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('deletes task for patient', function (done) {
       const taskId = 1
@@ -564,10 +567,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const taskId = 1
@@ -587,10 +590,10 @@ describe('Tasks module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 })

@@ -59,7 +59,7 @@ describe('Flowsheet module actions', () => {
           payload: patientId
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
@@ -67,7 +67,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const patientId = 42
@@ -85,10 +85,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -124,7 +124,7 @@ describe('Flowsheet module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedUrl = endpoints.letters.byPatientAndInfo + '?patient_id=42&info_ids%5B0%5D=10&info_ids%5B1%5D=12&info_ids%5B2%5D=11'
         const expectedHttp = [
@@ -132,7 +132,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const patientId = 42
@@ -153,10 +153,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -199,7 +199,7 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
@@ -214,7 +214,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('has non-existent segment', function (done) {
       const initialData = {
@@ -233,11 +233,11 @@ describe('Flowsheet module actions', () => {
           payload: 0
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual([])
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const initialData = {
@@ -258,10 +258,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -284,11 +284,11 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('works with action', function (done) {
       const payload = {
@@ -315,11 +315,11 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('works with modal', function (done) {
       this.testCase.setGetters({
@@ -355,11 +355,11 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('works with modal and existing device', function (done) {
       this.testCase.setGetters({
@@ -382,11 +382,11 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -466,7 +466,7 @@ describe('Flowsheet module actions', () => {
           payload: 11
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
           {
@@ -476,7 +476,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const payload = {
@@ -498,10 +498,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -518,16 +518,14 @@ describe('Flowsheet module actions', () => {
           payload: 10
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.appointmentSummaries.destroy + '/10'
-          }
+          { path: endpoints.appointmentSummaries.destroy + '/10' }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const id = 10
@@ -545,10 +543,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -569,14 +567,14 @@ describe('Flowsheet module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.devices.byStatus }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -593,10 +591,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -627,7 +625,7 @@ describe('Flowsheet module actions', () => {
           payload: 0
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual([])
         const expectedHttp = [
@@ -635,7 +633,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('sets tracker rank for last segment', function (done) {
       const patientId = 42
@@ -655,10 +653,10 @@ describe('Flowsheet module actions', () => {
           payload: 3
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const patientId = 42
@@ -676,10 +674,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -722,14 +720,14 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.flowsheetSteps.bySection }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -746,10 +744,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -768,7 +766,7 @@ describe('Flowsheet module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           {
@@ -777,7 +775,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const lastSegment = 18
@@ -795,10 +793,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -817,16 +815,14 @@ describe('Flowsheet module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
-          {
-            path: endpoints.patientSummaries.getTrackerNotes + '/42'
-          }
+          { path: endpoints.patientSummaries.getTrackerNotes + '/42' }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const patientId = 42
@@ -844,10 +840,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -867,7 +863,7 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
           {
@@ -880,7 +876,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const initialData = {
@@ -901,10 +897,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -923,7 +919,7 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
@@ -931,7 +927,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('sets future appointment with data', function (done) {
       const patientId = 42
@@ -947,10 +943,10 @@ describe('Flowsheet module actions', () => {
           payload: { id: '1' }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const patientId = 42
@@ -968,10 +964,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -991,7 +987,7 @@ describe('Flowsheet module actions', () => {
           payload: 42
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
           {
@@ -1005,7 +1001,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const initialData = {
@@ -1026,10 +1022,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -1046,7 +1042,7 @@ describe('Flowsheet module actions', () => {
           payload: INITIAL_FUTURE_APPOINTMENT
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           {
@@ -1055,7 +1051,7 @@ describe('Flowsheet module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const id = 10
@@ -1073,10 +1069,10 @@ describe('Flowsheet module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 })

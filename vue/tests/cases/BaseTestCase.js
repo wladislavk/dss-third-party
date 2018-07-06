@@ -40,6 +40,10 @@ export default class BaseTestCase {
     this.sandbox.restore()
   }
 
+  wait (callback) {
+    setTimeout(callback, this.fixedTimeout)
+  }
+
   // eslint-disable-next-line no-unused-vars
   stubRequest (requestData) {
     // do nothing

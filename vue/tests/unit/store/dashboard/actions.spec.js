@@ -33,14 +33,15 @@ describe('Dashboard module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.documentCategories.active }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -59,10 +60,10 @@ describe('Dashboard module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -103,14 +104,15 @@ describe('Dashboard module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           { path: endpoints.memos.current }
         ]
         expect(this.testCase.postData).toEqual(expectedHttp)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -129,10 +131,10 @@ describe('Dashboard module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -296,13 +298,13 @@ describe('Dashboard module actions', () => {
           payload: response
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(this.testCase.postData).toEqual([
           { path: endpoints.guideSettingOptions.settingIds }
         ])
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -319,10 +321,10 @@ describe('Dashboard module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -383,7 +385,7 @@ describe('Dashboard module actions', () => {
         }
       ]
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
         expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
@@ -392,7 +394,7 @@ describe('Dashboard module actions', () => {
         ]
         expect(this.testCase.postData).toEqual(expectedRequestSettings)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       this.testCase.stubRequest({
@@ -413,10 +415,10 @@ describe('Dashboard module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 
@@ -434,7 +436,7 @@ describe('Dashboard module actions', () => {
       }
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.postData).toEqual([
           {
             path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
@@ -443,7 +445,7 @@ describe('Dashboard module actions', () => {
         ])
         expect(this.testCase.alertText).toBe('Successfully updated.')
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
       const DEVICE_ID = 7
@@ -465,10 +467,10 @@ describe('Dashboard module actions', () => {
           }
         }
       ]
-      setTimeout(() => {
+      this.testCase.wait(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
-      }, 100)
+      })
     })
   })
 

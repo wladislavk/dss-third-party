@@ -19,6 +19,8 @@ export default class StoreTestCase extends BaseTestCase {
       dispatch: this._dispatch.bind(this)
     }
     this.postData = []
+
+    this.fixedTimeout = 100
   }
 
   setState (state) {

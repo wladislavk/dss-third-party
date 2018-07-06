@@ -11,25 +11,46 @@ use Services\VueDateSelector;
 
 class Tasks extends BaseContext
 {
-    const TASK_MENUS = [
+    private const TASK_MENUS = [
         'top menu' => 0,
         'patient menu' => 1,
         'dashboard' => -2,
     ];
 
-    const TASK_BUTTONS = [
+    private const TASK_BUTTONS = [
         'delete' => 1,
         'edit' => 2,
     ];
 
-    /** @var string */
-    private $taskDeactivated = '';
+    private const COLUMN_NAME = 'name';
+    private const COLUMN_DUE_DATE = 'due_date';
+    private const COLUMN_ASSIGNED_TO = 'assigned_to';
 
-    /** @var string */
-    private $taskDeleted = '';
+    private const COLUMNS_NOT_COMPLETED = [
+        self::COLUMN_NAME => 1,
+        self::COLUMN_DUE_DATE => 2,
+        self::COLUMN_ASSIGNED_TO => 3,
+    ];
 
-    /** @var string */
-    private $taskCreated = false;
+    private const COLUMNS_COMPLETED = [
+        self::COLUMN_NAME => 0,
+        self::COLUMN_DUE_DATE => 1,
+        self::COLUMN_ASSIGNED_TO => 2,
+    ];
+
+    private const TASK_CREATED = 'Not existing test task';
+    private const TASK_UPDATED = 'call for bar';
+    private const TASK_DEACTIVATED = 'Set up webinar for Dr. X software training.';
+    private const TASK_DELETED = 'asdasdasd';
+
+    /** @var bool */
+    private $taskCreatedOrUpdated = false;
+
+    /** @var bool */
+    private $taskDeactivated = false;
+
+    /** @var bool */
+    private $taskDeleted = false;
 
     /**
      * @When I click on task :task checkbox in :area
@@ -182,7 +203,7 @@ class Tasks extends BaseContext
                     $checkbox->setValue(false);
                     break;
             }
-            $this->taskCreated = true;
+            $this->taskCreatedOrUpdated = true;
         }
     }
 
@@ -443,38 +464,355 @@ class Tasks extends BaseContext
     }
 
     /**
+     * @Then I see the list of tasks:
+     * @param TableNode $expectedTasks
+     */
+    public function testSeeTheListOfTasks(TableNode $expectedTasks)
+    {
+        $this->checkTasks($expectedTasks->getHash(), '#not_completed_tasks', self::COLUMNS_NOT_COMPLETED);
+    }
+
+    /**
+     * @Then I see the list of completed tasks:
+     * @param TableNode $expectedTasks
+     */
+    public function testSeeTheListOfCompletedTasks(TableNode $expectedTasks)
+    {
+        $this->checkTasks($expectedTasks->getHash(), '#completed_tasks', self::COLUMNS_COMPLETED);
+    }
+
+    /**
+     * @Then I see the list of tasks has :pagesCount pages
+     * @param string $pagesCount
+     */
+    public function testSeeTheListOfTasksHasPages(string $pagesCount)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $pageLinks = $this->findAllCss('#non_cp_pages > *');
+        $this->checkPages($pagesCount, $pageLinks);
+    }
+
+    /**
+     * @Then I see the list of completed tasks has :pagesCount pages
+     * @param string $pagesCount
+     */
+    public function testSeeTheListOfCompletedTasksHasPages(string $pagesCount)
+    {
+        $pageLinks = $this->findAllCss('#cp_pages > *');
+        $this->checkPages($pagesCount, $pageLinks);
+    }
+
+    /**
+     * @param string $pagesCount
+     * @param array $pageLinks
+     */
+    private function checkPages(string $pagesCount, array $pageLinks)
+    {
+        Assert::assertEquals($pagesCount, count($pageLinks));
+        for ($page = 1; $page <= $pagesCount; $page++) {
+            $pageElement = $pageLinks[$page - 1];
+            Assert::assertEquals($page, trim($pageElement->getText()));
+        }
+    }
+
+    /**
+     * @When I click :buttonName button in Tasks section
+     * @param string $buttonName
+     * @throws BehatException
+     */
+    public function clickButtonInTasksSection(string $buttonName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $this->clickButton($buttonName);
+    }
+
+    /**
+     * @When I click :buttonName button in the main section
+     * @param string $buttonName
+     * @throws BehatException
+     */
+    public function clickButtonInMainSection(string $buttonName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        if ($this->clickElementWithText('#contentMain button.addButton', $buttonName)) {
+            return;
+        }
+
+        throw new BehatException("Button with text '$buttonName' not found in main section.");
+    }
+
+    /**
+     * @When I click add button in the modal with text :buttonName
+     * @param string $buttonName
+     * @throws BehatException
+     */
+    public function clickAddButtonInModal(string $buttonName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        if ($this->clickElementWithText('form table button.addButton', $buttonName)) {
+            return;
+        }
+
+        if ($this->clickElementWithValue('form table input[type="button"].addButton', $buttonName)) {
+            return;
+        }
+
+        if ($this->clickElementWithValue('form table input[type="submit"].addButton', $buttonName)) {
+            return;
+        }
+
+        throw new BehatException("Add button with text '$buttonName' not found in the modal.");
+    }
+
+    /**
+     * @When I click :pageNumber pagination link above incomplete tasks table
+     * @param string $pageNumber
+     * @throws BehatException
+     */
+    public function clickPaginationLinkInIncompleteTasks(string $pageNumber)
+    {
+        $this->clickPagination('#non_cp_pages .fp', $pageNumber);
+    }
+
+    /**
+     * @When I click :pageNumber pagination link above completed tasks table
+     * @param string $pageNumber
+     * @throws BehatException
+     */
+    public function clickPaginationLinkInCompletedTasks(string $pageNumber)
+    {
+        $this->clickPagination('#cp_pages .fp', $pageNumber);
+    }
+
+    /**
+     * @When I click :columnText column in tasks table
+     * @param string $columnText
+     * @throws BehatException
+     */
+    public function clickColumnInTasksTable(string $columnText)
+    {
+        $this->clickHeaderLink('#not_completed_tasks .tr_bg_h a', $columnText);
+    }
+
+    /**
+     * @When I click :columnText column in completed tasks table
+     * @param string $columnText
+     */
+    public function clickColumnInCompletedTasksTable(string $columnText)
+    {
+        $this->clickHeaderLink('#completed_tasks .tr_bg_h a', $columnText);
+    }
+
+    /**
+     * @param string $selector
+     * @param string $columnText
+     * @throws BehatException
+     */
+    private function clickHeaderLink(string $selector, string $columnText)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        if ($this->clickElementWithText($selector, $columnText)) {
+            return;
+        }
+
+        throw new BehatException("Header link '$columnText' not found.");
+    }
+
+    /**
+     * @When I fill task form on Manage Tasks page with values:
+     * @param TableNode $table
+     */
+    public function fillTaskFormOnManageTasksPageWithValues(TableNode $table)
+    {
+        $this->fillTaskForm($table);
+        $this->taskCreatedOrUpdated = true;
+    }
+
+    /**
+     * @When I click delete task link for :task from Manage Tasks page
+     * @param string $task
+     */
+    public function clickDeleteTaskLinkForFromManageTasksPage(string $task)
+    {
+        $this->clickDeleteButton($task);
+        $this->taskDeleted = true;
+    }
+
+    /**
+     * @When I click :buttonName button next to task :taskName on Manage Tasks page
+     * @param string $buttonName
+     * @param string $taskName
+     * @throws BehatException
+     */
+    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $rows = $this->findAllCss('#not_completed_tasks tr');
+        foreach ($rows as $row) {
+            $taskRowText = trim($row->getText());
+            if (strpos($taskRowText, $taskName) !== false) {
+                $button = $row->find('css', '.editlink');
+                $buttonText = trim($button->getText());
+                if ($buttonName === $buttonText) {
+                    $button->click();
+                    return;
+                }
+            }
+        }
+        throw new BehatException("Button with text $buttonName not found for task $taskName");
+    }
+
+    /**
+     * @When I click checkbox next to task :taskName on Manage Tasks page
+     * @param string $taskName
+     * @throws BehatException
+     */
+    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $rows = $this->findAllCss('#not_completed_tasks tr');
+        foreach ($rows as $row) {
+            $taskRowText = trim($row->getText());
+            if (strpos($taskRowText, $taskName) !== false) {
+                $button = $row->find('css', 'input[type=checkbox]');
+                if ($button) {
+                    $button->click();
+                    $this->taskDeactivated = true;
+                    return;
+                }
+            }
+        }
+        throw new BehatException("Checkbox not found for task $taskName");
+    }
+
+    /**
+     * @param array $expectedTasks
+     * @param string $tableId
+     * @param array $columnsNumbers
+     * @throws BehatException
+     */
+    private function checkTasks(array $expectedTasks, string $tableId, array $columnsNumbers)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $tableRows = $this->findAllCss(
+            sprintf('%s tr:not(:first-child)', $tableId)
+        );
+
+        Assert::assertEquals(count($expectedTasks), count($tableRows));
+
+        foreach ($expectedTasks as $index => $task) {
+            if (isset($tableRows[$index])) {
+                $cells = $tableRows[$index]->findAll('css', 'td');
+                Assert::assertEquals($task[self::COLUMN_NAME], $this->sanitizeText($cells[$columnsNumbers[self::COLUMN_NAME]]->getText()));
+                Assert::assertEquals($task[self::COLUMN_DUE_DATE], $this->sanitizeText($cells[$columnsNumbers[self::COLUMN_DUE_DATE]]->getText()));
+                Assert::assertEquals($task[self::COLUMN_ASSIGNED_TO], $this->sanitizeText($cells[$columnsNumbers[self::COLUMN_ASSIGNED_TO]]->getText()));
+            } else {
+                throw new BehatException(sprintf("Task with text %s not found in table %s", $task['name'], $tableId));
+            }
+        }
+    }
+
+    /**
+     * @param string $buttonName
+     * @throws BehatException
+     */
+    private function clickButton(string $buttonName): void
+    {
+        if ($this->clickElementWithText('.index_task a.button', $buttonName)) {
+            return;
+        }
+
+        throw new BehatException("Button with text '$buttonName' not found for tasks section.");
+    }
+
+    /**
+     * Returns true if element has been clicked.
+     *
+     * @param $selector
+     * @param string $buttonName
+     * @return bool
+     */
+    private function clickElementWithText(string $selector, string $buttonName): bool
+    {
+        $elements = $this->findAllCss($selector);
+        foreach ($elements as $element) {
+            if ($buttonName === trim($element->getText())) {
+                $element->click();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns true if element has been clicked.
+     *
+     * @param $selector
+     * @param string $buttonName
+     * @return bool
+     */
+    private function clickElementWithValue(string $selector, string $buttonName): bool
+    {
+        $elements = $this->findAllCss($selector);
+        foreach ($elements as $element) {
+            if ($buttonName == trim($element->getAttribute('value'))) {
+                $element->click();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $selector
+     * @param string $pageNumber
+     * @throws BehatException
+     */
+    private function clickPagination(string $selector, string $pageNumber): void
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        if ($this->clickElementWithText($selector, $pageNumber)) {
+            return;
+        }
+
+        throw new BehatException("Pagination link with value $pageNumber not found.");
+    }
+
+
+    /**
      * @AfterScenario
      */
     public function afterScenario()
     {
+        if ($this->taskCreatedOrUpdated) {
+            $this->executeQuery(sprintf("DELETE FROM dental_task WHERE task='%s';", self::TASK_CREATED));
+
+            $this->executeQuery(
+                sprintf(
+                    "UPDATE dental_task SET task='call for fu', patientid=112, due_date='2014-03-06' WHERE task='%s';",
+                    self::TASK_UPDATED
+                )
+            );
+            $this->taskCreatedOrUpdated = false;
+        }
         if ($this->taskDeactivated) {
-            $query = <<<SQL
-UPDATE dental_task
-SET status=0
-WHERE task='{$this->taskDeactivated}';
-SQL;
-            $this->executeQuery($query);
+            $this->executeQuery(sprintf("UPDATE dental_task SET status=0 WHERE task='%s';", self::TASK_DEACTIVATED));
+            $this->taskDeactivated = false;
         }
         if ($this->taskDeleted) {
-            $query = <<<SQL
-UPDATE dental_task
-SET status=0
-WHERE task='{$this->taskDeleted}';
-SQL;
-            $this->executeQuery($query);
-        }
-        if ($this->taskCreated) {
-            $deleteQuery = <<<SQL
-DELETE FROM dental_task
-WHERE task='Test task';
-SQL;
-            $this->executeQuery($deleteQuery);
-            $updateQuery = <<<SQL
-UPDATE dental_task
-SET task='call for fu', patientid=112, due_date='2014-03-06'
-WHERE task='call for bar';
-SQL;
-            $this->executeQuery($updateQuery);
+            $this->executeQuery(sprintf("UPDATE dental_task SET status=0 WHERE task='%s';", self::TASK_DELETED));
+            $this->taskDeleted = false;
         }
     }
 }

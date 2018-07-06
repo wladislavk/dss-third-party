@@ -46,6 +46,8 @@ default:
                 - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
+                - Contexts\Tasks
+
 chrome:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~

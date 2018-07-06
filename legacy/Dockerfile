@@ -57,14 +57,3 @@ CustomLog "/dev/stdout" common\n\
     AliasMatch "^/(.*\.)(css|js|map|json|bmp|cur|gif|jpg|jpeg|png|tif|swf|svg|pdf|eot|ttf|woff|xml)$" "${LEGACY_PATH}/$1$2"\n\
 </VirtualHost>\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
-
-# Create entrypoint script, make it executable
-RUN /bin/echo -e "#!/bin/bash\n\
-set -e\n\
-chmod -R 0777 ${LEGACY_PATH}/manage/3rdParty/tcpdf/cache\n\
-chmod -R 0777 ${LOADER_PATH}/storage\n\
-exec "$@"  -D FOREGROUND\n\
-" > /usr/sbin/docker-entrypoint.sh \
-    && chmod +x /usr/sbin/docker-entrypoint.sh
-
-ENTRYPOINT ["/usr/sbin/docker-entrypoint.sh"]

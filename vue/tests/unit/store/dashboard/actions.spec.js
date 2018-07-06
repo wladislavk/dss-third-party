@@ -405,11 +405,9 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
 
       this.testCase.wait(() => {
-        let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
-        expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
         expect(this.testCase.getResults()).toEqual({
           http: [
-            { path: expectedPath }
+            { path: endpoints.guideDevices.withImages }
           ],
           mutations: [],
           actions: [

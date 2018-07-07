@@ -31,9 +31,7 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.show + '/1' }
-          ],
+          http: { path: endpoints.users.show + '/1' },
           mutations: [
             {
               type: symbols.mutations.doctorName,
@@ -111,33 +109,31 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.screeners.store,
-              payload: {
-                docid: 1,
-                userid: 2,
-                rx_cpap: 3,
-                epworth: [
-                  {
-                    id: 'epworth1',
-                    value: 1
-                  },
-                  {
-                    id: 'epworth2',
-                    value: 2
-                  }
-                ],
-                first_name: 'John',
-                last_name: 'Doe',
-                phone: '2233223223',
-                symptom1: 1,
-                symptom2: 2,
-                coMorbidity1: 2,
-                coMorbidity2: 0
-              }
+          http: {
+            path: endpoints.screeners.store,
+            payload: {
+              docid: 1,
+              userid: 2,
+              rx_cpap: 3,
+              epworth: [
+                {
+                  id: 'epworth1',
+                  value: 1
+                },
+                {
+                  id: 'epworth2',
+                  value: 2
+                }
+              ],
+              first_name: 'John',
+              last_name: 'Doe',
+              phone: '2233223223',
+              symptom1: 1,
+              symptom2: 2,
+              coMorbidity1: 2,
+              coMorbidity2: 0
             }
-          ],
+          },
           mutations: [],
           actions: []
         })
@@ -202,7 +198,7 @@ describe('Screener module actions', () => {
       ScreenerModule.actions[symbols.actions.parseScreenerResults](this.testCase.mocks, payload)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.screenerId,
@@ -241,9 +237,7 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby' }
-          ],
+          http: { path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby' },
           mutations: [
             {
               type: symbols.mutations.setEpworthProps,
@@ -301,22 +295,20 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.homeSleepTests.store,
-              payload: {
-                screener_id: 1,
-                doc_id: 3,
-                user_id: 4,
-                company_id: 2,
-                patient_firstname: 'John',
-                patient_lastname: 'Doe',
-                patient_cell_phone: '2233223223',
-                patient_email: '',
-                patient_dob: ''
-              }
+          http: {
+            path: endpoints.homeSleepTests.store,
+            payload: {
+              screener_id: 1,
+              doc_id: 3,
+              user_id: 4,
+              company_id: 2,
+              patient_firstname: 'John',
+              patient_lastname: 'Doe',
+              patient_cell_phone: '2233223223',
+              patient_email: '',
+              patient_dob: ''
             }
-          ],
+          },
           mutations: [],
           actions: []
         })
@@ -329,10 +321,10 @@ describe('Screener module actions', () => {
     beforeEach(function () {
       this.response = null
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData.push({
+        this.testCase.postData = {
           path: path,
           payload: payload
-        })
+        }
         return this.response
       })
     })
@@ -356,14 +348,12 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: 'http://api/auth',
-              payload: {
-                foo: 'bar'
-              }
+          http: {
+            path: 'http://api/auth',
+            payload: {
+              foo: 'bar'
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.screenerToken,
@@ -398,12 +388,10 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: 'http://api/auth',
-              payload: {}
-            }
-          ],
+          http: {
+            path: 'http://api/auth',
+            payload: {}
+          },
           mutations: [],
           actions: []
         })
@@ -425,12 +413,10 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: 'http://api/auth',
-              payload: {}
-            }
-          ],
+          http: {
+            path: 'http://api/auth',
+            payload: {}
+          },
           mutations: [],
           actions: []
         })
@@ -456,9 +442,7 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.current }
-          ],
+          http: { path: endpoints.users.current },
           mutations: [
             {
               type: symbols.mutations.sessionData,

@@ -20,7 +20,7 @@ export default class StoreTestCase extends BaseTestCase {
       commit: this._commit.bind(this),
       dispatch: this._dispatch.bind(this)
     }
-    this.postData = []
+    this.postData = {}
 
     this.fixedTimeout = 100
   }
@@ -89,7 +89,7 @@ export default class StoreTestCase extends BaseTestCase {
         if (data) {
           newPostObject.payload = data
         }
-        this.postData.push(newPostObject)
+        this.postData = newPostObject
         if (error) {
           if (status !== 500) {
             return Promise.reject(new Error({ status: status }))

@@ -38,9 +38,7 @@ describe('Education module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.edxCertificates.byUser }
-          ],
+          http: { path: endpoints.edxCertificates.byUser },
           mutations: [
             {
               type: symbols.mutations.edxCertificatesData,
@@ -77,9 +75,7 @@ describe('Education module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.edxCertificates.byUser }
-          ],
+          http: { path: endpoints.edxCertificates.byUser },
           mutations: [],
           actions: [
             {

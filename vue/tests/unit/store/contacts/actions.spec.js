@@ -23,12 +23,10 @@ describe('Contacts Module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.contacts.withContactType,
-              payload: { contact_id: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.contacts.withContactType,
+            payload: { contact_id: 1 }
+          },
           mutations: [
             {
               type: symbols.mutations.setContact,
@@ -53,12 +51,10 @@ describe('Contacts Module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.contacts.withContactType,
-              payload: { contact_id: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.contacts.withContactType,
+            payload: { contact_id: 1 }
+          },
           mutations: [],
           actions: [
             {
@@ -78,12 +74,10 @@ describe('Contacts Module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.contacts.withContactType,
-              payload: { contact_id: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.contacts.withContactType,
+            payload: { contact_id: 1 }
+          },
           mutations: [],
           actions: [
             {

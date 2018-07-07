@@ -26,9 +26,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.documentCategories.active }
-          ],
+          http: { path: endpoints.documentCategories.active },
           mutations: [
             {
               type: symbols.mutations.documentCategories,
@@ -47,9 +45,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.documentCategories.active }
-          ],
+          http: { path: endpoints.documentCategories.active },
           mutations: [],
           actions: [
             {
@@ -71,7 +67,7 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.deviceSelectorModal](this.testCase.mocks)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.modal,
@@ -100,9 +96,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.memos.current }
-          ],
+          http: { path: endpoints.memos.current },
           mutations: [
             {
               type: symbols.mutations.memos,
@@ -121,9 +115,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.memos.current }
-          ],
+          http: { path: endpoints.memos.current },
           mutations: [],
           actions: [
             {
@@ -296,9 +288,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.guideSettingOptions.settingIds }
-          ],
+          http: { path: endpoints.guideSettingOptions.settingIds },
           mutations: [
             {
               type: symbols.mutations.deviceGuideSettingOptions,
@@ -317,9 +307,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.guideSettingOptions.settingIds }
-          ],
+          http: { path: endpoints.guideSettingOptions.settingIds },
           mutations: [],
           actions: [
             {
@@ -387,9 +375,7 @@ describe('Dashboard module actions', () => {
         let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
         expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: expectedPath }
-          ],
+          http: { path: expectedPath },
           mutations: [
             {
               type: symbols.mutations.deviceGuideResults,
@@ -412,9 +398,7 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.guideDevices.withImages }
-          ],
+          http: { path: endpoints.guideDevices.withImages },
           mutations: [],
           actions: [
             {
@@ -444,12 +428,10 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-              payload: { patient_id: PATIENT_ID }
-            }
-          ],
+          http: {
+            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+            payload: { patient_id: PATIENT_ID }
+          },
           mutations: [
             {
               type: symbols.mutations.resetModal,
@@ -476,12 +458,10 @@ describe('Dashboard module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-              payload: { patient_id: PATIENT_ID }
-            }
-          ],
+          http: {
+            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+            payload: { patient_id: PATIENT_ID }
+          },
           mutations: [],
           actions: [
             {
@@ -513,7 +493,7 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.moveGuideSettingSlider,
@@ -540,7 +520,7 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.moveGuideSettingSlider,

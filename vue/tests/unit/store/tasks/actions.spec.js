@@ -23,9 +23,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.index }
-          ],
+          http: { path: endpoints.tasks.index },
           mutations: [
             {
               type: symbols.mutations.setTasks,
@@ -45,9 +43,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.index }
-          ],
+          http: { path: endpoints.tasks.index },
           mutations: [],
           actions: [
             {
@@ -76,9 +72,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.indexForPatient + '/2' }
-          ],
+          http: { path: endpoints.tasks.indexForPatient + '/2' },
           mutations: [
             {
               type: symbols.mutations.setTasksForPatient,
@@ -99,9 +93,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.indexForPatient + '/2' }
-          ],
+          http: { path: endpoints.tasks.indexForPatient + '/2' },
           mutations: [],
           actions: [
             {
@@ -144,19 +136,17 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.store,
-              payload: {
-                task: 'test task',
-                due_date: '2014-01-03',
-                status: 0,
-                responsibleid: 3,
-                userid: 2,
-                patientid: 0
-              }
+          http: {
+            path: endpoints.tasks.store,
+            payload: {
+              task: 'test task',
+              due_date: '2014-01-03',
+              status: 0,
+              responsibleid: 3,
+              userid: 2,
+              patientid: 0
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -182,19 +172,17 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.store,
-              payload: {
-                task: 'test task',
-                due_date: '2014-01-03',
-                status: 0,
-                responsibleid: 3,
-                userid: 2,
-                patientid: undefined
-              }
+          http: {
+            path: endpoints.tasks.store,
+            payload: {
+              task: 'test task',
+              due_date: '2014-01-03',
+              status: 0,
+              responsibleid: 3,
+              userid: 2,
+              patientid: undefined
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -224,19 +212,17 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.update + '/1',
-              payload: {
-                task: 'test task',
-                due_date: '2014-01-03',
-                status: 0,
-                responsibleid: 3,
-                userid: 2,
-                patientid: 4
-              }
+          http: {
+            path: endpoints.tasks.update + '/1',
+            payload: {
+              task: 'test task',
+              due_date: '2014-01-03',
+              status: 0,
+              responsibleid: 3,
+              userid: 2,
+              patientid: 4
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -262,19 +248,17 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.update + '/1',
-              payload: {
-                task: 'test task',
-                due_date: '2014-01-03',
-                status: 0,
-                responsibleid: 3,
-                userid: 2,
-                patientid: undefined
-              }
+          http: {
+            path: endpoints.tasks.update + '/1',
+            payload: {
+              task: 'test task',
+              due_date: '2014-01-03',
+              status: 0,
+              responsibleid: 3,
+              userid: 2,
+              patientid: undefined
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -357,9 +341,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.responsible }
-          ],
+          http: { path: endpoints.users.responsible },
           mutations: [
             {
               type: symbols.mutations.responsibleUsers,
@@ -378,9 +360,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.responsible }
-          ],
+          http: { path: endpoints.users.responsible },
           mutations: [],
           actions: [
             {
@@ -415,9 +395,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.show + '/1' }
-          ],
+          http: { path: endpoints.tasks.show + '/1' },
           mutations: [
             {
               type: symbols.mutations.getTask,
@@ -437,9 +415,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.show + '/1' }
-          ],
+          http: { path: endpoints.tasks.show + '/1' },
           mutations: [],
           actions: [
             {
@@ -466,12 +442,10 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.update + '/1',
-              payload: { status: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.tasks.update + '/1',
+            payload: { status: 1 }
+          },
           mutations: [],
           actions: [
             {
@@ -492,12 +466,10 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.update + '/1',
-              payload: { status: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.tasks.update + '/1',
+            payload: { status: 1 }
+          },
           mutations: [],
           actions: [
             {
@@ -521,12 +493,10 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.tasks.update + '/1',
-              payload: { status: 1 }
-            }
-          ],
+          http: {
+            path: endpoints.tasks.update + '/1',
+            payload: { status: 1 }
+          },
           mutations: [],
           actions: [
             {
@@ -553,9 +523,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.destroy + '/1' }
-          ],
+          http: { path: endpoints.tasks.destroy + '/1' },
           mutations: [],
           actions: [
             {
@@ -576,9 +544,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.destroy + '/1' }
-          ],
+          http: { path: endpoints.tasks.destroy + '/1' },
           mutations: [],
           actions: [
             {
@@ -602,9 +568,7 @@ describe('Tasks module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.tasks.destroy + '/1' }
-          ],
+          http: { path: endpoints.tasks.destroy + '/1' },
           mutations: [],
           actions: [
             {

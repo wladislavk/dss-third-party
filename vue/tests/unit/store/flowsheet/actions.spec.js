@@ -32,9 +32,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.byPatient + '/' + patientId }
-          ],
+          http: { path: endpoints.appointmentSummaries.byPatient + '/' + patientId },
           mutations: [
             {
               type: symbols.mutations.clearAppointmentSummary,
@@ -67,9 +65,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.byPatient + '/' + patientId }
-          ],
+          http: { path: endpoints.appointmentSummaries.byPatient + '/' + patientId },
           mutations: [
             {
               type: symbols.mutations.clearAppointmentSummary,
@@ -110,9 +106,7 @@ describe('Flowsheet module actions', () => {
       this.testCase.wait(() => {
         const expectedUrl = endpoints.letters.byPatientAndInfo + '?patient_id=42&info_ids%5B0%5D=10&info_ids%5B1%5D=12&info_ids%5B2%5D=11'
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: expectedUrl }
-          ],
+          http: { path: expectedUrl },
           mutations: [
             {
               type: symbols.mutations.appointmentSummaryLetters,
@@ -135,9 +129,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.letters.byPatientAndInfo + '?patient_id=42' }
-          ],
+          http: { path: endpoints.letters.byPatientAndInfo + '?patient_id=42' },
           mutations: [],
           actions: [
             {
@@ -167,16 +159,14 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.store,
-              payload: {
-                step_id: CONSULT_ID,
-                patient_id: 42,
-                appt_type: 1
-              }
+          http: {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: CONSULT_ID,
+              patient_id: 42,
+              appt_type: 1
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.setExistingDevice,
@@ -220,16 +210,14 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.store,
-              payload: {
-                step_id: 99,
-                patient_id: 42,
-                appt_type: 1
-              }
+          http: {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: 99,
+              patient_id: 42,
+              appt_type: 1
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.setExistingDevice,
@@ -252,16 +240,14 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.store,
-              payload: {
-                step_id: CONSULT_ID,
-                patient_id: 42,
-                appt_type: 1
-              }
+          http: {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: CONSULT_ID,
+              patient_id: 42,
+              appt_type: 1
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.setExistingDevice,
@@ -299,7 +285,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [],
+          http: {},
           mutations: [],
           actions: [
             {
@@ -326,7 +312,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [],
+          http: {},
           mutations: [],
           actions: [
             {
@@ -363,7 +349,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [],
+          http: {},
           mutations: [
             {
               type: symbols.mutations.modal,
@@ -406,7 +392,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [],
+          http: {},
           mutations: [],
           actions: [
             {
@@ -440,7 +426,7 @@ describe('Flowsheet module actions', () => {
       FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.setExistingDevice,
@@ -480,7 +466,7 @@ describe('Flowsheet module actions', () => {
       FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [],
         actions: []
       })
@@ -500,12 +486,10 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.update + '/10',
-              payload: { foo: 'bar' }
-            }
-          ],
+          http: {
+            path: endpoints.appointmentSummaries.update + '/10',
+            payload: { foo: 'bar' }
+          },
           mutations: [],
           actions: [
             {
@@ -529,12 +513,10 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.update + '/10',
-              payload: { foo: 'bar' }
-            }
-          ],
+          http: {
+            path: endpoints.appointmentSummaries.update + '/10',
+            payload: { foo: 'bar' }
+          },
           mutations: [],
           actions: [
             {
@@ -560,9 +542,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.destroy + '/10' }
-          ],
+          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [
             {
               type: symbols.mutations.removeAppointmentSummary,
@@ -582,9 +562,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.destroy + '/10' }
-          ],
+          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [],
           actions: [
             {
@@ -613,9 +591,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.devices.byStatus }
-          ],
+          http: { path: endpoints.devices.byStatus },
           mutations: [
             {
               type: symbols.mutations.devices,
@@ -634,9 +610,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.devices.byStatus }
-          ],
+          http: { path: endpoints.devices.byStatus },
           mutations: [],
           actions: [
             {
@@ -667,9 +641,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.finalRank + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
           mutations: [
             {
               type: symbols.mutations.finalTrackerRank,
@@ -702,9 +674,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.finalRank + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
           mutations: [
             {
               type: symbols.mutations.finalTrackerRank,
@@ -737,9 +707,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.finalRank + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
           mutations: [],
           actions: [
             {
@@ -776,9 +744,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.flowsheetSteps.bySection }
-          ],
+          http: { path: endpoints.flowsheetSteps.bySection },
           mutations: [
             {
               type: symbols.mutations.clearTrackerSteps,
@@ -811,9 +777,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.flowsheetSteps.bySection }
-          ],
+          http: { path: endpoints.flowsheetSteps.bySection },
           mutations: [],
           actions: [
             {
@@ -840,9 +804,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.flowsheetSteps.byNextStep + '/18' }
-          ],
+          http: { path: endpoints.flowsheetSteps.byNextStep + '/18' },
           mutations: [
             {
               type: symbols.mutations.trackerStepsNext,
@@ -862,9 +824,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.flowsheetSteps.byNextStep + '/18' }
-          ],
+          http: { path: endpoints.flowsheetSteps.byNextStep + '/18' },
           mutations: [],
           actions: [
             {
@@ -891,9 +851,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.patientSummaries.getTrackerNotes + '/42' }
-          ],
+          http: { path: endpoints.patientSummaries.getTrackerNotes + '/42' },
           mutations: [
             {
               type: symbols.mutations.patientTrackerNotes,
@@ -913,9 +871,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.patientSummaries.getTrackerNotes + '/42' }
-          ],
+          http: { path: endpoints.patientSummaries.getTrackerNotes + '/42' },
           mutations: [],
           actions: [
             {
@@ -944,15 +900,13 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.patientSummaries.updateTrackerNotes,
-              payload: {
-                patient_id: 42,
-                tracker_notes: 'notes'
-              }
+          http: {
+            path: endpoints.patientSummaries.updateTrackerNotes,
+            payload: {
+              patient_id: 42,
+              tracker_notes: 'notes'
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -975,15 +929,13 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.patientSummaries.updateTrackerNotes,
-              payload: {
-                patient_id: 42,
-                tracker_notes: 'notes'
-              }
+          http: {
+            path: endpoints.patientSummaries.updateTrackerNotes,
+            payload: {
+              patient_id: 42,
+              tracker_notes: 'notes'
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -1009,9 +961,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.futureAppointment + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
           mutations: [],
           actions: [
             {
@@ -1032,9 +982,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.futureAppointment + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
           mutations: [
             {
               type: symbols.mutations.futureAppointment,
@@ -1059,9 +1007,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.futureAppointment + '/42' }
-          ],
+          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
           mutations: [],
           actions: [
             {
@@ -1090,16 +1036,14 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.store,
-              payload: {
-                step_id: 2,
-                patient_id: 42,
-                appt_type: 0
-              }
+          http: {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: 2,
+              patient_id: 42,
+              appt_type: 0
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -1122,16 +1066,14 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.appointmentSummaries.store,
-              payload: {
-                step_id: 2,
-                patient_id: 42,
-                appt_type: 0
-              }
+          http: {
+            path: endpoints.appointmentSummaries.store,
+            payload: {
+              step_id: 2,
+              patient_id: 42,
+              appt_type: 0
             }
-          ],
+          },
           mutations: [],
           actions: [
             {
@@ -1157,9 +1099,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.destroy + '/10' }
-          ],
+          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [
             {
               type: symbols.mutations.futureAppointment,
@@ -1179,9 +1119,7 @@ describe('Flowsheet module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.appointmentSummaries.destroy + '/10' }
-          ],
+          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [],
           actions: [
             {

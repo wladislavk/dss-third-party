@@ -44,9 +44,7 @@ describe('Patients module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.patients.patientData + '/1' }
-          ],
+          http: { path: endpoints.patients.patientData + '/1' },
           mutations: [
             {
               type: symbols.mutations.patientId,
@@ -92,9 +90,7 @@ describe('Patients module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.patients.patientData + '/1' }
-          ],
+          http: { path: endpoints.patients.patientData + '/1' },
           mutations: [],
           actions: [
             {
@@ -116,7 +112,7 @@ describe('Patients module actions', () => {
       PatientsModule.actions[symbols.actions.clearPatientData](this.testCase.mocks)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.patientId,

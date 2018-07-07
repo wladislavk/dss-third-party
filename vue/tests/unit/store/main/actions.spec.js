@@ -26,10 +26,10 @@ describe('Main module actions', () => {
     })
     it('resolves login', function (done) {
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData.push({
+        this.testCase.postData = {
           path: path,
           payload: payload
-        })
+        }
         const result = {
           data: {
             token: 'token'
@@ -43,12 +43,10 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: 'root/auth',
-              payload: credentials
-            }
-          ],
+          http: {
+            path: 'root/auth',
+            payload: credentials
+          },
           mutations: [],
           actions: [
             {
@@ -62,10 +60,10 @@ describe('Main module actions', () => {
     })
     it('throws if auth fails', function (done) {
       this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData.push({
+        this.testCase.postData = {
           path: path,
           payload: payload
-        })
+        }
         return Promise.reject('auth error')
       })
       const credentials = {foo: 'bar'}
@@ -74,12 +72,10 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: 'root/auth',
-              payload: credentials
-            }
-          ],
+          http: {
+            path: 'root/auth',
+            payload: credentials
+          },
           mutations: [],
           actions: [
             {
@@ -107,9 +103,7 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.check }
-          ],
+          http: { path: endpoints.users.check },
           mutations: [
             {
               type: symbols.mutations.mainToken,
@@ -134,9 +128,7 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.check }
-          ],
+          http: { path: endpoints.users.check },
           mutations: [
             {
               type: symbols.mutations.mainToken,
@@ -190,9 +182,7 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.current }
-          ],
+          http: { path: endpoints.users.current },
           mutations: [
             {
               type: symbols.mutations.userInfo,
@@ -238,9 +228,7 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            { path: endpoints.users.current }
-          ],
+          http: { path: endpoints.users.current },
           mutations: [],
           actions: [
             {
@@ -262,7 +250,7 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.disablePopupEdit](this.testCase.mocks)
 
       expect(this.testCase.getResults()).toEqual({
-        http: [],
+        http: {},
         mutations: [
           {
             type: symbols.mutations.popupEdit,
@@ -340,14 +328,12 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.patients.list,
-              payload: {
-                partial_name: 'John'
-              }
+          http: {
+            path: endpoints.patients.list,
+            payload: {
+              partial_name: 'John'
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.patientSearchList,
@@ -395,14 +381,12 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.patients.list,
-              payload: {
-                partial_name: 'John'
-              }
+          http: {
+            path: endpoints.patients.list,
+            payload: {
+              partial_name: 'John'
             }
-          ],
+          },
           mutations: [
             {
               type: symbols.mutations.patientSearchList,
@@ -444,14 +428,12 @@ describe('Main module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: [
-            {
-              path: endpoints.patients.list,
-              payload: {
-                partial_name: 'John'
-              }
+          http: {
+            path: endpoints.patients.list,
+            payload: {
+              partial_name: 'John'
             }
-          ],
+          },
           mutations: [],
           actions: []
         })

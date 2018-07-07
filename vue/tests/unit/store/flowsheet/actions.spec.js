@@ -15,8 +15,15 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('appointmentSummariesByPatient action', () => {
+    beforeEach(function () {
+      this.patientId = 42
+      this.expectedHttp = { path: endpoints.appointmentSummaries.byPatient + '/' + this.patientId }
+      this.clearSummaryMutation = {
+        type: symbols.mutations.clearAppointmentSummary,
+        payload: {}
+      }
+    })
     it('retrieves appointment summaries', function (done) {
-      const patientId = 42
       const firstItem = {
         id: 1,
         name: 'foo'
@@ -28,16 +35,13 @@ describe('Flowsheet module actions', () => {
       const response = [firstItem, secondItem]
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.byPatient + '/' + patientId },
+          http: this.expectedHttp,
           mutations: [
-            {
-              type: symbols.mutations.clearAppointmentSummary,
-              payload: {}
-            },
+            this.clearSummaryMutation,
             {
               type: symbols.mutations.getAppointmentSummary,
               payload: firstItem
@@ -50,7 +54,7 @@ describe('Flowsheet module actions', () => {
           actions: [
             {
               type: symbols.actions.lettersByPatientAndInfo,
-              payload: patientId
+              payload: this.patientId
             }
           ]
         })
@@ -58,19 +62,15 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const patientId = 42
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.appointmentSummariesByPatient](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.byPatient + '/' + patientId },
+          http: this.expectedHttp,
           mutations: [
-            {
-              type: symbols.mutations.clearAppointmentSummary,
-              payload: {}
-            }
+            this.clearSummaryMutation
           ],
           actions: [
             this.testCase.getErrorHandler('appointmentSummariesByPatient')
@@ -82,8 +82,11 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('lettersByPatientAndInfo action', () => {
+    beforeEach(function () {
+      this.patientId = 42
+      this.expectedUrl = endpoints.letters.byPatientAndInfo + '?patient_id=' + this.patientId
+    })
     it('retrieves letters', function (done) {
-      const patientId = 42
       this.testCase.setState({
         [symbols.state.appointmentSummaries]: [
           { id: 10 },
@@ -95,10 +98,10 @@ describe('Flowsheet module actions', () => {
       const response = ['foo', 'bar']
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
-        const expectedUrl = endpoints.letters.byPatientAndInfo + '?patient_id=42&info_ids%5B0%5D=10&info_ids%5B1%5D=12&info_ids%5B2%5D=11'
+        const expectedUrl = this.expectedUrl + '&info_ids%5B0%5D=10&info_ids%5B1%5D=12&info_ids%5B2%5D=11'
         expect(this.testCase.getResults()).toEqual({
           http: { path: expectedUrl },
           mutations: [
@@ -113,17 +116,16 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const patientId = 42
       this.testCase.setState({
         [symbols.state.appointmentSummaries]: []
       })
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.lettersByPatientAndInfo](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.letters.byPatientAndInfo + '?patient_id=42' },
+          http: { path: this.expectedUrl },
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('getLettersByPatientAndInfo')
@@ -135,15 +137,25 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('addAppointmentSummary action', () => {
-    it('adds appointment summary', function (done) {
-      const initialData = {
-        patientId: 42,
-        segmentId: CONSULT_ID
+    beforeEach(function () {
+      this.patientId = 42
+      this.flowId = 12
+      this.existingDeviceMutation = {
+        type: symbols.mutations.setExistingDevice,
+        payload: 0
       }
-      const response = { id: 12 }
+      this.setInitialData = function (segmentId) {
+        return {
+          patientId: this.patientId,
+          segmentId: segmentId
+        }
+      }
+    })
+    it('adds appointment summary', function (done) {
+      const response = { id: this.flowId }
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, this.setInitialData(CONSULT_ID))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
@@ -151,15 +163,12 @@ describe('Flowsheet module actions', () => {
             path: endpoints.appointmentSummaries.store,
             payload: {
               step_id: CONSULT_ID,
-              patient_id: 42,
+              patient_id: this.patientId,
               appt_type: 1
             }
           },
           mutations: [
-            {
-              type: symbols.mutations.setExistingDevice,
-              payload: 0
-            }
+            this.existingDeviceMutation
           ],
           actions: [
             {
@@ -177,8 +186,8 @@ describe('Flowsheet module actions', () => {
                   isSleepStudy: false,
                   isReason: false
                 },
-                flowId: 12,
-                patientId: 42
+                flowId: this.flowId,
+                patientId: this.patientId
               }
             }
           ]
@@ -187,30 +196,24 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('has non-existent segment', function (done) {
-      const initialData = {
-        patientId: 42,
-        segmentId: 99
-      }
-      const response = { id: 12 }
+      const segmentId = 99
+      const response = { id: this.flowId }
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, this.setInitialData(segmentId))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {
             path: endpoints.appointmentSummaries.store,
             payload: {
-              step_id: 99,
-              patient_id: 42,
+              step_id: segmentId,
+              patient_id: this.patientId,
               appt_type: 1
             }
           },
           mutations: [
-            {
-              type: symbols.mutations.setExistingDevice,
-              payload: 0
-            }
+            this.existingDeviceMutation
           ],
           actions: []
         })
@@ -218,13 +221,9 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const initialData = {
-        patientId: 42,
-        segmentId: CONSULT_ID
-      }
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.addAppointmentSummary](this.testCase.mocks, this.setInitialData(CONSULT_ID))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
@@ -232,15 +231,12 @@ describe('Flowsheet module actions', () => {
             path: endpoints.appointmentSummaries.store,
             payload: {
               step_id: CONSULT_ID,
-              patient_id: 42,
+              patient_id: this.patientId,
               appt_type: 1
             }
           },
           mutations: [
-            {
-              type: symbols.mutations.setExistingDevice,
-              payload: 0
-            }
+            this.existingDeviceMutation
           ],
           actions: [
             this.testCase.getErrorHandler('addAppointmentSummary')
@@ -252,45 +248,46 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('executeFlowsheetAction action', () => {
-    it('works without action and modal', function (done) {
-      const payload = {
-        segmentData: {
-          number: 2,
-          modal: null,
-          action: null
-        },
-        patientId: 42,
-        flowId: 13
+    beforeEach(function () {
+      this.patientId = 42
+      this.flowId = 13
+      this.segmentId = 2
+      this.modal = null
+      this.action = null
+      this.setPayload = function () {
+        return {
+          segmentData: {
+            number: this.segmentId,
+            modal: this.modal,
+            action: this.action
+          },
+          patientId: this.patientId,
+          flowId: this.flowId
+        }
       }
-
-      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      this.summaryByPatientAction = {
+        type: symbols.actions.appointmentSummariesByPatient,
+        payload: this.patientId
+      }
+    })
+    it('works without action and modal', function (done) {
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, this.setPayload())
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {},
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.appointmentSummariesByPatient,
-              payload: 42
-            }
+            this.summaryByPatientAction
           ]
         })
         done()
       })
     })
     it('works with action', function (done) {
-      const payload = {
-        segmentData: {
-          number: 2,
-          modal: null,
-          action: symbols.actions.setExistingDevice
-        },
-        patientId: 42,
-        flowId: 13
-      }
+      this.action = symbols.actions.setExistingDevice
 
-      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, this.setPayload())
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
@@ -300,14 +297,11 @@ describe('Flowsheet module actions', () => {
             {
               type: symbols.actions.setExistingDevice,
               payload: {
-                flowId: 13,
-                patientId: 42
+                flowId: this.flowId,
+                patientId: this.patientId
               }
             },
-            {
-              type: symbols.actions.appointmentSummariesByPatient,
-              payload: 42
-            }
+            this.summaryByPatientAction
           ]
         })
         done()
@@ -317,17 +311,9 @@ describe('Flowsheet module actions', () => {
       this.testCase.setGetters({
         [symbols.getters.shouldPreventFlowsheetModal]: false
       })
-      const payload = {
-        segmentData: {
-          number: 2,
-          modal: symbols.modals.impressionDevice,
-          action: null
-        },
-        patientId: 42,
-        flowId: 13
-      }
+      this.modal = symbols.modals.impressionDevice
 
-      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, this.setPayload())
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
@@ -338,19 +324,16 @@ describe('Flowsheet module actions', () => {
               payload: {
                 name: symbols.modals.impressionDevice,
                 params: {
-                  flowId: 13,
-                  segmentId: 2,
-                  patientId: 42,
+                  flowId: this.flowId,
+                  segmentId: this.segmentId,
+                  patientId: this.patientId,
                   white: true
                 }
               }
             }
           ],
           actions: [
-            {
-              type: symbols.actions.appointmentSummariesByPatient,
-              payload: 42
-            }
+            this.summaryByPatientAction
           ]
         })
         done()
@@ -360,27 +343,16 @@ describe('Flowsheet module actions', () => {
       this.testCase.setGetters({
         [symbols.getters.shouldPreventFlowsheetModal]: true
       })
-      const payload = {
-        segmentData: {
-          number: 2,
-          modal: symbols.modals.impressionDevice,
-          action: null
-        },
-        patientId: 42,
-        flowId: 13
-      }
+      this.modal = symbols.modals.impressionDevice
 
-      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.executeFlowsheetAction](this.testCase.mocks, this.setPayload())
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {},
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.appointmentSummariesByPatient,
-              payload: 42
-            }
+            this.summaryByPatientAction
           ]
         })
         done()
@@ -389,63 +361,57 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('setExistingDevice action', () => {
-    it('sets device', function () {
-      this.testCase.setState({
-        [symbols.state.appointmentSummaries]: [
-          {
-            deviceId: 1
-          },
-          {
-            deviceId: 2
-          }
-        ]
-      })
-      const payload = {
-        flowId: 13,
-        patientId: 42
+    beforeEach(function () {
+      this.patientId = 42
+      this.flowId = 13
+      this.payload = {
+        flowId: this.flowId,
+        patientId: this.patientId
       }
+      this.setSummaries = function (firstDeviceId, secondDeviceId) {
+        this.testCase.setState({
+          [symbols.state.appointmentSummaries]: [
+            { deviceId: firstDeviceId },
+            { deviceId: secondDeviceId }
+          ]
+        })
+      }
+    })
+    it('sets device', function () {
+      const firstDeviceId = 1
+      const secondDeviceId = 2
+      this.setSummaries(firstDeviceId, secondDeviceId)
 
-      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, this.payload)
 
       expect(this.testCase.getResults()).toEqual({
         http: {},
         mutations: [
           {
             type: symbols.mutations.setExistingDevice,
-            payload: 1
+            payload: firstDeviceId
           }
         ],
         actions: [
           {
             type: symbols.actions.updateAppointmentSummary,
             payload: {
-              id: 13,
+              id: this.flowId,
               data: {
-                device_id: 1
+                device_id: firstDeviceId
               },
-              patientId: 42
+              patientId: this.patientId
             }
           }
         ]
       })
     })
     it('returns if device not found', function () {
-      this.testCase.setState({
-        [symbols.state.appointmentSummaries]: [
-          {
-            deviceId: 0
-          },
-          {
-            deviceId: 0
-          }
-        ]
-      })
-      const payload = {
-        flowId: 13,
-        patientId: 42
-      }
+      const firstDeviceId = 0
+      const secondDeviceId = 0
+      this.setSummaries(firstDeviceId, secondDeviceId)
 
-      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.setExistingDevice](this.testCase.mocks, this.payload)
 
       expect(this.testCase.getResults()).toEqual({
         http: {},
@@ -456,27 +422,33 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('updateAppointmentSummary action', () => {
+    beforeEach(function () {
+      this.flowId = 10
+      this.patientId = 11
+      this.data = { foo: 'bar' }
+      this.payload = {
+        id: this.flowId,
+        patientId: this.patientId,
+        data: this.data
+      }
+      this.expectedHttp = {
+        path: endpoints.appointmentSummaries.update + '/' + this.flowId,
+        payload: this.data
+      }
+    })
     it('updates appointment summary', function (done) {
       this.testCase.stubRequest({})
-      const payload = {
-        id: 10,
-        patientId: 11,
-        data: { foo: 'bar' }
-      }
 
-      FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, this.payload)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.appointmentSummaries.update + '/10',
-            payload: { foo: 'bar' }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.appointmentSummariesByPatient,
-              payload: 11
+              payload: this.patientId
             }
           ]
         })
@@ -484,21 +456,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const payload = {
-        id: 10,
-        patientId: 11,
-        data: { foo: 'bar' }
-      }
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, payload)
+      FlowsheetModule.actions[symbols.actions.updateAppointmentSummary](this.testCase.mocks, this.payload)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.appointmentSummaries.update + '/10',
-            payload: { foo: 'bar' }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('updateAppointmentSummary')
@@ -510,19 +474,22 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('deleteAppointmentSummary action', () => {
+    beforeEach(function () {
+      this.flowId = 10
+      this.expectedHttp = { path: endpoints.appointmentSummaries.destroy + '/' + this.flowId }
+    })
     it('deletes appointment summary', function (done) {
       this.testCase.stubRequest({})
-      const id = 10
 
-      FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
+      FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, this.flowId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.removeAppointmentSummary,
-              payload: 10
+              payload: this.flowId
             }
           ],
           actions: []
@@ -531,14 +498,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const id = 10
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, id)
+      FlowsheetModule.actions[symbols.actions.deleteAppointmentSummary](this.testCase.mocks, this.flowId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('deleteAppointmentSummary')
@@ -592,67 +558,65 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('finalTrackerRank action', () => {
-    it('sets tracker rank', function (done) {
-      const patientId = 42
-      const response = {
-        final_rank: '1',
-        final_segment: '2',
-        last_segment: '0'
+    beforeEach(function () {
+      this.patientId = 42
+      this.expectedHttp = { path: endpoints.appointmentSummaries.finalRank + '/' + this.patientId }
+      this.finalRank = 0
+      this.finalSegment = 0
+      this.lastSegment = 0
+      this.setResponse = function () {
+        return {
+          final_rank: '' + this.finalRank,
+          final_segment: '' + this.finalSegment,
+          last_segment: '' + this.lastSegment
+        }
       }
-      this.testCase.stubRequest({response: response})
+      this.getMutations = function () {
+        return [
+          {
+            type: symbols.mutations.finalTrackerRank,
+            payload: this.finalRank
+          },
+          {
+            type: symbols.mutations.finalTrackerSegment,
+            payload: this.finalSegment
+          },
+          {
+            type: symbols.mutations.lastTrackerSegment,
+            payload: this.lastSegment
+          }
+        ]
+      }
+    })
+    it('sets tracker rank', function (done) {
+      this.finalRank = 1
+      this.finalSegment = 2
+      this.lastSegment = 0
+      this.testCase.stubRequest({response: this.setResponse()})
 
-      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
-          mutations: [
-            {
-              type: symbols.mutations.finalTrackerRank,
-              payload: 1
-            },
-            {
-              type: symbols.mutations.finalTrackerSegment,
-              payload: 2
-            },
-            {
-              type: symbols.mutations.lastTrackerSegment,
-              payload: 0
-            }
-          ],
+          http: this.expectedHttp,
+          mutations: this.getMutations(),
           actions: []
         })
         done()
       })
     })
     it('sets tracker rank for last segment', function (done) {
-      const patientId = 42
-      const response = {
-        final_rank: '1',
-        final_segment: '2',
-        last_segment: '3'
-      }
-      this.testCase.stubRequest({response: response})
+      this.finalRank = 1
+      this.finalSegment = 2
+      this.lastSegment = 3
+      this.testCase.stubRequest({response: this.setResponse()})
 
-      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
-          mutations: [
-            {
-              type: symbols.mutations.finalTrackerRank,
-              payload: 1
-            },
-            {
-              type: symbols.mutations.finalTrackerSegment,
-              payload: 2
-            },
-            {
-              type: symbols.mutations.lastTrackerSegment,
-              payload: 3
-            }
-          ],
+          http: this.expectedHttp,
+          mutations: this.getMutations(),
           actions: [
             {
               type: symbols.actions.trackerStepsNext,
@@ -664,14 +628,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const patientId = 42
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.finalTrackerRank](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('finalTrackerRank')
@@ -747,16 +710,19 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('trackerStepsNext action', () => {
+    beforeEach(function () {
+      this.lastSegment = 18
+      this.expectedHttp = { path: endpoints.flowsheetSteps.byNextStep + '/' + this.lastSegment }
+    })
     it('sets tracker steps', function (done) {
-      const lastSegment = 18
       const response = ['foo', 'bar']
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
+      FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, this.lastSegment)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.flowsheetSteps.byNextStep + '/18' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.trackerStepsNext,
@@ -769,14 +735,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const lastSegment = 18
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, lastSegment)
+      FlowsheetModule.actions[symbols.actions.trackerStepsNext](this.testCase.mocks, this.lastSegment)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.flowsheetSteps.byNextStep + '/18' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('trackerStepsNext')
@@ -788,16 +753,19 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('patientTrackerNotes action', () => {
+    beforeEach(function () {
+      this.patientId = 42
+      this.expectedHttp = { path: endpoints.patientSummaries.getTrackerNotes + '/' + this.patientId }
+    })
     it('retrieves patient tracker notes', function (done) {
-      const patientId = 42
       const response = ['foo', 'bar']
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.patientSummaries.getTrackerNotes + '/42' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.patientTrackerNotes,
@@ -810,14 +778,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const patientId = 42
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.patientTrackerNotes](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.patientSummaries.getTrackerNotes + '/42' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('patientTrackerNotes')
@@ -829,29 +796,34 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('updateTrackerNotes action', () => {
-    it('updates tracker notes', function (done) {
-      const initialData = {
-        patientId: 42,
-        trackerNotes: 'notes'
+    beforeEach(function () {
+      this.patientId = 42
+      this.trackerNotes = 'notes'
+      this.initialData = {
+        patientId: this.patientId,
+        trackerNotes: this.trackerNotes
       }
+      this.expectedHttp = {
+        path: endpoints.patientSummaries.updateTrackerNotes,
+        payload: {
+          patient_id: this.patientId,
+          tracker_notes: this.trackerNotes
+        }
+      }
+    })
+    it('updates tracker notes', function (done) {
       this.testCase.stubRequest({})
 
-      FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, this.initialData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.patientSummaries.updateTrackerNotes,
-            payload: {
-              patient_id: 42,
-              tracker_notes: 'notes'
-            }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.patientTrackerNotes,
-              payload: 42
+              payload: this.patientId
             }
           ]
         })
@@ -859,23 +831,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const initialData = {
-        patientId: 42,
-        trackerNotes: 'notes'
-      }
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.updateTrackerNotes](this.testCase.mocks, this.initialData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.patientSummaries.updateTrackerNotes,
-            payload: {
-              patient_id: 42,
-              tracker_notes: 'notes'
-            }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('updateTrackerNotes')
@@ -887,36 +849,39 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('futureAppointment action', () => {
+    beforeEach(function () {
+      this.patientId = 42
+      this.expectedHttp = { path: endpoints.appointmentSummaries.futureAppointment + '/' + this.patientId }
+      this.trackerNotesAction = {
+        type: symbols.actions.patientTrackerNotes,
+        payload: this.patientId
+      }
+    })
     it('sets future appointment without data', function (done) {
-      const patientId = 42
       this.testCase.stubRequest({response: null})
 
-      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.patientTrackerNotes,
-              payload: 42
-            }
+            this.trackerNotesAction
           ]
         })
         done()
       })
     })
     it('sets future appointment with data', function (done) {
-      const patientId = 42
       const response = { id: '1' }
       this.testCase.stubRequest({response: response})
 
-      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.futureAppointment,
@@ -924,24 +889,20 @@ describe('Flowsheet module actions', () => {
             }
           ],
           actions: [
-            {
-              type: symbols.actions.patientTrackerNotes,
-              payload: 42
-            }
+            this.trackerNotesAction
           ]
         })
         done()
       })
     })
     it('handles error', function (done) {
-      const patientId = 42
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, patientId)
+      FlowsheetModule.actions[symbols.actions.futureAppointment](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('futureAppointment')
@@ -953,30 +914,35 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('addFutureAppointment action', () => {
-    it('adds future appointment', function (done) {
-      const initialData = {
-        segmentId: 2,
-        patientId: 42
+    beforeEach(function () {
+      this.patientId = 42
+      this.segmentId = 2
+      this.initialData = {
+        segmentId: this.segmentId,
+        patientId: this.patientId
       }
+      this.expectedHttp = {
+        path: endpoints.appointmentSummaries.store,
+        payload: {
+          step_id: this.segmentId,
+          patient_id: this.patientId,
+          appt_type: 0
+        }
+      }
+    })
+    it('adds future appointment', function (done) {
       this.testCase.stubRequest({})
 
-      FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, this.initialData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.appointmentSummaries.store,
-            payload: {
-              step_id: 2,
-              patient_id: 42,
-              appt_type: 0
-            }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.futureAppointment,
-              payload: 42
+              payload: this.patientId
             }
           ]
         })
@@ -984,24 +950,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const initialData = {
-        segmentId: 2,
-        patientId: 42
-      }
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, initialData)
+      FlowsheetModule.actions[symbols.actions.addFutureAppointment](this.testCase.mocks, this.initialData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.appointmentSummaries.store,
-            payload: {
-              step_id: 2,
-              patient_id: 42,
-              appt_type: 0
-            }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('addFutureAppointment')
@@ -1013,15 +968,18 @@ describe('Flowsheet module actions', () => {
   })
 
   describe('deleteFutureAppointment action', () => {
+    beforeEach(function () {
+      this.appointmentId = 10
+      this.expectedHttp = { path: endpoints.appointmentSummaries.destroy + '/' + this.appointmentId }
+    })
     it('deletes future appointment', function (done) {
       this.testCase.stubRequest({})
-      const id = 10
 
-      FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
+      FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, this.appointmentId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.futureAppointment,
@@ -1034,14 +992,13 @@ describe('Flowsheet module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const id = 10
       this.testCase.stubErrorRequest()
 
-      FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, id)
+      FlowsheetModule.actions[symbols.actions.deleteFutureAppointment](this.testCase.mocks, this.appointmentId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.appointmentSummaries.destroy + '/10' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('deleteFutureAppointment')

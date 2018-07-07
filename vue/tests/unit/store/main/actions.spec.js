@@ -21,30 +21,32 @@ describe('Main module actions', () => {
       this.testCase.sandbox.stub(ProcessWrapper, 'getApiRoot').callsFake(() => {
         return 'root/'
       })
+      this.credentials = {foo: 'bar'}
+      this.expectedHttp = {
+        path: 'root/auth',
+        payload: this.credentials
+      }
     })
     it('resolves login', function (done) {
+      const token = 'token'
       this.testCase.stubRawRequest({
         response: {
           data: {
-            token: 'token'
+            token: token
           }
         }
       })
-      const credentials = {foo: 'bar'}
 
-      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
+      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, this.credentials)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: 'root/auth',
-            payload: credentials
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.dualAppLogin,
-              payload: 'token'
+              payload: token
             }
           ]
         })
@@ -52,22 +54,19 @@ describe('Main module actions', () => {
       })
     })
     it('throws if auth fails', function (done) {
-      this.testCase.stubRawRequest({error: 'auth error'})
-      const credentials = {foo: 'bar'}
+      const errorMessage = 'auth error'
+      this.testCase.stubRawRequest({error: errorMessage})
 
-      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
+      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, this.credentials)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: 'root/auth',
-            payload: credentials
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.handleErrors,
-              payload: {title: 'getToken', response: 'auth error'}
+              payload: {title: 'getToken', response: errorMessage}
             }
           ]
         })
@@ -94,7 +93,7 @@ describe('Main module actions', () => {
           mutations: [
             {
               type: symbols.mutations.mainToken,
-              payload: 'token'
+              payload: token
             }
           ],
           actions: [
@@ -295,20 +294,23 @@ describe('Main module actions', () => {
   */
 
   describe('patientSearchList action', () => {
+    beforeEach(function () {
+      this.searchTerm = 'John'
+      this.expectedHttp = {
+        path: endpoints.patients.list,
+        payload: {
+          partial_name: this.searchTerm
+        }
+      }
+    })
     it('shows list without patients', function (done) {
-      const searchTerm = 'John'
       this.testCase.stubRequest({response: []})
 
-      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, this.searchTerm)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.patients.list,
-            payload: {
-              partial_name: 'John'
-            }
-          },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.patientSearchList,
@@ -323,7 +325,7 @@ describe('Main module actions', () => {
                   id: 0,
                   name: 'Add patient with this name\u2026',
                   patientType: 'new',
-                  link: 'add_patient.php?search=John'
+                  link: 'add_patient.php?search=' + this.searchTerm
                 }
               ]
             }
@@ -334,16 +336,19 @@ describe('Main module actions', () => {
       })
     })
     it('shows list with patients', function (done) {
-      const searchTerm = 'John'
+      const firstId = 1
+      const secondId = 2
+      const firstName = 'John Doe'
+      const secondName = 'John Little'
       const response = [
         {
-          patientid: 1,
-          name: 'John Doe',
+          patientid: firstId,
+          name: firstName,
           patient_info: 0
         },
         {
-          patientid: 2,
-          name: 'John Little',
+          patientid: secondId,
+          name: secondName,
           patient_info: 1
         }
       ]
@@ -352,38 +357,33 @@ describe('Main module actions', () => {
         return element.name
       })
 
-      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, this.searchTerm)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.patients.list,
-            payload: {
-              partial_name: 'John'
-            }
-          },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.patientSearchList,
               payload: [
                 {
-                  id: 1,
-                  name: 'John Doe',
+                  id: firstId,
+                  name: firstName,
                   patientType: 'json',
-                  link: 'manage/add_patient.php?pid=1&ed=1',
+                  link: 'manage/add_patient.php?pid=' + firstId + '&ed=1',
                   route: {
                     name: ''
                   }
                 },
                 {
-                  id: 2,
-                  name: 'John Little',
+                  id: secondId,
+                  name: secondName,
                   patientType: 'json',
                   link: '',
                   route: {
                     name: 'patient-tracker',
                     query: {
-                      pid: 2
+                      pid: secondId
                     }
                   }
                 }
@@ -396,19 +396,13 @@ describe('Main module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const searchTerm = 'John'
       this.testCase.stubErrorRequest()
 
-      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, this.searchTerm)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.patients.list,
-            payload: {
-              partial_name: 'John'
-            }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: []
         })

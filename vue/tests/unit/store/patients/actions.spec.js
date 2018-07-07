@@ -13,8 +13,11 @@ describe('Patients module actions', () => {
   })
 
   describe('patientData action', () => {
+    beforeEach(function () {
+      this.patientId = 1
+      this.expectedHttp = { path: endpoints.patients.patientData + '/' + this.patientId }
+    })
     it('should get patient data', function (done) {
-      const patientId = 1
       const response = {
         insurance_type: '2',
         premedcheck: '3',
@@ -40,15 +43,15 @@ describe('Patients module actions', () => {
       }
       this.testCase.stubRequest({response: response})
 
-      PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
+      PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.patients.patientData + '/1' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.patientId,
-              payload: 1
+              payload: this.patientId
             },
             {
               type: symbols.mutations.patientData,
@@ -83,14 +86,13 @@ describe('Patients module actions', () => {
       })
     })
     it('should handle error', function (done) {
-      const patientId = 1
       this.testCase.stubErrorRequest()
 
-      PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
+      PatientsModule.actions[symbols.actions.patientData](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.patients.patientData + '/1' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('getPatientByIdAndDocId')

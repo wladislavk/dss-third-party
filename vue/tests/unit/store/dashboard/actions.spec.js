@@ -392,22 +392,25 @@ describe('Dashboard module actions', () => {
   })
 
   describe('updateFlowDevice action', () => {
-    it('updates a flow device', function (done) {
-      const DEVICE_ID = 7
-      const PATIENT_ID = 16
-
-      this.testCase.stubRequest({message: 'Successfully updated.'})
+    beforeEach(function () {
+      this.deviceId = 7
+      this.patientId = 16
       this.testCase.rootState.patients = {
-        [symbols.state.patientId]: PATIENT_ID
+        [symbols.state.patientId]: this.patientId
       }
-      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+      this.expectedHttp = {
+        path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + this.deviceId,
+        payload: { patient_id: this.patientId }
+      }
+    })
+    it('updates a flow device', function (done) {
+      const message = 'Successfully updated.'
+      this.testCase.stubRequest({message: message})
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, this.deviceId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-            payload: { patient_id: PATIENT_ID }
-          },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.resetModal,
@@ -416,28 +419,18 @@ describe('Dashboard module actions', () => {
           ],
           actions: []
         })
-        expect(this.testCase.alertText).toBe('Successfully updated.')
+        expect(this.testCase.alertText).toBe(message)
         done()
       })
     })
     it('handles error', function (done) {
-      const DEVICE_ID = 7
-      const PATIENT_ID = 16
-
       this.testCase.stubErrorRequest()
 
-      this.testCase.rootState.patients = {
-        [symbols.state.patientId]: PATIENT_ID
-      }
-
-      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, this.deviceId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-            payload: { patient_id: PATIENT_ID }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('updateFlowDevice')
@@ -449,56 +442,56 @@ describe('Dashboard module actions', () => {
   })
 
   describe('moveGuideSettingSlider action', () => {
-    it('sets option value', function () {
-      const data = {
-        id: 1,
-        value: 'bar',
-        labels: {
-          2: 'foo',
-          4: 'bar',
-          7: 'bar'
+    beforeEach(function () {
+      this.id = 1
+      this.firstLabel = 2
+      this.secondLabel = 4
+      this.thirdLabel = 7
+      this.firstValue = 'foo'
+      this.secondValue = 'bar'
+      this.setData = function (value) {
+        return {
+          id: this.id,
+          value: value,
+          labels: {
+            [this.firstLabel]: this.firstValue,
+            [this.secondLabel]: this.secondValue,
+            [this.thirdLabel]: this.secondValue
+          }
         }
       }
+      this.getMutation = function (expectedLabel) {
+        return {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: this.id,
+            value: expectedLabel
+          }
+        }
+      }
+    })
+    it('sets option value', function () {
+      const data = this.setData(this.secondValue)
 
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
       expect(this.testCase.getResults()).toEqual({
         http: {},
         mutations: [
-          {
-            type: symbols.mutations.moveGuideSettingSlider,
-            payload: {
-              id: 1,
-              value: 4
-            }
-          }
+          this.getMutation(this.secondLabel)
         ],
         actions: []
       })
     })
     it('leaves option unchanged if value not found', function () {
-      const data = {
-        id: 1,
-        value: 'baz',
-        labels: {
-          2: 'foo',
-          4: 'bar',
-          7: 'bar'
-        }
-      }
+      const data = this.setData('baz')
 
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
 
       expect(this.testCase.getResults()).toEqual({
         http: {},
         mutations: [
-          {
-            type: symbols.mutations.moveGuideSettingSlider,
-            payload: {
-              id: 1,
-              value: 0
-            }
-          }
+          this.getMutation(0)
         ],
         actions: []
       })

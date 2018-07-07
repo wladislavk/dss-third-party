@@ -13,20 +13,29 @@ describe('Contacts Module actions', () => {
   })
 
   describe('setCurrentContact action', () => {
+    beforeEach(function () {
+      this.contactId = 1
+      this.payload = { contactId: this.contactId }
+      this.expectedHttp = {
+        path: endpoints.contacts.withContactType,
+        payload: { contact_id: this.contactId }
+      }
+      this.disablePopupAction = {
+        type: symbols.actions.disablePopupEdit,
+        payload: {}
+      }
+    })
     it('should set contact if promise resolves', function (done) {
       const response = {
         foo: 'bar'
       }
       this.testCase.stubRequest({response: response})
 
-      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
+      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, this.payload)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.contacts.withContactType,
-            payload: { contact_id: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.setContact,
@@ -34,10 +43,7 @@ describe('Contacts Module actions', () => {
             }
           ],
           actions: [
-            {
-              type: symbols.actions.disablePopupEdit,
-              payload: {}
-            }
+            this.disablePopupAction
           ]
         })
         done()
@@ -47,20 +53,14 @@ describe('Contacts Module actions', () => {
     it('should not set contact if promise resolves without data', function (done) {
       this.testCase.stubRequest({message: 'foo'})
 
-      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
+      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, this.payload)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.contacts.withContactType,
-            payload: { contact_id: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.disablePopupEdit,
-              payload: {}
-            }
+            this.disablePopupAction
           ]
         })
         done()
@@ -70,14 +70,11 @@ describe('Contacts Module actions', () => {
     it('should handle error if promise rejects', function (done) {
       this.testCase.stubErrorRequest()
 
-      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, { contactId: 1 })
+      ContactModule.actions[symbols.actions.setCurrentContact](this.testCase.mocks, this.payload)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.contacts.withContactType,
-            payload: { contact_id: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('getContactById')

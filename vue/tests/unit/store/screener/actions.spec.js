@@ -14,15 +14,17 @@ describe('Screener module actions', () => {
 
   describe('getDoctorData action', () => {
     it('should set doctor data', function (done) {
+      const docId = 1
+      const firstName = 'John'
       this.testCase.stubRequest({
         response: {
-          first_name: 'John'
+          first_name: firstName
         }
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.sessionData]: {
-          docId: 1
+          docId: docId
         }
       })
 
@@ -30,11 +32,11 @@ describe('Screener module actions', () => {
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.users.show + '/1' },
+          http: { path: endpoints.users.show + '/' + docId },
           mutations: [
             {
               type: symbols.mutations.doctorName,
-              payload: 'John'
+              payload: firstName
             }
           ],
           actions: []
@@ -46,6 +48,17 @@ describe('Screener module actions', () => {
 
   describe('submitScreener action', () => {
     it('should submit screener data', function (done) {
+      const epworthProps = [
+        {
+          id: 'epworth1',
+          value: 1
+        },
+        {
+          id: 'epworth2',
+          value: 2
+        }
+      ]
+
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.sessionData]: {
@@ -66,16 +79,7 @@ describe('Screener module actions', () => {
             value: '2233223223'
           }
         ],
-        [symbols.state.epworthProps]: [
-          {
-            id: 'epworth1',
-            value: 1
-          },
-          {
-            id: 'epworth2',
-            value: 2
-          }
-        ],
+        [symbols.state.epworthProps]: epworthProps,
         [symbols.state.symptoms]: [
           {
             name: 'symptom1',
@@ -114,16 +118,7 @@ describe('Screener module actions', () => {
               docid: 1,
               userid: 2,
               rx_cpap: 3,
-              epworth: [
-                {
-                  id: 'epworth1',
-                  value: 1
-                },
-                {
-                  id: 'epworth2',
-                  value: 2
-                }
-              ],
+              epworth: epworthProps,
               first_name: 'John',
               last_name: 'Doe',
               phone: '2233223223',
@@ -317,6 +312,16 @@ describe('Screener module actions', () => {
   })
 
   describe('authenticateScreener action', () => {
+    beforeEach(function () {
+      this.setOutcome = function (promise) {
+        promise.then((response) => {
+          this.outcome = response
+        }).catch((error) => {
+          this.outcome = error
+        })
+      }
+      this.expectedUrl = 'http://api/auth'
+    })
     it('should authenticate screener', function (done) {
       this.testCase.stubRawRequest({
         response: {
@@ -329,21 +334,13 @@ describe('Screener module actions', () => {
         foo: 'bar'
       }
 
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, payload)
-      promise.then((response) => {
-        outcome = response
-      }).catch((error) => {
-        outcome = error
-      })
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, payload))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {
-            path: 'http://api/auth',
-            payload: {
-              foo: 'bar'
-            }
+            path: this.expectedUrl,
+            payload: payload
           },
           mutations: [
             {
@@ -358,7 +355,7 @@ describe('Screener module actions', () => {
             }
           ]
         })
-        expect(outcome instanceof Error).toBe(false)
+        expect(this.outcome instanceof Error).toBe(false)
         done()
       })
     })
@@ -371,65 +368,55 @@ describe('Screener module actions', () => {
         }
       })
 
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then((response) => {
-        outcome = response
-      }).catch((error) => {
-        outcome = error
-      })
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {}))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {
-            path: 'http://api/auth',
+            path: this.expectedUrl,
             payload: {}
           },
           mutations: [],
           actions: []
         })
-        expect(outcome instanceof Error).toBe(true)
-        expect(outcome.message).toBe('No token retrieved')
+        expect(this.outcome instanceof Error).toBe(true)
+        expect(this.outcome.message).toBe('No token retrieved')
         done()
       })
     })
     it('should handle authentication failure', function (done) {
       this.testCase.stubRawRequest({error: ''})
 
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then((response) => {
-        outcome = response
-      }).catch((error) => {
-        outcome = error
-      })
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {}))
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: {
-            path: 'http://api/auth',
+            path: this.expectedUrl,
             payload: {}
           },
           mutations: [],
           actions: []
         })
-        expect(outcome instanceof Error).toBe(true)
-        expect(outcome.message).toBe('Authentication failed')
+        expect(this.outcome instanceof Error).toBe(true)
+        expect(this.outcome.message).toBe('Authentication failed')
         done()
       })
     })
   })
 
   describe('setSessionData action', () => {
+    beforeEach(function () {
+      this.testCase.setState({
+        [symbols.state.screenerToken]: 'token'
+      })
+    })
     it('should set session data', function (done) {
       const response = {
         userid: 1,
         docid: 2
       }
       this.testCase.stubRequest({response: response})
-      this.testCase.setState({
-        [symbols.state.screenerToken]: 'token'
-      })
 
       ScreenerModule.actions[symbols.actions.setSessionData](this.testCase.mocks)
 
@@ -452,9 +439,6 @@ describe('Screener module actions', () => {
     })
     it('should throw error while setting session data', function (done) {
       this.testCase.stubErrorRequest()
-      this.testCase.setState({
-        [symbols.state.screenerToken]: 'token'
-      })
 
       const promise = ScreenerModule.actions[symbols.actions.setSessionData](this.testCase.mocks)
       promise.then(() => {

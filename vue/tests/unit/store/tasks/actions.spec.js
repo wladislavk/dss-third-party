@@ -35,7 +35,6 @@ describe('Tasks module actions', () => {
         done()
       })
     })
-
     it('should retrieve tasks with error', function (done) {
       this.testCase.stubRequest({status: 401})
 
@@ -55,18 +54,21 @@ describe('Tasks module actions', () => {
   })
 
   describe('retrieveTasksForPatient action', () => {
+    beforeEach(function () {
+      this.patientId = 2
+      this.expectedHttp = { path: endpoints.tasks.indexForPatient + '/' + this.patientId }
+    })
     it('should retrieve patient tasks successfully', function (done) {
       const tasks = [
         { id: 1 }
       ]
       this.testCase.stubRequest({response: tasks})
-      const patientId = 2
 
-      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
+      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.indexForPatient + '/2' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.setTasksForPatient,
@@ -78,16 +80,14 @@ describe('Tasks module actions', () => {
         done()
       })
     })
-
     it('should retrieve patient tasks with error', function (done) {
       this.testCase.stubRequest({status: 401})
-      const patientId = 2
 
-      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, patientId)
+      TasksModule.actions[symbols.actions.retrieveTasksForPatient](this.testCase.mocks, this.patientId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.indexForPatient + '/2' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('getPatientTasks', 401)
@@ -100,77 +100,85 @@ describe('Tasks module actions', () => {
 
   describe('addTask action', () => {
     beforeEach(function () {
+      this.taskId = 1
+      this.userId = 2
+      this.responsibleId = 3
+      this.patientId = 4
+      this.taskName = 'test task'
       this.testCase.setRootState({
         main: {
           [symbols.state.userInfo]: {
-            plainUserId: 2
+            plainUserId: this.userId
           }
         }
       })
-    })
-
-    it('should add new task', function (done) {
-      const data = {
+      this.newTaskData = {
         id: 0,
-        task: 'test task',
+        task: this.taskName,
         dueDate: new Date('01/03/2014'),
-        responsible: 3,
+        responsible: this.responsibleId,
         status: false,
         patientId: 0
       }
+      this.existingTaskData = {
+        id: this.taskId,
+        task: this.taskName,
+        dueDate: new Date('01/03/2014'),
+        responsible: this.responsibleId,
+        status: false,
+        patientId: this.patientId
+      }
+      this.expectedAddHttp = {
+        path: endpoints.tasks.store,
+        payload: {
+          task: this.taskName,
+          due_date: '2014-01-03',
+          status: 0,
+          responsibleid: this.responsibleId,
+          userid: this.userId,
+          patientid: 0
+        }
+      }
+      this.expectedUpdateHttp = {
+        path: endpoints.tasks.update + '/' + this.taskId,
+        payload: {
+          task: this.taskName,
+          due_date: '2014-01-03',
+          status: 0,
+          responsibleid: this.responsibleId,
+          userid: this.userId,
+          patientid: this.patientId
+        }
+      }
+      this.retrieveTasksAction = {
+        type: symbols.actions.retrieveTasks,
+        payload: {}
+      }
+    })
+    it('should add new task', function (done) {
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.newTaskData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.store,
-            payload: {
-              task: 'test task',
-              due_date: '2014-01-03',
-              status: 0,
-              responsibleid: 3,
-              userid: 2,
-              patientid: 0
-            }
-          },
+          http: this.expectedAddHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('should add new task with error', function (done) {
-      const data = {
-        id: 0,
-        task: 'test task',
-        dueDate: new Date('01/03/2014'),
-        responsible: 3,
-        status: false
-      }
       this.testCase.stubErrorRequest()
 
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.newTaskData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.store,
-            payload: {
-              task: 'test task',
-              due_date: '2014-01-03',
-              status: 0,
-              responsibleid: 3,
-              userid: 2,
-              patientid: undefined
-            }
-          },
+          http: this.expectedAddHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('addTask')
@@ -180,67 +188,29 @@ describe('Tasks module actions', () => {
       })
     })
     it('should edit existing task', function (done) {
-      const data = {
-        id: 1,
-        task: 'test task',
-        dueDate: new Date('01/03/2014'),
-        responsible: 3,
-        status: false,
-        patientId: 4
-      }
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.existingTaskData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.update + '/1',
-            payload: {
-              task: 'test task',
-              due_date: '2014-01-03',
-              status: 0,
-              responsibleid: 3,
-              userid: 2,
-              patientid: 4
-            }
-          },
+          http: this.expectedUpdateHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('should edit existing task with error', function (done) {
-      const data = {
-        id: 1,
-        task: 'test task',
-        dueDate: new Date('01/03/2014'),
-        responsible: 3,
-        status: false
-      }
       this.testCase.stubErrorRequest()
 
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data)
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.existingTaskData)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.update + '/1',
-            payload: {
-              task: 'test task',
-              due_date: '2014-01-03',
-              status: 0,
-              responsibleid: 3,
-              userid: 2,
-              patientid: undefined
-            }
-          },
+          http: this.expectedUpdateHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('updateTask')
@@ -250,15 +220,9 @@ describe('Tasks module actions', () => {
       })
     })
     it('should trigger error if task is not set', function (done) {
-      const data = {
-        id: 0,
-        task: '',
-        dueDate: new Date('01/03/2014'),
-        responsible: 3,
-        status: false
-      }
+      this.newTaskData.task = ''
       let message = ''
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.newTaskData).catch((reason) => {
         message = reason.message
       })
 
@@ -268,15 +232,9 @@ describe('Tasks module actions', () => {
       })
     })
     it('should trigger error if date is not set', function (done) {
-      const data = {
-        id: 0,
-        task: 'test task',
-        dueDate: '',
-        responsible: 3,
-        status: false
-      }
+      this.newTaskData.dueDate = ''
       let message = ''
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.newTaskData).catch((reason) => {
         message = reason.message
       })
 
@@ -286,15 +244,9 @@ describe('Tasks module actions', () => {
       })
     })
     it('should trigger error if user is not set', function (done) {
-      const data = {
-        id: 0,
-        task: 'test task',
-        dueDate: new Date('01/03/2014'),
-        responsible: 0,
-        status: false
-      }
+      this.newTaskData.responsible = 0
       let message = ''
-      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, data).catch((reason) => {
+      TasksModule.actions[symbols.actions.addTask](this.testCase.mocks, this.newTaskData).catch((reason) => {
         message = reason.message
       })
 
@@ -348,10 +300,13 @@ describe('Tasks module actions', () => {
   })
 
   describe('getTask action', () => {
+    beforeEach(function () {
+      this.taskId = 1
+      this.expectedHttp = { path: endpoints.tasks.show + '/' + this.taskId }
+    })
     it('gets task by id', function (done) {
-      const taskId = 1
       const response = {
-        id: 1,
+        id: this.taskId,
         due_date: '2018-02-03',
         task: 'test task',
         responsibleid: 2,
@@ -361,11 +316,11 @@ describe('Tasks module actions', () => {
       }
       this.testCase.stubRequest({response: response})
 
-      TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.show + '/1' },
+          http: this.expectedHttp,
           mutations: [
             {
               type: symbols.mutations.getTask,
@@ -378,14 +333,13 @@ describe('Tasks module actions', () => {
       })
     })
     it('handles error', function (done) {
-      const taskId = 1
       this.testCase.stubErrorRequest()
 
-      TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.getTask](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.show + '/1' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('getTask')
@@ -397,70 +351,64 @@ describe('Tasks module actions', () => {
   })
 
   describe('updateTaskStatus action', () => {
+    beforeEach(function () {
+      this.taskId = 1
+      this.expectedHttp = {
+        path: endpoints.tasks.update + '/' + this.taskId,
+        payload: { status: 1 }
+      }
+      this.retrieveTasksAction = {
+        type: symbols.actions.retrieveTasks,
+        payload: {}
+      }
+    })
     it('updates status without patient', function (done) {
-      const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.update + '/1',
-            payload: { status: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('updates status with patient', function (done) {
-      const taskId = 1
-      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
+      const patientId = 2
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = patientId
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.update + '/1',
-            payload: { status: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.retrieveTasksForPatient,
-              payload: 2
+              payload: patientId
             },
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('handles error', function (done) {
-      const taskId = 1
       this.testCase.stubErrorRequest()
 
-      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.updateTaskStatus](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: {
-            path: endpoints.tasks.update + '/1',
-            payload: { status: 1 }
-          },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('updateTaskToActive')
@@ -472,61 +420,61 @@ describe('Tasks module actions', () => {
   })
 
   describe('deleteTask action', () => {
+    beforeEach(function () {
+      this.taskId = 1
+      this.expectedHttp = { path: endpoints.tasks.destroy + '/' + this.taskId }
+      this.retrieveTasksAction = {
+        type: symbols.actions.retrieveTasks,
+        payload: {}
+      }
+    })
     it('deletes task', function (done) {
-      const taskId = 1
       this.testCase.mocks.rootState.patients[symbols.state.patientId] = 0
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.destroy + '/1' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('deletes task for patient', function (done) {
-      const taskId = 1
-      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
+      const patientId = 2
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = patientId
       this.testCase.stubRequest({})
 
-      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.destroy + '/1' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             {
               type: symbols.actions.retrieveTasksForPatient,
-              payload: 2
+              payload: patientId
             },
-            {
-              type: symbols.actions.retrieveTasks,
-              payload: {}
-            }
+            this.retrieveTasksAction
           ]
         })
         done()
       })
     })
     it('handles error', function (done) {
-      const taskId = 1
       this.testCase.stubErrorRequest()
 
-      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, taskId)
+      TasksModule.actions[symbols.actions.deleteTask](this.testCase.mocks, this.taskId)
 
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
-          http: { path: endpoints.tasks.destroy + '/1' },
+          http: this.expectedHttp,
           mutations: [],
           actions: [
             this.testCase.getErrorHandler('deleteTask')

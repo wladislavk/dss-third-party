@@ -48,13 +48,7 @@ describe('Dashboard module actions', () => {
           http: { path: endpoints.documentCategories.active },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getDocumentCategories',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getDocumentCategories')
           ]
         })
         done()
@@ -118,13 +112,7 @@ describe('Dashboard module actions', () => {
           http: { path: endpoints.memos.current },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getCurrentMemos',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getCurrentMemos')
           ]
         })
         done()
@@ -310,13 +298,7 @@ describe('Dashboard module actions', () => {
           http: { path: endpoints.guideSettingOptions.settingIds },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getDeviceGuideSettingOptions',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getDeviceGuideSettingOptions')
           ]
         })
         done()
@@ -401,13 +383,7 @@ describe('Dashboard module actions', () => {
           http: { path: endpoints.guideDevices.withImages },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getDeviceGuideResults',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getDeviceGuideResults')
           ]
         })
         done()
@@ -464,13 +440,7 @@ describe('Dashboard module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'updateFlowDevice',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('updateFlowDevice')
           ]
         })
         done()

@@ -123,13 +123,7 @@ describe('Main module actions', () => {
             }
           ],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getUserByToken',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getUserByToken')
           ]
         })
         done()
@@ -218,13 +212,7 @@ describe('Main module actions', () => {
           http: { path: endpoints.users.current },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getCurrentUser',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getCurrentUser')
           ]
         })
         done()

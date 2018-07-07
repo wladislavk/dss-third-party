@@ -73,13 +73,7 @@ describe('Flowsheet module actions', () => {
             }
           ],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'appointmentSummariesByPatient',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('appointmentSummariesByPatient')
           ]
         })
         done()
@@ -132,13 +126,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.letters.byPatientAndInfo + '?patient_id=42' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getLettersByPatientAndInfo',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getLettersByPatientAndInfo')
           ]
         })
         done()
@@ -255,13 +243,7 @@ describe('Flowsheet module actions', () => {
             }
           ],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'addAppointmentSummary',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('addAppointmentSummary')
           ]
         })
         done()
@@ -519,13 +501,7 @@ describe('Flowsheet module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'updateAppointmentSummary',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('updateAppointmentSummary')
           ]
         })
         done()
@@ -565,13 +541,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'deleteAppointmentSummary',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('deleteAppointmentSummary')
           ]
         })
         done()
@@ -613,13 +583,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.devices.byStatus },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getDevicesByStatus',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getDevicesByStatus')
           ]
         })
         done()
@@ -710,13 +674,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.appointmentSummaries.finalRank + '/42' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'finalTrackerRank',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('finalTrackerRank')
           ]
         })
         done()
@@ -780,13 +738,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.flowsheetSteps.bySection },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'trackerSteps',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('trackerSteps')
           ]
         })
         done()
@@ -827,13 +779,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.flowsheetSteps.byNextStep + '/18' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'trackerStepsNext',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('trackerStepsNext')
           ]
         })
         done()
@@ -874,13 +820,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.patientSummaries.getTrackerNotes + '/42' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'patientTrackerNotes',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('patientTrackerNotes')
           ]
         })
         done()
@@ -938,13 +878,7 @@ describe('Flowsheet module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'updateTrackerNotes',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('updateTrackerNotes')
           ]
         })
         done()
@@ -1010,13 +944,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.appointmentSummaries.futureAppointment + '/42' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'futureAppointment',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('futureAppointment')
           ]
         })
         done()
@@ -1076,13 +1004,7 @@ describe('Flowsheet module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'addFutureAppointment',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('addFutureAppointment')
           ]
         })
         done()
@@ -1122,13 +1044,7 @@ describe('Flowsheet module actions', () => {
           http: { path: endpoints.appointmentSummaries.destroy + '/10' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'deleteFutureAppointment',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('deleteFutureAppointment')
           ]
         })
         done()

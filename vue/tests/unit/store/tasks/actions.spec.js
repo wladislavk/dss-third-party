@@ -46,13 +46,7 @@ describe('Tasks module actions', () => {
           http: { path: endpoints.tasks.index },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getTasks',
-                response: new Error({status: 401})
-              }
-            }
+            this.testCase.getErrorHandler('getTasks', 401)
           ]
         })
         done()
@@ -96,13 +90,7 @@ describe('Tasks module actions', () => {
           http: { path: endpoints.tasks.indexForPatient + '/2' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getPatientTasks',
-                response: new Error({status: 401})
-              }
-            }
+            this.testCase.getErrorHandler('getPatientTasks', 401)
           ]
         })
         done()
@@ -185,13 +173,7 @@ describe('Tasks module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'addTask',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('addTask')
           ]
         })
         done()
@@ -261,13 +243,7 @@ describe('Tasks module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'updateTask',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('updateTask')
           ]
         })
         done()
@@ -363,13 +339,7 @@ describe('Tasks module actions', () => {
           http: { path: endpoints.users.responsible },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getResponsibleUsers',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getResponsibleUsers')
           ]
         })
         done()
@@ -418,13 +388,7 @@ describe('Tasks module actions', () => {
           http: { path: endpoints.tasks.show + '/1' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getTask',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getTask')
           ]
         })
         done()
@@ -499,13 +463,7 @@ describe('Tasks module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'updateTaskToActive',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('updateTaskToActive')
           ]
         })
         done()
@@ -571,13 +529,7 @@ describe('Tasks module actions', () => {
           http: { path: endpoints.tasks.destroy + '/1' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'deleteTask',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('deleteTask')
           ]
         })
         done()

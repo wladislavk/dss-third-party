@@ -80,13 +80,7 @@ describe('Contacts Module actions', () => {
           },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getContactById',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getContactById')
           ]
         })
         done()

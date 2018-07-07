@@ -93,13 +93,7 @@ describe('Patients module actions', () => {
           http: { path: endpoints.patients.patientData + '/1' },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getPatientByIdAndDocId',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getPatientByIdAndDocId')
           ]
         })
         done()

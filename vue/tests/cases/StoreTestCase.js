@@ -3,6 +3,7 @@ import axios from 'axios'
 import store from '../../src/store'
 import BaseTestCase from './BaseTestCase'
 import http from 'src/services/http'
+import symbols from 'src/symbols'
 
 export default class StoreTestCase extends BaseTestCase {
   methods = ['get', 'post', 'put', 'delete']
@@ -55,6 +56,20 @@ export default class StoreTestCase extends BaseTestCase {
       http: this.postData,
       mutations: this.mutations,
       actions: this.actions
+    }
+  }
+
+  getErrorHandler (title, status) {
+    let error = new Error()
+    if (status) {
+      error = new Error({status: status})
+    }
+    return {
+      type: symbols.actions.handleErrors,
+      payload: {
+        title: title,
+        response: error
+      }
     }
   }
 

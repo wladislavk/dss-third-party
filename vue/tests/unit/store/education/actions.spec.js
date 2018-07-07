@@ -78,13 +78,7 @@ describe('Education module actions', () => {
           http: { path: endpoints.edxCertificates.byUser },
           mutations: [],
           actions: [
-            {
-              type: symbols.actions.handleErrors,
-              payload: {
-                title: 'getEdxCertificatesData',
-                response: new Error()
-              }
-            }
+            this.testCase.getErrorHandler('getEdxCertificatesData')
           ]
         })
         done()

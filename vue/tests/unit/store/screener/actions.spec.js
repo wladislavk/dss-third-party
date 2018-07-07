@@ -1,4 +1,3 @@
-import axios from 'axios'
 import endpoints from '../../../../src/endpoints'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/StoreTestCase'
@@ -318,20 +317,12 @@ describe('Screener module actions', () => {
   })
 
   describe('authenticateScreener action', () => {
-    beforeEach(function () {
-      this.response = null
-      this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData = {
-          path: path,
-          payload: payload
-        }
-        return this.response
-      })
-    })
     it('should authenticate screener', function (done) {
-      this.response = Promise.resolve({
-        data: {
-          token: 'token'
+      this.testCase.stubRawRequest({
+        response: {
+          data: {
+            token: 'token'
+          }
         }
       })
       const payload = {
@@ -372,9 +363,11 @@ describe('Screener module actions', () => {
       })
     })
     it('should handle token retrieval failure', function (done) {
-      this.response = Promise.resolve({
-        data: {
-          foo: 'bar'
+      this.testCase.stubRawRequest({
+        response: {
+          data: {
+            foo: 'bar'
+          }
         }
       })
 
@@ -401,7 +394,7 @@ describe('Screener module actions', () => {
       })
     })
     it('should handle authentication failure', function (done) {
-      this.response = Promise.reject(new Error())
+      this.testCase.stubRawRequest({error: ''})
 
       let outcome
       const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})

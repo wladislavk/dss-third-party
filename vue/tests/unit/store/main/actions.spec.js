@@ -1,8 +1,6 @@
-/* eslint-disable prefer-promise-reject-errors */
 import symbols from '../../../../src/symbols'
 import MainModule from '../../../../src/store/main'
 import TestCase from '../../../cases/StoreTestCase'
-import axios from 'axios'
 import LocalStorageManager from '../../../../src/services/LocalStorageManager'
 import endpoints from '../../../../src/endpoints'
 import RouterKeeper from '../../../../src/services/RouterKeeper'
@@ -25,17 +23,12 @@ describe('Main module actions', () => {
       })
     })
     it('resolves login', function (done) {
-      this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData = {
-          path: path,
-          payload: payload
-        }
-        const result = {
+      this.testCase.stubRawRequest({
+        response: {
           data: {
             token: 'token'
           }
         }
-        return Promise.resolve(result)
       })
       const credentials = {foo: 'bar'}
 
@@ -59,13 +52,7 @@ describe('Main module actions', () => {
       })
     })
     it('throws if auth fails', function (done) {
-      this.testCase.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.testCase.postData = {
-          path: path,
-          payload: payload
-        }
-        return Promise.reject('auth error')
-      })
+      this.testCase.stubRawRequest({error: 'auth error'})
       const credentials = {foo: 'bar'}
 
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)

@@ -1,3 +1,5 @@
+/* eslint-disable prefer-promise-reject-errors */
+import axios from 'axios'
 import store from '../../src/store'
 import BaseTestCase from './BaseTestCase'
 import http from 'src/services/http'
@@ -83,20 +85,12 @@ export default class StoreTestCase extends BaseTestCase {
     }
     for (let method of this.methods) {
       this.sandbox.stub(http, method).callsFake((path, data) => {
-        const newPostObject = {
-          path: path
-        }
-        if (data) {
-          newPostObject.payload = data
-        }
-        this.postData = newPostObject
-        if (error) {
-          if (status !== 500) {
-            return Promise.reject(new Error({ status: status }))
-          }
-          return Promise.reject(new Error())
-        }
-        return Promise.resolve(result)
+        return this._replaceRequest(path, data, {
+          status: status,
+          error: error,
+          errorMessage: '',
+          result: result
+        })
       })
     }
   }
@@ -106,5 +100,50 @@ export default class StoreTestCase extends BaseTestCase {
       status: 500
     }
     this.stubRequest(requestData)
+  }
+
+  stubRawRequest (requestData) {
+    let status = 200
+    let error = false
+    let errorMessage = ''
+    if (requestData.hasOwnProperty('error')) {
+      error = true
+      errorMessage = requestData.error
+      status = 500
+    }
+    let result = {}
+    if (requestData.hasOwnProperty('response')) {
+      result = requestData.response
+    }
+    for (let method of this.methods) {
+      this.sandbox.stub(axios, method).callsFake((path, data) => {
+        return this._replaceRequest(path, data, {
+          status: status,
+          error: error,
+          errorMessage: errorMessage,
+          result: result
+        })
+      })
+    }
+  }
+
+  _replaceRequest (path, data, requestData) {
+    const newPostObject = {
+      path: path
+    }
+    if (data) {
+      newPostObject.payload = data
+    }
+    this.postData = newPostObject
+    if (requestData.error) {
+      if (requestData.errorMessage) {
+        return Promise.reject(requestData.errorMessage)
+      }
+      if (requestData.status !== 500) {
+        return Promise.reject(new Error({ status: requestData.status }))
+      }
+      return Promise.reject(new Error())
+    }
+    return Promise.resolve(requestData.result)
   }
 }

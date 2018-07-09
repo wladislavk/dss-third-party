@@ -123,7 +123,7 @@ $db = new Db();
     <!-- END TOP NAVIGATION MENU -->
     <form class="navbar-form" role="search" action="/manage/admin/manage_users.php" type="get">
         <div class="form-group">
-            <emnput type="text" class="form-control input-sm" name="search" placeholder="Name or username">
+            <input type="text" class="form-control input-sm" name="search" placeholder="Name or username">
         </div>
         <button type="submit" class="btn btn-primary btn-xs">Search user</button>
     </form>
@@ -347,7 +347,7 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
                         <em class="icon-close"></em>
                         </a>
                         <div class="input-group">
-                            <emnput type="text" class="form-control" name="search" disabled style="cursor:default;">
+                            <input type="text" class="form-control" name="search" disabled style="cursor:default;">
                         </div>
                     </form>
                     <!-- END RESPONSIVE QUICK SEARCH FORM -->

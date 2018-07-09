@@ -134,7 +134,7 @@ if (isset($my)) { ?>
                 <?php
             }
         }
-        ?>
+    } ?>
     </table>
     <?php
 } ?>

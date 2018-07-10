@@ -1,41 +1,31 @@
-import Vue from 'vue'
-import moxios from 'moxios'
-import sinon from 'sinon'
-import store from '../../../../../src/store'
 import ReasonRowComponent from '../../../../../src/components/manage/chart/summary-rows/ReasonRow.vue'
 import { DELAYING_ID } from '../../../../../src/constants/chart'
 import symbols from '../../../../../src/symbols'
 import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
-import Alerter from '../../../../../src/services/Alerter'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('ReasonRow component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(ReasonRowComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
+    this.props = {
+      patientId: 42,
+      elementId: 1,
+      segmentId: DELAYING_ID
     }
+
+    this.testCase.setComponent(ReasonRowComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows reasons', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.id).toBe('delay_reason_1')
     expect(selector.getAttribute('name')).toBe('data[1][delay_reason]')
@@ -51,135 +41,102 @@ describe('ReasonRow component', () => {
   })
 
   it('shows other reason', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     expect(link.style.display).toBe('')
   })
 
   it('shows without current reason', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: ''
-    }
-    const vm = this.mount(props)
+    this.props.reason = ''
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.value).toBe('insurance')
   })
 
   it('shows without current reason and reason data', function () {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: 99,
-      reason: ''
-    }
-    const vm = this.mount(props)
+    this.props.segmentId = 99
+    this.props.reason = ''
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     expect(selector.value).toBe('')
   })
 
   it('updates reason', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
-    let confirmation = false
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      confirmation = true
-      return true
-    })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.config.data).not.toBeUndefined()
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const firstRequest = requestResults[0]
+      expect(firstRequest.hasOwnProperty('body')).toBe(true)
       const expectedData = {
         delay_reason: 'dental work'
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
-      expect(confirmation).toBe(false)
+      expect(firstRequest.body).toEqual(expectedData)
+      expect(this.testCase.confirmText).toBe('')
       done()
     })
   })
 
   it('updates reason and erases description', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.update + '/1'
     })
-    let confirmation = false
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      confirmation = true
-      return true
-    })
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.config.data).not.toBeUndefined()
-      expect(confirmation).toBe(true)
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const firstRequest = requestResults[0]
+      expect(firstRequest.hasOwnProperty('body')).toBe(true)
+      expect(this.testCase.confirmText).not.toBe('')
       done()
     })
   })
 
   it('updates to empty data', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'deciding'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'deciding'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = ''
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
-      expect(moxios.requests.count()).toBe(0)
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(0)
       done()
     })
   })
 
   it('opens flowsheet modal', function (done) {
-    const props = {
-      patientId: 42,
-      elementId: 1,
-      segmentId: DELAYING_ID,
-      reason: 'other'
-    }
-    const vm = this.mount(props)
+    this.props.reason = 'other'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     link.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const expectedModal = {
         name: symbols.modals.flowsheetReason,
         params: {
@@ -191,9 +148,5 @@ describe('ReasonRow component', () => {
       expect(vm.$store.state.main[symbols.state.modal]).toEqual(expectedModal)
       done()
     })
-  })
-
-  afterEach(function () {
-    moxios.uninstall()
   })
 })

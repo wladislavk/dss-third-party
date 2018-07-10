@@ -1,11 +1,13 @@
-import Vue from 'vue'
-import store from '../../../../src/store'
 import PatientIncompleteHstComponent from '../../../../src/components/manage/patients/PatientIncompleteHst.vue'
-import VueMoment from 'vue-moment'
 import { DSS_CONSTANTS } from '../../../../src/constants/main'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientIncompleteHst component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(PatientIncompleteHstComponent)
+
     this.propsData = {
       status: 10,
       patientId: 1,
@@ -15,19 +17,16 @@ describe('PatientIncompleteHst component', () => {
       officeNotes: 'notes',
       rejectedReason: 'reason'
     }
+  })
 
-    Vue.use(VueMoment)
-    const Component = Vue.extend(PatientIncompleteHstComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        propsData: this.propsData
-      }).$mount()
-    }
+  afterEach(function () {
+    this.testCase.reset()
   })
 
   it('shows warning', function () {
-    const vm = this.mount()
+    this.testCase.setPropsData(this.propsData)
+    const vm = this.testCase.mount()
+
     expect(vm.$el.children.length).toBe(4)
     const firstLink = vm.$el.firstChild
     expect(firstLink.getAttribute('href')).toContain('manage/hst_request.php?pid=1&hst_id=2')
@@ -38,16 +37,18 @@ describe('PatientIncompleteHst component', () => {
 
   it('shows with status label', function () {
     this.propsData.status = 0
+    this.testCase.setPropsData(this.propsData)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     const thirdChild = vm.$el.children[2]
     expect(thirdChild.innerHTML).toBe('<span>Unsent</span>')
   })
 
   it('shows with scheduled status', function () {
     this.propsData.status = DSS_CONSTANTS.DSS_HST_SCHEDULED
+    this.testCase.setPropsData(this.propsData)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     expect(vm.$el.children.length).toBe(5)
     const fourthChild = vm.$el.children[3]
     expect(fourthChild.textContent).toBe(' - notes')
@@ -55,8 +56,9 @@ describe('PatientIncompleteHst component', () => {
 
   it('shows with rejected status', function () {
     this.propsData.status = DSS_CONSTANTS.DSS_HST_REJECTED
+    this.testCase.setPropsData(this.propsData)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     expect(vm.$el.children.length).toBe(6)
     const thirdChild = vm.$el.children[2]
     expect(thirdChild.textContent).toBe('Rejected')
@@ -70,8 +72,9 @@ describe('PatientIncompleteHst component', () => {
   it('shows with rejected with date', function () {
     this.propsData.status = DSS_CONSTANTS.DSS_HST_REJECTED
     this.propsData.dateRejected = new Date('04/03/2016')
+    this.testCase.setPropsData(this.propsData)
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     expect(vm.$el.children.length).toBe(7)
     const fifthChild = vm.$el.children[4]
     expect(fifthChild.textContent).toBe(' - 04/03/2016 12:00 am')

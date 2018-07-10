@@ -1,69 +1,48 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import CommonHeaderComponent from '../../../../src/components/manage/common/CommonHeader.vue'
 import symbols from '../../../../src/symbols'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
-import LegacyHref from '../../../../src/directives/LegacyHref'
-import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('CommonHeader component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
 
-    Vue.directive('legacy-href', LegacyHref)
     store.commit(symbols.mutations.patientId, 0)
     store.commit(symbols.mutations.modal, { name: '' })
-    Vue.component('patient-header', {
-      template: '<div class="patient-header"></div>'
-    })
-    Vue.component('right-top-menu', {
-      template: '<div class="right-menu"></div>'
-    })
-    Vue.component('left-top-menu', {
-      template: '<div class="left-menu"></div>'
-    })
-    Vue.component('task-menu', {
-      template: '<div class="task-menu"></div>'
-    })
-    Vue.component('patient-search', {
-      template: '<div class="patient-search"></div>'
-    })
-    Vue.component('welcome-text', {
-      template: '<div class="welcome-text"></div>'
-    })
-    Vue.use(VueRouter)
-    const Component = Vue.extend(CommonHeaderComponent)
-    const Router = new VueRouter({
-      routes: [
-        {
-          name: 'dashboard',
-          path: '/'
-        }
-      ]
-    })
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: Router
-      }).$mount()
-    }
+
+    const childComponents = [
+      'patient-header',
+      'right-top-menu',
+      'left-top-menu',
+      'task-menu',
+      'patient-search',
+      'welcome-text'
+    ]
+    this.testCase.setComponent(CommonHeaderComponent)
+    this.testCase.setChildComponents(childComponents)
+    this.testCase.setRoutes([
+      {
+        name: 'dashboard',
+        path: '/'
+      }
+    ])
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows header', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const companyLogoDiv = vm.$el.querySelector('div.company-logo')
     expect(companyLogoDiv).toBeNull()
   })
 
   it('shows patient header when ID present', function () {
     store.commit(symbols.mutations.patientId, 1)
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const patientHeaderDiv = vm.$el.querySelector('div.patient-header')
     expect(patientHeaderDiv).not.toBeNull()
     const patientMenusDiv = vm.$el.querySelector('div.patient-menus')
@@ -71,14 +50,11 @@ describe('CommonHeader component', () => {
   })
 
   it('clicks buttons', function (done) {
-    let redirectUrl = ''
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
-      redirectUrl = ProcessWrapper.getLegacyRoot() + url
-    })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const addTaskButton = vm.$el.querySelector('button#add_task_button')
     addTaskButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const expectedModal = {
         name: symbols.modals.addTask,
         params: {
@@ -89,8 +65,8 @@ describe('CommonHeader component', () => {
       expect(vm.$store.state.main[symbols.mutations.modal]).toEqual(expectedModal)
       const addPatientButton = vm.$el.querySelector('button#add_patient_button')
       addPatientButton.click()
-      vm.$nextTick(() => {
-        expect(redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php')
+      this.testCase.wait(() => {
+        expect(this.testCase.redirectUrl).toBe('manage/add_patient.php')
         done()
       })
     })

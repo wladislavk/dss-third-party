@@ -1,4 +1,4 @@
-FROM node:7.10-alpine
+FROM node:8.11-alpine
 
 RUN set -x \
   && sed -i 's,v[0-9]\.[0-9],v3.6,g' /etc/apk/repositories \
@@ -10,6 +10,7 @@ RUN set -x \
     ttf-dejavu \
     xpra \
     make \
+    build-base \
   && rm -rf /var/cache/apk/*
 
 ARG APP_DIR=/opt/app
@@ -22,5 +23,7 @@ ENV NODE_ENV $NODE_ENV
 COPY package.json $APP_DIR
 RUN yarn
 COPY . $APP_DIR
+
+RUN npm rebuild node-sass --force
 
 CMD [ "yarn", "run", "dev" ]

@@ -5,12 +5,14 @@ import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
 describe('Flowsheet module mutations', () => {
   describe('getAppointmentSummary mutation', () => {
     it('gets summary without fields', function () {
+      const initialData = {
+        id: 42,
+        name: 'foo'
+      }
+
       const state = {
         [symbols.state.appointmentSummaries]: [
-          {
-            id: 42,
-            name: 'foo'
-          }
+          initialData
         ]
       }
       const data = {
@@ -27,10 +29,7 @@ describe('Flowsheet module mutations', () => {
       FlowsheetModule.mutations[symbols.mutations.getAppointmentSummary](state, data)
       const expectedState = {
         [symbols.state.appointmentSummaries]: [
-          {
-            id: 42,
-            name: 'foo'
-          },
+          initialData,
           {
             id: 1,
             segmentId: 2,
@@ -194,16 +193,18 @@ describe('Flowsheet module mutations', () => {
 
   describe('trackerSteps mutation', () => {
     it('adds tracker steps', function () {
+      const firstStep = {
+        id: 1,
+        name: 'first'
+      }
+      const secondStep = {
+        id: 2,
+        name: 'second'
+      }
       const state = {
         [symbols.state.trackerSteps]: [
-          {
-            id: 1,
-            name: 'first'
-          },
-          {
-            id: 2,
-            name: 'second'
-          }
+          firstStep,
+          secondStep
         ]
       }
       const data = [
@@ -226,14 +227,8 @@ describe('Flowsheet module mutations', () => {
       FlowsheetModule.mutations[symbols.mutations.trackerSteps](state, payload)
       const expectedState = {
         [symbols.state.trackerSteps]: [
-          {
-            id: 1,
-            name: 'first'
-          },
-          {
-            id: 2,
-            name: 'second'
-          },
+          firstStep,
+          secondStep,
           {
             id: 3,
             name: 'third',
@@ -253,16 +248,18 @@ describe('Flowsheet module mutations', () => {
   })
 
   describe('futureAppointment mutation', () => {
-    it('sets appointment without date', function () {
-      const state = {
+    beforeEach(function () {
+      this.state = {
         [symbols.state.futureAppointment]: INITIAL_FUTURE_APPOINTMENT
       }
+    })
+    it('sets appointment without date', function () {
       const data = {
         id: '1',
         segmentid: '2',
         date_scheduled: ''
       }
-      FlowsheetModule.mutations[symbols.mutations.futureAppointment](state, data)
+      FlowsheetModule.mutations[symbols.mutations.futureAppointment](this.state, data)
       const expectedState = {
         [symbols.state.futureAppointment]: {
           id: 1,
@@ -270,18 +267,15 @@ describe('Flowsheet module mutations', () => {
           dateScheduled: null
         }
       }
-      expect(state).toEqual(expectedState)
+      expect(this.state).toEqual(expectedState)
     })
     it('sets appointment with date', function () {
-      const state = {
-        [symbols.state.futureAppointment]: INITIAL_FUTURE_APPOINTMENT
-      }
       const data = {
         id: '1',
         segmentid: '2',
         date_scheduled: '2016-01-01'
       }
-      FlowsheetModule.mutations[symbols.mutations.futureAppointment](state, data)
+      FlowsheetModule.mutations[symbols.mutations.futureAppointment](this.state, data)
       const expectedState = {
         [symbols.state.futureAppointment]: {
           id: 1,
@@ -289,7 +283,7 @@ describe('Flowsheet module mutations', () => {
           dateScheduled: new Date('2016-01-01')
         }
       }
-      expect(state).toEqual(expectedState)
+      expect(this.state).toEqual(expectedState)
     })
   })
 })

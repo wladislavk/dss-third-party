@@ -1,161 +1,122 @@
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import sinon from 'sinon'
 import symbols from '../../../../src/symbols'
 import SwalWrapper from '../../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../../src/store/dashboard'
 import TestCase from '../../../cases/StoreTestCase'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
-import Alerter from '../../../../src/services/Alerter'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   describe('documentCategories action', () => {
     it('retrieves document categories', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({response: response})
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.documentCategories,
-          payload: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.documentCategories.active }
-        ]
-        expect(postData).toEqual(expectedHttp)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.documentCategories.active },
+          mutations: [
+            {
+              type: symbols.mutations.documentCategories,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
-      })
+      this.testCase.stubErrorRequest()
 
       DashboardModule.actions[symbols.actions.documentCategories](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDocumentCategories',
-            response: new Error()
-          }
-        }
-      ]
 
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.documentCategories.active },
+          mutations: [],
+          actions: [
+            this.testCase.getErrorHandler('getDocumentCategories')
+          ]
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('deviceSelectorModal action', () => {
     it('opens device selector', function () {
       DashboardModule.actions[symbols.actions.deviceSelectorModal](this.testCase.mocks)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.modal,
-          payload: {
-            name: symbols.modals.deviceSelector,
-            params: {
-              white: true
+
+      expect(this.testCase.getResults()).toEqual({
+        http: {},
+        mutations: [
+          {
+            type: symbols.mutations.modal,
+            payload: {
+              name: symbols.modals.deviceSelector,
+              params: {
+                white: true
+              }
             }
           }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+        ],
+        actions: []
+      })
     })
   })
 
   describe('memos action', () => {
     it('retrieves memos', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({response: response})
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.memos,
-          payload: [
-            { id: 1 },
-            { id: 2 }
-          ]
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          { path: endpoints.memos.current }
-        ]
-        expect(postData).toEqual(expectedHttp)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.memos.current },
+          mutations: [
+            {
+              type: symbols.mutations.memos,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
-      })
+      this.testCase.stubErrorRequest()
 
       DashboardModule.actions[symbols.actions.memos](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getCurrentMemos',
-            response: new Error()
-          }
-        }
-      ]
 
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.memos.current },
+          mutations: [],
+          actions: [
+            this.testCase.getErrorHandler('getCurrentMemos')
+          ]
+        })
         done()
-      }, 100)
+      })
     })
   })
 
@@ -163,7 +124,7 @@ describe('Dashboard module actions', () => {
     beforeEach(function () {
       this.swalData = []
       this.inputValue = ''
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         let result = null
         if (func) {
           result = func(this.inputValue)
@@ -171,24 +132,20 @@ describe('Dashboard module actions', () => {
         this.swalData.push({data: data, result: result})
       })
       this.inputError = ''
-      this.sandbox.stub(SwalWrapper, 'showInputError').callsFake((text) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'showInputError').callsFake((text) => {
         this.inputError = text
       })
       this.closed = false
-      this.sandbox.stub(SwalWrapper, 'close').callsFake(() => {
+      this.testCase.sandbox.stub(SwalWrapper, 'close').callsFake(() => {
         this.closed = true
       })
     })
     it('exports with good password', function () {
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
-      })
       this.inputValue = '1234'
       DashboardModule.actions[symbols.actions.exportMDModal]()
       expect(this.closed).toBe(true)
       expect(this.inputError).toBe('')
-      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
+      expect(this.testCase.redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
       const expectedSwal = [
         {
           data: {
@@ -264,15 +221,13 @@ describe('Dashboard module actions', () => {
     it('imports data with confirmation', function () {
       const swalData = []
       const isConfirm = true
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         swalData.push(data)
         func(isConfirm)
       })
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
-      })
+
       DashboardModule.actions[symbols.actions.dataImportModal]()
+
       const expectedData = [
         {
           title: '',
@@ -287,121 +242,92 @@ describe('Dashboard module actions', () => {
         }
       ]
       expect(swalData).toEqual(expectedData)
-      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
+      expect(this.testCase.redirectUrl).toBe(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
     })
     it('imports data without confirmation', function () {
       const isConfirm = false
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
+      this.testCase.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
         func(isConfirm)
       })
-      let destination = ''
-      this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-        destination = url
-      })
       DashboardModule.actions[symbols.actions.dataImportModal]()
-      expect(destination).toBe('')
+      expect(this.testCase.redirectUrl).toBe('')
     })
   })
 
   describe('getDeviceGuideSettingOptions action', () => {
     it('retrieves device guide setting options', function (done) {
-      const result = {
-        data: {
-          data: [
-            {
-              id: 13,
-              labels: ['Not Important', 'Neutral', 'Very Important'],
-              name: 'Comfort',
-              number: 3
-            },
-            {
-              id: 3,
-              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-              name: 'Bruxism',
-              number: 5
-            }
-          ]
+      const response = [
+        {
+          id: 13,
+          labels: ['Not Important', 'Neutral', 'Very Important'],
+          name: 'Comfort',
+          number: 3
+        },
+        {
+          id: 3,
+          labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+          name: 'Bruxism',
+          number: 5
         }
-      }
-      let getPath = ''
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        getPath = path
-        return Promise.resolve(result)
-      })
+      ]
+      this.testCase.stubRequest({response: response})
+
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.deviceGuideSettingOptions,
-          payload: [
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.guideSettingOptions.settingIds },
+          mutations: [
             {
-              id: 13,
-              labels: ['Not Important', 'Neutral', 'Very Important'],
-              name: 'Comfort',
-              number: 3
-            },
-            {
-              id: 3,
-              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-              name: 'Bruxism',
-              number: 5
+              type: symbols.mutations.deviceGuideSettingOptions,
+              payload: response
             }
-          ]
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(getPath).toEqual(endpoints.guideSettingOptions.settingIds)
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
-      })
+      this.testCase.stubErrorRequest()
+
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDeviceGuideSettingOptions',
-            response: new Error()
-          }
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.guideSettingOptions.settingIds },
+          mutations: [],
+          actions: [
+            this.testCase.getErrorHandler('getDeviceGuideSettingOptions')
+          ]
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('getDeviceGuideResults action', () => {
     it('retrieves device guide results', function (done) {
-      const result = {
-        data: {
-          data: [
-            {
-              name: 'SUAD Ultra Elite',
-              id: 13,
-              value: 34,
-              imagePath: 'dental_device_13.gif'
-            },
-            {
-              name: 'SUAD Hard',
-              id: 14,
-              value: 33,
-              imagePath: 'dental_device_14.gif'
-            },
-            {
-              name: 'Narval',
-              id: 7,
-              value: 33,
-              imagePath: 'dental_device_7.gif'
-            }
-          ]
+      const response = [
+        {
+          name: 'SUAD Ultra Elite',
+          id: 13,
+          value: 34,
+          imagePath: 'dental_device_13.gif'
+        },
+        {
+          name: 'SUAD Hard',
+          id: 14,
+          value: 33,
+          imagePath: 'dental_device_14.gif'
+        },
+        {
+          name: 'Narval',
+          id: 7,
+          value: 33,
+          imagePath: 'dental_device_7.gif'
         }
-      }
+      ]
 
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: [
@@ -424,165 +350,151 @@ describe('Dashboard module actions', () => {
         ]
       })
 
-      let requestSettings = {}
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        requestSettings = {
-          path: path
-        }
-        return Promise.resolve(result)
-      })
+      this.testCase.stubRequest({response: response})
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.deviceGuideResults,
-          payload: result.data.data
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+      this.testCase.wait(() => {
         let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
         expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
-        const expectedRequestSettings = {
-          path: expectedPath
-        }
-        expect(requestSettings).toEqual(expectedRequestSettings)
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: expectedPath },
+          mutations: [
+            {
+              type: symbols.mutations.deviceGuideResults,
+              payload: response
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
-      })
+      this.testCase.stubErrorRequest()
+
       this.testCase.setState({
         [symbols.state.deviceGuideSettingOptions]: []
       })
 
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getDeviceGuideResults',
-            response: new Error()
-          }
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.guideDevices.withImages },
+          mutations: [],
+          actions: [
+            this.testCase.getErrorHandler('getDeviceGuideResults')
+          ]
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('updateFlowDevice action', () => {
-    it('updates a flow device', function (done) {
-      const DEVICE_ID = 7
-      const PATIENT_ID = 16
-      const response = {
-        data: { message: 'Successfully updated.' }
-      }
-
-      let requestSettings = {}
-      this.sandbox.stub(http, 'put').callsFake((path, data) => {
-        requestSettings = {
-          path: path,
-          data: data
-        }
-        return Promise.resolve(response)
-      })
-      let alertText = ''
-      this.sandbox.stub(Alerter, 'alert').callsFake((message) => {
-        alertText = message
-      })
+    beforeEach(function () {
+      this.deviceId = 7
+      this.patientId = 16
       this.testCase.rootState.patients = {
-        [symbols.state.patientId]: PATIENT_ID
+        [symbols.state.patientId]: this.patientId
       }
-      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+      this.expectedHttp = {
+        path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + this.deviceId,
+        payload: { patient_id: this.patientId }
+      }
+    })
+    it('updates a flow device', function (done) {
+      const message = 'Successfully updated.'
+      this.testCase.stubRequest({message: message})
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, this.deviceId)
 
-      setTimeout(() => {
-        const expectedRequestSettings = {
-          path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
-          data: {
-            patient_id: PATIENT_ID
-          }
-        }
-        expect(requestSettings).toEqual(expectedRequestSettings)
-        expect(alertText).toBe('Successfully updated.')
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: this.expectedHttp,
+          mutations: [
+            {
+              type: symbols.mutations.resetModal,
+              payload: {}
+            }
+          ],
+          actions: []
+        })
+        expect(this.testCase.alertText).toBe(message)
         done()
-      }, 100)
+      })
     })
     it('handles error', function (done) {
-      const DEVICE_ID = 7
-      const PATIENT_ID = 16
-      this.sandbox.stub(http, 'put').callsFake(() => {
-        return Promise.reject(new Error())
-      })
-      this.testCase.rootState.patients = {
-        [symbols.state.patientId]: PATIENT_ID
-      }
-      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'updateFlowDevice',
-            response: new Error()
-          }
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
+      this.testCase.stubErrorRequest()
+
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, this.deviceId)
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: this.expectedHttp,
+          mutations: [],
+          actions: [
+            this.testCase.getErrorHandler('updateFlowDevice')
+          ]
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('moveGuideSettingSlider action', () => {
-    it('sets option value', function () {
-      const data = {
-        id: 1,
-        value: 'bar',
-        labels: {
-          2: 'foo',
-          4: 'bar',
-          7: 'bar'
-        }
-      }
-      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.moveGuideSettingSlider,
-          payload: {
-            id: 1,
-            value: 4
+    beforeEach(function () {
+      this.id = 1
+      this.firstLabel = 2
+      this.secondLabel = 4
+      this.thirdLabel = 7
+      this.firstValue = 'foo'
+      this.secondValue = 'bar'
+      this.setData = function (value) {
+        return {
+          id: this.id,
+          value: value,
+          labels: {
+            [this.firstLabel]: this.firstValue,
+            [this.secondLabel]: this.secondValue,
+            [this.thirdLabel]: this.secondValue
           }
         }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+      }
+      this.getMutation = function (expectedLabel) {
+        return {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: this.id,
+            value: expectedLabel
+          }
+        }
+      }
+    })
+    it('sets option value', function () {
+      const data = this.setData(this.secondValue)
+
+      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+
+      expect(this.testCase.getResults()).toEqual({
+        http: {},
+        mutations: [
+          this.getMutation(this.secondLabel)
+        ],
+        actions: []
+      })
     })
     it('leaves option unchanged if value not found', function () {
-      const data = {
-        id: 1,
-        value: 'baz',
-        labels: {
-          2: 'foo',
-          4: 'bar',
-          7: 'bar'
-        }
-      }
+      const data = this.setData('baz')
+
       DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.moveGuideSettingSlider,
-          payload: {
-            id: 1,
-            value: 0
-          }
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+
+      expect(this.testCase.getResults()).toEqual({
+        http: {},
+        mutations: [
+          this.getMutation(0)
+        ],
+        actions: []
+      })
     })
   })
 })

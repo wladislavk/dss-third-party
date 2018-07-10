@@ -24,8 +24,6 @@ abstract class TasksBaseContext extends BaseContext
     protected $taskDeleted = false;
 
     /**
-     * @When I fill task form with values:
-     *
      * @param TableNode $table
      * @throws BehatException
      */
@@ -81,7 +79,6 @@ abstract class TasksBaseContext extends BaseContext
     }
 
     /**
-     * @When I click :buttonName button next to task :taskName on Manage Tasks page
      * @param string $buttonName
      * @param string $taskName
      * @throws BehatException
@@ -106,7 +103,6 @@ abstract class TasksBaseContext extends BaseContext
     }
 
     /**
-     * @When I click checkbox next to task :taskName on Manage Tasks page
      * @param string $taskName
      * @throws BehatException
      */
@@ -129,10 +125,7 @@ abstract class TasksBaseContext extends BaseContext
         throw new BehatException("Checkbox not found for task $taskName");
     }
 
-
     /**
-     * @When I click delete task link for :task
-     *
      * @param string $task
      * @throws BehatException|UnsupportedDriverActionException|DriverException
      */

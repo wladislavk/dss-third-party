@@ -21,6 +21,7 @@ class Tasks extends TasksBaseContext
         'edit' => 2,
     ];
 
+
     /**
      * @When I click on task :task checkbox in :area
      *
@@ -185,6 +186,28 @@ class Tasks extends TasksBaseContext
             }
         }
         Assert::assertEquals($value, $realValue);
+    }
+
+    /**
+     * @When I fill task form with values:
+     *
+     * @param TableNode $table
+     * @throws BehatException
+     */
+    public function fillTaskForm(TableNode $table)
+    {
+        parent::fillTaskForm($table);
+    }
+
+    /**
+     * @When I click delete task link for :task
+     *
+     * @param string $task
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
+     */
+    public function clickDeleteButton($task)
+    {
+        parent::clickDeleteButton($task);
     }
 
     /**

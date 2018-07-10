@@ -3,6 +3,8 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use PHPUnit\Framework\Assert;
 
 class ManageTasks extends TasksBaseContext
@@ -67,6 +69,49 @@ class ManageTasks extends TasksBaseContext
                 throw new BehatException(sprintf("Task with text %s not found in table %s", $task['name'], $tableId));
             }
         }
+    }
+
+    /**
+     * @When I fill task form on Manage Tasks page with values:
+     *
+     * @param TableNode $table
+     * @throws BehatException
+     */
+    public function fillTaskForm(TableNode $table)
+    {
+        parent::fillTaskForm($table);
+    }
+
+    /**
+     * @When I click :buttonName button next to task :taskName on Manage Tasks page
+     * @param string $buttonName
+     * @param string $taskName
+     * @throws BehatException
+     */
+    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName)
+    {
+        parent::clickButtonNextToTaskOnManageTasksPage($buttonName, $taskName);
+    }
+
+    /**
+     * @When I click checkbox next to task :taskName on Manage Tasks page
+     * @param string $taskName
+     * @throws BehatException
+     */
+    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName)
+    {
+        parent::clickCheckboxNextToTaskOnManageTasksPage($taskName);
+    }
+
+    /**
+     * @When I click delete task link for :task on Manage Tasks page
+     *
+     * @param string $task
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
+     */
+    public function clickDeleteButton($task)
+    {
+        parent::clickDeleteButton($task);
     }
 
     /**

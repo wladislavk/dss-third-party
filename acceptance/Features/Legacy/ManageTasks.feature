@@ -109,7 +109,7 @@ Feature: Task Management from Manage Tasks page
       | Due Date    | date     | yes      |
       | Assigned To | select   | yes      |
       | Completed   | checkbox | no       |
-    When I fill task form with values:
+    When I fill task form on Manage Tasks page with values:
       | field       | type     | value                  |
       | Task        | text     | Not existing test task |
       | Due Date    | date     | today                  |
@@ -140,7 +140,7 @@ Feature: Task Management from Manage Tasks page
       | Due Date    | text     | 03/06/2014  |
       | Assigned To | select   | Doctor 1    |
       | Completed   | checkbox | No          |
-    When I fill task form with values:
+    When I fill task form on Manage Tasks page with values:
       | field       | type     | value        |
       | Task        | text     | call for bar |
       | Due Date    | date     | today        |
@@ -194,7 +194,7 @@ Feature: Task Management from Manage Tasks page
   Scenario: Delete task from modal
     When I click "Edit" button next to task "asdasdasd" on Manage Tasks page
     Then the modal window is "open"
-    When I click delete task link for "asdasdasd"
+    When I click delete task link for "asdasdasd" on Manage Tasks page
     And I confirm browser alert
     Then the modal window is "closed"
     And I see the list of tasks:

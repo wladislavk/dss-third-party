@@ -46,6 +46,7 @@ default:
                 - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
+                - Contexts\Tasks
                 - Contexts\ManageTasks
 
 chrome:

@@ -20,6 +20,7 @@ abstract class BaseContext extends RawMinkContext
     const START_URL = 'http://' . SUT_HOST . '/manage';
 
     const NUMBER_OF_TRIES = 3;
+    const NUMBER_OF_TRIES_FOR_ALERT_CHECKING = 10000;
 
     const REQUIRED_HTML = '<span class="red">*</span>';
 

@@ -13,10 +13,10 @@ class AddTaskDataForDoc1 extends Migration
             return;
         }
 
-        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 1', '1', '1', '0', '2012-04-01 00:00:00', '0');");
-        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 2', '1', '1', '0', '2012-04-01 00:00:00', '0');");
-        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 3', '1', '1', '0', '2012-04-01 00:00:00', '0');");
-        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 4', '1', '1', '0', '2012-04-01 00:00:00', '0');");
+        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 1', '1', '1', '0', '2012-04-01 00:00:00', NULL);");
+        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 2', '1', '1', '0', '2012-04-01 00:00:00', NULL);");
+        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 3', '1', '1', '0', '2012-04-01 00:00:00', NULL);");
+        DB::insert("INSERT INTO `dental_task` (`task`, `userid`, `responsibleid`, `status`, `due_date`, `patientid`) VALUES ('Very important task 4', '1', '1', '0', '2012-04-01 00:00:00', NULL);");
 
         DB::update("UPDATE `dental_task` SET `due_date`='2014-01-24 00:00:00' WHERE `task`='review HST' and `responsibleid` = 4;");
         DB::update("UPDATE `dental_task` SET `due_date`='2014-01-23 00:00:00' WHERE `task`='vbvzvn';");

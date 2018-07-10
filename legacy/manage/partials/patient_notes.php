@@ -133,8 +133,7 @@ if (isset($my)) { ?>
                 </tr>
                 <?php
             }
-        }
-    } ?>
+        } ?>
     </table>
     <?php
 } ?>

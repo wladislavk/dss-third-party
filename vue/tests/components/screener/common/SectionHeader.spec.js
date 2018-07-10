@@ -1,11 +1,12 @@
-import Vue from 'vue'
 import symbols from '../../../../src/symbols'
 import SectionHeaderComponent from '../../../../src/components/screener/common/SectionHeader.vue'
 import store from '../../../../src/store'
-import { INITIAL_CONTACT_DATA } from '../../../../src/constants/screener'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('SectionHeader component', () => {
   beforeAll(function () {
+    this.testCase = new TestCase()
+
     const contactData = store.state.screener[symbols.state.contactData]
     for (let element of contactData) {
       if (element.camelName === 'firstName') {
@@ -17,24 +18,21 @@ describe('SectionHeader component', () => {
     }
     store.state.screener.contactData = contactData
 
-    const Component = Vue.extend(SectionHeaderComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
+    this.props = {
+      title: 'My title'
     }
+
+    this.testCase.setComponent(SectionHeaderComponent)
   })
 
   afterEach(function () {
-    store.state.screener.contactData = INITIAL_CONTACT_DATA
+    this.testCase.reset()
   })
 
   it('should display full name and title', function () {
-    const propsData = {
-      title: 'My title'
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const heading = vm.$el.querySelector('h5')
     expect(heading).not.toBeNull()
     const expected = 'Health Assessment - John Doe'
@@ -45,12 +43,11 @@ describe('SectionHeader component', () => {
   })
 
   it('should display bottom margin and no assessment', function () {
-    const propsData = {
-      title: 'My title',
-      bottomMargin: true,
-      assessment: false
-    }
-    const vm = this.mount(propsData)
+    this.props.bottomMargin = true
+    this.props.assessment = false
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const heading = vm.$el.querySelector('h5')
     expect(heading).toBeNull()
     const title = vm.$el.querySelector('h3')

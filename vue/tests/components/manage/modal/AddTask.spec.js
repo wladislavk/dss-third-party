@@ -1,64 +1,46 @@
-import Vue from 'vue'
-import sinon from 'sinon'
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import AddTaskComponent from '../../../../src/components/manage/modal/AddTask.vue'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
 import symbols from '../../../../src/symbols'
-import Alerter from '../../../../src/services/Alerter'
-import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('AddTask component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
-    const users = [
-      {
-        userid: 1,
-        first_name: 'John',
-        last_name: 'Doe'
-      },
-      {
-        userid: 2,
-        first_name: 'Jane',
-        last_name: 'Jones'
-      }
-    ]
-    moxios.stubRequest(http.formUrl(endpoints.users.responsible), {
-      status: 200,
-      responseText: {
-        data: users
-      }
-    })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
-    })
+    this.testCase = new TestCase()
+
     store.state.main[symbols.state.modal].name = 'addTask'
     store.state.main[symbols.state.userInfo].plainUserId = 1
 
-    const Component = Vue.extend(AddTaskComponent)
-    this.mount = function (taskId) {
-      if (taskId) {
-        store.state.main[symbols.state.modal].params.id = taskId
-      }
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(AddTaskComponent)
+
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
+    })
+    this.testCase.stubRequest({
+      url: endpoints.users.responsible,
+      response: [
+        {
+          userid: 1,
+          first_name: 'John',
+          last_name: 'Doe'
+        },
+        {
+          userid: 2,
+          first_name: 'Jane',
+          last_name: 'Jones'
+        }
+      ]
+    })
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('shows HTML for new task', function (done) {
-    const vm = this.mount()
-    moxios.wait(() => {
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
       const validationRow = vm.$el.querySelector('tr#validation-error')
@@ -83,23 +65,22 @@ describe('AddTask component', () => {
 
   it('shows HTML for existing task', function (done) {
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
-    const vm = this.mount(taskId)
-    moxios.wait(() => {
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task')
       const taskInput = vm.$el.querySelector('input#task')
@@ -118,23 +99,22 @@ describe('AddTask component', () => {
 
   it('shows HTML for existing task with patient', function (done) {
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: 'John',
-      lastname: 'Doe'
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: 'John',
+        lastname: 'Doe'
       }
     })
-    const vm = this.mount(taskId)
-    moxios.wait(() => {
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const header = vm.$el.querySelector('td.cat_head')
       expect(header.textContent.trim()).toBe('Add new task (John Doe)')
       done()
@@ -142,12 +122,12 @@ describe('AddTask component', () => {
   })
 
   it('edits task', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.store), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.tasks.store
     })
-    const vm = this.mount()
-    moxios.wait(() => {
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const taskInput = vm.$el.querySelector('input#task')
       taskInput.value = 'new task'
       taskInput.dispatchEvent(new Event('change'))
@@ -161,7 +141,7 @@ describe('AddTask component', () => {
       responsible.dispatchEvent(new Event('change'))
       const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
         const validationRow = vm.$el.querySelector('tr#validation-error')
         expect(validationRow.style.display).toBe('none')
@@ -171,11 +151,12 @@ describe('AddTask component', () => {
   })
 
   it('edits task with validation error', function (done) {
-    const vm = this.mount()
-    moxios.wait(() => {
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('addTask')
         const validationRow = vm.$el.querySelector('tr#validation-error')
         expect(validationRow.style.display).toBe('')
@@ -186,73 +167,59 @@ describe('AddTask component', () => {
   })
 
   it('deletes task', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
-    // @todo: uncomment after this page is migrated
-    // let redirected = false
-    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake(() => {
-      // @todo: uncomment after this page is migrated
-      // redirected = true
-    })
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/' + taskId), {
-      status: 200,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: endpoints.tasks.destroy + '/' + taskId
     })
-    const vm = this.mount(taskId)
-    moxios.wait(() => {
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
         // @todo: uncomment after this page is migrated
-        // expect(redirected).toBe(true)
+        // expect(this.testCase.redirectUrl).not.toBe('')
         done()
       })
     })
   })
 
   it('deletes task without confirmation', function (done) {
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    this.testCase.confirmDialog = false
     const taskId = 1
-    const taskData = {
-      id: 1,
-      due_date: '2014-08-06',
-      task: 'test task',
-      responsibleid: 2,
-      status: 1,
-      firstname: '',
-      lastname: ''
-    }
-    moxios.stubRequest(http.formUrl(endpoints.tasks.show + '/' + taskId), {
-      status: 200,
-      responseText: {
-        data: taskData
+    this.testCase.stubRequest({
+      url: endpoints.tasks.show + '/' + taskId,
+      response: {
+        id: 1,
+        due_date: '2014-08-06',
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
       }
     })
-    const vm = this.mount(taskId)
-    moxios.wait(() => {
+    store.state.main[symbols.state.modal].params.id = taskId
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       const deleteLink = vm.$el.querySelector('a.delete-task')
       deleteLink.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('addTask')
         done()
       })

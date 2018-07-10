@@ -13,7 +13,7 @@ describe('Education module mutations', () => {
       EducationsModule.mutations[symbols.mutations.edxCertificatesData](this.state, data)
 
       const expectedState = {
-        [symbols.state.edxCertificates]: [{someData: 1, otherData: 2}]
+        [symbols.state.edxCertificates]: data
       }
       expect(this.state).toEqual(expectedState)
     })

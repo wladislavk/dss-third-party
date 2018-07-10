@@ -42,7 +42,7 @@
                 v-bind:tasks="laterTasks"
                 task-code="lat"
                 task-type="Later"
-                v-bind:due-date="true"
+                v-bind:has-due-date="true"
                 v-bind:is-patient="false"
             ></task-data>
             <br /><br />

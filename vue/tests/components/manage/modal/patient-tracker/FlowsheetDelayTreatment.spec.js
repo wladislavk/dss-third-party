@@ -1,14 +1,14 @@
-import Vue from 'vue'
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import FlowsheetDelayTreatmentComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetDelayTreatment.vue'
 import symbols from '../../../../../src/symbols'
-import http from '../../../../../src/services/http'
 import endpoints from '../../../../../src/endpoints'
 import { DELAYING_ID } from '../../../../../src/constants/chart'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetDelayTreatment component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientName] = 'John Doe'
     store.state.main[symbols.state.modal] = {
       name: symbols.modals.flowsheetDelayTreatment,
@@ -18,29 +18,16 @@ describe('FlowsheetDelayTreatment component', () => {
       }
     }
 
-    moxios.install()
-
-    const Component = Vue.extend(FlowsheetDelayTreatmentComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(FlowsheetDelayTreatmentComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-
-    store.state.patients[symbols.state.patientName] = ''
-    store.state.main[symbols.state.modal] = {
-      name: '',
-      params: {}
-    }
+    this.testCase.reset()
   })
 
   it('shows modal', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const header = vm.$el.querySelector('h2')
     expect(header.textContent).toBe('What is the reason for delaying treatment for John Doe?')
     const treatmentOptions = vm.$el.querySelectorAll('option')
@@ -51,25 +38,29 @@ describe('FlowsheetDelayTreatment component', () => {
   })
 
   it('sets treatment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
-    })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'dental work'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
-        expect(moxios.requests.count()).toBe(2)
-        const firstRequest = moxios.requests.at(0)
-        expect(firstRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.update + '/1'))
-        const expectedData = {
-          delay_reason: 'dental work'
+      this.testCase.wait(() => {
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).toBe(2)
+        const expectedFirst = {
+          url: endpoints.appointmentSummaries.update + '/1',
+          body: {
+            delay_reason: 'dental work'
+          }
         }
-        expect(JSON.parse(firstRequest.config.data)).toEqual(expectedData)
+        expect(requestResults[0]).toEqual(expectedFirst)
+
         const expectedModal = {
           name: '',
           params: {}
@@ -81,18 +72,19 @@ describe('FlowsheetDelayTreatment component', () => {
   })
 
   it('sets treatment with reason', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
-    })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'other'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const expectedModal = {
           name: symbols.modals.flowsheetReason,
           params: {

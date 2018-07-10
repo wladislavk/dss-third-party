@@ -1,7 +1,6 @@
 import symbols from '../../../../symbols'
 import Alerter from '../../../../services/Alerter'
 import FileRetrieverFactory from '../../../../services/file-retrievers/FileRetrieverFactory'
-import http from '../../../../services/http'
 
 export default {
   props: {

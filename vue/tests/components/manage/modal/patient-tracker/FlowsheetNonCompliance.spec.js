@@ -1,14 +1,14 @@
-import Vue from 'vue'
-import moxios from 'moxios'
 import store from '../../../../../src/store'
 import symbols from '../../../../../src/symbols'
 import FlowsheetNonComplianceComponent from '../../../../../src/components/manage/modal/patient-tracker/FlowsheetNonCompliance.vue'
-import http from '../../../../../src/services/http'
 import endpoints from '../../../../../src/endpoints'
 import { NON_COMPLIANT_ID } from '../../../../../src/constants/chart'
+import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('FlowsheetNonCompliance component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientName] = 'John Doe'
     store.state.main[symbols.state.modal] = {
       name: symbols.modals.flowsheetNonCompliance,
@@ -18,29 +18,16 @@ describe('FlowsheetNonCompliance component', () => {
       }
     }
 
-    moxios.install()
-
-    const Component = Vue.extend(FlowsheetNonComplianceComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(FlowsheetNonComplianceComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
-
-    store.state.patients[symbols.state.patientName] = ''
-    store.state.main[symbols.state.modal] = {
-      name: '',
-      params: {}
-    }
+    this.testCase.reset()
   })
 
   it('shows modal', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const header = vm.$el.querySelector('h2')
     expect(header.textContent).toBe('What is the reason John Doe is non-compliant?')
     const treatmentOptions = vm.$el.querySelectorAll('option')
@@ -51,25 +38,29 @@ describe('FlowsheetNonCompliance component', () => {
   })
 
   it('sets treatment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
-    })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'lost device'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
-        expect(moxios.requests.count()).toBe(2)
-        const firstRequest = moxios.requests.at(0)
-        expect(firstRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.update + '/1'))
-        const expectedData = {
-          noncomp_reason: 'lost device'
+      this.testCase.wait(() => {
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).toBe(2)
+        const expectedFirst = {
+          url: endpoints.appointmentSummaries.update + '/1',
+          body: {
+            noncomp_reason: 'lost device'
+          }
         }
-        expect(JSON.parse(firstRequest.config.data)).toEqual(expectedData)
+        expect(requestResults[0]).toEqual(expectedFirst)
+
         const expectedModal = {
           name: '',
           params: {}
@@ -81,18 +72,19 @@ describe('FlowsheetNonCompliance component', () => {
   })
 
   it('sets treatment with reason', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.update + '/1'), {
-      status: 200,
-      responseText: {}
-    })
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const selector = vm.$el.querySelector('select')
     selector.value = 'other'
     selector.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
+      this.testCase.stubRequest({
+        url: endpoints.appointmentSummaries.update + '/1'
+      })
+
       const submitButton = vm.$el.querySelector('input')
       submitButton.click()
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         const expectedModal = {
           name: symbols.modals.flowsheetReason,
           params: {

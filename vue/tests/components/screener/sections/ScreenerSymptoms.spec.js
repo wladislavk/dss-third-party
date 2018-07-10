@@ -1,11 +1,12 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import symbols from '../../../../src/symbols'
 import ScreenerSymptomsComponent from '../../../../src/components/screener/sections/ScreenerSymptoms.vue'
 import store from '../../../../src/store'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerSymptoms', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     this.answers = {
       breathing: true,
       driving: false,
@@ -21,20 +22,13 @@ describe('ScreenerSymptoms', () => {
       staying_asleep: false
     }
 
-    const routes = [
+    this.testCase.setComponent(ScreenerSymptomsComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-diagnoses',
         path: '/diagnoses'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerSymptomsComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
 
     this.setSymptoms = function () {
       for (let symptom of store.state.screener[symbols.state.symptoms]) {
@@ -54,11 +48,12 @@ describe('ScreenerSymptoms', () => {
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
+    this.testCase.reset()
   })
 
   it('should display existing fields', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const allLabels = vm.$el.querySelectorAll('div#sect3 > div.sepH_b')
     expect(allLabels.length).toBe(12)
 
@@ -73,7 +68,8 @@ describe('ScreenerSymptoms', () => {
   })
 
   it('should update data when all fields are set', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect3_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
@@ -81,7 +77,7 @@ describe('ScreenerSymptoms', () => {
 
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const symptoms = store.state.screener[symbols.state.symptoms]
       for (let symptom of symptoms) {
         const answer = this.answers[symptom.name]
@@ -99,7 +95,8 @@ describe('ScreenerSymptoms', () => {
   })
 
   it('should throw error when some fields are not set', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const nextButton = vm.$el.querySelector('a#sect3_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
@@ -109,14 +106,13 @@ describe('ScreenerSymptoms', () => {
 
     nextButton.click()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
 
       const errorDivs = vm.$el.querySelectorAll('div.msg_error > div.error')
       expect(errorDivs.length).toBe(2)
       expect(errorDivs[0].textContent).toContain('Snore:')
       expect(errorDivs[1].textContent).toContain('Headaches:')
-
       done()
     })
   })

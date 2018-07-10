@@ -18,7 +18,7 @@ export default {
       type: Boolean,
       default: false
     },
-    dueDate: {
+    hasDueDate: {
       type: Boolean,
       default: false
     },
@@ -29,5 +29,13 @@ export default {
   },
   components: {
     taskElement: TaskElementComponent
+  },
+  methods: {
+    getDueDate (date) {
+      if (date) {
+        return new Date(date)
+      }
+      return null
+    }
   }
 }

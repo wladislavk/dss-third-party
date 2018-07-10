@@ -1,48 +1,35 @@
-import Vue from 'vue'
-import VueMoment from 'vue-moment'
-import LegacyHref from '../../../../src/directives/LegacyHref'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import moxios from 'moxios'
-import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
-import Alerter from '../../../../src/services/Alerter'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TaskElement component', () => {
   beforeEach(function () {
-    moxios.install()
-    Vue.directive('legacy-href', LegacyHref)
-    Vue.use(VueMoment)
-    const Component = Vue.extend(TaskElementComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
-    this.task = {
-      id: 1,
-      patientid: 2,
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(TaskElementComponent)
+
+    this.props = {
+      taskId: 1,
+      patientId: 2,
       task: 'task 1',
-      due_date: '2016-03-02 10:53:00',
-      firstname: '',
-      lastname: ''
+      dueDate: new Date('2016-03-02 10:53:00'),
+      firstName: '',
+      lastName: '',
+      hasDueDate: false,
+      isPatient: false
     }
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should display base HTML', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const input = vm.$el.querySelector('input')
     expect(input.getAttribute('value')).toBe('1')
     expect(input.getAttribute('class')).toBe('task_status task_status_general')
@@ -52,12 +39,10 @@ describe('TaskElement component', () => {
   })
 
   it('should display HTML for patient', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
+    this.props.isPatient = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const input = vm.$el.querySelector('input')
     expect(input.getAttribute('class')).toBe('task_status')
     const taskContent = vm.$el.querySelector('div.task_content')
@@ -65,25 +50,20 @@ describe('TaskElement component', () => {
   })
 
   it('should display HTML for due date', function () {
-    const propsData = {
-      task: this.task,
-      dueDate: true,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.props.hasDueDate = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const dueDateSpan = vm.$el.querySelector('span.task_due_date')
     expect(dueDateSpan.textContent).toBe('03 02 - ')
   })
 
   it('should display HTML for first name and last name', function () {
-    this.task.firstname = 'John'
-    this.task.lastname = 'Doe'
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.props.firstName = 'John'
+    this.props.lastName = 'Doe'
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const nameSpan = vm.$el.querySelector('span.task_name')
     expect(nameSpan.textContent.trim()).toBe('(John Doe)')
     const nameLink = nameSpan.querySelector('a.task_name_link')
@@ -91,22 +71,21 @@ describe('TaskElement component', () => {
   })
 
   it('should fire onMouseEnter and onMouseLeave', function (done) {
-    const propsData = {
-      task: this.task,
-      dueDate: true,
-      isPatient: true
-    }
-    const vm = this.mount(propsData)
+    this.props.isPatient = true
+    this.props.hasDueDate = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const li = vm.$el
     const taskExtra = li.querySelector('div.task_extra')
     expect(taskExtra.style.display).toBe('none')
     const mouseEnterEvent = new Event('mouseenter')
     const mouseLeaveEvent = new Event('mouseleave')
     li.dispatchEvent(mouseEnterEvent)
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(taskExtra.style.display).toBe('')
       li.dispatchEvent(mouseLeaveEvent)
-      vm.$nextTick(() => {
+      this.testCase.wait(() => {
         expect(taskExtra.style.display).toBe('none')
         done()
       })
@@ -114,25 +93,16 @@ describe('TaskElement component', () => {
   })
 
   it('should update task to active', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.tasks.update + '/1'), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.update + '/1'
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
     })
 
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     vm.$store.commit(symbols.mutations.setTasks, [
       {
         id: 1
@@ -145,18 +115,24 @@ describe('TaskElement component', () => {
     const input = vm.$el.querySelector('input')
     expect(input.checked).toBe(false)
     input.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(input.checked).toBe(true)
-      expect(moxios.requests.count()).toBe(2)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.update + '/1'))
-      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
-      const firstRequest = moxios.requests.at(0)
-      const expectedRequest = {
-        status: 1
-      }
-      expect(JSON.parse(firstRequest.config.data)).toEqual(expectedRequest)
+      const requestResults = this.testCase.getRequestResults()
+      const expectedResults = [
+        {
+          url: endpoints.tasks.update + '/1',
+          body: {
+            status: 1
+          }
+        },
+        {
+          url: endpoints.tasks.index
+        }
+      ]
+      expect(requestResults).toEqual(expectedResults)
       input.click()
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(input.checked).toBe(true)
         done()
       })
@@ -164,33 +140,23 @@ describe('TaskElement component', () => {
   })
 
   it('should delete task', function (done) {
-    spyOn(Alerter, 'isConfirmed').and.returnValue(true)
-    moxios.stubRequest(http.formUrl(endpoints.tasks.destroy + '/1'), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.destroy + '/1'
     })
-    moxios.stubRequest(http.formUrl(endpoints.tasks.index), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.tasks.index
     })
 
-    const propsData = {
-      task: this.task,
-      dueDate: false,
-      isPatient: false
-    }
-    const vm = this.mount(propsData)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
 
     const deleteLink = vm.$el.querySelector('a.task_delete')
     deleteLink.click()
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      expect(moxios.requests.at(0).url).toBe(http.formUrl(endpoints.tasks.destroy + '/1'))
-      expect(moxios.requests.at(1).url).toBe(http.formUrl(endpoints.tasks.index))
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      expect(requestResults[0].url).toBe(endpoints.tasks.destroy + '/1')
+      expect(requestResults[1].url).toBe(endpoints.tasks.index)
       done()
     })
   })

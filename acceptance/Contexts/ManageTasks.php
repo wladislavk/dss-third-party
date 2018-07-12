@@ -28,8 +28,9 @@ class ManageTasks extends TasksBaseContext
     /**
      * @Then I see the list of tasks:
      * @param TableNode $expectedTasks
+     * @return void
      */
-    public function testSeeTheListOfTasks(TableNode $expectedTasks)
+    public function testSeeTheListOfTasks(TableNode $expectedTasks): void
     {
         $this->checkTasks($expectedTasks->getHash(), '#not_completed_tasks', self::COLUMNS_NOT_COMPLETED);
     }
@@ -38,7 +39,7 @@ class ManageTasks extends TasksBaseContext
      * @Then I see the list of completed tasks:
      * @param TableNode $expectedTasks
      */
-    public function testSeeTheListOfCompletedTasks(TableNode $expectedTasks)
+    public function testSeeTheListOfCompletedTasks(TableNode $expectedTasks): void
     {
         $this->checkTasks($expectedTasks->getHash(), '#completed_tasks', self::COLUMNS_COMPLETED);
     }
@@ -47,9 +48,11 @@ class ManageTasks extends TasksBaseContext
      * @param array $expectedTasks
      * @param string $tableId
      * @param array $columnsNumbers
+     * @return void
+     *
      * @throws BehatException
      */
-    private function checkTasks(array $expectedTasks, string $tableId, array $columnsNumbers)
+    private function checkTasks(array $expectedTasks, string $tableId, array $columnsNumbers): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -75,9 +78,11 @@ class ManageTasks extends TasksBaseContext
      * @When I fill task form on Manage Tasks page with values:
      *
      * @param TableNode $table
+     * @return void
+     *
      * @throws BehatException
      */
-    public function fillTaskForm(TableNode $table)
+    public function fillTaskForm(TableNode $table): void
     {
         parent::fillTaskForm($table);
     }
@@ -86,9 +91,11 @@ class ManageTasks extends TasksBaseContext
      * @When I click :buttonName button next to task :taskName on Manage Tasks page
      * @param string $buttonName
      * @param string $taskName
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName)
+    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName): void
     {
         parent::clickButtonNextToTaskOnManageTasksPage($buttonName, $taskName);
     }
@@ -96,9 +103,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click checkbox next to task :taskName on Manage Tasks page
      * @param string $taskName
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName)
+    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName): void
     {
         parent::clickCheckboxNextToTaskOnManageTasksPage($taskName);
     }
@@ -107,9 +116,11 @@ class ManageTasks extends TasksBaseContext
      * @When I click delete task link for :task on Manage Tasks page
      *
      * @param string $task
+     * @return void
+     *
      * @throws BehatException|UnsupportedDriverActionException|DriverException
      */
-    public function clickDeleteButton($task)
+    public function clickDeleteButton($task): void
     {
         parent::clickDeleteButton($task);
     }
@@ -117,8 +128,9 @@ class ManageTasks extends TasksBaseContext
     /**
      * @Then I see the list of tasks has :pagesCount pages
      * @param string $pagesCount
+     * @return void
      */
-    public function testSeeTheListOfTasksHasPages(string $pagesCount)
+    public function testSeeTheListOfTasksHasPages(string $pagesCount): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -129,8 +141,9 @@ class ManageTasks extends TasksBaseContext
     /**
      * @Then I see the list of completed tasks has :pagesCount pages
      * @param string $pagesCount
+     * @return void
      */
-    public function testSeeTheListOfCompletedTasksHasPages(string $pagesCount)
+    public function testSeeTheListOfCompletedTasksHasPages(string $pagesCount): void
     {
         $pageLinks = $this->findAllCss('#cp_pages > *');
         $this->checkPages($pagesCount, $pageLinks);
@@ -139,8 +152,9 @@ class ManageTasks extends TasksBaseContext
     /**
      * @param string $pagesCount
      * @param array $pageLinks
+     * @return void
      */
-    private function checkPages(string $pagesCount, array $pageLinks)
+    private function checkPages(string $pagesCount, array $pageLinks): void
     {
         Assert::assertEquals($pagesCount, count($pageLinks));
         for ($page = 1; $page <= $pagesCount; $page++) {
@@ -152,9 +166,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :buttonName button in Tasks section
      * @param string $buttonName
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickButtonInTasksSection(string $buttonName)
+    public function clickButtonInTasksSection(string $buttonName): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -164,9 +180,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :buttonName button in the main section
      * @param string $buttonName
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickButtonInMainSection(string $buttonName)
+    public function clickButtonInMainSection(string $buttonName): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -180,9 +198,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click add button in the modal with text :buttonName
      * @param string $buttonName
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickAddButtonInModal(string $buttonName)
+    public function clickAddButtonInModal(string $buttonName): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -204,9 +224,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :pageNumber pagination link above incomplete tasks table
      * @param string $pageNumber
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickPaginationLinkInIncompleteTasks(string $pageNumber)
+    public function clickPaginationLinkInIncompleteTasks(string $pageNumber): void
     {
         $this->clickPagination('#non_cp_pages .fp', $pageNumber);
     }
@@ -214,9 +236,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :pageNumber pagination link above completed tasks table
      * @param string $pageNumber
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickPaginationLinkInCompletedTasks(string $pageNumber)
+    public function clickPaginationLinkInCompletedTasks(string $pageNumber): void
     {
         $this->clickPagination('#cp_pages .fp', $pageNumber);
     }
@@ -224,9 +248,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :columnText column in tasks table
      * @param string $columnText
+     * @return void
+     *
      * @throws BehatException
      */
-    public function clickColumnInTasksTable(string $columnText)
+    public function clickColumnInTasksTable(string $columnText): void
     {
         $this->clickHeaderLink('#not_completed_tasks .tr_bg_h a', $columnText);
     }
@@ -234,8 +260,9 @@ class ManageTasks extends TasksBaseContext
     /**
      * @When I click :columnText column in completed tasks table
      * @param string $columnText
+     * @return void
      */
-    public function clickColumnInCompletedTasksTable(string $columnText)
+    public function clickColumnInCompletedTasksTable(string $columnText): void
     {
         $this->clickHeaderLink('#completed_tasks .tr_bg_h a', $columnText);
     }
@@ -243,9 +270,11 @@ class ManageTasks extends TasksBaseContext
     /**
      * @param string $selector
      * @param string $columnText
+     * @return void
+     *
      * @throws BehatException
      */
-    private function clickHeaderLink(string $selector, string $columnText)
+    private function clickHeaderLink(string $selector, string $columnText): void
     {
         $this->wait(MEDIUM_WAIT_TIME);
 
@@ -258,6 +287,8 @@ class ManageTasks extends TasksBaseContext
 
     /**
      * @param string $buttonName
+     * @return void
+     *
      * @throws BehatException
      */
     private function clickButton(string $buttonName): void
@@ -313,6 +344,8 @@ class ManageTasks extends TasksBaseContext
     /**
      * @param $selector
      * @param string $pageNumber
+     * @return void
+     *
      * @throws BehatException
      */
     private function clickPagination(string $selector, string $pageNumber): void
@@ -328,8 +361,9 @@ class ManageTasks extends TasksBaseContext
 
     /**
      * @AfterScenario
+     * @return void
      */
-    public function afterScenario()
+    public function afterScenario(): void
     {
         $this->cleanUpTasks();
     }

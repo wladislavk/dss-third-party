@@ -406,6 +406,35 @@ class Main extends BaseContext
     }
 
     /**
+     * @Then I see browser alert with text :text as soon as possible
+     *
+     * @param string $text
+     * @throws NoAlertOpenException
+     * @throws BehatException
+     */
+    public function testBrowserAlertAsSoonAsPossible(string $text)
+    {
+        for (
+            $numberOfTries = 0;
+            $numberOfTries < self::NUMBER_OF_TRIES_FOR_ALERT_CHECKING;
+            ++$numberOfTries
+        ) {
+            try {
+                $realText = $this->getAlertText();
+                break;
+            } catch (NoAlertOpenException $e) {
+                // do nothing
+            }
+        }
+
+        if (!isset($realText)) {
+            $realText = $this->getAlertText();
+        }
+
+        Assert::assertEquals($text, $realText);
+    }
+
+    /**
      * @Then I see :header table
      *
      * @param string $header
@@ -474,6 +503,44 @@ class Main extends BaseContext
         }
         $tableHeading = $this->findCss('td.cat_head');
         Assert::assertEquals($heading, trim($tableHeading->getText()));
+    }
+
+
+    /**
+     * @throws NoAlertOpenException
+     * @throws BehatException
+     */
+    private function getAlertText(): string
+    {
+        switch (BROWSER) {
+            case 'phantomjs':
+                break;
+            case 'chrome':
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    try {
+                        $alertText = $driver->getWebDriverSession()->getAlert_text();
+                    } catch (\Exception $exception) {
+                        if ($this->isNoAlertOpenException($exception->getMessage())) {
+                            throw new NoAlertOpenException('No alert open.');
+                        }
+                        throw new BehatException($exception->getMessage());
+                    }
+
+                    return (isset($alertText)) ? $alertText : '';
+                }
+                break;
+        }
+        return '';
+    }
+
+    private function isNoAlertOpenException(string $message): bool
+    {
+        if (strstr($message, 'no alert open')) {
+            return true;
+        }
+        return false;
     }
 
     /**

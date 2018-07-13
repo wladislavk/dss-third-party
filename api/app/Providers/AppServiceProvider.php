@@ -24,11 +24,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \DB::listen(function ($query) {
-            $dbLog = new Logger('Query');
-            $dbLog->pushHandler(new RotatingFileHandler(storage_path('logs/query.log'), 5, Logger::DEBUG));
-            $dbLog->info($query->sql, ['Bindings' => $query->bindings, 'Time' => $query->time]);
-        });
+        if ($this->app->environment() != 'production') {
+            \DB::listen(function ($query) {
+                $dbLog = new Logger('Query');
+                $dbLog->pushHandler(new RotatingFileHandler(storage_path('logs/query.log'), 5, Logger::DEBUG));
+                $dbLog->info($query->sql, ['Bindings' => $query->bindings, 'Time' => $query->time]);
+            });
+        }
     }
 
     /**
@@ -41,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
         $this->app->bind('apiresponse', ApiResponseHelper::class);
 
-        if ($this->app->environment('testing')) {
+        if ($this->app->environment() == 'testing') {
             $this->app->singleton(ThirdPartyCallerInterface::class, MockCaller::class);
             $this->app->bind(PDFWrapperInterface::class, MockPDFWrapper::class);
         } else {

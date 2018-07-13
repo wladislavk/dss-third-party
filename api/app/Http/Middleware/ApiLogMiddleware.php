@@ -22,6 +22,7 @@ class ApiLogMiddleware
      * @param Closure $next
      * @return mixed
      * @throws ValidatorException
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function handle(Request $request, Closure $next)
     {

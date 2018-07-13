@@ -1,47 +1,36 @@
-import Vue from 'vue'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import moxios from 'moxios'
-import store from '../../../../src/store'
 import DashboardMessagesComponent from '../../../../src/components/manage/dashboard/DashboardMessages.vue'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('DashboardMessages component', () => {
   beforeEach(function () {
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(DashboardMessagesComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
+    this.testCase.setComponent(DashboardMessagesComponent)
   })
 
   afterEach(function () {
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should show tasks', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.memos.current), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: 1,
-            memo: 'memo 1'
-          },
-          {
-            id: 2,
-            memo: '<b>memo 2</b>'
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.memos.current,
+      response: [
+        {
+          id: 1,
+          memo: 'memo 1'
+        },
+        {
+          id: 2,
+          memo: '<b>memo 2</b>'
+        }
+      ]
     })
 
-    const vm = this.mount({})
+    const vm = this.testCase.mount()
 
-    moxios.wait(function () {
+    this.testCase.wait(() => {
       const items = vm.$el.querySelectorAll('div.task_menu > ul > li')
       expect(items.length).toBe(2)
       expect(items[0].innerHTML).toBe('memo 1')

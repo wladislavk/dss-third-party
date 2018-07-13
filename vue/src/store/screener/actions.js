@@ -59,7 +59,7 @@ export default {
     }
 
     http.token = state[symbols.state.screenerToken]
-    return http.request('post', endpoints.screeners.store, screenerData)
+    return http.post(endpoints.screeners.store, screenerData)
   },
 
   [symbols.actions.parseScreenerResults] ({ state, commit }, { id }) {
@@ -134,7 +134,7 @@ export default {
       patient_dob: getContactValue('dob')
     }
 
-    return http.request('post', endpoints.homeSleepTests.store, ajaxData)
+    return http.post(endpoints.homeSleepTests.store, ajaxData)
   },
 
   [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
@@ -159,7 +159,7 @@ export default {
 
   [symbols.actions.setSessionData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    return http.request('get', endpoints.users.current).then((response) => {
+    return http.get(endpoints.users.current).then((response) => {
       const data = response.data.data
       const sessionData = {
         userId: data.userid,

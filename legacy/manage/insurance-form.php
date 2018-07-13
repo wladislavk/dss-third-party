@@ -1,5 +1,4 @@
 <?php
-
 namespace Ds3\Libraries\Legacy;
 
 include_once('includes/constants.inc');

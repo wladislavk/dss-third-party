@@ -5,11 +5,15 @@
             <task-element
                 v-for="task in tasks"
                 v-bind:key="task.id"
-                v-bind:task="task"
-                v-bind:due-date="dueDate"
+                v-bind:task-id="task.id"
+                v-bind:task="task.task"
+                v-bind:due-date="getDueDate(task.due_date)"
+                v-bind:has-due-date="hasDueDate"
+                v-bind:first-name="task.firstname"
+                v-bind:last-name="task.lastname"
+                v-bind:patient-id="task.patientid"
                 v-bind:is-patient="isPatient"
-            >
-            </task-element>
+            ></task-element>
         </ul>
     </div>
 </template>

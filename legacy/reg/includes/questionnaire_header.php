@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
 <div class="cf sepH_c endpoint-permissions-menu"
      v-bind:doc-id="<?= (int)$_SESSION['patient_docid'] ?>"
      v-bind:patient-id="<?= (int)$_SESSION['pid'] ?>">

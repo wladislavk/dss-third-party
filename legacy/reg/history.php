@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
@@ -19,6 +20,8 @@ include 'includes/questionnaire_sections.php';
     }
 </script>
 <?php
+$db = new Db();
+
 if ($_POST['q_page3sub'] == 1) {
     $allergens = $_POST['allergens'];
     $allergenscheck = $_POST['allergenscheck'];
@@ -49,8 +52,6 @@ if ($_POST['q_page3sub'] == 1) {
     $no_medications = $_POST['no_medications'];
     $no_history = $_POST['no_history'];
     $orthodontics = $_POST['orthodontics'];
-    $premedcheck = $_POST["premedcheck"];
-    $premed = $_POST["premeddet"];
     $family_hd = $_POST['family_hd'];
     $family_bp = $_POST['family_bp'];
     $family_dia = $_POST['family_dia'];
@@ -86,7 +87,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($allergens)) {
         foreach ($allergens as $val) {
             if (trim($val) != '') {
-                $as = "SELECT allergens from dental_allergens where allergensid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $as = "SELECT allergens from dental_allergens where allergensid = '" . $db->escape( $val) . "'";
             }
             $aq = mysqli_query($con, $as);
             $arow = mysqli_fetch_assoc($aq);
@@ -98,7 +99,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($medications)) {
         foreach($medications as $val) {
             if (trim($val) != '') {
-                $ms = "SELECT medications from dental_medications where medicationsid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $ms = "SELECT medications from dental_medications where medicationsid = '" . $db->escape( $val) . "'";
             }
             $mq = mysqli_query($con, $ms);
             $mrow = mysqli_fetch_assoc($mq);
@@ -114,7 +115,7 @@ if ($_POST['q_page3sub'] == 1) {
     if (is_array($history)) {
         foreach ($history as $val) {
             if (trim($val) != '') {
-                $hs = "SELECT history from dental_history where historyid = '" . mysqli_real_escape_string($con, $val) . "'";
+                $hs = "SELECT history from dental_history where historyid = '" . $db->escape( $val) . "'";
             }
             $hq = mysqli_query($con, $hs);
             $hrow = mysqli_fetch_assoc($hq);
@@ -126,7 +127,7 @@ if ($_POST['q_page3sub'] == 1) {
         $history_arr = '~' . $history_arr;
     }
 
-    $exist_sql = "SELECT q_page3id FROM dental_q_page3_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $exist_sql = "SELECT q_page3id FROM dental_q_page3_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
     $exist_q = mysqli_query($con, $exist_sql);
     if (mysqli_num_rows($exist_q) == 0) {
         $ins_sql = "insert into dental_q_page3 set 
@@ -165,8 +166,8 @@ if ($_POST['q_page3sub'] == 1) {
             family_hd = '".s_for($family_hd)."',
             family_bp = '".s_for($family_bp)."',
             family_dia = '".s_for($family_dia)."',
-            family_sd = '".s_for($family_sd)."',	
-    		alcohol = '".s_for($alcohol)."',
+            family_sd = '".s_for($family_sd)."',
+            alcohol = '".s_for($alcohol)."',
             sedative = '".s_for($sedative)."',
             caffeine = '".s_for($caffeine)."',
             smoke = '".s_for($smoke)."',
@@ -194,19 +195,18 @@ if ($_POST['q_page3sub'] == 1) {
             drymouth_text = '".s_for($drymouth_text)."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape($_SESSION['pid'])."'");
+        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
-            set		
+            set
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."'
             where 
             patientid='".$_SESSION["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-
-        $msg = "Added Successfully"; ?>
+        $db->query($ped_sql);
+        ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';
         </script>
@@ -248,7 +248,7 @@ if ($_POST['q_page3sub'] == 1) {
             family_hd = '".s_for($family_hd)."',
             family_bp = '".s_for($family_bp)."',
             family_dia = '".s_for($family_dia)."',
-    		family_sd = '".s_for($family_sd)."',
+            family_sd = '".s_for($family_sd)."',
             alcohol = '".s_for($alcohol)."',
             sedative = '".s_for($sedative)."',
             caffeine = '".s_for($caffeine)."',
@@ -275,19 +275,17 @@ if ($_POST['q_page3sub'] == 1) {
             clinch_grind_text  = '".s_for($clinch_grind_text)."',
             future_dental_det = '".s_for($future_dental_det)."',
             drymouth_text = '".s_for($drymouth_text)."'
-    		where q_page3id = $qPage3Id";
-		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
-        mysqli_query($con, "UPDATE dental_patients SET history_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+            where q_page3id = $qPage3Id";
+        $db->query($ed_sql);
+        $db->query("UPDATE dental_patients SET history_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+        $db->query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
         $ped_sql = "update dental_patients 
             set             
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."' 
             where 
             patientid='".$_SESSION["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
-
-        $msg = "Edited Successfully";
+        $db->query($ped_sql);
         ?>
         <script type="text/javascript">
             window.location='<?= $_POST['goto_p']; ?>';
@@ -304,8 +302,6 @@ if ($comp['history'] == 0) {
     $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."' ";
     $pat_my = mysqli_query($con, $pat_sql);
     $pat_myarray = mysqli_fetch_array($pat_my);
-
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
@@ -328,28 +324,15 @@ if ($comp['history'] == 0) {
     $history = st($myarray['history']);
     $other_history = st($myarray['other_history']);
     $dental_health = st($myarray['dental_health']);
-    $injurytohead = st($myarray['injurytohead']);
-    $injurytoface = st($myarray['injurytoface']);
-    $injurytoneck = st($myarray['injurytoneck']);
-    $injurytoteeth = st($myarray['injurytoteeth']);
-    $injurytomouth = st($myarray['injurytomouth']);
     $drymouth = st($myarray['drymouth']);
     $removable = st($myarray['removable']);
     $year_completed = st($myarray['year_completed']);
-    $tmj = st($myarray['tmj']);
-    $gum_problems = st($myarray['gum_problems']);
-    $dental_pain = st($myarray['dental_pain']);
-    $dental_pain_describe = st($myarray['dental_pain_describe']);
     $completed_future = st($myarray['completed_future']);
     $clinch_grind = st($myarray['clinch_grind']);
     $wisdom_extraction = st($myarray['wisdom_extraction']);
-    $jawjointsurgery = st($myarray['jawjointsurgery']);
-    $no_allergens = st($myarray['no_allergens']);
-    $no_medications = st($myarray['no_medications']);
-    $no_history = st($myarray['no_history']);
     $orthodontics = st($myarray['orthodontics']);
 
-    $psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $psql = "SELECT * FROM dental_patients where patientid='".$db->escape( $_SESSION['pid'])."'";
     $pmy = mysqli_query($con, $psql);
     $pmyarray = mysqli_fetch_array($pmy);
 
@@ -537,9 +520,9 @@ if ($comp['history'] == 0) {
             </div>
             <div class="sepH_b half">
                     <label class="lbl_in2">Have you had TMJ (jaw joint) surgery?</label>
-                    <input type="radio" class="extra" name="tmj_surgery" value="Yes" <? if($tmj_surgery == 'Yes') echo " checked";?> /> Yes
+                    <input type="radio" class="extra" name="tmj_surgery" value="Yes" <?php if($tmj_surgery == 'Yes') echo " checked";?> /> Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="extra" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> /> No
+                    <input type="radio" class="extra" name="tmj_surgery" value="No" <?php if($tmj_surgery == 'No') echo " checked";?> /> No
                     <span id="tmj_surgery_extra"><label class="lbl_in2">Please describe:</label><input type="text" class="inpt_in2" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" /></span>
             </div>
             <div class="sepH_b clear half">
@@ -683,7 +666,7 @@ if ($comp['history'] == 0) {
                 var v = $(this).val();
                 var n = $(this).attr('name');
                 var c = $(this).attr('checked');
-                if (v == "Yes") {
+                if (v === "Yes") {
                     if (c) {
                         $('#' + n + '_extra').css('display', 'inline');
                     } else {
@@ -696,7 +679,7 @@ if ($comp['history'] == 0) {
             $('.extra').click(function (e) {
                 var v = e.target.value;
                 var n = e.target.name;
-                if (v == "Yes") {
+                if (v === "Yes") {
                     $('#'+n+'_extra').css('display', 'inline');
                 } else {
                     $('#'+n+'_extra').css('display', 'none');

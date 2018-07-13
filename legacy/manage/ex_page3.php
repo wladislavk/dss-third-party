@@ -104,7 +104,7 @@ if ($patient_info) {
         if ($gag_reflex_arr != '') {
             $gag_reflex_arr = '~'.$gag_reflex_arr;
         }
-				
+
         $nasal_passages_arr = '';
         if (is_array($nasal_passages)) {
             foreach ($nasal_passages as $val) {
@@ -188,7 +188,6 @@ if ($patient_info) {
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';
@@ -204,7 +203,6 @@ if ($patient_info) {
         $andNullConditional";
 
     $myarray = $db->getRow($sql);
-    $ex_page3id = st($myarray['ex_page3id']);
     $maxilla = st($myarray['maxilla']);
     $other_maxilla = st($myarray['other_maxilla']);
     $mandible = st($myarray['mandible']);
@@ -482,22 +480,22 @@ if ($patient_info) {
                 </td>
             </tr>
         </table>
-		<div style="float:right;">
-	        <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
-	        <input type="submit" value="" style="visibility: hidden; width: 0; height: 0; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
-	        <button class="do-backup hidden" title="Save a copy of the last saved values">
-            <span class="done">Archive page</span>
-            <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
-        </button>
-        <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
-	        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
-		    &nbsp;&nbsp;&nbsp;
-		</div>
-	</form>
-	<br />
+        <div style="float:right;">
+            <input type="reset" value="Undo Changes" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" value="" style="visibility: hidden; width: 0; height: 0; position: absolute;" onclick="return false;" onsubmit="return false;" onchange="return false;" />
+            <button class="do-backup hidden" title="Save a copy of the last saved values">
+                <span class="done">Archive page</span>
+                <span class="in-progress" style="display:none;">Archiving... <img src="/manage/images/loading.gif" alt=""></span>
+            </button>
+            <input type="submit" name="ex_pagebtn" value="Save" <?= $isHistoricView ? 'disabled' : '' ?> />
+            <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" <?= $isHistoricView ? 'disabled' : '' ?> />
+            &nbsp;&nbsp;&nbsp;
+        </div>
+    </form>
+    <br />
     <?php include "includes/form_bottom.htm";?>
-	<br />
-	<div id="popupRefer" style="width:750px;">
+        <br />
+        <div id="popupRefer" style="width:750px;">
         <a id="popupReferClose">
             <button>X</button>
         </a>

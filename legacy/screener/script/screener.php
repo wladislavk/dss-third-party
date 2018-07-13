@@ -28,9 +28,7 @@ function submit_screener(e){
         <?php
           $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
           $epworth_my = mysqli_query($con, $epworth_sql);
-          $epworth_number = mysqli_num_rows($epworth_my);
-          while($ea = mysqli_fetch_array($epworth_my))
-          {
+          while($ea = mysqli_fetch_array($epworth_my)) {
         ?>
         epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
         <?php } ?>
@@ -256,7 +254,7 @@ function submit_screener(e){
 
 function next_sect(sect){
   if(sect==2){
-	$('#restart_nav').show();
+      $('#restart_nav').show();
   }
   $('.sect').hide();
   $('#sect'+sect).show();
@@ -309,7 +307,7 @@ function validate_name(e){
 
   if(return_val){
         $('.assessment_name').text($('#first_name_div input').val()+" "+$('#last_name_div input').val());
-  	next_sect(2);
+        next_sect(2);
   }else{
     $('#name_error_box').html(error_text).show();
   }
@@ -472,15 +470,15 @@ function show_doctor(e){
 
 
 $(document).ready(function(){
-				//regular dialog
-				$("a[rel='fancyReg']").fancybox({
-					'transitionIn'	: 'elastic',
-					'width'				: 300,
-					'height'			: 150,
-					'autoDimensions'	: false,
-					'overlayOpacity'	: '0',
-					'hideOnOverlayClick': false
-				});
+    //regular dialog
+    $("a[rel='fancyReg']").fancybox({
+        'transitionIn': 'elastic',
+        'width': 300,
+        'height': 150,
+        'autoDimensions': false,
+        'overlayOpacity': '0',
+        'hideOnOverlayClick': false
+    });
 });
 
 
@@ -513,7 +511,6 @@ function submit_hst(e){
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
   $epworth_my = mysqli_query($con, $epworth_sql);
-  $epworth_number = mysqli_num_rows($epworth_my);
   while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
@@ -530,8 +527,8 @@ function submit_hst(e){
       if(r.error){
         onFailure();
       }else{
-	alert('HST submitted for approval and is in your Pending HST queue.');
-	window.location = 'index.php';
+    alert('HST submitted for approval and is in your Pending HST queue.');
+    window.location = 'index.php';
       }
     },
     error: onFailure

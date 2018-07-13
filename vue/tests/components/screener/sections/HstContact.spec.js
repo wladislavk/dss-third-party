@@ -1,28 +1,29 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import HstContactComponent from '../../../../src/components/screener/sections/HstContact.vue'
 import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('HstContact component', () => {
   beforeEach(function () {
-    const Component = Vue.extend(HstContactComponent)
-    this.mount = function (propsData) {
-      const vm = new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-      return vm
-    }
-  })
+    this.testCase = new TestCase()
 
-  it('shows and updates contact', function (done) {
     const props = {
       name: 'first_name',
       label: 'First Name',
       value: 'John',
       className: 'foo'
     }
-    const vm = this.mount(props)
+
+    this.testCase.setComponent(HstContactComponent)
+    this.testCase.setPropsData(props)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
+  it('shows and updates contact', function (done) {
+    const vm = this.testCase.mount()
 
     const storedContacts = store.state.screener[symbols.state.storedContactData]
     expect(storedContacts).toEqual({})
@@ -35,7 +36,7 @@ describe('HstContact component', () => {
 
     input.value = 'Jane'
     input.dispatchEvent(new Event('change'))
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(storedContacts).toEqual({hst_first_name: 'Jane'})
       done()
     })

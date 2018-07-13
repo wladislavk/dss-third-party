@@ -20,15 +20,17 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_GET['own']) && $_GET['own'] == 1) {
-    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     $c_q = mysqli_query($con, $c_sql);
     $changed = mysqli_num_rows($c_q);
 
-    $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".$db->escape( $_GET['pid'])."' AND docid='".$db->escape( $_SESSION['docid'])."'";
     mysqli_query($con, $own_sql);
     if ($_GET['own_completed'] == 1) {
-        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+        $q1_sql = "SELECT q_page1id from dental_q_page1_pivot WHERE patientid='".$db->escape( $_GET['pid'])."'";
         $q1_q = mysqli_query($con, $q1_sql);
         if (mysqli_num_rows($q1_q) == 0) {
             $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
@@ -92,11 +94,9 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
     $no_medications = $_POST['no_medications'];
     $no_history = $_POST['no_history'];
     $orthodontics = $_POST['orthodontics'];
-    $premedcheck = $_POST["premedcheck"];
     $allergenscheck = $_POST["allergenscheck"];
     $medicationscheck = $_POST["medicationscheck"];
     $historycheck = $_POST["historycheck"];
-    $premed = $_POST["premeddet"];
     $family_hd = $_POST['family_hd'];
     $family_bp = $_POST['family_bp'];
     $family_dia = $_POST['family_dia'];
@@ -162,7 +162,7 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
             }
         }
     }
-	
+
     if ($history_arr != '') {
         $history_arr = '~' . $history_arr;
     }
@@ -205,7 +205,7 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
             family_hd = '".s_for($family_hd)."',
             family_bp = '".s_for($family_bp)."',
             family_dia = '".s_for($family_dia)."',
-            family_sd = '".s_for($family_sd)."',	
+            family_sd = '".s_for($family_sd)."',
             alcohol = '".s_for($alcohol)."',
             sedative = '".s_for($sedative)."',
             caffeine = '".s_for($caffeine)."',
@@ -234,15 +234,14 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
             drymouth_text = '".s_for($drymouth_text)."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        $db->query($ins_sql);
 
-		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
         $ped_sql = "update dental_patients 
-            set		
+            set
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."'
-            where 
-            patientid='".$_GET["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
+            where patientid='".$_GET["pid"]."'";
+        $db->query($ped_sql);
 
         $msg = "Added Successfully";
         if (isset($_POST['q_pagebtn_proceed'])) { ?>
@@ -258,7 +257,7 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
         }
         trigger_error("Die called", E_USER_ERROR);
     } else {
-        $ed_sql = " update dental_q_page3 set 
+        $ed_sql = "update dental_q_page3 set 
             allergens = '".s_for($allergens_arr)."',
             other_allergens = '".s_for($other_allergens)."',
             medications = '".s_for($medications_arr)."',
@@ -319,18 +318,17 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
             clinch_grind_text  = '".s_for($clinch_grind_text)."',
             future_dental_det = '".s_for($future_dental_det)."',
             drymouth_text = '".s_for($drymouth_text)."'
-    		where q_page3id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+            where q_page3id = '".s_for($_POST['ed'])."'";
+        $db->query($ed_sql);
 
         $ped_sql = "update dental_patients 
             set             
             premedcheck = '".s_for($_POST["premedcheck"])."',
             premed = '".s_for($_POST["premeddet"])."' 
-            where 
-            patientid='".$_GET["pid"]."'";
-        mysqli_query($con, $ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
+            where patientid='".$_GET["pid"]."'";
+        $db->query($ped_sql);
 
-		$msg = "Edited Successfully";
+        $msg = "Edited Successfully";
         if (isset($_POST['q_pagebtn_proceed'])) { ?>
             <script type="text/javascript">
                     window.location='q_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
@@ -346,12 +344,6 @@ if (!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1) {
     }
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con, $pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 $sqldpp = "select * from dental_patients where parent_patientid='".$_GET['pid']."'";
 $mydpp = mysqli_query($con,$sqldpp);
 $dpp_row = mysqli_fetch_array($mydpp);
@@ -361,41 +353,24 @@ $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
 $q_page3id = st($myarray['q_page3id']);
-$allergens = st($myarray['allergens']);
 $other_allergens = st($myarray['other_allergens']);
-$medications = st($myarray['medications']);
 $other_medications = st($myarray['other_medications']);
-$history = st($myarray['history']);
 $other_history = st($myarray['other_history']);
 $dental_health = st($myarray['dental_health']);
-$injurytohead = st($myarray['injurytohead']);
-$injurytoface = st($myarray['injurytoface']);
-$injurytoneck = st($myarray['injurytoneck']);
-$injurytoteeth = st($myarray['injurytoteeth']);
-$injurytomouth = st($myarray['injurytomouth']);
 $drymouth = st($myarray['drymouth']);
 $removable = st($myarray['removable']);
 $year_completed = st($myarray['year_completed']);
-$tmj = st($myarray['tmj']);
-$gum_problems = st($myarray['gum_problems']);
-$dental_pain = st($myarray['dental_pain']);
-$dental_pain_describe = st($myarray['dental_pain_describe']);
 $completed_future = st($myarray['completed_future']);
 $clinch_grind = st($myarray['clinch_grind']);
 $wisdom_extraction = st($myarray['wisdom_extraction']);
-$jawjointsurgery = st($myarray['jawjointsurgery']);
-$no_allergens = st($myarray['no_allergens']);
-$no_medications = st($myarray['no_medications']);
-$no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$psql = "SELECT * FROM dental_patients where patientid='".$db->escape($_GET['pid'])."'";
 $pmy = mysqli_query($con,$psql);
 $pmyarray = mysqli_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
-$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 $family_bp = st($myarray["family_bp"]);
@@ -482,7 +457,7 @@ $drymouth_text = $myarray['drymouth_text'];
             fa.other_medications.disabled = false;
         }
     }
-	
+
     function chk_history() {
         fa = document.q_page3frm;
         chk_l = document.getElementsByName('history[]').length;
@@ -516,7 +491,7 @@ $drymouth_text = $myarray['drymouth_text'];
 
     <div style="clear:both;"></div>
     <?php
-    $patient_sql = "SELECT * FROM dental_q_page3_pivot WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $patient_sql = "SELECT * FROM dental_q_page3_pivot WHERE parent_patientid='".$db->escape( $_GET['pid'])."'";
     $patient_q = mysqli_query($con,$patient_sql);
     $pat_row = mysqli_fetch_assoc($patient_q);
     if (mysqli_num_rows($patient_q) == 0) {

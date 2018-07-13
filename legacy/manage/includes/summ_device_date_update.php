@@ -15,7 +15,7 @@ $db = new Db();
 
 $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$pid."'";
 
-$escapedDate = mysqli_real_escape_string($con, $d);
+$escapedDate = $db->escape($d);
 if ($db->getNumberRows($sql) == 0) {
     $s = "INSERT INTO dental_ex_page5 set 
         dentaldevice_date='$escapedDate', 
@@ -30,22 +30,22 @@ if ($db->getNumberRows($sql) == 0) {
     $s = "UPDATE dental_ex_page5 set dentaldevice_date='$escapedDate' where ex_page5id=$exPage5Id";
 }
   
-$last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysqli_real_escape_string($con,$pid)." ORDER BY date_completed DESC";
+$last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".$db->escape($pid)." ORDER BY date_completed DESC";
 
 $last_r = $db->getRow($last_sql);
-$u = "UPDATE dental_flow_pg2_info SET date_completed='".mysqli_real_escape_string($con,$d)."' WHERE id='".$last_r['id']."'";
+$u = "UPDATE dental_flow_pg2_info SET date_completed='".$db->escape($d)."' WHERE id='".$last_r['id']."'";
 $db->query($u);
 
 $q = $db->query($s);
 
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con, $pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".$db->escape($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 
 $imp_r = $db->getRow($imp_s);
 
 //competed_date changed to date_completed
 $flow_sql = "UPDATE dental_flow_pg2_info SET
-    date_completed='".mysqli_real_escape_string($con,$d)."'
-    WHERE id='".mysqli_real_escape_string($con,$imp_r['id'])."'";
+    date_completed='".$db->escape($d)."'
+    WHERE id='".$db->escape($imp_r['id'])."'";
 $db->query($flow_sql);
 
 if ($q) {

@@ -144,8 +144,7 @@ class CsvProcessor
         CsvProcessorAdapterInterface $csvProcessor,
         $docId,
         $ipAddress
-    )
-    {
+    ) {
         $rowBatch = array_filter($rowBatch, [$this, 'filterEmptyRows']);
 
         $dataBatch = array_map(function ($row) use ($headerFields, $docId, $ipAddress, $csvProcessor) {
@@ -176,8 +175,7 @@ class CsvProcessor
         $docId,
         $ipAddress,
         $ignoreExtension = false
-    )
-    {
+    ) {
         $return = [
             'inserted' => 0,
             'errors' => [],

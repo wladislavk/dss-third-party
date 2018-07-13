@@ -1,31 +1,28 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
-<!--[if IE]>
-    <link rel="stylesheet" type="text/css" href="css/questionnaire_ie.css" />
-<![endif]-->
 <?php
-$todaysdate = date("m/d/Y");
+$db = new Db();
+
 if ($_POST['q_page1sub'] == 1) {
-    $s_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $s_sql = "SELECT * FROM dental_patients WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
     $s_q = mysqli_query($con, $s_sql);
     $s_r = mysqli_fetch_assoc($s_q);
     if ($s_r['questionnaire_status'] == 0 || $s_r['questionnaire_status'] == 1) {
-        $ess = $_POST['ess'];
-        $tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];
         $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
         $complaint_my = mysqli_query($con, $complaint_sql);
-    	$comp_arr = '';
-    	while($complaint_myarray = mysqli_fetch_array($complaint_my)) {
+        $comp_arr = '';
+        while($complaint_myarray = mysqli_fetch_array($complaint_my)) {
             if ($_POST['complaint_'.$complaint_myarray['complaintid']] != '') {
                 $comp_arr .= $complaint_myarray['complaintid'].'|'.$_POST['complaint_'.$complaint_myarray['complaintid']].'~';
             }
         }
-		if ($_POST['complaint_0'] != '') {
+        if ($_POST['complaint_0'] != '') {
             $comp_arr .= '0|'.$_POST['complaint_0'].'~';
         }
 
@@ -47,7 +44,7 @@ if ($_POST['q_page1sub'] == 1) {
 
         $main_reason_arr = '';
         echo $main_reason;
-	    if (is_array($main_reason)) {
+        if (is_array($main_reason)) {
             foreach ($main_reason as $val) {
                 if (trim($val) != '') {
                     $main_reason_arr .= trim($val) . '~';
@@ -57,11 +54,11 @@ if ($_POST['q_page1sub'] == 1) {
         if ($main_reason_arr != '') {
             $main_reason_arr = '~' . $main_reason_arr;
         }
-	
-        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+
+        $exist_sql = "SELECT q_page1id FROM dental_q_page1_pivot WHERE patientid='".$db->escape( $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if (mysqli_num_rows($exist_q) == 0) {
-    		$ins_sql = " insert into dental_q_page1 set 
+            $ins_sql = " insert into dental_q_page1 set 
                 patientid = '".s_for($_SESSION['pid'])."',
                 chief_complaint_text = '".s_for($chief_complaint_text)."',
                 sleep_qual = '".s_for($sleep_qual)."',
@@ -84,12 +81,12 @@ if ($_POST['q_page1sub'] == 1) {
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = '".date('m/d/Y')."',
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-    		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+            $db->query($ins_sql);
 
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-    		mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-    		$msg = "Added Successfully";
-    		?>
+            $db->query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+            $db->query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
+            $msg = "Added Successfully";
+            ?>
             <script type="text/javascript">
                 window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
             </script>
@@ -117,18 +114,18 @@ if ($_POST['q_page1sub'] == 1) {
                 main_reason = '".s_for($main_reason_arr)."',
                 main_reason_other = '".s_for($main_reason_other)."'
                 where q_page1id = $qPage1IdSelected";
-    		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+            $db->query($ed_sql);
 
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-            mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-    		$msg = "Edited Successfully";
-    		?>
+            $db->query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".$db->escape( $_SESSION['pid'])."'");
+            $db->query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".$db->escape( $_SESSION['pid'])."'");
+            $msg = "Edited Successfully";
+            ?>
             <script type="text/javascript">
                 window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
             </script>
             <?php
-    		trigger_error("Die called", E_USER_ERROR);
-    	}
+            trigger_error("Die called", E_USER_ERROR);
+        }
     } else {
         //symptoms status is not 0
         ?>
@@ -143,10 +140,6 @@ if ($_POST['q_page1sub'] == 1) {
 require_once __DIR__ . '/includes/questionnaire_header.php';
 $comp = questionnaireCompletedSections($_SESSION['pid']);
 if ($comp['symptoms'] == 0) {
-    $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
-    $pat_my = mysqli_query($con, $pat_sql);
-    $pat_myarray = mysqli_fetch_array($pat_my);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     $sql = "select * from dental_q_page1_pivot where patientid='".$_SESSION['pid']."' ";
     $my = mysqli_query($con, $sql);
     $myarray = mysqli_fetch_array($my);
@@ -155,19 +148,15 @@ if ($comp['symptoms'] == 0) {
     $chief_complaint_text = st($myarray['chief_complaint_text']);
     $complaintid = st($myarray['complaintid']);
     $other_complaint = st($myarray['other_complaint']);
-    $additional_paragraph = st($myarray['additional_paragraph']);
     $energy_level = st($myarray['energy_level']);
     $snoring_sound = st($myarray['snoring_sound']);
     $wake_night = st($myarray['wake_night']);
-    $breathing_night = st($myarray['breathing_night']);
     $morning_headaches = st($myarray['morning_headaches']);
     $hours_sleep = st($myarray['hours_sleep']);
     $quit_breathing = st($myarray['quit_breathing']);
     $bed_time_partner = st($myarray['bed_time_partner']);
     $sleep_same_room = st($myarray['sleep_same_room']);
     $told_you_snore = st($myarray['told_you_snore']);
-    $main_reason = st($myarray['main_reason']);
-    $main_reason_other = st($myarray['main_reason_other']);
     $sleep_qual = st($myarray['sleep_qual']);
 
     if ($complaintid != '') {
@@ -213,23 +202,22 @@ if ($comp['symptoms'] == 0) {
         <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
         <input type="hidden" id="goto_p" name="goto_p" value="sleep.php" />
         <div class="formEl_a">
-        	<div class="sepH_b clear">
+            <div class="sepH_b clear">
                 <label class="lbl_a">
                     What is the main reason you are seeking treatment?
                 </label>
                 <textarea class="inpt_a" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
-        	</div>
-        	<h3>Subjective</h3>
+            </div>
+            <h3>Subjective</h3>
             <label class="lbl_a" id="title0" for="Field0">
                 Other Complaints
             </label>
             <?php
             $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
             $complaint_my = mysqli_query($con, $complaint_sql);
-            $complaint_number = mysqli_num_rows($complaint_my);
             ?>
             <span class="form_info">
-			    Please check any other complaints below.
+                Please check any other complaints below.
             </span>
             <br />
             <script type="text/javascript">
@@ -241,7 +229,7 @@ if ($comp['symptoms'] == 0) {
                             selections.push($(this).val());
                         }
                     });
-    				$('.complaint_chb').each( function(){
+                    $('.complaint_chb').each( function(){
                         $(' option', this).each( function(){
                             if (in_array($(this).attr("value"), selections) && !($(this).attr("selected"))) {
                                 $(this).attr('disabled','disabled');
@@ -250,7 +238,7 @@ if ($comp['symptoms'] == 0) {
                             }
                         });
                     });
-    			}
+                }
                 function in_array(needle, haystack) {
                     for (var key in haystack) {
                         if (needle === haystack[key]) {
@@ -262,7 +250,7 @@ if ($comp['symptoms'] == 0) {
                 $('document').ready(function() {
                     update_c_chb();
                 });
-		    </script>
+            </script>
             <?php
             while ($complaint_myarray = mysqli_fetch_array($complaint_my)) {
                 if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
@@ -272,7 +260,7 @@ if ($comp['symptoms'] == 0) {
                 } ?>
                 <div style="width:48%;float:left;">
                     <span>
-        			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <?php if ($chk == 1) echo 'checked="checked"'; ?> />
+                        <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <?php if ($chk == 1) echo 'checked="checked"'; ?> />
                         &nbsp;&nbsp;
                         <?=st($complaint_myarray['complaint']);?><br />&nbsp;
                     </span>
@@ -281,7 +269,7 @@ if ($comp['symptoms'] == 0) {
             } ?>
             <div style="width:48%;float:left;">
                 <span>
-    				<?php
+                    <?php
                     if (@array_search(0, $compid) === false) {
                         $chk = '';
                     } else {
@@ -297,7 +285,7 @@ if ($comp['symptoms'] == 0) {
                 (Enter Each Complaint on Different Line)<br />
                 <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>
             </div>
-    		<script type="text/javascript">
+            <script type="text/javascript">
                 function chk_other_comp() {
                     if ($('#complaint_0').is(':checked')) {
                         $('#other_complaints').show();
@@ -307,7 +295,7 @@ if ($comp['symptoms'] == 0) {
                 }
                 chk_other_comp();
             </script>
-    		<h3 class="clear">Subjective Signs/Symptoms</h3>
+            <h3 class="clear">Subjective Signs/Symptoms</h3>
             <div class="sepH_b half num">
                 <label class="lbl_in">Rate your overall energy level 0 -10 (10 being the highest)</label>
                 <select name="energy_level" class="inpt_in">

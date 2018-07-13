@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once __DIR__ . '/admin/includes/stripe-functions.php';
 include_once 'admin/includes/main_include.php';
 ?>
@@ -6,39 +8,35 @@ include_once 'admin/includes/main_include.php';
 <h3>Credit Card Information</h3>
 
 <?php
-    $key_r = getStripeRelatedUserData($_SESSION['docid']);
-    setupStripeConnection($key_r['stripe_secret_key']);
+$key_r = getStripeRelatedUserData($_SESSION['docid']);
+setupStripeConnection($key_r['stripe_secret_key']);
 
-    $customer = getStripeCustomer($key_r['cc_id']);
+$customer = getStripeCustomer($key_r['cc_id']);
 
-    if (!$customer && $key_r['email']) {
-        $customer = searchStripeCustomer($key_r['email']);
-    }
+if (!$customer && $key_r['email']) {
+    $customer = searchStripeCustomer($key_r['email']);
+}
 
-    if (getenv('DOCKER_USED') && !empty($_POST['delete-stripe']) && $customer) {
-        $customer->delete();
-    }
+if (getenv('DOCKER_USED') && !empty($_POST['delete-stripe']) && $customer) {
+    $customer->delete();
+}
 
-    $card = getActiveStripeCard($customer);
-    $missingCard = is_null($card);
+$card = getActiveStripeCard($customer);
+$missingCard = is_null($card);
 
-    if ($missingCard) {
-        ?>No card on record.<?php
-        ?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_add').show();$(this).hide();return false;" id="show_but">Add</a>
-
-<?php
-    }else{
-
-        ?>Active card is <?php echo  e($card->brand) ?> ending in: <?php
-        echo $card->last4;
-        ?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a>
-<?php
-    }
+if ($missingCard) { ?>
+    No card on record.
+    <a href="#" onclick="$('#card_form').show();$('#payment_proceed_add').show();$(this).hide();return false;" id="show_but">Add</a>
+    <?php
+}else{ ?>
+    Active card is <?php echo  e($card->brand) ?> ending in: <?php echo $card->last4; ?>
+    <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a>
+    <?php
+}
 ?>
     <div id="card_form" style="display:none;" class="clear">
-
-    <div class="form_errors" style="display:none"></div>
-    <input type="hidden" id="userid" name="userid" />
+        <div class="form_errors" style="display:none"></div>
+        <input type="hidden" id="userid" name="userid" />
         <div class="sepH_b half">
             <label class="lbl_a" for="card-number"><strong>1.</strong> Card Number:</label>
             <input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number" id="card-number"/>
@@ -63,17 +61,17 @@ include_once 'admin/includes/main_include.php';
             <label class="lbl_a" for="card-zip"><strong>6.</strong> Card Zipcode:</label>
             <input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
         </div>
+        <?php
+        $db = new Db();
 
-<?php
-        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-  
+        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
         $r = $db->getRow($sql);
+
         $manage_staff_value = 0;
-        if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1) {
+        if ($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
             $manage_staff_value = 1;
         }
-?>
-
+        ?>
         <script>
             var manage_staff_value = <?php echo $manage_staff_value; ?>;
             var userid = <?php echo  addslashes($key_r['userid']); ?>;
@@ -83,18 +81,17 @@ include_once 'admin/includes/main_include.php';
             var name = "<?php echo  addslashes($key_r['name']); ?>";
             var cc_id = "<?php echo  addslashes($key_r['cc_id']); ?>";
         </script>
-
-<?php
+        <?php
         if($missingCard) {
-?>
+            ?>
             <div id="payment_proceed_add_buttons">
                 <a href="#" onclick="add_cc(); return false;" id="payment_proceed_add" class="addButton">Save</a>
-<?php
-        } else {
-?>
+                <?php
+        } else { ?>
                 <div id="payment_proceed_update_buttons">
                     <a href="#" onclick="update_cc(); return false;" id="payment_proceed_update" class="addButton">Update</a>
-<?php } ?>
+                    <?php
+        } ?>
                     or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return false;" id="payment_proceed_cancel" class="fr btn btn_dL">Cancel</a>
                 </div>
                 <div id="loader" style="display:none;">
@@ -103,5 +100,4 @@ include_once 'admin/includes/main_include.php';
             </div>
 
             <div class="clear"></div>
-
-<script type="text/javascript" src="/manage/js/stripe_card_info.js"></script>
+        <script type="text/javascript" src="/manage/js/stripe_card_info.js"></script>

@@ -1,20 +1,11 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-function claim_errors($pid, $medicare = false)
+function claim_errors($pid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $errors = [];
-
-    if ($medicare) {
-        $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".(!empty($pid) ? $pid : '')." LIMIT 1";
-        $row = $db->getRow($sql);
-        if ($row['p_m_ins_type'] == 1) {
-            array_push($errors, "patient has Medicare Insurance. You can change patient\'s insurance type in the Patient Info section");
-        }
-    }
 
     $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$pid;
     $num = $db->getNumberRows($sql);
@@ -88,7 +79,7 @@ function claim_errors($pid, $medicare = false)
             $doc_sql = "SELECT u.* FROM 
                 dental_patients p 
                 JOIN dental_users u ON p.docid = u.userid 
-                WHERE p.patientid = '".mysqli_real_escape_string($con,$pid)."'";
+                WHERE p.patientid = '".$db->escape($pid)."'";
             $doc = $db->getRow($doc_sql);
             if ($doc['medicare_npi'] == '') {
                 array_push($errors, "No Medicare NPI on file - cannot file Medicare claims. Please add your Medicare NPI via Admin -> Profile.");
@@ -102,29 +93,9 @@ function claim_errors($pid, $medicare = false)
         array_push($errors, "Does not have flowsheet");
     } else {
         $flow = $flowresult[0];
-        $copyreqdate = $flow['copyreqdate'];
-        $referred_by = $flow['referred_by'];
-        $referreddate = $flow['referreddate'];
-        $thxletter = $flow['thxletter'];
-        $queststartdate = $flow['queststartdate'];
-        $questcompdate = $flow['questcompdate'];
-        $insinforec = $flow['insinforec'];
-        $rxreq = $flow['rxreq'];
         $rxrec = $flow['rxrec'];
-        $lomnreq = $flow['lomnreq'];
         $lomnrec = $flow['lomnrec'];
         $rxlomnrec = $flow['rxlomnrec'];
-        $contact_location = $flow['contact_location'];
-        $questsendmeth = $flow['questsendmeth'];
-        $questsender = $flow['questsender'];
-        $refneed = $flow['refneed'];
-        $refneeddate1 = $flow['refneeddate1'];
-        $refneeddate2 = $flow['refneeddate2'];
-        $preauth = $flow['preauth'];
-        $preauth1 = $flow['preauth1'];
-        $preauth2 = $flow['preauth2'];
-        $insverbendate1 = $flow['insverbendate1'];
-        $insverbendate2 = $flow['insverbendate2'];
     }
 
     if (!(($rxrec != '' && $lomnrec != '') || $rxlomnrec != '')) {
@@ -133,33 +104,20 @@ function claim_errors($pid, $medicare = false)
     return $errors;
 }
 
-function list_preauth_errors($pid)
-{
-    $errors = preauth_errors($pid);
-    if (count($errors) > 0) {
-        $e_text = 'Unable to request verification of benefits:\n';
-        foreach ($errors as $e) {
-            $e_text .= '\n'.$e;
-        }
-    }
-    return $e_text;
-}
-
 function create_vob($pid)
 {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
     $sql = "SELECT tc.* 
         FROM dental_patients p 
         JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486'
-        WHERE p.patientid = '".mysqli_real_escape_string($con,$pid)."'";
+        WHERE p.patientid = '".$db->escape($pid)."'";
     $e0486 = ($db->getNumberRows($sql) > 0);
 
     $sql = "SELECT u.* 
         FROM dental_patients p 
         JOIN dental_users u ON p.docid = u.userid 
-        WHERE p.patientid = '".mysqli_real_escape_string($con,$pid)."' 
+        WHERE p.patientid = '".$db->escape($pid)."' 
         AND u.npi != '' AND u.npi IS NOT NULL 
         AND u.tax_id_or_ssn != '' AND u.tax_id_or_ssn IS NOT NULL 
         AND (u.ssn = 1 OR u.ein = 1) 
@@ -215,38 +173,38 @@ function create_vob($pid)
              doc_name, doc_practice, doc_address, doc_phone
          ) VALUES (
              '" . $pid . "',
-             '" . mysqli_real_escape_string($con, $my_array['doc_id']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['ins_co']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['ins_rank']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['ins_phone']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_ins_group_id']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_ins_id']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_firstname']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_lastname']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_phone']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_add1']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_add2']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_city']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_state']) . "',
-             '" . mysqli_real_escape_string($con, $my_array['patient_zip']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['patient_dob']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['insured_first_name']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['insured_last_name']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['insured_dob']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_npi']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['referring_doc_npi']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['trxn_code_amount']) . "',
-             '" . mysqli_real_escape_string($con,$diagnosis) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_medicare_npi']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_tax_id_or_ssn']) . "',
-             '" . mysqli_real_escape_string($con,$sd) . "',
+             '" . $db->escape( $my_array['doc_id']) . "',
+             '" . $db->escape( $my_array['ins_co']) . "',
+             '" . $db->escape( $my_array['ins_rank']) . "',
+             '" . $db->escape( $my_array['ins_phone']) . "',
+             '" . $db->escape( $my_array['patient_ins_group_id']) . "',
+             '" . $db->escape( $my_array['patient_ins_id']) . "',
+             '" . $db->escape( $my_array['patient_firstname']) . "',
+             '" . $db->escape( $my_array['patient_lastname']) . "',
+             '" . $db->escape( $my_array['patient_phone']) . "',
+             '" . $db->escape( $my_array['patient_add1']) . "',
+             '" . $db->escape( $my_array['patient_add2']) . "',
+             '" . $db->escape( $my_array['patient_city']) . "',
+             '" . $db->escape( $my_array['patient_state']) . "',
+             '" . $db->escape( $my_array['patient_zip']) . "',
+             '" . $db->escape($my_array['patient_dob']) . "',
+             '" . $db->escape($my_array['insured_first_name']) . "',
+             '" . $db->escape($my_array['insured_last_name']) . "',
+             '" . $db->escape($my_array['insured_dob']) . "',
+             '" . $db->escape($my_array['doc_npi']) . "',
+             '" . $db->escape($my_array['referring_doc_npi']) . "',
+             '" . $db->escape($my_array['trxn_code_amount']) . "',
+             '" . $db->escape($diagnosis) . "',
+             '" . $db->escape($my_array['doc_medicare_npi']) . "',
+             '" . $db->escape($my_array['doc_tax_id_or_ssn']) . "',
+             '" . $db->escape($sd) . "',
              " . DSS_PREAUTH_PENDING . ",
-             '" . mysqli_real_escape_string($con,$_SESSION['userid']) . "',
+             '" . $db->escape($_SESSION['userid']) . "',
              1,
-             '" . mysqli_real_escape_string($con,$my_array['doc_name']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_practice']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_address']) . "',
-             '" . mysqli_real_escape_string($con,$my_array['doc_phone']) . "'
+             '" . $db->escape($my_array['doc_name']) . "',
+             '" . $db->escape($my_array['doc_practice']) . "',
+             '" . $db->escape($my_array['doc_address']) . "',
+             '" . $db->escape($my_array['doc_phone']) . "'
          )";
     return $db->query($sql);
 }

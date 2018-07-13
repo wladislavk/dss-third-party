@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'admin/includes/main_include.php';
 include 'includes/sescheck.php';
 include_once 'admin/includes/general.htm';
@@ -13,6 +15,8 @@ if (isset($_POST['partial_name'])) {
 }
 
 $names = explode(" ", $partial);
+
+$db = new Db();
 
 $sql = "
     SELECT p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info 

@@ -8,7 +8,8 @@ namespace Ds3\Libraries\Legacy;
  * @param array  $parameters
  * @return string|bool
  */
-function edx_command ($instruction, Array $parameters) {
+function edx_command($instruction, array $parameters)
+{
     $instructions = [
         'login' => 'edxScript.sh',
         'new' => 'edxNewUser.sh',
@@ -76,9 +77,9 @@ function edx_command ($instruction, Array $parameters) {
  *
  * @param int $userId
  */
-function edx_user_update ($userId) {
+function edx_user_update($userId)
+{
     $db = new Db();
-    $id = intval($userId);
 
     $sql = "SELECT username, email, first_name, last_name, edx_id
           FROM dental_users
@@ -126,7 +127,8 @@ function edx_user_update ($userId) {
  *
  * @param int $edxId
  */
-function edx_user_delete ($edxId) {
+function edx_user_delete($edxId)
+{
     if ($edxId) {
         edx_command('delete', [$edxId]);
     }
@@ -138,7 +140,8 @@ function edx_user_delete ($edxId) {
  * @param int $userId
  * @return string|bool
  */
-function edx_user_login ($userId) {
+function edx_user_login($userId)
+{
     $db = new Db();
 
     $userId = intval($userId);

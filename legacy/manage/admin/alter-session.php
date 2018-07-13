@@ -16,6 +16,8 @@ if (isset($_POST['admin_access'])) {
     $_SESSION['admincompanyid'] = intval($_POST['admincompanyid']);
 }
 
+$db = new Db();
+
 $companies = $db->getResults('SELECT id, name FROM companies');
 $accessLevels = $dss_admin_access_labels;
 

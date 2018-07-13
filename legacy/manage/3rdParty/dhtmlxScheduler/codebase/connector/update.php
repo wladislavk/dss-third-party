@@ -146,7 +146,7 @@ class DataUpdate{
 		$sql = "SELECT * FROM  {$actions_table}";
 		$sql .= " LEFT OUTER JOIN {$join_table} ON ";
 		$sql .= "{$actions_table}.DATAID = {$join_table}.{$id_field_name} ";
-		$sql .= "WHERE {$actions_table}.ID > '{$version}' AND {$actions_table}.USER <> '{$user}'";
+		$sql .= "WHERE {$actions_table}.ID > '{$version}' AND {$actions_table}.USER != '{$user}'";
 		return $sql;
 	}
 

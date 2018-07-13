@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php"; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include "admin/includes/main_include.php";
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -53,7 +57,7 @@
                                 <td valign="top" colspan="2" width="25%" >
                                     <table width="80%" cellpadding="3" cellspacing="1" border="0">
                                         <tr class="tr_bg_h">
-                                            <td valign="top" class="col_head" colspan="2" class="col_head">
+                                            <td valign="top" colspan="2" class="col_head">
                                                 Permanent Teeth
                                             </td>
                                         </tr>
@@ -83,7 +87,7 @@
                                 <td valign="top" colspan="2" width="25%">
                                     <table width="80%" cellpadding="3" cellspacing="1" border="0">
                                         <tr class="tr_bg_h">
-                                            <td valign="top" class="col_head" colspan="2" class="col_head">
+                                            <td valign="top" colspan="2" class="col_head">
                                                 Primary Teeth
                                             </td>
                                         </tr>
@@ -110,13 +114,13 @@
                                 <td valign="top" colspan="2" width="25%">
                                     <table width="80%" cellpadding="3" cellspacing="1" border="0">
                                         <tr class="tr_bg_h">
-                                            <td valign="top" class="col_head" colspan="2" class="col_head">
+                                            <td valign="top" colspan="2" class="col_head">
                                                 Pairs Selected
                                             </td>
                                         </tr>
                                         <tr>
                                             <td valign="top" colspan="2">
-                                                <textarea name="t_text" class="tbox" style="width:250px; height:100px;"><?php echo str_replace(' , ','',(!empty($_GET['fval']) ? $_GET['fval'] : ''));?></textarea>
+                                                <textarea name="t_text" class="tbox" style="width:250px; height:100px;"><?php echo str_replace(' , ', '', (!empty($_GET['fval']) ? $_GET['fval'] : ''));?></textarea>
                                             </td>
                                         </tr>
                                     </table>

@@ -1,12 +1,12 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include_once('admin/includes/main_include.php');
-include_once("includes/sescheck.php"); 
-include_once('includes/constants.inc');
-include_once('includes/dental_patient_summary.php');
-include_once('includes/general_functions.php');
-include("includes/calendarinc.php");
+include_once 'admin/includes/main_include.php';
+include_once "includes/sescheck.php";
+include_once 'includes/constants.inc';
+include_once 'includes/dental_patient_summary.php';
+include_once 'includes/general_functions.php';
+include "includes/calendarinc.php";
 
 // $preferDefault allows to ignore post data when the form has been saved
 function postField($name, $default = '', $preferDefault = false)
@@ -186,7 +186,7 @@ if ($isDeleteStudy) {
     // Set default message. In case everything goes ok the message will be updated
     $msg = $errorMessage ?: 'There was an error uploading the attachment. Please try again.';
 
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $diagnosising_doc = $db->escape( $diagnosising_doc);
     $q = "UPDATE dental_summ_sleeplab SET
         `date` = '$date',
         `sleeptesttype` = '$sleeptesttype',
@@ -288,7 +288,7 @@ if ($isDeleteStudy) {
         }
     }
 
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $diagnosising_doc = $db->escape( $diagnosising_doc);
 
     $q = "INSERT INTO `dental_summ_sleeplab` (
             `id` ,
@@ -576,34 +576,7 @@ if ($sleepLabResult) {
     $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
     $device_my = $db->getResults($device_sql);
 
-    $sleepLabIds = [];
-    $sleepLabDeviceIds = [];
-    foreach ($sleepLabResult as $sleepLab) {
-        $sleepLabIds[] = $sleepLab['place'];
-        $sleepLabDeviceIds[] = $sleepLab['dentaldevice'];
-    }
-    $sleepLabIdsString = $db->escapeList($sleepLabIds);
-    $sleepLabDeviceIdsString = $db->escapeList($sleepLabDeviceIds);
-    $sleepLabCompanyQuery = "SELECT company FROM dental_sleeplab WHERE sleeplabid IN ($sleepLabIdsString);";
-    /** @var array $sleepLabCompanies */
-    $sleepLabCompanies = $db->getResults($sleepLabCompanyQuery) || [];
-    $sleepLabDeviceQuery = "SELECT device FROM dental_device WHERE deviceid IN ($sleepLabDeviceIdsString);";
-    /** @var array $sleepLabDevices */
-    $sleepLabDevices = $db->getResults($sleepLabDeviceQuery) || [];
-
     foreach ($sleepLabResult as $s_lab) {
-        $place = '';
-        foreach ($sleepLabCompanies as $sleepLabCompany) {
-            if ($sleepLabCompany['sleeplabid'] == $s_lab['place']) {
-                $place = $sleepLabCompany['company'];
-            }
-        }
-        $device = '';
-        foreach ($sleepLabDevices as $sleepLabDevice) {
-            if ($sleepLabDevice['deviceid'] == $s_lab['dentaldevice']) {
-                $device = $sleepLabDevice['device'];
-            }
-        }
         ?>
         <form class="sleep-study-form" action="<?= $formAction ?>" style="float:left;" method="post" enctype="multipart/form-data">
             <input type="hidden" name="sleeplabid" value="<?= $s_lab['id']; ?>" />
@@ -779,4 +752,4 @@ if ($sleepLabResult) {
         </form>
         <?php
     }
-} ?>
+}

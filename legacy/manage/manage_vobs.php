@@ -1,7 +1,10 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once 'includes/constants.inc';
+
+$db = new Db();
 
 if (isset($_GET['rid'])) {
     $s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s", $_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
@@ -16,6 +19,8 @@ if (isset($_GET['rid'])) {
 
 function insert_preauth_row($patient_id)
 {
+    $db = new Db();
+
     if (empty($patient_id)) {
         return;
     }
@@ -76,7 +81,7 @@ function insert_preauth_row($patient_id)
         '" . date('Y-m-d H:i:s') . "', "
         . DSS_PREAUTH_PENDING . "
         )";
-    $my = $db->query($sql);
+    $db->query($sql);
 }
 
 $rec_disp = 20;
@@ -108,7 +113,7 @@ if (isset($_REQUEST['sortdir']) && $_REQUEST['sortdir'] != '') {
 } else {
     $dir = 'DESC';
 }
-	
+
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT
     preauth.id,
@@ -123,11 +128,11 @@ $sql = "SELECT
     JOIN dental_patients p ON p.patientid = preauth.patient_id
     WHERE preauth.doc_id = {$_SESSION['docid']}";
 if (isset($_GET['status'])) {
-    $sql .= " AND preauth.status = '".mysqli_real_escape_string($con, $_GET['status'])."' ";
+    $sql .= " AND preauth.status = '".$db->escape( $_GET['status'])."' ";
 }
 if (isset($_GET['viewed'])) {
     if ($_GET['viewed'] == 1) {
-        $sql .= " AND preauth.viewed = '".mysqli_real_escape_string($con, $_GET['viewed'])."' ";
+        $sql .= " AND preauth.viewed = '".$db->escape( $_GET['viewed'])."' ";
     } else {
         $sql .= " AND (preauth.viewed = '0' OR preauth.viewed IS NULL) ";
     }
@@ -244,5 +249,5 @@ $my = $db->getResults($sql);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

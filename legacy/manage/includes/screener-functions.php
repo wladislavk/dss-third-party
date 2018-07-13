@@ -1,7 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-function coMorbidityLabels () {
+function coMorbidityLabels()
+{
     $coMorbidityLabels = [
         'rx_blood_pressure' => 'High blood pressure',
         'rx_apnea' => 'Sleep Apnea',
@@ -18,7 +19,7 @@ function coMorbidityLabels () {
         'rx_metabolic_syndrome' => 'Metabolic Syndrome',
         'rx_obesity' => 'Obesity',
         'rx_heartburn' => 'Heartburn (Gastroesophageal Reflux)',
-        'rx_afib' => 'Atrial Fibrillation'
+        'rx_afib' => 'Atrial Fibrillation',
     ];
 
     return $coMorbidityLabels;
@@ -30,7 +31,8 @@ function coMorbidityLabels () {
  * Certain values from the list might be inactive fields, but they are included here
  * for historic purposes.
  */
-function coMorbidityWeights () {
+function coMorbidityWeights()
+{
     $coMorbidityWeights = [
         'rx_cpap'               => 4,
         'rx_heart_disease'      => 2,
@@ -61,7 +63,8 @@ function coMorbidityWeights () {
  * @param array $sourceData
  * @return int
  */
-function coMorbiditySum ($sourceData) {
+function coMorbiditySum($sourceData)
+{
     $weights = coMorbidityWeights();
     $total = 0;
 

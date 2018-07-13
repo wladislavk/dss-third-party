@@ -8,17 +8,17 @@ include '../manage/admin/includes/password.php';
 
 $e = '';
 
+$db = new Db();
+
 if (isset($_POST['loginbut'])) {
-    $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
-    $salt_q = mysqli_query($con, $salt_sql);
-    $salt_row = mysqli_fetch_assoc($salt_q);
+    $salt_sql = "SELECT salt FROM dental_patients WHERE email='".$db->escape( $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
+    $salt_row = $db->getRow($salt_sql);
     $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, dp.docid, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
-    $check_my = mysqli_query($con, $check_sql);
+    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, dp.docid, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".$db->escape( $_POST['username'])."' and dp.password='".$pass."' ";
 
-    if (mysqli_num_rows($check_my) > 0) {
-        $p = mysqli_fetch_assoc($check_my);
+    if ($db->getNumberRows($check_sql) > 0) {
+        $p = $db->getRow($check_sql);
         $_SESSION['patient_docid'] = $p['docid'];
         $_SESSION['pid'] = $p['patientid'];
         $_SESSION['patientToken'] = generateApiToken('p_' . $p['patientid']);
@@ -31,8 +31,7 @@ if (isset($_POST['loginbut'])) {
             <script type="text/javascript">
                 window.location = 'register.php';
             </script>
-        <?php }
-
+            <?php }
         trigger_error('Die called', E_USER_ERROR);
     } else {
         $login_error = true;
@@ -49,9 +48,6 @@ if (isset($_POST['loginbut'])) {
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
     <link href="css/login.css" rel="stylesheet" type="text/css" />
-    <!--[if IE]>
-    <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-    <![endif]-->
 </head>
 <body>
 <div id="login_container">
@@ -60,7 +56,7 @@ if (isset($_POST['loginbut'])) {
     <h2>Patient Login</h2>
     <?php if($login_error){ ?>
       <span class="error">
-	Error! Wrong email address or password.
+    Error! Wrong email address or password.
       </span>
     <?php } ?>
     <?php if($_GET['activated']==1){ ?>
@@ -69,7 +65,7 @@ if (isset($_POST['loginbut'])) {
       </span>
 
     <?php } ?>
-      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
+      <form name="loginfrm" method="POST" action="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)">
 
     <div class="field">
       <label>Email Address</label>
@@ -87,7 +83,7 @@ if (isset($_POST['loginbut'])) {
       <button type="submit" name="loginbut" class="large">Log In</button>
       <button onclick="showSect('first1');return false;" class="fr">First time user?</button>
     </div>
-	</form>
+    </form>
   </div>
 
   <div class="login_content" id="email_sect" style="display:none;">
@@ -154,7 +150,7 @@ if (isset($_POST['loginbut'])) {
 </div>
 <script type="text/javascript">
 $('#email_code').keyup(function(){
-	$('#first1_error').hide('slow');
+    $('#first1_error').hide('slow');
 });
 
 function showSect(s){
@@ -165,7 +161,7 @@ function showSect(s){
 
 function sendInstructions(type, but){
   but.disabled = true;
-  if(type == 'activate'){
+  if(type === 'activate'){
     var e = $('#email_activate').val();
   }else{
     var e = $('#email_reset').val();
@@ -182,21 +178,21 @@ function sendInstructions(type, but){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
-	  if(type == 'activate'){
-	    txt = "An email has been sent to "+e+" with instructions to complete the process."
-	  }else{
- 	    txt = "An email has been sent to "+e+" with instructions to complete the password reset process. Please allow 1-2 minutes to receive this email."
-	  }
+      if(type === 'activate'){
+        txt = "An email has been sent to "+e+" with instructions to complete the process."
+      }else{
+        txt = "An email has been sent to "+e+" with instructions to complete the password reset process. Please allow 1-2 minutes to receive this email."
+      }
           $('#email_sent_text').html(txt);
           showSect('first2');
         }else{
-          if(r.error == "existing"){
+          if(r.error === "existing"){
                 $('.existing_email').html(e);
                 showSect('existing');
-          }else if(r.error == "email"){
+          }else if(r.error === "email"){
                 $('#first1_error').html("Email address not found.").show('slow');
                 $('#reset_error').html("Email address not found.").show('slow');
-          }else if(r.error == "restricted"){
+          }else if(r.error === "restricted"){
                 $('#first1_error').html("User cannot be activated").show('slow');
                 $('#reset_error').html("User cannot be activated.").show('slow');
            }else{
@@ -204,7 +200,7 @@ function sendInstructions(type, but){
                 $('#reset_error').html("Error finding email.").show('slow');
           }
         }
-	but.disabled = false;
+    but.disabled = false;
     }
    });
   }
@@ -220,21 +216,21 @@ function sendAccessCode(){
     type: 'post',
     data: {email: e},
     success: function( data ) {
-	var r = $.parseJSON(data);
-	if(r.success){	
-	  $('#code_email').val(e);
-	  $('#access_phone').html(r.phone);
+    var r = $.parseJSON(data);
+    if(r.success){
+      $('#code_email').val(e);
+      $('#access_phone').html(r.phone);
           showSect('first2');
-	}else{
-	  if(r.error == "existing"){
-		$('#existing_email').html(e);
-		showSect('existing');
-          }else if(r.error == "email"){
-		$('#first1_error').html("Email address not found.").show('slow');
-	  }else{
-		$('#first1_error').html("Error finding email.").show('slow');	
-	  }
-	}
+    }else{
+      if(r.error === "existing"){
+        $('#existing_email').html(e);
+        showSect('existing');
+          }else if(r.error === "email"){
+        $('#first1_error').html("Email address not found.").show('slow');
+      }else{
+        $('#first1_error').html("Error finding email.").show('slow');
+      }
+    }
     }
    });
   }
@@ -253,20 +249,20 @@ function createPassword(){
     type: 'post',
     data: {email: e, code: c, p: p1},
     success: function( data ) {
-	var r = $.parseJSON(data);
+    var r = $.parseJSON(data);
         if(r.success){  
           showSect('first2');
         }else{
-          if(r.error == "code"){
-		$('#first2_error').html("Access code is incorrect.  Please try again.").show('slow');	
+          if(r.error === "code"){
+        $('#first2_error').html("Access code is incorrect.  Please try again.").show('slow');
           }else{
-		$('#first2_error').html("Error.").show('slow');
-	  }
-	}
+        $('#first2_error').html("Error.").show('slow');
+      }
+    }
     }
   });
   }else{
-                   $('#first2_error').html("The passwords you entered don't match. Please re-enter your password.").show('slow'); 
+      $('#first2_error').html("The passwords you entered don't match. Please re-enter your password.").show('slow');
   }
 
 }
@@ -280,10 +276,10 @@ function recover_password(){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
-	  $('#sent_email').html(e);
+      $('#sent_email').html(e);
           showSect('password_sent');
         }else{
-          if(r.error == "email"){
+          if(r.error === "email"){
                 $('#password_error').html("Email address not found.").show('slow');   
           }else{
                 $('#password_error').html("Error.").show('slow');
@@ -315,7 +311,7 @@ if(p1!=p2){
 <div style="clear:both;"></div>
 
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
-<br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
+<br/><a style="font-family: arial, sans-serif; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>
 </body>
 </html>

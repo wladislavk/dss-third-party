@@ -1,5 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
-<?php include 'includes/top.htm'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include 'includes/top.htm';
+?>
 <br />
 <span class="admin_head">Ledger</span>
 <br /><br />
@@ -17,7 +20,7 @@ if (isset($_GET['pid'])) { ?>
     <button class="addButton" onclick="window.location.href='ledger.php'" style="float:right;">All Patients</button>
     <?php
 } ?>
-	
+
 <form name="dailyfrm" action="ledger_report.php<?= (isset($_GET['pid'])) ? "?pid=".$_GET['pid'] : ''; ?>" method="get" onSubmit="return dailyabc(this)">
     <?php
     if (isset($_GET['pid'])) { ?>
@@ -69,7 +72,6 @@ if (isset($_GET['pid'])) { ?>
         </tr>
     </table>
 </form>
-
 <form name="weeklyfrm" action="ledger_report.php<?= (isset($_GET['pid'])) ? "?pid=".$_GET['pid'] : ''; ?>" method="get">
     <?php
     if (isset($_GET['pid'])) { ?>
@@ -106,7 +108,7 @@ if (isset($_GET['pid'])) { ?>
                     <?php
                     for ($i = 2010; $i <= date('Y'); $i++) { ?>
                         <option value="<?= $i; ?>" <?php if (date('Y') == $i) { echo " selected"; } ?>><?= $i ?></option>
-                        <?
+                        <?php
                     } ?>
                 </select>
                 <span class="red">*</span>
@@ -266,12 +268,13 @@ if (isset($_GET['pid'])) { ?>
         </tr>
     </table>
 </form>
-
 <?php
+$db = new Db();
+
 if (!empty($_GET['pt_lastname'])) {
     $pat_sql = "
         select * from dental_patients 
-        where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' 
+        where docid='".$db->escape( $_SESSION['docid'])."' 
         AND lastname like '%".s_for($_GET['pt_lastname'])."%' 
         and status=1
     ";

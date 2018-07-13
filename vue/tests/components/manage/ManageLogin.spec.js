@@ -1,94 +1,61 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import sinon from 'sinon'
-import moxios from 'moxios'
 import store from '../../../src/store'
 import ManageLoginComponent from '../../../src/components/manage/ManageLogin.vue'
-import Alerter from '../../../src/services/Alerter'
-import http from '../../../src/services/http'
 import endpoints from '../../../src/endpoints'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../src/symbols'
-import LegacyHref from '../../../src/directives/LegacyHref'
+import TestCase from '../../cases/ComponentTestCase'
 
 describe('ManageLogin component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    this.alert = ''
-    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
-      this.alert = text
-    })
-    moxios.install()
+    this.testCase = new TestCase()
 
     store.state.main[symbols.state.mainToken] = ''
 
-    Vue.directive('legacy-href', LegacyHref)
-    Vue.component('site-seal', {
-      template: '<div class="site-seal"></div>'
-    })
-    Vue.use(VueRouter)
-    const Component = Vue.extend(ManageLoginComponent)
-    const Router = new VueRouter({
-      routes: [
-        {
-          name: 'login',
-          path: '/login'
-        },
-        {
-          name: 'dashboard',
-          path: '/'
-        },
-        {
-          name: 'screener-root',
-          path: '/screener'
-        }
-      ]
-    })
-    this.mount = function () {
-      const vm = new Component({
-        store: store,
-        router: Router
-      }).$mount()
-      vm.$router.push({name: 'login'})
-      vm.$mount()
-      return vm
-    }
+    this.testCase.setComponent(ManageLoginComponent)
+    this.testCase.setChildComponents(['site-seal'])
+    this.testCase.setRoutes([
+      {
+        name: 'login',
+        path: '/login'
+      },
+      {
+        name: 'dashboard',
+        path: '/'
+      },
+      {
+        name: 'screener-root',
+        path: '/screener'
+      }
+    ])
+    this.testCase.setActiveRoute('login')
   })
 
   afterEach(function () {
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('logs in successfully', function (done) {
-    moxios.stubRequest(ProcessWrapper.getApiRoot() + 'auth', {
-      status: 200,
-      responseText: {
-        token: 'token'
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      dataKey: 'token',
+      response: 'token'
+    })
+    this.testCase.stubRequest({
+      url: endpoints.users.check,
+      response: {
+        type: 'foo'
       }
     })
-    moxios.stubRequest(http.formUrl(endpoints.users.check), {
-      status: 200,
-      responseText: {
-        data: {
-          type: 'foo'
-        }
-      }
+    this.testCase.stubRequest({
+      url: endpoints.loginDetails.store
     })
-    moxios.stubRequest(http.formUrl(endpoints.loginDetails.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
-    })
-    moxios.stubRequest(http.formUrl(endpoints.users.current), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.users.current
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
@@ -97,10 +64,10 @@ describe('ManageLogin component', () => {
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('')
+      expect(this.testCase.alertText).toBe('')
       expect(vm.focusUser).toBe(false)
       expect(vm.focusPassword).toBe(false)
       expect(vm.$router.currentRoute.name).toBe('dashboard')
@@ -109,12 +76,13 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in with wrong password', function (done) {
-    moxios.stubRequest(ProcessWrapper.getApiRoot() + 'auth', {
-      status: 403,
-      responseText: {}
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      status: 403
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
@@ -123,7 +91,7 @@ describe('ManageLogin component', () => {
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage.textContent).toBe('Username or password not found. This account may be inactive.')
       expect(vm.$router.currentRoute.name).toBe('login')
@@ -132,16 +100,17 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in without username', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const passwordInput = vm.$el.querySelector('input#password')
     passwordInput.value = 'password'
     passwordInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('Username is Required')
+      expect(this.testCase.alertText).toBe('Username is Required')
       expect(vm.focusUser).toBe(true)
       expect(vm.focusPassword).toBe(false)
       expect(vm.$router.currentRoute.name).toBe('login')
@@ -150,16 +119,17 @@ describe('ManageLogin component', () => {
   })
 
   it('logs in without password', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('change'))
     const submitButton = vm.$el.querySelector('input#btnsubmit')
     submitButton.click()
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
       expect(errorMessage).toBeNull()
-      expect(this.alert).toBe('Password is Required')
+      expect(this.testCase.alertText).toBe('Password is Required')
       expect(vm.focusUser).toBe(false)
       expect(vm.focusPassword).toBe(true)
       expect(vm.$router.currentRoute.name).toBe('login')
@@ -168,15 +138,13 @@ describe('ManageLogin component', () => {
   })
 
   it('redirects if token exists', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.loginDetails.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.loginDetails.store
     })
     store.state.main[symbols.state.mainToken] = 'token'
-    const vm = this.mount()
-    moxios.wait(() => {
+    const vm = this.testCase.mount()
+
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('dashboard')
       done()
     })

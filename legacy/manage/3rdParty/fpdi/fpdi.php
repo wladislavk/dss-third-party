@@ -316,7 +316,7 @@ class FPDI extends FPDF_TPL {
                 $tx = -$tpl['box']['llx'];
                 $ty = -$tpl['box']['lly']; 
                 
-                if ($tpl['_rotationAngle'] <> 0) {
+                if ($tpl['_rotationAngle'] != 0) {
                     $angle = $tpl['_rotationAngle'] * M_PI/180;
                     $c=cos($angle);
                     $s=sin($angle);

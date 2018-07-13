@@ -1,17 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
 $specialFilter = '';
 $isDefaultFilter = false;
 
+$db = new Db();
+
 if (isset($_GET['upstatus'])) {
     $userId = intval($_SESSION['userid']);
     $docId = intval($_SESSION['docid']);
 
     $permissions = $db->getRow("SELECT docid, edit_ledger_entries
-            FROM dental_users
-            WHERE userid = '$userId'");
+        FROM dental_users
+        WHERE userid = '$userId'");
 
     $allowFO = $permissions['docid'] == 0 || $permissions['edit_ledger_entries'] == 1;
 
@@ -45,8 +49,7 @@ if (isset($_GET['upstatus'])) {
         $db->query("UPDATE dental_insurance
             SET status = '$newStatus'
             WHERE insuranceid = '$claimId'
-                AND docid = '$docId'");
-
+            AND docid = '$docId'");
         claim_status_history_update($claimId, $newStatus, $oldStatus, '', $_SESSION['adminuserid']);
     }
 
@@ -75,8 +78,7 @@ if(!isset($_GET['filter'])){
     $_GET['filter']=100;
 }
 
-if(isset($_REQUEST["delid"]))
-{
+if(isset($_REQUEST["delid"])) {
     deleteClaim($_REQUEST['delid']);
 
     $msg= "Deleted Successfully";
@@ -89,9 +91,6 @@ if(isset($_REQUEST["delid"]))
 }
 
 /**
- * @see DSS-142
- * @see CS-73
- *
  * Filter BO claims by actionable claims.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  *
@@ -133,17 +132,17 @@ $pend_sql = "SELECT
         ) AS electronic_adddate,
         $backOfficeClaimsConditional AS belongs_to_bo
     FROM dental_insurance claim
-        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
-        JOIN dental_users users ON claim.docid = users.userid
-        LEFT JOIN companies c ON c.id = users.billing_company_id
-        LEFT JOIN (
-            SELECT claim_id, COUNT(id) num_notes
-            FROM dental_claim_notes
-            GROUP BY claim_id
-        ) notes ON notes.claim_id = claim.insuranceid
+    LEFT JOIN dental_patients p ON claim.patientid = p.patientid
+    JOIN dental_users users ON claim.docid = users.userid
+    LEFT JOIN companies c ON c.id = users.billing_company_id
+    LEFT JOIN (
+        SELECT claim_id, COUNT(id) num_notes
+        FROM dental_claim_notes
+        GROUP BY claim_id
+    ) notes ON notes.claim_id = claim.insuranceid
     WHERE claim.docid = '{$_SESSION['docid']}'
-        AND $whichOfficeConditional
-        ";
+    AND $whichOfficeConditional
+";
 
 $pend_sql .= "
         AND (
@@ -167,9 +166,6 @@ $pend_sql .= " ORDER BY " . $db->escape($sort);
 $pend_my = $db->getResults($pend_sql);
 
 /**
- * @see DSS-142
- * @see CS-73
- *
  * Filter BO claims by actionable claims.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  *
@@ -195,16 +191,16 @@ $sql = "SELECT
         ) AS electronic_adddate,
         $backOfficeClaimsConditional AS belongs_to_bo
     FROM dental_insurance claim
-        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
-        JOIN dental_users users ON claim.docid = users.userid
-        LEFT JOIN companies c ON c.id = users.billing_company_id
-        LEFT JOIN (
-            SELECT claim_id, COUNT(id) AS num_notes
-            FROM dental_claim_notes
-            GROUP BY claim_id
-        ) notes ON notes.claim_id = claim.insuranceid
+    LEFT JOIN dental_patients p ON claim.patientid = p.patientid
+    JOIN dental_users users ON claim.docid = users.userid
+    LEFT JOIN companies c ON c.id = users.billing_company_id
+    LEFT JOIN (
+        SELECT claim_id, COUNT(id) AS num_notes
+        FROM dental_claim_notes
+        GROUP BY claim_id
+    ) notes ON notes.claim_id = claim.insuranceid
     WHERE claim.docid = '{$_SESSION['docid']}'
-        AND $whichOfficeConditional
+    AND $whichOfficeConditional
         ";
 
 if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
@@ -257,9 +253,8 @@ $my = $db->getResults($sql);
     }
     #patient_nav {
         width: 98.6%;
-        margin: auto;
         padding-top: 15px;
-        margin-bottom: 15px;
+        margin: auto auto 15px;
     }
     #patient_nav > ul > li:last-child {
         padding-right: 15px;
@@ -312,7 +307,7 @@ $my = $db->getResults($sql);
 if(isset($_GET['msg'])){
 ?>
 <div align="center" class="red">
-    <b><? echo $_GET['msg'];?></b>
+    <b><?php echo $_GET['msg'];?></b>
 </div>
 <?php
 } 
@@ -343,9 +338,7 @@ if(isset($_GET['msg'])){
         </td>
     </tr>
     <?php
-    }
-    else
-    {
+    } else {
         foreach ($pend_my as $pend_myarray) {
             $tr_class = $pend_myarray['belongs_to_bo'] ? 'tr_inactive' : 'tr_active';
         ?>
@@ -361,14 +354,12 @@ if(isset($_GET['msg'])){
             <?php echo $dss_claim_status_labels[$pend_myarray['status']];?>
             <?php
             if($pend_myarray['p_m_dss_file']!=2){
-                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$pend_myarray['docid'])."'";
+                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".$db->escape($pend_myarray['docid'])."'";
                 $b_q = $db->getRow($b_sql);
                 if(!empty($b_q)){
                     $b_r = $b_q;
-                    $exclusive_billing = $b_r['exclusive'];
                     $billing_co = $b_r['name'];
                 }else{
-                    $exclusive_billing = 0;
                     $billing_co = "DSS";
                 }
                 echo "(".$billing_co." filing)";
@@ -458,99 +449,91 @@ if(v == '100'){
 </script>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-  <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-      <tr class="tr_bg_h">
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="15%">
-      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
-      	</td>
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="35%">
-      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
-      	</td>
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
-      	</td>
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
-      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
-      	</td>
-      	<td valign="top" class="col_head" width="10%">
-      		Action
-      	</td>
-      	<td valign="top" class="col_head" width="10%">
-      		Mailed
-      	</td>
-      </tr>
-      <?php if(count($my) == 0){ ?>
-      <tr class="tr_bg">
-          <td valign="top" class="col_head" colspan="10" align="center">
-              No Records
-          </td>
-      </tr>
-      <?php 
-      }
-      else
-      {
-      		$sec_status = array(DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_PAID_SEC_INSURANCE, DSS_CLAIM_PAID_SEC_PATIENT,DSS_CLAIM_SEC_PATIENT_DISPUTE, DSS_CLAIM_SEC_REJECTED);
-      		foreach ($my as $myarray) {
-
-            	if(in_array($myarray["status"], $sec_status)){
-              	  $is_secondary = true;
-            	}else{
-              	  $is_secondary = false;
-             	}
-
+    <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="15%">
+                <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
+            </td>
+            <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="35%">
+                <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+            </td>
+            <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+            </td>
+            <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
+                <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
+            </td>
+            <td valign="top" class="col_head" width="10%">
+                Action
+            </td>
+            <td valign="top" class="col_head" width="10%">
+                Mailed
+            </td>
+        </tr>
+        <?php if(count($my) == 0){ ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="10" align="center">
+                    No Records
+                </td>
+            </tr>
+            <?php
+        } else {
+            $sec_status = array(DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_PAID_SEC_INSURANCE, DSS_CLAIM_PAID_SEC_PATIENT,DSS_CLAIM_SEC_PATIENT_DISPUTE, DSS_CLAIM_SEC_REJECTED);
+            foreach ($my as $myarray) {
+                if(in_array($myarray["status"], $sec_status)){
+                    $is_secondary = true;
+                }else{
+                    $is_secondary = false;
+                }
                 $tr_class = $myarray['belongs_to_bo'] ? 'tr_inactive' : 'tr_active';
-      ?>
-      <tr class="<?php echo $tr_class;?> status_<?php echo $myarray['status']; ?> claim"
-          <?= $myarray['belongs_to_bo'] ? 'title="This claim is handled by BO"' : '' ?>>
-          <td valign="top">
-              <?php echo date('m-d-Y H:i',strtotime((($myarray["electronic_adddate"]!='')?$myarray["electronic_adddate"]:$myarray["adddate"])));?>
-          </td>
-          <td valign="top">
-              <?php echo $myarray['firstname'].' '.$myarray['lastname']; ?>	
-          </td>
-          <td valign="top">
-              <?php echo $dss_claim_status_labels[$myarray['status']];?>
-          </td>
-          <td valign="top">
-              <a href="view_claim.php?claimid=<?php echo $myarray['insuranceid']; ?>&pid=<?php echo $myarray['patientid']; ?>#notes">View (<?php echo $myarray['num_notes'];?>)</a>
-          </td>
-          <td valign="top">
-              <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $myarray['patientid']; ?>" class="editlink" title="EDIT">
-                  View 
-              </a>
-              |
-              <a href="print_claim.php?insid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $myarray['patientid']; ?>" class="editlink" title="EDIT">
-                  Print
-              </a>
-          </td>
-          <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { 
-              if($is_secondary){ ?>
-          <td>
-              <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?>
-                  class="sec_mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>"
-                  value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; ?> />
-          </td>
-          <?php }else{ ?>
-          <td>
-              <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?>
-                  class="mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>"
-                  value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> />
-          </td>
-          <?php } 
-          } ?>
-          <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
-          <td>
-              <?php echo ($myarray['mailed_date'] !='')?'X':''; ?>
-          </td>
-          <?php } ?>
-      </tr>
-      <?php 	}
-      }?>
-  </table>
+                ?>
+                <tr class="<?php echo $tr_class;?> status_<?php echo $myarray['status']; ?> claim"
+                    <?= $myarray['belongs_to_bo'] ? 'title="This claim is handled by BO"' : '' ?>>
+                    <td valign="top">
+                        <?php echo date('m-d-Y H:i',strtotime((($myarray["electronic_adddate"]!='')?$myarray["electronic_adddate"]:$myarray["adddate"])));?>
+                    </td>
+                    <td valign="top">
+                        <?php echo $myarray['firstname'].' '.$myarray['lastname']; ?>
+                    </td>
+                    <td valign="top">
+                        <?php echo $dss_claim_status_labels[$myarray['status']];?>
+                    </td>
+                    <td valign="top">
+                        <a href="view_claim.php?claimid=<?php echo $myarray['insuranceid']; ?>&pid=<?php echo $myarray['patientid']; ?>#notes">View (<?php echo $myarray['num_notes'];?>)</a>
+                    </td>
+                    <td valign="top">
+                        <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $myarray['patientid']; ?>" class="editlink" title="EDIT">
+                            View
+                        </a>
+                        |
+                        <a href="print_claim.php?insid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $myarray['patientid']; ?>" class="editlink" title="EDIT">
+                            Print
+                        </a>
+                    </td>
+                    <?php
+                    if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+                        if($is_secondary){ ?>
+                            <td>
+                                <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?> class="sec_mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>" value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; ?> />
+                            </td>
+                        <?php }else{ ?>
+                            <td>
+                                <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?> class="mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>" value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> />
+                            </td>
+                        <?php }
+                    } ?>
+                    <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
+                        <td>
+                            <?php echo ($myarray['mailed_date'] !='')?'X':''; ?>
+                        </td>
+                    <?php } ?>
+                </tr>
+            <?php }
+        }?>
+    </table>
 </form>
 
 <br/><br/>
-
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>
@@ -558,45 +541,36 @@ if(v == '100'){
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
-<? include "includes/bottom.htm";?>
+<br /><br />
+<?php include "includes/bottom.htm";?>
 
 <script type="text/javascript">
-  $('.mailed_chk:not(.filed-by-bo)').click( function(){
-    lid = $(this).val();
-    c = $(this).is(':checked');
-    type = 'pri';
-                                   $.ajax({
-                                        url: "includes/claim_mail.php",
-                                        type: "post",
-                                        data: {lid: lid, mailed: c, type:type},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }
-                                        },
-                                        failure: function(data){
-                                        }
-                                  });
-
-  });
-  $('.sec_mailed_chk:not(.filed-by-bo)').click( function(){
-    lid = $(this).val();
-    c = $(this).is(':checked');
-    type = 'sec';
-                                   $.ajax({
-                                        url: "includes/claim_mail.php",
-                                        type: "post",
-                                        data: {lid: lid, mailed: c, type:type},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }
-                                        },
-                                        failure: function(data){
-                                        }
-                                  });
-
-  });
-
+    $('.mailed_chk:not(.filed-by-bo)').click(function () {
+        lid = $(this).val();
+        c = $(this).is(':checked');
+        type = 'pri';
+        $.ajax({
+            url: "includes/claim_mail.php",
+            type: "post",
+            data: {lid: lid, mailed: c, type:type},
+            success: function(data){
+                var r = $.parseJSON(data);
+            },
+            failure: function(data){}
+        });
+    });
+    $('.sec_mailed_chk:not(.filed-by-bo)').click( function(){
+        lid = $(this).val();
+        c = $(this).is(':checked');
+        type = 'sec';
+        $.ajax({
+            url: "includes/claim_mail.php",
+            type: "post",
+            data: {lid: lid, mailed: c, type:type},
+            success: function(data){
+                var r = $.parseJSON(data);
+            },
+            failure: function(data){}
+        });
+    });
 </script>

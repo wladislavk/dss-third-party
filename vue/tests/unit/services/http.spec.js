@@ -11,6 +11,7 @@ describe('HTTP Service', () => {
       this.post.data = data
     })
   })
+
   afterEach(function () {
     this.sandbox.restore()
   })

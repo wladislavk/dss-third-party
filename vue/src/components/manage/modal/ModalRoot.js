@@ -98,7 +98,10 @@ export default {
     },
     hasComponent (componentName) {
       const existedComponents = Object.keys(this.$options.components)
-      return (existedComponents.indexOf(componentName) > -1)
+      if (existedComponents.indexOf(componentName) > -1) {
+        return true
+      }
+      return false
     }
   }
 }

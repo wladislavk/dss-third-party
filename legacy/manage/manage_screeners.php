@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include __DIR__ . '/includes/top.htm';
 include __DIR__ . '/includes/similar.php';
 include_once __DIR__ . '/includes/constants.inc';
@@ -6,16 +8,14 @@ require_once __DIR__ . '/includes/screener-functions.php';
 require_once __DIR__ . '/includes/hst_functions.php';
 
 $coMorbidityLabels = coMorbidityLabels();
-$coMorbidityWeights = coMorbidityWeights();
 
 $docId = intval($_SESSION['docid']);
 $userId = intval($_SESSION['userid']);
 
-if (isset($db) && $db instanceof Db) {
-    $isStaff = $userId == $docId ||
-        $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
-}
+$db = new Db();
 
+$isStaff = $userId == $docId ||
+    $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />
@@ -37,29 +37,27 @@ if (!empty($_GET['create_for'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-	if (isset($_REQUEST['delid'])) {
-        if (isset($con)) {
-            $deleteScreenerSql = "DELETE FROM dental_screener where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
-        }
-	  $db->query($deleteScreenerSql);
-	}
+    if (isset($_REQUEST['delid'])) {
+        $deleteScreenerSql = "DELETE FROM dental_screener where docid='".$db->escape( $_SESSION['docid'])."' AND id='".$db->escape($_REQUEST['delid'])."'";
+        $db->query($deleteScreenerSql);
+    }
 
-	if (isset($_REQUEST['hst'])) {
-        $screenerSql = "SELECT * FROM dental_screener WHERE id='".mysqli_real_escape_string($con, $_REQUEST['hst'])."'";
+    if (isset($_REQUEST['hst'])) {
+        $screenerSql = "SELECT * FROM dental_screener WHERE id='".$db->escape( $_REQUEST['hst'])."'";
         $screenerResult = $db->getRow($screenerSql);
 
-        $hstSql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con, $screenerResult['id'])."'";
+        $hstSql = "SELECT * FROM dental_hst WHERE screener_id='".$db->escape( $screenerResult['id'])."'";
         $hstResult = $db->getRow($hstSql);
 
         $dateOfBirth = ($hstResult['patient_dob'] != '') ? date('m/d/Y', strtotime($hstResult['patient_dob'])) : '';
 
         $patientSql = "INSERT INTO dental_patients SET
-                  docid='".mysqli_real_escape_string($con, $screenerResult['docid'])."',
-                  firstname = '".mysqli_real_escape_string($con, $screenerResult['first_name'])."',
-                  lastname = '".mysqli_real_escape_string($con, $screenerResult['last_name'])."',
-                  cell_phone = '".mysqli_real_escape_string($con, $screenerResult['phone'])."',
-                  email = '".mysqli_real_escape_string($con, $hstResult['patient_email'])."',
-                  dob = '".mysqli_real_escape_string($con, $dateOfBirth)."',
+                  docid='".$db->escape( $screenerResult['docid'])."',
+                  firstname = '".$db->escape( $screenerResult['first_name'])."',
+                  lastname = '".$db->escape( $screenerResult['last_name'])."',
+                  cell_phone = '".$db->escape( $screenerResult['phone'])."',
+                  email = '".$db->escape( $hstResult['patient_email'])."',
+                  dob = '".$db->escape( $dateOfBirth)."',
                   status='1',
                   adddate = now(),
                   ip_address = '".$_SERVER['REMOTE_ADDR']."'";
@@ -70,14 +68,14 @@ if (!empty($_GET['create_for'])) {
         $updateHstSql = "UPDATE dental_hst SET
                   patient_id = '".$newPatientId."',
                   status='".DSS_HST_PENDING."'
-                  WHERE screener_id=".mysqli_real_escape_string($con, $screenerResult['id']);
+                  WHERE screener_id=".$db->escape( $screenerResult['id']);
 
         $db->query($updateHstSql);
 
         $screener_sql = "UPDATE dental_screener SET
                        patient_id = '".$newPatientId."',
                        contacted = '1'
-                       WHERE id=".mysqli_real_escape_string($con, $screenerResult['id']);
+                       WHERE id=".$db->escape( $screenerResult['id']);
 
         $db->query($screener_sql);
         ?>
@@ -101,15 +99,15 @@ if (!empty($_GET['create_for'])) {
     $sort = "s.adddate";
     if (isset($_REQUEST['sort']) && $_REQUEST['sort'] != '') {
         switch ($_REQUEST['sort']) {
-		    case 'patient':
-		        $sort = "s.last_name";
-		        break;
-		    case 'user':
-		        $sort = 'u.name';
-		        break;
-		    case 'phone':
-		        $sort = 's.phone';
-		        break;
+            case 'patient':
+                $sort = "s.last_name";
+                break;
+            case 'user':
+                $sort = 'u.name';
+                break;
+            case 'phone':
+                $sort = 's.phone';
+                break;
         }
     } else {
         $_REQUEST['sort'] = 'adddate';
@@ -149,19 +147,19 @@ if (!empty($_GET['create_for'])) {
     }
 
     if ($risk !== '') {
-        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $risk)." ";
+        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".$db->escape( $risk)." ";
     }
 
     if ($contacted !== '') {
-        $mainScreenerSql .= " AND contacted = ".mysqli_real_escape_string($con, $contacted)." ";
-	}
+        $mainScreenerSql .= " AND contacted = ".$db->escape( $contacted)." ";
+    }
 
-	if ($contactedRisk !== '') {
-        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con, $contactedRisk)." ";
+    if ($contactedRisk !== '') {
+        $mainScreenerSql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".$db->escape( $contactedRisk)." ";
         $mainScreenerSql .= " AND contacted = 0 ";
     }
 
-	$mainScreenerSql .= "ORDER BY $sort $dir";
+    $mainScreenerSql .= "ORDER BY $sort $dir";
 
     $totalRecords = $db->getNumberRows($mainScreenerSql);
 
@@ -181,44 +179,44 @@ if (!empty($_GET['create_for'])) {
 <br /><br />&nbsp;<br />
 
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div style="margin-left:20px;margin-bottom:10px;">
-	<?php if ($risk >= 10) { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
-	<?php } ?>
+    <?php if ($risk >= 10) { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
+    <?php } ?>
 
-	<?php if ($contacted == '0') { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
-	<?php } ?>
+    <?php if ($contacted == '0') { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
+    <?php } ?>
 
-	<?php if ($contactedRisk >= 10) { ?>
-		<a href="manage_screeners.php" class="addButton">Show All</a>
-	<?php } else { ?>
-		<a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
-	<?php } ?>
+    <?php if ($contactedRisk >= 10) { ?>
+        <a href="manage_screeners.php" class="addButton">Show All</a>
+    <?php } else { ?>
+        <a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
+    <?php } ?>
 </div>
 
 <div style="font-weight:bold; font-size: 14px; margin:0 auto; width: 300px; text-align:center;">
-	<?php if ($risk >= 10) { ?>
-		<p>Showing High/Severe Patients only</p>
-	<?php } elseif ($contacted == '0') { ?>
-		<p>Showing NOT contacted patients only</p>
-	<?php } elseif ($contactedRisk >= 10) { ?>
-	        <p>Showing High/Severe NOT contacted patients only</p>
-	<?php } else { ?>
-		<p>Showing ALL Patients</p>
-	<?php } ?>
+    <?php if ($risk >= 10) { ?>
+        <p>Showing High/Severe Patients only</p>
+    <?php } elseif ($contacted == '0') { ?>
+        <p>Showing NOT contacted patients only</p>
+    <?php } elseif ($contactedRisk >= 10) { ?>
+            <p>Showing High/Severe NOT contacted patients only</p>
+    <?php } else { ?>
+        <p>Showing ALL Patients</p>
+    <?php } ?>
 </div>
 
 <form name="sortfrm" action="<?= $_SERVER['PHP_SELF']?>" method="post">
-	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-		<?php
+    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <?php
         if ($totalRecords > $rec_disp) { ?>
             <tr bgColor="#ffffff">
                 <td align="right" colspan="15" class="bp">
@@ -250,9 +248,9 @@ if (!empty($_GET['create_for'])) {
             <td valign="top" class="col_head" width="10%">Results</td>
             <td valign="top" class="col_head" width="10%">HST</td>
             <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user') ? 'arrow_'.strtolower($_REQUEST['sortdir']) : ''; ?>" width="10%">
-	            <a href="manage_screeners.php?sort=user&sortdir=<?= ($_REQUEST['sort'] == 'user' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Screened By</a>
-	        </td>
-	        <td valign="top" class="col_head" width="10%">Contacted</td>
+                <a href="manage_screeners.php?sort=user&sortdir=<?= ($_REQUEST['sort'] == 'user' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Screened By</a>
+            </td>
+            <td valign="top" class="col_head" width="10%">Contacted</td>
             <td valign="top" class="col_head">Edit</td>
         </tr>
         <?php

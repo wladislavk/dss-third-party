@@ -1,93 +1,95 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-    include 'includes/constants.inc';
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+include 'includes/constants.inc';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-        <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-    <head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
+</head>
+<?php
+$db = new Db();
 
-    <?php
-        if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1) {
-        	$op_arr = explode("\n",trim($_POST['transaction_code']));			
-        	
-            foreach($op_arr as $i=>$val) {
-        		if($val <> '') {
-        			$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."' WHERE docid ='".$_SESSION['docid']."';";
-        			
-        			if($db->getNumberRows($sel_check) == 0) {
-        				$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',docid ='".$_SESSION['docid']."';";
-        				$db->query($ins_sql);
-        			}
-        		}
-        	}
-	        
-            $msg = "Added Successfully";
-	?>
-        	<script type="text/javascript">
-        		parent.window.location = 'manage_transaction_code.php?msg=<?php echo $msg;?>';
-        	</script>
-	<?php
-	        trigger_error("Die called", E_USER_ERROR);
+if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1) {
+    $op_arr = explode("\n",trim($_POST['transaction_code']));
+
+    foreach($op_arr as $i=>$val) {
+        if($val != '') {
+            $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."' AND docid ='".$_SESSION['docid']."';";
+
+            if($db->getNumberRows($sel_check) == 0) {
+                $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',docid ='".$_SESSION['docid']."';";
+                $db->query($ins_sql);
+            }
         }
+    }
 
+    $msg = "Added Successfully";
+    ?>
+    <script type="text/javascript">
+        parent.window.location = 'manage_transaction_code.php?msg=<?php echo $msg;?>';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
         if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) {
-        	$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
-        	
-        	if($db->getNumberRows($sel_check) > 0) {
-        		$msg="Transaction Code already exist. So please give another Transaction Code.";
-    ?>
-        		<script type="text/javascript">
-        			alert("<?php echo $msg;?>");
-        			window.location = "#add";
-        		</script>
-    <?php
-        	} else {
-        		if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
-        			$sby = 999;
-        		} else {
-        			$sby = s_for($_POST["sortby"]);
-        		}
-        		
-        		if($_POST["ed"] != "") {
-                    $ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
-                                modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
-                                modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
-                                days_units = '".s_for($_POST['days_units'])."',
-        				        amount_adjust = '".s_for($_POST['amount_adjust'])."',
-                                sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
+            $sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid != '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
 
-        			$db->query($ed_sql);
-        			$msg = "Edited Successfully";
+            if($db->getNumberRows($sel_check) > 0) {
+                $msg="Transaction Code already exist. So please give another Transaction Code.";
     ?>
-        			<script type="text/javascript">
-        				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
-        			</script>
+                <script type="text/javascript">
+                    alert("<?php echo $msg;?>");
+                    window.location = "#add";
+                </script>
     <?php
-        			trigger_error("Die called", E_USER_ERROR);
-        		} else {
-                    $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
-                                modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
-                                modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
-                                days_units = '".s_for($_POST['days_units'])."',
-        				        amount_adjust = '".s_for($_POST['amount_adjust'])."',
-                                sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_SESSION['docid'];
-        			
-                    $db->query($ins_sql);
-        			$msg = "Added Successfully";
+            } else {
+                if(s_for($_POST["sortby"]) == '' || is_numeric(s_for($_POST["sortby"])) === false) {
+                    $sby = 999;
+                } else {
+                    $sby = s_for($_POST["sortby"]);
+                }
+
+                if($_POST["ed"] != "") {
+                    $ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
+                        modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
+                        modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
+                        days_units = '".s_for($_POST['days_units'])."',
+                        amount_adjust = '".s_for($_POST['amount_adjust'])."',
+                        sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
+
+                $db->query($ed_sql);
+                $msg = "Edited Successfully";
+                ?>
+                <script type="text/javascript">
+                    parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
+                </script>
+                <?php
+                trigger_error("Die called", E_USER_ERROR);
+            } else {
+                $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
+                    modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
+                    modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
+                    days_units = '".s_for($_POST['days_units'])."',
+                    amount_adjust = '".s_for($_POST['amount_adjust'])."',
+                    sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_SESSION['docid'];
+
+                $db->query($ins_sql);
+                $msg = "Added Successfully";
     ?>
-        			<script type="text/javascript">
-        				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
-        			</script>
-    <?php
-        			trigger_error("Die called", E_USER_ERROR);
-        		}
-        	}
+                <script type="text/javascript">
+                    parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
+                </script>
+                <?php
+                trigger_error("Die called", E_USER_ERROR);
+            }
         }
+    }
     ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -103,10 +105,9 @@
     <body>
         <?php
             $thesql = "select * from dental_transaction_code where transaction_codeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."' AND docid ='".$_SESSION['docid']."'";
-
             $themyarray = $db->getRow($thesql);
-        	if($themyarray) {
-        	    if($msg != '') {
+            if($themyarray) {
+                if($msg != '') {
                     $transaction_code = $_POST['transaction_code'];
                     $type = $_POST['type'];
                     $place = $_POST['place'];
@@ -118,7 +119,7 @@
                     $modifier_code_2 = $_POST['modifier_code_2'];
                     $days_units = $_POST['days_units'];
                     $amount_adjust = $_POST['amount_adjust'];
-    	        } else {
+                } else {
                     $transaction_code = st($themyarray['transaction_code']);
                     $type = st($themyarray['type']);
                     $place = st($themyarray['place']);
@@ -130,20 +131,18 @@
                     $modifier_code_2 = $themyarray['modifier_code_2'];
                     $days_units = $themyarray['days_units'];
                     $amount_adjust = $themyarray['amount_adjust'];
+                }
+
+                if($themyarray["transaction_codeid"] != '') {
+                    $but_text = "Edit ";
+                } else {
                     $but_text = "Add ";
-    	        }
-    	
-            	if($themyarray["transaction_codeid"] != '') {
-            		$but_text = "Edit ";
-            	} else {
-            		$but_text = "Add ";
-            	}
-    	    }
-    	?>
+                }
+            }
+        ?>
+        <br /><br />
 
-    	<br /><br />
-
-    	<?php if(!empty($msg)) {?>
+        <?php if(!empty($msg)) {?>
             <div align="center" class="red">
                 <?php echo $msg;?>
             </div>
@@ -155,7 +154,7 @@
                     <td colspan="2" class="cat_head">
                        <?php echo (!empty($but_text) ? $but_text : '')?> Transaction Code 
                        <?php if(!empty($transaction_code)) { ?>
-                       		&quot;<?php echo $transaction_code;?>&quot;
+                           &quot;<?php echo $transaction_code;?>&quot;
                        <?php } ?>
                     </td>
                 </tr>
@@ -165,7 +164,7 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <input type="text" name="transaction_code" value="<?php echo (!empty($transaction_code) ? $transaction_code : '')?>" class="tbox" /> 
-                        <span class="red">*</span>				
+                        <span class="red">*</span>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -173,7 +172,7 @@
                         Transaction Type
                     </td>
                     <td valign="top" class="frmdata">
-                        <select name="type" class="tbox" />
+                        <select name="type" class="tbox">
                           <option value="1" <?php if(!empty($type) && $type == "1"){echo " selected='selected'";} ?>> Medical Code </option>
                           <option value="2" <?php if(!empty($type) && $type == "2"){echo " selected='selected'";} ?>> Patient Payment Code </option>
                           <option value="3" <?php if(!empty($type) && $type == "3"){echo " selected='selected'";} ?>> Insurance Payment Code </option>
@@ -181,7 +180,7 @@
                           <option value="5" <?php if(!empty($type) && $type == "5"){echo " selected='selected'";} ?>> Modifier Code </option>
                           <option value="6" <?php if(!empty($type) && $type == "6"){echo " selected='selected'";} ?>> Adjustment Code </option>              
                         </select> 
-                        <span class="red">*</span>				
+                        <span class="red">*</span>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -189,7 +188,7 @@
                        Place
                     </td>
                     <td valign="top" class="frmdata">
-                        <select name="place" class="tbox" />
+                        <select name="place" class="tbox">
                             <option value=""></option>
                             <?php
                                 $psql = "select * from dental_place_service order by sortby";
@@ -206,7 +205,7 @@
                        Default Modifier Code 1
                     </td>
                     <td valign="top" class="frmdata">
-                        <select name="modifier_code_1" class="tbox" />
+                        <select name="modifier_code_1" class="tbox">
                             <option value=""></option>
                             <?php
                                 $psql = "select * from dental_modifier_code order by sortby";
@@ -223,7 +222,7 @@
                         Default Modifier Code 2
                     </td>
                     <td valign="top" class="frmdata">
-                        <select name="modifier_code_2" class="tbox" />
+                        <select name="modifier_code_2" class="tbox">
                             <option value=""></option>
                             <?php
                                 $psql = "select * from dental_modifier_code order by sortby";
@@ -248,7 +247,7 @@
                         Sort By
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="sortby" value="<?php echo (!empty($sortby) ? $sortby : '');?>" class="tbox" style="width:30px"/>		
+                        <input type="text" name="sortby" value="<?php echo (!empty($sortby) ? $sortby : '');?>" class="tbox" style="width:30px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -264,9 +263,9 @@
                         Status
                     </td>
                     <td valign="top" class="frmdata">
-                    	<select name="status" class="tbox">
-                        	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
-                        	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
+                        <select name="status" class="tbox">
+                            <option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                            <option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                         </select>
                     </td>
                 </tr>
@@ -287,22 +286,22 @@
                         Description
                     </td>
                     <td valign="top" class="frmdata">
-                    	<textarea class="tbox" name="description" style="width:100%;"><?php echo (!empty($description) ? $description : '');?></textarea>
+                        <textarea class="tbox" name="description" style="width:100%;"><?php echo (!empty($description) ? $description : '');?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td  colspan="2" align="center">
                         <span class="red">
-                            * Required Fields					
+                            * Required Fields
                         </span><br />
                         <input type="hidden" name="transaction_codesub" value="1" />
                         <input type="hidden" name="ed" value="<?php echo $themyarray["transaction_codeid"]?>" />
                         <input type="submit" value=" <?php echo (!empty($but_text) ? $but_text : '')?> Transaction Code" class="button" />
-                		<?php if($themyarray["transaction_codeid"]) { ?>
-                            <a href="manage_transaction_code.php?delid=<?php echo $themyarray["transaction_codeid"];?>" target="_parent" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right;"class="dellink" title="DELETE">
+                        <?php if($themyarray["transaction_codeid"]) { ?>
+                            <a href="manage_transaction_code.php?delid=<?php echo $themyarray["transaction_codeid"];?>" target="_parent" onclick="return confirm('Do Your Really want to Delete?.');" style="float:right;" class="dellink" title="DELETE">
                                 Delete
                             </a>
-                		<?php } ?>
+                        <?php } ?>
                     </td>
                 </tr>
             </table>

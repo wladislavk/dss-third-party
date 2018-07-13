@@ -39,6 +39,8 @@ $csv = [
 
 fputcsv($out, $csv);
 
+$db = new Db();
+
 $sql = "SELECT
         dc.*,
         dq.qualifier AS qualifier_name, 

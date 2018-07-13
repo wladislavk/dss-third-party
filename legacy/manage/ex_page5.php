@@ -32,7 +32,6 @@ if (empty($patient_info)) { ?>
 $db = new Db();
 if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1) {
     $additional_paragraph_pal = $_POST['additional_paragraph_pal'];
-    $caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
     $joint_exam = $_POST['joint_exam'];
     $i_opening_from = $_POST['i_opening_from'];
     $i_opening_to = (!empty($_POST['i_opening_to']) ? $_POST['i_opening_to'] : '');
@@ -91,7 +90,6 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
         }
     }
 
-    $join_exam_arr = '';
     if (is_array($joint_exam)) {
         if (!isset($joint_exam_arr)) {
             $joint_exam_arr = "";
@@ -239,8 +237,6 @@ if (!$isHistoricView && !empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] =
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_myarray = $db->getRow($pat_sql);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
         window.location = 'manage_patient.php';
@@ -256,36 +252,11 @@ $sql = "SELECT *
     $andNullConditional";
 $myarray = $db->getRow($sql);
 
-$ex_page5id = st($myarray['ex_page5id']);
 $palpationid = st($myarray['palpationid']);
 $palpationRid = st($myarray['palpationRid']);
 $additional_paragraph_pal = st($myarray['additional_paragraph_pal']);
-$joint_exam = st($myarray['joint_exam']);
 $jointid = st($myarray['jointid']);
-$i_opening_from = st($myarray['i_opening_from']);
-$i_opening_to = st($myarray['i_opening_to']);
-$i_opening_equal = st($myarray['i_opening_equal']);
-$protrusion_from = st($myarray['protrusion_from']);
-$protrusion_to = st($myarray['protrusion_to']);
-$protrusion_equal = st($myarray['protrusion_equal']);
-$l_lateral_from = st($myarray['l_lateral_from']);
-$l_lateral_to = st($myarray['l_lateral_to']);
-$l_lateral_equal = st($myarray['l_lateral_equal']);
-$r_lateral_from = st($myarray['r_lateral_from']);
-$r_lateral_to = st($myarray['r_lateral_to']);
-$r_lateral_equal = st($myarray['r_lateral_equal']);
-$deviation_from = st($myarray['deviation_from']);
-$deviation_to = st($myarray['deviation_to']);
-$deviation_equal = st($myarray['deviation_equal']);
-$deflection_from = st($myarray['deflection_from']);
-$deflection_to = st($myarray['deflection_to']);
-$deflection_equal = st($myarray['deflection_equal']);
-$range_normal = st($myarray['range_normal']);
-$normal = st($myarray['normal']);
-$other_range_motion = st($myarray['other_range_motion']);
 $additional_paragraph_rm = st($myarray['additional_paragraph_rm']);
-$deviation_r_l = st($myarray['deviation_r_l']);
-$deflection_r_l = st($myarray['deflection_r_l']);
 
 if ($palpationid != '') {
     $pal_arr1 = explode('~', $palpationid);
@@ -350,12 +321,6 @@ $soundValues = [
     'B' => 'B',
     'WNL' => 'WNL'
 ];
-
-$palpations = $db->getResults("SELECT *
-    FROM dental_palpation
-    WHERE `status` = 1
-    ORDER BY sortby");
-$maxRows = ceil(count($palpations) / 2);
 
 $jointExams = $db->getResults("SELECT *
     FROM dental_joint_exam

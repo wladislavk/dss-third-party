@@ -23,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
     $mallampati = $_POST['mallampati'];
     $tonsils = $_POST['tonsils'];
@@ -40,19 +42,19 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
     if ($tonsils_arr != '') {
         $tonsils_arr = '~' . $tonsils_arr;
     }
-	
+
     if ($_POST['ed'] == '') {
         $ins_sql = "insert into dental_ex_page2 set 
             patientid = '".s_for($_GET['pid'])."',
             mallampati = '".s_for($mallampati)."',
-            additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+            additional_notes = '".$db->escape( $_POST['additional_notes'])."',
             tonsils = '".s_for($tonsils_arr)."',
             tonsils_grade = '".s_for($tonsils_grade)."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $msg = "Added Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -70,11 +72,11 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
     } else {
         $ed_sql = "update dental_ex_page2 set 
             mallampati = '".s_for($mallampati)."',
-            additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+            additional_notes = '".$db->escape( $_POST['additional_notes'])."',
             tonsils = '".s_for($tonsils_arr)."',
             tonsils_grade = '".s_for($tonsils_grade)."'
             where ex_page2id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";
         if (isset($_POST['ex_pagebtn_proceed'])) { ?>
@@ -95,8 +97,6 @@ if (!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1) {
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con,$pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">

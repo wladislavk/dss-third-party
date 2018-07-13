@@ -82,38 +82,34 @@ describe('Main module mutations', () => {
   })
 
   describe('modal mutation', () => {
-    it('loads modal with params', function () {
-      const state = {
+    beforeEach(function () {
+      this.state = {
         [symbols.state.modal]: {}
       }
+    })
+    it('loads modal with params', function () {
       const payload = {
         name: 'foo',
         params: {first: 1, second: 2}
       }
-      MainModule.mutations[symbols.mutations.modal](state, payload)
+      MainModule.mutations[symbols.mutations.modal](this.state, payload)
       const expectedState = {
-        [symbols.state.modal]: {
-          name: 'foo',
-          params: {first: 1, second: 2}
-        }
+        [symbols.state.modal]: payload
       }
-      expect(state).toEqual(expectedState)
+      expect(this.state).toEqual(expectedState)
     })
     it('loads modal without params', function () {
-      const state = {
-        [symbols.state.modal]: {}
-      }
       const payload = {
         name: 'foo'
       }
-      MainModule.mutations[symbols.mutations.modal](state, payload)
+      MainModule.mutations[symbols.mutations.modal](this.state, payload)
       const expectedState = {
         [symbols.state.modal]: {
           name: 'foo',
           params: {}
         }
       }
-      expect(state).toEqual(expectedState)
+      expect(this.state).toEqual(expectedState)
     })
   })
 })

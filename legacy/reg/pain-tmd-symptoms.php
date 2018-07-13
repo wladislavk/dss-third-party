@@ -1018,9 +1018,6 @@ $painOccurrence = [
 <script type="text/javascript" src="/assets/app/vue-cleanup.js?v=20180502"></script>
 <link rel="stylesheet" href="css/questionnaire.css" />
 <link rel="stylesheet" href="css/table.css" />
-<!--[if IE]>
-<link rel="stylesheet" type="text/css" href="css/questionnaire_ie.css" />
-<![endif]-->
 <?php
 
 require_once __DIR__ . '/includes/footer.php';

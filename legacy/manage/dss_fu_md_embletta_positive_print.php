@@ -3,9 +3,11 @@ namespace Ds3\Libraries\Legacy;
 
 include "admin/includes/main_include.php";
 
+$db = new Db();
+
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-	
 $pat_myarray = $db->getRow($pat_sql);
+
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 if ($pat_myarray['patientid'] == '') { ?>
@@ -17,8 +19,8 @@ if ($pat_myarray['patientid'] == '') { ?>
 }
 
 $ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
-	
 $ref_myarray = $db->getRow($ref_sql);
+
 $referring_physician = st($ref_myarray['referring_physician']);
 $a_arr = explode(' ', $referring_physician);
 if (st($pat_myarray['dob']) != '' ) {
@@ -30,8 +32,8 @@ if (st($pat_myarray['dob']) != '' ) {
 }
 
 $q3_sql = "select * from dental_q_page3_pivot where patientid='".$_GET['pid']."'";
-	
 $q3_myarray = $db->getRow($q3_sql);
+
 $history = st($q3_myarray['history']);
 $medications = st($q3_myarray['medications']);
 $history_arr = explode('~', $history);
@@ -68,8 +70,6 @@ foreach ($medications_arr as $val) {
 $q2_sql = "select * from dental_q_page2_pivot where patientid='".$_GET['pid']."'";
 
 $q2_myarray = $db->getRow($q2_sql);
-$polysomnographic = st($q2_myarray['polysomnographic']);
-$sleep_center_name = st($q2_myarray['sleep_center_name']);
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
 $rdi = st($q2_myarray['rdi']);
@@ -81,15 +81,9 @@ include_once 'includes/get_sti_o2.php';
 $sti_o2_1 = getStiO2($db, $_GET['pid']);
 
 if (st($pat_myarray['gender']) == 'Female') {
-    $h_h =  "her";
     $s_h =  "she";
-    $h_h1 =  "her";
-    $m_m = "Mrs.";
 } else {
-    $h_h =  "his";
     $s_h =  "he";
-    $h_h1 =  "him";
-    $m_m = "Mr.";
 }
 ?>
 

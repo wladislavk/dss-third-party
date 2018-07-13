@@ -1,51 +1,39 @@
-import Vue from 'vue'
-import moxios from 'moxios'
 import store from '../../../../src/store'
 import ScreenerDoctorResultsComponent from '../../../../src/components/screener/sections/ScreenerDoctorResults.vue'
 import symbols from '../../../../src/symbols'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerDoctorResults component', () => {
   beforeEach(function () {
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(ScreenerDoctorResultsComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase.setComponent(ScreenerDoctorResultsComponent)
 
-    const epworthMockData = [
-      {
-        epworthid: 1,
-        epworth: 'foo',
-        selected: 1
-      },
-      {
-        epworthid: 2,
-        epworth: 'bar',
-        selected: 0
-      },
-      {
-        epworthid: 3,
-        epworth: 'baz',
-        selected: 4
-      }
-    ]
-
-    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
-      status: 200,
-      responseText: {
-        data: epworthMockData
-      }
+    this.testCase.stubRequest({
+      url: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby',
+      response: [
+        {
+          epworthid: 1,
+          epworth: 'foo',
+          selected: 1
+        },
+        {
+          epworthid: 2,
+          epworth: 'bar',
+          selected: 0
+        },
+        {
+          epworthid: 3,
+          epworth: 'baz',
+          selected: 4
+        }
+      ]
     })
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('shows results', function (done) {
@@ -71,16 +59,18 @@ describe('ScreenerDoctorResults component', () => {
     }
     store.commit(symbols.mutations.coMorbidity, coMorbidityData)
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const epworthProps = {
         1: 1,
         2: 0,
         3: 4
       }
+      // todo: direct store modification should not occur after mount
       store.commit(symbols.mutations.modifyEpworthProps, epworthProps)
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         const contactDivs = vm.$el.querySelectorAll('div.contact_div')
         expect(contactDivs.length).toBe(3)
         expect(contactDivs[0].querySelector('label').textContent).toBe('First name:')

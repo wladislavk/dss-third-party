@@ -8,7 +8,9 @@ if ($_GET['backoffice'] == '1') {
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
-$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
+$db = new Db();
+
+$letterid = $db->escape( !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
@@ -21,23 +23,23 @@ if ($letter_result) {
         $topatient = $row['topatient'];
         $md_list = $row['md_list'];
         $md_referral_list = $row['md_referral_list'];
-        $mds = explode(",", $md_list);
-        $md_referrals = explode(",", $md_referral_list);
     }
 }
 
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
-	
 $othermd_result = $db->getResults($othermd_query);
+
 $md_array = [];
 $md_referral_array = [];
-if ($othermd_result) foreach ($othermd_result as $row) {
-    if ($row['md_list'] != null) {
-        $md_array = array_merge($md_array, explode(",", $row['md_list']));
-    }
-    if ($row['md_referral_list'] != null) {
-        $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+if ($othermd_result) {
+    foreach ($othermd_result as $row) {
+        if ($row['md_list'] != null) {
+            $md_array = array_merge($md_array, explode(",", $row['md_list']));
+        }
+        if ($row['md_referral_list'] != null) {
+            $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+        }
     }
 }
 $full_md_list = implode(",", $md_array);
@@ -60,14 +62,14 @@ $title = $template_result['name'];
 
 // Get Franchisee Name
 $franchisee_query = "SELECT name FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
-	
 $franchisee_result = $db->getRow($franchisee_query);
+
 $franchisee_name = $franchisee_result['name'];
 
 // Get Patient Information
 $patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob FROM dental_patients WHERE patientid = '".$patientid."';";
-	
 $patient_result = $db->getResults($patient_query);
+
 $patient_info = [];
 foreach ($patient_result as $row) {
     $patient_info = $row;
@@ -80,7 +82,6 @@ $q3_sql = "SELECT history, medications from dental_q_page3_pivot WHERE patientid
 $q3_myarray = $db->getRow($q3_sql);
 $history = $q3_myarray['history'];
 $medications = $q3_myarray['medications'];
-$history_arr = explode('~',$history);
 $history_arr = explode('~',$history);
 $history_disp = '';
 foreach ($history_arr as $val) {
@@ -126,15 +127,14 @@ $q1_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, plac
 
 $q1_myarray = $db->getRow($q1_sql);
 $first_study_date = st($q1_myarray['date']);
-$first_diagnosis = st($q1_myarray['diagnosis']);
 $first_ahi = st($q1_myarray['ahi']);
 $first_rdi = st($q1_myarray['rdi']);
 $first_o2sat90 = st($q1_myarray['t9002']);
 $first_o2nadir = st($q1_myarray['o2nadir']);
-$first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
+
 $q2_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
-	
 $q2_myarray = $db->getRow($q2_sql);
+
 $second_study_date = st($q2_myarray['date']);
 $second_diagnosis = st($q2_myarray['diagnosis']);
 $second_ahi = st($q2_myarray['ahi']);
@@ -144,34 +144,36 @@ $second_o2nadir = st($q2_myarray['o2nadir']);
 $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
 $dentaldevice = st($q2_myarray['dentaldevice']);
+
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
-	
 $sleeplab_myarray = $db->getRow($sleeplab_sql);
+
 $sleeplab_name = st($sleeplab_myarray['company']);
+
 $subj1_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
-	
 $subj1_result = $db->getResults($subj1_query);
+
 foreach ($subj1_result as $row) {
     $subj1 = $row;
 }
 
 $subj2_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid DESC LIMIT 1;";
-	
 $subj2_result = $db->getResults($subj2_query);
+
 foreach ($subj2_result as $row) {
     $subj2 = $row;
 }
 
 // Device Delivery Date
 $device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
-	
 $device_result = $db->getRow($device_query);
+
 $delivery_date = date('F d, Y', strtotime($device_result['date_completed']));
 
 // Appointment Date
 $appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
-	
 $appt_result = $db->getRow($appt_query);
+
 $appt_date = date('F d, Y', strtotime($appt_result['date_scheduled']));
 
 function trigger_letter20($pid)
@@ -206,7 +208,7 @@ if ($topatient) {
 } else {
   $contact_info = get_contact_info('', $md_list, $md_referral_list);
 }
-$letter_contacts = array();
+$letter_contacts = [];
 if ($contact_info) {
     foreach ($contact_info['patient'] as $contact) {
       $letter_contacts[] = array_merge(['type' => 'patient'], $contact);
@@ -445,7 +447,6 @@ $template = "<p>%todays_date%</p>
             foreach ($letter_contacts as $key => $contact) {
               $new_template[$key] = $dupe_template;
             }
-            $duplicated = true;
         }
         // Reset Letter
         if (isset($_POST['reset_letter'])) {
@@ -590,7 +591,7 @@ $template = "<p>%todays_date%</p>
                 $message = str_replace($search, "", $message);
                 deliver_letter($letterid, $message);
             } else {
-                $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+                send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
             }
 
             if ($parent) { ?>
@@ -604,11 +605,11 @@ $template = "<p>%todays_date%</p>
         // Catch Post Delete Button and Delete letters Here
         if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
             if (count($letter_contacts) == 1) {
-                    $parent = true;
+                $parent = true;
             }
             $type = $contact['type'];
             $recipientid = $contact['id'];
-            $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+            $letterid = delete_letter($letterid, $type, $recipientid, $new_template[$key]);
             if ($parent) { ?>
                 <script type="text/javascript">
                     window.location = '<?php echo ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
@@ -656,8 +657,8 @@ $template = "<p>%todays_date%</p>
     } ?>
     <br><br>
 </form>
-		</td>
-	</tr>
+        </td>
+    </tr>
 </table>
 
 <?php

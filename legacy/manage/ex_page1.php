@@ -169,7 +169,6 @@ if ($patient_info) {
         $andNullConditional";
     $myarray = $db->getRow($sql);
 
-    $ex_page1id = st($myarray['ex_page1id']);
     $blood_pressure = st($myarray['blood_pressure']);
     $pulse = st($myarray['pulse']);
     $neck_measurement = st($myarray['neck_measurement']);

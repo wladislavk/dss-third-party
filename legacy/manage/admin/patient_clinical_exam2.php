@@ -1,5 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -22,6 +23,8 @@ include "includes/patient_nav.php";
 </ul>
 <p>&nbsp;</p>
 <?php
+$db = new Db();
+
 if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
     $blood_pressure = $_POST['blood_pressure'];
     $pulse = $_POST['pulse'];
@@ -58,7 +61,7 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ins_sql);
 
         $pat_sql = "UPDATE dental_patients SET
             feet = '".s_for($feet)."',
@@ -89,7 +92,7 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
             additional_paragraph = '".s_for($additional_paragraph)."',
             tongue = '".s_for($tongue_arr)."'
             where ex_page1id = '".s_for($_POST['ed'])."'";
-        mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ed_sql);
 
         $pat_sql = "UPDATE dental_patients SET
             feet = '".s_for($feet)."',
@@ -118,8 +121,6 @@ if (!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con, $pat_sql);
 $pat_myarray = mysqli_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 if ($pat_myarray['patientid'] == '') { ?>
     <script type="text/javascript">
@@ -151,11 +152,11 @@ $tongue = st($myarray['tongue']);
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <a name="top"></a>
 &nbsp;&nbsp;
-<? include "../includes/form_top.htm";?>
+<?php include "../includes/form_top.htm";?>
 <br />
 <br />
 <div align="center" class="red">
-	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
@@ -189,7 +190,7 @@ $tongue = st($myarray['tongue']);
                                 <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
                                     <?php for ($i = 50; $i <= 150; $i++) { ?>
                                         <option value="<?=$i?>" <?php if ($pulse == $i) echo " selected";?>><?=$i?></option>
-                                    <? } ?>
+                                    <?php } ?>
                                 </select>
                             </span>
                         </div>

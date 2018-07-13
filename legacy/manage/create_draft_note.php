@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 session_start();
 
@@ -37,9 +38,7 @@ if ($_POST['ed'] != ''){ //post from editing
   {
     echo "logged_out";
   }
-}
-else //creating a new note.
-{
+} else { //creating a new note.
     $notes = $_POST['notes'];
 
     if (is_array($notes)) {
@@ -58,7 +57,7 @@ else //creating a new note.
   $note_id = $db->getInsertId($note_sql);
 
   $update_sql = "UPDATE dental_notes SET parentid = '".$note_id."' WHERE notesid = '".$note_id."';";
-  $update_result = $db->query($update_sql);
+  $db->query($update_sql);
 
   echo $note_id;
 }

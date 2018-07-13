@@ -8,6 +8,8 @@ require_once __DIR__ . '/includes/constants.inc';
 
 $patientId = intval($_GET['pid']);
 
+$db = new Db();
+
 $patientQuery = "SELECT access_code, access_code_date
     FROM dental_patients
     WHERE patientid = '$patientId'";
@@ -20,7 +22,6 @@ if ($isResetAccessCode) {
     $db->query("UPDATE dental_patients
         SET access_code = '$accessCode', access_code_date = NOW()
         WHERE patientid = '$patientId'");
-
     $patientData = $db->getRow($patientQuery);
 }
 
@@ -33,7 +34,7 @@ if (isset($_POST['email_but'])) {
     $filename = "user_pin_{$pat['patientid']}.pdf";
 
     // Set active_status = 2
-    sendRegEmail($pat['patientid'], $pat['email'], '', $pat['email'], 2);
+    sendRegEmail($pat['patientid'], $pat['email'], $pat['email'], 2);
 
     $template = getTemplate('patient/pin-instructions');
     $html = parseTemplate($template, $mailerData);
@@ -44,17 +45,15 @@ if (isset($_POST['email_but'])) {
     <br /><br />
     <h3>Temporary PIN document created and email sent to patient.</h3>
     <script type="text/javascript">
-        window.location = 'letterpdfs/<?php echo  $filename; ?>';
+        window.location = 'letterpdfs/<?php echo $filename; ?>';
     </script>
     <?php
-
     trigger_error("Die called", E_USER_ERROR);
 }
 
 $accessCode = $patientData['access_code'];
 $startDate = date('m/d/Y', strtotime($patientData['access_code_date']));
 $expirationDate = date('m/d/Y', strtotime(date('Y-m-d', strtotime($patientData['access_code_date'])). '+5 days'));
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -70,7 +69,6 @@ $expirationDate = date('m/d/Y', strtotime(date('Y-m-d', strtotime($patientData['
         <?php if ($isResetAccessCode) { ?>
             <script>
                 var patientId = <?= json_encode($patientId) ?>;
-
                 try {
                     parent.$('#access-code').text(<?= json_encode($accessCode) ?>);
                 } catch (e) {

@@ -47,7 +47,7 @@ function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pi
         if(source!=''){
             $('#'+source).val('');
         }
-        var a = e.which; // ascii decimal value                                //var c = String.fromCharCode(a);
+        var a = e.which; // ascii decimal value
         var listSize = $('#'+hint+' ul li').size();
         var stringSize = $this.val().length;
         if ($this.val().trim() == "") {
@@ -165,45 +165,6 @@ function updateval(t){
         t.value = '';
     }
 }
-/*
- $(document).keyup(function(e) {
- switch (e.which) {
- case 38:
- move_selectionref('up');
- break;
- case 40:
- move_selectionref('down');
- break;
- case 13:
- //alert('');
- break;
- }
- });
-
- function move_selectionref(direction) {
- if ($('#referredby_list > li.list_hover').size() == 0) {
- window.selectionref = 0;
- }
- if (direction == 'up' && window.selectionref != 0) {
- if (window.selectionref != 1) {
- window.selectionref--;
- }
- } else if (direction == 'down') {
- if (window.selectionref != ($("#referredby_list li").size() -1)) {
- window.selectionref++;
- }
- }
- set_selectedref(window.selectionref);
- }
- function set_selectedref(menuitem) {
- $('#referredby_list li').removeClass('list_hover');
- $('#referredby_list li').eq(menuitem).addClass('list_hover');
- var rowid = $('#referred_list li').eq(menuitem).data("rowid");
- var rowsource = $('#referred_list li').eq(menuitem).data("rowsource");
- var rowname = $('#referred_list li').eq(menuitem).data("rowname");
- $('#referred_name').val(rowname);
- }
- */
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

@@ -1,21 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include_once('includes/constants.inc');
-	include_once('admin/includes/main_include.php');
-	include("includes/sescheck.php");
-	include('includes/claim_create.php');
-	include('includes/claim_functions.php');
-	//include('includes/general_functions.php');
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	$is_front_office = true;
-	$manage_path = "";
-	$admin_path = "admin/";
-	$called_from = "manage_insurance.php";
-	$v2_form = "insurance_v2.php?insid=".(!empty($_GET['insid']) ? $_GET['insid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '');
-	
-	include_once("includes/claim_form_eligible.inc");
+include_once('includes/constants.inc');
+include_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+include('includes/claim_create.php');
+include('includes/claim_functions.php');
+
+$is_front_office = true;
+$manage_path = "";
+$admin_path = "admin/";
+$called_from = "manage_insurance.php";
+$v2_form = "insurance_v2.php?insid=".(!empty($_GET['insid']) ? $_GET['insid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '');
+
+include_once("includes/claim_form_eligible.inc");
 ?>
+<link rel="stylesheet" href="css/insurance_eligible.css">
 
-	<link rel="stylesheet" href="css/insurance_eligible.css">
-
-	<script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="js/masks.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/masks.js?v=<?= time() ?>"></script>

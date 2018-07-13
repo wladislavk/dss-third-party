@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'timezone' => 'America/New_York',
+    'timezone' => env('SYSTEM_TZ_ENV'),
 
     /*
     |--------------------------------------------------------------------------
@@ -129,7 +129,7 @@ return [
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
-        DentalSleepSolutions\Providers\FoundationServiceProvider::class,
+        Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
@@ -157,6 +157,7 @@ return [
         DentalSleepSolutions\Providers\EventServiceProvider::class,
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
+        DentalSleepSolutions\Providers\AuthServiceProvider::class,
         DentalSleepSolutions\Providers\CommandServiceProvider::class,
         DentalSleepSolutions\Providers\CustomValidationServiceProvider::class,
     ],

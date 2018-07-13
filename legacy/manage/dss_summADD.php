@@ -1,12 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
-$fuquery_array = $db->getResults($fuquery_sql);
-
+<?php
+namespace Ds3\Libraries\Legacy;
 ?>
 <!--key reference table-->
 <div style="float: left; width: 210px; margin-right: 10px; padding: 0; border: 0;">
-	<table style="width: 100%;" class="followup-keytable" cellpadding="0">
+    <table style="width: 100%;" class="followup-keytable" cellpadding="0">
         <tr style="background: #444;">
             <td colspan="4"><span style="color: #fff;">@Del / Follow Up ID / New</span></td>
         </tr>

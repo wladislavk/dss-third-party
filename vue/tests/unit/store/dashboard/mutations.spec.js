@@ -78,46 +78,30 @@ describe('Dashboard module mutations', () => {
 
   describe('resetDeviceGuideSettingOptions mutation', () => {
     it('resets device guide setting options', function () {
+      const data = [
+        {
+          id: 13,
+          checkedOption: 3,
+          checked: true,
+          labels: ['Not Important', 'Neutral', 'Very Important'],
+          name: 'Comfort',
+          number: 3
+        },
+        {
+          id: 3,
+          checkedOption: 2,
+          checked: false,
+          labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+          name: 'Bruxism',
+          number: 5
+        }
+      ]
       const state = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 3,
-            checked: true,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 2,
-            checked: false,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: data
       }
       DashboardModule.mutations[symbols.mutations.resetDeviceGuideSettingOptions](state)
       const expectedState = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 0,
-            checked: false,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 0,
-            checked: false,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: data
       }
       expect(state).toEqual(expectedState)
     })
@@ -125,25 +109,26 @@ describe('Dashboard module mutations', () => {
 
   describe('checkGuideSetting mutation', () => {
     it('checks guide setting', function () {
+      const initialData = [
+        {
+          id: 13,
+          checkedOption: 0,
+          checked: false,
+          labels: ['Not Important', 'Neutral', 'Very Important'],
+          name: 'Comfort',
+          number: 3
+        },
+        {
+          id: 3,
+          checkedOption: 0,
+          checked: false,
+          labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+          name: 'Bruxism',
+          number: 5
+        }
+      ]
       const state = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 0,
-            checked: false,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 0,
-            checked: false,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: initialData
       }
       const data = {
         id: 3,
@@ -151,24 +136,7 @@ describe('Dashboard module mutations', () => {
       }
       DashboardModule.mutations[symbols.mutations.checkGuideSetting](state, data)
       const expectedState = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 0,
-            checked: false,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 0,
-            checked: true,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: initialData
       }
       expect(state).toEqual(expectedState)
     })
@@ -176,25 +144,26 @@ describe('Dashboard module mutations', () => {
 
   describe('moveGuideSettingSlider mutation', () => {
     it('moves slider', function () {
+      const initialData = [
+        {
+          id: 13,
+          checkedOption: 0,
+          checked: false,
+          labels: ['Not Important', 'Neutral', 'Very Important'],
+          name: 'Comfort',
+          number: 3
+        },
+        {
+          id: 3,
+          checkedOption: 0,
+          checked: false,
+          labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+          name: 'Bruxism',
+          number: 5
+        }
+      ]
       const state = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 0,
-            checked: false,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 0,
-            checked: false,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: initialData
       }
       const data = {
         id: 3,
@@ -202,24 +171,7 @@ describe('Dashboard module mutations', () => {
       }
       DashboardModule.mutations[symbols.mutations.moveGuideSettingSlider](state, data)
       const expectedState = {
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 0,
-            checked: false,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            number: 3
-          },
-          {
-            id: 3,
-            checkedOption: 2,
-            checked: false,
-            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
-            name: 'Bruxism',
-            number: 5
-          }
-        ]
+        [symbols.state.deviceGuideSettingOptions]: initialData
       }
       expect(state).toEqual(expectedState)
     })

@@ -2,38 +2,43 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Auth;
 
-use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Auth\LegacyAuth;
-use DentalSleepSolutions\Exceptions\AuthException;
-use DentalSleepSolutions\Exceptions\JwtException;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Auth\Guard;
+use DentalSleepSolutions\Services\Auth\JwtHelper;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AuthController extends Controller
 {
     const ADMIN_FLAG_INDEX = 'admin';
     const PATIENT_FLAG_INDEX = 'patient';
 
-    /** @var LegacyAuth */
-    private $legacyAuth;
+    /** @var Auth */
+    protected $auth;
 
-    /** @var JwtAuth */
-    private $jwtAuth;
+    /** @var JwtHelper */
+    private $jwtHelper;
 
+    /**
+     * @param Auth $auth
+     * @param Config $config
+     * @param JwtHelper $jwtHelper
+     * @param Request $request
+     */
     public function __construct(
+        Auth $auth,
         Config $config,
-        LegacyAuth $legacyAuth,
-        JwtAuth $jwtAuth,
+        JwtHelper $jwtHelper,
         Request $request
     )
     {
-        parent::__construct($config, $request);
-        $this->legacyAuth = $legacyAuth;
-        $this->jwtAuth = $jwtAuth;
+        parent::__construct($auth, $config, $request);
+        $this->jwtHelper = $jwtHelper;
     }
 
     /**
@@ -41,46 +46,36 @@ class AuthController extends Controller
      * If authentication is successful, then a token will be returned
      *
      * @return array|JsonResponse
+     * @throws \InvalidArgumentException
      */
     public function auth()
     {
-        $credentials = $this->request->all();
-        try {
-            $authenticated = $this->legacyAuth->byCredentials($credentials);
-        } catch (\Exception $e) {
-            return ApiResponse::responseError($e->getMessage(), Response::HTTP_FORBIDDEN);
+        $role = JwtHelper::ROLE_USER;
+        $credentials = [
+            'username' => $this->request->get('username'),
+            'password' => $this->request->get('password'),
+        ];
+        if (!empty($this->request->get(JwtHelper::ROLE_ADMIN))) {
+            $role = JwtHelper::ROLE_ADMIN;
         }
-
-        if (!$authenticated) {
+        if (!empty($this->request->get(JwtHelper::ROLE_PATIENT))) {
+            $role = JwtHelper::ROLE_PATIENT;
+            $credentials = [
+                'email' => $this->request->get('email'),
+                'password' => $this->request->get('password'),
+            ];
+        }
+        /** @var Guard $guard */
+        $guard = $this->auth->guard($role);
+        /** @var Authenticatable $authenticatable */
+        $authenticatable = $guard->validate($credentials);
+        if (!$authenticatable) {
             return ApiResponse::responseError('Invalid credentials', Response::HTTP_FORBIDDEN);
         }
-
-        $user = $this->legacyAuth->user();
-        $adminFlag = $user->getAttribute(self::ADMIN_FLAG_INDEX);
-        $patientFlag = $user->getAttribute(self::PATIENT_FLAG_INDEX);
-        $role = JwtAuth::ROLE_USER;
-
-        if ($adminFlag) {
-            $role = JwtAuth::ROLE_ADMIN;
-        }
-
-        if ($patientFlag) {
-            $role = JwtAuth::ROLE_PATIENT;
-        }
-
-        $this->jwtAuth
-            ->guard($role)
-            ->login($user)
-        ;
-
-        try {
-            $token = $this->jwtAuth->toToken($role);
-        } catch (JwtException $e) {
-            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (AuthException $e) {
-            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
+        $token = $this->jwtHelper->createToken([
+            JwtHelper::CLAIM_ROLE_INDEX => $role,
+            JwtHelper::CLAIM_ID_INDEX => $authenticatable->getAuthIdentifier(),
+        ]);
         return ['status' => 'Authenticated', 'token' => $token];
     }
 
@@ -96,9 +91,9 @@ class AuthController extends Controller
         return [
             'status' => 'Health',
             'data' => [
-                'admin' => $this->request->admin(),
-                'user' => $this->request->user(),
-                'patient' => $this->request->patient(),
+                'admin' => $this->admin(),
+                'user' => $this->user(),
+                'patient' => $this->patient(),
             ]
         ];
     }

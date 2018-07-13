@@ -1,4 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><div id="ledger">
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
+<div id="ledger">
   <svg style='height:300px; width: 450px;'/>
 </div>
 
@@ -38,6 +41,8 @@
    var charges = [];
    var credits = [];
    <?php
+         $db = new Db();
+
     $sql = "select a.Date as ledger_date,
             COALESCE((SELECT sum(l.amount) 
             FROM dental_ledger l
@@ -61,40 +66,30 @@
     $total_credits = 0;
 
     foreach ($q as $r) {
-    	$total_charge += $r['charge'];
-    	$total_credits += $r['credit'];
-    	
-      if($i == 0){
-	?>
-
-        charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
-        
-        credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
-
-  <?php
-		    $i++;
-	    }
-  ?>
-      charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_charge; ?>]);
-      credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_credits; ?>]);
+        $total_charge += $r['charge'];
+        $total_credits += $r['credit'];
+        if ($i == 0) { ?>
+            charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
+            credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
+            <?php
+            $i++;
+        }
+        ?>
+        charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo $total_charge; ?>]);
+        credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo $total_credits; ?>]);
   <?php
     }
   ?>
 
   return [
     {
-	"key": "Total Charges",
-      "values": charges
+        "key": "Total Charges",
+        "values": charges
     },
     {
-      "key": "Total Credits",
-      "values": credits
+        "key": "Total Credits",
+        "values": credits
     }
   ];
  }
-
 </script>
-<?php $total_charge_sum = $total_charge; ?>
-<?php $total_credits_sum = $total_credits; ?>
-
-

@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import moxios from 'moxios'
 import moment from 'moment'
 import store from '../../../../src/store'
 import TrackerSectionTwoComponent from '../../../../src/components/manage/chart/TrackerSectionTwo.vue'
 import symbols from '../../../../src/symbols'
 import { INITIAL_FUTURE_APPOINTMENT } from '../../../../src/constants/chart'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerSectionTwo component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.flowsheet[symbols.state.trackerStepsNext] = [
       {
         id: 1,
@@ -22,26 +22,21 @@ describe('TrackerSectionTwo component', () => {
     ]
     store.state.flowsheet[symbols.state.futureAppointment] = INITIAL_FUTURE_APPOINTMENT
 
-    moxios.install()
-
-    const Component = Vue.extend(TrackerSectionTwoComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
-  })
-
-  afterEach(function () {
-    moxios.uninstall()
-  })
-
-  it('shows with empty data', function () {
     const props = {
       patientId: 42
     }
-    const vm = this.mount(props)
+
+    this.testCase.setComponent(TrackerSectionTwoComponent)
+    this.testCase.setPropsData(props)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
+  it('shows with empty data', function () {
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.className).toBe('sched_div current_step')
     const stepSelector = rootDiv.querySelector('select#next_step')
@@ -61,10 +56,8 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('shows with pre-set future appointment', function (done) {
-    const props = {
-      patientId: 42
-    }
-    const vm = this.mount(props)
+    const vm = this.testCase.mount()
+
     const midnight = moment(moment().format('MM/DD/YYYY'), 'MM/DD/YYYY')
     const inTenDays = midnight.add(10, 'days')
     store.state.flowsheet[symbols.state.futureAppointment] = {
@@ -73,7 +66,7 @@ describe('TrackerSectionTwo component', () => {
       dateScheduled: new Date(inTenDays.format('YYYY-MM-DD HH:mm')),
       dateUntil: null
     }
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.className).toBe('sched_div')
       const stepSelector = rootDiv.querySelector('select#next_step')
@@ -88,48 +81,39 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('creates new appointment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
-    const props = {
-      patientId: 42
-    }
-    const vm = this.mount(props)
+    const vm = this.testCase.mount()
+
     const datePicker = vm.$el.querySelector('input#next_step_date')
     expect(datePicker.getAttribute('disabled')).toBe('disabled')
     const stepSelector = vm.$el.querySelector('select#next_step')
     stepSelector.value = '2'
     stepSelector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(datePicker.getAttribute('disabled')).toBeNull()
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 2,
-        patient_id: 42,
-        appt_type: 0
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 2,
+          patient_id: 42,
+          appt_type: 0
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })
 
   it('updates existing appointment', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.destroy + '/10'), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.destroy + '/10'
     })
     store.state.flowsheet[symbols.state.futureAppointment] = {
       id: 10,
@@ -137,26 +121,28 @@ describe('TrackerSectionTwo component', () => {
       dateScheduled: null,
       dateUntil: null
     }
-    const props = {
-      patientId: 42
-    }
-    const vm = this.mount(props)
+    const vm = this.testCase.mount()
+
     const stepSelector = vm.$el.querySelector('select#next_step')
     expect(stepSelector.value).toBe('1')
     stepSelector.value = '2'
     stepSelector.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(3)
-      const deleteRequest = moxios.requests.at(0)
-      expect(deleteRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.destroy + '/10'))
-      const addRequest = moxios.requests.at(1)
-      expect(addRequest.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 2,
-        patient_id: 42,
-        appt_type: 0
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(3)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.destroy + '/10'
       }
-      expect(JSON.parse(addRequest.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
+      const expectedSecond = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 2,
+          patient_id: 42,
+          appt_type: 0
+        }
+      }
+      expect(requestResults[1]).toEqual(expectedSecond)
       done()
     })
   })
@@ -167,29 +153,26 @@ describe('TrackerSectionTwo component', () => {
   })
 
   it('updates tracker notes', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.patientSummaries.updateTrackerNotes), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.patientSummaries.updateTrackerNotes
     })
-    const props = {
-      patientId: 42
-    }
-    const vm = this.mount(props)
+    const vm = this.testCase.mount()
+
     const trackerNotes = vm.$el.querySelector('input#tracker-notes')
     expect(trackerNotes.value).toBe('')
     trackerNotes.value = 'foo'
     trackerNotes.dispatchEvent(new Event('change'))
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.patientSummaries.updateTrackerNotes))
-      const expectedData = {
-        patient_id: 42,
-        tracker_notes: 'foo'
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.patientSummaries.updateTrackerNotes,
+        body: {
+          patient_id: 42,
+          tracker_notes: 'foo'
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })

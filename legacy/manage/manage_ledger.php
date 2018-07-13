@@ -1,143 +1,123 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
-include_once('includes/dental_patient_summary.php');
-include_once('includes/patient_info.php');
+include_once 'includes/dental_patient_summary.php';
+include_once 'includes/patient_info.php';
 require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
-if ($patient_info)
-$sql = "SELECT  "
-     . "  dl.amount, sum(pay.amount) as paid_amount "
-     . "FROM dental_ledger dl  "
-     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
-     . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
-     . "GROUP BY dl.ledgerid";
-$result = $db->getResults($sql);
+$db = new Db();
+
+if ($patient_info) {
+    $sql = "SELECT  "
+        . "  dl.amount, sum(pay.amount) as paid_amount "
+        . "FROM dental_ledger dl  "
+        . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+        . "WHERE dl.docid='" . $_SESSION['docid'] . "' AND dl.patientid='" . s_for($_GET['pid']) . "'  "
+        . "GROUP BY dl.ledgerid";
+    $result = $db->getResults($sql);
+}
 $ledger_balance = 0;
-if ($result) foreach ($result as $row) {
-  $ledger_balance -= (!empty($row['amount']) ? $row['amount'] : 0);
-  $ledger_balance += (!empty($row['paid_amount']) ? $row['paid_amount'] : 0);
+if ($result) {
+    foreach ($result as $row) {
+        $ledger_balance -= (!empty($row['amount']) ? $row['amount'] : 0);
+        $ledger_balance += (!empty($row['paid_amount']) ? $row['paid_amount'] : 0);
+    }
 }
 update_patient_summary((!empty($_GET['pid']) ? $_GET['pid'] : ''), 'ledger', $ledger_balance);
 ?>
-
 <link rel="stylesheet" href="css/ledger.css" />
-
 <?php
 if(!isset($_GET['sort'])){
-  $_GET['sort'] = 'service_date';
-  $_GET['sortdir'] = 'desc';
+    $_GET['sort'] = 'service_date';
+    $_GET['sortdir'] = 'desc';
 }
 
-if(!empty($_REQUEST["delid"]))
-{
-  $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-  $pat_my2 = $db->getResults($pat_sql2);
-  foreach ($pat_my2 as $pat_myarray2) {
-    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
-    if(!$pat_sql3){
-      echo "There was an error updating the ledger record.  Please contact your system administrator.";
-    }
-  }  
-  
-  $del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
-  $db->query($del_sql);
-  
-  $msg= "Deleted Successfully";?>
-
-  <script type="text/javascript">
-    //alert("Deleted Successfully");
-                <?php if($_GET['popup']==1){ ?>
-                  parent.window.location.reload();
-                <?php }else{ ?>
-      window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-  </script>
-  <?php
-  trigger_error("Die called", E_USER_ERROR);
-}
-
-if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
-  $sql = "DELETE FROM dental_ledger_statement WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delstatementid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
-  $db->query($sql);
-  $msg = "Deleted Successfully";
-          ?>
-        <script type="text/javascript">
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
-}
-
-if(!empty($_REQUEST["delclaimid"]))
-{
-  $sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
-  $q = $db->getResults($sql);
-  if(count($q)>0){
-      deleteClaim($_REQUEST['delclaimid'], DSS_CLAIM_PENDING);
-      $msg = "Deleted Successfully";
-  }
-  ?>
-        <script type="text/javascript">
-                //alert("Deleted Successfully");
-                <?php if($_GET['popup']==1){ ?>
-                  parent.window.location.reload();
-                <?php }else{ ?>
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
-  
-}
-
-if(!empty($_REQUEST["delnoteid"]))
-{
-
-  $sql = "DELETE FROM dental_ledger_note WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delnoteid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
-        $q = mysqli_query($con, $sql);
-         if($q){
-
-          $msg= "Deleted Successfully";
-         }else{
-          $msg = "Error deleting.";
+if(!empty($_REQUEST["delid"])) {
+    $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    $pat_my2 = $db->getResults($pat_sql2);
+    foreach ($pat_my2 as $pat_myarray2) {
+        $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+        if(!$pat_sql3){
+            echo "There was an error updating the ledger record.  Please contact your system administrator.";
         }
-        ?>
-        <script type="text/javascript">
-                //alert("Deleted Successfully");
-                <?php if($_GET['popup']==1){ ?>
-                  parent.window.location.reload();
-                <?php }else{ ?>
-                  window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
-                <?php } ?>
-        </script>
-        <?php
-        trigger_error("Die called", E_USER_ERROR);
+    }
 
+    $del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
+    $db->query($del_sql);
+
+    $msg= "Deleted Successfully";?>
+    <script type="text/javascript">
+        <?php if ($_GET['popup'] == 1) { ?>
+            parent.window.location.reload();
+        <?php } else { ?>
+            window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
 
+if (isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != "") {
+    $sql = "DELETE FROM dental_ledger_statement WHERE id='".$db->escape($_REQUEST['delstatementid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
+    $db->query($sql);
+    $msg = "Deleted Successfully"; ?>
+    <script type="text/javascript">
+        window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+if (!empty($_REQUEST["delclaimid"])) {
+    $sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
+    $q = $db->getResults($sql);
+    if (count($q) > 0) {
+        deleteClaim($_REQUEST['delclaimid'], DSS_CLAIM_PENDING);
+        $msg = "Deleted Successfully";
+    } ?>
+    <script type="text/javascript">
+        <?php if($_GET['popup']==1){ ?>
+            parent.window.location.reload();
+        <?php }else{ ?>
+            window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+if (!empty($_REQUEST["delnoteid"])) {
+    $sql = "DELETE FROM dental_ledger_note WHERE id='".$db->escape($_REQUEST['delnoteid'])."' AND patientid='".$db->escape($_REQUEST['pid'])."'";
+    $q = mysqli_query($con, $sql);
+    if($q){
+        $msg= "Deleted Successfully";
+    }else{
+        $msg = "Error deleting.";
+    } ?>
+    <script type="text/javascript">
+        <?php if($_GET['popup']==1){ ?>
+              parent.window.location.reload();
+        <?php }else{ ?>
+              window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
+        <?php } ?>
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql); 
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 
-if(empty($pat_myarray['patientid']))
-{
-  ?>
-  <script type="text/javascript">
-    //window.location = 'manage_patient.php';
-  </script>
-  <?php
-  //trigger_error("Die called", E_USER_ERROR);
-}
-
 $rec_disp = 2000;
 
-if(!empty($_REQUEST["page"]))
-  $index_val = $_REQUEST["page"];
-else
-  $index_val = 0;
-  
+if (!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
 $i_val = $index_val * $rec_disp;
 
 if (isset($_GET['sort'])) {
@@ -177,10 +157,10 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
             i.mailed_date,
             $filedByBackOfficeConditional AS filed_by_bo
         FROM dental_insurance i
-            LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
-            LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
+        LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
+        LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
         WHERE i.patientid = '$patientId'
-            AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
+        AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
         GROUP BY i.insuranceid
     ";
 } else {
@@ -195,100 +175,86 @@ $sql = "$sql
     $limit";
 
 $my = $db->getResults($sql);
-
-$num_users = count($my);
 ?>
 
-<!--
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/popup.js" type="text/javascript"></script>
--->
 <span class="admin_head">
   Ledger Card
 </span>
 
 &nbsp;&nbsp;&nbsp;
 <?php echo $name;
-if(st($pat_myarray['add1']) <> '') {?>
+if(st($pat_myarray['add1']) != '') {?>
   <br />
   &nbsp;&nbsp;&nbsp;
   <?php echo st($pat_myarray['add1']);
 }
 
-if(st($pat_myarray['add2']) <> '') {?>
+if(st($pat_myarray['add2']) != '') {?>
   <br />
   &nbsp;&nbsp;&nbsp;
   <?php echo st($pat_myarray['add2']);
 }?>
-
 &nbsp;&nbsp;&nbsp;
 <?php echo st($pat_myarray['city']);?>  
-
 &nbsp;&nbsp;&nbsp;
 <?php echo st($pat_myarray['state']);?> 
-
 &nbsp;&nbsp;&nbsp;
 <?php echo st($pat_myarray['zip']);?> 
-
 <br />
 &nbsp;&nbsp;&nbsp;
 D: <?php echo st($pat_myarray['work_phone']);?>
-
 &nbsp;&nbsp;&nbsp;
 H: <?php echo st($pat_myarray['home_phone']);?>
-
 <br />
 &nbsp;&nbsp;&nbsp;
 W1: <?php echo st($pat_myarray['cell_phone']);?>
-
 <br />
-
 <script type="text/javascript">
-  function concat_checked(ids){
-    var s = '';
-    var first = true;
-    for(var i = 0; i < ids.length; i++){
-      if(ids[i].checked) {
-        if(first){
-          first=false;
-        }else{
-          s+=',';
+    function concat_checked(ids) {
+        var s = '';
+        var first = true;
+        for (var i = 0; i < ids.length; i++) {
+            if (ids[i].checked) {
+                if (first) {
+                    first = false;
+                } else {
+                    s += ',';
+                }
+                s += ids[i].value;
+            }
         }
-        s += ids[i].value;
-      }
+        return s;
     }
-    return s;
-  }
 </script>
 
 <div align="right">
 <?php if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){ ?>
-  <button onclick="Javascript: window.location='manage_ledger.php?<?php echo 'pid='.$_GET['pid'];?>';" class="addButton">
+  <button onclick="window.location='manage_ledger.php?<?php echo 'pid='.$_GET['pid'];?>';" class="addButton">
     View All 
   </button>
 <?php }else{ ?>
-  <button onclick="Javascript: window.location='manage_ledger.php?openclaims=1&<?php echo 'pid='.$_GET['pid'];?>';" class="addButton">
+  <button onclick="window.location='manage_ledger.php?openclaims=1&<?php echo 'pid='.$_GET['pid'];?>';" class="addButton">
     Claims Outstanding 
   </button>
 <?php } ?>  
   &nbsp;&nbsp;
-  <button onclick="Javascript: window.open('print_ledger_report.php?<?php echo (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')" class="addButton">
+  <button onclick="window.open('print_ledger_report.php?<?php echo (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')" class="addButton">
     Print Ledger
   </button>
   &nbsp;&nbsp;
-  <button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
+  <button onclick="loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
     Add New Transaction
   </button>
   &nbsp;&nbsp;
-  <button onclick="Javascript: window.location='manage_ledger.php?pid=<?php echo $_GET['pid'];?>&inspay=1'" class="addButton">
+  <button onclick="window.location='manage_ledger.php?pid=<?php echo $_GET['pid'];?>&inspay=1'" class="addButton">
     Add Ins. Payment
   </button>
   &nbsp;&nbsp;
-  <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
+  <button onclick="loadPopup('add_ledger_note.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
     Add Note 
   </button>
   &nbsp;&nbsp;
-  <button onclick="Javascript: window.open('ledger_statement.php?pid=<?php echo $_GET['pid'];?>')" class="addButton">
+  <button onclick="window.open('ledger_statement.php?pid=<?php echo $_GET['pid'];?>')" class="addButton">
     Create Statement 
   </button>
   &nbsp;&nbsp;
@@ -302,7 +268,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php } ?>
 </div>
 
-<form name="edit_mult_form" id="edit_mult_form" />
+<form name="edit_mult_form" id="edit_mult_form">
   <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php if($total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
@@ -373,11 +339,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
   $last_sd = '';
   $last_ed = '';
   foreach ($my as $myarray) {
-    if($myarray["status"] == 1){
-      $tr_class = "tr_active";
-    }else{
-      $tr_class = "tr_inactive";
-    }
     $tr_class = "tr_active";
     if(!empty($myarray['ledger']) && $myarray['ledger'] == 'claim'){ 
       $tr_class .= ' clickable_row status_'.$myarray['status']; 
@@ -469,7 +430,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
                                   >
 <?php 
-      if(st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
+      if(st($myarray["amount"]) != 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["amount"]),2);
         if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
@@ -502,7 +463,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
                                   >
 <?php 
-      if(st($myarray["paid_amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
+      if(st($myarray["paid_amount"]) != 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["paid_amount"]),2);
       }?>
         &nbsp;
@@ -551,10 +512,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       }elseif(!empty($myarray['ledger']) && ($myarray['ledger']=='claim' || $myarray['ledger'] == 'ledger')){
         echo (!empty($dss_claim_status_labels[$myarray["status"]]) ? $dss_claim_status_labels[$myarray["status"]] : '');
       }
-            //if($myarray["status"] == '0'){echo "Pend.";}
-            //if($myarray["status"] == '1'){echo "Sent ";}
-            //if($myarray["status"] == '2'){echo "Filed";}
-  ?>        
+  ?>
       </td>
       <td valign="top">
 <?php 
@@ -568,9 +526,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       if((!empty($myarray['ledger']) && $myarray['ledger']=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'){ ?>
         <a href="Javascript:;" 
 <?php
-      // column 'edit_ledger_entries' is exist in 'dental_users' table
-      // $pla_sql = "SELECT edit_ledger_entries FROM dental_users where userid='".$_SESSION['userid']."'";
-      // $pla = $db->getRow($pla_sql);
         if(!empty($pla) && $pla['edit_ledger_entries'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){?>
                                     onclick="alert('You do not have permission to edit ledger entries.  Please contact your office manager to resolve this issue.');" 
 <?php 
@@ -588,13 +543,13 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         </a>
 <?php 
         }else{ ?>
-        <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
+        <a href="Javascript:;" onclick="loadPopup('add_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
           Pay 
         </a>
 <?php 
         }
       }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='note'){ ?>
-        <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_note.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="EDIT">
+        <a href="Javascript:;" onclick="loadPopup('edit_ledger_note.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="EDIT">
           Edit 
         </a>
 <?php 
@@ -606,18 +561,18 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php 
         }
         if($myarray['status']==DSS_CLAIM_PENDING){ ?>
-        <a href="<?php echo $_SERVER['PHP_SELF']?>?delclaimid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+        <a href="<?php echo $_SERVER['PHP_SELF']?>?delclaimid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
           Delete 
         </a>
 <?php 
         }
       }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='ledger_payment'){ ?>
-        <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
+        <a href="Javascript:;" onclick="loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
           Edit 
         </a>
 <?php 
       }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='statement'){ ?>
-        <a href="<?php echo $_SERVER['PHP_SELF']?>?delstatementid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+        <a href="<?php echo $_SERVER['PHP_SELF']?>?delstatementid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
           Delete 
         </a>
 <?php 
@@ -756,9 +711,11 @@ if($_GET['sortdir']=='DESC'){ ?>
     </tr>
     <tr>
       <td colspan="8">
-        <center><button class="addButton" onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;">
-        View Ledger Records
-        </button></center>
+        <center>
+            <button class="addButton" onclick="loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;">
+                View Ledger Records
+            </button>
+        </center>
       </td>
     </tr> 
   </table>
@@ -773,13 +730,5 @@ if($_GET['sortdir']=='DESC'){ ?>
 <div id="backgroundPopup"></div>
 
 <br /><br />  
-
-<?php
-
-// } else {  // end pt info check
-//  print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
-// }
-
-?>
 
 <?php include "includes/bottom.htm";?>

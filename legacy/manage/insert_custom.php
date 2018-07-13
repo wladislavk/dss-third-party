@@ -41,8 +41,8 @@ if (!empty($_POST["customsub"]) && $_POST["customsub"] == 1) {
     $data = $db->escapeAssignmentList($data);
 
     $db->query("INSERT INTO dental_custom
-            SET $data, adddate = NOW()
-        ");
+        SET $data, adddate = NOW()
+    ");
 
     ?>
     <script type="text/javascript">

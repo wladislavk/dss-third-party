@@ -537,6 +537,10 @@ SQL;
 DELETE FROM dental_letters WHERE patientid=170 AND md_list='75,123';
 SQL;
         $this->executeQuery($query);
+        $query = <<<SQL
+DELETE FROM dental_letters WHERE patientid=170 AND md_list='123,75';
+SQL;
+        $this->executeQuery($query);
     }
 
     /**

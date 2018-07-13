@@ -3,7 +3,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use Tests\TestCases\ApiTestCase;
 
@@ -31,8 +31,8 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     public function testStore()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
 
         $stepId = 1;
@@ -54,8 +54,8 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     public function testUpdate()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
 
         $summaryId = 15;
@@ -82,8 +82,8 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     public function testDestroy()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
 
         /** @var Letter $testLetter */
@@ -112,8 +112,8 @@ class AppointmentSummariesApiTest extends ApiTestCase
 
     public function testGetFinalRank()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
 
         $patientId = 170;

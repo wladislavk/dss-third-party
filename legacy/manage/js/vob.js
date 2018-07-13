@@ -41,22 +41,4 @@ $(document).ready(function(){
 
   });
 
-/*
-  $('#rx_item').click( function(){
-    $('#rx_file').click();
-  });
-
-  $('#rx_file').change( function(){
-    $('#rx_form').submit(); 
-  });
-
-  $('#lomn_item').click( function(){
-    $('#lomn_file').click();
-  });
-
-  $('#lomn_file').change( function(){
-    $('#lomn_form').submit();
-  });
-*/
-
 });

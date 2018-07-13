@@ -3,7 +3,6 @@ edited = false;
 $(document).ready(function() {
 	$(':input:not(#patient_search)').change(function() { 
 		edited = true;
-		//window.onbeforeunload = confirmExit;
 	});
 	$('#q_page2frm').submit(function() {
 		window.onbeforeunload = null;

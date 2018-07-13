@@ -1,55 +1,44 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../src/endpoints'
-import http from '../../../src/services/http'
-import moxios from 'moxios'
 import symbols from '../../../src/symbols'
 import ScreenerLoginComponent from '../../../src/components/screener/ScreenerLogin.vue'
 import store from '../../../src/store'
+import TestCase from '../../cases/ComponentTestCase'
+import ProcessWrapper from 'src/wrappers/ProcessWrapper'
 
 describe('ScreenerLogin', () => {
   beforeEach(function () {
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerLoginComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-intro',
         path: '/intro'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerLoginComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
+    this.testCase.reset()
   })
 
   it('should log in properly', function (done) {
-    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
-      status: 200,
-      responseText: {
-        token: 'token'
-      }
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
+      dataKey: 'token',
+      response: 'token'
     })
-    moxios.stubRequest(http.formUrl(endpoints.users.current), {
-      status: 200,
-      responseText: {
-        data: {
-          userid: 1,
-          docid: 2
-        }
+    this.testCase.stubRequest({
+      url: endpoints.users.current,
+      response: {
+        userid: 1,
+        docid: 2
       }
     })
 
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('input'))
@@ -59,9 +48,9 @@ describe('ScreenerLogin', () => {
     const loginButton = vm.$el.querySelector('button#loginbut')
     loginButton.click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.screenerToken]).toBe('token')
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('screener-intro')
         expect(store.state.screener[symbols.state.sessionData].userId).toBe(1)
         expect(store.state.screener[symbols.state.sessionData].docId).toBe(2)
@@ -73,14 +62,15 @@ describe('ScreenerLogin', () => {
   })
 
   it('should log in unsuccessfully', function (done) {
-    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
+    this.testCase.stubRequest({
+      url: ProcessWrapper.getApiRoot() + 'auth',
+      rawUrl: true,
       status: 403,
-      responseText: {
-        error: 'error'
-      }
+      dataKey: 'error',
+      response: 'error'
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
     const usernameInput = vm.$el.querySelector('input#username')
     usernameInput.value = 'user'
     usernameInput.dispatchEvent(new Event('input'))
@@ -90,7 +80,7 @@ describe('ScreenerLogin', () => {
     const loginButton = vm.$el.querySelector('button#loginbut')
     loginButton.click()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       expect(store.state.screener[symbols.state.screenerToken]).toBe('')
       const errorDiv = vm.$el.querySelector('span.error')
       expect(errorDiv).not.toBeNull()
@@ -99,10 +89,10 @@ describe('ScreenerLogin', () => {
   })
 
   it('should redirect if token is set', function (done) {
-    const vm = this.mount()
     store.commit(symbols.mutations.screenerToken, 'token')
+    const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-intro')
       done()
     })

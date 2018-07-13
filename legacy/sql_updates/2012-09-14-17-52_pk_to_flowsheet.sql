@@ -1,1 +1,0 @@
-ALTER TABLE dental_flow_pg2_info ADD id INT PRIMARY KEY AUTO_INCREMENT;

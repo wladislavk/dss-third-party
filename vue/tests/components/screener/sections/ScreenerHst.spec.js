@@ -1,20 +1,15 @@
-import sinon from 'sinon'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import ScreenerHstComponent from '../../../../src/components/screener/sections/ScreenerHst.vue'
 import store from '../../../../src/store'
-import Alerter from '../../../../src/services/Alerter'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ScreenerHST', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const routes = [
+    this.testCase.setComponent(ScreenerHstComponent)
+    this.testCase.setRoutes([
       {
         name: 'start',
         path: '/'
@@ -23,17 +18,8 @@ describe('ScreenerHST', () => {
         name: 'screener-intro',
         path: '/intro'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerHstComponent)
-    this.mount = function () {
-      const vm = new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-      vm.$router.push({name: 'start'})
-      return vm
-    }
+    ])
+    this.testCase.setActiveRoute('start')
 
     const sessionData = {
       docId: 2,
@@ -50,35 +36,31 @@ describe('ScreenerHST', () => {
     store.commit(symbols.mutations.addStoredContact, { name: 'class', value: 'foo' })
     store.commit(symbols.mutations.contactData)
 
-    moxios.stubRequest(http.formUrl(endpoints.companies.homeSleepTest), {
-      status: 200,
-      responseText: {
-        data: [
-          {
-            id: 1,
-            name: 'First',
-            logo: 'first.png'
-          },
-          {
-            id: 2,
-            name: 'Second',
-            logo: ''
-          }
-        ]
-      }
+    this.testCase.stubRequest({
+      url: endpoints.companies.homeSleepTest,
+      response: [
+        {
+          id: 1,
+          name: 'First',
+          logo: 'first.png'
+        },
+        {
+          id: 2,
+          name: 'Second',
+          logo: ''
+        }
+      ]
     })
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
-    moxios.uninstall()
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('should display existing data', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyDivs = vm.$el.querySelectorAll('div.company_div')
       expect(companyDivs.length).toBe(2)
       expect(companyDivs[0].querySelector('label').textContent).toBe('First')
@@ -93,27 +75,23 @@ describe('ScreenerHST', () => {
   })
 
   it('should send HST request', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
-
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
-
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      moxios.wait(() => {
-        const request = moxios.requests.mostRecent()
-        expect(request.config.data).not.toBeUndefined()
+      this.testCase.wait(() => {
+        const requestResults = this.testCase.getRequestResults()
+        expect(requestResults.length).not.toBe(0)
+        const lastRequest = requestResults[requestResults.length - 1]
+        expect(lastRequest.hasOwnProperty('body')).toBe(true)
         const expectedData = {
           screener_id: 1,
           doc_id: 2,
@@ -125,7 +103,7 @@ describe('ScreenerHST', () => {
           patient_email: 'foo@bar.com',
           patient_dob: '08/25/1985'
         }
-        expect(JSON.parse(request.config.data)).toEqual(expectedData)
+        expect(lastRequest.body).toEqual(expectedData)
         expect(store.state.screener[symbols.state.contactData][0].value).toBe('')
         expect(vm.$router.currentRoute.name).toBe('screener-intro')
         done()
@@ -134,22 +112,17 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if company is not set', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
-
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
-
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })
@@ -157,18 +130,12 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if contact data is not set', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
-
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 200,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
-
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       store.commit(symbols.mutations.addStoredContact, {name: 'dob', value: ''})
       store.commit(symbols.mutations.contactData)
 
@@ -178,7 +145,8 @@ describe('ScreenerHST', () => {
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      vm.$nextTick(() => {
+      this.testCase.waitForRequest = false
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })
@@ -186,25 +154,20 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if ajax request returned 400', function (done) {
-    this.sandbox.stub(Alerter, 'alert')
-
-    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
-      status: 400,
-      responseText: {
-        data: {}
-      }
+    this.testCase.stubRequest({
+      url: endpoints.homeSleepTests.store,
+      status: 400
     })
+    const vm = this.testCase.mount()
 
-    const vm = this.mount()
-
-    moxios.wait(() => {
+    this.testCase.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
-      moxios.wait(() => {
+      this.testCase.wait(() => {
         expect(vm.$router.currentRoute.name).toBe('start')
         done()
       })

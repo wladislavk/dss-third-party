@@ -1,32 +1,35 @@
+import lodash from 'lodash'
 import PatientsModule from '../../../../src/store/patients'
 import symbols from '../../../../src/symbols'
 
 describe('Patients module mutations', () => {
+  beforeEach(function () {
+    this.state = {
+      [symbols.state.allergen]: false,
+      [symbols.state.medicare]: false,
+      [symbols.state.premedCheck]: 0,
+      [symbols.state.patientName]: '',
+      [symbols.state.displayAlert]: false,
+      [symbols.state.headerTitle]: '',
+      [symbols.state.headerAlertText]: '',
+      [symbols.state.questionnaireStatuses]: {
+        symptoms: 0,
+        treatments: 0,
+        history: 0
+      },
+      [symbols.state.isEmailBounced]: false,
+      [symbols.state.totalPatientContacts]: 0,
+      [symbols.state.totalPatientInsurances]: 0,
+      [symbols.state.totalSubPatients]: 0,
+      [symbols.state.rejectedClaimsForCurrentPatient]: [],
+      [symbols.state.patientHomeSleepTestStatus]: '',
+      [symbols.state.incompleteHomeSleepTests]: []
+    }
+  })
+
   describe('patientData mutation', () => {
-    beforeEach(function () {
-      this.state = {
-        [symbols.state.allergen]: false,
-        [symbols.state.medicare]: false,
-        [symbols.state.premedCheck]: 0,
-        [symbols.state.patientName]: '',
-        [symbols.state.displayAlert]: false,
-        [symbols.state.headerTitle]: 'title',
-        [symbols.state.headerAlertText]: '',
-        [symbols.state.questionnaireStatuses]: {
-          symptoms: 0,
-          treatments: 0,
-          history: 0
-        },
-        [symbols.state.isEmailBounced]: false,
-        [symbols.state.totalPatientContacts]: 0,
-        [symbols.state.totalPatientInsurances]: 0,
-        [symbols.state.totalSubPatients]: 0,
-        [symbols.state.rejectedClaimsForCurrentPatient]: [],
-        [symbols.state.patientHomeSleepTestStatus]: '',
-        [symbols.state.incompleteHomeSleepTests]: []
-      }
-    })
     it('sets patient data', function () {
+      this.state[symbols.state.headerTitle] = 'title'
       const data = {
         insuranceType: '0',
         preMedCheck: '0',
@@ -184,6 +187,7 @@ describe('Patients module mutations', () => {
 
   describe('clearPatientData mutation', () => {
     it('clears patient data', function () {
+      const initialState = lodash.cloneDeep(this.state)
       const state = {
         [symbols.state.allergen]: true,
         [symbols.state.medicare]: true,
@@ -205,30 +209,10 @@ describe('Patients module mutations', () => {
         [symbols.state.patientHomeSleepTestStatus]: 'baz',
         [symbols.state.incompleteHomeSleepTests]: ['first', 'second']
       }
+
       PatientsModule.mutations[symbols.mutations.clearPatientData](state)
 
-      const expectedState = {
-        [symbols.state.allergen]: false,
-        [symbols.state.medicare]: false,
-        [symbols.state.premedCheck]: 0,
-        [symbols.state.patientName]: '',
-        [symbols.state.displayAlert]: false,
-        [symbols.state.headerTitle]: '',
-        [symbols.state.headerAlertText]: '',
-        [symbols.state.questionnaireStatuses]: {
-          symptoms: 0,
-          treatments: 0,
-          history: 0
-        },
-        [symbols.state.isEmailBounced]: false,
-        [symbols.state.totalPatientContacts]: 0,
-        [symbols.state.totalPatientInsurances]: 0,
-        [symbols.state.totalSubPatients]: 0,
-        [symbols.state.rejectedClaimsForCurrentPatient]: [],
-        [symbols.state.patientHomeSleepTestStatus]: '',
-        [symbols.state.incompleteHomeSleepTests]: []
-      }
-      expect(state).toEqual(expectedState)
+      expect(state).toEqual(initialState)
     })
   })
 })

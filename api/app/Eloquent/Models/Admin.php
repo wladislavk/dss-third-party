@@ -51,7 +51,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property-read \DentalSleepSolutions\Eloquent\Models\AdminCompany $adminCompany
  * @mixin \Eloquent
  */
-class Admin extends AbstractModel
+class Admin extends AbstractAuthenticatableModel
 {
     use WithoutUpdatedTimestamp;
 

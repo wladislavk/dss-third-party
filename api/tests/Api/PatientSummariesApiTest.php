@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class PatientSummariesApiTest extends ApiTestCase
 {
@@ -46,8 +46,8 @@ class PatientSummariesApiTest extends ApiTestCase
 
     public function testUpdateTrackerNotes()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $requestData = [
             'patient_id' => 10,

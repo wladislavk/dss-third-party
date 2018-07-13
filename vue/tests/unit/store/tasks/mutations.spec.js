@@ -35,10 +35,12 @@ describe('Tasks module mutations', () => {
   })
 
   describe('getTask mutation', () => {
-    it('retrieves task without patient name', function () {
-      const state = {
+    beforeEach(function () {
+      this.state = {
         currentTask: {}
       }
+    })
+    it('retrieves task without patient name', function () {
       const task = {
         id: 1,
         due_date: new Date('2014-06-03'),
@@ -49,7 +51,7 @@ describe('Tasks module mutations', () => {
         lastname: '',
         patientid: '0'
       }
-      TasksModule.mutations[symbols.mutations.getTask](state, task)
+      TasksModule.mutations[symbols.mutations.getTask](this.state, task)
       const expected = {
         id: 1,
         dueDate: new Date('2014-06-03'),
@@ -59,12 +61,9 @@ describe('Tasks module mutations', () => {
         patientId: 0,
         patientName: ''
       }
-      expect(state[symbols.state.currentTask]).toEqual(expected)
+      expect(this.state[symbols.state.currentTask]).toEqual(expected)
     })
     it('retrieves task with patient name', function () {
-      const state = {
-        currentTask: {}
-      }
       const task = {
         id: 1,
         due_date: new Date('2014-06-03'),
@@ -75,7 +74,7 @@ describe('Tasks module mutations', () => {
         lastname: 'Doe',
         patientid: '3'
       }
-      TasksModule.mutations[symbols.mutations.getTask](state, task)
+      TasksModule.mutations[symbols.mutations.getTask](this.state, task)
       const expected = {
         id: 1,
         dueDate: new Date('2014-06-03'),
@@ -85,7 +84,7 @@ describe('Tasks module mutations', () => {
         patientId: 3,
         patientName: 'John Doe'
       }
-      expect(state[symbols.state.currentTask]).toEqual(expected)
+      expect(this.state[symbols.state.currentTask]).toEqual(expected)
     })
   })
 })

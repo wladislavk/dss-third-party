@@ -230,9 +230,6 @@ function submit_screener(){
 
             $('.pat_name').text($('#first_name').val());
             $('#risk_image').html('<img src="' + img + '" />');
-            //$('#ep_score').text(an_text);
-            //$('#snore_score').text(snore);
-            //$('#survey_score').text(survey);
 
             //update hst div
             $('#hst_first_name').val($('#first_name').val());

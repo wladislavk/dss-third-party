@@ -1,8 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-//include "includes/general_functions.php";
-//include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -21,10 +21,12 @@ include("includes/sescheck.php");
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
+$db = new Db();
+
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     $ins_sql = "insert into dental_contact set company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', contacttypeid = '11', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
     $pc_id = $db->getInsertId($ins_sql);
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".$db->escape($_REQUEST['id'])."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
@@ -37,33 +39,18 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
             break;
     }
     $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
-    //echo $psql;
     $db->query($psql);
-    $d = "DELETE FROM dental_patient_insurance where id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
+    $d = "DELETE FROM dental_patient_insurance where id='".$db->escape($_REQUEST['id'])."'";
     $db->query($d);?>
     <script type="text/javascript">
         parent.window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
     </script>
-    <?php	
+    <?php
 }
-?>
-<?php /*
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-</head>
-<body width="98%"> */ ?>
-
-<?php
-$thesql = "select * from dental_patient_insurance where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
+$thesql = "select * from dental_patient_insurance where id='".$db->escape((!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
-$lastname = st(!empty($themyarray['lastname']) ? $themyarray['lastname'] : '');
 $company = st($themyarray['company']);
 $add1 = st($themyarray['address1']);
 $add2 = st($themyarray['address2']);
@@ -74,21 +61,12 @@ $phone1 = st($themyarray['phone']);
 $phone2 = st(!empty($themyarray['phone2']) ? $themyarray['phone2'] : '');
 $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
-$national_provider_id = st(!empty($themyarray['national_provider_id']) ? $themyarray['national_provider_id'] : '');
-$qualifier = st(!empty($themyarray['qualifier']) ? $themyarray['qualifier'] : '');
-$qualifierid = st(!empty($themyarray['qualifierid']) ? $themyarray['qualifierid'] : '');
-$greeting = st(!empty($themyarray['greeting']) ? $themyarray['greeting'] : '');
-$sincerely = st(!empty($themyarray['sincerely']) ? $themyarray['sincerely'] : '');
-$contacttypeid = st(!empty($themyarray['contacttypeid']) ? $themyarray['contacttypeid'] : '');
 $notes = st(!empty($themyarray['notes']) ? $themyarray['notes'] : '');
 $preferredcontact = st(!empty($themyarray['preferredcontact']) ? $themyarray['preferredcontact'] : '');
-$name = st(!empty($themyarray['firstname']) ? $themyarray['firstname'] : '')." ".st(!empty($themyarray['middlename']) ? $themyarray['middlename'] : '')." ".st(!empty($themyarray['lastname']) ? $themyarray['lastname'] : '');
 
 $but_text = "Add ";
 ?>
-	
 <br /><br />
-
 <?php if(!empty($msg)) { ?>
     <div align="center" class="red">
         <?php echo $msg;?>
@@ -99,28 +77,28 @@ $but_text = "Add ";
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
-        		Add Insurance Company
+                Add Insurance Company
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             <span>
                             <span style="color:#000000">Company <?php echo (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
                             <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Address
                             <span id="req_0" class="req">*</span>
                         </label>
@@ -149,13 +127,13 @@ $but_text = "Add ";
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
+        <tr>
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="<?php echo $phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
@@ -169,7 +147,7 @@ $but_text = "Add ";
                                 <input id="fax" name="fax" type="text" class="phonemask field text addr tbox" value="<?php echo $fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
-						</div>
+                        </div>
                         <div>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>" tabindex="14" maxlength="255" style="width:325px;" />
@@ -177,48 +155,46 @@ $but_text = "Add ";
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
-                            Notes:
-                        </label>
+         <tr>
+             <td valign="top" colspan="2" class="frmhead">
+                 <ul>
+                     <li id="foli8" class="complex">
+                         <label class="desc" id="title0" for="Field0">
+                             Notes:
+                         </label>
                         <div>
                             <span class="full">
-                            	<textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
+                                <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $notes?></textarea>
                             </span>
                         </div>
                     </li>
-				</ul>
+                 </ul>
             </td>
         </tr>
-        
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Preferred Contact Method
             </td>
             <td valign="top" class="frmdata">
-            	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
-                	<option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                	<option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
-                	<option value="fax" <?php if($preferredcontact == 'fax') echo " selected";?>>Fax</option>
+                <select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+                    <option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                    <option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                    <option value="fax" <?php if($preferredcontact == 'fax') echo " selected";?>>Fax</option>
                 </select>
                 <br />&nbsp;
             </td>
         </tr>
-        
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="tbox" tabindex="22">
+                    <option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -226,7 +202,7 @@ $but_text = "Add ";
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="id" value="<?php echo $themyarray["id"]?>" />
@@ -236,16 +212,5 @@ $but_text = "Add ";
     </table>
 </form>
 </div>
-<!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
-  </td>
-</tr>-->
-<!-- Stick Footer Section Here -->
-<!--</table>-->
-<!--<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
--->
 </body>
 </html>

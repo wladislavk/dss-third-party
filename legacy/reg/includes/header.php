@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include '../manage/admin/includes/main_include.php'; ?>
-<?php include '../manage/includes/constants.inc'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+include '../manage/admin/includes/main_include.php';
+include '../manage/includes/constants.inc';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
@@ -43,20 +47,20 @@
                 <h1>Dental Sleep Solutions</h1>
             </div>
             <ul id="main_nav" class="fr">
-				<li class="nav_item active lgutipL" title="Home">
+                <li class="nav_item active lgutipL" title="Home">
                     <a href="index.php" class="main_link">
                         <img class="img_holder" style="background-image: url(images/icons/home.png)" alt="" src="images/blank.gif"/>
                         <span>Dashboard</span>
                     </a>
                     <img class="tick tick_a" alt="" src="images/blank.gif" />
                 </li>
-				<li class="nav_item lgutipR" title="Register">
+                <li class="nav_item lgutipR" title="Register">
                     <a href="register.php" class="main_link">
                         <img class="img_holder" style="background-image: url(images/icons/user2.png)" alt="" src="images/blank.gif"/>
                         <span>Registration</span>
                     </a>
                 </li>
-				<li class="nav_item lgutipT" title="Questionnaire">
+                <li class="nav_item lgutipT" title="Questionnaire">
                     <a href="symptoms.php" class="main_link">
                         <img class="img_holder" style="background-image: url(images/icons/clipboard.png)" alt="" src="images/blank.gif"/>
                         <span>Questionnaire</span>

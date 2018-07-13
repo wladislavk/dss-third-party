@@ -16,7 +16,6 @@ function loadPopup(fa){
         });
 
 	});
-	//document.getElementById("aj_pop").src = fa; 
 	//loads popup only if it is disabled
 	if(popupStatus==0){
 		$("#backgroundPopup").css({
@@ -39,7 +38,6 @@ function loadPopupWithClose(fa, c){
         });
 
         });
-        //document.getElementById("aj_pop").src = fa; 
         //loads popup only if it is disabled
         if(popupStatus==0){
                 $("#backgroundPopup").css({

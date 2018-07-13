@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 require_once __DIR__ . '/includes/main_include.php';
 
 if (!empty($_POST['report'])) {
+    $db = new Db();
+
     $logData = $db->escapeAssignmentList([
         'userid' => intval($_SESSION['userid']),
         'adminid' => intval($_SESSION['adminuserid']),

@@ -3,17 +3,44 @@ import symbols from '../../../symbols'
 
 export default {
   props: {
+    taskId: {
+      type: Number,
+      required: true
+    },
     task: {
-      type: Object,
+      type: String,
       required: true
     },
     dueDate: {
+      validator: function (value) {
+        if (value instanceof Date) {
+          return true
+        }
+        if (value === null) {
+          return true
+        }
+        return false
+      }
+    },
+    firstName: {
+      type: String,
+      default: ''
+    },
+    lastName: {
+      type: String,
+      default: ''
+    },
+    patientId: {
+      type: Number,
+      default: 0
+    },
+    hasDueDate: {
       type: Boolean,
-      required: true
+      default: false
     },
     isPatient: {
       type: Boolean,
-      required: true
+      default: false
     }
   },
   data () {
@@ -36,7 +63,7 @@ export default {
         return
       }
       const checkbox = event.target
-      this.$store.dispatch(symbols.actions.updateTaskStatus, this.task.id).then(() => {
+      this.$store.dispatch(symbols.actions.updateTaskStatus, this.taskId).then(() => {
       }).catch(() => {
         // allow to try again; preventDefault() cannot be used because of async
         checkbox.checked = false
@@ -47,13 +74,13 @@ export default {
       if (!Alerter.isConfirmed(confirmText)) {
         return
       }
-      this.$store.dispatch(symbols.actions.deleteTask, this.task.id)
+      this.$store.dispatch(symbols.actions.deleteTask, this.taskId)
     },
-    onClickTaskPopup (taskId) {
+    onClickTaskPopup () {
       const modalData = {
         name: symbols.modals.addTask,
         params: {
-          id: taskId,
+          id: this.taskId,
           patientId: 0
         }
       }

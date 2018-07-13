@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Services\Users;
 
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
@@ -61,7 +61,7 @@ class UserNumberRetriever
      */
     public function addUserNumbers(User $user, $methods = [])
     {
-        $docId = $user->getDocIdOrZero();
+        $docId = $user->normalizedDocId();
         $numbers = [];
         if (!sizeof($methods)) {
             $methods = self::NUMBERED_METHODS;
@@ -74,6 +74,7 @@ class UserNumberRetriever
             $numbers['unmailed_claims'] = $numbers['unmailed_claims_software'];
         }
         $userData = $user->toArray();
+        $userData['docid'] = $docId;
         $userData['numbers'] = $numbers;
         return $userData;
     }

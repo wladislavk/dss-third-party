@@ -8,3 +8,5 @@ manage/edx_scripts/edxProductionToken.txt
 .idea
 /vendor/
 node_modules/
+manage/3rdParty/tcpdf/cache/*
+!manage/3rdParty/tcpdf/cache/.gitkeep

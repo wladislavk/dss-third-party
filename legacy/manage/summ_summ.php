@@ -25,33 +25,19 @@ if ($num_face == 0) { ?>
     }
 }
 
-$sql = "select * from dental_q_page1_view where patientid='$pid'";
+$sql = "select * from dental_q_page1_pivot where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$energy_level = st($myarray['energy_level']);
-$snoring_sound = st($myarray['snoring_sound']);
-$wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
-$morning_headaches = st($myarray['morning_headaches']);
-$hours_sleep = st($myarray['hours_sleep']);
 $quit_breathing = st($myarray['quit_breathing']);
 $bed_time_partner = st($myarray['bed_time_partner']);
 $sleep_same_room = st($myarray['sleep_same_room']);
-$told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
-$sleep_qual = st($myarray['sleep_qual']);
 
-if(isset($_POST['device_submit'])){
-    $sql = "select * from dental_ex_page5_view where patientid='$pid'";
+if (isset($_POST['device_submit'])) {
+    $sql = "select * from dental_ex_page5_pivot where patientid='$pid'";
     $row = $db->getRow($sql);
     if ($_POST['ir_max'] !='' && $_POST['ir_min'] != '') {
         $ir_range = abs($_POST['ir_max'] - $_POST['ir_min']);
@@ -60,7 +46,7 @@ if(isset($_POST['device_submit'])){
     }
     if ($row) {
         $ex_ed_sql = "
-            update dental_ex_page5_view set 
+            update dental_ex_page5 set 
                 protrusion_from = '".$db->escape($_POST['ir_min'])."',
                 protrusion_to = '".$db->escape($_POST['ir_max'])."',
                 protrusion_equal = '".$db->escape($ir_range)."',
@@ -72,7 +58,7 @@ if(isset($_POST['device_submit'])){
         $db->query($ex_ed_sql);
     } else {
         $ex_ins_sql = "
-            insert dental_ex_page5 set 
+            insert into dental_ex_page5 set 
                 patientid = '".$db->escape($_GET['pid'])."',
                 protrusion_from = '".$db->escape($_POST['ir_min'])."',
                 protrusion_to = '".$db->escape($_POST['ir_max'])."',
@@ -85,36 +71,45 @@ if(isset($_POST['device_submit'])){
                 adddate = now(),
                 ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'
         ";
-        $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+        $db->query($ex_ins_sql);
     }
-    $sql = "select * from dental_summary_view where patientid='$pid'";
-    $row = $db->getRow($sql);
-    if (!$row) {
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
+    $maxIdRow = $db->getRow($maxIdSql);
+    $maxId = 0;
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+    }
+    $initialTitration1Escaped = $db->escape($_POST['initial_device_titration_1']);
+    $initialTitrationHEscaped = $db->escape($_POST['initial_device_titration_equal_h']);
+    $initialTitrationVEscaped = $db->escape($_POST['initial_device_titration_equal_v']);
+    $echovisionVerEscaped = $db->escape($_POST['optimum_echovision_ver']);
+    $echovisionHorEscaped = $db->escape($_POST['optimum_echovision_hor']);
+    if (!$maxId) {
         $ins_sql = " insert into dental_summary set 
-                      patientid = '".$db->escape($_GET['pid'])."',
-                      initial_device_titration_1 = '".$db->escape($_POST['initial_device_titration_1'])."',
-                      initial_device_titration_equal_h = '".$db->escape($_POST['initial_device_titration_equal_h'])."',
-                      initial_device_titration_equal_v = '".$db->escape($_POST['initial_device_titration_equal_v'])."',
-                      optimum_echovision_ver = '".$db->escape($_POST['optimum_echovision_ver'])."',
-                      optimum_echovision_hor = '".$db->escape($_POST['optimum_echovision_hor'])."',
-                      userid = '".$db->escape($_SESSION['userid'])."',
-                      docid = '".$db->escape($_SESSION['docid'])."',
-                      adddate = now(),
-                      ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
+            patientid = '".$db->escape($_GET['pid'])."',
+            initial_device_titration_1 = '$initialTitration1Escaped',
+            initial_device_titration_equal_h = '$initialTitrationHEscaped',
+            initial_device_titration_equal_v = '$initialTitrationVEscaped',
+            optimum_echovision_ver = '$echovisionVerEscaped',
+            optimum_echovision_hor = '$echovisionHorEscaped',
+            userid = '".$db->escape($_SESSION['userid'])."',
+            docid = '".$db->escape($_SESSION['docid'])."',
+            adddate = now(),
+            ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
         $db->query($ins_sql);
-  	} else {
-        $ed_sql = "update dental_summary_view set 
-                initial_device_titration_1 = '".$db->escape($_POST['initial_device_titration_1'])."',
-                initial_device_titration_equal_h = '".$db->escape($_POST['initial_device_titration_equal_h'])."',
-                initial_device_titration_equal_v = '".$db->escape($_POST['initial_device_titration_equal_v'])."',
-                optimum_echovision_ver = '".$db->escape($_POST['optimum_echovision_ver'])."',
-                optimum_echovision_hor = '".$db->escape($_POST['optimum_echovision_hor'])."'
-                 where patientid = '".$db->escape($_GET['pid'])."'";
+    } else {
+        $ed_sql = "update dental_summary set 
+            initial_device_titration_1 = '$initialTitration1Escaped',
+            initial_device_titration_equal_h = '$initialTitrationHEscaped',
+            initial_device_titration_equal_v = '$initialTitrationVEscaped',
+            optimum_echovision_ver = '$echovisionVerEscaped',
+            optimum_echovision_hor = '$echovisionHorEscaped'
+            where summaryid = {$maxId}";
         $db->query($ed_sql);
-  	}
+    }
 }
 
-$sqlex = "select * from dental_ex_page5_view where patientid='$pid'";
+$sqlex = "select * from dental_ex_page5_pivot where patientid='$pid'";
 $myarrayex = $db->getRow($sqlex);
 
 $i_opening_from = st($myarrayex['i_opening_from']);
@@ -138,13 +133,25 @@ if ($imp_r) {
     $dentaldevice_date = st(($myarrayex['dentaldevice_date'] != '') ? date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])) : '');
 }
 
-$sqls = "select * from dental_summary_view where patientid='$pid'";
-$myarrays = $db->getRow($sqls);
-$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
-$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
-$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
-$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
-$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+$initial_device_titration_1 = '';
+$initial_device_titration_equal_h = '';
+$initial_device_titration_equal_v = '';
+$optimum_echovision_hor = '';
+$optimum_echovision_ver = '';
+if ($pid) {
+    $maxIdSql = "SELECT MAX(`summaryid`) AS `max_summaryid` FROM `dental_summary` WHERE `patientid`=$pid";
+    $maxIdRow = $db->getRow($maxIdSql);
+    if ($maxIdRow && $maxIdRow['max_summaryid']) {
+        $maxId = $maxIdRow['max_summaryid'];
+        $sqls = "select `initial_device_titration_1`, `initial_device_titration_equal_h`, `initial_device_titration_equal_v`, `optimum_echovision_ver`, `optimum_echovision_hor` from dental_summary where summaryid=$maxId";
+        $myarrays = $db->getRow($sqls);
+        $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
+        $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
+        $initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
+        $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
+        $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
+    }
+}
 ?>
 <div style="margin-bottom:6px">
     <?php
@@ -181,15 +188,12 @@ if ($imp_r['segmentid'] == '4') { ?>
     <input id="dental_device_date" name="dentaldevice_date" type="text" class="calendar_device_date" value="<?php echo $dentaldevice_date; ?>" />
     <strong>Duration:</strong>
 <?php
-    if ($dentaldevice_date != '') {
-        // echo '(' . time_agoNaN_format(date('U') - strtotime($dentaldevice_date)) . ')';
-    } else {
+    if ($dentaldevice_date == '') {
         echo '(N/A)';
     }
 } ?>
 <br />
 <?php
-    $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='$pid'";
     $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '$pid' ORDER BY date_completed DESC, id DESC;";
     $last_r = $db->getRow($last_sql);
 ?>
@@ -206,7 +210,7 @@ if ($imp_r['segmentid'] == '4') { ?>
     <div class="box">
         <strong>Reason for seeking tx:</strong>
         <?php
-        $c_sql = "SELECT chief_complaint_text from dental_q_page1_view WHERE patientid='$pid'";
+        $c_sql = "SELECT chief_complaint_text from dental_q_page1_pivot WHERE patientid='$pid'";
         $c_r = $db->getRow($c_sql);
         echo $c_r['chief_complaint_text'];
         if ($complaintid != '') {
@@ -227,12 +231,8 @@ if ($imp_r['segmentid'] == '4') { ?>
             if ($complaintid != '') {
                 $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                 $complaint_my = $db->getResults($complaint_sql);
-                $complaint_number = count($complaint_my);
                 foreach ($complaint_my as $complaint_myarray) {
-                    if (@array_search($complaint_myarray['complaintid'], $compid) === false) {
-                        $chk = '';
-                    } else {
-                        // $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+                    if (@array_search($complaint_myarray['complaintid'], $compid) !== false) {
                         ?>
                         <li><?= $complaint_myarray['complaint']; ?></li>
                         <?php
@@ -492,7 +492,6 @@ $segments[1] = "Initial Contact";
             Patient has not previously attempted CPAP therapy.
             <?php
         } else {
-            // echo $pat_myarray['cpap'];
             ?>
             <label>
                 <br />
@@ -502,29 +501,18 @@ $segments[1] = "Initial Contact";
         <?php
         }
 
-$sql = "select * from dental_q_page2_view where patientid='$pid'";
+$sql = "select * from dental_q_page2_pivot where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
-        $q_page2id = st($myarray['q_page2id']);
         $polysomnographic = st($myarray['polysomnographic']);
         $sleep_center_name_text = st($myarray['sleep_center_name_text']);
         $sleep_study_on = st($myarray['sleep_study_on']);
-        $confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-        $rdi = st($myarray['rdi']);
-        $ahi = st($myarray['ahi']);
         $cpap = st($myarray['cpap']);
         $cur_cpap = st($myarray['cur_cpap']);
         $intolerance = st($myarray['intolerance']);
         $other_intolerance = st($myarray['other_intolerance']);
-        $other = st($myarray['other']);
-        $affidavit = st($myarray['affidavit']);
-        $type_study = st($myarray['type_study']);
         $nights_wear_cpap = st($myarray['nights_wear_cpap']);
         $percent_night_cpap = st($myarray['percent_night_cpap']);
-        $custom_diagnosis = st($myarray['custom_diagnosis']);
-        $sleep_study_by = st($myarray['sleep_study_by']);
-        $triedquittried = st($myarray['triedquittried']);
-        $timesovertime = st($myarray['timesovertime']);
 
         if ($cpap == '') {
             $cpap = 'No';
@@ -613,7 +601,7 @@ $myarray = $db->getRow($sql);
             <br />
             <div class="cpap_options">
                 <span class="cpap_other_text">
-                    <span style="color:#000000; padding-top:0px;">
+                    <span style="color:#000000; padding-top:0;">
                         <strong>Other Items</strong>
                         <br />
                     </span>
@@ -637,7 +625,7 @@ $myarray = $db->getRow($sql);
 <script src="js/summ_summ.js" type="text/javascript"></script>
 
 <form id="rom_form" action="" method="POST">
-    <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
+    <table width="100%" align="center" border="1" cellpadding="7" cellspacing="0">
         <tr valign="top">
             <td width="17%" height="4">
                 ROM:&nbsp;&nbsp;

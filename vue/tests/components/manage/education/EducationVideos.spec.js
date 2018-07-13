@@ -1,20 +1,21 @@
-import Vue from 'vue'
-import store from '../../../../src/store'
 import EducationVideosComponent from '../../../../src/components/manage/education/EducationVideos.vue'
 import { VIDEOS } from '../../../../src/constants/education'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('EducationVideos component', () => {
   beforeEach(function () {
-    const Component = Vue.extend(EducationVideosComponent)
-    this.mount = function () {
-      return new Component({
-        store: store
-      }).$mount()
-    }
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(EducationVideosComponent)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
   })
 
   it('shows videos', function () {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     const videoDivs = vm.$el.querySelectorAll('div.video-div')
     expect(videoDivs.length).toBe(VIDEOS.length)
     const firstHeading = videoDivs[0].querySelector('h2')

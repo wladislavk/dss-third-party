@@ -10,6 +10,8 @@ $response = $_POST['response'];
 $jsonResponse = @json_decode($response, true);
 $type = isset($jsonResponse['type']) ? $jsonResponse['type'] : '1';
 
+$db = new Db();
+
 $insertData = $db->escapeAssignmentList([
     'patientid' => $patientId,
     'userid' => $_SESSION['userid'],

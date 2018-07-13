@@ -1,18 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../../manage/admin/includes/main_include.php';
+
 $docid = $_REQUEST['docid'];
 $userid = $_REQUEST['userid'];
 $first_name = $_REQUEST['first_name'];
 $last_name = $_REQUEST['last_name'];
 $phone = $_REQUEST['phone'];
-/*$epworth_reading = $_REQUEST['epworth_reading'];
-$epworth_public = $_REQUEST['epworth_public'];
-$epworth_passenger = $_REQUEST['epworth_passenger'];
-$epworth_lying = $_REQUEST['epworth_lying'];
-$epworth_talking = $_REQUEST['epworth_talking'];
-$epworth_lunch = $_REQUEST['epworth_lunch'];
-$epworth_traffic = $_REQUEST['epworth_traffic'];
-*/
 $snore_1 = $_REQUEST['snore_1'];
 $snore_2 = $_REQUEST['snore_2'];
 $snore_3 = $_REQUEST['snore_3'];
@@ -40,11 +35,7 @@ $rx_heartburn = $_REQUEST['rx_heartburn'];
 $rx_afib = $_REQUEST['rx_afib'];
 $rx_cpap = $_REQUEST['rx_cpap'];
 
-/*
-$ = $_REQUEST[''];
-$ = $_REQUEST[''];
-$ = $_REQUEST[''];
-*/
+$db = new Db();
 
 $s = "INSERT INTO dental_screener (
         docid,
@@ -81,57 +72,55 @@ $s = "INSERT INTO dental_screener (
         adddate,
         ip_address
     ) VALUES (
-        '".mysqli_real_escape_string($con, $docid)."',
-        '".mysqli_real_escape_string($con, $userid)."',
-        '".mysqli_real_escape_string($con, $first_name)."',
-        '".mysqli_real_escape_string($con, $last_name)."',
-        '".mysqli_real_escape_string($con, $phone)."',
-        '".mysqli_real_escape_string($con, $snore_1)."',
-        '".mysqli_real_escape_string($con, $snore_2)."',
-        '".mysqli_real_escape_string($con, $snore_3)."',
-        '".mysqli_real_escape_string($con, $snore_4)."',
-        '".mysqli_real_escape_string($con, $snore_5)."',
-        '".mysqli_real_escape_string($con, $breathing)."',
-        '".mysqli_real_escape_string($con, $driving)."',
-        '".mysqli_real_escape_string($con, $gasping)."',
-        '".mysqli_real_escape_string($con, $sleepy)."',
-        '".mysqli_real_escape_string($con, $snore)."',
-        '".mysqli_real_escape_string($con, $weight_gain)."',
-        '".mysqli_real_escape_string($con, $blood_pressure)."',
-        '".mysqli_real_escape_string($con, $jerk)."',
-        '".mysqli_real_escape_string($con, $burning)."',
-        '".mysqli_real_escape_string($con, $headaches)."',
-        '".mysqli_real_escape_string($con, $falling_asleep)."',
-        '".mysqli_real_escape_string($con, $staying_asleep)."',
-        '".mysqli_real_escape_string($con, $rx_cpap)."',
-        '".mysqli_real_escape_string($con, $rx_metabolic_syndrome)."',
-        '".mysqli_real_escape_string($con, $rx_hypertension)."',
-        '".mysqli_real_escape_string($con, $rx_heart_disease)."',
-        '".mysqli_real_escape_string($con, $rx_stroke)."',
-        '".mysqli_real_escape_string($con, $rx_diabetes)."',
-        '".mysqli_real_escape_string($con, $rx_obesity)."',
-        '".mysqli_real_escape_string($con, $rx_heartburn)."',
-        '".mysqli_real_escape_string($con, $rx_afib)."',
+        '".$db->escape( $docid)."',
+        '".$db->escape( $userid)."',
+        '".$db->escape( $first_name)."',
+        '".$db->escape( $last_name)."',
+        '".$db->escape( $phone)."',
+        '".$db->escape( $snore_1)."',
+        '".$db->escape( $snore_2)."',
+        '".$db->escape( $snore_3)."',
+        '".$db->escape( $snore_4)."',
+        '".$db->escape( $snore_5)."',
+        '".$db->escape( $breathing)."',
+        '".$db->escape( $driving)."',
+        '".$db->escape( $gasping)."',
+        '".$db->escape( $sleepy)."',
+        '".$db->escape( $snore)."',
+        '".$db->escape( $weight_gain)."',
+        '".$db->escape( $blood_pressure)."',
+        '".$db->escape( $jerk)."',
+        '".$db->escape( $burning)."',
+        '".$db->escape( $headaches)."',
+        '".$db->escape( $falling_asleep)."',
+        '".$db->escape( $staying_asleep)."',
+        '".$db->escape( $rx_cpap)."',
+        '".$db->escape( $rx_metabolic_syndrome)."',
+        '".$db->escape( $rx_hypertension)."',
+        '".$db->escape( $rx_heart_disease)."',
+        '".$db->escape( $rx_stroke)."',
+        '".$db->escape( $rx_diabetes)."',
+        '".$db->escape( $rx_obesity)."',
+        '".$db->escape( $rx_heartburn)."',
+        '".$db->escape( $rx_afib)."',
         now(),
         '".$_SERVER['REMOTE_ADDR']."'
     )";
-	$q = mysqli_query($con, $s);
-	$screenerid = mysqli_insert_id($con);
+    mysqli_query($con, $s);
+    $screenerid = mysqli_insert_id($con);
 
 if($screenerid){
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = mysqli_query($con, $epworth_sql);
-    $epworth_number = mysqli_num_rows($epworth_my);
-    while($epworth_myarray = mysqli_fetch_array($epworth_my))
-    {
+    while($epworth_myarray = mysqli_fetch_array($epworth_my)) {
         $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
         if($chk != ''){
             $hst_sql = "INSERT INTO dental_screener_epworth SET
-                        screener_id = '".mysqli_real_escape_string($con, $screenerid)."',
-                        epworth_id = '".mysqli_real_escape_string($con, $epworth_myarray['epworthid'])."',
-                        response = '".mysqli_real_escape_string($con, $chk)."',
+                        screener_id = '".$db->escape( $screenerid)."',
+                        epworth_id = '".$db->escape( $epworth_myarray['epworthid'])."',
+                        response = '".$db->escape( $chk)."',
                         adddate = now(),
-                        ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+                        ip_address = '".$db->escape( $_SERVER['REMOTE_ADDR'])."'";
             mysqli_query($con, $hst_sql);
         }
     }
@@ -140,5 +129,5 @@ if($screenerid){
 }else{
     $error = mysqli_error($con);
     error_log('Screener insertion failed: ' . $error);
-  echo '{"error":true}';
+    echo '{"error":true}';
 }

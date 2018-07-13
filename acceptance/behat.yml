@@ -40,8 +40,10 @@ default:
                 - Contexts\PatientChart
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
+                - Contexts\PatientUploadDw
                 - Contexts\Profile
                 - Contexts\ProgressNotes
+                - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
 chrome:
@@ -50,6 +52,7 @@ chrome:
         Behat\MinkExtension:
             base_url: "http://localhost"
             browser_name: "chrome"
+            files_path: "%paths.base%/Data/files/"
             sessions:
                 default:
                     chrome:
@@ -61,6 +64,7 @@ chrome2:
             browser_name: "chrome"
             default_session: "selenium2"
             javascript_session: "selenium2"
+            files_path: "%paths.base%/Data/files/"
             selenium2:
                 browser: "chrome"
                 wd_host: "http://selenium:4444/wd/hub"
@@ -80,6 +84,7 @@ firefox:
             browser_name: "firefox"
             default_session: "selenium2"
             javascript_session: "selenium2"
+            files_path: "%paths.base%/Data/files/"
             selenium2:
                 browser: "firefox"
                 wd_host: "http://127.0.0.1:4444/wd/hub"
@@ -93,6 +98,7 @@ phantom:
             base_url: "http://localhost"
             default_session: "selenium2"
             javascript_session: "selenium2"
+            files_path: "%paths.base%/Data/files/"
             selenium2:
                 browser: "phantomjs"
                 wd_host: "http://127.0.0.1:8643/wd/hub"

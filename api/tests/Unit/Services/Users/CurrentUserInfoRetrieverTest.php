@@ -7,25 +7,24 @@ use DentalSleepSolutions\Services\Users\CurrentUserInfoRetriever;
 use DentalSleepSolutions\Services\Users\UserNumberRetriever;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
-use DentalSleepSolutions\Eloquent\Models\Dental\User as DentalUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class CurrentUserInfoRetrieverTest extends UnitTestCase
 {
     /** @var CurrentUserInfoRetriever */
     private $currentUserInfoRetriever;
 
-    /** @var DentalUser|null */
+    /** @var User|null */
     private $dentalUser;
 
-    /** @var DentalUser|null */
+    /** @var User|null */
     private $doctor;
 
     public function setUp()
     {
-        $this->dentalUser = new DentalUser();
+        $this->dentalUser = new User();
         $this->dentalUser->use_course = 1;
-        $this->doctor = new DentalUser();
+        $this->doctor = new User();
         $this->doctor->status = 3;
 
         $userNumberRetriever = $this->mockUserNumberRetriever();
@@ -35,9 +34,11 @@ class CurrentUserInfoRetrieverTest extends UnitTestCase
 
     public function testWithUserAndDoctor()
     {
-        $baseUser = new BaseUser();
+        /** @var User $baseUser */
+        $baseUser = new User();
         $baseUser->userid = 1;
         $baseUser->docid = 2;
+        $baseUser->use_course = 1;
 
         $userInfo = $this->currentUserInfoRetriever->getCurrentUserInfo($baseUser);
         $expected = [
@@ -52,7 +53,7 @@ class CurrentUserInfoRetrieverTest extends UnitTestCase
 
     public function testWithoutUserAndDoctor()
     {
-        $baseUser = new BaseUser();
+        $baseUser = new User();
         $baseUser->userid = 10;
         $baseUser->docid = 20;
 

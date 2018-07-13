@@ -1,29 +1,12 @@
-import moxios from 'moxios'
-import Vue from 'vue'
-import store from '../../../../src/store'
 import TrackerStepComponent from '../../../../src/components/manage/chart/TrackerStep.vue'
-import http from '../../../../src/services/http'
 import endpoints from '../../../../src/endpoints'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('TrackerStep component', () => {
   beforeEach(function () {
-    moxios.install()
+    this.testCase = new TestCase()
 
-    const Component = Vue.extend(TrackerStepComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
-    }
-  })
-
-  afterEach(function () {
-    moxios.uninstall()
-  })
-
-  it('shows normal step', function () {
-    const props = {
+    this.props = {
       stepId: 3,
       patientId: 42,
       name: 'foo',
@@ -31,7 +14,18 @@ describe('TrackerStep component', () => {
       completed: false,
       last: false
     }
-    const vm = this.mount(props)
+
+    this.testCase.setComponent(TrackerStepComponent)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
+  })
+
+  it('shows normal step', function () {
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('')
     const link = root.querySelector('a')
@@ -41,29 +35,19 @@ describe('TrackerStep component', () => {
   })
 
   it('shows completed step', function () {
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: true,
-      last: false
-    }
-    const vm = this.mount(props)
+    this.props.completed = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('completed_step')
   })
 
   it('shows first step', function () {
-    const props = {
-      stepId: 1,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: false
-    }
-    const vm = this.mount(props)
+    this.props.stepId = 1
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     expect(link).toBeNull()
     const span = vm.$el.querySelector('span')
@@ -72,47 +56,35 @@ describe('TrackerStep component', () => {
   })
 
   it('shows last step', function () {
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: true
-    }
-    const vm = this.mount(props)
+    this.props.last = true
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const root = vm.$el
     expect(root.className).toBe('last')
   })
 
   it('adds new step', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.appointmentSummaries.store), {
-      status: 200,
-      responseText: {
-        data: []
-      }
+    this.testCase.stubRequest({
+      url: endpoints.appointmentSummaries.store
     })
-    const props = {
-      stepId: 3,
-      patientId: 42,
-      name: 'foo',
-      section: 1,
-      completed: false,
-      last: false
-    }
-    const vm = this.mount(props)
+    this.testCase.setPropsData(this.props)
+    const vm = this.testCase.mount()
+
     const link = vm.$el.querySelector('a')
     link.click()
-    moxios.wait(() => {
-      expect(moxios.requests.count()).toBe(2)
-      const request = moxios.requests.at(0)
-      expect(request.url).toBe(http.formUrl(endpoints.appointmentSummaries.store))
-      const expectedData = {
-        step_id: 3,
-        patient_id: 42,
-        appt_type: 1
+    this.testCase.wait(() => {
+      const requestResults = this.testCase.getRequestResults()
+      expect(requestResults.length).toBe(2)
+      const expectedFirst = {
+        url: endpoints.appointmentSummaries.store,
+        body: {
+          step_id: 3,
+          patient_id: 42,
+          appt_type: 1
+        }
       }
-      expect(JSON.parse(request.config.data)).toEqual(expectedData)
+      expect(requestResults[0]).toEqual(expectedFirst)
       done()
     })
   })

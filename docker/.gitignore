@@ -1,3 +1,5 @@
 ssh_keys
 .idea
 .env
+images/*
+!images/resources

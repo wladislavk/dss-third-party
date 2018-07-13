@@ -6,6 +6,7 @@ use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Services\Epworth\EpworthFinder;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\JsonResponse;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
@@ -15,12 +16,13 @@ class EpworthSleepinessScaleController extends BaseRestController
     private $epworthFinder;
 
     public function __construct(
+        Auth $auth,
         Config $config,
         AbstractRepository $repository,
         Request $request,
         EpworthFinder $epworthFinder
     ) {
-        parent::__construct($config, $repository, $request);
+        parent::__construct($auth, $config, $repository, $request);
         $this->epworthFinder = $epworthFinder;
     }
 

@@ -15,46 +15,47 @@ include __DIR__ . '/includes/header.php';
   <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 
 <?php
-  $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
-			      WHERE c.default_new = 1"; 
+$db = new Db();
 
-  $c_r = $db->getRow($c_sql);
+$c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
+              WHERE c.default_new = 1";
+$c_r = $db->getRow($c_sql);
 ?>
-	<div id="content_wrapper">
-		<div id="main_content" class="cf">
+    <div id="content_wrapper">
+        <div id="main_content" class="cf">
       <h2 class="sepH_c">Step-by-Step User Registration</h2>
       <form action="register.php" id="register_form" method="post">
-				<ul id="status" class="cf">
-				  <?php $pagenum = 1; ?>
-					<li class="active">
+                <ul id="status" class="cf">
+                  <?php $pagenum = 1; ?>
+                    <li class="active">
             <span class="large"><?php echo $pagenum++; ?>. Contact Info</span>
           </li>
-					<li>
+                    <li>
             <span class="large"><?php echo $pagenum++; ?>. Payment Info</span>
           </li>
-				</ul>
-				<div id="register" class="wizard" style="height:1400px;">
-					<div class="items formEl_a">
-						<div class="page">
-							<div class="pageInside">
-								<div class="cf">
-									<div class="dp25">
-										<h3 class="sepH_a">Contact Information</h3>
-										<p class="s_color"></p>
-									</div>
-									<div class="dp75">
-										<div>
-			                <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
+                </ul>
+                <div id="register" class="wizard" style="height:1400px;">
+                    <div class="items formEl_a">
+                        <div class="page">
+                            <div class="pageInside">
+                                <div class="cf">
+                                    <div class="dp25">
+                                        <h3 class="sepH_a">Contact Information</h3>
+                                        <p class="s_color"></p>
+                                    </div>
+                                    <div class="dp75">
+                                        <div>
+                            <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
                             <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
-											<div id="welcome_errors" class="form_errors" style="display:none"></div>
+                                            <div id="welcome_errors" class="form_errors" style="display:none"></div>
                       <div class="sepH_b">
                         <label class="lbl_a"><strong>1.</strong> Registration Code <span class="req">*</span></label>
                         <input class="inpt_a validate" type="password" name="code" id="code" value="" />
                       </div>
-                  		<div class="sepH_b">
-                  			<label class="lbl_a"><strong>2.</strong> First Name <span class="req">*</span></label>
-                  			<input class="inpt_a validate" type="text" name="first_name" id="first_name" value="" />
-                  		</div>
+                        <div class="sepH_b">
+                            <label class="lbl_a"><strong>2.</strong> First Name <span class="req">*</span></label>
+                            <input class="inpt_a validate" type="text" name="first_name" id="first_name" value="" />
+                        </div>
                       <div class="sepH_b">
                         <label class="lbl_a"><strong>3.</strong> Last Name <span class="req">*</span></label>
                         <input class="inpt_a validate" type="text" name="last_name" id="last_name" value="" />
@@ -71,14 +72,14 @@ include __DIR__ . '/includes/header.php';
                         I accept the <a id="saas_agree_but" href="#saas_agree">user agreement</a> and <a id="hipaa_agree_but" href="#hipaa_agree">HIPAA agreement</a>
                         <input type="checkbox"  class="validate" id="agreement" name="agreement" />
                       </div>
-											<div class="cf">
+                                            <div class="cf">
                         <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
             <div class="page">
               <div class="pageInside">
                 <div class="cf">
@@ -130,23 +131,21 @@ include __DIR__ . '/includes/header.php';
               </div>
             </div>
             <div class="page" id="confirmation">
-  						<div class="pageInside">
-  							<div class="last sepH_c">
-  								<p  class="sepH_b">Congratulations! A registration email has been sent to the email address <span id="email_add"></span>. Please continue the registration by clicking the link in that email.</p>
+                        <div class="pageInside">
+                            <div class="last sepH_c">
+                                <p  class="sepH_b">Congratulations! A registration email has been sent to the email address <span id="email_add"></span>. Please continue the registration by clicking the link in that email.</p>
                   <div class="cf">
                     <a href="../index.php" class="fr btn btn_dL">Finished</a>
-    							</div>
-  						  </div>
-  					  </div>
-						</div>
-			    </div>
+                                </div>
+                          </div>
+                      </div>
+                        </div>
+                </div>
         </div>
-	    </form>  
+        </form>
       <div style="clear:both;"></div>
 
   <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
-  <!-- jQuery is used only for this example; it isn't required to use Stripe -->
-  <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
   <script type="text/javascript">
     // this identifies your website in the createToken call below
     Stripe.setPublishableKey('<?php echo   $c_r['stripe_publishable_key']; ?>');

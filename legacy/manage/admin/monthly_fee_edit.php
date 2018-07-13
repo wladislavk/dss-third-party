@@ -1,71 +1,64 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
-{
-			$ed_sql = "update companies set 
-				monthly_fee = '".mysqli_real_escape_string($con,$_POST["monthly_fee"])."',
-				fax_fee = '".mysqli_real_escape_string($con,$_POST["fax_fee"])."',
-				free_fax = '".mysqli_real_escape_string($con,$_POST["free_fax"])."'
-			where id='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql);;
 
-			$msg = "Edited Successfully";
-			?>
-			<script type="text/javascript">
-				//alert("<?php echo $msg;?>");
-				parent.window.location='manage_percase_invoice.php?msg=<?php echo $msg;?>';
-			</script>
-			<?
-			trigger_error("Die called", E_USER_ERROR);
+$db = new Db();
+
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
+    $ed_sql = "update companies set 
+        monthly_fee = '".$db->escape($_POST["monthly_fee"])."',
+        fax_fee = '".$db->escape($_POST["fax_fee"])."',
+        free_fax = '".$db->escape($_POST["free_fax"])."'
+        where id='".$_POST["ed"]."'";
+    mysqli_query($con,$ed_sql);;
+
+    $msg = "Edited Successfully";
+    ?>
+    <script type="text/javascript">
+        parent.window.location='manage_percase_invoice.php?msg=<?php echo $msg;?>';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
-
 ?>
-
 <?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php
+$thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
+$themy = mysqli_query($con,$thesql);
+$themyarray = mysqli_fetch_array($themy);
 
-    <?
-    $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
-	$themy = mysqli_query($con,$thesql);
-	$themyarray = mysqli_fetch_array($themy);
-	
-	if(!empty($msg))
-	{
-		$name = $themyarray['name'];
-		$monthly_fee = $_POST['monthly_fee'];
-		$fax_fee = $_POST['fax_fee'];
-		$free_fax = $_POST['free_fax'];
-	}
-	else
-	{
-		$name = st($themyarray['name']);
-		$monthly_fee = st($themyarray['monthly_fee']);
-		$fax_fee = st($themyarray['fax_fee']);
-		$free_fax = st($themyarray['free_fax']);
-	}
-	
-		$but_text = "Edit ";
-	?>
-	
-	<br /><br />
-	
-	<?php if(!empty($msg)) {?>
+if(!empty($msg)) {
+    $name = $themyarray['name'];
+    $monthly_fee = $_POST['monthly_fee'];
+    $fax_fee = $_POST['fax_fee'];
+    $free_fax = $_POST['free_fax'];
+} else {
+    $name = st($themyarray['name']);
+    $monthly_fee = st($themyarray['monthly_fee']);
+    $fax_fee = st($themyarray['fax_fee']);
+    $free_fax = st($themyarray['free_fax']);
+}
+$but_text = "Edit ";
+?>
+<br /><br />
+<?php if(!empty($msg)) {?>
     <div align="center" class="red">
         <?php echo $msg;?>
     </div>
-    <?php }?>
-    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" >
+<?php }?>
+<form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" >
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?php echo $but_text?> Fees 
-               <?php if($name <> "") {?>
-               		&quot;<?php echo $name;?>&quot;
-               <?php }?>
+                <?php echo $but_text?> Fees
+                <?php if($name != "") {?>
+                    &quot;<?php echo $name;?>&quot;
+                <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -105,6 +98,6 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

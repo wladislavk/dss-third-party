@@ -10,6 +10,8 @@ $isMine = !empty($_GET['mine']) && $_GET['mine'] == 1;
 $docId = (int)$_SESSION['docid'];
 $userId = (int)$_SESSION['userid'];
 
+$db = new Db();
+
 if (isset($_GET['delid'])) {
     $delId = (int)$_GET['delid'];
     $del_sql = "UPDATE dental_task
@@ -90,13 +92,12 @@ $queryArray = array_only($_GET, ['mine', 'sort1', 'sortdir1', 'page1', 'sort2', 
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Tasks
+    Manage Tasks
 </span>
 <br/>
 <br/>
 &nbsp;
-<button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task
-</button>
+<button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task</button>
 <?php if (!empty($_GET['mine']) && $_GET['mine'] == 1) { ?>
     <button onclick="window.location='manage_tasks.php'" class="addButton" style="float:right; margin-right: 10px;">Show
         All
@@ -337,7 +338,7 @@ require_once __DIR__ . '/includes/bottom.htm';
  * @param array $except
  * @return string
  */
-function queryString(array $queryArray, array $except=[])
+function queryString(array $queryArray, array $except = [])
 {
     if (count($except)) {
         $queryArray = array_except($queryArray, $except);

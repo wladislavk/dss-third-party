@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Company;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Tests\TestCases\ApiTestCase;
 
 class CompaniesApiTest extends ApiTestCase
@@ -40,8 +40,8 @@ class CompaniesApiTest extends ApiTestCase
 
     public function testGetUserCompanies()
     {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
+        /** @var User $user */
+        $user = User::find(1);
         $this->be($user);
         $this->get(self::ROUTE_PREFIX . '/companies/by-user');
         $this->assertResponseOk();
@@ -57,7 +57,7 @@ class CompaniesApiTest extends ApiTestCase
             'adddate' => '2013-04-03 12:36:19',
             'ip_address' => '128.12.179.156',
             'eligible_api_key' => 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx',
-            'logo' => 'company_logo_3.png',
+            'logo' => 'resources/company_logo_3.png',
             'stripe_secret_key' => 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk',
             'stripe_publishable_key' => 'pk_test_AwG89We9HPlSSaFDI1TZgnie',
             'monthly_fee' => '149.00',

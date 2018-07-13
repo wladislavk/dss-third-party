@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Services\Patients\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Services\Letters\LetterTriggerLauncher;
 use DentalSleepSolutions\Services\Patients\PatientSummaryManager;
@@ -51,7 +50,7 @@ abstract class AbstractPatientEditor
      */
     public function editPatient(
         array $formData,
-        BaseUser $currentUser,
+        User $currentUser,
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
@@ -104,7 +103,7 @@ abstract class AbstractPatientEditor
         EditPatientRequestData $requestData,
         $patientId
     ) {
-        $docId = $currentUser->getDocIdOrZero();
+        $docId = $currentUser->normalizedDocId();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
         $this->letterTriggerLauncher->triggerLetters(

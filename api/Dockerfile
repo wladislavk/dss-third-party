@@ -1,13 +1,16 @@
 FROM debian:9.3
 
+ARG SYSTEM_TZ
+
 # Directories for custom php and httpd packages
 ENV _RH_HTTPD=/etc/apache2 \
     _RH_PHP=/php/7.2
 ENV _RH_PHP_D=/etc${_RH_PHP}
 
+ENV SYSTEM_TZ_ENV=$SYSTEM_TZ
+
 # Set Timezone
-ENV TZ=America/New_York
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$SYSTEM_TZ /etc/localtime && echo $SYSTEM_TZ > /etc/timezone
 
 RUN set -xe \
     && apt-get update
@@ -57,12 +60,11 @@ RUN set -xe \
 RUN set -xe \
     && mkdir -p /opt/tmp && cd /opt/tmp \
     # Get keys Sebastian Bergmann <sb@sebastian-bergmann.de> GPG key to validate signature
-    && export GPG_KEYS=D8406D0D82947747293778314AA394086372C20A \
     # Fallback servers in case one of them is down
-    && ( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) \
-    && gpg --fingerprint "$GPG_KEYS" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys D8406D0D82947747293778314AA394086372C20A \
+    #  || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
+    #  || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) \
+    && gpg --fingerprint D8406D0D82947747293778314AA394086372C20A \
     # Download phpunit and its signature
     && export PHPUNIT_VERSION=6.5 \
     && curl -sSLo phpunit.phar https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar \
@@ -76,7 +78,7 @@ RUN set -xe \
 
 # Customize php setup
 RUN set -xe \
-    && /bin/echo 'date.timezone="America/New_York"' > "${_RH_PHP_D}/mods-available/custom.ini" \
+    && /bin/echo 'date.timezone='"${SYSTEM_TZ}" > "${_RH_PHP_D}/mods-available/custom.ini" \
     && ln -s "${_RH_PHP_D}/mods-available/custom.ini" "${_RH_PHP_D}/apache2/conf.d/40-custom.ini"
 
 ENV \

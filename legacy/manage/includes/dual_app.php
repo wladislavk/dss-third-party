@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . '/../../config.php';
+
 function dualAppRedirect($path)
 {
     if (!DUAL_APP) {

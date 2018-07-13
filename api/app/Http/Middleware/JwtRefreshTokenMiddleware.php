@@ -2,64 +2,76 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Auth\JwtAuth;
+use DentalSleepSolutions\Auth\Guard;
 use DentalSleepSolutions\Services\Auth\JwtHelper;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
-class JwtRefreshTokenMiddleware extends AbstractJwtAuthMiddleware
+class JwtRefreshTokenMiddleware
 {
+    /** @var Auth */
+    private $auth;
+
     /** @var JwtHelper */
     private $jwtHelper;
 
     /**
-     * @param JwtAuth $jwtAuth
+     * @param Auth $auth
      * @param JwtHelper $jwtHelper
      */
-    public function __construct(
-        JwtAuth $jwtAuth,
-        JwtHelper $jwtHelper
-    )
+    public function __construct(Auth $auth, JwtHelper $jwtHelper)
     {
-        parent::__construct($jwtAuth);
+        $this->auth = $auth;
         $this->jwtHelper = $jwtHelper;
     }
 
     /**
      * @param Request $request
      * @param Closure $next
-     * @return \Illuminate\Http\Response
-     * @throws \DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException
+     * @return JsonResponse
+     * @throws \InvalidArgumentException
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): JsonResponse
     {
         $response = $next($request);
-
-        if ($request->admin()) {
-            return $this->refreshToken($response, $request->admin(), JwtAuth::ROLE_ADMIN);
+        foreach (JwtHelper::ROLES as $role) {
+            $authenticatable = $this->userGuard($role);
+            if ($authenticatable) {
+                return $this->refreshToken($response, $authenticatable, $role);
+            }
         }
-
-        if ($request->user()) {
-            return $this->refreshToken($response, $request->user(), JwtAuth::ROLE_USER);
-        }
-
-        if ($request->patient()) {
-            return $this->refreshToken($response, $request->patient(), JwtAuth::ROLE_PATIENT);
-        }
-
         return $response;
     }
 
-    protected function refreshToken(Response $response, Authenticatable $model, $role)
+    /**
+     * @param JsonResponse $response
+     * @param Authenticatable $authenticatable
+     * @param string $role
+     * @return JsonResponse
+     */
+    private function refreshToken(JsonResponse $response, Authenticatable $authenticatable, string $role): JsonResponse
     {
-        $token = $this->jwtHelper
-            ->createToken([
-                JwtAuth::CLAIM_ROLE_INDEX => $role,
-                JwtAuth::CLAIM_ID_INDEX  => $model->getAuthIdentifier(),
-            ])
-        ;
-        $response->headers->set(self::AUTH_HEADER, self::AUTH_HEADER_START . $token);
+        $token = $this->jwtHelper->createToken([
+            JwtHelper::CLAIM_ROLE_INDEX => $role,
+            JwtHelper::CLAIM_ID_INDEX  => $authenticatable->getAuthIdentifier(),
+        ]);
+        $response->headers->set(
+            JwtAuthenticationMiddleware::AUTH_HEADER, JwtAuthenticationMiddleware::AUTH_HEADER_START . $token
+        );
         return $response;
+    }
+
+    /**
+     * @param string $role
+     * @return Authenticatable|null
+     * @throws \InvalidArgumentException
+     */
+    private function userGuard(string $role):? Authenticatable
+    {
+        /** @var Guard $guard */
+        $guard = $this->auth->guard($role);
+        return $guard->user();
     }
 }

@@ -32,7 +32,6 @@ function checkIncisal(){
 }
 
 $('document').ready( function(){
-    //checkIncisal();
     calcIncisal();
 })
 

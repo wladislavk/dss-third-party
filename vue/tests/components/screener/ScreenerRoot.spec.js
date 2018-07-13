@@ -1,12 +1,14 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import symbols from '../../../src/symbols'
 import ScreenerRootComponent from '../../../src/components/screener/ScreenerRoot.vue'
 import store from '../../../src/store'
+import TestCase from '../../cases/ComponentTestCase'
 
 describe('ScreenerRoot', () => {
   beforeEach(function () {
-    const routes = [
+    this.testCase = new TestCase()
+
+    this.testCase.setComponent(ScreenerRootComponent)
+    this.testCase.setRoutes([
       {
         name: 'screener-main',
         path: '/main'
@@ -15,25 +17,18 @@ describe('ScreenerRoot', () => {
         name: 'screener-login',
         path: '/login'
       }
-    ]
-
-    const Component = Vue.extend(ScreenerRootComponent)
-    this.mount = function () {
-      return new Component({
-        store: store,
-        router: new VueRouter({routes})
-      }).$mount()
-    }
+    ])
   })
 
   afterEach(function () {
-    store.commit(symbols.mutations.restoreInitialScreener)
+    this.testCase.reset()
   })
 
   it('should go to login if no token present', function (done) {
-    const vm = this.mount()
+    const vm = this.testCase.mount()
+
     expect(document.title).toBe('Dental Sleep Solutions :: Screener')
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-login')
       done()
     })
@@ -41,9 +36,9 @@ describe('ScreenerRoot', () => {
 
   it('should go to main if token is present', function (done) {
     store.commit(symbols.mutations.screenerToken, 'token')
-    const vm = this.mount()
+    const vm = this.testCase.mount()
 
-    vm.$nextTick(() => {
+    this.testCase.wait(() => {
       expect(vm.$router.currentRoute.name).toBe('screener-main')
       done()
     })

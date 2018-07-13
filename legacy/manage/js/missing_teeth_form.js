@@ -27,6 +27,4 @@ $(document).ready(function(){
             $('input[tabindex="'+(p+1)+'"]').focus();
         }
     }
-    //var inputs = $(this).closest('form').find(':input');
-    //inputs.eq( inputs.index(this)+ 1 ).focus();
 });

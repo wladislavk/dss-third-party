@@ -47,6 +47,7 @@ default:
                 - Contexts\Staff
                 - Contexts\Support
                 - Contexts\Tasks
+                - Contexts\ManageTasks
 
 chrome:
     extensions:

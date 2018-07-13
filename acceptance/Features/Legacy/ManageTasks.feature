@@ -194,7 +194,7 @@ Feature: Task Management from Manage Tasks page
   Scenario: Delete task from modal
     When I click "Edit" button next to task "asdasdasd" on Manage Tasks page
     Then the modal window is "open"
-    When I click delete task link for "asdasdasd" from Manage Tasks page
+    When I click delete task link for "asdasdasd" on Manage Tasks page
     And I confirm browser alert
     Then the modal window is "closed"
     And I see the list of tasks:

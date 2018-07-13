@@ -37,6 +37,7 @@ default:
                 - Contexts\Insurance
                 - Contexts\Ledger
                 - Contexts\Letters
+                - Contexts\ManageTasks
                 - Contexts\PatientChart
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
@@ -46,8 +47,6 @@ default:
                 - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
-                - Contexts\Tasks
-                - Contexts\ManageTasks
 
 chrome:
     extensions:

@@ -21,7 +21,6 @@ class Tasks extends TasksBaseContext
         'edit' => 2,
     ];
 
-
     /**
      * @When I click on task :task checkbox in :area
      *
@@ -121,51 +120,6 @@ class Tasks extends TasksBaseContext
     }
 
     /**
-     * @Then I see add task form with header :header
-     *
-     * @param string $header
-     */
-    public function testAddTaskForm($header)
-    {
-        $this->wait(SHORT_WAIT_TIME);
-        if (SUT_HOST == 'loader') {
-            $this->getCommonClient()->switchToIFrame('aj_pop');
-        }
-        $headerCell = $this->findCss('td.cat_head');
-        Assert::assertNotNull($headerCell);
-        Assert::assertEquals($header, $this->sanitizeText($headerCell->getText()));
-    }
-
-    /**
-     * @Then add task form has following fields:
-     *
-     * @param TableNode $table
-     */
-    public function testAddTaskFormFields(TableNode $table)
-    {
-        $this->wait(SHORT_WAIT_TIME);
-        $form = $this->findCss('form[name="notesfrm"]');
-        $expectedRows = $table->getHash();
-        $tableRows = $this->findAllCss('td.frmhead', $form);
-        foreach ($tableRows as $key => $tableRow) {
-            if (!$tableRow->isVisible()) {
-                unset($tableRows[$key]);
-            }
-        }
-        $tableRows = array_values($tableRows);
-        array_pop($tableRows);
-        Assert::assertEquals(sizeof($expectedRows), sizeof($tableRows));
-        foreach ($expectedRows as $rowNumber => $row) {
-            $column = $tableRows[$rowNumber];
-            $label = $this->findCss('label', $column);
-            $labelText = str_replace(':', '', $label->getText());
-            Assert::assertEquals($row['field'], $labelText);
-            Assert::assertTrue($this->checkRequiredFormElement($column, $row['required']));
-            Assert::assertTrue($this->checkFormElement($column, $row['type']));
-        }
-    }
-
-    /**
      * @Then the :field form field is filled with value :value
      *
      * @param string $field
@@ -186,28 +140,6 @@ class Tasks extends TasksBaseContext
             }
         }
         Assert::assertEquals($value, $realValue);
-    }
-
-    /**
-     * @When I fill task form with values:
-     *
-     * @param TableNode $table
-     * @throws BehatException
-     */
-    public function fillTaskForm(TableNode $table)
-    {
-        parent::fillTaskForm($table);
-    }
-
-    /**
-     * @When I click delete task link for :task
-     *
-     * @param string $task
-     * @throws BehatException|UnsupportedDriverActionException|DriverException
-     */
-    public function clickDeleteButton($task)
-    {
-        parent::clickDeleteButton($task);
     }
 
     /**
@@ -336,50 +268,6 @@ class Tasks extends TasksBaseContext
         $this->wait(SHORT_WAIT_TIME);
         $header = $this->findCss('span#task_header');
         Assert::assertEquals($bullet, trim($header->getText()));
-    }
-
-    /**
-     * @Then add task form is filled with values:
-     *
-     * @param TableNode $table
-     */
-    public function testPreFilledValues(TableNode $table)
-    {
-        $elements = $table->getHash();
-        $cells = $this->findAllCss('td.frmhead');
-        foreach ($cells as $cellKey => $cell) {
-            $label = $this->findCss('label', $cell);
-            if (!$cell->isVisible() || !$label) {
-                unset($cells[$cellKey]);
-            }
-        }
-        /** @var NodeElement[] $cells */
-        $cells = array_values($cells);
-        Assert::assertEquals(sizeof($elements), sizeof($cells));
-        foreach ($elements as $key => $element) {
-            $label = $this->findCss('label', $cells[$key]);
-            Assert::assertNotNull($label);
-            Assert::assertContains($element['field'], $label->getText());
-            switch ($element['type']) {
-                case 'text':
-                    $input = $this->findCss('input', $cells[$key]);
-                    Assert::assertEquals($element['value'], $input->getValue());
-                    break;
-                case 'select':
-                    $select = $this->findCss('select', $cells[$key]);
-                    $selectedOption = $this->findCss('option[value="' . $select->getValue() . '"]', $select);
-                    Assert::assertEquals($element['value'], $selectedOption->getText());
-                    break;
-                case 'checkbox':
-                    $checkbox = $this->findCss('input', $cells[$key]);
-                    if ($element['value'] == 'Yes') {
-                        Assert::assertTrue($checkbox->getValue());
-                        break;
-                    }
-                    Assert::assertNull($checkbox->getValue());
-                    break;
-            }
-        }
     }
 
     /**

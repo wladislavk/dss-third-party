@@ -3,8 +3,6 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\DriverException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 use PHPUnit\Framework\Assert;
 
 class ManageTasks extends TasksBaseContext
@@ -72,57 +70,6 @@ class ManageTasks extends TasksBaseContext
                 throw new BehatException(sprintf("Task with text %s not found in table %s", $task['name'], $tableId));
             }
         }
-    }
-
-    /**
-     * @When I fill task form on Manage Tasks page with values:
-     *
-     * @param TableNode $table
-     * @return void
-     *
-     * @throws BehatException
-     */
-    public function fillTaskForm(TableNode $table): void
-    {
-        parent::fillTaskForm($table);
-    }
-
-    /**
-     * @When I click :buttonName button next to task :taskName on Manage Tasks page
-     * @param string $buttonName
-     * @param string $taskName
-     * @return void
-     *
-     * @throws BehatException
-     */
-    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName): void
-    {
-        parent::clickButtonNextToTaskOnManageTasksPage($buttonName, $taskName);
-    }
-
-    /**
-     * @When I click checkbox next to task :taskName on Manage Tasks page
-     * @param string $taskName
-     * @return void
-     *
-     * @throws BehatException
-     */
-    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName): void
-    {
-        parent::clickCheckboxNextToTaskOnManageTasksPage($taskName);
-    }
-
-    /**
-     * @When I click delete task link for :task on Manage Tasks page
-     *
-     * @param string $task
-     * @return void
-     *
-     * @throws BehatException|UnsupportedDriverActionException|DriverException
-     */
-    public function clickDeleteButton($task): void
-    {
-        parent::clickDeleteButton($task);
     }
 
     /**
@@ -283,6 +230,60 @@ class ManageTasks extends TasksBaseContext
         }
 
         throw new BehatException("Header link '$columnText' not found.");
+    }
+
+
+    /**
+     * @When I click checkbox next to task :taskName on Manage Tasks page
+     * @param string $taskName
+     * @return void
+     *
+     * @throws BehatException
+     */
+    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $rows = $this->findAllCss('#not_completed_tasks tr');
+        foreach ($rows as $row) {
+            $taskRowText = trim($row->getText());
+            if (strpos($taskRowText, $taskName) !== false) {
+                $button = $row->find('css', 'input[type=checkbox]');
+                if ($button) {
+                    $button->click();
+                    $this->taskDeactivated = true;
+                    return;
+                }
+            }
+        }
+        throw new BehatException("Checkbox not found for task $taskName");
+    }
+
+    /**
+     * @When I click :buttonName button next to task :taskName on Manage Tasks page
+     * @param string $buttonName
+     * @param string $taskName
+     * @return void
+     *
+     * @throws BehatException
+     */
+    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName)
+    {
+        $this->wait(MEDIUM_WAIT_TIME);
+
+        $rows = $this->findAllCss('#not_completed_tasks tr');
+        foreach ($rows as $row) {
+            $taskRowText = trim($row->getText());
+            if (strpos($taskRowText, $taskName) !== false) {
+                $button = $row->find('css', '.editlink');
+                $buttonText = trim($button->getText());
+                if ($buttonName === $buttonText) {
+                    $button->click();
+                    return;
+                }
+            }
+        }
+        throw new BehatException("Button with text $buttonName not found for task $taskName");
     }
 
     /**

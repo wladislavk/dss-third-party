@@ -6,6 +6,8 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Services\VueDateSelector;
+use PHPUnit\Framework\Assert;
+use Behat\Mink\Element\NodeElement;
 
 abstract class TasksBaseContext extends BaseContext
 {
@@ -23,11 +25,60 @@ abstract class TasksBaseContext extends BaseContext
     /** @var bool */
     protected $taskDeleted = false;
 
+
     /**
+     * @Then add task form is filled with values:
+     *
      * @param TableNode $table
+     */
+    public function testPreFilledValues(TableNode $table)
+    {
+        $elements = $table->getHash();
+        $cells = $this->findAllCss('td.frmhead');
+        foreach ($cells as $cellKey => $cell) {
+            $label = $this->findCss('label', $cell);
+            if (!$cell->isVisible() || !$label) {
+                unset($cells[$cellKey]);
+            }
+        }
+        /** @var NodeElement[] $cells */
+        $cells = array_values($cells);
+        Assert::assertEquals(sizeof($elements), sizeof($cells));
+        foreach ($elements as $key => $element) {
+            $label = $this->findCss('label', $cells[$key]);
+            Assert::assertNotNull($label);
+            Assert::assertContains($element['field'], $label->getText());
+            switch ($element['type']) {
+                case 'text':
+                    $input = $this->findCss('input', $cells[$key]);
+                    Assert::assertEquals($element['value'], $input->getValue());
+                    break;
+                case 'select':
+                    $select = $this->findCss('select', $cells[$key]);
+                    $selectedOption = $this->findCss('option[value="' . $select->getValue() . '"]', $select);
+                    Assert::assertEquals($element['value'], $selectedOption->getText());
+                    break;
+                case 'checkbox':
+                    $checkbox = $this->findCss('input', $cells[$key]);
+                    if ($element['value'] == 'Yes') {
+                        Assert::assertTrue($checkbox->getValue());
+                        break;
+                    }
+                    Assert::assertNull($checkbox->getValue());
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @When I fill task form with values:
+     *
+     * @param TableNode $table
+     * @return void
+     *
      * @throws BehatException
      */
-    public function fillTaskForm(TableNode $table)
+    public function fillTaskForm(TableNode $table): void
     {
         $cells = $this->findAllCss('td.frmhead');
         foreach ($cells as $cellKey => $cell) {
@@ -79,57 +130,60 @@ abstract class TasksBaseContext extends BaseContext
     }
 
     /**
-     * @param string $buttonName
-     * @param string $taskName
-     * @throws BehatException
+     * @Then add task form has following fields:
+     *
+     * @param TableNode $table
      */
-    public function clickButtonNextToTaskOnManageTasksPage(string $buttonName, string $taskName)
+    public function testAddTaskFormFields(TableNode $table)
     {
-        $this->wait(MEDIUM_WAIT_TIME);
-
-        $rows = $this->findAllCss('#not_completed_tasks tr');
-        foreach ($rows as $row) {
-            $taskRowText = trim($row->getText());
-            if (strpos($taskRowText, $taskName) !== false) {
-                $button = $row->find('css', '.editlink');
-                $buttonText = trim($button->getText());
-                if ($buttonName === $buttonText) {
-                    $button->click();
-                    return;
-                }
+        $this->wait(SHORT_WAIT_TIME);
+        $form = $this->findCss('form[name="notesfrm"]');
+        $expectedRows = $table->getHash();
+        $tableRows = $this->findAllCss('td.frmhead', $form);
+        foreach ($tableRows as $key => $tableRow) {
+            if (!$tableRow->isVisible()) {
+                unset($tableRows[$key]);
             }
         }
-        throw new BehatException("Button with text $buttonName not found for task $taskName");
+        $tableRows = array_values($tableRows);
+        array_pop($tableRows);
+        Assert::assertEquals(sizeof($expectedRows), sizeof($tableRows));
+        foreach ($expectedRows as $rowNumber => $row) {
+            $column = $tableRows[$rowNumber];
+            $label = $this->findCss('label', $column);
+            $labelText = str_replace(':', '', $label->getText());
+            Assert::assertEquals($row['field'], $labelText);
+            Assert::assertTrue($this->checkRequiredFormElement($column, $row['required']));
+            Assert::assertTrue($this->checkFormElement($column, $row['type']));
+        }
     }
 
     /**
-     * @param string $taskName
-     * @throws BehatException
+     * @Then I see add task form with header :header
+     *
+     * @param string $header
+     * @return void
      */
-    public function clickCheckboxNextToTaskOnManageTasksPage(string $taskName)
+    public function testAddTaskForm($header): void
     {
-        $this->wait(MEDIUM_WAIT_TIME);
-
-        $rows = $this->findAllCss('#not_completed_tasks tr');
-        foreach ($rows as $row) {
-            $taskRowText = trim($row->getText());
-            if (strpos($taskRowText, $taskName) !== false) {
-                $button = $row->find('css', 'input[type=checkbox]');
-                if ($button) {
-                    $button->click();
-                    $this->taskDeactivated = true;
-                    return;
-                }
-            }
+        $this->wait(SHORT_WAIT_TIME);
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
         }
-        throw new BehatException("Checkbox not found for task $taskName");
+        $headerCell = $this->findCss('td.cat_head');
+        Assert::assertNotNull($headerCell);
+        Assert::assertEquals($header, $this->sanitizeText($headerCell->getText()));
     }
 
     /**
+     * @When I click delete task link for :task
+     *
      * @param string $task
+     * @return void
+     *
      * @throws BehatException|UnsupportedDriverActionException|DriverException
      */
-    public function clickDeleteButton($task)
+    public function clickDeleteButton($task): void
     {
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame('aj_pop');

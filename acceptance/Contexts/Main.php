@@ -139,6 +139,8 @@ class Main extends BaseContext
      */
     public function clickAddButton($button)
     {
+        $this->wait(MEDIUM_WAIT_TIME);
+
         $buttonElements = $this->findAllCss('button.addButton');
         foreach ($buttonElements as $buttonElement) {
             if ($button == trim($buttonElement->getText())) {

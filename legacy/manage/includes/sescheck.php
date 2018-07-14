@@ -19,6 +19,9 @@ if (!function_exists('getUserByToken')) {
     {
         $_SESSION['userid'] = intval($data['userid']);
         $_SESSION['docid'] = intval($data['docid']);
+        if (!$_SESSION['docid']) {
+            $_SESSION['docid'] = $_SESSION['userid'];
+        }
         $_SESSION['username'] = $data['username'];
     }
 }
@@ -32,18 +35,18 @@ if (
     $_SESSION['username']
 ) {
     if (isset($_GET['token'])) {
-        $_SESSION['token'] = $_GET['token'];
+        $_SESSION['api_token'] = $_GET['token'];
     }
     $loggedIn = true;
 } elseif (isset($_GET['token'])) {
     $result = getUserByToken($_GET['token']);
     if (isset($result['data']['userid'])) {
-        $_SESSION['token'] = $_GET['token'];
+        $_SESSION['api_token'] = $_GET['token'];
         setSessionData($result['data']);
         $loggedIn = true;
     }
-} elseif (isset($_SESSION['token'])) {
-    $result = getUserByToken($_SESSION['token']);
+} elseif (isset($_SESSION['api_token'])) {
+    $result = getUserByToken($_SESSION['api_token']);
     if (isset($result['data']['userid'])) {
         setSessionData($result['data']);
         $loggedIn = true;

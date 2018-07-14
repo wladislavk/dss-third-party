@@ -85,16 +85,6 @@ function patientApiToken () {
     return isset($_SESSION['patient_api_token']) ? $_SESSION['patient_api_token'] : '';
 }
 
-/**
- * @param array $data
- */
-function setUserSessionData(array $data)
-{
-    $_SESSION['userid'] = (int)$data['userid'];
-    $_SESSION['docid'] = (int)$data['docid'];
-    $_SESSION['username'] = $data['username'];
-}
-
 function secureSessionStart() {
     $domain = 'example.com'; // note $domain
     $session_name = 'sec_session_id'; // Set a custom session name

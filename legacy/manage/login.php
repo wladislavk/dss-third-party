@@ -76,7 +76,7 @@ if(isset($_POST["loginsub"]))
 			$_SESSION['name']=$check_myarray['first_name']." ".$check_myarray['last_name'];
 			$_SESSION['user_access']=$check_myarray['user_access'];
 			$_SESSION['companyid']=$check_myarray['companyid'];
-			apiToken(generateUserApiToken($username, $rawPassword));
+			$_SESSION['api_token'] = generateUserApiToken($username, $rawPassword);
 
 
 			if($check_myarray['docid'] != 0)

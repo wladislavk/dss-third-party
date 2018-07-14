@@ -20,8 +20,7 @@
                 $_SESSION['user_access']=$check_myarray['user_access'];
                 $_SESSION['companyid']=$check_myarray['companyid'];
                 $_SESSION['user_type']=$check_myarray['user_type'];
-
-                apiToken(refreshApiToken($_SESSION['admin_api_token']));
+                $_SESSION['api_token'] = generateApiToken('u_'.$check_myarray['userid']);
 
                 if($check_myarray['docid'] != 0)
                 {

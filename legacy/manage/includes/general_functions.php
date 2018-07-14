@@ -20,77 +20,31 @@ function logoutFO () {
     $_SESSION['name'] = '';
     $_SESSION['user_access'] = '';
     $_SESSION['companyid'] = '';
-    apiToken('');
+    $_SESSION['api_token'] = '';
 }
 
 function logoutBO () {
     $_SESSION['adminuserid'] = '';
     $_SESSION['admin_access'] = '';
     $_SESSION['admincompanyid'] = '';
-    adminApiToken('');
+    $_SESSION['admin_api_token'] = '';
 }
 
-/**
- * @return string
- */
-function generateRedirectQuery()
-{
-    /**
-     * Links with token in the query string come from the dual app.
-     * Failed logins from the dual app mean the token is not valid -- expired, for example.
-     * Legacy login will generate a new token.
-     * Login redirections with tokens must remove the (invalid) token, or the invalid token will be saved in session.
-     */
-    $requestUri = $_SERVER['REQUEST_URI'];
-    $components = explode('?', $requestUri, 2);
-    if (isset($components[1])) {
-        $queryString = $components[1];
-        $queryVariables = [];
-        parse_str($queryString, $queryVariables);
-        unset($queryVariables['token']);
-        $queryString = http_build_query($queryVariables);
-        $components[1] = $queryString;
-        $requestUri = join('?', $components);
-    }
-    return urlencode($requestUri);
-}
-
-/**
- * @param string $username
- * @param string $password
- * @return string
- */
 function generateUserApiToken($username, $password)
 {
     return generateApiToken($username, $password);
 }
 
-/**
- * @param string $username
- * @param string $password
- * @return string
- */
 function generateAdminApiToken($username, $password)
 {
     return generateApiToken($username, $password, ['admin' => 1]);
 }
 
-/**
- * @param string $username
- * @param string $password
- * @return string
- */
 function generatePatientApiToken($username, $password)
 {
     return generateApiToken($username, $password, ['patient' => 1]);
 }
 
-/**
- * @param string $username
- * @param string $password
- * @param array $options
- * @return string
- */
 function generateApiToken($username, $password, array $options=[])
 {
     $postFields = $options;
@@ -119,132 +73,16 @@ function generateApiToken($username, $password, array $options=[])
     return 'no-token: ' . $error;
 }
 
-/**
- * @param string $token
- * @return string
- */
-function refreshApiToken($token)
-{
-    $curl = curl_init(config('app.lanApiUrl') . 'refresh-token');
-    curl_setopt_array($curl, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HEADER => true,
-        CURLOPT_HTTPHEADER => ["Authorization: Bearer $token"],
-    ]);
-    $response = curl_exec($curl);
-    $error = curl_error($curl);
-    if (preg_match('/Authorization: Bearer (?P<token>.+)/', $response, $match)) {
-        return $match['token'];
-    }
-    return 'no-token: ' . $error;
+function apiToken() {
+    return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
 }
 
-/**
- * @param string $field
- * @param string|null $value
- * @return string
- */
-function sessionField($field, $value = null)
-{
-    if (!is_null($value)) {
-        $_SESSION[$field] = $value;
-    }
-    if (empty($_SESSION[$field])) {
-        return '';
-    }
-    return $_SESSION[$field];
+function adminApiToken () {
+    return isset($_SESSION['admin_api_token']) ? $_SESSION['admin_api_token'] : '';
 }
 
-/**
- * @param string|null $token
- * @return string
- */
-function apiToken($token = null)
-{
-    return sessionField('token', $token);
-}
-
-/**
- * @param string|null $token
- * @return string
- */
-function adminApiToken($token = null)
-{
-    return sessionField('admin_api_token', $token);
-}
-
-/**
- * @param string|null $token
- * @return string
- */
-function patientApiToken($token = null)
-{
-    return sessionField('patient_api_token', $token);
-}
-
-/**
- * @param array $query
- * @return bool
- */
-function attemptUserLogin(array $query)
-{
-    if (sessionField('userid') && sessionField('docid') && sessionField('username')) {
-        if (isset($query['token'])) {
-            apiToken($query['token']);
-        }
-        return true;
-    }
-    if (isset($query['token'])) {
-        $token = $query['token'];
-        $result = getUserByToken($token);
-        if (isValidUserFromToken($result)) {
-            apiToken($token);
-            setUserSessionData($result['data']);
-            return true;
-        }
-        return false;
-    }
-    if (apiToken()) {
-        $result = getUserByToken(apiToken());
-        if (isValidUserFromToken($result)) {
-            setUserSessionData($result['data']);
-            return true;
-        }
-        return false;
-    }
-    return false;
-}
-
-/**
- * @param string $token
- * @return array
- */
-function getUserByToken($token)
-{
-    $handle = curl_init(API_URL . 'users/current');
-    curl_setopt($handle, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token]);
-    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($handle);
-    curl_close($handle);
-    try {
-        $result = json_decode($response, true);
-    } catch (\Exception $e) {
-        return [];
-    }
-    if (!is_array($result)) {
-        return [];
-    }
-    return $result;
-}
-
-/**
- * @param array $userData
- * @return bool
- */
-function isValidUserFromToken(array $userData)
-{
-    return isset($userData['data']['userid']);
+function patientApiToken () {
+    return isset($_SESSION['patient_api_token']) ? $_SESSION['patient_api_token'] : '';
 }
 
 /**

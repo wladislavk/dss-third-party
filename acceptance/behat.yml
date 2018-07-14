@@ -28,7 +28,6 @@ default:
                 - "%paths.base%/Features/Legacy"
             contexts:
                 - Contexts\Main
-                - Contexts\Auth
                 - Contexts\CommonElements
                 - Contexts\Dashboard
                 - Contexts\Claims
@@ -37,7 +36,6 @@ default:
                 - Contexts\Forms
                 - Contexts\Insurance
                 - Contexts\Ledger
-                - Contexts\LoginViaToken
                 - Contexts\Letters
                 - Contexts\PatientChart
                 - Contexts\PatientScreener

@@ -29,21 +29,6 @@ class Pages
             'url' => '/manage/support.php',
             'vue' => false,
         ],
-        [
-            'name' => 'Inner Page with Invalid Token',
-            'url' => '/manage/index.php?token=undefined&flag=deadbeef',
-            'vue' => false,
-        ],
-        [
-            'name' => 'Inner Page with Valid Token',
-            'url' => '/manage/index.php?token=' . VALID_TOKEN . '&flag=deadbeef',
-            'vue' => false,
-        ],
-        [
-            'name' => 'Inner Page with No Token',
-            'url' => '/manage/index.php?flag=deadbeef',
-            'vue' => false,
-        ],
     ];
 
     /**
@@ -58,9 +43,7 @@ class Pages
                 $url = $aPage['url'];
                 if ($aPage['vue']) {
                     $url = self::VUE_URL_PREFIX . $url;
-                    return $url;
                 }
-                $url = 'http://' . SUT_HOST . $url;
                 return $url;
             }
         }

@@ -1,7 +1,6 @@
 <?php
 
-require_once('padCrypt.php');
-require_once('AES_Encryption.php');
+use VKR\AES\AES_Encryption;
 
 class FTSSamples
 {

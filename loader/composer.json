@@ -10,7 +10,8 @@
         "intouch/laravel-newrelic": "~2.0",
         "soundasleep/html2text": "~0.2",
         "stripe/stripe-php": "^6.4",
-        "tecnickcom/TCPDF": "^6.2"
+        "tecnickcom/TCPDF": "^6.2",
+        "vkr/aes": "^1.1"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",

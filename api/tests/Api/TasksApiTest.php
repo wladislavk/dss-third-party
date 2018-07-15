@@ -48,7 +48,7 @@ class TasksApiTest extends ApiTestCase
         $this->be($user);
         $this->get(self::ROUTE_PREFIX . $this->getRoute());
         $this->assertResponseOk();
-        $this->assertEquals(3, count($this->getResponseData()));
+        $this->assertEquals(7, count($this->getResponseData()));
         $this->assertEquals(82, $this->getResponseData()[0]['id']);
         $this->assertEquals('2014-01-10 00:00:00', $this->getResponseData()[0]['due_date']);
         $this->assertEquals(94, $this->getResponseData()[1]['id']);

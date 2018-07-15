@@ -18,20 +18,20 @@ Feature: Task Management
       | Assigned To | select   | yes      |
       | Completed   | checkbox | no       |
     When I fill task form with values:
-      | field       | type     | value     |
-      | Task        | text     | Test task |
-      | Due Date    | date     | today     |
-      | Assigned To | select   | Doctor 1  |
-      | Completed   | checkbox | No        |
+      | field       | type     | value                  |
+      | Task        | text     | Not existing test task |
+      | Due Date    | date     | today                  |
+      | Assigned To | select   | Doctor 1               |
+      | Completed   | checkbox | No                     |
     And I click add button with text "Add Task"
     Then the modal window is "closed"
     And I see these task sub-sections in "dashboard":
-      | section  |
-      | Overdue  |
-      | Today    |
+      | section |
+      | Overdue |
+      | Today   |
     And I see checkboxes with these tasks under "Today" section in "dashboard":
-      | task      |
-      | Test task |
+      | task                   |
+      | Not existing test task |
 
   Scenario: Edit task
     Given I am logged in as "doc1f"
@@ -42,16 +42,20 @@ Feature: Task Management
       | Set up webinar for Dr. X software training. |
       | call for fu (John Drake)                    |
       | asdasdasd                                   |
+      | Very important task 1                       |
+      | Very important task 2                       |
+      | Very important task 3                       |
+      | Very important task 4                       |
     When I run mouse over task "call for fu (John Drake)" in "dashboard"
     And I click "edit" button next to task "call for fu (John Drake)" in "dashboard"
     Then the modal window is "open"
     And I see add task form with header "Add new task (John Drake)"
     And add task form is filled with values:
-      | field       | type     | value        |
-      | Task        | text     | call for fu  |
-      | Due Date    | text     | 03/06/2014   |
-      | Assigned To | select   | Doctor 1     |
-      | Completed   | checkbox | No           |
+      | field       | type     | value       |
+      | Task        | text     | call for fu |
+      | Due Date    | text     | 03/06/2014  |
+      | Assigned To | select   | Doctor 1    |
+      | Completed   | checkbox | No          |
     When I fill task form with values:
       | field       | type     | value        |
       | Task        | text     | call for bar |
@@ -64,9 +68,14 @@ Feature: Task Management
       | task                                        |
       | Set up webinar for Dr. X software training. |
       | asdasdasd                                   |
+      | Very important task 1                       |
+      | Very important task 2                       |
+      | Very important task 3                       |
+      | Very important task 4                       |
+
     And I see checkboxes with these tasks under "Today" section in "dashboard":
-      | task                                        |
-      | call for bar (John Drake)                   |
+      | task                      |
+      | call for bar (John Drake) |
 
   Scenario: Delete task from modal
     Given I am logged in as "doc1f"
@@ -76,6 +85,10 @@ Feature: Task Management
       | Set up webinar for Dr. X software training. |
       | call for fu (John Drake)                    |
       | asdasdasd                                   |
+      | Very important task 1                       |
+      | Very important task 2                       |
+      | Very important task 3                       |
+      | Very important task 4                       |
     When I run mouse over task "asdasdasd" in "dashboard"
     And I click "edit" button next to task "asdasdasd" in "dashboard"
     Then the modal window is "open"

@@ -34,6 +34,7 @@ RUN set -xe \
     && apt-get update \
     && apt-get -y install \
         php7.2 \
+        php7.2-dev \
         php7.2-bcmath \
         php7.2-common \
         php7.2-curl \
@@ -46,6 +47,8 @@ RUN set -xe \
         php7.2-tidy \
         php7.2-xml \
         libapache2-mod-php7.2 \
+        php-pear \
+        libmcrypt-dev \
     && apt-get -y upgrade \
     # PDFtk
     && curl -sSLo pdftk-2.02-1.el6.x86_64.rpm https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm \
@@ -55,27 +58,25 @@ RUN set -xe \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
+RUN pecl install mcrypt-1.0.1
+
 # PHPUnit
 RUN set -xe \
     && mkdir -p /opt/tmp && cd /opt/tmp \
     # Get keys Sebastian Bergmann <sb@sebastian-bergmann.de> GPG key to validate signature
     # Fallback servers in case one of them is down
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys D8406D0D82947747293778314AA394086372C20A \
-    #  || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
-    #  || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) \
-    && gpg --fingerprint D8406D0D82947747293778314AA394086372C20A \
     # Download phpunit and its signature
     && export PHPUNIT_VERSION=6.5 \
     && curl -sSLo phpunit.phar https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar \
     && curl -sSLo phpunit.phar.asc https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar.asc \
     && ls -la \
-    # Validate
-    && gpg --verify phpunit.phar.asc phpunit.phar \
     # Install and cleanup
     && mv phpunit.phar /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit \
     && rm -rf /opt/tmp \
     # Customize php setup
-    && echo $'short_open_tag = On\ndate.timezone = '"${SYSTEM_TZ}" > "${_RH_PHP_D}/custom.ini"
+    && echo $'short_open_tag = On\ndate.timezone = '"${SYSTEM_TZ}" > "${_RH_PHP_D}/custom.ini" \
+    && echo "extension=/usr/lib/php/20170718/mcrypt.so" > /etc/php/7.2/cli/conf.d/mcrypt.ini \
+    && echo "extension=/usr/lib/php/20170718/mcrypt.so" > /etc/php/7.2/apache2/conf.d/mcrypt.ini
 
 ENV \
     # Set variables exactly as in /opt/rh/rh-php72/enable, to do not source manually

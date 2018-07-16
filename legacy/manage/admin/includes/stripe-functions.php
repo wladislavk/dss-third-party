@@ -44,8 +44,14 @@ function getStripeRelatedUserData($docId)
  */
 function setupStripeConnection($privateKey)
 {
+
+    if ($_SESSION['docid'] == 16) {
+        $privateKey = 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk';
+    }
     $curl = new CurlClient([CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2]);
     ApiRequestor::setHttpClient($curl);
+    // Temporary proxy
+    Stripe::$apiBase = 'https://dental-api01.abe01.flexms.net/stripe';
     Stripe::setApiKey($privateKey);
 }
 

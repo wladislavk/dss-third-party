@@ -153,7 +153,9 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
             LEFT JOIN dental_users p ON dl.producerid=p.userid 
             LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
             LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
-            where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+            where dl.docid='".$_SESSION['docid']."' 
+            AND tc.docid='".$_SESSION['docid']."'
+            and dl.patientid='".s_for($_GET['pid'])."' 
             AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
         UNION
             select 
@@ -198,8 +200,9 @@ while ($find_myarray = mysqli_fetch_array($find_my)) {
             LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
             where i.patientid='".s_for($_GET['pid'])."'
             GROUP BY i.insuranceid
+            ORDER BY service_date DESC
         ";
-        $my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+        $my = $db->query($sql);
 
         $html = '';
         $html .=' <table width="98%">

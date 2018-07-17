@@ -135,13 +135,21 @@ Feature: Dashboard
       | Set up webinar for Dr. X software training. |
       | call for fu (John Drake)                    |
       | asdasdasd                                   |
+      | Very important task 1                       |
+      | Very important task 2                       |
+      | Very important task 3                       |
+      | Very important task 4                       |
     And I see button with text "View All"
     When I click on task "Set up webinar for Dr. X software training." checkbox in "dashboard"
     Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
-      | task                                        |
-      | call for fu (John Drake)                    |
-      | asdasdasd                                   |
-    And I see "My Tasks (2)" bullet in top menu
+      | task                     |
+      | call for fu (John Drake) |
+      | asdasdasd                |
+      | Very important task 1    |
+      | Very important task 2    |
+      | Very important task 3    |
+      | Very important task 4    |
+    And I see "My Tasks (6)" bullet in top menu
     When I run mouse over task "asdasdasd" in "dashboard"
     Then I see "delete" button next to task "asdasdasd" in "dashboard"
     And I see "edit" button next to task "asdasdasd" in "dashboard"
@@ -149,9 +157,13 @@ Feature: Dashboard
     And I confirm browser alert
     # this line turns out to be highly volatile in legacy for no apparent reason, no problem in Vue
     Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
-      | task                                        |
-      | call for fu (John Drake)                    |
-    And I see "My Tasks (1)" bullet in top menu
+      | task                     |
+      | call for fu (John Drake) |
+      | Very important task 1    |
+      | Very important task 2    |
+      | Very important task 3    |
+      | Very important task 4    |
+    And I see "My Tasks (5)" bullet in top menu
 
   Scenario: View messages
     Given I am logged in as "doc1f"

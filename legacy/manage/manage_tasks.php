@@ -116,27 +116,21 @@ $queryArray = array_only($_GET, ['mine', 'sort1', 'sortdir1', 'page1', 'sort2', 
     <?php paging1($no_pages, $index_val, queryString($queryArray, ['page1'])); ?>
 </span>
 
-
 <table id="not_completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr class="tr_bg_h">
-        <td width="2%" class="col_head">
-        </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'task') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="45%">
+        <td width="2%" class="col_head"> </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'task') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="45%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=task&sortdir1=<?php echo ($_REQUEST['sort1'] == 'task' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Task</a>
         </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'due_date') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="20%">
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'due_date') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="20%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=due_date&sortdir1=<?php echo ($_REQUEST['sort1'] == 'due_date' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Due
-                Date</a>
+                Date
+            </a>
         </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'responsible') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="20%">
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'responsible') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="20%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=responsible&sortdir1=<?php echo ($_REQUEST['sort1'] == 'responsible' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Assigned
-                To</a>
+                To
+            </a>
         </td>
         <td valign="top" class="col_head" width="15%">
             Action

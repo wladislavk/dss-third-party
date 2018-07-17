@@ -23,10 +23,6 @@ $db = new Db();
 if ( !empty($_POST['form']) ) {
     foreach($_POST['form'] as $form) {
         $insertMedicalCode = $form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != '';
-        $medicalCodeColumnsWithComma = '';
-        if ($insertMedicalCode) {
-            $medicalCodeColumnsWithComma = ', `modcode`, `modcode2`, `placeofservice`';
-        }
         $sqlinsertqry = "INSERT INTO `dental_ledger` (`ledgerid` ,
                                                         `patientid` ,
                                                         `service_date` ,

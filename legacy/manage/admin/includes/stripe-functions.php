@@ -50,7 +50,7 @@ function setupStripeConnection($privateKey)
     }
     $curl = new CurlClient([CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2]);
     ApiRequestor::setHttpClient($curl);
-    $apiUrl = getenv('API_URL');
+    $apiUrl = getenv('LAN_API_URL');
     // Temporary proxy
     Stripe::$apiBase = $apiUrl . 'stripe';
     Stripe::setApiKey($privateKey);

@@ -6,6 +6,7 @@
 */
 Route::get('health-check', 'Api\HealthCheckController@index');
 Route::post('auth', 'Auth\AuthController@auth');
+Route::any('stripe/{any}', 'StripeController@proxy')->where('any', '.*');
 
 Route::group(
     ['middleware' => ['jwt.authentication', 'sudo.authentication', 'authorization:admin|user|patient']],
@@ -331,8 +332,6 @@ Route::group(
         Route::resource('social-histories', 'SocialHistoriesController', ['except' => ['create', 'edit']]);
 
         Route::resource('soft-palates', 'SoftPalatesController', ['except' => ['create', 'edit']]);
-
-        Route::any('stripe/{any}', 'StripeController@proxy')->where('any', '.*');
 
         Route::get('summaries/latest', 'SummariesController@latest');
         Route::resource('summaries', 'SummariesController', ['except' => ['create', 'edit']]);

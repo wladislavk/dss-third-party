@@ -23,7 +23,10 @@ $db = new Db();
 if ( !empty($_POST['form']) ) {
     foreach($_POST['form'] as $form) {
         $insertMedicalCode = $form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != '';
-        $medicalCodeColumnsWithComma = $insertMedicalCode ? ', `modcode`, `modcode2`, `placeofservice`' : '';
+        $medicalCodeColumnsWithComma = '';
+        if ($insertMedicalCode) {
+            $medicalCodeColumnsWithComma = ', `modcode`, `modcode2`, `placeofservice`';
+        }
         $sqlinsertqry = "INSERT INTO `dental_ledger` (`ledgerid` ,
                                                         `patientid` ,
                                                         `service_date` ,
@@ -40,8 +43,10 @@ if ( !empty($_POST['form']) ) {
                                                         `ip_address` ,
                                                         `transaction_code`,
                                                         `producerid`,
-                                                        `primary_claim_id`
-                                                        $medicalCodeColumnsWithComma
+                                                        `primary_claim_id`,
+                                                        `modcode`,
+                                                        `modcode2`,
+                                                        `placeofservice`
                                                         ) VALUES ";
 
         if ($form['status'] == DSS_TRXN_PENDING) {
@@ -95,76 +100,76 @@ if ( !empty($_POST['form']) ) {
             $amount = $form['amount'];
         }
 
-        $patientId = (int)$_POST['patientid'];
-        $userId = (int)$_SESSION['userid'];
-        $docId = (int)$_SESSION['docid'];
-        $remoteIp = $db->escape($_SERVER['REMOTE_ADDR']);
-        $transactionCode = $db->escape($txcode['transaction_code']);
-        $transactionDescription = $db->escape($txcode['description']);
+        $_POST['patientid'] = $db->escape( $_POST['patientid']);
+        $_SESSION['userid'] = $db->escape( $_SESSION['userid']);
+        $_SESSION['docid'] = $db->escape( $_SESSION['docid']);
+        $_SERVER['REMOTE_ADDR'] = $db->escape( $_SERVER['REMOTE_ADDR']);
+        $txcode['transaction_code'] = $db->escape( $txcode['transaction_code']);
+        $txcode['description'] = $db->escape( $txcode['description']);
 
         if ($d <= $i) {
-            $form_claim_id = 0;
             if ($form['status'] == 1) {
-                $form_claim_id = (int)$claim_id;
+                $form_claim_id = $claim_id;
+            } else {
+                $form_claim_id = '';
             }
-            $amount = (float)str_replace(',', '', $amount);
-            $values = [
-                'ledgerid' => 'NULL',
-                'patientid' => $patientId,
-                'service_date' => "'" . date('Y-m-d', strtotime($form['service_date'])) . "'",
-                'entry_date' => "'" . date('Y-m-d', strtotime($form['entry_date'])) . "'",
-                'description' => "'$transactionDescription'",
-                'producer' => 'NULL',
-                'amount' => 'NULL',
-                'transaction_type' => 'None',
-                'paid_amount' => 'NULL',
-                'userid' => $userId,
-                'docid' => $docId,
-                'status' => "'" . $db->escape($new_status) . "'",
-                'adddate' => "'" . date('Y-m-d') . "'",
-                'ip_address' => "'$remoteIp'",
-                'transaction_code' => "'$transactionCode'",
-                'producerid' => (int)$form['producer'],
-                'primary_claim_id' => $form_claim_id,
-            ];
+
             // This particular insertion requires extra column values
             if ($insertMedicalCode) {
-                $values = array_merge($values, [
-                    'transaction_type' => 'Charge',
-                    'amount' => $amount,
-                    'adddate' => "'" . date('Y-m-d', strtotime($form['entry_date'])) . "'",
-                    'modcode' => "'" . $db->escape($txcode['modifier_code_1']) . "'",
-                    'modcode2' => "'" . $db->escape($txcode['modifier_code_2']) . "'",
-                    'placeofservice' => "'" . $db->escape($txcode['place_service']) . "'",
-                ]);
-                $query_ins = join(', ', $values);
+                $query_ins = "( NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '{$txcode['modifier_code_1']}', '{$txcode['modifier_code_2']}', '{$txcode['place_service']}')";
             } elseif ($form['procedure_code'] == '2' && $form['service_date'] != '' && $form['amount'] != '' || $form['procedure_code'] == '3' && $form['service_date'] != '' && $form['amount'] != '') {
-                $values = array_merge($values, [
-                    'transaction_type' => 'Credit',
-                    'paid_amount' => $amount,
-                ]);
-                $query_ins = join(', ', $values);
+                $query_ins = "(
+                    NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', '')";
             } elseif ($form['procedure_code'] == '6' && $form['proccode'] == '100' && $form['service_date'] != '' && $form['amount'] != '') {
-                $values = array_merge($values, [
-                    'transaction_type' => 'Debit-Prod Adj',
-                    'paid_amount' => $amount,
-                ]);
-                $query_ins = join(', ', $values);
+                $query_ins = "(
+                    NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Debit-Prod Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                        )";
             } elseif ($form['procedure_code'] == '6' && $form['proccode'] != '100' && $form['service_date'] != '' && $form['amount'] != '') {
-                $values = array_merge($values, [
-                    'transaction_type' => 'Credit-Coll Adj',
-                    'paid_amount' => $amount,
-                ]);
-                $query_ins = join(', ', $values);
+                $query_ins = "(
+                    NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit-Coll Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                        )";
             } elseif ($form['service_date'] != '' && $form['amount'] != '' ) {
-                $query_ins = join(', ', $values);
+                $query_ins = "(
+                    NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'None', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                        )";
             }
 
             if (!empty($query_ins)) {
                 $sqlinsertqry .= $query_ins;
                 $ins_id = $db->getInsertId($sqlinsertqry);
                 if (strtolower($txcode['transaction_code']) == 'e0486') {
-                    invoice_add_e0486('1', $_SESSION['docid'], $ins_id);
+                    invoice_add_e0486('1', $_SESSION['docid'], $ins_id, DSS_INVOICE_TYPE_BC_FO);
+                }
+            }
+        } elseif ($d == $i) {
+            $descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_code='".$form['proccode']."' LIMIT 1;";
+
+            $descquery = $db->getResults($descsql);
+            if ($descquery) {
+                foreach ($descquery as $txcode) {
+                    if ($form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != '') {
+                        $service_date = $form['service_date'];
+                        $sqlinsertqry .= "(
+                            NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($service_date))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                            )";
+                    } elseif ($form['procedure_code'] == '2' && $form['service_date'] != '' && $form['amount'] != '' || $form['procedure_code'] == '3' && $form['service_date'] != '' && $form['amount'] != '') {
+                        $sqlinsertqry .= "(
+                            NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                            )";
+                    } elseif ($form['procedure_code'] == '6' && $form['proccode'] == '100' && $form['service_date'] != '' && $form['amount'] != '') {
+                        $sqlinsertqry .= "(
+                            NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Debit-Prod Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                            )";
+                    } elseif ($form['procedure_code'] == '6' && $form['proccode'] != '100' && $form['service_date'] != '' && $form['amount'] != '') {
+                        $sqlinsertqry .= "(
+                            NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit-Coll Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                            )";
+                    } elseif ($form['service_date'] != '' && $form['amount'] != '') {
+                        $sqlinsertqry .= "(
+                            NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'None', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '', '', ''
+                            )";
+                    }
+                    $d++;
                 }
             }
         }

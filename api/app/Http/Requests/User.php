@@ -66,7 +66,6 @@ class User extends Request
         'claim_margin_top'        => 'integer',
         'claim_margin_left'       => 'integer',
         'logo'                    => ['regex:/^user_logo_[0-9]+\.(gif|png|bmp|jpg|jpeg)$/'],
-        'homepage'                => 'boolean',
         'use_letter_header'       => 'boolean',
         'access_code_id'          => 'integer',
         'first_name'              => 'required|string',

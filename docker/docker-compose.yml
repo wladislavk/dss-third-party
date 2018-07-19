@@ -30,7 +30,7 @@ services:
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
     environment:
       SYSTEM_TZ_ENV: "${SYSTEM_TZ:-America/New_York}"
-    command: bash -c 'yum list installed | grep -e php56 -e mcrypt -e pdf -e httpd24'
+    command: bash -c 'dpkg -l | grep -e php56 -e mcrypt -e pdf -e httpd24'
     labels:
       - "traefik.enable=false"
 

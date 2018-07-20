@@ -1,5 +1,6 @@
 <?php
-namespace Ds3\Libraries\Legacy;
+namespace Ds3ThirdParty\Metronic\JqueryFileUpload;
+
 /*
  * jQuery File Upload Plugin PHP Class 7.1.0
  * https://github.com/blueimp/jQuery-File-Upload
@@ -13,7 +14,6 @@ namespace Ds3\Libraries\Legacy;
 
 class UploadHandler
 {
-
     protected $options;
 
     // PHP File Upload error message codes:

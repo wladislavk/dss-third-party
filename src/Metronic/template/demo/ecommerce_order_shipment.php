@@ -1,9 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
   /* 
    * Paging
    */
-
-  //var_dump($_POST["selected"]);
 
   $iTotalRecords = 0;
   $iDisplayLength = intval($_REQUEST['iDisplayLength']);

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 /**
  * upload.php
  *
@@ -21,15 +21,6 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-
-/* 
-// Support CORS
-header("Access-Control-Allow-Origin: *");
-// other CORS headers if any...
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-	trigger_error("Exit called", E_USER_ERROR); // finish preflight CORS requests here
-}
-*/
 
 // 5 minutes execution time
 @set_time_limit(5 * 60);

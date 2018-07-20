@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 $query = $_REQUEST["query"];
 
 $max = rand(5, 10);

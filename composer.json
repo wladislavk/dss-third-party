@@ -9,7 +9,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Ds3ThirdParty\\": "src/"
+            "Ds3ThirdParty\\": "src/",
+            "Ds3ThirdParty\\Metronic\\JqueryFileUpload": "src/Metronic/template/assets/plugins/jquery-file-upload/server/php/"
         }
     }
 }

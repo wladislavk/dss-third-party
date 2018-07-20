@@ -1,0 +1,15 @@
+{
+    "name": "ds3/third-party",
+    "description": "Third party code for DSS",
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "php": ">=7.2",
+        "ext-gd": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ds3ThirdParty\\": "src/"
+        }
+    }
+}

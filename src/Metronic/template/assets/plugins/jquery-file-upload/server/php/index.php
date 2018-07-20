@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Metronic\template\assets\plugins\jquery-file-upload
 /*
  * jQuery File Upload Plugin PHP Example 5.14
  * https://github.com/blueimp/jQuery-File-Upload

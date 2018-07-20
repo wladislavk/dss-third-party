@@ -12,6 +12,9 @@ if (!empty($_REQUEST["page"])) {
     $index_val = 0;
 }
 
+$sort = 'pc.lastname';
+$dir = 'DESC';
+
 if(isset($_REQUEST['sort'])){
     switch($_REQUEST['sort']){
         case 'address':
@@ -27,12 +30,9 @@ if(isset($_REQUEST['sort'])){
 }else{
     $_REQUEST['sort']='name';
     $_REQUEST['sortdir']='DESC';
-    $sort = "pc.lastname";
 }
-if(isset($_REQUEST['sortdir'])){
-    $dir = $_REQUEST['sortdir'];
-}else{
-    $dir = 'DESC';
+if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir'] === 'ASC'){
+    $dir = 'ASC';
 }
 
 $db = new Db();
@@ -41,7 +41,7 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT pc.parent_patientid, pc.firstname, pc.lastname FROM dental_patients pc 
     JOIN dental_patients p ON p.patientid = pc.parent_patientid
     WHERE p.docid=".$db->escape($_SESSION['docid'])." AND pc.parent_patientid IS NOT NULL AND pc.parent_patientid != ''";
-$sql .= "ORDER BY ".$sort." ".$dir;
+$sql .= " ORDER BY ".$sort." ".$dir;
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 

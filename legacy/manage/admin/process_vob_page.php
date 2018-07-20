@@ -76,8 +76,6 @@ $preauth = $db->getRow($sql);
 
 $pid = $preauth['patient_id'];
 
-$canEdit = preAuthEditPermission($preauth, $adminCompanyId, $isSuperAdmin);
-
 if (!$preauth) {
     $message = 'You are not authorized to view this page';
     ?>
@@ -87,6 +85,8 @@ if (!$preauth) {
     <?php
     trigger_error('Die called', E_USER_ERROR);
 }
+
+$canEdit = preAuthEditPermission($preauth, $adminCompanyId, $isSuperAdmin);
 
 // load dynamic preauth info
 $sql = "SELECT

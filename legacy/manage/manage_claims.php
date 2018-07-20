@@ -163,7 +163,7 @@ if (isset($_GET['notes']) && $_GET['notes'] == 1) {
 }
 
 $pend_sql .= " ORDER BY " . $db->escape($sort);
-$pend_my = $db->getResults($pend_sql);
+$pend_my = $db->query($pend_sql);
 
 /**
  * Filter BO claims by actionable claims.
@@ -243,7 +243,7 @@ if ($isDefaultFilter) {
 }
 
 $sql .= " ORDER BY " . $db->escape($sort);
-$my = $db->getResults($sql);
+$my = $db->query($sql);
 
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -330,7 +330,7 @@ if(isset($_GET['msg'])){
             Action
         </td>
     </tr>
-    <?php if(count($pend_my) == 0)
+    <?php if(!$pend_my)
     { ?>
     <tr class="tr_bg">
         <td valign="top" class="col_head" colspan="10" align="center">
@@ -339,7 +339,7 @@ if(isset($_GET['msg'])){
     </tr>
     <?php
     } else {
-        foreach ($pend_my as $pend_myarray) {
+        while ($pend_myarray = mysqli_fetch_assoc($pend_my)) {
             $tr_class = $pend_myarray['belongs_to_bo'] ? 'tr_inactive' : 'tr_active';
         ?>
     <tr class="<?php echo $tr_class;?> status_<?php echo $pend_myarray['status']; ?> claim"
@@ -470,7 +470,7 @@ if(v == '100'){
                 Mailed
             </td>
         </tr>
-        <?php if(count($my) == 0){ ?>
+        <?php if(!$my){ ?>
             <tr class="tr_bg">
                 <td valign="top" class="col_head" colspan="10" align="center">
                     No Records
@@ -479,7 +479,7 @@ if(v == '100'){
             <?php
         } else {
             $sec_status = array(DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_PAID_SEC_INSURANCE, DSS_CLAIM_PAID_SEC_PATIENT,DSS_CLAIM_SEC_PATIENT_DISPUTE, DSS_CLAIM_SEC_REJECTED);
-            foreach ($my as $myarray) {
+            while ($myarray = mysqli_fetch_assoc($my)) {
                 if(in_array($myarray["status"], $sec_status)){
                     $is_secondary = true;
                 }else{

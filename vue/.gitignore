@@ -4,4 +4,5 @@ npm-debug.log
 .idea
 /config.js
 yarn-error.log
-dist/
+dist/*
+!dist/.gitkeep

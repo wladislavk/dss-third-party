@@ -1,10 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-// It will be called downloaded.pdf
-include_once('3rdParty/tcpdf/config/lang/eng.php');
-include_once('3rdParty/tcpdf/tcpdf.php');
-
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/dental_patient_summary.php');

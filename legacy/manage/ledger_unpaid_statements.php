@@ -5,8 +5,6 @@ set_time_limit(300);
 session_start();
 
 // It will be called downloaded.pdf
-require_once('3rdParty/tcpdf/config/lang/eng.php');
-require_once('3rdParty/tcpdf/tcpdf.php');
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/dental_patient_summary.php');

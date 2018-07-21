@@ -6,7 +6,7 @@ require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if($_POST["mult_qualifiersub"] == 1) {
-    $op_arr = split("\n",trim($_POST['qualifier']));
+    $op_arr = explode("\n",trim($_POST['qualifier']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {

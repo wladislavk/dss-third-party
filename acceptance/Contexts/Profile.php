@@ -295,7 +295,8 @@ SET
 	service_medicare_ptan = '88888999',
 	service_tax_id_or_ssn = '99999999',
 	service_ssn = 0,
-	service_ein = 0
+	service_ein = 0,
+	updated_at = '2016-01-12 15:15:29'
 WHERE 
 	dental_users.userid = 1;
 SQL;

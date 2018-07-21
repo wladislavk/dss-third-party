@@ -75,9 +75,9 @@ export default {
         usePaymentReports: parseInt(data.doc_info.use_payment_reports),
         useCourseStaff: parseInt(data.doc_info.use_course_staff)
       }
+      commit(symbols.mutations.notificationNumbers, data.numbers)
       commit(symbols.mutations.userInfo, userInfo)
       commit(symbols.mutations.docInfo, docInfo)
-      commit(symbols.mutations.notificationNumbers, data.numbers)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
     })

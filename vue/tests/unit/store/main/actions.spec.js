@@ -143,7 +143,6 @@ describe('Main module actions', () => {
         use_course: '5',
         username: 'John',
         doc_info: {
-          homepage: '6',
           manage_staff: '7',
           use_eligible_api: '8',
           use_letters: '9',
@@ -179,7 +178,6 @@ describe('Main module actions', () => {
             {
               type: symbols.mutations.docInfo,
               payload: {
-                homepage: 6,
                 manageStaff: 7,
                 useEligibleApi: 8,
                 useLetters: 9,

@@ -1,14 +1,14 @@
 <?php
 namespace Ds3\Http\Middleware;
 
-use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Config\Repository as Config;
 use Ds3\Libraries\Legacy\Loader;
 use Ds3\Libraries\Legacy\LoaderException;
 use Closure;
 
-class LegacyLoader implements Middleware
+class LegacyLoader
 {
     private $config;
     private $debugBar = null;
@@ -22,7 +22,13 @@ class LegacyLoader implements Middleware
         }
     }
 
-    public function handle($request, Closure $next)
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return \Illuminate\Http\Response|mixed
+     * @throws \Exception
+     */
+    public function handle(Request $request, Closure $next)
     {
         try {
             $legacyPath = $this->config->get('app.legacy_path');
@@ -72,6 +78,7 @@ class LegacyLoader implements Middleware
 
             return $response;
         } catch (LoaderException $exception) {
+            die($exception->getMessage());
             // Legacy file not found
         }
 

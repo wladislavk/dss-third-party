@@ -156,8 +156,8 @@ $template = "<p>%todays_date%</p>
 
         foreach ($letter_contacts as $key => $contact) {
             // Token search and replace arrays
-            $search = array();
-            $replace = array();
+            $search = [];
+            $replace = [];
             $search[] = '%todays_date%';
             $replace[] = "<strong>" . $todays_date . "</strong>";
             $search[] = '%patient_fullname%';

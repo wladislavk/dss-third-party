@@ -7,7 +7,8 @@ use Illuminate\Http\RedirectResponse;
 
 class Loader
 {
-    public static $redirectRegex = '@^
+    public static $redirectRegex = /** @lang text */
+        '@^
             \s*<script[^>]*?>\s*
                 (?:
                     window\.location\.replace\(\s*
@@ -85,11 +86,11 @@ class Loader
      * Sets the values of the GET (query string) or POST (payload) request
      *
      * @param string $type get, post
-     * @param Array $parameters Array
+     * @param array $parameters Array
      * @param bool $reset Delete previous contents of the parameters
      * @return $this
      */
-    public function setRequestParams($type, Array $parameters, $reset = false)
+    public function setRequestParams($type, array $parameters, $reset = false)
     {
         $type = strtolower($type);
 
@@ -124,7 +125,7 @@ class Loader
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getOutputHeaders()
     {
@@ -323,6 +324,7 @@ class Loader
     private function requireLegacyFile($legacyFile)
     {
         try {
+            /** @noinspection PhpIncludeInspection */
             require $legacyFile;
         } catch (\ErrorException $exitException) {
             /**

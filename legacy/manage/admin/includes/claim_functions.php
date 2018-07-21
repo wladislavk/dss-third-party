@@ -1,7 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-require_once __DIR__ . '/../../3rdParty/tcpdf/tcpdf.php';
 require_once __DIR__ . '/../../3rdParty/fpdi/fpdi.php';
 require_once __DIR__ . '/../../includes/constants.inc';
 

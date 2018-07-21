@@ -30,7 +30,6 @@ if ($exitStatus) {
     error_log("PDFtk exit status: $exitStatus");
 }
 
-include_once '3rdParty/tcpdf/tcpdf.php';
 include_once '3rdParty/fpdi/fpdi.php';
 
 class PDF extends \FPDI {

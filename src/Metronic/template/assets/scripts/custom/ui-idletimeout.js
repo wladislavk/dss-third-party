@@ -17,10 +17,10 @@ var UIIdleTimeout = function () {
                 pollingInterval: 60,
                 AJAXTimeout: 10000,
                 failedRequests: 20,
-                keepAliveURL: '/manage/admin/demo/idletimeout_keepalive.php',
+                keepAliveURL: '../../../demo/idletimeout_keepalive.php',
                 serverResponseEquals: 'OK',
                 onTimeout: function(){
-                    window.location = "/manage/admin/logout.php";
+                    // window.location = "logout.php";
                 },
                 onIdle: function(){
                     $('#idle-timeout-dialog').modal('show');

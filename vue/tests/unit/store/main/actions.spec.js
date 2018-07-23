@@ -164,6 +164,13 @@ describe('Main module actions', () => {
           http: { path: endpoints.users.current },
           mutations: [
             {
+              type: symbols.mutations.notificationNumbers,
+              payload: {
+                one: 1,
+                two: 2
+              }
+            },
+            {
               type: symbols.mutations.userInfo,
               payload: {
                 userId: 'u_1',
@@ -184,13 +191,6 @@ describe('Main module actions', () => {
                 usePatientPortal: 10,
                 usePaymentReports: 11,
                 useCourseStaff: 12
-              }
-            },
-            {
-              type: symbols.mutations.notificationNumbers,
-              payload: {
-                one: 1,
-                two: 2
               }
             }
           ],

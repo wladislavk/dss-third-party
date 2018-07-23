@@ -29,6 +29,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     $pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".$db->escape($_REQUEST['id'])."'";
 
     $pcr = $db->getRow($pcsql);
+    $validContactType = true;
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['contacttype']) {
         case '1':
@@ -46,10 +47,14 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
         case '5':
             $psql .= " docmdother ";
             break;
+        default:
+            $validContactType = false;
     }
-    $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
 
-    $db->query($psql);
+    if ($validContactType) {
+        $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
+        $db->query($psql);
+    }
     $d = "DELETE FROM dental_patient_contacts where id='".$db->escape($_REQUEST['id'])."'";
 
     $db->query($d);

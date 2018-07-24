@@ -44,8 +44,15 @@ function getStripeRelatedUserData($docId)
  */
 function setupStripeConnection($privateKey)
 {
+
+    if ($_SESSION['docid'] == 16) {
+        $privateKey = 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk';
+    }
     $curl = new CurlClient([CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2]);
     ApiRequestor::setHttpClient($curl);
+    $apiUrl = getenv('STRIPE_PROXY_URL');
+    // Temporary proxy
+    Stripe::$apiBase = $apiUrl . 'stripe';
     Stripe::setApiKey($privateKey);
 }
 

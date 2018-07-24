@@ -163,8 +163,6 @@ Feature: Task Management from Manage Tasks page
 
   Scenario: Complete task
     When I click checkbox next to task "Set up webinar for Dr. X software training." on Manage Tasks page
-    And I click "Dashboard" link
-    And I click "View All" button in Tasks section
     Then I see the list of tasks:
       | name                                                     | due_date | assigned_to               |
       | asdasdasd                                                | Overdue  | Doctor 1                  |

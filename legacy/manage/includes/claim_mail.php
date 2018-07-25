@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once '../admin/includes/main_include.php';
 require_once '../admin/includes/general.htm';
 require_once 'claim_functions.php';
@@ -8,8 +10,7 @@ $mailed = $_REQUEST['mailed'];
 $type = $_REQUEST['type'];
 $s = mail_claim($lid, $mailed, $type);
 if($s){
-  echo '{"success":true}';
+    echo '{"success":true}';
 }else{
-  echo '{"error":true}';
+    echo '{"error":true}';
 }
-?>

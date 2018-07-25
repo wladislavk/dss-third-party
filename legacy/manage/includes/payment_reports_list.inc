@@ -18,11 +18,9 @@ $page_count = 30;
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 $from = $page * $page_count;
 
-$sort_by = strtolower($_REQUEST['sort']);
 $sort_by = isset($_REQUEST['sort'])  ? strtolower($_REQUEST['sort']) : 'date';
 $sort_direction = strtolower($_REQUEST['sortdir']);
 $sort_direction = (empty($sort_direction) || ($sort_direction != 'asc' && $sort_direction != 'desc')) ? 'desc' : $sort_direction;
-$sort_by_sql = '';
 
 $npiList = [];
 
@@ -48,20 +46,20 @@ if ($is_unviewed) {
 }
 
 /**
- * @see DSS-437
- *
  * Retrieve all NPIs associated to member of this office
  */
 if (empty($back_office)) {
     $franchiseeId = $docId;
 }
 
+$db = new Db();
+
 if ($franchiseeId) {
     $sql_user_filter = "i.docid = '$franchiseeId'";
     $npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
         FROM dental_users
         WHERE docid = '$franchiseeId'
-            OR userid = '$franchiseeId'");
+        OR userid = '$franchiseeId'");
 
     $npiList = $npiList ? array_flatten($npiList) : [];
     $npiList = array_filter(array_unique($npiList));
@@ -85,7 +83,7 @@ $sql_count = "SELECT COUNT(payment_id) AS total
             $sql_join_section
         WHERE $sql_user_filter
         
-        UNION
+    UNION
         
         SELECT payment_id, viewed
         FROM dental_payment_reports AS pr
@@ -94,7 +92,7 @@ $sql_count = "SELECT COUNT(payment_id) AS total
             AND i.insuranceid IS NULL
     ) reports
     WHERE 1 = 1 $sql_where
-    ";
+";
 
 $total = $db->getColumn($sql_count, 'total', 0);
 
@@ -288,4 +286,4 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
         });
     });
 </script>
-<?php  include 'includes/bottom.htm';?>
+<?php include __DIR__ . '/bottom.htm';?>

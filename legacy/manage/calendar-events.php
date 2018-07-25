@@ -1,9 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 use Carbon\Carbon;
 
 include __DIR__ . '/admin/includes/main_include.php';
 include __DIR__ . '/includes/sescheck.php';
+
+$db = new Db();
 
 $docId = intval($_SESSION['docid']);
 $eventId = !empty($_GET['eid']) ? preg_replace('/\D+/', '', $_GET['eid']) : '';
@@ -20,11 +23,11 @@ $conditional = strlen($eventId) ? "dc.event_id = '$eventId'" :
 
 $sql = "SELECT dc.*, dp.firstname, dp.lastname, dt.name AS etype
     FROM dental_calendar AS dc
-        LEFT JOIN dental_patients AS dp ON dc.patientid = dp.patientid
-        INNER JOIN dental_appt_types AS dt ON dc.category = dt.classname
+    LEFT JOIN dental_patients AS dp ON dc.patientid = dp.patientid
+    INNER JOIN dental_appt_types AS dt ON dc.category = dt.classname
     WHERE dc.docid='$docId'
-        AND dt.docid='$docId'
-        AND ($conditional)
+    AND dt.docid='$docId'
+    AND ($conditional)
     ORDER BY dc.id ASC";
 $eventList = $db->getResults($sql);
 

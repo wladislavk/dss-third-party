@@ -14,12 +14,12 @@ Feature: Common page elements
       | Support (5)        |
       | Sign Out           |
     And I see left top bar with following links:
-      | text               |
-      | Scheduler          |
-      | Snoozle/Help       |
-      | Online CE          |
-    And I see "My Tasks (3)" bullet in top menu
-    When I run mouse over "My Tasks (3)" bullet in top menu
+      | text         |
+      | Scheduler    |
+      | Snoozle/Help |
+      | Online CE    |
+    And I see "My Tasks (7)" bullet in top menu
+    When I run mouse over "My Tasks (7)" bullet in top menu
     Then I see these task sub-sections in "top menu":
       | section |
       | Overdue |
@@ -29,6 +29,11 @@ Feature: Common page elements
       | Set up webinar for Dr. X software training. |
       | call for fu (John Drake)                    |
       | asdasdasd                                   |
+      | Very important task 1                       |
+      | Very important task 2                       |
+      | Very important task 3                       |
+      | Very important task 4                       |
+
     And I see patient search form
     And I see buttons in patient search section:
       | text          |

@@ -56,7 +56,7 @@ export default {
 
   [symbols.actions.userInfo] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
-    return http.request('get', endpoints.users.current).then((response) => {
+    return http.get(endpoints.users.current).then((response) => {
       const data = response.data.data
       const userInfo = {
         userId: data.id,

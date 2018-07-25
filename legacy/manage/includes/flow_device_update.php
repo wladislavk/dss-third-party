@@ -1,43 +1,48 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once '../admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include_once '../admin/includes/main_include.php';
 
-  $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
-  $d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
-  $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
+$id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+$d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
+$pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
-  $info_sql = "UPDATE dental_flow_pg2_info SET
-          		 device_id='".mysqli_real_escape_string($con,$d)."'
-          		 WHERE id='".mysqli_real_escape_string($con,$id)."'";
+$db = new Db();
 
-  $q = $db->query($info_sql);
+$info_sql = "UPDATE dental_flow_pg2_info SET
+    device_id='".$db->escape( $d)."'
+    WHERE id='".$db->escape( $id)."'";
 
-  $last_sql = "SELECT id FROM dental_flow_pg2_info
-  		         WHERE appointment_type=1 AND
-        			 patientid='".$pid."'
-        			 AND (segmentid='7' OR segmentid='4')
-        			 order BY date_completed DESC, id DESC";
+$db = new Db();
+$q = $db->query($info_sql);
 
-  $last_r = $db->getRow($last_sql);
-  if($last_r['id']==$id){
-    $sql = "SELECT * FROM dental_ex_page5_view where patientid='".$pid."'";
+$last_sql = "SELECT id FROM dental_flow_pg2_info
+    WHERE appointment_type=1 AND
+    patientid='".$pid."'
+    AND (segmentid='7' OR segmentid='4')
+    order BY date_completed DESC, id DESC";
 
-    if($db->getNumberRows($sql)==0){
-      $s = "INSERT INTO dental_ex_page5 set 
-            dentaldevice='".mysqli_real_escape_string($con,$d)."', 
+$last_r = $db->getRow($last_sql);
+if ($last_r['id'] == $id) {
+    $sql = "SELECT * FROM dental_ex_page5_pivot where patientid='".$pid."'";
+
+    if ($db->getNumberRows($sql) == 0) {
+        $sql = "INSERT INTO dental_ex_page5 set 
+            dentaldevice='".$db->escape($d)."', 
             patientid='".$pid."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     } else {
-      $sql = "update dental_ex_page5_view set dentaldevice='".mysqli_real_escape_string($con,$d)."' where patientid='".$pid."'";
+        $exPageId5Row = $db->getRow($sql);
+        $exPage5Id = $exPageId5Row['ex_page5id'];
+        $sql = "update dental_ex_page5 set dentaldevice='".$db->escape( $d)."' where ex_page5id=$exPage5Id";
     }
-  $q = $db->query($sql);
-  }
-  if(!empty($q)){
+    $q = $db->query($sql);
+}
+if (!empty($q)) {
     echo '{"success":true}';
-  }else{
+} else {
     echo '{"error":true}';
-  }
-?>
+}

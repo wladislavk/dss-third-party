@@ -11,14 +11,15 @@ require_once __DIR__ . '/general_functions.php';
  * @param int $hstId
  * @return int
  */
-function createPatientFromHSTRequest ($hstId) {
+function createPatientFromHSTRequest($hstId)
+{
     $db = new Db();
 
     $hstId = intval($hstId);
     $hstData = $db->getRow("SELECT screener_id, patient_email, patient_dob
         FROM dental_hst
         WHERE id = '$hstId'
-            AND COALESCE(patient_id, 0) = 0");
+        AND COALESCE(patient_id, 0) = 0");
 
     if (!$hstData) {
         return 0;
@@ -28,7 +29,7 @@ function createPatientFromHSTRequest ($hstId) {
     $screenerData = $db->getRow("SELECT docid, first_name, last_name, phone
         FROM dental_screener
         WHERE id = '$screenerId'
-            AND COALESCE(patient_id, 0) = 0");
+        AND COALESCE(patient_id, 0) = 0");
 
     if (!$screenerData) {
         return 0;
@@ -60,14 +61,15 @@ function createPatientFromHSTRequest ($hstId) {
  * @param $screenerId
  * @return int
  */
-function createPatientFromScreener ($screenerId) {
+function createPatientFromScreener($screenerId)
+{
     $db = new Db();
 
     $screenerId = intval($screenerId);
     $screenerData = $db->getRow("SELECT docid, first_name, last_name, phone
         FROM dental_screener
         WHERE id = '$screenerId'
-            AND COALESCE(patient_id, 0) = 0");
+        AND COALESCE(patient_id, 0) = 0");
 
     if (!$screenerData) {
         return 0;
@@ -95,7 +97,7 @@ function createPatientFromScreener ($screenerId) {
 }
 
 /**
- * Mark a  HST Request as authorized, create proper EP worth entry and email patient
+ * Mark a HST Request as authorized, create proper EP worth entry and email patient
  *
  * @param int $hstId
  * @param int $hstCompanyId
@@ -103,7 +105,8 @@ function createPatientFromScreener ($screenerId) {
  * @param int $userId
  * @return bool|int
  */
-function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
+function authorizeHSTRequest($hstId, $hstCompanyId, $userId, $docId)
+{
     $db = new Db();
 
     $hstId = intval($hstId);
@@ -119,7 +122,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
     $screenerData = $db->getRow("SELECT docid, patient_id, first_name, last_name, phone
         FROM dental_screener
         WHERE id = '$screenerId'
-            AND COALESCE(patient_id, 0) = 0");
+        AND COALESCE(patient_id, 0) = 0");
     $screenerData = $screenerData ?: [];
 
     if (!$hstData['patient_id'] && !$screenerData['patient_id']) {
@@ -149,10 +152,9 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
     ];
 
     $hstUpdateData = $db->escapeAssignmentList($hstUpdateData);
-    $db->query("UPDATE dental_hst SET $hstUpdateData, authorizeddate = NOW(), updatedate = NOW()
-        WHERE id = '$hstId'");
+    $db->query("UPDATE dental_hst SET $hstUpdateData, authorizeddate = NOW(), updatedate = NOW() WHERE id = '$hstId'");
 
-    $epWorthIds = $db->getColumn("SELECT epworthid FROM dental_q_sleep_view WHERE patientid = '$patientId'", 'epworthid');
+    $epWorthIds = $db->getColumn("SELECT epworthid FROM dental_q_sleep_pivot WHERE patientid = '$patientId'", 'epworthid');
 
     $epid = [];
     $epseq = [];
@@ -210,7 +212,8 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
  * @param int $hstId
  * @param int $userId
  */
-function cancelHSTRequest ($hstId, $userId) {
+function cancelHSTRequest($hstId, $userId)
+{
     $db = new Db();
     $hstId = intval($hstId);
 
@@ -220,6 +223,5 @@ function cancelHSTRequest ($hstId, $userId) {
     ];
     $updateData = $db->escapeAssignmentList($updateData);
 
-    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updatedate = NOW()
-        WHERE id = '$hstId'");
+    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updatedate = NOW() WHERE id = '$hstId'");
 }

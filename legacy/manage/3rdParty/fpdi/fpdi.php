@@ -316,7 +316,7 @@ class FPDI extends FPDF_TPL {
                 $tx = -$tpl['box']['llx'];
                 $ty = -$tpl['box']['lly']; 
                 
-                if ($tpl['_rotationAngle'] <> 0) {
+                if ($tpl['_rotationAngle'] != 0) {
                     $angle = $tpl['_rotationAngle'] * M_PI/180;
                     $c=cos($angle);
                     $s=sin($angle);
@@ -461,9 +461,9 @@ class FPDI extends FPDF_TPL {
     			// A dictionary.
     			$this->_straightOut('<<');
 
-    			reset ($value[1]);
+    			reset($value[1]);
 
-    			while (list($k, $v) = each($value[1])) {
+    			foreach ($value[1] as $k => $v) {
     				$this->_straightOut($k . ' ');
     				$this->pdf_write_value($v);
     			}

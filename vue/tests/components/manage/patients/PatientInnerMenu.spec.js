@@ -1,11 +1,12 @@
-import Vue from 'vue'
 import store from '../../../../src/store'
 import PatientInnerMenuComponent from '../../../../src/components/manage/patients/PatientInnerMenu.vue'
 import symbols from '../../../../src/symbols'
-import UnescapeFilter from '../../../../src/filters/Unescape'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('PatientInnerMenu component', () => {
   beforeEach(function () {
+    this.testCase = new TestCase()
+
     store.state.patients[symbols.state.patientName] = 'John Doe'
     store.state.patients[symbols.state.medicare] = false
     store.state.patients[symbols.state.displayAlert] = false
@@ -14,18 +15,21 @@ describe('PatientInnerMenu component', () => {
     store.state.patients[symbols.state.premedCheck] = 0
     store.state.patients[symbols.state.allergen] = false
 
-    Vue.filter('unescape', UnescapeFilter)
-    const Component = Vue.extend(PatientInnerMenuComponent)
-    this.mount = function (propsData) {
-      return new Component({
-        store: store,
-        propsData: propsData
-      }).$mount()
+    const props = {
+      patientId: 1
     }
+
+    this.testCase.setComponent(PatientInnerMenuComponent)
+    this.testCase.setPropsData(props)
+  })
+
+  afterEach(function () {
+    this.testCase.reset()
   })
 
   it('shows menu', function () {
-    const vm = this.mount({ patientId: 1 })
+    const vm = this.testCase.mount()
+
     const patientNameDiv = vm.$el
     expect(patientNameDiv.className).not.toContain('long-patient')
     const medicareLogo = patientNameDiv.querySelector('img')
@@ -39,8 +43,8 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with medicare', function () {
     store.state.patients[symbols.state.medicare] = true
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     const patientNameDiv = vm.$el
     const medicareLogo = patientNameDiv.querySelector('img')
     expect(medicareLogo).not.toBeNull()
@@ -50,8 +54,8 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with long patient name', function () {
     store.state.patients[symbols.state.patientName] = 'Benedict J. Cumberbatch'
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     const patientNameDiv = vm.$el
     expect(patientNameDiv.className).toContain('long-patient')
   })
@@ -59,8 +63,8 @@ describe('PatientInnerMenu component', () => {
   it('shows menu with notes', function () {
     store.state.patients[symbols.state.displayAlert] = true
     store.state.patients[symbols.state.headerAlertText] = 'foo&bar'
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
     const links = patientNameSpan.querySelectorAll('a')
     expect(links.length).toBe(1)
@@ -71,8 +75,8 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with premedcheck', function () {
     store.state.patients[symbols.state.premedCheck] = 1
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
     const links = patientNameSpan.querySelectorAll('a')
     expect(links.length).toBe(1)
@@ -84,8 +88,8 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with allergen', function () {
     store.state.patients[symbols.state.allergen] = true
+    const vm = this.testCase.mount()
 
-    const vm = this.mount({ patientId: 1 })
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
     const links = patientNameSpan.querySelectorAll('a')
     expect(links.length).toBe(1)

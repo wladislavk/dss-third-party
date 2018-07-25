@@ -38,7 +38,7 @@ $canBackup = isset($canBackup) ? $canBackup : true;
 $baseTable = !empty($baseTable) ? $baseTable : 'exception_table_not_defined';
 $baseSearch = !empty($baseSearch) ? $baseSearch : ['conditional_not_defined' => -1];
 
-$historyTable = preg_replace('/_view$/', '', $baseTable);
+$historyTable = preg_replace('/_pivot$/', '', $baseTable);
 $sourceTable = $isHistoricView ? $historyTable : $baseTable;
 $primaryKey = $db->primaryKey($historyTable);
 
@@ -49,8 +49,8 @@ $secondaryTables = isset($secondaryTables) ? $secondaryTables : [];
 $secondaryHistoryTables = [];
 $secondarySourceTables = [];
 
-foreach ($secondaryTables as $table=>$conditionals) {
-    $secondaryHistoryTables[$table] = preg_replace('/_view$/', '', $table);
+foreach ($secondaryTables as $table => $conditionals) {
+    $secondaryHistoryTables[$table] = preg_replace('/_pivot$/', '', $table);
     $secondarySourceTables[$table] = $isHistoricView ? $secondaryHistoryTables[$table] : $table;
 }
 
@@ -104,18 +104,18 @@ list($initiatedTimestamp, $lastModifiedTimestamp) = call_user_func(function () u
 
     try {
         $timestamps = $db->getRow("SELECT
-                adddate AS created_at,
-                updated_at AS updated_at
+            adddate AS created_at,
+            updated_at AS updated_at
             FROM $sourceTable
-                WHERE $baseConditionals
-                $andHistoryIdConditional
+            WHERE $baseConditionals
+            $andHistoryIdConditional
         ");
     } catch (\Exception $e) {
         $timestamps = $db->getRow("SELECT
-                adddate AS created_at
+            adddate AS created_at
             FROM $sourceTable
-                WHERE $baseConditionals
-                $andHistoryIdConditional
+            WHERE $baseConditionals
+            $andHistoryIdConditional
         ");
     }
 
@@ -172,20 +172,19 @@ list($targetId, $historyList) = call_user_func(function () use (
      * Set the reference_id to match the $targetId from the main table
      */
     foreach ($secondaryTables as $table => $conditionals) {
+        $table = preg_replace('/_pivot$/', '', $table);
         $secondaryConditionals = $db->escapeAssignmentList($conditionals, 'AND');
 
         $db->query("UPDATE $table
             SET reference_id = '$targetId'
             WHERE $secondaryConditionals
-                AND reference_id = 0
+            AND reference_id = 0
         ");
     }
 
     $historyList = $db->getResults($historyListQuery);
     return [$targetId, $historyList];
 });
-
-$isListEmpty = sizeof($historyList) < 2;
 
 if (isset($_POST['kill_switch']) && $_POST['kill_switch'] === 'bulk-backup') {
     trigger_error('Die called', E_USER_ERROR);

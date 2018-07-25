@@ -9,11 +9,13 @@ return [
     'lanApiUrl' => env('LAN_API_URL', 'http://api/'),
     'domain' => env('APP_URL_NAME', 'DentalSleepSolutions.com'),
     'name' => env('APP_NAME', 'Dental Sleep Solutions'),
-    'timezone' => 'US/Eastern',
+    'timezone' => env('SYSTEM_TZ_ENV', 'US/Eastern'),
     'locale' => 'en',
     'fallback_locale' => 'en',
     'key' => env('APP_KEY'),
-    'cipher' => MCRYPT_RIJNDAEL_128,
+    // TODO: mcrypt is not included in newer versions of PHP, Laravel default value is used. shall we keep it or change for something else?
+    // 'cipher' => MCRYPT_RIJNDAEL_128,
+    'cipher' => 'AES-256-CBC',
     'log' => 'daily', // single, daily, syslog
 
     'ledger' => [
@@ -47,11 +49,9 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
         'Illuminate\Auth\AuthServiceProvider',
         'Illuminate\Cache\CacheServiceProvider',
         'Illuminate\Foundation\Providers\ConsoleSupportServiceProvider',
-        'Illuminate\Routing\ControllerServiceProvider',
         'Illuminate\Cookie\CookieServiceProvider',
         'Illuminate\Database\DatabaseServiceProvider',
         'Illuminate\Encryption\EncryptionServiceProvider',
@@ -68,8 +68,6 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
 
-        'Illuminate\Html\HtmlServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider',
         'Intouch\LaravelNewrelic\NewrelicServiceProvider'
     ],
 

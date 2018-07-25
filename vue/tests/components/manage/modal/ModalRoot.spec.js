@@ -1,34 +1,28 @@
-import Vue from 'vue'
-import sinon from 'sinon'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import ModalRootComponent from '../../../../src/components/manage/modal/ModalRoot.vue'
-import Alerter from '../../../../src/services/Alerter'
+import TestCase from '../../../cases/ComponentTestCase'
 
 describe('ModalRoot component', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
+
     store.state.main[symbols.state.popupEdit] = false
 
     window.innerWidth = 1200
     window.innerHeight = 800
     window.pageYOffset = 10
 
-    Vue.component('addTask', {
-      template: '<div class="add-task"></div>'
-    })
-    const Component = Vue.extend(ModalRootComponent)
-    this.mount = function (componentData) {
-      store.state.main[symbols.state.modal] = componentData
-      return new Component({
-        store: store,
-        components: ModalRootComponent.components
-      }).$mount()
-    }
+    this.testCase.setComponent(ModalRootComponent)
+    this.testCase.setChildComponents(['add-task'])
+    this.testCase.setRenderChildren(true)
+
+    // nextTick does not work for some reason
+    this.testCase.fixedTimeout = 100
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   it('does not display if no component', function () {
@@ -36,7 +30,9 @@ describe('ModalRoot component', () => {
       name: 'foo',
       params: {}
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.style.display).toBe('none')
   })
@@ -48,7 +44,9 @@ describe('ModalRoot component', () => {
         first: '1'
       }
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const rootDiv = vm.$el
     expect(rootDiv.style.display).toBe('')
     const contactDiv = vm.$el.querySelector('div#popupContact')
@@ -65,59 +63,57 @@ describe('ModalRoot component', () => {
         first: '1'
       }
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const closeButton = vm.$el.querySelector('a#popupContactClose')
     closeButton.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up on click at background', function (done) {
     store.state.main[symbols.state.popupEdit] = true
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return true
-    })
     const componentData = {
       name: 'addTask',
       params: {
         first: '1'
       }
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const background = vm.$el.querySelector('div#backgroundPopup')
     background.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up without confirmation', function (done) {
-    store.state.main[symbols.state.popupEdit] = true
-    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
-      return false
-    })
+    store.commit(symbols.mutations.popupEdit, {value: true})
+    this.testCase.confirmDialog = false
     const componentData = {
       name: 'addTask',
       params: {
         first: '1'
       }
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const background = vm.$el.querySelector('div#backgroundPopup')
     background.click()
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('')
       done()
-    }, 100)
+    })
   })
 
   it('closes pop-up on key press', function (done) {
@@ -127,15 +123,16 @@ describe('ModalRoot component', () => {
         first: '1'
       }
     }
-    const vm = this.mount(componentData)
+    store.state.main[symbols.state.modal] = componentData
+    const vm = this.testCase.mount()
+
     const keyupEvent = new Event('keyup')
     keyupEvent.keyCode = 27
     window.dispatchEvent(keyupEvent)
-    // nextTick does not work for some reason
-    setTimeout(() => {
+    this.testCase.wait(() => {
       const rootDiv = vm.$el
       expect(rootDiv.style.display).toBe('none')
       done()
-    }, 100)
+    })
   })
 })

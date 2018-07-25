@@ -9,20 +9,13 @@ function delete_segment (id) {
                 pid: pid
             },
             success: function(data){
-                //alert(data);
                 var r = $.parseJSON(data);
                 
-                if (r.error) {
-                    if (r.error == 'sent') {
-                        //alert('Letter sent');
-                    }
-                }
-                else {
+                if (!r.error) {
                     $('#completed_row_'+id).remove();
                 }
             },
             failure: function(data){
-                //alert('fail');
             }
         });
     }
@@ -45,14 +38,12 @@ function update_completed_date (cid) {
             pid: pid
         },
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
             
             if (r.error) {}
             else {}
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 }
@@ -78,11 +69,9 @@ $(document).delegate('.delay_reason', "change", function(){
             pid: pid
         },
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
             
-            if (r.error) {}
-            else {
+            if (!r.error) {
                 if (reason == "other") {
                     $(document).find('#reason_btn'+id).show();
                     loadPopup('flowsheet_other_reason.php?ed='+id+'&pid=112&sid=5');
@@ -93,7 +82,6 @@ $(document).delegate('.delay_reason', "change", function(){
             }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });
@@ -119,20 +107,17 @@ $(document).delegate('.noncomp_reason', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
-            if (r.error) {} else {
+            if (!r.error) {
                 if (reason == "other") {
                     $(document).find('#reason_btn' + id).show();
                     loadPopup('flowsheet_other_reason.php?ed=' + id + '&pid=112&sid=5');
                 } else {
                     $(document).find('#reason_btn' + id).hide();
                 }
-
             }
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });
@@ -152,12 +137,9 @@ $(document).delegate('.dentaldevice', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
-            if (r.error) {} else {}
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });
@@ -176,12 +158,9 @@ $(document).delegate('.study_type', "change", function () {
             pid: pid
         },
         success: function (data) {
-            //alert(data);
             var r = $.parseJSON(data);
-            if (r.error) {} else {}
         },
         failure: function (data) {
-            //alert('fail');
         }
     });
 });

@@ -10,6 +10,8 @@ $isMine = !empty($_GET['mine']) && $_GET['mine'] == 1;
 $docId = (int)$_SESSION['docid'];
 $userId = (int)$_SESSION['userid'];
 
+$db = new Db();
+
 if (isset($_GET['delid'])) {
     $delId = (int)$_GET['delid'];
     $del_sql = "UPDATE dental_task
@@ -90,13 +92,12 @@ $queryArray = array_only($_GET, ['mine', 'sort1', 'sortdir1', 'page1', 'sort2', 
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Tasks
+    Manage Tasks
 </span>
 <br/>
 <br/>
 &nbsp;
-<button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task
-</button>
+<button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task</button>
 <?php if (!empty($_GET['mine']) && $_GET['mine'] == 1) { ?>
     <button onclick="window.location='manage_tasks.php'" class="addButton" style="float:right; margin-right: 10px;">Show
         All
@@ -115,27 +116,21 @@ $queryArray = array_only($_GET, ['mine', 'sort1', 'sortdir1', 'page1', 'sort2', 
     <?php paging1($no_pages, $index_val, queryString($queryArray, ['page1'])); ?>
 </span>
 
-
 <table id="not_completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr class="tr_bg_h">
-        <td width="2%" class="col_head">
-        </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'task') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="45%">
+        <td width="2%" class="col_head"> </td>
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'task') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="45%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=task&sortdir1=<?php echo ($_REQUEST['sort1'] == 'task' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Task</a>
         </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'due_date') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="20%">
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'due_date') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="20%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=due_date&sortdir1=<?php echo ($_REQUEST['sort1'] == 'due_date' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Due
-                Date</a>
+                Date
+            </a>
         </td>
-        <td valign="top"
-            class="col_head <?php echo ($_REQUEST['sort1'] == 'responsible') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>"
-            width="20%">
+        <td valign="top" class="col_head <?php echo ($_REQUEST['sort1'] == 'responsible') ? 'arrow_' . strtolower($_REQUEST['sortdir1']) : ''; ?>" width="20%">
             <a href="?<?= queryString($queryArray, ['sort1', 'sortdir1']) ?>&sort1=responsible&sortdir1=<?php echo ($_REQUEST['sort1'] == 'responsible' && $_REQUEST['sortdir1'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Assigned
-                To</a>
+                To
+            </a>
         </td>
         <td valign="top" class="col_head" width="15%">
             Action
@@ -337,7 +332,7 @@ require_once __DIR__ . '/includes/bottom.htm';
  * @param array $except
  * @return string
  */
-function queryString(array $queryArray, array $except=[])
+function queryString(array $queryArray, array $except = [])
 {
     if (count($except)) {
         $queryArray = array_except($queryArray, $except);

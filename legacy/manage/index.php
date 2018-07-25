@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once __DIR__ . '/includes/dual_app.php';
 dualAppRedirect('main/index');
 
@@ -7,10 +9,12 @@ include 'includes/top.htm';
 $docId = (int)$_SESSION['docid'];
 $apiToken = apiToken();
 
-$sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
+$db = new Db();
+
+$sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
 $r = $db->getRow($sql);
 
-$manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+$manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . $db->escape( $_SESSION['userid']) . "'";
 $manageStaff = $db->getRow($manageStaffSql);
 
 if ($r['homepage'] != '1'): ?>
@@ -127,7 +131,7 @@ endif ?>
                                     $course_sql = "
                                         SELECT s.use_course, d.use_course_staff FROM dental_users s
                                         JOIN dental_users d ON d.userid = s.docid
-                                        WHERE s.userid='" . mysqli_real_escape_string($con,$_SESSION['userid']). "'
+                                        WHERE s.userid='" . $db->escape($_SESSION['userid']). "'
                                     ";
                                     $course_r = $db->getRow($course_sql);
                                     if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1): ?>
@@ -271,7 +275,7 @@ endif ?>
                     <?php
                     $od_q = $db->getResults($od_sql);
                     if (count($od_q) > 0): ?>
-                        <h4 style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
+                        <h4 style="margin-bottom:0;color:red;" class="task_od_header">Overdue</h4>
                         <ul class="task_od_list">
                             <?php
                             foreach ($od_q as $od_r) { ?>
@@ -296,7 +300,7 @@ endif ?>
                     endif;
                     $tod_q = $db->getResults($tod_sql);
                     if (count($tod_q) > 0): ?>
-                        <h4 style="margin-bottom:0px;" class="task_tod_header">Today</h4>
+                        <h4 style="margin-bottom:0;" class="task_tod_header">Today</h4>
                         <ul class="task_tod_list">
                             <?php
                             foreach ($tod_q as $od_r) { ?>
@@ -322,7 +326,7 @@ endif ?>
                     endif;
                     $tom_q = $db->getResults($tom_sql);
                     if (count($tom_q) > 0): ?>
-                        <h4 style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
+                        <h4 style="margin-bottom:0;" class="task_tom_header">Tomorrow</h4>
                         <ul class="task_tom_list">
                             <?php
                             foreach ($tom_q as $od_r) { ?>
@@ -449,7 +453,7 @@ endif ?>
 
 <br /><br />
 
-<script type="text/javascript" src="../Scripts/sucker_tree_home.js"></script>
+<script type="text/javascript" src="3rdParty/suckertree/sucker_tree_home.js"></script>
 
 <?php require_once __DIR__ . '/includes/vue-setup.htm'; ?>
 <script>

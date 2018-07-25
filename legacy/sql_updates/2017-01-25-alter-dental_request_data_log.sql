@@ -1,1 +1,0 @@
-ALTER TABLE dental_request_data_log ADD COLUMN ip_address VARCHAR(50) DEFAULT '';

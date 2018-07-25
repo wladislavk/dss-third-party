@@ -1,12 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
 <?php
-if (isset($my)) {
-    ?>
-<style>
-    #sect_notes dd {
-        word-break: break-all;
-    }
-</style>
+namespace Ds3\Libraries\Legacy;
+
+if (isset($my)) { ?>
+    <style>
+        #sect_notes dd {
+            word-break: break-all;
+        }
+    </style>
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
         <?php
         if (count($my) == 0) { ?>
@@ -15,11 +15,11 @@ if (isset($my)) {
             </tr>
             <?php
         } else {
-            $signNotesResult = [];
-            if (isset($db) && $db instanceof Db) {
-                $signNotesSql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape($_SESSION['userid']) . "'";
-                $signNotesResult = $db->getRow($signNotesSql);
-            }
+            $db = new Db();
+
+            $signNotesSql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape($_SESSION['userid']) . "'";
+            $signNotesResult = $db->getRow($signNotesSql);
+
             $userSign = $signNotesResult['sign_notes'];
             $userIds = [];
             foreach ($my as $dentalNote) {
@@ -33,28 +33,25 @@ if (isset($my)) {
             }
             foreach ($my as $dentalNote) {
                 if ($dentalNote["signed_id"] != '') {
-                    $tr_class = "tr_active";
                     $bg_color = "";
                     $status = "Signed";
                 } elseif ($dentalNote["status"] == 2) {
-                    $tr_class = "tr_draft";
                     $bg_color = "#FFFF99";
                     $status = 'Draft';
                 } else {
-                    $tr_class = "tr_inactive";
                     $bg_color = "#FF9999";
                     $status = "Unsigned";
                 }
-                $tr_class = "tr_active";
                 $theUser = [];
                 foreach ($users as $user) {
                     if ($user['userid'] == $dentalNote['userid']) {
                         $theUser = $user;
                     }
+                }
                 $tr_class = "tr_active";
 
                 try {
-                    $soapNote = json_decode($myarray['notes'], true);
+                    $soapNote = json_decode($dentalNote['notes'], true);
                 } catch (\Exception $e) {
                     $soapNote = null;
                 }
@@ -136,9 +133,7 @@ if (isset($my)) {
                 </tr>
                 <?php
             }
-        }
-        ?>
+        } ?>
     </table>
     <?php
-    }
 } ?>

@@ -78,14 +78,12 @@ function otherSelect(number, f)
 		}else{
 			f.sleeplabwheresched.style.display = "none";
 		}
-		//f.sleeplabschedhome.style.display = "none";
 	} else {
 		document.getElementById('interpretation'+number+'1').style.visibility = 'visible';
 		document.getElementById('interpretation'+number+'2').style.visibility = 'visible';
 		document.getElementById('interpretation'+number+'3').style.visibility = 'visible';
 		document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
 	
-		//f.sleeplabwheresched.style.display = "none";
 		if($('input:radio[name=needed]:checked').val()=="Yes"){
 			f.sleeplabsched.style.display = "block";
 		}else{

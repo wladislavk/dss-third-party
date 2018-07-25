@@ -1,97 +1,91 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
-{
-	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."' OR parent_patientid='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
-	
-	$del_sql = "delete from dental_patient_contacts where patientid='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
-        $del_sql = "delete from dental_patient_insurance where patientid='".$_REQUEST["delid"]."'";
-        mysqli_query($con,$del_sql);
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
+    $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."' OR parent_patientid='".$_REQUEST["delid"]."'";
+    mysqli_query($con,$del_sql);
 
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
-	</script>
-	<?
-	trigger_error("Die called", E_USER_ERROR);
+    $del_sql = "delete from dental_patient_contacts where patientid='".$_REQUEST["delid"]."'";
+    mysqli_query($con,$del_sql);
+
+    $del_sql = "delete from dental_patient_insurance where patientid='".$_REQUEST["delid"]."'";
+    mysqli_query($con,$del_sql);
+
+    $msg= "Deleted Successfully";
+    ?>
+    <script type="text/javascript">
+        window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 }
+
+$db = new Db();
 
 if(is_super($_SESSION['admin_access'])){
-$doc_sql = "select * from dental_users where user_access=2 order by username";
+    $doc_sql = "select * from dental_users where user_access=2 order by username";
 }else{
-  $doc_sql = "SELECT u.* FROM dental_users u 
-                INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                WHERE u.user_access=2 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
-                ORDER BY username";
+    $doc_sql = "SELECT u.* 
+        FROM dental_users u 
+        INNER JOIN dental_user_company uc ON uc.userid = u.userid
+        WHERE u.user_access=2 AND uc.companyid='".$db->escape($_SESSION['admincompanyid'])."'
+        ORDER BY username";
 }
-
-$doc_my = mysqli_query($con,$doc_sql);
 
 $doc_my1 = mysqli_query($con,$doc_sql);
 $doc_myarray1 = mysqli_fetch_array($doc_my1);
 
-if(empty($_GET['docid']))
-{
-	$_GET['docid'] = $doc_myarray1['userid'];
+if(empty($_GET['docid'])) {
+    $_GET['docid'] = $doc_myarray1['userid'];
 }
 
 $rec_disp = 20;
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
+if(!empty($_REQUEST["page"])) {
+    $index_val = $_REQUEST["page"];
+} else {
+    $index_val = 0;
+}
+
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-$sql = "select * from dental_patients order by lastname, firstname";
+    $sql = "select * from dental_patients order by lastname, firstname";
 }elseif(is_software($_SESSION['admin_access'])){
-$sql = "select p.* from dental_patients p 
-	JOIN dental_users u ON u.userid=p.docid 
-   	JOIN dental_user_company uc ON uc.userid = u.userid
-	where uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' order by p.lastname, p.firstname";
+    $sql = "select p.* 
+        from dental_patients p 
+        JOIN dental_users u ON u.userid=p.docid 
+        JOIN dental_user_company uc ON uc.userid = u.userid
+        where uc.companyid='".$db->escape($_SESSION['admincompanyid'])."' 
+        order by p.lastname, p.firstname";
 }elseif(is_billing($_SESSION['admin_access'])){
-  $a_sql = "SELECT ac.companyid FROM admin_company ac
-                        JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
-  $a_q = mysqli_query($con,$a_sql);
-  $admin = mysqli_fetch_assoc($a_q);
-$sql = "select p.* from dental_patients p 
-	JOIN dental_users u ON u.userid=p.docid 
-	where u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."' order by p.lastname, p.firstname";
+    $a_sql = "SELECT ac.companyid 
+        FROM admin_company ac
+        JOIN admin a ON a.adminid = ac.adminid
+        WHERE a.adminid='".$db->escape($_SESSION['adminuserid'])."'";
+    $a_q = mysqli_query($con,$a_sql);
+    $admin = mysqli_fetch_assoc($a_q);
+    $sql = "select p.* 
+        from dental_patients p 
+        JOIN dental_users u ON u.userid=p.docid 
+        where u.billing_company_id='".$db->escape($admin['companyid'])."' 
+        order by p.lastname, p.firstname";
 }
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql);
-$num_users=mysqli_num_rows($my);
-
+$my = mysqli_query($con,$sql);
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <link href="../css/search-hints.css" rel="stylesheet" type="text/css">
 
 <div class="page-header">
-	Manage Patient
-   <!-- -
-    <select class="tbox" onchange="Javascript: window.location='<?php echo $_SERVER['PHP_SELF'];?>?docid='+this.value;">
-        <?php while($doc_myarray = mysqli_fetch_array($doc_my))
-		{?>
-    		<option value="<?php echo st($doc_myarray['userid']);?>" <?php if(st($doc_myarray['userid']) == $_GET['docid']) echo " selected";?>>
-            	<?php echo st($doc_myarray['username']);?> [ <?php echo st($doc_myarray['name']);?> ]
-            </option>
-        <?php }?>
-    </select>-->
+    Manage Patient
 </div>
-
 
 <script type="text/javascript">
     // Patient Search Suggestion Script
@@ -100,23 +94,22 @@ $num_users=mysqli_num_rows($my);
     var searchVal = ""; // global variable to hold the last valid search string
     $(document).ready(function() {
         $('#patient_search').keyup(function(e) {
-                var a = e.which; // ascii decimal value
-                //var c = String.fromCharCode(a);
-                var listSize = $('#patient_list li').size();
-                var stringSize = $(this).val().length;
-                if ($(this).val().trim() == "") {
-                    $('#search_hints').css('display', 'none');
-                    $('.json_patient').remove();
-                    $('.create_new').remove();
-                    $('.initial_list').css("display", "table-row");
-                } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-                    $('.initial_list').css("display", "none");
-                    $('#search_hints').css("display", "inline");
-                    sendValue($('#patient_search').val());
-                    if ($(this).val() > 2) {
-                        window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
-                    }
+            var a = e.which; // ascii decimal value
+            var listSize = $('#patient_list li').size();
+            var stringSize = $(this).val().length;
+            if ($(this).val().trim() == "") {
+                $('#search_hints').css('display', 'none');
+                $('.json_patient').remove();
+                $('.create_new').remove();
+                $('.initial_list').css("display", "table-row");
+            } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
+                $('.initial_list').css("display", "none");
+                $('#search_hints').css("display", "inline");
+                sendValue($('#patient_search').val());
+                if ($(this).val() > 2) {
+                    window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                 }
+            }
         });
         $(document).keyup(function(e) {
             switch (e.which) {
@@ -128,9 +121,9 @@ $num_users=mysqli_num_rows($my);
                     break;
                 case 13:
                     if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){
-                      if (selectedUrl != '') {
-                        window.location = window.selectedUrl;
-                      }
+                        if (selectedUrl != '') {
+                            window.location = window.selectedUrl;
+                        }
                     }
                     break;
             }
@@ -142,29 +135,29 @@ $num_users=mysqli_num_rows($my);
         });
         $('#patient_list > li').hover(function() {
             if($(this).data("pattype")!="no"){
-              $(this).css('cursor','pointer');
+                $(this).css('cursor','pointer');
             }
             window.selection = $(this).data("number");
             set_selected(window.selection);
         }, function() {
             if($(this).data("pattype")!="no"){
-              $(this).css('cursor','auto');
+                $(this).css('cursor','auto');
             }
             $('#patient_list li').removeClass('list_hover');
             window.selectedUrl = '';
         });
         $('#patient_list > li').click(function() {
             if($(this).data("pattype")=="new"){
-            n = $('#patient_search').val();
-            window.location = "add_patient.php?search="+n;
+                n = $('#patient_search').val();
+                window.location = "add_patient.php?search="+n;
             }else if($(this).data("pattype")=="no"){
-            //do nothing
+                //do nothing
             }else{
-            if (selectedUrl != '') {
-                window.location = window.selectedUrl;
-            }
-            $('#patient_search').val($(this).html());
-            sendValue($(this).html());
+                if (selectedUrl != '') {
+                    window.location = window.selectedUrl;
+                }
+                $('#patient_search').val($(this).html());
+                sendValue($(this).html());
             }
         });
         $('*').click(function() {
@@ -299,7 +292,7 @@ $num_users=mysqli_num_rows($my);
     }
     function template_list(li, patient) {
         if(patient.middlename != null){
-        var mid = patient.middlename
+            var mid = patient.middlename
         }else{
             var mid = '';
         }
@@ -317,7 +310,8 @@ $num_users=mysqli_num_rows($my);
         if (patient.premedcheck == "1") {
             var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med";
         }
-        if(patient.middlename != null){            var mid = patient.middlename
+        if(patient.middlename != null){
+            var mid = patient.middlename
         }else{
             var mid = '';
         }
@@ -334,123 +328,89 @@ $num_users=mysqli_num_rows($my);
             row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
         } else {
             row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
-            /*
-            row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
-            row.find('.flowsheet').html(patient.fspage1_complete);
-            row.find('.next_visit').html(patient.next_visit);
-            row.find('.last_visit').html(patient.last_visit);
-            row.find('.last_treatment').html(patient.last_treatment);
-            row.find('.appliance').html(patient.device);
-            row.find('.appliance_since').html(patient.delivery_date);
-            row.find('.vob').html(patient.vob);
-            row.find('.ledger').html(patient.ledger)
-            */
         }
         return row;
     }
 </script>
-                                                                                                          
-
-
 
 <form>
-    <!--<form name="form" action="search.php" method="get">-->
-  <div id="patient_search_div">
-  <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
-  <!--<input type="submit" name="Submit" value="Patient Search By Last Name" class="btn btn-primary">-->
+    <div id="patient_search_div">
+        <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
         <br />
         <div id="search_hints"  class="search_hints" style="display:none;">
-                <ul id="patient_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
+            <ul id="patient_list">
+                <li class="template" style="display:none">Doe, John S</li>
+            </ul>
         </div>
-   </div>
+    </div>
 </form>
-
-
-
-
-
-
-
-
-
-
-&nbsp;
 <?php if(!is_billing($_SESSION['admin_access'])){ ?>
-<div align="right">
-	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?php echo $_GET['docid']?>');" class="btn btn-success">
-		Add New Patient
-		<span class="glyphicon glyphicon-plus">
-	</button>
-	&nbsp;&nbsp;
-</div>
+    <div align="right">
+        <button onclick="loadPopup('add_patient.php?docid=<?php echo $_GET['docid']?>');" class="btn btn-success">
+            Add New Patient
+            <span class="glyphicon glyphicon-plus">
+        </button>
+        &nbsp;&nbsp;
+    </div>
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered table-hover">
-	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"docid=".$_GET['docid']);
-			?>
-		</TD>
-	</TR>
-	<?php }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="90%">
-			Name
-		</td>
-		<td valign="top" class="col_head" width="20%">
-			Action
-		</td>
-	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			if($myarray["status"] == 1)
-			{
-				$tr_class = "tr_active";
-			}
-			else
-			{
-				$tr_class = "tr_inactive";
-			}
-		?>
-			<tr class="<?php echo $tr_class;?>">
-				<td valign="top">
-					<?php echo st($myarray["firstname"]);?>&nbsp;
-                    <?php echo st($myarray["middlename"]);?>.&nbsp;
-                    <?php echo st($myarray["lastname"]);?> 
-				</td>
-				<td valign="top">
-					<a href="view_patient.php?pid=<?php echo $myarray["patientid"];?>" title="Edit" class="btn btn-primary btn-sm">
-						View
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-                    
-				</td>
-			</tr>
-	<?php 	}
-	}?>
-</table>
+    <table class="table table-bordered table-hover">
+        <?php if($total_rec > $rec_disp) {?>
+            <tr bgcolor="#ffffff">
+                <td align="right" colspan="15" class="bp">
+                    Pages:
+                    <?php
+                    paging($no_pages,$index_val,"docid=".$_GET['docid']);
+                    ?>
+                </td>
+            </tr>
+        <?php }?>
+        <tr class="tr_bg_h">
+            <td valign="top" class="col_head" width="90%">
+                Name
+            </td>
+            <td valign="top" class="col_head" width="20%">
+                Action
+            </td>
+        </tr>
+        <?php if(mysqli_num_rows($my) == 0) { ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="10" align="center">
+                    No Records
+                </td>
+            </tr>
+            <?php
+        } else {
+            while($myarray = mysqli_fetch_array($my)) {
+                if($myarray["status"] == 1) {
+                    $tr_class = "tr_active";
+                } else {
+                    $tr_class = "tr_inactive";
+                }
+                ?>
+                <tr class="<?php echo $tr_class;?>">
+                    <td valign="top">
+                        <?php echo st($myarray["firstname"]);?>&nbsp;
+                        <?php echo st($myarray["middlename"]);?>.&nbsp;
+                        <?php echo st($myarray["lastname"]);?>
+                    </td>
+                    <td valign="top">
+                        <a href="view_patient.php?pid=<?php echo $myarray["patientid"];?>" title="Edit" class="btn btn-primary btn-sm">
+                            View
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                </tr>
+                <?php
+            }
+        } ?>
+    </table>
 </form>
-
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
@@ -458,5 +418,5 @@ $num_users=mysqli_num_rows($my);
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

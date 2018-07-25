@@ -56,24 +56,13 @@ $(function() {
             console.log('isHmo: ' + isHmo);
             console.log('outOfPocketMet: ' + outOfPocketMet);
         }
-        //if (benefits == 1){ //out of network
         if (hasOutOfNetwork == 1) {
             // percentage from out_of_network_percentage
             percentagePaid = $('#out_of_network_percentage').val();
-            //} else if (isHmo == 0) {
-            // percentage from in_network_percentage
-            //percentagePaid = $('#in_network_percentage').val();
         } else {
             // no percentage, set to 0
             percentagePaid = 0;
         }
-        /*}else{ //in-network
-         if(hasOutOfNetwork == 1){
-         percentagePaid = 0;
-         }else{
-         percentagePaid = $('#in_network_percentage').val();
-         }
-         }*/
         if (debug) { console.log('percentagePaid: ' + percentagePaid); }
 
         if (isNaN(deviceAmount))     { deviceAmount = 0; }

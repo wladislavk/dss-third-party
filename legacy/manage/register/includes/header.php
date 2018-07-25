@@ -1,6 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php session_start(); ?>
-<?php include '../admin/includes/main_include.php'; ?>
-<?php include '../includes/constants.inc'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+session_start();
+
+include '../admin/includes/main_include.php';
+include '../includes/constants.inc';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
@@ -39,22 +44,19 @@
             </div>
         </div>
     </div>
- 
     <!-- header section -->
     <div id="header">
         <div class="wrapper cf">
             <div class="logo fl">
-		<h1>Dental Sleep Solutions</h1>
+        <h1>Dental Sleep Solutions</h1>
             </div>
-	<?php if($_SERVER['SCRIPT_NAME'] == '/manage/register/new.php') { ?>
+    <?php if($_SERVER['SCRIPT_NAME'] == '/manage/register/new.php') { ?>
             <ul id="main_nav" class="fr">
-                                <li class="nav_item lgutipT" title="start over" id="restart_nav"><a href="../login.php" class="main_link" ><img class="img_holder" style="background-image: url(images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Cancel</span></a></li>
-
+                <li class="nav_item lgutipT" title="start over" id="restart_nav"><a href="../login.php" class="main_link" ><img class="img_holder" style="background-image: url(images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Cancel</span></a></li>
             </ul>
-	  <?php } ?>
+      <?php } ?>
         </div>
     </div>
- 
     <!-- main section -->
     <div id="main">
         <div class="wrapper">

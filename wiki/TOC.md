@@ -80,12 +80,12 @@
     1. Creating and managing Jira issues
     2. Git branches and pull requests
         1. Branch and commit naming
-        2. Multi-repository branches
-        3. Pull requests
-        4. Code reviews
-        5. Merging
-        6. Rules for bugfixes and hotfixes
-        7. Rules for Wiki changes
+        2. Pull requests
+        3. Code reviews
+        4. Merging
+        5. Rules for bugfixes and hotfixes
+        6. Rules for Wiki changes
+    3. Monorepo guide
 9. Acceptance testing guide
     1. Testing workflow
     2. What to test and what not to test

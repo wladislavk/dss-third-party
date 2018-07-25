@@ -2,12 +2,15 @@
 namespace Ds3\Libraries\Legacy;
 
 session_start();
+
 require_once 'main_include.php';
 require_once '../../includes/constants.inc';
 require 'access.php';
 
 $docId = intval($_REQUEST['account']);
 $users = [];
+
+$db = new Db();
 
 if (is_super($_SESSION['admin_access'])) {
     $authorized = true;

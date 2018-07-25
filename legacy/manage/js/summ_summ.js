@@ -21,14 +21,9 @@ $('#dental_device').change( function(){
         type: "post",
         data: {device: val, pid: pid},
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
-            }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 });
@@ -42,14 +37,9 @@ function update_dental_device_date(){
         type: "post",
         data: {device_date: val, pid: pid},
         success: function(data){
-            //alert(data);
             var r = $.parseJSON(data);
-            if(r.error){
-            }else{
-            }
         },
         failure: function(data){
-            //alert('fail');
         }
     });
 }

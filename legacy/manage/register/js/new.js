@@ -29,11 +29,6 @@ lga_wizard = {
 	init: function(){
 		//wizard form submit
 		$('#register_form').submit(function() {
-			//var post = $(this).serializeObject();
-			//$.post('helpers/register_submit.php', post, function(data) {
-			//	$('#form_summary').html(data);
-			//	//alert(data);
-			//});
 			return false;
 		});
 
@@ -70,31 +65,6 @@ lga_wizard = {
 				var page = root.find(".page").eq(api.getIndex());
 				notValid = false;
 				//class="validate" needs to be added to elements that needs to be validated
-				/*
-				if(api.getIndex()==0){
-				  $.ajax({
-					url: "includes/check_email.php",
-                                        type: "post",
-                                        data: {email: $("#email").val(), id: $("#userid").val()},
-					async: false,
-					success: function(data){
-						if(data == 'false'){	
-						  notValid = true;
-						}
-					},
-					failure: function(data){
-						//alert('fail');
-					}
-                                  });
-					
-				  if($("#email").val()!=$("#oldemail").val()){
-					if(!confirm('You have changed your email from '+$("#oldemail").val()+' to '+$("#email").val()+'.  You will be sent an email reminder of this change.')){
-						return false;
-					}
-				  }
-				  
-				}
-				*/
 				page.find('.validate').each(function(){
 					//assign validator to single element
 					validator = $("#register_form").validate({
@@ -199,14 +169,6 @@ lga_wizard = {
 			}
 			
 	                        var post = $('#register_form').serializeObject();
-				//alert(post);
-                	        /*$.post('helpers/new_submit.php', post, function(data) {
-					var r = $.parseJSON(data);
-					$('#userid').val(r['userid']);
-					//alert(data);
-                        	        //$('#form_summary').html(data);
-                                	//alert(data);
-                        	});*/
 			$("#status li").removeClass("active").eq(i).addClass("active filed");
 			$("#status li.active").prev("li").addClass("filed");
 			window.scroll(0,0);

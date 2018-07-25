@@ -3,14 +3,16 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
 
+$db = new Db();
+
 $externalPatientId = $db->escape($_GET['id']);
 $externalCompanyId = $db->escape($_GET['sw']);
 
 $sql = "SELECT p.patientid, p.status
     FROM dental_patients p
-        JOIN dental_external_patients ep ON ep.patient_id = p.patientid
+    JOIN dental_external_patients ep ON ep.patient_id = p.patientid
     WHERE ep.external_id = '$externalPatientId'
-        AND ep.software = '$externalCompanyId'
+    AND ep.software = '$externalCompanyId'
     LIMIT 1";
 
 $externalPatient = $db->getRow($sql);

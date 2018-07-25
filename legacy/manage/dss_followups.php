@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once 'admin/includes/main_include.php';
 include_once 'includes/sescheck.php';
 
@@ -85,7 +87,6 @@ if (isset($_POST['submitaddfu'])) {
     }
 } elseif (isset($_POST['submitupdatefu'])) {
     $id = $db->escape($_POST['id']);
-    $patientid = $db->escape($_POST['patientid']);
     $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
     $devadd = $db->escape($_POST['devadd']);
     $dsetadd = $db->escape($_POST['dsetadd']);
@@ -135,11 +136,11 @@ if (isset($_POST['submitaddfu'])) {
                     adddate=now(),
                     ip_address='".$_SERVER['REMOTE_ADDR']."'
             ";
-  		    $db->query($i);
-  	    }
+            $db->query($i);
+        }
         $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".$db->escape($id)."'";
         $db->query($d);
-  	    for ($thorntonid = 1; $thorntonid <= 5; $thorntonid++) {
+        for ($thorntonid = 1; $thorntonid <= 5; $thorntonid++) {
             $i = "
                 INSERT INTO dentalsummfu_tss SET
                     thorntonid='".$thorntonid."',
@@ -176,7 +177,7 @@ $bodywidth = ($numf * 160) + 320;
             <tr>
                 <td>
                     <?php
-                    $sqlex = "select * from dental_ex_page5_view where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+                    $sqlex = "select * from dental_ex_page5_pivot where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                     $myarrayex = $db->getRow($sqlex);
                     $dentaldevice = st($myarrayex['dentaldevice']);
                     ?>
@@ -476,15 +477,8 @@ $bodywidth = ($numf * 160) + 320;
         }
     }
 
-    $q_sql = "SELECT * FROM dental_q_page1_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+    $q_sql = "SELECT * FROM dental_q_page1_pivot WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $q_row = $db->getRow($q_sql);
-
-    $t_sql = "SELECT tot_score FROM dental_thorton_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-    $t_row = $db->getRow($t_sql);
-
-    $s_sql = "SELECT analysis FROM dental_q_sleep_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-    $s_row = $db->getRow($s_sql);
-    $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     ?>
 
     <form style="float:left;" class="sleepstudybaseline" id="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
@@ -493,9 +487,6 @@ $bodywidth = ($numf * 160) + 320;
             <tr style="background: #444;height: 30px;">
                 <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
             </tr>
-            <?php
-            $s = "SELECT initial_device_titration_1 FROM dental_summary_view WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-            $r = $db->getRow($s); ?>
             <tr>
                 <td style="background: #F9FFDF;">
                     <input type="text" size="12" style="width:75px;" name="exam_date" value="<?= ($q_row['exam_date']) ? date('m/d/Y', strtotime($q_row['exam_date'])) : ''; ?>" />

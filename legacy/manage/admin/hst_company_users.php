@@ -10,8 +10,8 @@ $companyType = $db->escape(DSS_COMPANY_TYPE_HST);
 $companyDetails = $db->getRow("SELECT name
     FROM companies
     WHERE id = '$companyId'
-        AND company_type = '$companyType'
-    ");
+    AND company_type = '$companyType'
+");
 $companyExists = false;
 $companyName = '<Invalid HST Company>';
 $listUpdated = false;
@@ -48,18 +48,15 @@ $sql = "SELECT
         user.last_name,
         company_pivot.companyid = '$companyId' AS company_client
     FROM dental_users user
-		LEFT JOIN dental_user_hst_company company_pivot ON company_pivot.userid = user.userid
-		LEFT JOIN companies company ON company.id = company_pivot.companyid
-            AND company.company_type = '$companyType'
-	WHERE user.docid = 0
-	ORDER BY company_pivot.companyid = '$companyId' DESC,
-	    user.last_name ASC,
-	    user.first_name ASC,
-	    user.username ASC
-	";
-
+    LEFT JOIN dental_user_hst_company company_pivot ON company_pivot.userid = user.userid
+    LEFT JOIN companies company ON company.id = company_pivot.companyid AND company.company_type = '$companyType'
+    WHERE user.docid = 0
+    ORDER BY company_pivot.companyid = '$companyId' DESC,
+        user.last_name ASC,
+        user.first_name ASC,
+        user.username ASC
+";
 $users = $db->getResults($sql);
-
 ?>
 <div class="page-header">
     <?= e($companyName) ?> Company Users

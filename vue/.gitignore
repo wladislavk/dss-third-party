@@ -3,3 +3,6 @@ node_modules/
 npm-debug.log
 .idea
 /config.js
+yarn-error.log
+dist/*
+!dist/.gitkeep

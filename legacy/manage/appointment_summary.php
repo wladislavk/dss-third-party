@@ -1,4 +1,6 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+?>
 <table width="98%" class="table table-bordered table-hover">
     <tr>
         <th>Date</th>
@@ -42,7 +44,6 @@
     $flow_pg2_info_res = $db->getResults($flow_pg2_info_query);
 
     foreach ($flow_pg2_info_res as $row) {
-        $datesched = (!empty($row['date_scheduled'])) ? date('m/d/Y', strtotime($row['date_scheduled'])) : '';
         $datecomp = (!empty($row['date_completed'])) ? date('m/d/Y', strtotime($row['date_completed'])) : '';
         $id = $row['id'];
         if ($datecomp != '') { ?>

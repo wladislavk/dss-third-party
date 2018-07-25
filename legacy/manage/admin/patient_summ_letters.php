@@ -1,26 +1,32 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 require_once('includes/general.htm');
 ?>
 <link rel="stylesheet" href="../css/letters.css" />
 <?php
-
-function userid_asc($a, $b) {
+function userid_asc($a, $b)
+{
     return strcmp ($a['userid'], $b['userid']);
 }
 
-function userid_desc($a, $b) {
+function userid_desc($a, $b)
+{
     return strcmp ($b['userid'], $a['userid']);
 }
 
-function subject_asc($a, $b) {
+function subject_asc($a, $b)
+{
     return strcmp ($a['subject'], $b['subject']);
 }
 
-function subject_desc($a, $b) {
+function subject_desc($a, $b)
+{
     return strcmp ($b['subject'], $a['subject']);
 }
 
-function sentto_asc($a, $b) {
+function sentto_asc($a, $b)
+{
     $word_lista = explode(" ", $a['sentto']);
     $word_listb = explode(" ", $b['sentto']);
     if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
@@ -39,7 +45,8 @@ function sentto_asc($a, $b) {
     return strcmp ($a['sentto'], $b['sentto']);
 }
 
-function sentto_desc($a, $b) {
+function sentto_desc($a, $b)
+{
     $word_lista = explode(" ", $a['sentto']);
     $word_listb = explode(" ", $b['sentto']);
     if (is_numeric($word_lista[0]) && is_numeric($word_listb[0])) {
@@ -58,36 +65,42 @@ function sentto_desc($a, $b) {
     return strcmp ($b['sentto'], $a['sentto']);
 }
 
-function method_asc($a, $b) {
+function method_asc($a, $b)
+{
     return strcmp ($a['send_method'], $b['send_method']);
 }
 
-function method_desc($a, $b) {
+function method_desc($a, $b)
+{
     return strcmp ($b['send_method'], $a['send_method']);
 }
 
-function generated_date_asc($a, $b) {
+function generated_date_asc($a, $b)
+{
     if ($a['generated_date'] == $b['generated_date']) {
         return 0;
     }
     return ($a['generated_date'] < $b['generated_date']) ? -1 : 1;
 }
 
-function generated_date_desc($a, $b) {
+function generated_date_desc($a, $b)
+{
     if ($a['generated_date'] == $b['generated_date']) {
         return 0;
     }
     return ($a['generated_date'] > $b['generated_date']) ? -1 : 1;
 }
 
-function delivery_date_asc($a, $b) {
+function delivery_date_asc($a, $b)
+{
     if ($a['delivery_date'] == $b['delivery_date']) {
         return 0;
     }
     return ($a['delivery_date'] < $b['delivery_date']) ? -1 : 1;
 }
 
-function delivery_date_desc($a, $b) {
+function delivery_date_desc($a, $b)
+{
     if ($a['delivery_date'] == $b['delivery_date']) {
         return 0;
     }
@@ -96,10 +109,13 @@ function delivery_date_desc($a, $b) {
 
 $page = '0';
 $page_limit = '10';
-$column = 'letterid';
 $filter = "%";
 
-if (isset($_GET['filter'])) { $filter = mysqli_real_escape_string($con,$_GET['filter']); }
+$db = new Db();
+
+if (isset($_GET['filter'])) {
+    $filter = $db->escape( $_GET['filter']);
+}
 if(!isset($_REQUEST['sort'])){
     $_REQUEST['sort'] = 'generated_date';
     if (!empty($status) && $status == 'sent') {
@@ -109,7 +125,7 @@ if(!isset($_REQUEST['sort'])){
     }
 }
 
-if(!isset($_REQUEST['sort2'])){
+if (!isset($_REQUEST['sort2'])) {
     $_REQUEST['sort2'] = 'generated_date';
     $_REQUEST['sort2dir'] = 'DESC';
 }
@@ -152,9 +168,8 @@ $letters_res = mysqli_query($con,$letters_query);
 
 if (!$letters_res) {
     error_log("MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con));
-    print "Error selecting letters from the database.";
-}
-else {
+    echo "Error selecting letters from the database.";
+} else {
     while ($row = mysqli_fetch_assoc($letters_res)) {
         $dental_letters[] = $row;
     }
@@ -164,22 +179,19 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
     // Get Correspondence Column
     if ($letter['template_type']=='0') {
         $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
-    }
-    else {
+    } else {
         $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
     }
     
     $template_res = mysqli_query($con,$template_sql);
-    $correspondence = array();
     $correspondence = mysqli_fetch_assoc($template_res);
     $dental_letters[$key]['id'] = $letter['letterid'];
     $dental_letters[$key]['mailed'] = $letter['mailed_date'];
     $dental_letters[$key]['mailed_once'] = $letter['mailed_once'];
     
-    if (!empty($letter['pdf_path'])&&$letter['status']!=0) {
+    if (!empty($letter['pdf_path']) && $letter['status'] != 0) {
         $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
-    }
-    else {
+    } else {
         $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
     }
     
@@ -188,12 +200,6 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
     if ($letter['templateid'] == 99) {
         $dental_letters[$key]['subject'] = "User Generated";
     }
-    
-    // Get Recipients for Sent to Column
-    $s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con,$letter['patientid'])." LIMIT 1";
-    $q = mysqli_query($con,$s);
-    $r = mysqli_fetch_assoc($q);
-    $source = $r['referred_source'];
     
     $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
     
@@ -208,36 +214,31 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $master_r['pat_referral_list'], $master_r['letterid']);
         
         if (!empty($contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])) {
-            //$contacts['patient'] = array_merge($contacts['patient'], $master_contacts['patient']);
-        }
-        else if (!empty($master_contacts['patient']) && count($master_contacts['patient'])) {
+
+        } elseif (!empty($master_contacts['patient']) && count($master_contacts['patient'])) {
             $contacts['patient'] = $master_contacts['patient'];
         }
         
         if (!empty($contacts['mds']) && count($contacts['mds']) && !empty($master_contacts['mds']) && count($master_contacts['mds'])) {
             $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
-        }
-        else if (!empty($master_contacts['mds']) && count($master_contacts['mds'])){
+        } elseif (!empty($master_contacts['mds']) && count($master_contacts['mds'])){
             $contacts['mds'] = $master_contacts['mds'];
         }
         
         if (!empty($contacts['md_referrals']) && count($contacts['md_referrals']) && count($master_contacts['md_referrals'])) {
             $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
-        }
-        else if (!empty($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])) {
+        } elseif (!empty($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])) {
             $contacts['md_referrals'] = $master_contacts['md_referrals'];
         }
         
         if (!empty($contacts['pat_referrals']) && count($contacts['pat_referrals']) && count($master_contacts['pat_referrals'])) {
             $contacts['pat_referrals'] = array_merge($contacts['pat_referrals'], $master_contacts['pat_referrals']);
-        }
-        else if (!empty($master_contacts['pat_referrals']) && count($master_contacts['pat_referrals'])) {
+        } elseif (!empty($master_contacts['pat_referrals']) && count($master_contacts['pat_referrals'])) {
             $contacts['pat_referrals'] = $master_contacts['pat_referrals'];
         }
     }
     
-    //print_r($contacts); print "<br />";
-    $total_contacts = count(!empty($contacts['patient']) ? $contacts['patient'] : array()) + count(!empty($contacts['mds']) ? $contacts['mds'] : array()) + count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : array()) + count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : array());
+    $total_contacts = count(!empty($contacts['patient']) ? $contacts['patient'] : []) + count(!empty($contacts['mds']) ? $contacts['mds'] : []) + count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : []) + count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : []);
     $dental_letters[$key]['total_contacts'] = $total_contacts;
     
     if ($total_contacts > 1) {
@@ -246,11 +247,9 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         $dental_letters[$key]['mds'] = $contacts['mds'];
         $dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
         $dental_letters[$key]['pat_referrals'] = (!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : '');
-    }
-    else if ($total_contacts == 0) {
+    } else if ($total_contacts == 0) {
         $dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
-    }
-    else {
+    } else {
         // Patient: Salutation Lastname, Firstname
         $dental_letters[$key]['sentto'] = '';
         $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
@@ -270,8 +269,8 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
 }
 
 // Collect Letters in array
-$pending_letters = array();
-$sent_letters = array();
+$pending_letters = [];
+$sent_letters = [];
 
 if (!empty($dental_letters)) foreach ($dental_letters as $letter) {
     if ($letter['status'] == "0") {
@@ -373,9 +372,8 @@ if ($_REQUEST['sort2'] == "delivery_date" && $_REQUEST['sort2dir'] == "DESC") {
 $f_sql = "SELECT * FROM dental_faxes
     WHERE sfax_completed=1
     AND sfax_status=2
-    AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
+    AND patientid='".$db->escape((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
     AND viewed=0;";
-
 $f_q = mysqli_query($con,$f_sql);
 $f_num = mysqli_num_rows($f_q);
 
@@ -404,7 +402,7 @@ if ($f_num > 0) { ?>
         while ($row = mysqli_fetch_assoc($result)) {
             //DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
             if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
-                print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+                echo "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
             }
         }
         ?>
@@ -418,9 +416,6 @@ if ($f_num > 0) { ?>
 
 <table id="letters-table" class="table table-bordered table-hover">
     <tr class="tr_bg_h">
-        <!--<th class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a>
-        </th>-->
         <th class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
             <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondence</a>
         </th>
@@ -437,9 +432,6 @@ if ($f_num > 0) { ?>
     $end = $i + $page_limit;
     
     while ($i < count($pending_letters) && $i < $end) {
-        //print $pending_letters[$i]['templateid']; print "<br />";
-        //$name = $pending_letters[$i]['lastname'] . " " . $pending_letters[$i]['middlename'] . ", " . $pending_letters[$i]['firstname'];
-        $userid = $pending_letters[$i]['userid'];
         $url = $pending_letters[$i]['url'];
         $id = $pending_letters[$i]['id'];
         $subject = $pending_letters[$i]['subject'];
@@ -449,14 +441,11 @@ if ($f_num > 0) { ?>
         
         if ($pending_letters[$i]['sfax_status']=='2' AND $pending_letters[$i]['fax_viewed']=='0') {
             $alert = " bgcolor=\"#FFFF33\"";
-        }
-        else if (!empty($pending_letters[$i]['old'])) {
+        } else if (!empty($pending_letters[$i]['old'])) {
             $alert = " bgcolor=\"#FF9696\"";
-        }
-        else {
+        } else {
             $alert = null;
         }
-        
         ?>
         <tr <?= $alert; ?>>
             <td>
@@ -464,7 +453,6 @@ if ($f_num > 0) { ?>
             </td>
             <td>
                 <?php
-                
                 if ($total_contacts > 1) { ?>
                     <a href="#" class="btn btn-default btn-sm contacts-toggler">
                         <?= $sentto; ?>
@@ -477,21 +465,18 @@ if ($f_num > 0) { ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['mds'] as $md) { ?>
                             <p>
                                 <?= $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['md_referrals'] as $md_referral) { ?>
                             <p>
                                 <?= $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
                                 <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" />Delete</a>
                             </p>
                         <?php }
-                        
                         foreach ($pending_letters[$i]['pat_referrals'] as $md_referral) { ?>
                             <p>
                                 <?= $pat_referral['salutation']." ".$pat_referral['firstname']." ".$pat_referral['lastname']; ?>
@@ -499,47 +484,44 @@ if ($f_num > 0) { ?>
                             </p>
                         <?php } ?>
                     </div>
-                <?php }
-                else {
+                    <?php
+                } else {
                     echo $sentto;
                 } ?>
             </td>
             <td><?= $generated; ?></td>
         </tr>
         <?php
-        
         $i++;
     } ?>
 </table>
 <script type="text/javascript">
-function delete_pending_letter (lid, type, rid, par) {
-    $.ajax({
-        url: "includes/letter_delete.php",
-        type: "post",
-        data: {
-            lid: lid,
-            type: type,
-            rid: rid,
-            par: par
-        },
-        success: function(data){
-            var r = $.parseJSON(data);
-            
-            if (r.error) {}
-            else {
-                window.location.reload();
-            }
-        },
-        failure: function(data){}
-    });
-}
+    function delete_pending_letter (lid, type, rid, par) {
+        $.ajax({
+            url: "includes/letter_delete.php",
+            type: "post",
+            data: {
+                lid: lid,
+                type: type,
+                rid: rid,
+                par: par
+            },
+            success: function(data){
+                var r = $.parseJSON(data);
+
+                if (!r.error) {
+                    window.location.reload();
+                }
+            },
+            failure: function(data){}
+        });
+    }
 </script>
 
 <h2>
     Sent Letters
     <small>Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters#sect_letters",$page1); ?></small>
 </h2>
-
 <table class="table table-bordered table-hover">
     <tr class="tr_bg_h">
         <th class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a></th>
@@ -551,13 +533,10 @@ function delete_pending_letter (lid, type, rid, par) {
         <th class="col_head <?= ($_REQUEST['sort2'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Mailed</a></th>
     </tr>
     <?php
-    
     $i = $page_limit * $page2;
     $end = $i + $page_limit;
     
     while ($i < count($sent_letters) && $i < $end) {
-        //print $sent_letters[$i]['templateid']; print "<br />";
-        //$name = $sent_letters[$i]['lastname'] . " " . $sent_letters[$i]['middlename'] . ", " . $sent_letters[$i]['firstname'];
         $userid = $sent_letters[$i]['userid'];
         $url = $sent_letters[$i]['url'];
         $subject = $sent_letters[$i]['subject'];
@@ -567,14 +546,6 @@ function delete_pending_letter (lid, type, rid, par) {
         $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
         $id = $sent_letters[$i]['id'];
         $mailed = $sent_letters[$i]['mailed'];
-        
-        if ($sent_letters[$i]['old']) {
-            $alert = " bgcolor=\"#FF9696\"";
-        }
-        else {
-            $alert = null;
-        }
-        
         ?>
         <tr>
             <td><?= $userid ?></td>
@@ -594,41 +565,37 @@ function delete_pending_letter (lid, type, rid, par) {
             </td>
         </tr>
         <?php
-        
         $i++;
     } ?>
 </table>
 <script type="text/javascript">
-$(document).ready(function(){
-    $('.contacts-toggler').on('click',function(e){
-        e.preventDefault();
-        
-        var $this = $(this);
-        
-        $this.next().toggle();
-        $this.find('.glyphicon')
-        .toggleClass('glyphicon-chevron-up')
-        .toggleClass('glyphicon-chevron-down')
-        
-        return false;
-    });
-});
+    $(document).ready(function () {
+        $('.contacts-toggler').on('click', function (e) {
+            e.preventDefault();
 
-$('.mailed_chk').click( function(){
-    lid = $(this).val();
-    c = $(this).is(':checked');
-    
-    $.ajax({
-        url: "includes/letter_mail.php",
-        type: "post",
-        data: {lid: lid, mailed: c},
-        success: function(data){
-            var r = $.parseJSON(data);
-            
-            if (r.error){}
-            else {}
-        },
-        failure: function(data){}
+            var $this = $(this);
+
+            $this.next().toggle();
+            $this.find('.glyphicon')
+            .toggleClass('glyphicon-chevron-up')
+            .toggleClass('glyphicon-chevron-down');
+
+            return false;
+        });
     });
-});
+
+    $('.mailed_chk').click(function () {
+        lid = $(this).val();
+        c = $(this).is(':checked');
+
+        $.ajax({
+            url: "includes/letter_mail.php",
+            type: "post",
+            data: {lid: lid, mailed: c},
+            success: function (data) {
+                var r = $.parseJSON(data);
+            },
+            failure: function(data){}
+        });
+    });
 </script>

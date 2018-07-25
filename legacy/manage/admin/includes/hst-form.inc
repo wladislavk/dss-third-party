@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../includes/hst_functions.php';
 $is_front_office = empty($is_back_office);
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
 
+$db = new Db();
 if (!empty($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
 
@@ -21,8 +22,8 @@ if (!empty($_REQUEST['hst_id'])) {
     $hstData = $db->getRow("SELECT *
         FROM dental_hst
         WHERE patient_id = '$patientId'
-            AND company_id = '$hstCompanyId'
-            AND status NOT IN ($hstCompanyCompleteStatuses)");
+        AND company_id = '$hstCompanyId'
+        AND status NOT IN ($hstCompanyCompleteStatuses)");
     $hstId = $hstData ? $hstData['id'] : 0;
 }
 
@@ -36,7 +37,7 @@ if ($is_front_office) {
     $authorizedProviderJoinConditional = $isStaff ? "'$userId'" : "'$docId'";
 } else {
     $userId = 0;
-    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'"));
+    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'", 'docid'));
 
     $isStaff = false;
     $authorizedProviderJoinConditional = 'p.docid';
@@ -45,8 +46,7 @@ if ($is_front_office) {
 $hstCompanyList = [];
 $unorderedHstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
     FROM companies h
-        JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
-            AND uhc.userid = '$docId'
+    JOIN dental_user_hst_company uhc ON uhc.companyid = h.id AND uhc.userid = '$docId'
     WHERE h.company_type = '$hstCompanyType'
     ORDER BY name ASC");
 
@@ -56,10 +56,9 @@ foreach ($unorderedHstCompanyList as $hstCompany) {
 
 $hstCompany = $db->getRow("SELECT h.*, uhc.id as uhc_id
     FROM companies h
-        JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
-            AND uhc.userid = '$docId'
+    JOIN dental_user_hst_company uhc ON uhc.companyid = h.id AND uhc.userid = '$docId'
     WHERE h.company_type = '$hstCompanyType'
-        AND h.id = '$hstCompanyId'
+    AND h.id = '$hstCompanyId'
     ORDER BY name ASC");
 
 $patientData = $db->getRow("SELECT
@@ -86,30 +85,28 @@ $patientData = $db->getRow("SELECT
         IF(u.producer_files AND LENGTH(TRIM(u.state)), u.state, d.state) AS 'provider_state',
         IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_patients p
-        LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
-        LEFT JOIN dental_users u ON u.userid = $authorizedProviderJoinConditional
-        LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
+    LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
+    LEFT JOIN dental_users u ON u.userid = $authorizedProviderJoinConditional
+    LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE p.patientid = '$patientId'");
 
 $hstData = !empty($hstData) ? $hstData : [];
 
 if ($patientData) {
     /**
-     * @see DSS-166
-     *
      * If the HST request has not been found, create a new set to be displayed
      * Otherwise, complete blank fields for HST not requested (status = DSS_HST_REQUESTED)
      */
     if (!$hstData) {
         $hstData = $patientData + [
-                'company_id' => 0,
-                'diagnosis_id' => 0,
-                'hst_type' => 0,
-                'hst_nights' => 2,
-                'hst_positions' => '',
-                'provider_signature' => 1,
-                'provider_date' => date('m/d/Y'),
-            ];
+            'company_id' => 0,
+            'diagnosis_id' => 0,
+            'hst_type' => 0,
+            'hst_nights' => 2,
+            'hst_positions' => '',
+            'provider_signature' => 1,
+            'provider_date' => date('m/d/Y'),
+        ];
     } elseif ($hstData['status'] == DSS_HST_REQUESTED) {
         foreach ($patientData as $field=>$value) {
             $hstData[$field] = $hstData[$field] ?: $value;
@@ -130,13 +127,11 @@ $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
 if ($is_front_office && isset($_POST['delete'])) {
     cancelHSTRequest($hstId, $userId);
-
     ?>
     <script type="text/javascript">
         window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request canceled successfully.') ?>';
     </script>
     <?php
-
     trigger_error('Die called', E_USER_ERROR);
 }
 
@@ -180,7 +175,7 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
         $updateData = $db->escapeAssignmentList($updateData);
         $db->query("UPDATE dental_hst SET $updateData WHERE id = '$hstId'");
     } else {
-        $thorton_sql = "SELECT * FROM dental_thorton_view WHERE patientid = '$patientId'";
+        $thorton_sql = "SELECT * FROM dental_thorton_pivot WHERE patientid = '$patientId'";
         $thorton = $db->getRow($thorton_sql);
 
         $insertData = $updateData + [
@@ -195,11 +190,8 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
             'status' => DSS_HST_REQUESTED,
             'ip_address' => $_SERVER['REMOTE_ADDR']
         ];
-
         $insertData = $db->escapeAssignmentList($insertData);
-
-        $hstId = $db->getInsertId("INSERT INTO dental_hst
-            SET $insertData, authorized_id = NULL, authorizeddate = NULL, adddate = NOW()");
+        $hstId = $db->getInsertId("INSERT INTO dental_hst SET $insertData, authorized_id = NULL, authorizeddate = NULL, adddate = NOW()");
     }
 
     if (!$authorize) { ?>
@@ -207,19 +199,16 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
             window.location = '/manage/manage_hst.php?status=0&viewed=0';
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
 
     if ($canAuthorize) {
         authorizeHSTRequest($hstId, $hstCompanyId, $userId, $docId);
-
         ?>
         <script type="text/javascript">
             window.location = 'add_patient.php?ed=<?= $patientId ?>&preview=1&addtopat=1&pid=<?= $patientId ?>';
         </script>
         <?php
-
         trigger_error('Die called', E_USER_ERROR);
     }
 }
@@ -231,17 +220,17 @@ $insuranceCompanyList = [
         'phone' => '',
         'fax' => '',
         'email' => '',
-    ]
+    ],
 ];
 $unorderedInsuranceCompanyList = $db->getResults("SELECT
-        contactid AS id,
-        company AS name,
-        phone1 AS phone,
-        fax,
-        email
+    contactid AS id,
+    company AS name,
+    phone1 AS phone,
+    fax,
+    email
     FROM dental_contact
     WHERE contacttypeid = '11'
-        AND docid = '$docId'");
+    AND docid = '$docId'");
 
 foreach ($unorderedInsuranceCompanyList as $insuranceCompany) {
     $insuranceCompanyList[$insuranceCompany['id']] = $insuranceCompany;
@@ -258,9 +247,9 @@ $unorderedProviderList = $db->getResults("SELECT
         IF(u.producer_files AND LENGTH(TRIM(u.state)), u.state, d.state) AS 'provider_state',
         IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_users u
-        LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
+    LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE u.userid = '$docId'
-        OR (u.docid = '$docId' AND u.sign_notes = 1)
+    OR (u.docid = '$docId' AND u.sign_notes = 1)
     ORDER BY u.last_name, u.first_name, u.userid");
 
 foreach ($unorderedProviderList as $provider) {
@@ -268,7 +257,6 @@ foreach ($unorderedProviderList as $provider) {
 }
 
 $defaultProvider = $isStaff ? $userId : $docId;
-
 ?>
 <script>
     var providerList = <?= json_encode($providerList) ?>,
@@ -276,20 +264,17 @@ $defaultProvider = $isStaff ? $userId : $docId;
         insuranceCompanyList = <?= json_encode($insuranceCompanyList) ?>;
 
     <?php if (!$canAuthorize && !$canFinishLater) { ?>
-    jQuery(function($){
-        $('#hst_order_sleep_services').find('input, select, button').prop('disabled', true);
-    });
+        jQuery(function ($) {
+            $('#hst_order_sleep_services').find('input, select, button').prop('disabled', true);
+        });
     <?php } ?>
 
     <?php if (!empty($is_back_office)) { ?>
-    jQuery(function($){
-        var $form = $('#hst_order_sleep_services');
-
-        $form.find('input:text, select').addClass('form-control input-sm')
-            .filter('select').addClass('input-inline');
-
-        $form.find('input:submit, button').addClass('btn btn-primary');
-    });
+        jQuery(function ($) {
+            var $form = $('#hst_order_sleep_services');
+            $form.find('input:text, select').addClass('form-control input-sm').filter('select').addClass('input-inline');
+            $form.find('input:submit, button').addClass('btn btn-primary');
+        });
     <?php } ?>
 </script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -302,9 +287,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
     }
 </style>
 <?php if (!empty($is_back_office)) { ?>
-    <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?=
-        isset($_GET['status']) ? '&amp;ret_status=' . e($_GET['status']) : ''
-    ?>" title="Back to HST Results" class="btn btn-primary btn-sm">
+    <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?= isset($_GET['status']) ? '&amp;ret_status=' . e($_GET['status']) : '' ?>" title="Back to HST Results" class="btn btn-primary btn-sm">
         <span class="glyphicon glyphicon-arrow-left"></span>
         HST Details
     </a>
@@ -312,11 +295,9 @@ $defaultProvider = $isStaff ? $userId : $docId;
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
     <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
-
     <h3 align="center">Home Sleep Test Order Form For
         <?= e($hstData['patient_firstname'] . ' ' . $hstData['patient_lastname']) ?>
     </h3>
-
     <ul class="frmhead">
         <li>
             <label class="desc">Company</label>
@@ -424,10 +405,8 @@ $defaultProvider = $isStaff ? $userId : $docId;
             <label class="desc">Diagnosis / Reason for Study</label>
             <hr />
             <?php
-
             $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
             $ins_diag_my = $db->getResults($ins_diag_sql);
-
             foreach ($ins_diag_my as $ins_diag_myarray) { ?>
                 <input type="radio" name="diagnosis_id"
                     <?= $ins_diag_myarray['ins_diagnosisid'] == $hstData['diagnosis_id'] ? 'checked' : '' ?>
@@ -453,7 +432,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
             </label>
             <select name="hst_1_nights">
                 <option <?= !$nightsDefault ? 'selected' : '' ?>></option>
-                <?php for ($n=1;$n<=$diagnosticNightsLimit;$n++) { ?>
+                <?php for ($n = 1; $n <= $diagnosticNightsLimit; $n++) { ?>
                     <option <?= $n == $nightsDefault ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
             </select>
@@ -471,7 +450,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
             </label>
             <select name="hst_3_nights">
                 <option <?= !$nightsDefault ? 'selected' : '' ?>></option>
-                <?php for ($n=1;$n<=$oatNightsLimit;$n++) { ?>
+                <?php for ($n = 1; $n <= $oatNightsLimit; $n++) { ?>
                     <option <?= $n == $nightsDefault ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
             </select>
@@ -479,10 +458,9 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <span>Device position:</span>
                 <?php for ($n=0;!$n || $n<$nightsDefault;$n++) { ?>
                     <span class="field-position">
-                            <input type="text" id="device-position-<?= $n ?>" name="hst_device_position[<?= $n ?>]"
-                                   value="<?= e($hstData['hst_positions'][$n]) ?>" />
-                            <label for="device-position-<?= $n ?>">For night <?= $n + 1 ?></label>
-                        </span>
+                        <input type="text" id="device-position-<?= $n ?>" name="hst_device_position[<?= $n ?>]" value="<?= e($hstData['hst_positions'][$n]) ?>" />
+                        <label for="device-position-<?= $n ?>">For night <?= $n + 1 ?></label>
+                    </span>
                 <?php } ?>
             </p>
         </li>
@@ -499,7 +477,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 Select a provider to auto-populate the details:
                 <select id="provider_selector">
                     <option></option>
-                    <?php foreach ($providerList as $id=>$provider) { ?>
+                    <?php foreach ($providerList as $id => $provider) { ?>
                         <option value="<?= $id ?>" <?= $id == $defaultProvider ? 'selected' : '' ?>>
                             <?= e($provider['provider_lastname'] . ', ' . $provider['provider_firstname']) ?>
                         </option>
@@ -517,8 +495,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_lastname">Provider Last Name</label>
             </span>
             <span>
-                <input type="text" name="provider_phone" id="provider_phone" class="phonemask"
-                    value="<?= e($hstData['provider_phone']) ?>" />
+                <input type="text" name="provider_phone" id="provider_phone" class="phonemask" value="<?= e($hstData['provider_phone']) ?>" />
                 <label for="provider_phone">Phone</label>
             </span>
         </li>
@@ -532,21 +509,17 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_city">City</label>
             </span>
             <span>
-                <input type="text" name="provider_state" id="provider_state"
-                    value="<?= e($hstData['provider_state']) ?>" />
+                <input type="text" name="provider_state" id="provider_state" value="<?= e($hstData['provider_state']) ?>" />
                 <label for="provider_state">State</label>
             </span>
             <span>
-                <input type="text" name="provider_zip" id="provider_zip" class="zipmask" size="10"
-                    value="<?= e($hstData['provider_zip']) ?>" />
+                <input type="text" name="provider_zip" id="provider_zip" class="zipmask" size="10" value="<?= e($hstData['provider_zip']) ?>" />
                 <label for="provider_zip">Zip</label>
             </span>
         </li>
         <li>
             <span>
-                <input type="text" name="provider_date" id="provider_date" class="calendar"
-                    onChange="validateDate('provider_date');" placeholder="YYYY-MM-DD" data-date-format="Y-m-d"
-                    value="<?= e($hstData['provider_date']) ?>" />
+                <input type="text" name="provider_date" id="provider_date" class="calendar" onChange="validateDate('provider_date');" placeholder="YYYY-MM-DD" data-date-format="Y-m-d" value="<?= e($hstData['provider_date']) ?>" />
                 <label for="provider_date">Date</label>
             </span>
         </li>
@@ -576,15 +549,12 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <input class="button" type="submit" name="save" value="Save / Finish Later" />
             <?php } ?>
             <?php if ($canAuthorize) { ?>
-                <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>"
-                   title="Cancel HST and delete from queue"
-                   onclick="return confirm('Are you sure you want to delete this HST?');">Delete</a>
+                <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>" title="Cancel HST and delete from queue" onclick="return confirm('Are you sure you want to delete this HST?');">Delete</a>
             <?php } ?>
         </p>
     <?php } ?>
 </form>
 <?php
-
 if ($hstData['status'] != DSS_HST_REQUESTED) {
     $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
     $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';

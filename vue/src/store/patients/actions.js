@@ -48,7 +48,7 @@ export default {
       dentaldevice: deviceId,
       patientid: state[symbols.state.patientId]
     }
-    return http.request('post', endpoints.tmjClinicalExams.storeForPatient, data).catch((response) => {
+    return http.post(endpoints.tmjClinicalExams.storeForPatient, data).catch((response) => {
       dispatch(symbols.actions.handleErrors, { title: 'storeClinicalExam', response: response })
     })
   }

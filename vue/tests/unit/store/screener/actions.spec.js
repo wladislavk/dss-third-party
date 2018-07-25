@@ -1,68 +1,64 @@
-import axios from 'axios'
 import endpoints from '../../../../src/endpoints'
-import http from '../../../../src/services/http'
-import sinon from 'sinon'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/StoreTestCase'
 import ScreenerModule from '../../../../src/store/screener'
 
 describe('Screener module actions', () => {
   beforeEach(function () {
-    this.sandbox = sinon.createSandbox()
     this.testCase = new TestCase()
   })
 
   afterEach(function () {
-    this.sandbox.restore()
+    this.testCase.reset()
   })
 
   describe('getDoctorData action', () => {
     it('should set doctor data', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            first_name: 'John'
-          }
+      const docId = 1
+      const firstName = 'John'
+      this.testCase.stubRequest({
+        response: {
+          first_name: firstName
         }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
       })
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.sessionData]: {
-          docId: 1
+          docId: docId
         }
       })
 
       ScreenerModule.actions[symbols.actions.getDoctorData](this.testCase.mocks)
 
-      const expectedMutations = [
-        {
-          type: symbols.mutations.doctorName,
-          payload: 'John'
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.users.show + '/1'
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.users.show + '/' + docId },
+          mutations: [
+            {
+              type: symbols.mutations.doctorName,
+              payload: firstName
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('submitScreener action', () => {
     it('should submit screener data', function (done) {
+      const epworthProps = [
+        {
+          id: 'epworth1',
+          value: 1
+        },
+        {
+          id: 'epworth2',
+          value: 2
+        }
+      ]
+
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.sessionData]: {
@@ -83,16 +79,7 @@ describe('Screener module actions', () => {
             value: '2233223223'
           }
         ],
-        [symbols.state.epworthProps]: [
-          {
-            id: 'epworth1',
-            value: 1
-          },
-          {
-            id: 'epworth2',
-            value: 2
-          }
-        ],
+        [symbols.state.epworthProps]: epworthProps,
         [symbols.state.symptoms]: [
           {
             name: 'symptom1',
@@ -119,32 +106,19 @@ describe('Screener module actions', () => {
           selected: 3
         }
       })
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-      })
+      this.testCase.stubRequest({})
+
       ScreenerModule.actions[symbols.actions.submitScreener](this.testCase.mocks)
-      setTimeout(() => {
-        const expectedPost = [
-          {
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: {
             path: endpoints.screeners.store,
             payload: {
               docid: 1,
               userid: 2,
               rx_cpap: 3,
-              epworth: [
-                {
-                  id: 'epworth1',
-                  value: 1
-                },
-                {
-                  id: 'epworth2',
-                  value: 2
-                }
-              ],
+              epworth: epworthProps,
               first_name: 'John',
               last_name: 'Doe',
               phone: '2233223223',
@@ -153,11 +127,12 @@ describe('Screener module actions', () => {
               coMorbidity1: 2,
               coMorbidity2: 0
             }
-          }
-        ]
-        expect(postData).toEqual(expectedPost)
+          },
+          mutations: [],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
   })
 
@@ -213,93 +188,77 @@ describe('Screener module actions', () => {
       const payload = {
         id: 1
       }
+
       ScreenerModule.actions[symbols.actions.parseScreenerResults](this.testCase.mocks, payload)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.screenerId,
-          payload: 1
-        },
-        {
-          type: symbols.mutations.epworthWeight,
-          payload: 5
-        },
-        {
-          type: symbols.mutations.coMorbidityWeight,
-          payload: 11
-        },
-        {
-          type: symbols.mutations.surveyWeight,
-          payload: 9
-        }
-      ]
-      expect(this.testCase.mutations).toEqual(expectedMutations)
+
+      expect(this.testCase.getResults()).toEqual({
+        http: {},
+        mutations: [
+          {
+            type: symbols.mutations.screenerId,
+            payload: 1
+          },
+          {
+            type: symbols.mutations.epworthWeight,
+            payload: 5
+          },
+          {
+            type: symbols.mutations.coMorbidityWeight,
+            payload: 11
+          },
+          {
+            type: symbols.mutations.surveyWeight,
+            payload: 9
+          }
+        ],
+        actions: []
+      })
     })
   })
 
   describe('setEpworthProps action', () => {
     it('should set epworth props', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            {
-              id: 1
-            },
-            {
-              id: 2
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
+      const response = [
+        { id: 1 },
+        { id: 2 }
+      ]
+      this.testCase.stubRequest({response: response})
       this.testCase.setState({
         token: 'token'
       })
+
       ScreenerModule.actions[symbols.actions.setEpworthProps](this.testCase.mocks)
-      setTimeout(() => {
-        const expectedPost = [
-          {
-            path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'
-          }
-        ]
-        const expectedMutations = [
-          {
-            type: symbols.mutations.setEpworthProps,
-            payload: [
-              {
-                id: 1,
-                selected: '',
-                error: false
-              },
-              {
-                id: 2,
-                selected: '',
-                error: false
-              }
-            ]
-          }
-        ]
-        expect(postData).toEqual(expectedPost)
-        expect(this.testCase.mutations).toEqual(expectedMutations)
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.epworthSleepinessScale.index + '?status=1&order=sortby' },
+          mutations: [
+            {
+              type: symbols.mutations.setEpworthProps,
+              payload: [
+                {
+                  id: 1,
+                  selected: '',
+                  error: false
+                },
+                {
+                  id: 2,
+                  selected: '',
+                  error: false
+                }
+              ]
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('submitHST action', () => {
     it('should submit home sleep request to API', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-      })
+      this.testCase.stubRequest({})
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token',
         [symbols.state.screenerId]: 1,
@@ -325,190 +284,161 @@ describe('Screener module actions', () => {
           }
         ]
       }
+
       ScreenerModule.actions[symbols.actions.submitHst](this.testCase.mocks, payload)
-      const expectedPost = [
-        {
-          path: endpoints.homeSleepTests.store,
-          payload: {
-            screener_id: 1,
-            doc_id: 3,
-            user_id: 4,
-            company_id: 2,
-            patient_firstname: 'John',
-            patient_lastname: 'Doe',
-            patient_cell_phone: '2233223223',
-            patient_email: '',
-            patient_dob: ''
-          }
-        }
-      ]
-      setTimeout(() => {
-        expect(postData).toEqual(expectedPost)
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: {
+            path: endpoints.homeSleepTests.store,
+            payload: {
+              screener_id: 1,
+              doc_id: 3,
+              user_id: 4,
+              company_id: 2,
+              patient_firstname: 'John',
+              patient_lastname: 'Doe',
+              patient_cell_phone: '2233223223',
+              patient_email: '',
+              patient_dob: ''
+            }
+          },
+          mutations: [],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
   })
 
   describe('authenticateScreener action', () => {
     beforeEach(function () {
-      this.postData = []
-      this.response = null
-      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.postData.push({
-          path: path,
-          payload: payload
+      this.setOutcome = function (promise) {
+        promise.then((response) => {
+          this.outcome = response
+        }).catch((error) => {
+          this.outcome = error
         })
-        return this.response
-      })
+      }
+      this.expectedUrl = 'http://api/auth'
     })
     it('should authenticate screener', function (done) {
-      this.response = Promise.resolve({
-        data: {
-          token: 'token'
+      this.testCase.stubRawRequest({
+        response: {
+          data: {
+            token: 'token'
+          }
         }
       })
       const payload = {
         foo: 'bar'
       }
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, payload)
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.screenerToken,
-            payload: 'token'
-          }
-        ]
-        const expectedActions = [
-          {
-            type: symbols.actions.setSessionData,
-            payload: {}
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(this.testCase.actions).toEqual(expectedActions)
-        const expectedPostData = [
-          {
-            path: 'http://api/auth',
-            payload: {
-              foo: 'bar'
+
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, payload))
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: {
+            path: this.expectedUrl,
+            payload: payload
+          },
+          mutations: [
+            {
+              type: symbols.mutations.screenerToken,
+              payload: 'token'
             }
-          }
-        ]
-        expect(this.postData).toEqual(expectedPostData)
-        expect(outcome instanceof Error).toBe(false)
+          ],
+          actions: [
+            {
+              type: symbols.actions.setSessionData,
+              payload: {}
+            }
+          ]
+        })
+        expect(this.outcome instanceof Error).toBe(false)
         done()
-      }, 100)
+      })
     })
     it('should handle token retrieval failure', function (done) {
-      this.response = Promise.resolve({
-        data: {
-          foo: 'bar'
+      this.testCase.stubRawRequest({
+        response: {
+          data: {
+            foo: 'bar'
+          }
         }
       })
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual([])
-        expect(this.testCase.actions).toEqual([])
-        expect(outcome instanceof Error).toBe(true)
-        expect(outcome.message).toBe('No token retrieved')
+
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {}))
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: {
+            path: this.expectedUrl,
+            payload: {}
+          },
+          mutations: [],
+          actions: []
+        })
+        expect(this.outcome instanceof Error).toBe(true)
+        expect(this.outcome.message).toBe('No token retrieved')
         done()
-      }, 100)
+      })
     })
     it('should handle authentication failure', function (done) {
-      this.response = Promise.reject(new Error())
-      let outcome
-      const promise = ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {})
-      promise.then(
-        (response) => {
-          outcome = response
-        },
-        (error) => {
-          outcome = error
-        }
-      )
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual([])
-        expect(this.testCase.actions).toEqual([])
-        expect(outcome instanceof Error).toBe(true)
-        expect(outcome.message).toBe('Authentication failed')
+      this.testCase.stubRawRequest({error: ''})
+
+      this.setOutcome(ScreenerModule.actions[symbols.actions.authenticateScreener](this.testCase.mocks, {}))
+
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: {
+            path: this.expectedUrl,
+            payload: {}
+          },
+          mutations: [],
+          actions: []
+        })
+        expect(this.outcome instanceof Error).toBe(true)
+        expect(this.outcome.message).toBe('Authentication failed')
         done()
-      }, 100)
+      })
     })
   })
 
   describe('setSessionData action', () => {
-    it('should set session data', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            userid: 1,
-            docid: 2
-          }
-        }
-      }
-      this.sandbox.stub(http, 'request').callsFake((method, path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
+    beforeEach(function () {
       this.testCase.setState({
         [symbols.state.screenerToken]: 'token'
       })
-
-      const expectedMutations = [
-        {
-          type: symbols.mutations.sessionData,
-          payload: {
-            userId: 1,
-            docId: 2
-          }
-        }
-      ]
+    })
+    it('should set session data', function (done) {
+      const response = {
+        userid: 1,
+        docid: 2
+      }
+      this.testCase.stubRequest({response: response})
 
       ScreenerModule.actions[symbols.actions.setSessionData](this.testCase.mocks)
 
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.users.current
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
+      this.testCase.wait(() => {
+        expect(this.testCase.getResults()).toEqual({
+          http: { path: endpoints.users.current },
+          mutations: [
+            {
+              type: symbols.mutations.sessionData,
+              payload: {
+                userId: 1,
+                docId: 2
+              }
+            }
+          ],
+          actions: []
+        })
         done()
-      }, 100)
+      })
     })
     it('should throw error while setting session data', function (done) {
-      const postData = []
-      this.sandbox.stub(http, 'request').callsFake((method, path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.reject(new Error())
-      })
-      this.testCase.setState({
-        [symbols.state.screenerToken]: 'token'
-      })
+      this.testCase.stubErrorRequest()
 
       const promise = ScreenerModule.actions[symbols.actions.setSessionData](this.testCase.mocks)
       promise.then(() => {

@@ -16,7 +16,7 @@ function dualAppRedirect($path)
     if (strstr($path, '?')) {
         $separator = '&';
     }
-    $token = (isset($_SESSION['token']) ? $_SESSION['token'] : '');
+    $token = (isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '');
     header("Location: {$vueUrl}{$path}{$separator}token={$token}");
     exit;
 }

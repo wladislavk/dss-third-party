@@ -44,14 +44,13 @@ if(isset($_POST['bill_submit'])){
         $cq = mysqli_query($con,$csql);
         $cr = mysqli_fetch_assoc($cq);
         try{
-            $charge = \Stripe\Charge::retrieve($cr['stripe_charge']);
             $refundDetails = [
-                'charge' => $charge->id,
+                'charge' => $cr['stripe_charge'],
             ];
-
             if ($amount) {
                 $refundDetails['amount'] = $amount;
             }
+            $refund = \Stripe\Refund::create($refundDetails);
         } catch(\Stripe\Error\Card $e) {
             // Since it's a decline, Stripe_CardError will be caught
             $body = $e->getJsonBody();
@@ -91,6 +90,14 @@ if(isset($_POST['bill_submit'])){
             // Something else happened, completely unrelated to Stripe
             $body = $e->getMessage();
             echo e($body).". Please contact your Credit Card billing administrator to resolve this issue."; ?>
+            <br /><br />
+            <button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button>
+            <?php
+            trigger_error("Die called", E_USER_ERROR);
+        }
+        if (!$refund) {
+            ?>
+            The refund has failed. Please contact the system administrator to inform about the issue.
             <br /><br />
             <button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button>
             <?php

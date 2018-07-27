@@ -23,14 +23,7 @@
     19 => 'Ds3\\Providers\\AppServiceProvider',
     20 => 'Ds3\\Providers\\EventServiceProvider',
     21 => 'Ds3\\Providers\\RouteServiceProvider',
-    22 => 'Ds3\\Providers\\UserServiceProvider',
-    23 => 'Ds3\\Providers\\AdminServiceProvider',
-    24 => 'Ds3\\Providers\\Ds3AuthServiceProvider',
-    25 => 'Ds3\\Providers\\AccessCodeServiceProvider',
-    26 => 'Ds3\\Providers\\BackOfficeServiceProvider',
-    27 => 'Ds3\\Providers\\PlanServiceProvider',
-    28 => 'Ds3\\Providers\\CompanyServiceProvider',
-    29 => 'Intouch\\LaravelNewrelic\\NewrelicServiceProvider',
+    22 => 'Intouch\\LaravelNewrelic\\NewrelicServiceProvider',
   ),
   'eager' => 
   array (
@@ -47,14 +40,7 @@
     10 => 'Ds3\\Providers\\AppServiceProvider',
     11 => 'Ds3\\Providers\\EventServiceProvider',
     12 => 'Ds3\\Providers\\RouteServiceProvider',
-    13 => 'Ds3\\Providers\\UserServiceProvider',
-    14 => 'Ds3\\Providers\\AdminServiceProvider',
-    15 => 'Ds3\\Providers\\Ds3AuthServiceProvider',
-    16 => 'Ds3\\Providers\\AccessCodeServiceProvider',
-    17 => 'Ds3\\Providers\\BackOfficeServiceProvider',
-    18 => 'Ds3\\Providers\\PlanServiceProvider',
-    19 => 'Ds3\\Providers\\CompanyServiceProvider',
-    20 => 'Intouch\\LaravelNewrelic\\NewrelicServiceProvider',
+    13 => 'Intouch\\LaravelNewrelic\\NewrelicServiceProvider',
   ),
   'deferred' => 
   array (

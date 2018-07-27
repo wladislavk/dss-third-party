@@ -25,9 +25,7 @@ class Kernel extends HttpKernel {
      * @var array
      */
     protected $routeMiddleware = [
-        'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         'auth'       => 'Ds3\Http\Middleware\Authenticate',
-        'header'     => 'Ds3\Http\Middleware\TopMiddleware',
     ];
 
 }

@@ -7,7 +7,7 @@ require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if($_POST["mult_screeningsub"] == 1) {
-    $op_arr = split("\n",trim($_POST['screening']));
+    $op_arr = explode("\n",trim($_POST['screening']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {

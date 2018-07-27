@@ -733,7 +733,7 @@ $qs_myarray = $db->getRow($qs_sql);
 $epworthid = st($qs_myarray['epworthid']);
 $ep_total = 0;
 if ($epworthid != '') {
-    $epworth_arr1 = split('~',$epworthid);
+    $epworth_arr1 = explode('~',$epworthid);
     $ep_total = 0;
     foreach ($epworth_arr1 as $i => $val) {
         $epworth_arr2 = explode('|', $val);
@@ -762,7 +762,7 @@ $intolerance = st($q2_myarray['intolerance']);
 $other_intolerance = st($q2_myarray['other_intolerance']);
 
 if ($intolerance != '') {
-    $intolerance_arr1 = split('~', $intolerance);
+    $intolerance_arr1 = explode('~', $intolerance);
     $problem_cpap = '';
     foreach ($intolerance_arr1 as $val) {
         $intolerance_sql = "select * from dental_intolerance where status=1 and intoleranceid='".$val."'";

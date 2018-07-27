@@ -4,6 +4,8 @@ namespace Ds3\Libraries\Legacy;
 include_once __DIR__ . '/admin/includes/main_include.php';
 include_once __DIR__ . '/includes/constants.inc';
 
+session_write_close();
+
 $docId = intval($_SESSION['docid']);
 
 header("Content-type: text/csv");

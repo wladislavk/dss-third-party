@@ -812,7 +812,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, functi
         'claim_margin_top'        => $faker->randomDigit,
         'claim_margin_left'       => $faker->randomDigit,
         'logo'                    => $faker->regexify('user_logo_[0-9]+\.(gif|png|bmp|jpg|jpeg)'),
-        'homepage'                => $faker->boolean,
         'use_letter_header'       => $faker->boolean,
         'access_code_id'          => $faker->randomDigit,
         'first_name'              => $faker->firstNameMale,

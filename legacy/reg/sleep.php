@@ -161,7 +161,7 @@ if ($comp['epworth'] == 0) {
     $analysis = st($myarray['analysis']);
 
     if ($epworthid != '') {
-        $epworth_arr1 = split('~',$epworthid);
+        $epworth_arr1 = explode('~',$epworthid);
 
         foreach ($epworth_arr1 as $i => $val) {
             $epworth_arr2 = explode('|', $val);

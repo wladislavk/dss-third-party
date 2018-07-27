@@ -5,7 +5,7 @@ include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if(!empty($_POST["mult_type_servicesub"]) && $_POST["mult_type_servicesub"] == 1) {
-    $op_arr = split("\n",trim($_POST['type_service']));
+    $op_arr = explode("\n",trim($_POST['type_service']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {

@@ -160,7 +160,7 @@ if ($comp['symptoms'] == 0) {
     $sleep_qual = st($myarray['sleep_qual']);
 
     if ($complaintid != '') {
-        $comp_arr1 = split('~',$complaintid);
+        $comp_arr1 = explode('~',$complaintid);
         foreach ($comp_arr1 as $i => $val) {
             $comp_arr2 = explode('|',$val);
             $compid[$i] = $comp_arr2[0];

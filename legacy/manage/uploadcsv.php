@@ -12,6 +12,8 @@ require_once __DIR__ . '/includes/general_functions.php';
 require_once __DIR__ . '/admin/includes/CsvProcessor.php';
 require_once __DIR__ . '/admin/includes/CsvPatientProcessorAdapter.php';
 
+session_write_close();
+
 if (isset($_POST['submitbut'])) {
     if ($_FILES['csv']['error'] !== 0) { ?>
         <script type="text/javascript">

@@ -27,8 +27,8 @@ if ($letter_result) {
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
 $othermd_result = $db->getResults($othermd_query);
-$md_array = array();
-$md_referral_array = array();
+$md_array = [];
+$md_referral_array = [];
 if ($othermd_result) foreach ($othermd_result as $row) {
     if ($row['md_list'] != null) {
         $md_array = array_merge($md_array, explode(",", $row['md_list']));
@@ -59,7 +59,7 @@ $franchisee_name = ($franchisee_result) ? array_shift($franchisee_result) : '';
 // Get Patient Information
 $patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob FROM dental_patients WHERE patientid = '".$patientid."';";
 $patient_result = $db->getRow($patient_query);
-$patient_info = array();
+$patient_info = [];
 if ($patient_result) {
     $patient_info = array_merge($patient_result, array('age' => floor((time() - strtotime(!empty($patient_info['dob']) ? $patient_info['dob'] : ''))/31556926)));
 }
@@ -148,7 +148,7 @@ if ($topatient) {
 } else {
     $contact_info = get_contact_info('', $md_list, $md_referral_list);
 }
-$letter_contacts = array();
+$letter_contacts = [];
 if (!empty($contact_info['patient'])) foreach ($contact_info['patient'] as $contact) {
     $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
 }
@@ -197,14 +197,14 @@ cc:  %other_mds%</p>";
 <form action="/manage/dss_referral_thank_you_pt_not_candidate.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 <?php
-if ($_POST != array()) {
+if ($_POST != []) {
     foreach ($_POST['duplicate_letter'] as $key => $value) {
         $dupekey = $key;
     }
     // Check for updated templates
     foreach ($letter_contacts as $key => $contact) {
-        $search = array();
-        $replace = array();
+        $search = [];
+        $replace = [];
         $search[] = '%todays_date%';
         $replace[] = "<strong>" . $todays_date . "</strong>";
         $search[] = '%md_fullname%';

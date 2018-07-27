@@ -27,8 +27,8 @@ if ($letter_result){
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
 $othermd_result = $db->getRow($othermd_query);
-$md_array = array();
-$md_referral_array = array();
+$md_array = [];
+$md_referral_array = [];
 if ($othermd_result) {
     if ($othermd_result['md_list'] != null) {
         $md_array = array_merge($md_array, explode(",", $othermd_result['md_list']));
@@ -301,8 +301,8 @@ if ($_POST != array()) {
 
 foreach ($letter_contacts as $key => $contact) {
     // Token search and replace arrays
-    $search = array();
-    $replace = array();
+    $search = [];
+    $replace = [];
     $search[] = '%todays_date%';
     $replace[] = "<strong>" . $todays_date . "</strong>";
     $search[] = '%md_fullname%';

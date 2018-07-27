@@ -1,8 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include_once('../3rdParty/tcpdf/config/lang/eng.php');
-include_once('../3rdParty/tcpdf/tcpdf.php');
 include_once('includes/main_include.php');
 include_once('../includes/constants.inc');
 

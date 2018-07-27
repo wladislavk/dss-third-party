@@ -11,6 +11,8 @@ include __DIR__ . '/edx_functions.php';
 include __DIR__ . '/help_functions.php';
 include __DIR__ . '/../admin/includes/claim_functions.php';
 
+session_write_close();
+
 $db = new Db();
 
 $sql = "SELECT homepage from dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";

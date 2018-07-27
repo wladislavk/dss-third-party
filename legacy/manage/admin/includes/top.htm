@@ -6,6 +6,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/constants.inc");
 include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php"); 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 
+session_write_close();
+
 require_once __DIR__ . '/claim_functions.php';
 
 $db = new Db();

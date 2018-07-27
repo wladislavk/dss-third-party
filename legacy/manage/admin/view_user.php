@@ -52,7 +52,6 @@ $eligible_test = st($themyarray['eligible_test']);
 $use_course = st($themyarray['use_course']);
 $use_course_staff = st($themyarray['use_course_staff']);
 $use_letter_header = st($themyarray['use_letter_header']);
-$homepage = st($themyarray['homepage']);
 $companyid = st($themyarray['companyid']);
 $user_type = st($themyarray['user_type']);
 $billing_company_id = $themyarray['billing_company_id'];
@@ -436,10 +435,6 @@ $service_ssn = $themyarray['service_ssn'];
     <div class="form-group expanded">
         <label class="col-md-3 control-label">Visuals to use</label>
         <div class="col-md-9">
-            <label class="col-md-4">
-                <input type="checkbox" name="homepage" value="1" <?php if($homepage == 1) echo " checked='checked'";?>>
-                New Homepage
-            </label>
             <label class="col-md-4">
                 <input type="checkbox" name="use_letter_header" value="1" <?php if($use_letter_header == 1) echo " checked='checked'";?>>
                 Letter Header

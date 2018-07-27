@@ -133,7 +133,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                 eligible_test = '".$db->escape($_POST['eligible_test'])."',
                 use_course = '".$db->escape($_POST['use_course'])."',
                 use_course_staff = '".$db->escape($_POST['use_course_staff'])."',
-                homepage = '".$db->escape($_POST['homepage'])."',
                 use_letter_header = '".$db->escape($_POST['use_letter_header'])."',
                 user_type = '".$db->escape($_POST['user_type'])."',
                 status = '".$db->escape($_POST["status"])."',
@@ -291,7 +290,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                 eligible_test = '".$db->escape(!empty($_POST['eligible_test']) ? $_POST['eligible_test'] : '')."',
                 use_course = '".$db->escape(!empty($_POST['use_course']) ? $_POST['use_course'] : '')."',
                 use_course_staff = '".$db->escape($_POST['use_course_staff'])."',
-                homepage = '".$db->escape($_POST['homepage'])."',
                 use_letter_header = '".$db->escape($_POST['use_letter_header'])."',
                 user_type = '".$db->escape($_POST["user_type"])."',
                 billing_company_id = '".$_POST['billing_company_id']."',
@@ -499,7 +497,6 @@ if(!empty($msg)) {
     $use_course = (!empty($_POST['use_course']) ? $_POST['use_course'] : '');
     $use_course_staff = $_POST['use_course_staff'];
     $use_letter_header = $_POST['use_letter_header'];
-    $homepage = $_POST['homepage'];
     $companyid = $_POST['companyid'];
     $user_type = $_POST['user_type'];
     $billing_company_id = $_POST['billing_company_id'];
@@ -561,7 +558,6 @@ if(!empty($msg)) {
     $use_course = st($themyarray['use_course']);
     $use_course_staff = st($themyarray['use_course_staff']);
     $use_letter_header = st($themyarray['use_letter_header']);
-    $homepage = st($themyarray['homepage']);
     $companyid = st($themyarray['companyid']);
     $user_type = st($themyarray['user_type']);
     $billing_company_id = $themyarray['billing_company_id'];
@@ -592,7 +588,6 @@ if(!isset($_GET['ed'])){
     $intro_letters = 1;
     $use_course = 0;
     $use_course_staff = 1;
-    $homepage = 1;
     $use_letter_header = 1;
     $use_payment_reports = 0;
     $companyid = 4;
@@ -972,10 +967,6 @@ if($themyarray["userid"] != '') {
         <div class="form-group expanded">
             <label class="col-md-3 col-sm-3 col-xs-3 control-label">Visuals to use</label>
             <div class="col-md-9 col-sm-9 col-xs-9">
-                <label class="col-md-4 col-sm-4 col-xs-4">
-                    <input type="checkbox" name="homepage" value="1" <?php if($homepage == 1) echo " checked='checked'";?>>
-                    New Homepage
-                </label>
                 <label class="col-md-4 col-sm-4 col-xs-4">
                     <input type="checkbox" name="use_letter_header" value="1" <?php if($use_letter_header == 1) echo " checked='checked'";?>>
                     Letter Header

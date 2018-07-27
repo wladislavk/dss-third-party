@@ -35,6 +35,11 @@ export default {
       return []
     }
   },
+  watch: {
+    studyType (newVal) {
+      this.currentStudyType = newVal
+    }
+  },
   methods: {
     updateStudyType (event) {
       const newValue = event.target.value

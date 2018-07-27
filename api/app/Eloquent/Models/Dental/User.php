@@ -75,7 +75,6 @@ use DentalSleepSolutions\Eloquent\Traits\UserTrait;
  *     @SWG\Property(property="claim_margin_top", type="integer"),
  *     @SWG\Property(property="claim_margin_left", type="integer"),
  *     @SWG\Property(property="logo", type="string"),
- *     @SWG\Property(property="homepage", type="integer"),
  *     @SWG\Property(property="use_letter_header", type="integer"),
  *     @SWG\Property(property="access_code_id", type="integer"),
  *     @SWG\Property(property="first_name", type="string"),
@@ -182,7 +181,6 @@ use DentalSleepSolutions\Eloquent\Traits\UserTrait;
  * @property int|null $claim_margin_top
  * @property int|null $claim_margin_left
  * @property string|null $logo
- * @property int|null $homepage
  * @property int|null $use_letter_header
  * @property int|null $access_code_id
  * @property string|null $first_name

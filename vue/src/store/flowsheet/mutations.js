@@ -1,38 +1,38 @@
 import symbols from '../../symbols'
 
 export default {
-  [symbols.mutations.getAppointmentSummary] (state, element) {
-    let newSummary = {
-      id: parseInt(element.id),
-      segmentId: parseInt(element.segmentid),
-      deviceId: parseInt(element.device_id),
-      description: element.description,
-      studyType: '',
-      delayReason: '',
-      nonComplianceReason: '',
-      dateCompleted: null,
-      dateScheduled: null
+  [symbols.mutations.getAppointmentSummary] (state, data) {
+    const newSummaries = []
+    for (let element of data) {
+      let newSummary = {
+        id: parseInt(element.id),
+        segmentId: parseInt(element.segmentid),
+        deviceId: parseInt(element.device_id),
+        description: element.description,
+        studyType: '',
+        delayReason: '',
+        nonComplianceReason: '',
+        dateCompleted: null,
+        dateScheduled: null
+      }
+      if (element.study_type) {
+        newSummary.studyType = element.study_type
+      }
+      if (element.delay_reason) {
+        newSummary.delayReason = element.delay_reason
+      }
+      if (element.noncomp_reason) {
+        newSummary.nonComplianceReason = element.noncomp_reason
+      }
+      if (element.date_completed) {
+        newSummary.dateCompleted = new Date(element.date_completed)
+      }
+      if (element.date_scheduled) {
+        newSummary.dateScheduled = new Date(element.date_scheduled)
+      }
+      newSummaries.push(newSummary)
     }
-    if (element.study_type) {
-      newSummary.studyType = element.study_type
-    }
-    if (element.delay_reason) {
-      newSummary.delayReason = element.delay_reason
-    }
-    if (element.noncomp_reason) {
-      newSummary.nonComplianceReason = element.noncomp_reason
-    }
-    if (element.date_completed) {
-      newSummary.dateCompleted = new Date(element.date_completed)
-    }
-    if (element.date_scheduled) {
-      newSummary.dateScheduled = new Date(element.date_scheduled)
-    }
-    state[symbols.state.appointmentSummaries].push(newSummary)
-  },
-
-  [symbols.mutations.clearAppointmentSummary] (state) {
-    state[symbols.state.appointmentSummaries] = []
+    state[symbols.state.appointmentSummaries] = newSummaries
   },
 
   [symbols.mutations.removeAppointmentSummary] (state, id) {

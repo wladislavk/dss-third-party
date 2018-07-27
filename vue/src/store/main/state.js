@@ -10,7 +10,6 @@ export default {
   },
   [symbols.state.popupEdit]: false,
   [symbols.state.docInfo]: {
-    homepage: 0,
     manageStaff: 0,
     useEligibleApi: 0,
     useLetters: 0,

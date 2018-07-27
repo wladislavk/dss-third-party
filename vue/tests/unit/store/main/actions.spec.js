@@ -143,7 +143,6 @@ describe('Main module actions', () => {
         use_course: '5',
         username: 'John',
         doc_info: {
-          homepage: '6',
           manage_staff: '7',
           use_eligible_api: '8',
           use_letters: '9',
@@ -165,6 +164,13 @@ describe('Main module actions', () => {
           http: { path: endpoints.users.current },
           mutations: [
             {
+              type: symbols.mutations.notificationNumbers,
+              payload: {
+                one: 1,
+                two: 2
+              }
+            },
+            {
               type: symbols.mutations.userInfo,
               payload: {
                 userId: 'u_1',
@@ -179,20 +185,12 @@ describe('Main module actions', () => {
             {
               type: symbols.mutations.docInfo,
               payload: {
-                homepage: 6,
                 manageStaff: 7,
                 useEligibleApi: 8,
                 useLetters: 9,
                 usePatientPortal: 10,
                 usePaymentReports: 11,
                 useCourseStaff: 12
-              }
-            },
-            {
-              type: symbols.mutations.notificationNumbers,
-              payload: {
-                one: 1,
-                two: 2
               }
             }
           ],

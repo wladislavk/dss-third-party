@@ -15,1191 +15,1184 @@ session_write_close();
 
 $db = new Db();
 
-$sql = "SELECT homepage from dental_users WHERE userid='".$db->escape($_SESSION['docid'])."'";
-$r = $db->getRow($sql);
+if (!empty($_SESSION['loginid'])) {
+    $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
 
-if ($r['homepage'] != '1') {
-    include_once 'top2.htm';
-} else {
-    if (!empty($_SESSION['loginid'])) {
-        $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
-
-        $cur_ins_sql = "INSERT INTO dental_login_detail (
-                loginid,
-                userid,
-                cur_page,
-                adddate,
-                ip_address
-            ) VALUES (
-                '".$db->escape($_SESSION['loginid'])."',
-                '".$db->escape($_SESSION['userid'])."',
-                '".$db->escape($cur_page_full)."',
-                now(),
-                '".$db->escape($_SERVER['REMOTE_ADDR'])."'
-            )
-        ";
-        $db->query($cur_ins_sql);
-    }
-
-    $docid = intval($_SESSION['docid']);
-
-    $dental_letters_query = "
-        SELECT dental_letters.generated_date AS generated_date
-        FROM dental_letters USE INDEX(pending_letters)
-        WHERE dental_letters.status = '0'
-        AND dental_letters.delivered = '0'
-        AND dental_letters.deleted = '0'
-        AND dental_letters.docid = '$docid'
-        AND (
-            dental_letters.parentid IS NULL
-            OR dental_letters.parentid = 0
+    $cur_ins_sql = "INSERT INTO dental_login_detail (
+            loginid,
+            userid,
+            cur_page,
+            adddate,
+            ip_address
+        ) VALUES (
+            '".$db->escape($_SESSION['loginid'])."',
+            '".$db->escape($_SESSION['userid'])."',
+            '".$db->escape($cur_page_full)."',
+            now(),
+            '".$db->escape($_SERVER['REMOTE_ADDR'])."'
         )
-        ORDER BY generated_date ASC;
     ";
-    $pending_letters = $db->getNumberRows($dental_letters_query);
-    $seconds_per_day = 86400;
+    $db->query($cur_ins_sql);
+}
 
-    $dental_letters_query = "
-        SELECT COUNT(letterid) AS total
-        FROM dental_letters
-        LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
-        WHERE (
-            dental_letters.status = '1'
-            OR dental_letters.delivered = 1
-        )
-        AND mailed_date IS NULL
-        AND dental_letters.deleted = '0'
-        AND dental_letters.docid = '$docid'
+$docid = intval($_SESSION['docid']);
+
+$dental_letters_query = "
+    SELECT dental_letters.generated_date AS generated_date
+    FROM dental_letters
+    WHERE dental_letters.status = '0'
+    AND dental_letters.delivered = '0'
+    AND dental_letters.deleted = '0'
+    AND dental_letters.docid = '$docid'
+    AND (
+        dental_letters.parentid IS NULL
+        OR dental_letters.parentid = 0
+    )
+    ORDER BY generated_date ASC;
+";
+$pending_letters = $db->getNumberRows($dental_letters_query);
+$seconds_per_day = 86400;
+
+$dental_letters_query = "
+    SELECT COUNT(letterid) AS total
+    FROM dental_letters
+    LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
+    WHERE (
+        dental_letters.status = '1'
+        OR dental_letters.delivered = 1
+    )
+    AND mailed_date IS NULL
+    AND dental_letters.deleted = '0'
+    AND dental_letters.docid = '$docid'
+";
+$unmailed_letters = $db->getColumn($dental_letters_query, 'total', 0);
+
+/**
+ * @see DSS-142
+ * Actionable claims for FO users
+ *
+ * IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office
+ * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
+ */
+$frontOfficeClaimsConditional = frontOfficeClaimsConditional(['patient' => 'patient']);
+$countFrontOfficeClaimsQuery = "
+    SELECT COUNT(claim.insuranceid) AS total
+    FROM dental_insurance claim
+    LEFT JOIN dental_patients patient ON patient.patientid = claim.patientid
+    JOIN dental_users users ON claim.docid = users.userid
+    LEFT JOIN companies company ON company.id = users.billing_company_id
+    WHERE $frontOfficeClaimsConditional
+    AND claim.docid = '$docid'
+";
+
+/**
+ * @ToDo: Determine if these are actionable claims for admins
+ * @ToDo: Determine if this status list needs the REJECTED status
+ */
+$claim_query = "$countFrontOfficeClaimsQuery
+        AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")";
+
+$num_pending_claims = $db->getColumn($claim_query, 'total', 0);
+$num_pending_nodss_claims = $num_pending_claims;
+
+$claim_query = "$countFrontOfficeClaimsQuery
+        AND claim.mailed_date IS NULL
+        AND claim.sec_mailed_date IS NULL";
+
+if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+    $claim_query .= "
+        AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")
     ";
-    $unmailed_letters = $db->getColumn($dental_letters_query, 'total', 0);
+}
 
-    /**
-     * @see DSS-142
-     * Actionable claims for FO users
-     *
-     * IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office
-     * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
-     */
-    $frontOfficeClaimsConditional = frontOfficeClaimsConditional(['patient' => 'patient']);
-    $countFrontOfficeClaimsQuery = "
-        SELECT COUNT(claim.insuranceid) AS total
-        FROM dental_insurance claim
-        LEFT JOIN dental_patients patient ON patient.patientid = claim.patientid
-        JOIN dental_users users ON claim.docid = users.userid
-        LEFT JOIN companies company ON company.id = users.billing_company_id
-        WHERE $frontOfficeClaimsConditional
-        AND claim.docid = '$docid'
-    ";
+$num_unmailed_claims = $db->getColumn($claim_query, 'total', 0);
 
-    /**
-     * @ToDo: Determine if these are actionable claims for admins
-     * @ToDo: Determine if this status list needs the REJECTED status
-     */
-    $claim_query = "$countFrontOfficeClaimsQuery
-            AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")";
+$claim_query = "$countFrontOfficeClaimsQuery
+        AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('rejected')) . ")";
 
-    $num_pending_claims = $db->getColumn($claim_query, 'total', 0);
-    $num_pending_nodss_claims = $num_pending_claims;
+$num_rejected_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $claim_query = "$countFrontOfficeClaimsQuery
-            AND claim.mailed_date IS NULL
-            AND claim.sec_mailed_date IS NULL";
+$preauth_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_insurance_preauth
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_PREAUTH_COMPLETE . "'
+    AND COALESCE(viewed, 0) != 1;
+";
 
-    if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
-        $claim_query .= "
-            AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")
-        ";
-    }
+$num_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $num_unmailed_claims = $db->getColumn($claim_query, 'total', 0);
+$preauth_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_insurance_preauth
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_PREAUTH_PENDING . "'
+    AND COALESCE(viewed, 0) != 1
+";
 
-    $claim_query = "$countFrontOfficeClaimsQuery
-            AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('rejected')) . ")";
+$num_pending_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $num_rejected_claims = $db->getColumn($claim_query, 'total', 0);
+$numRejectedPreAuth = $db->getColumn("
+    SELECT COUNT(id) AS total
+    FROM dental_insurance_preauth
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_PREAUTH_REJECTED . "'
+    AND COALESCE(viewed, 0) != 1
+", 'total', 0);
 
-    $preauth_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_insurance_preauth
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_PREAUTH_COMPLETE . "'
-        AND COALESCE(viewed, 0) != 1;
-    ";
+$hst_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_hst
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_HST_COMPLETE . "'
+    AND COALESCE(viewed, 0) != 1
+";
 
-    $num_preauth = $db->getColumn($preauth_query, 'total', 0);
+$num_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $preauth_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_insurance_preauth
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_PREAUTH_PENDING . "'
-        AND COALESCE(viewed, 0) != 1
-    ";
+$hst_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_hst
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_HST_REQUESTED . "'
+    AND COALESCE(viewed, 0) != 1
+";
 
-    $num_pending_preauth = $db->getColumn($preauth_query, 'total', 0);
+$num_requested_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $numRejectedPreAuth = $db->getColumn("
-        SELECT COUNT(id) AS total
-        FROM dental_insurance_preauth
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_PREAUTH_REJECTED . "'
-        AND COALESCE(viewed, 0) != 1
-    ", 'total', 0);
+$hst_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_hst
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_HST_REJECTED . "'
+    AND COALESCE(viewed, 0) != 1
+";
 
-    $hst_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_hst
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_HST_COMPLETE . "'
-        AND COALESCE(viewed, 0) != 1
-    ";
+$num_rejected_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $num_hst = $db->getColumn($hst_query, 'total', 0);
+$pc_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_patient_contacts pc
+    INNER JOIN dental_patients p ON p.patientid = pc.patientid
+    WHERE p.docid = '$docid'
+";
 
-    $hst_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_hst
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_HST_REQUESTED . "'
-        AND COALESCE(viewed, 0) != 1
-    ";
+$num_pc = $db->getColumn($pc_query, 'total', 0);
 
-    $num_requested_hst = $db->getColumn($hst_query, 'total', 0);
+$pi_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_patient_insurance pi
+    INNER JOIN dental_patients p ON p.patientid = pi.patientid
+    WHERE p.docid = '$docid'
+";
 
-    $hst_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_hst
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_HST_REJECTED . "'
-        AND COALESCE(viewed, 0) != 1
-    ";
+$num_pi = $db->getColumn($pi_query, 'total', 0);
 
-    $num_rejected_hst = $db->getColumn($hst_query, 'total', 0);
+$c_query = "
+    SELECT COUNT(p2.patientid) AS total
+    FROM dental_patients p2
+    INNER JOIN dental_patients p ON p.patientid = p2.parent_patientid
+    WHERE p.docid = '$docid'
+";
 
-    $pc_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_patient_contacts pc
-        INNER JOIN dental_patients p ON p.patientid = pc.patientid
-        WHERE p.docid = '$docid'
-    ";
+$num_c = $db->getColumn($c_query, 'total', 0);
 
-    $num_pc = $db->getColumn($pc_query, 'total', 0);
-
-    $pi_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_patient_insurance pi
-        INNER JOIN dental_patients p ON p.patientid = pi.patientid
-        WHERE p.docid = '$docid'
-    ";
-
-    $num_pi = $db->getColumn($pi_query, 'total', 0);
-
-    $c_query = "
-        SELECT COUNT(p2.patientid) AS total
-        FROM dental_patients p2
-        INNER JOIN dental_patients p ON p.patientid = p2.parent_patientid
-        WHERE p.docid = '$docid'
-    ";
-
-    $num_c = $db->getColumn($c_query, 'total', 0);
-
-    /**
-     * @ToDo: Use named statuses for the patient
-     */
-    $d_sql = "
-        SELECT COUNT(p.patientid) AS total
-        FROM dental_patients p
-        LEFT JOIN (
-            SELECT COUNT(patientid) AS total, firstname, lastname
-            FROM dental_patients
-            WHERE docid = '$docid'
-            AND status = 1
-            AND (
-                IFNULL(firstname, '') != ''
-                OR IFNULL(lastname, '') != ''
-            )
-            GROUP BY firstname, lastname
-        ) by_name ON by_name.firstname = p.firstname AND by_name.lastname = p.lastname
-        LEFT JOIN (
-            SELECT COUNT(patientid) AS total, add1, city, state, zip
-            FROM dental_patients
-            WHERE docid = '$docid'
-            AND status = 1
-            AND (
-                IFNULL(add1, '') != ''
-                OR IFNULL(city, '') != ''
-                OR IFNULL(state, '') != ''
-                OR IFNULL(zip, '') != ''
-            )
-            GROUP BY add1, city, state, zip
-        ) by_address ON by_address.add1 = p.add1 AND by_address.city = p.city AND by_address.state = p.state AND by_address.zip = p.zip
-        WHERE p.docid = '$docid'
-        AND p.status IN (3, 4)
-        AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0
-    ";
-
-    $num_pending_duplicates = $db->getColumn($d_sql, 'total', 0);
-
-    $bounce_query = "
-        SELECT COUNT(p.patientid) AS total
-        FROM dental_patients p
-        WHERE p.email_bounce = 1
-        AND p.docid = '$docid'
-    ";
-
-    $num_bounce = $db->getColumn($bounce_query, 'total', 0);
-
-    $use_payment_reports = $db->getColumn("
-        SELECT use_payment_reports
-        FROM dental_users
-        WHERE userid = '$docid'
-    ", 'use_payment_reports', false);
-
-    $num_payment_reports = 0;
-
-    if ($use_payment_reports) {
-        $payment_reports_query = "
-            SELECT COUNT(payment_id) AS total
-            FROM dental_payment_reports AS pr
-            INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-            WHERE i.docid = '$docid'
-            AND COALESCE(pr.viewed, 0) != 1
-        ";
-
-        $num_payment_reports = $db->getColumn($payment_reports_query, 'total', 0);
-    }
-
-    /**
-     * @todo: indexes adddate, signed_on
-     */
-    $unsigned_query = "
-        SELECT COUNT(m.notesid) AS total
-        FROM (
-            SELECT n.notesid, n.signed_on, n.parentid
-            FROM (
-                SELECT notesid, signed_on, parentid
-                FROM dental_notes
-                WHERE status != 0
-                AND docid = '$docid'
-                ORDER BY adddate DESC
-            ) AS n
-            GROUP BY n.parentid
-        ) AS m
-        WHERE IFNULL(m.signed_on, '') = ''
-    ";
-
-    $num_unsigned = $db->getColumn($unsigned_query, 'total', 0);
-
-    $preauth_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_insurance_preauth
-        WHERE doc_id = '$docid'
-        AND status = '" . DSS_PREAUTH_REJECTED . "'
-        AND COALESCE(viewed, 0) != 1
-    ";
-
-    $num_rejected_preauth = $db->getColumn($preauth_query, 'total', 0);
-
-    $fax_query = "
-        SELECT COUNT(id) AS total
-        FROM dental_faxes
+/**
+ * @ToDo: Use named statuses for the patient
+ */
+$d_sql = "
+    SELECT COUNT(p.patientid) AS total
+    FROM dental_patients p
+    LEFT JOIN (
+        SELECT COUNT(patientid) AS total, firstname, lastname
+        FROM dental_patients
         WHERE docid = '$docid'
-        AND COALESCE(viewed, 0) = 0
-        AND sfax_status = 2
+        AND status = 1
+        AND (
+            IFNULL(firstname, '') != ''
+            OR IFNULL(lastname, '') != ''
+        )
+        GROUP BY firstname, lastname
+    ) by_name ON by_name.firstname = p.firstname AND by_name.lastname = p.lastname
+    LEFT JOIN (
+        SELECT COUNT(patientid) AS total, add1, city, state, zip
+        FROM dental_patients
+        WHERE docid = '$docid'
+        AND status = 1
+        AND (
+            IFNULL(add1, '') != ''
+            OR IFNULL(city, '') != ''
+            OR IFNULL(state, '') != ''
+            OR IFNULL(zip, '') != ''
+        )
+        GROUP BY add1, city, state, zip
+    ) by_address ON by_address.add1 = p.add1 AND by_address.city = p.city AND by_address.state = p.state AND by_address.zip = p.zip
+    WHERE p.docid = '$docid'
+    AND p.status IN (3, 4)
+    AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0
+";
+
+$num_pending_duplicates = $db->getColumn($d_sql, 'total', 0);
+
+$bounce_query = "
+    SELECT COUNT(p.patientid) AS total
+    FROM dental_patients p
+    WHERE p.email_bounce = 1
+    AND p.docid = '$docid'
+";
+
+$num_bounce = $db->getColumn($bounce_query, 'total', 0);
+
+$use_payment_reports = $db->getColumn("
+    SELECT use_payment_reports
+    FROM dental_users
+    WHERE userid = '$docid'
+", 'use_payment_reports', false);
+
+$num_payment_reports = 0;
+
+if ($use_payment_reports) {
+    $payment_reports_query = "
+        SELECT COUNT(payment_id) AS total
+        FROM dental_payment_reports AS pr
+        INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+        WHERE i.docid = '$docid'
+        AND COALESCE(pr.viewed, 0) != 1
     ";
 
-    $num_fax_alerts = $db->getColumn($fax_query, 'total', 0);
+    $num_payment_reports = $db->getColumn($payment_reports_query, 'total', 0);
+}
 
-    $support_query = "
-        SELECT COUNT(id) AS total
+/**
+ * @todo: indexes adddate, signed_on
+ */
+$unsigned_query = "
+    SELECT COUNT(m.notesid) AS total
+    FROM (
+        SELECT n.notesid, n.signed_on, n.parentid
         FROM (
-            SELECT t.id
-            FROM dental_support_tickets t
-            LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
-            WHERE t.docid = '$docid'
-            AND (
-                (r.viewed = 0 AND r.response_type = 0)
-                OR (t.viewed = 0 AND t.create_type = 0)
-                OR (
-                    t.status = '" . DSS_TICKET_STATUS_CLOSED . "'
-                    AND r.viewed = 0
-                    AND r.response_type = 0
-                    AND r.body != ''
-                )
+            SELECT notesid, signed_on, parentid
+            FROM dental_notes
+            WHERE status != 0
+            AND docid = '$docid'
+            ORDER BY adddate DESC
+        ) AS n
+        GROUP BY n.parentid
+    ) AS m
+    WHERE IFNULL(m.signed_on, '') = ''
+";
+
+$num_unsigned = $db->getColumn($unsigned_query, 'total', 0);
+
+$preauth_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_insurance_preauth
+    WHERE doc_id = '$docid'
+    AND status = '" . DSS_PREAUTH_REJECTED . "'
+    AND COALESCE(viewed, 0) != 1
+";
+
+$num_rejected_preauth = $db->getColumn($preauth_query, 'total', 0);
+
+$fax_query = "
+    SELECT COUNT(id) AS total
+    FROM dental_faxes
+    WHERE docid = '$docid'
+    AND COALESCE(viewed, 0) = 0
+    AND sfax_status = 2
+";
+
+$num_fax_alerts = $db->getColumn($fax_query, 'total', 0);
+
+$support_query = "
+    SELECT COUNT(id) AS total
+    FROM (
+        SELECT t.id
+        FROM dental_support_tickets t
+        LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
+        WHERE t.docid = '$docid'
+        AND (
+            (r.viewed = 0 AND r.response_type = 0)
+            OR (t.viewed = 0 AND t.create_type = 0)
+            OR (
+                t.status = '" . DSS_TICKET_STATUS_CLOSED . "'
+                AND r.viewed = 0
+                AND r.response_type = 0
+                AND r.body != ''
             )
-            GROUP BY t.id
-        ) AS derived_table
-    ";
+        )
+        GROUP BY t.id
+    ) AS derived_table
+";
 
-    $num_support = $db->getColumn($support_query, 'total', 0);
-    ?>
+$num_support = $db->getColumn($support_query, 'total', 0);
+?>
 
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <title><?= $sitename; ?></title>
-        <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-        <link href="css/task.css" rel="stylesheet" type="text/css" />
-        <link href="css/notifications.css" rel="stylesheet" type="text/css" />
-        <link href="css/search-hints.css" rel="stylesheet" type="text/css">
-        <link href="css/top.css" rel="stylesheet" type="text/css" />
+    <title><?= $sitename; ?></title>
+    <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
+    <link href="css/task.css" rel="stylesheet" type="text/css" />
+    <link href="css/notifications.css" rel="stylesheet" type="text/css" />
+    <link href="css/search-hints.css" rel="stylesheet" type="text/css">
+    <link href="css/top.css" rel="stylesheet" type="text/css" />
 
-        <script type="text/javascript">
-            function removeCookie (name) {
-                document.cookie = encodeURIComponent(name) + '=; domain=dentalsleepsolutions.com; path=/; max-age=0; expires=Mon, 03 Jul 2006 21:44:38 GMT';
-            }
+    <script type="text/javascript">
+        function removeCookie (name) {
+            document.cookie = encodeURIComponent(name) + '=; domain=dentalsleepsolutions.com; path=/; max-age=0; expires=Mon, 03 Jul 2006 21:44:38 GMT';
+        }
 
-            function removeCECookies () {
-                removeCookie('edxloggin');
-                removeCookie('sessionid');
-            }
-        </script>
-        <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
-        <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-        <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
-        <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-        <script type="text/javascript" src="3rdParty/jquery.tablesorter.min.js"></script>
-        <script type="text/javascript" src="3rdParty/jquery.tablesorter.pager.js"></script>
-        <script type="text/javascript" src="3rdParty/jquery.tablesorter.widgets.js"></script>
-        <script type="text/javascript" src="js/masks.js"></script>
-        <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
+        function removeCECookies () {
+            removeCookie('edxloggin');
+            removeCookie('sessionid');
+        }
+    </script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="3rdParty/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="3rdParty/jquery.tablesorter.pager.js"></script>
+    <script type="text/javascript" src="3rdParty/jquery.tablesorter.widgets.js"></script>
+    <script type="text/javascript" src="js/masks.js"></script>
+    <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 
-        <?php if ($_SERVER['SERVER_NAME'] == "stage.dss-rh.xforty.com") { ?>
-            <script type="text/javascript" src="script/logout_timer_long.js"></script>
-        <?php } else { ?>
-            <script type="text/javascript" src="script/logout_timer.js"></script>
-        <?php } ?>
+    <?php if ($_SERVER['SERVER_NAME'] == "stage.dss-rh.xforty.com") { ?>
+        <script type="text/javascript" src="script/logout_timer_long.js"></script>
+    <?php } else { ?>
+        <script type="text/javascript" src="script/logout_timer.js"></script>
+    <?php } ?>
 
-        <script type="text/javascript" src="js/jquery.cookie.js"></script>
-        <script type="text/javascript" src="js/ddlevelsmenu.js">
-          /***********************************************
-          * All Levels Navigational Menu- (c) Dynamic Drive DHTML code library (http://www.dynamicdrive.com)
-          * This notice MUST stay intact for legal use
-          * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
-          ***********************************************/
-        </script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/ddlevelsmenu.js">
+      /***********************************************
+      * All Levels Navigational Menu- (c) Dynamic Drive DHTML code library (http://www.dynamicdrive.com)
+      * This notice MUST stay intact for legal use
+      * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+      ***********************************************/
+    </script>
 
-        <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-        <script language="javascript" type="text/javascript" src="js/top.js?v=20160831"></script>
-        <script language="javascript" type="text/javascript" src="script/hideshow.js"></script>
-        <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
+    <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+    <script language="javascript" type="text/javascript" src="js/top.js?v=20160831"></script>
+    <script language="javascript" type="text/javascript" src="script/hideshow.js"></script>
+    <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
+    <?php
+    include 'includes/calendarinc.php';
+
+    if ($_SERVER["SCRIPT_NAME"] == "/manage/q_image.php") { ?>
+        <!-- Load the Cloud Zoom CSS file -->
+        <link href="css/cloud-zoom.css" rel="stylesheet" type="text/css" />
+
+        <!-- You can load the jQuery library from the Google Content Network.
+        Probably better than from your own server. -->
+
+        <!-- Load the Cloud Zoom JavaScript file -->
+        <script type="text/JavaScript" src="js/cloud-zoom.1.0.2.min.js"></script>
         <?php
-        include 'includes/calendarinc.php';
+    } ?>
 
-        if ($_SERVER["SCRIPT_NAME"] == "/manage/q_image.php") { ?>
-            <!-- Load the Cloud Zoom CSS file -->
-            <link href="css/cloud-zoom.css" rel="stylesheet" type="text/css" />
-  
-            <!-- You can load the jQuery library from the Google Content Network.
-            Probably better than from your own server. -->
+    <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" />
 
-            <!-- Load the Cloud Zoom JavaScript file -->
-            <script type="text/JavaScript" src="js/cloud-zoom.1.0.2.min.js"></script>
-            <?php
-        } ?>
+    <link rel="stylesheet" href="/assets/css/colorbox.css" type="text/css" />
+    <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+    <script src="/assets/js/jquery.blockUI.js" type="text/javascript"></script>
 
-        <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
-        <link rel="stylesheet" href="css/form.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/vendor/sweetalert/sweetalert.css" type="text/css" />
+    <script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
 
-        <link rel="stylesheet" href="/assets/css/colorbox.css" type="text/css" />
-        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
-        <script src="/assets/js/jquery.blockUI.js" type="text/javascript"></script>
-
-        <link rel="stylesheet" href="/assets/vendor/sweetalert/sweetalert.css" type="text/css" />
-        <script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
-
-        <script src="/assets/vendor/moment.js" type="text/javascript"></script>
-        <script src="/assets/vendor/moment-timezone-with-data.js" type="text/javascript"></script>
-        <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
-        <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var popupWindows = {
-                    education: {
-                        link: '/manage/edx_login.php',
-                        name: 'edx_help'
-                    },
-                    help: {
-                        link: '/manage/help_login.php',
-                        name: 'snoozle_help'
-                    }
-                };
-                $('a[href*="education.dentalsleepsolutions.com/"], a[href*="help.dentalsleepsolutions.com/"]').click(function(){
-                    var $this = $(this),
-                        link = this.href,
-                        match = link.match(/^https?:\/\/(education|help).dentalsleepsolutions.com/);
-                    if (!match) {
-                        return true;
-                    }
-                    match = match[1];
-                    if (typeof removeCECookies === 'function') {
-                        removeCECookies();
-                    }
-                    window.open(popupWindows[match].link, popupWindows[match].name);
-                    setTimeout(function(){
-                        window.open(link, popupWindows[match].name);
-                    }, 3500);
-                    return false;
-                });
+    <script src="/assets/vendor/moment.js" type="text/javascript"></script>
+    <script src="/assets/vendor/moment-timezone-with-data.js" type="text/javascript"></script>
+    <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
+    <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var popupWindows = {
+                education: {
+                    link: '/manage/edx_login.php',
+                    name: 'edx_help'
+                },
+                help: {
+                    link: '/manage/help_login.php',
+                    name: 'snoozle_help'
+                }
+            };
+            $('a[href*="education.dentalsleepsolutions.com/"], a[href*="help.dentalsleepsolutions.com/"]').click(function(){
+                var $this = $(this),
+                    link = this.href,
+                    match = link.match(/^https?:\/\/(education|help).dentalsleepsolutions.com/);
+                if (!match) {
+                    return true;
+                }
+                match = match[1];
+                if (typeof removeCECookies === 'function') {
+                    removeCECookies();
+                }
+                window.open(popupWindows[match].link, popupWindows[match].name);
+                setTimeout(function(){
+                    window.open(link, popupWindows[match].name);
+                }, 3500);
+                return false;
             });
-        </script>
-        <?php
-        $hideallblocks = 0;
-        if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
-            $getstepqrysql = "
-                SELECT * FROM dental_flow_pg2 
-                WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' 
-                LIMIT 1;
-            ";
-
-            $stepquery = $db->getRow($getstepqrysql);
-            $stepquery = [$stepquery['steparray']];
-            if ($db->getNumberRows($getstepqrysql) > 0) {
-                $step = explode(",", $stepquery['0']);
-                $step_json = json_encode($step);
-                $hideallblocks = 1;
-            } else {
-                $hideallblocks = 2;
-            }
-        } ?>
-    </head>
-
-    <body onload='
-        <?php
-        if ($hideallblocks == 2) { ?>
-            hideallblocks();
-            <?php
-        } elseif ($hideallblocks == 1) { ?>
-            hideallblocksForFlowsheet(<?= $step_json ?>);
-            <?php
-        }
-        if (isset($_GET["preview"]) && $_GET["preview"] == "1") { ?>
-            check();
-            <?php
-        }
-        if (isset($_GET["page"]) && $_GET["page"] == "page2") { ?>
-            document.getElementById("flowsheet_page1").style.display="none";
-            document.getElementById("flowsheet_page2").style.display="block";
-            <?php
-        } ?>
-    '>
-
+        });
+    </script>
     <?php
-    if (isset($_GET['page']) && $_GET['page'] == 'page2') { ?>
-        <link href="css/flowsheet_page_page2.css" rel="stylesheet" type="text/css" />
-        <?php
-    } else { ?>
-        <link href="css/flowsheet_page.css" rel="stylesheet" type="text/css" />
-        <?php
-    } ?>
-
-    <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-
-    <?php
-    if (isset($_GET['pid']) && $_GET['pid'] != '') {
-        $title = '';
-        $sql = "
-            select * from dental_patients 
-            where docid='".$db->escape($_SESSION['docid'])."' 
-            AND patientid='".$db->escape($_GET['pid'])."'
+    $hideallblocks = 0;
+    if ($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php") {
+        $getstepqrysql = "
+            SELECT * FROM dental_flow_pg2 
+            WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' 
+            LIMIT 1;
         ";
-        $my = $db->getResults($sql);
-        foreach ($my as $myarray) {
-            $premed = $myarray['premedcheck'];
-            $medicare = ($myarray['p_m_ins_type'] == 1);
 
-            // text for the alert box next to *Med
-            $alertText = $myarray['alert_text'];
-            $displayAlert = $myarray['display_alert'];
-
-            if ($premed) {
-                $title .= "Pre-medication: " . $myarray['premed']."\n";
-            }
-
-            $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid='".$db->escape($_GET['pid'])."'";
-
-            $myq3array = $db->getRow($sqlq3);
-            $allergen = $myq3array['allergenscheck'];
-
-            if ($allergen) {
-                $title .= "Allergens: " . $myq3array['other_allergens'];
-            }
-
-            $thename = $myarray['firstname']." ".$myarray['lastname'];
+        $stepquery = $db->getRow($getstepqrysql);
+        $stepquery = [$stepquery['steparray']];
+        if ($db->getNumberRows($getstepqrysql) > 0) {
+            $step = explode(",", $stepquery['0']);
+            $step_json = json_encode($step);
+            $hideallblocks = 1;
+        } else {
+            $hideallblocks = 2;
         }
     } ?>
+</head>
 
-    <script src="admin/popup/popup.js" type="text/javascript"></script>
-    <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
-    <!-- Header and nav goes here -->
-        <tr>
-            <td colspan="2" align="right"> </td>
-        </tr>
-        <tr>
-            <td valign='top' height="400">
-                <?php
-                $task_sql = "
-                    select dt.*, du.name, p.firstname, p.lastname from dental_task dt
-                    JOIN dental_users du ON dt.responsibleid=du.userid
-                    LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-                    WHERE (dt.status = '0' OR dt.status IS NULL) 
-                    AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
-                ";
-                $num_tasks = $db->getNumberRows($task_sql);
-                $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce + $num_unsigned + $num_pending_duplicates;
-                if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
-                    $mess_count += $num_unmailed_claims + $num_pending_nodss_claims;
-                } else {
-                    $mess_count += $num_pending_claims;
-                } ?>
-                <div class="suckertreemenu2">
-                    <ul id="topmenu2">
-                        <li><a href="index.php"> Notifications(<?= $mess_count; ?>)</a></li>
-                        <li id="header_support" <?= ($num_support > 0) ? 'class="pending"' : ""; ?>>
-                            <a href="support.php">Support <?= ($num_support > 0) ? "(".$num_support.")" : ""; ?></a>
-                        </li>
-                        <li>
-                            <a href="logout.php">Sign Out</a>
-                        </li>
-                    </ul>
-                </div>
-                <script type="text/javascript">
-                    if (window.task_function) {
-                        task_function();
-                    }
-                </script>
-                <?php
-                $task_sql = "
-                    select dt.*, du.name, p.firstname, p.lastname from dental_task dt
-                    JOIN dental_users du ON dt.responsibleid=du.userid
-                    LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-                    WHERE (dt.status = '0' OR dt.status IS NULL) 
-                    AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
-                ";
-                $num_tasks = $db->getNumberRows($task_sql); ?>
-                <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
-                    <span id="task_header">My Tasks (<span id="task_count"><?= $num_tasks; ?></span>)</span>
-                    <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
-                        <?php
-                        $od_sql = $task_sql . " AND dt.due_date < CURDATE();";
-                        $tod_sql = $task_sql . " AND dt.due_date = CURDATE();";
-                        $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
-                        if (date('N') == 7) {
-                            $this_sun = date('Y-m-d');
-                            $next_mon = date('Y-m-d', strtotime("next Tuesday"));
-                            $next_sun = date('Y-m-d', strtotime("next Sunday"));
-                        } else {
-                            $this_sun = date('Y-m-d', strtotime("next Sunday"));
-                            $next_mon = date('Y-m-d', strtotime("next Monday"));
-                            $next_sun = date('Y-m-d', strtotime("next Sunday + 1 week"));
-                        }
+<body onload='
+    <?php
+    if ($hideallblocks == 2) { ?>
+        hideallblocks();
+        <?php
+    } elseif ($hideallblocks == 1) { ?>
+        hideallblocksForFlowsheet(<?= $step_json ?>);
+        <?php
+    }
+    if (isset($_GET["preview"]) && $_GET["preview"] == "1") { ?>
+        check();
+        <?php
+    }
+    if (isset($_GET["page"]) && $_GET["page"] == "page2") { ?>
+        document.getElementById("flowsheet_page1").style.display="none";
+        document.getElementById("flowsheet_page2").style.display="block";
+        <?php
+    } ?>
+'>
 
-                        $tw_sql = $task_sql . " AND dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND '".$this_sun."'";
-                        $nw_sql = $task_sql . " AND dt.due_date BETWEEN '".$next_mon."' AND '".$next_sun."'";
-                        $lat_sql = $task_sql . " AND dt.due_date > '".$next_sun."' ORDER BY dt.due_date ASC";
+<?php
+if (isset($_GET['page']) && $_GET['page'] == 'page2') { ?>
+    <link href="css/flowsheet_page_page2.css" rel="stylesheet" type="text/css" />
+    <?php
+} else { ?>
+    <link href="css/flowsheet_page.css" rel="stylesheet" type="text/css" />
+    <?php
+} ?>
 
-                        $od_q = $db->getResults($od_sql);
-                        $od_num = count($od_q);
-                        if ($od_num > 0) { ?>
-                            <h4 id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
-                            <ul id="task_od_list">
-                                <?php
-                                foreach ($od_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;">
-                                            <?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        }
-                        $tod_q = $db->getResults($tod_sql);
-                        $tod_num = count($tod_q);
-                        if ($tod_num > 0) { ?>
-                            <h4 id="task_tod_header" class="task_tod_header">Today</h4>
-                            <ul id="task_tod_list">
-                                <?php
-                                foreach ($tod_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;">
-                                            <?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        }
-                        $tom_q = $db->getResults($tom_sql);
-                        $tom_num = count($tom_q);
-                        if ($tom_num > 0) { ?>
-                            <h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
-                            <ul id="task_tom_list">
-                                <?php
-                                foreach ($tom_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;">
-                                            <?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        }
-                        $tw_q = $db->getResults($tw_sql);
-                        $tw_num = count($tw_q);
-                        if ($tw_num > 0) { ?>
-                            <h4 id="task_tw_header" class="task_tw_header">This Week</h4>
-                            <ul id="task_tw_list">
-                                <?php
-                                foreach ($tw_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;">
-                                            <?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        }
-                        $nw_q = $db->getResults($nw_sql);
-                        $nw_num = count($nw_q);
-                        if ($nw_num > 0) { ?>
-                            <h4 id="task_nw_header" class="task_nw_header">Next Week</h4>
-                            <ul id="task_nw_list">
-                                <?php
-                                foreach ($nw_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;"><?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        }
-                        $lat_q = $db->getResults($lat_sql);
-                        $lat_num = count($lat_q);
-                        if ($lat_num > 0) { ?>
-                            <h4 id="task_lat_header" class="task_lat_header">Later</h4>
-                            <ul id="task_lat_list">
-                                <?php
-                                foreach ($lat_q as $od_r) { ?>
-                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                        </div>
-                                        <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
-                                        <div style="float:left; width:170px;">
-                                            <?= date('M d', strtotime($od_r['due_date'])); ?>
-                                            -
-                                            <?= $od_r['task']; ?>
-                                            <?php
-                                            if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                <?php
-                                            } ?>
-                                        </div>
-                                    </li>
-                                    <?php
-                                } ?>
-                            </ul>
-                            <?php
-                        } ?>
-                        <br /><br />
-                        <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
-                    </div>
-                </div>
-                <?php
-                if ($_SESSION['docid'] == $_SESSION['userid']) {
-                    $course_sql = "SELECT use_course FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
-                    $course_r = $db->getRow($course_sql);
-                    if ($course_r['use_course'] == 1) { ?>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
-                        <?php
-                    }
-                } else {
-                    $course_sql = "
-                        SELECT s.use_course, d.use_course_staff FROM dental_users s
-                        JOIN dental_users d ON d.userid = s.docid
-                        WHERE s.userid='".$db->escape($_SESSION['userid'])."'
-                    ";
-                    $course_r = $db->getRow($course_sql);
-                    if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1) { ?>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
-                        <?php
-                    }
-                } ?>
-                <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
-                <script type="text/javascript" src="js/task.js?v=20180715"></script>
-                <script type="text/javascript" src="script/autocomplete.js?v=20160719"></script>
-                <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
-                <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
-                    <div style="margin-top:10px; margin-left:20px; float:left;"><a href="/manage" id="logo">Dashboard</a></div>
-                    <div style="float:left; width:68%;">
-                        <form>
-                            <div id="patient_search_div">
-                                <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />
-                                <div id="search_hints"  class="search_hints" style="display:none;">
-                                    <ul id="patient_list">
-                                        <li class="template" style="display:none">Doe, John S</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </form>
-                        <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                        <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid'])) ? '?pid='.$_GET['pid'] : ''; ?>')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
-                    </div>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+
+<?php
+if (isset($_GET['pid']) && $_GET['pid'] != '') {
+    $title = '';
+    $sql = "
+        select * from dental_patients 
+        where docid='".$db->escape($_SESSION['docid'])."' 
+        AND patientid='".$db->escape($_GET['pid'])."'
+    ";
+    $my = $db->getResults($sql);
+    foreach ($my as $myarray) {
+        $premed = $myarray['premedcheck'];
+        $medicare = ($myarray['p_m_ins_type'] == 1);
+
+        // text for the alert box next to *Med
+        $alertText = $myarray['alert_text'];
+        $displayAlert = $myarray['display_alert'];
+
+        if ($premed) {
+            $title .= "Pre-medication: " . $myarray['premed']."\n";
+        }
+
+        $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3_pivot WHERE patientid='".$db->escape($_GET['pid'])."'";
+
+        $myq3array = $db->getRow($sqlq3);
+        $allergen = $myq3array['allergenscheck'];
+
+        if ($allergen) {
+            $title .= "Allergens: " . $myq3array['other_allergens'];
+        }
+
+        $thename = $myarray['firstname']." ".$myarray['lastname'];
+    }
+} ?>
+
+<script src="admin/popup/popup.js" type="text/javascript"></script>
+<table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
+<!-- Header and nav goes here -->
+    <tr>
+        <td colspan="2" align="right"> </td>
+    </tr>
+    <tr>
+        <td valign='top' height="400">
+            <?php
+            $task_sql = "
+                select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+                JOIN dental_users du ON dt.responsibleid=du.userid
+                LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+                WHERE (dt.status = '0' OR dt.status IS NULL) 
+                AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
+            ";
+            $num_tasks = $db->getNumberRows($task_sql);
+            $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce + $num_unsigned + $num_pending_duplicates;
+            if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+                $mess_count += $num_unmailed_claims + $num_pending_nodss_claims;
+            } else {
+                $mess_count += $num_pending_claims;
+            } ?>
+            <div class="suckertreemenu2">
+                <ul id="topmenu2">
+                    <li><a href="index.php"> Notifications(<?= $mess_count; ?>)</a></li>
+                    <li id="header_support" <?= ($num_support > 0) ? 'class="pending"' : ""; ?>>
+                        <a href="support.php">Support <?= ($num_support > 0) ? "(".$num_support.")" : ""; ?></a>
+                    </li>
+                    <li>
+                        <a href="logout.php">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+            <script type="text/javascript">
+                if (window.task_function) {
+                    task_function();
+                }
+            </script>
+            <?php
+            $task_sql = "
+                select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+                JOIN dental_users du ON dt.responsibleid=du.userid
+                LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+                WHERE (dt.status = '0' OR dt.status IS NULL) 
+                AND dt.responsibleid='".$db->escape($_SESSION['userid'])."'
+            ";
+            $num_tasks = $db->getNumberRows($task_sql); ?>
+            <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
+                <span id="task_header">My Tasks (<span id="task_count"><?= $num_tasks; ?></span>)</span>
+                <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
                     <?php
-                    $logo_sql = "
-                        SELECT c.logo FROM companies c
-                        JOIN dental_user_company uc ON uc.companyid = c.id
-                        WHERE uc.userid='".$_SESSION['userid']."'
-                    ";
-                    $logo_r = $db->getRow($logo_sql);
-                    if ($logo_r['logo'] != '') { ?>
-                        <div style="float:right;margin:13px 15px 0 0;"><img src="display_file.php?f=<?= $logo_r['logo']; ?>" /></div>
-                        <?php
-                    } ?>
-                    <div style="clear:both;"></div>
-                </div>
-                <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
-                    <div style="width:98.6%; background:#00457c;margin:0 auto;">
-                        <?php
-                        if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
-                            <div id="patient_name_div" <?= (!empty($thename) && strlen($thename) > 20) ? 'style="font-size:14px"' : ''; ?>>
-                                <div id="patient_name_inner">
-                                    <?php
-                                    if (!empty($medicare)) { ?>
-                                        <img src="images/medicare_logo_small.png" />
-                                        <?php
-                                    } ?>
-                                    <span class="<?= (!empty($medicare)) ? 'medicare_name' : 'name' ?>">
-                                        <?= (!empty($thename) ? $thename : ''); ?>
-                                        <?php
-                                        if ($displayAlert && !empty($alertText)) { ?>
-                                            <a href="#" title="Notes: <?= $alertText; ?>" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-                                            <?php
-                                        } ?>
-                                        <?php
-                                        if (!empty($premed) && $premed == 1 || !empty($allergen) && $allergen == 1) { ?>
-                                            <a href="q_page3.php?pid=<?= $_GET['pid'] ?>" title="<?= $title ?>" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
-                                            <?php
-                                        } ?>
-                                    </span>
-                                </div>
-                            </div>
+                    $od_sql = $task_sql . " AND dt.due_date < CURDATE();";
+                    $tod_sql = $task_sql . " AND dt.due_date = CURDATE();";
+                    $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+                    if (date('N') == 7) {
+                        $this_sun = date('Y-m-d');
+                        $next_mon = date('Y-m-d', strtotime("next Tuesday"));
+                        $next_sun = date('Y-m-d', strtotime("next Sunday"));
+                    } else {
+                        $this_sun = date('Y-m-d', strtotime("next Sunday"));
+                        $next_mon = date('Y-m-d', strtotime("next Monday"));
+                        $next_sun = date('Y-m-d', strtotime("next Sunday + 1 week"));
+                    }
+
+                    $tw_sql = $task_sql . " AND dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND '".$this_sun."'";
+                    $nw_sql = $task_sql . " AND dt.due_date BETWEEN '".$next_mon."' AND '".$next_sun."'";
+                    $lat_sql = $task_sql . " AND dt.due_date > '".$next_sun."' ORDER BY dt.due_date ASC";
+
+                    $od_q = $db->getResults($od_sql);
+                    $od_num = count($od_q);
+                    if ($od_num > 0) { ?>
+                        <h4 id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
+                        <ul id="task_od_list">
                             <?php
-                            $t_sql = "
-                                select dt.*, du.name, p.firstname, p.lastname 
-                                from dental_task dt 
-                                JOIN dental_users du ON dt.responsibleid=du.userid 
-                                LEFT JOIN dental_patients p ON p.patientid=dt.patientid 
-                                WHERE (dt.status = '0' OR dt.status IS NULL) 
-                                AND (
-                                    du.docid='".$db->escape($_SESSION['docid'])."' 
-                                    OR du.userid='".$db->escape($_SESSION['docid'])."'
-                                ) 
-                                AND dt.patientid='".$db->escape($_GET['pid'])."'
-                            ";
-                            $t_num_sql = $t_sql;
-                            $num_pat_tasks = $db->getNumberRows($t_num_sql);
-                            if ($num_pat_tasks > 0) { ?>
-                                <div class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
-                                    <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks(<?= $num_pat_tasks; ?>)</span>
-                                    <?php
-                                    $od_sql = $t_sql . " AND dt.due_date < CURDATE();";
-                                    $tod_sql = $t_sql . " AND dt.due_date = CURDATE();";
-                                    $tom_sql = $t_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
-                                    $fut_sql = $t_sql . " AND dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY);"; ?>
-                                    <div class="task_list" id="pat_task_list" style="display:none;">
+                            foreach ($od_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;">
+                                        <?= $od_r['task']; ?>
                                         <?php
-                                        $od_q = $db->getResults($od_sql);
-                                        $od_num = count($od_q);
-                                        if ($od_num > 0) { ?>
-                                            <h4 id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
-                                            <ul id="pat_task_od_list">
-                                                <?php
-                                                foreach ($od_q as $od_r) { ?>
-                                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
-                                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                                        </div>
-                                                        <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-                                                        <?= $od_r['task']; ?>
-                                                        <?php
-                                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                            (<a href="add_patient.php?ed= <?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                            <?php
-                                                        } ?>
-                                                    </li>
-                                                    <?php
-                                                } ?>
-                                            </ul>
-                                            <?php
-                                        }
-                                        $od_q = $db->getResults($tod_sql);
-                                        $od_num = count($od_q);
-                                        if ($od_num > 0) { ?>
-                                            <h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
-                                            <ul id="pat_task_tod_list">
-                                                <?php
-                                                foreach ($od_q as $od_r) { ?>
-                                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                                        </div>
-                                                        <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-                                                        <?= $od_r['task']; ?>
-                                                        <?php
-                                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                            <?php
-                                                        } ?>
-                                                    </li>
-                                                    <?php
-                                                } ?>
-                                            </ul>
-                                            <?php
-                                        }
-                                        $od_q = $db->getResults($tom_sql);
-                                        $od_num = count($od_q);
-                                        if ($od_num > 0) { ?>
-                                            <h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
-                                            <ul id="pat_task_tom_list">
-                                                <?php
-                                                foreach ($od_q as $od_r) { ?>
-                                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                                        </div>
-                                                        <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-                                                        <?= $od_r['task']; ?>
-                                                        <?php
-                                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                            <?php
-                                                        } ?>
-                                                    </li>
-                                                    <?php
-                                                } ?>
-                                            </ul>
-                                            <?php
-                                        }
-                                        $od_q = $db->getResults($fut_sql);
-                                        $od_num = count($od_q);
-                                        if ($od_num > 0) { ?>
-                                            <h4 id="pat_task_fut_header" class="task_fut_header">Future</h4>
-                                            <ul id="pat_task_fut_list">
-                                                <?php
-                                                foreach ($od_q as $od_r) { ?>
-                                                    <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
-                                                        <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-                                                            <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
-                                                            <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
-                                                        </div>
-                                                        <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-                                                        <?= $od_r['task']; ?>
-                                                        <?php
-                                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
-                                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
-                                                            <?php
-                                                        } ?>
-                                                    </li>
-                                                    <?php
-                                                } ?>
-                                            </ul>
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
                                             <?php
                                         } ?>
                                     </div>
-                                </div>
+                                </li>
                                 <?php
-                            }
-                        }
-                        if (isset($_GET['pid'])) { ?>
-                            <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-                            <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'display:none':'';?>" class="button" id="hide_patient_warnings" onclick="$.cookie('hide_pat_warnings', <?= $_GET['pid']; ?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
-                            <?php
-                        } ?>
-                        <div class="suckertreemenu">
-                            <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">Welcome <?= $_SESSION['username']; ?></span>
-                        </div>
-                        <?php
-                        if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
-                            <div id="patient_nav">
-                                <ul>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_flowsheet3.php') ? 'nav_active' : ''; ?>" href="manage_flowsheet3.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Tracker</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/dss_summ.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Summary Sheet</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_ledger.php') ? 'nav_active' : ''; ?>" href="manage_ledger.php?pid=<?= $_GET["pid"] ?>&addtopat=1">Ledger</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_insurance.php') ? 'nav_active' : ''; ?>" href="manage_insurance.php?pid=<?= $_GET["pid"] ?>&addtopat=1">Insurance</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_progress_notes.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?sect=notes&pid=<?= $_GET["pid"] ?>&addtopat=1">Progress Notes</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/patient_letters.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?sect=letters&pid=<?= $_GET['pid'] ?>&addtopat=1">Letters</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/q_image.php') ? 'nav_active' : ''; ?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= (strpos($_SERVER['PHP_SELF'], 'q_page') || strpos($_SERVER['PHP_SELF'], 'q_sleep')) ? 'nav_active' : ''; ?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
-                                    </li>
-                                    <li>
-                                        <a class="<?= (strpos($_SERVER['PHP_SELF'], 'ex_page')) ? 'nav_active' : ''; ?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
-                                    </li>
-                                    <li class="last">
-                                        <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/add_patient.php') ? 'nav_active' : ''; ?>" href="add_patient.php?ed=<?= $_GET['pid'] ?>&addtopat=1&pid=<?= $_GET['pid'] ?>">Patient Info</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <?php
-                        } else { ?>
-                            <div style="clear:both;"></div>
-                            <?php
-                        } ?>
-                    </div>
-                    <div style="clear:both;"></div>
-                </div>
-                <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
-                    <div style="clear:both;"></div>
-                    <?php
-                    if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
-                        <div style="margin-left:20px;float:left;width:400px;display:none;">
-                            You are currently in a patient chart -
-                            <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
-                        </div>
-                        <div style="float:right;width:300px;">
-                            <?php
-                            $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid='".$_GET['pid']."'";
-                            $my = $db->getResults($sql);
-                            foreach ($my as $myarray) {
-                                $thename = $myarray['firstname'] . " " . $myarray['lastname'];
                             } ?>
-                        </div>
-                        <?php
-                    } ?>
-                    <br />
-                    <?php
-                    if (isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings'] != $_GET['pid'])) { ?>
-                        <script type="text/javascript">
-                            $.cookie('hide_pat_warnings', '');
-                        </script>
+                        </ul>
                         <?php
                     }
-                    if (isset($_GET['pid'])) { ?>
-                        <div id="patient_warnings" <?= (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid']) ? 'style="display:none;"' : '';?>>
+                    $tod_q = $db->getResults($tod_sql);
+                    $tod_num = count($tod_q);
+                    if ($tod_num > 0) { ?>
+                        <h4 id="task_tod_header" class="task_tod_header">Today</h4>
+                        <ul id="task_tod_list">
+                            <?php
+                            foreach ($tod_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;">
+                                        <?= $od_r['task']; ?>
+                                        <?php
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                            <?php
+                                        } ?>
+                                    </div>
+                                </li>
+                                <?php
+                            } ?>
+                        </ul>
                         <?php
-                        if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
-                            $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
-                            $pat = $db->getRow($s);
-
-                            $n = num_patient_changes($_GET['pid']);
-                            $contacts_sql = "
-                                SELECT 
-                                    pc.id, 
-                                    pc.contacttype, 
-                                    pc.firstname, 
-                                    pc.lastname, 
-                                    pc.address1, 
-                                    pc.address2, 
-                                    pc.city, 
-                                    pc.state, 
-                                    pc.zip, 
-                                    pc.phone,
-                                    p.firstname as patfirstname, 
-                                    p.lastname as patlastname
-                                FROM dental_patient_contacts pc 
-                                INNER JOIN dental_patients p ON pc.patientid=p.patientid
-                                WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
-                                AND p.patientid='".$db->escape($_GET['pid'])."'
-                            ";
-                            $total_contacts = $db->getNumberRows($contacts_sql);
-                            $insurance_sql = "
-                                SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname 
-                                FROM dental_patient_insurance pi 
-                                INNER JOIN dental_patients p ON pi.patientid=p.patientid 
-                                WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
-                                AND p.patientid='".$db->escape($_GET['pid'])."'
-                            ";
-                            $total_insurance = $db->getNumberRows($insurance_sql);
-                            if (($n + $total_contacts + $total_insurance) > 0) { ?>
-                                <a class="warning" href="patient_changes.php?pid=<?= $_GET['pid']; ?>">
-                                    <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-                                </a>
+                    }
+                    $tom_q = $db->getResults($tom_sql);
+                    $tom_num = count($tom_q);
+                    if ($tom_num > 0) { ?>
+                        <h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
+                        <ul id="task_tom_list">
+                            <?php
+                            foreach ($tom_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;">
+                                        <?= $od_r['task']; ?>
+                                        <?php
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                            <?php
+                                        } ?>
+                                    </div>
+                                </li>
                                 <?php
-                            }
-                            $exist_sql = "
-                                SELECT symptoms_status, treatments_status, history_status 
-                                FROM dental_patients 
-                                WHERE patientid='".$db->escape($_GET['pid'])."'
-                            ";
-                            $exist_row = $db->getRow($exist_sql);
-                            if (
-                                isset($exist_row['symptoms_status'])
-                                && $exist_row['symptoms_status'] == 2
-                                || isset($exist_row['treatments_status'])
-                                && $exist_row['treatments_status'] == 2
-                                || isset($exist_row['history_status'])
-                                && $exist_row['history_status'] == 2
-                                || isset($exist_row['sleep_status'])
-                                && $exist_row['sleep_status'] == 2
-                            ) { ?>
-                                <a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1">
-                                    <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-                                </a>
+                            } ?>
+                        </ul>
+                        <?php
+                    }
+                    $tw_q = $db->getResults($tw_sql);
+                    $tw_num = count($tw_q);
+                    if ($tw_num > 0) { ?>
+                        <h4 id="task_tw_header" class="task_tw_header">This Week</h4>
+                        <ul id="task_tw_list">
+                            <?php
+                            foreach ($tw_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;">
+                                        <?= $od_r['task']; ?>
+                                        <?php
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                            <?php
+                                        } ?>
+                                    </div>
+                                </li>
                                 <?php
-                            }
-                            $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".$db->escape($_GET['pid'])."'";
-                            if ($db->getNumberRows($email_sql) > 0) { ?>
-                                <a class="warning" href="add_patient.php?ed=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1">
-                                    <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
-                                </a>
+                            } ?>
+                        </ul>
+                        <?php
+                    }
+                    $nw_q = $db->getResults($nw_sql);
+                    $nw_num = count($nw_q);
+                    if ($nw_num > 0) { ?>
+                        <h4 id="task_nw_header" class="task_nw_header">Next Week</h4>
+                        <ul id="task_nw_list">
+                            <?php
+                            foreach ($nw_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;"><?= $od_r['task']; ?>
+                                        <?php
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                            <?php
+                                        } ?>
+                                    </div>
+                                </li>
                                 <?php
-                            }
-                            $rc_sql = "
-                                SELECT * FROM dental_insurance WHERE 
-                                (status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
-                                AND patientid='".$db->escape($_GET['pid'])."'
-                            ";
-                            $rc_q = $db->getResults($rc_sql);
-                            $rc_num = count($rc_q);
-                            if ($rc_num > 0) { ?>
-                                <span class="warning">Warning! Patient has the following rejected claims: <br />
+                            } ?>
+                        </ul>
+                        <?php
+                    }
+                    $lat_q = $db->getResults($lat_sql);
+                    $lat_num = count($lat_q);
+                    if ($lat_num > 0) { ?>
+                        <h4 id="task_lat_header" class="task_lat_header">Later</h4>
+                        <ul id="task_lat_list">
+                            <?php
+                            foreach ($lat_q as $od_r) { ?>
+                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                    </div>
+                                    <input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+                                    <div style="float:left; width:170px;">
+                                        <?= date('M d', strtotime($od_r['due_date'])); ?>
+                                        -
+                                        <?= $od_r['task']; ?>
+                                        <?php
+                                        if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                            (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                            <?php
+                                        } ?>
+                                    </div>
+                                </li>
+                                <?php
+                            } ?>
+                        </ul>
+                        <?php
+                    } ?>
+                    <br /><br />
+                    <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
+                </div>
+            </div>
+            <?php
+            if ($_SESSION['docid'] == $_SESSION['userid']) {
+                $course_sql = "SELECT use_course FROM dental_users WHERE userid='".$db->escape($_SESSION['userid'])."'";
+                $course_r = $db->getRow($course_sql);
+                if ($course_r['use_course'] == 1) { ?>
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
+                    <?php
+                }
+            } else {
+                $course_sql = "
+                    SELECT s.use_course, d.use_course_staff FROM dental_users s
+                    JOIN dental_users d ON d.userid = s.docid
+                    WHERE s.userid='".$db->escape($_SESSION['userid'])."'
+                ";
+                $course_r = $db->getRow($course_sql);
+                if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1) { ?>
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
+                    <?php
+                }
+            } ?>
+            <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
+            <script type="text/javascript" src="js/task.js?v=20180715"></script>
+            <script type="text/javascript" src="script/autocomplete.js?v=20160719"></script>
+            <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
+            <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
+                <div style="margin-top:10px; margin-left:20px; float:left;"><a href="/manage" id="logo">Dashboard</a></div>
+                <div style="float:left; width:68%;">
+                    <form>
+                        <div id="patient_search_div">
+                            <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />
+                            <div id="search_hints"  class="search_hints" style="display:none;">
+                                <ul id="patient_list">
+                                    <li class="template" style="display:none">Doe, John S</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                    <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
+                    <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid'])) ? '?pid='.$_GET['pid'] : ''; ?>')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                </div>
+                <?php
+                $logo_sql = "
+                    SELECT c.logo FROM companies c
+                    JOIN dental_user_company uc ON uc.companyid = c.id
+                    WHERE uc.userid='".$_SESSION['userid']."'
+                ";
+                $logo_r = $db->getRow($logo_sql);
+                if ($logo_r['logo'] != '') { ?>
+                    <div style="float:right;margin:13px 15px 0 0;"><img src="display_file.php?f=<?= $logo_r['logo']; ?>" /></div>
+                    <?php
+                } ?>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
+                <div style="width:98.6%; background:#00457c;margin:0 auto;">
+                    <?php
+                    if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
+                        <div id="patient_name_div" <?= (!empty($thename) && strlen($thename) > 20) ? 'style="font-size:14px"' : ''; ?>>
+                            <div id="patient_name_inner">
+                                <?php
+                                if (!empty($medicare)) { ?>
+                                    <img src="images/medicare_logo_small.png" />
                                     <?php
-                                    foreach ($rc_q as $rejected) { ?>
-                                        <a href="view_claim.php?claimid=<?= $rejected['insuranceid']; ?>&pid=<?= $_GET['pid']; ?>">
-                                            <?= $rejected['insuranceid']; ?> - <?= date('m/d/Y', strtotime($rejected['adddate'])); ?>
-                                        </a><br />
+                                } ?>
+                                <span class="<?= (!empty($medicare)) ? 'medicare_name' : 'name' ?>">
+                                    <?= (!empty($thename) ? $thename : ''); ?>
+                                    <?php
+                                    if ($displayAlert && !empty($alertText)) { ?>
+                                        <a href="#" title="Notes: <?= $alertText; ?>" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
+                                        <?php
+                                    } ?>
+                                    <?php
+                                    if (!empty($premed) && $premed == 1 || !empty($allergen) && $allergen == 1) { ?>
+                                        <a href="q_page3.php?pid=<?= $_GET['pid'] ?>" title="<?= $title ?>" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
                                         <?php
                                     } ?>
                                 </span>
+                            </div>
+                        </div>
+                        <?php
+                        $t_sql = "
+                            select dt.*, du.name, p.firstname, p.lastname 
+                            from dental_task dt 
+                            JOIN dental_users du ON dt.responsibleid=du.userid 
+                            LEFT JOIN dental_patients p ON p.patientid=dt.patientid 
+                            WHERE (dt.status = '0' OR dt.status IS NULL) 
+                            AND (
+                                du.docid='".$db->escape($_SESSION['docid'])."' 
+                                OR du.userid='".$db->escape($_SESSION['docid'])."'
+                            ) 
+                            AND dt.patientid='".$db->escape($_GET['pid'])."'
+                        ";
+                        $t_num_sql = $t_sql;
+                        $num_pat_tasks = $db->getNumberRows($t_num_sql);
+                        if ($num_pat_tasks > 0) { ?>
+                            <div class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
+                                <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks(<?= $num_pat_tasks; ?>)</span>
                                 <?php
-                            }
-                            $rc_sql = "
-                                SELECT * FROM dental_hst
-                                WHERE (
-                                    status = '".(defined('DSS_HST_REQUSTED') ? DSS_HST_REQUSTED : '')."'
-                                    OR status = '".(defined('DSS_HST_PENDING') ? DSS_HST_PENDING : '')."'
-                                    OR status = '".(defined('DSS_HST_SCHEDULED') ? DSS_HST_SCHEDULED : '')."'
-                                    OR (
-                                        status = '".(defined('DSS_HST_REJECTED') ? DSS_HST_REJECTED : '')."'
-                                        AND (viewed IS NULL OR viewed = 0)
-                                    )
-                                )
-                                AND patient_id = '".$db->escape($_GET['pid'])."'
-                            ";
-                            $rc_q = $db->getResults($rc_sql);
-                            $pat_hst_num_uncompleted = count($rc_q);
-                            $pat_hst_status = '';
-                            if (count($rc_q) > 0) { ?>
-                                <span class="warning">Patient has the following Home Sleep Tests: <br />
+                                $od_sql = $t_sql . " AND dt.due_date < CURDATE();";
+                                $tod_sql = $t_sql . " AND dt.due_date = CURDATE();";
+                                $tom_sql = $t_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+                                $fut_sql = $t_sql . " AND dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY);"; ?>
+                                <div class="task_list" id="pat_task_list" style="display:none;">
                                     <?php
-                                    foreach ($rc_q as $hst) { ?>
-                                        <a href="/manage/hst_request.php?pid=<?= $hst['patient_id'] ?>&amp;hst_id=<?= $hst['id'] ?>">HST was requested <?= date('m/d/Y', strtotime($hst['adddate'])); ?></a>
-                                        and is currently
-                                        <?php
-                                        if ($hst['status'] == DSS_HST_REJECTED) { ?>
-                                            <a href="manage_hst.php?status=4&viewed=0"><?= $dss_hst_status_labels[$hst['status']]; ?></a>
+                                    $od_q = $db->getResults($od_sql);
+                                    $od_num = count($od_q);
+                                    if ($od_num > 0) { ?>
+                                        <h4 id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
+                                        <ul id="pat_task_od_list">
                                             <?php
-                                        } else { ?>
-                                            <?= $dss_hst_status_labels[$hst['status']]; ?>
-                                            <?php
-                                        } ?>
-                                        <?= ($hst['status'] == DSS_HST_SCHEDULED) ? ' - ' . $hst['office_notes'] : ''; ?>
-                                        <?= ($hst['status'] == DSS_HST_REJECTED) ? ' - ' . $hst['rejected_reason'] : ''; ?>
-                                        <?= ($hst['status'] == DSS_HST_REJECTED && $hst['rejecteddate'] != '') ? ' - '.date('m/d/Y h:i a', strtotime($hst['rejecteddate'])) : ''; ?>
+                                            foreach ($od_q as $od_r) { ?>
+                                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>">
+                                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                                    </div>
+                                                    <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+                                                    <?= $od_r['task']; ?>
+                                                    <?php
+                                                    if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                                        (<a href="add_patient.php?ed= <?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                                        <?php
+                                                    } ?>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
                                         <?php
-                                        if ($hst['status'] == DSS_HST_REJECTED) { ?>
-                                            <br />
-                                            <a href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
+                                    }
+                                    $od_q = $db->getResults($tod_sql);
+                                    $od_num = count($od_q);
+                                    if ($od_num > 0) { ?>
+                                        <h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
+                                        <ul id="pat_task_tod_list">
                                             <?php
-                                        } ?>
-                                        <br />
+                                            foreach ($od_q as $od_r) { ?>
+                                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                                    </div>
+                                                    <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+                                                    <?= $od_r['task']; ?>
+                                                    <?php
+                                                    if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                                        (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                                        <?php
+                                                    } ?>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
                                         <?php
-                                        $pat_hst_status = $dss_hst_status_labels[$hst['status']];
+                                    }
+                                    $od_q = $db->getResults($tom_sql);
+                                    $od_num = count($od_q);
+                                    if ($od_num > 0) { ?>
+                                        <h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
+                                        <ul id="pat_task_tom_list">
+                                            <?php
+                                            foreach ($od_q as $od_r) { ?>
+                                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                                    </div>
+                                                    <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+                                                    <?= $od_r['task']; ?>
+                                                    <?php
+                                                    if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                                        (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                                        <?php
+                                                    } ?>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
+                                        <?php
+                                    }
+                                    $od_q = $db->getResults($fut_sql);
+                                    $od_num = count($od_q);
+                                    if ($od_num > 0) { ?>
+                                        <h4 id="pat_task_fut_header" class="task_fut_header">Future</h4>
+                                        <ul id="pat_task_fut_list">
+                                            <?php
+                                            foreach ($od_q as $od_r) { ?>
+                                                <li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+                                                    <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+                                                        <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+                                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                                    </div>
+                                                    <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+                                                    <?= $od_r['task']; ?>
+                                                    <?php
+                                                    if ($od_r['firstname'] != '' && $od_r['lastname'] != '') { ?>
+                                                        (<a href="add_patient.php?ed=<?= $od_r['patientid'] ?>&addtopat=1&pid=<?= $od_r['patientid'] ?>"><?= $od_r['firstname'] ?> <?= $od_r['lastname'] ?></a>)
+                                                        <?php
+                                                    } ?>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
+                                        <?php
                                     } ?>
-                                </span>
-                                <?php
-                            }
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    if (isset($_GET['pid'])) { ?>
+                        <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+                        <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'display:none':'';?>" class="button" id="hide_patient_warnings" onclick="$.cookie('hide_pat_warnings', <?= $_GET['pid']; ?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+                        <?php
+                    } ?>
+                    <div class="suckertreemenu">
+                        <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">Welcome <?= $_SESSION['username']; ?></span>
+                    </div>
+                    <?php
+                    if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
+                        <div id="patient_nav">
+                            <ul>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_flowsheet3.php') ? 'nav_active' : ''; ?>" href="manage_flowsheet3.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Tracker</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/dss_summ.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Summary Sheet</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_ledger.php') ? 'nav_active' : ''; ?>" href="manage_ledger.php?pid=<?= $_GET["pid"] ?>&addtopat=1">Ledger</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_insurance.php') ? 'nav_active' : ''; ?>" href="manage_insurance.php?pid=<?= $_GET["pid"] ?>&addtopat=1">Insurance</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/manage_progress_notes.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?sect=notes&pid=<?= $_GET["pid"] ?>&addtopat=1">Progress Notes</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/patient_letters.php') ? 'nav_active' : ''; ?>" href="dss_summ.php?sect=letters&pid=<?= $_GET['pid'] ?>&addtopat=1">Letters</a>
+                                </li>
+                                <li>
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/q_image.php') ? 'nav_active' : ''; ?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a>
+                                </li>
+                                <li>
+                                    <a class="<?= (strpos($_SERVER['PHP_SELF'], 'q_page') || strpos($_SERVER['PHP_SELF'], 'q_sleep')) ? 'nav_active' : ''; ?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
+                                </li>
+                                <li>
+                                    <a class="<?= (strpos($_SERVER['PHP_SELF'], 'ex_page')) ? 'nav_active' : ''; ?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
+                                </li>
+                                <li class="last">
+                                    <a class="<?= ($_SERVER['PHP_SELF'] == '/manage/add_patient.php') ? 'nav_active' : ''; ?>" href="add_patient.php?ed=<?= $_GET['pid'] ?>&addtopat=1&pid=<?= $_GET['pid'] ?>">Patient Info</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <?php
+                    } else { ?>
+                        <div style="clear:both;"></div>
+                        <?php
+                    } ?>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
+                <div style="clear:both;"></div>
+                <?php
+                if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
+                    <div style="margin-left:20px;float:left;width:400px;display:none;">
+                        You are currently in a patient chart -
+                        <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
+                    </div>
+                    <div style="float:right;width:300px;">
+                        <?php
+                        $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid='".$_GET['pid']."'";
+                        $my = $db->getResults($sql);
+                        foreach ($my as $myarray) {
+                            $thename = $myarray['firstname'] . " " . $myarray['lastname'];
                         } ?>
                     </div>
                     <?php
+                } ?>
+                <br />
+                <?php
+                if (isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings'] != $_GET['pid'])) { ?>
+                    <script type="text/javascript">
+                        $.cookie('hide_pat_warnings', '');
+                    </script>
+                    <?php
                 }
-                $sql = "SELECT use_letters from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
-                $r = $db->getRow($sql);
-                $use_letters = ($r['use_letters'] == '1');
-    // closing html tags missing
-} // CLOSE HOME PAGE CHECK
+                if (isset($_GET['pid'])) { ?>
+                    <div id="patient_warnings" <?= (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid']) ? 'style="display:none;"' : '';?>>
+                    <?php
+                    if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
+                        $s = "SELECT * FROM dental_patients WHERE parent_patientid='".$db->escape($_GET['pid'])."'";
+                        $pat = $db->getRow($s);
+
+                        $n = num_patient_changes($_GET['pid']);
+                        $contacts_sql = "
+                            SELECT 
+                                pc.id, 
+                                pc.contacttype, 
+                                pc.firstname, 
+                                pc.lastname, 
+                                pc.address1, 
+                                pc.address2, 
+                                pc.city, 
+                                pc.state, 
+                                pc.zip, 
+                                pc.phone,
+                                p.firstname as patfirstname, 
+                                p.lastname as patlastname
+                            FROM dental_patient_contacts pc 
+                            INNER JOIN dental_patients p ON pc.patientid=p.patientid
+                            WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
+                            AND p.patientid='".$db->escape($_GET['pid'])."'
+                        ";
+                        $total_contacts = $db->getNumberRows($contacts_sql);
+                        $insurance_sql = "
+                            SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname 
+                            FROM dental_patient_insurance pi 
+                            INNER JOIN dental_patients p ON pi.patientid=p.patientid 
+                            WHERE p.docid='".$db->escape($_SESSION['docid'])."' 
+                            AND p.patientid='".$db->escape($_GET['pid'])."'
+                        ";
+                        $total_insurance = $db->getNumberRows($insurance_sql);
+                        if (($n + $total_contacts + $total_insurance) > 0) { ?>
+                            <a class="warning" href="patient_changes.php?pid=<?= $_GET['pid']; ?>">
+                                <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+                            </a>
+                            <?php
+                        }
+                        $exist_sql = "
+                            SELECT symptoms_status, treatments_status, history_status 
+                            FROM dental_patients 
+                            WHERE patientid='".$db->escape($_GET['pid'])."'
+                        ";
+                        $exist_row = $db->getRow($exist_sql);
+                        if (
+                            isset($exist_row['symptoms_status'])
+                            && $exist_row['symptoms_status'] == 2
+                            || isset($exist_row['treatments_status'])
+                            && $exist_row['treatments_status'] == 2
+                            || isset($exist_row['history_status'])
+                            && $exist_row['history_status'] == 2
+                            || isset($exist_row['sleep_status'])
+                            && $exist_row['sleep_status'] == 2
+                        ) { ?>
+                            <a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1">
+                                <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+                            </a>
+                            <?php
+                        }
+                        $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".$db->escape($_GET['pid'])."'";
+                        if ($db->getNumberRows($email_sql) > 0) { ?>
+                            <a class="warning" href="add_patient.php?ed=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1">
+                                <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
+                            </a>
+                            <?php
+                        }
+                        $rc_sql = "
+                            SELECT * FROM dental_insurance WHERE 
+                            (status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
+                            AND patientid='".$db->escape($_GET['pid'])."'
+                        ";
+                        $rc_q = $db->getResults($rc_sql);
+                        $rc_num = count($rc_q);
+                        if ($rc_num > 0) { ?>
+                            <span class="warning">Warning! Patient has the following rejected claims: <br />
+                                <?php
+                                foreach ($rc_q as $rejected) { ?>
+                                    <a href="view_claim.php?claimid=<?= $rejected['insuranceid']; ?>&pid=<?= $_GET['pid']; ?>">
+                                        <?= $rejected['insuranceid']; ?> - <?= date('m/d/Y', strtotime($rejected['adddate'])); ?>
+                                    </a><br />
+                                    <?php
+                                } ?>
+                            </span>
+                            <?php
+                        }
+                        $rc_sql = "
+                            SELECT * FROM dental_hst
+                            WHERE (
+                                status = '".(defined('DSS_HST_REQUSTED') ? DSS_HST_REQUSTED : '')."'
+                                OR status = '".(defined('DSS_HST_PENDING') ? DSS_HST_PENDING : '')."'
+                                OR status = '".(defined('DSS_HST_SCHEDULED') ? DSS_HST_SCHEDULED : '')."'
+                                OR (
+                                    status = '".(defined('DSS_HST_REJECTED') ? DSS_HST_REJECTED : '')."'
+                                    AND (viewed IS NULL OR viewed = 0)
+                                )
+                            )
+                            AND patient_id = '".$db->escape($_GET['pid'])."'
+                        ";
+                        $rc_q = $db->getResults($rc_sql);
+                        $pat_hst_num_uncompleted = count($rc_q);
+                        $pat_hst_status = '';
+                        if (count($rc_q) > 0) { ?>
+                            <span class="warning">Patient has the following Home Sleep Tests: <br />
+                                <?php
+                                foreach ($rc_q as $hst) { ?>
+                                    <a href="/manage/hst_request.php?pid=<?= $hst['patient_id'] ?>&amp;hst_id=<?= $hst['id'] ?>">HST was requested <?= date('m/d/Y', strtotime($hst['adddate'])); ?></a>
+                                    and is currently
+                                    <?php
+                                    if ($hst['status'] == DSS_HST_REJECTED) { ?>
+                                        <a href="manage_hst.php?status=4&viewed=0"><?= $dss_hst_status_labels[$hst['status']]; ?></a>
+                                        <?php
+                                    } else { ?>
+                                        <?= $dss_hst_status_labels[$hst['status']]; ?>
+                                        <?php
+                                    } ?>
+                                    <?= ($hst['status'] == DSS_HST_SCHEDULED) ? ' - ' . $hst['office_notes'] : ''; ?>
+                                    <?= ($hst['status'] == DSS_HST_REJECTED) ? ' - ' . $hst['rejected_reason'] : ''; ?>
+                                    <?= ($hst['status'] == DSS_HST_REJECTED && $hst['rejecteddate'] != '') ? ' - '.date('m/d/Y h:i a', strtotime($hst['rejecteddate'])) : ''; ?>
+                                    <?php
+                                    if ($hst['status'] == DSS_HST_REJECTED) { ?>
+                                        <br />
+                                        <a href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
+                                        <?php
+                                    } ?>
+                                    <br />
+                                    <?php
+                                    $pat_hst_status = $dss_hst_status_labels[$hst['status']];
+                                } ?>
+                            </span>
+                            <?php
+                        }
+                    } ?>
+                </div>
+                <?php
+            }
+            $sql = "SELECT use_letters from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
+            $r = $db->getRow($sql);
+            $use_letters = ($r['use_letters'] == '1');
+// closing html tags missing
 
 $office_type = DSS_OFFICE_TYPE_FRONT;

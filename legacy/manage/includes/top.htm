@@ -43,7 +43,7 @@ if ($r['homepage'] != '1') {
 
     $dental_letters_query = "
         SELECT dental_letters.generated_date AS generated_date
-        FROM dental_letters
+        FROM dental_letters USE INDEX(pending_letters)
         WHERE dental_letters.status = '0'
         AND dental_letters.delivered = '0'
         AND dental_letters.deleted = '0'

@@ -2,26 +2,29 @@
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class Handler extends ExceptionHandler {
-
+class Handler extends ExceptionHandler
+{
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
 	 * @var array
 	 */
 	protected $dontReport = [
-		'Symfony\Component\HttpKernel\Exception\HttpException'
+		HttpException::class,
 	];
 
-	/**
-	 * Report or log an exception.
-	 *
-	 * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-	 *
-	 * @param  \Exception  $e
-	 * @return void
-	 */
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param  \Exception $e
+     * @return mixed
+     * @throws Exception
+     */
 	public function report(Exception $e)
 	{
 		return parent::report($e);
@@ -32,16 +35,13 @@ class Handler extends ExceptionHandler {
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \Exception  $e
-	 * @return \Illuminate\Http\Response
+	 * @return Response
 	 */
-	public function render($request, Exception $e)
+	public function render($request, \Exception $e)
 	{
-		if ($this->isHttpException($e))
-		{
-			return $this->renderHttpException($e);
-		}
-		else
-		{
+		if ($this->isHttpException($e) && $e instanceof HttpException) {
+            return $this->renderHttpException($e);
+		} else {
             // Dependency injection?
             if (preg_match('/^production|release|stage|staging$/', app()->environment())) {
                 /**
@@ -62,5 +62,4 @@ class Handler extends ExceptionHandler {
 			return parent::render($request, $e);
 		}
 	}
-
 }

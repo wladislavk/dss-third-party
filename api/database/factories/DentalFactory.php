@@ -155,20 +155,22 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, func
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermission::class, function ($faker) {
+    $resourceGroup = factory(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class)->create();
     return [
-        'group_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
-        'patient_id' => $faker->randomDigit,
+        'group_id' => $resourceGroup->id,
+        'doc_id' => 0,
+        'patient_id' => 0,
     ];
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResource::class, function ($faker) {
+    $resourceGroup = factory(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class)->create();
     return [
-        'group_id' => $faker->randomDigit,
+        'group_id' => $resourceGroup->id,
         'slug' => $faker->slug,
         'route' => $faker->slug,
-        'created_by' => $faker->randomDigit,
-        'updated_by' => $faker->randomDigit,
+        'created_by' => 0,
+        'updated_by' => 0,
     ];
 });
 

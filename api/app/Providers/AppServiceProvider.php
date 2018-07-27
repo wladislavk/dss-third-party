@@ -27,7 +27,9 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() != 'production') {
             \DB::listen(function ($query) {
                 $dbLog = new Logger('Query');
-                $dbLog->pushHandler(new RotatingFileHandler(storage_path('logs/query.log'), 5, Logger::DEBUG));
+                $logName = storage_path('logs/query.log');
+                $handler = new RotatingFileHandler($logName, 5, Logger::DEBUG, true, 0777);
+                $dbLog->pushHandler($handler);
                 $dbLog->info($query->sql, ['Bindings' => $query->bindings, 'Time' => $query->time]);
             });
         }

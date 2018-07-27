@@ -15,5 +15,5 @@ if ($r = $db->getRow($sql)) {
     $etype = $r['name'];
     echo '{"success":true, "etype":"' . $etype . '"}';
 } else {
-    echo '{"success":false"}';
+    echo '{"success":false}';
 }

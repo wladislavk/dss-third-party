@@ -169,18 +169,10 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     if ($this->hasKey($nsKey, $itemKey))
     {
       $fp = $this->_getHandle($nsKey, $itemKey, self::POSITION_START);
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(0);
-      }
       $str = '';
       while (!feof($fp) && false !== $bytes = fread($fp, 8192))
       {
         $str .= $bytes;
-      }
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(1);
       }
       return $str;
     }
@@ -197,17 +189,9 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     if ($this->hasKey($nsKey, $itemKey))
     {
       $fp = $this->_getHandle($nsKey, $itemKey, self::POSITION_START);
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(0);
-      }
       while (!feof($fp) && false !== $bytes = fread($fp, 8192))
       {
         $is->write($bytes);
-      }
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(1);
       }
     }
   }

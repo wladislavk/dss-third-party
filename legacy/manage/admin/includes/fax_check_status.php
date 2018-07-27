@@ -38,7 +38,7 @@ if ($q) {
         $transmissionId = $r['sfax_transmission_id'];
 
         $_SESSION['companyid'] = $companyId;
-        $fts = new \FTSSamples($db);
+        $fts = new \FTSSamples($companyId);
 
         // Try/catch block for API calls
         try {

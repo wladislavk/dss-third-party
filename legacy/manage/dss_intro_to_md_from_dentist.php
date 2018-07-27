@@ -2,9 +2,9 @@
 namespace Ds3\Libraries\Legacy;
 
 if($_GET['backoffice'] == '1') {
-  include 'admin/includes/top.htm';
+    include 'admin/includes/top.htm';
 } else {
-  include 'includes/top.htm';
+    include 'includes/top.htm';
 }
 
 ?>

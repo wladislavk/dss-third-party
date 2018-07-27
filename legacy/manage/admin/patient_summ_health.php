@@ -981,7 +981,7 @@ $weight = st($bmi_myarray['weight']);
     $deflection_r_l = st($myarray['deflection_r_l']);
     
     if ($palpationid != '') {
-        $pal_arr1 = split('~',$palpationid);
+        $pal_arr1 = explode('~',$palpationid);
         foreach ($pal_arr1 as $i => $val) {
             $pal_arr2 = explode('|', $val);
             $palid[$i] = $pal_arr2[0];
@@ -989,7 +989,7 @@ $weight = st($bmi_myarray['weight']);
         }
     }
     if ($palpationRid != '') {
-        $palR_arr1 = split('~', $palpationRid);
+        $palR_arr1 = explode('~', $palpationRid);
         foreach ($palR_arr1 as $i => $val) {
             $palR_arr2 = explode('|', $val);
             $palRid[$i] = $palR_arr2[0];

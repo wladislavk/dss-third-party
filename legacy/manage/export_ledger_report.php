@@ -21,6 +21,8 @@ header("Expires: 0");
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
+session_write_close();
+
 $start_date = $_GET['start_date'];
 $end_date = $_GET['end_date'];
 ?>

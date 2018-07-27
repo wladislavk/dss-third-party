@@ -68,7 +68,6 @@ export default {
         username: data.username
       }
       const docInfo = {
-        homepage: parseInt(data.doc_info.homepage),
         manageStaff: parseInt(data.doc_info.manage_staff),
         useEligibleApi: parseInt(data.doc_info.use_eligible_api),
         useLetters: parseInt(data.doc_info.use_letters),
@@ -76,9 +75,9 @@ export default {
         usePaymentReports: parseInt(data.doc_info.use_payment_reports),
         useCourseStaff: parseInt(data.doc_info.use_course_staff)
       }
+      commit(symbols.mutations.notificationNumbers, data.numbers)
       commit(symbols.mutations.userInfo, userInfo)
       commit(symbols.mutations.docInfo, docInfo)
-      commit(symbols.mutations.notificationNumbers, data.numbers)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
     })

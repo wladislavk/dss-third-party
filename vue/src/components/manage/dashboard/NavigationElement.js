@@ -17,8 +17,7 @@ export default {
   },
   data () {
     return {
-      showChildren: false,
-      elementName: ''
+      showChildren: false
     }
   },
   computed: {
@@ -52,14 +51,19 @@ export default {
         return 'subfoldericon'
       }
       return ''
+    },
+    hasPopulator () {
+      if (this.menuItem.hasOwnProperty('populator') && this.menuItem.populator) {
+        return true
+      }
+      return false
+    },
+    elementName () {
+      if (this.hasPopulator) {
+        return populators[this.menuItem.populator](this.$store.state, this.menuItem.name)
+      }
+      return this.menuItem.name
     }
-  },
-  created () {
-    let elementName = this.menuItem.name
-    if (this.menuItem.hasOwnProperty('populator') && this.menuItem.populator) {
-      elementName = populators[this.menuItem.populator](this.$store.state, elementName)
-    }
-    this.elementName = elementName
   },
   methods: {
     clickLink (event) {

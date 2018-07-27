@@ -42,15 +42,15 @@ $schedulerAppointmentTypes = schedulerAppointmentTypes($_SESSION['docid']);
 </div>
 
 <style type="text/css" media="screen">
-<?php foreach ($schedulerAppointmentTypes as $appt_t_r) {
-    $str = strtolower($appt_t_r['name']);
-    $str = html_entity_decode($str);
-    $str = preg_replace('/[^a-z0-9]/i', '', $str);
-    ?>
-    .dhx_cal_event.event_<?php echo $str; ?> div{
-        background-color: #<?php echo $appt_t_r['color']; ?> !important;
-    }
-<?php } ?>
+    <?php foreach ($schedulerAppointmentTypes as $appt_t_r) {
+        $str = strtolower($appt_t_r['name']);
+        $str = html_entity_decode($str);
+        $str = preg_replace('/[^a-z0-9]/i', '', $str);
+        ?>
+        .dhx_cal_event.event_<?php echo $str; ?> div{
+            background-color: #<?php echo $appt_t_r['color']; ?> !important;
+        }
+    <?php } ?>
 </style>
 
 <script type="text/javascript" charset="utf-8">

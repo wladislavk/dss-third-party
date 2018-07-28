@@ -164,7 +164,7 @@
         self.newNoteCallback(args.note)
       })
 
-      this.$http.get(this.apiEndPoint, options)
+      this.$http.get(this.apiEndPoint + '?patient_id=' + this.patientId, options)
         .then(function (response) {
           var data = {}
           var notes = []

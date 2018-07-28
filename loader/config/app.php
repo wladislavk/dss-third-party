@@ -36,9 +36,9 @@ return [
         /*
          * Application Service Providers...
          */
-        'Ds3\Providers\AppServiceProvider',
-        'Ds3\Providers\EventServiceProvider',
-        'Ds3\Providers\RouteServiceProvider',
+        Ds3\Providers\AppServiceProvider::class,
+        Ds3\Providers\EventServiceProvider::class,
+        Ds3\Providers\RouteServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */
@@ -61,7 +61,7 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
 
-        'Intouch\LaravelNewrelic\NewrelicServiceProvider'
+        Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
     ],
 
     'manifest' => storage_path().'/framework',

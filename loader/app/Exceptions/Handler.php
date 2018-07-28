@@ -1,6 +1,6 @@
-<?php namespace Ds3\Exceptions;
+<?php
+namespace Ds3\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -23,9 +23,9 @@ class Handler extends ExceptionHandler
      *
      * @param  \Exception $e
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
-	public function report(Exception $e)
+	public function report(\Exception $e)
 	{
 		return parent::report($e);
 	}

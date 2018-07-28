@@ -95,14 +95,6 @@ if(isset($_POST['bill_submit'])){
             <?php
             trigger_error("Die called", E_USER_ERROR);
         }
-        if (!$refund) {
-            ?>
-            The refund has failed. Please contact the system administrator to inform about the issue.
-            <br /><br />
-            <button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button>
-            <?php
-            trigger_error("Die called", E_USER_ERROR);
-        }
         $charge_sql = "INSERT INTO dental_refund SET
             amount='".$db->escape(str_replace(',','',$_POST['amount']))."',
             userid='".$db->escape($id)."',

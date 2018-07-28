@@ -23,14 +23,16 @@
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~6.5",
         "phpspec/phpspec": "~2.1",
-        "barryvdh/laravel-ide-helper": "^2.3"
+        "barryvdh/laravel-ide-helper": "^2.3",
+        "laravel/browser-kit-testing": "~3.0"
     },
     "autoload": {
         "classmap": [
             "database"
         ],
         "psr-4": {
-            "Ds3\\": "app/"
+            "Ds3\\": "app/",
+            "Tests\\": "tests/"
         }
     },
     "autoload-dev": {

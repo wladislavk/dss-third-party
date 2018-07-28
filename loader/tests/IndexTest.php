@@ -1,6 +1,7 @@
 <?php
+namespace Tests;
 
-class ExampleTest extends TestCase
+class IndexTest extends TestCase
 {
     /**
      * A basic functional test example.
@@ -9,8 +10,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicExample()
     {
-        $response = $this->call('GET', '/');
-
+        $this->call('GET', '/');
         $this->assertRedirectedTo('/manage/login');
     }
 }

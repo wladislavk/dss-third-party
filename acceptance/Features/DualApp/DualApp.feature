@@ -26,7 +26,8 @@ Feature: Dual legacy / Vue app authentication and navigation
   Scenario: Verify session data
     Given I am logged in as "doc1f"
     When I go to "start" page
-    And I click on "Letters" in notifications menu
+    Then I see main page with welcome text for user "doc1f"
+    When I click on "Letters" in notifications menu
     Then I see the following filter letter type list:
       | type                                            |
       |                                                 |

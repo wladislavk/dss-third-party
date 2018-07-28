@@ -136,11 +136,13 @@ function debounceCall (call, options) {
       if ($this.data("pattype") == "new") {
         n = $search.val();
         window.location = "add_patient.php?search="+n;
+        return
       } else if ($this.data("pattype") == "no") {
         //do nothing
       } else {
         if (selectedUrl != '') {
           window.location = window.selectedUrl;
+          return
         }
 
         $search.val($this.html());

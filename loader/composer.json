@@ -4,6 +4,12 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dentalsleepsolutions/aes"
+        }
+    ],
     "require": {
         "php": ">=7.2",
         "laravel/framework": "5.5.*",

@@ -1,0 +1,14 @@
+{
+    "name": "vkr/aes",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6",
+        "ext-mcrypt": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "VKR\\AES\\": "src/"
+        }
+    }
+}

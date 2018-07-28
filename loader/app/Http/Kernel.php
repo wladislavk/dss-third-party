@@ -18,13 +18,4 @@ class Kernel extends HttpKernel
         'Illuminate\View\Middleware\ShareErrorsFromSession',
         'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken',
     ];
-
-    /**
-     * The application's route middleware.
-     *
-     * @var array
-     */
-    protected $routeMiddleware = [
-        'auth'       => 'Ds3\Http\Middleware\Authenticate',
-    ];
 }

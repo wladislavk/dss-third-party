@@ -1165,9 +1165,6 @@ function deliver_letter($letterid, $message)
     return null;
 }
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
-
 // Extend the TCPDF class to create custom Header and Footer
 class DS3PDF extends \TCPDF {
     protected $footerText = '';

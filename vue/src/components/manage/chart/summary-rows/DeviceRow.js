@@ -36,6 +36,11 @@ export default {
   created () {
     this.currentDeviceId = this.defaultDeviceId
   },
+  watch: {
+    deviceId (newVal) {
+      this.currentDeviceId = newVal
+    }
+  },
   methods: {
     updateDeviceId (event) {
       const newValue = event.target.value

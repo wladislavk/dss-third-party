@@ -15,21 +15,33 @@ describe('Flowsheet module mutations', () => {
           initialData
         ]
       }
-      const data = {
-        id: '1',
-        segmentid: '2',
-        device_id: '3',
-        description: 'description',
-        study_type: null,
-        delay_reason: null,
-        noncomp_reason: null,
-        date_completed: null,
-        date_scheduled: null
-      }
+      const data = [
+        {
+          id: '1',
+          segmentid: '2',
+          device_id: '3',
+          description: 'description',
+          study_type: null,
+          delay_reason: null,
+          noncomp_reason: null,
+          date_completed: null,
+          date_scheduled: null
+        },
+        {
+          id: '1',
+          segmentid: '2',
+          device_id: '3',
+          description: 'description',
+          study_type: 'study',
+          delay_reason: 'delay',
+          noncomp_reason: 'non-compliance',
+          date_completed: '2016-01-01',
+          date_scheduled: '2017-02-02'
+        }
+      ]
       FlowsheetModule.mutations[symbols.mutations.getAppointmentSummary](state, data)
       const expectedState = {
         [symbols.state.appointmentSummaries]: [
-          initialData,
           {
             id: 1,
             segmentId: 2,
@@ -40,29 +52,7 @@ describe('Flowsheet module mutations', () => {
             nonComplianceReason: '',
             dateCompleted: null,
             dateScheduled: null
-          }
-        ]
-      }
-      expect(state).toEqual(expectedState)
-    })
-    it('gets summary with fields', function () {
-      const state = {
-        [symbols.state.appointmentSummaries]: []
-      }
-      const data = {
-        id: '1',
-        segmentid: '2',
-        device_id: '3',
-        description: 'description',
-        study_type: 'study',
-        delay_reason: 'delay',
-        noncomp_reason: 'non-compliance',
-        date_completed: '2016-01-01',
-        date_scheduled: '2017-02-02'
-      }
-      FlowsheetModule.mutations[symbols.mutations.getAppointmentSummary](state, data)
-      const expectedState = {
-        [symbols.state.appointmentSummaries]: [
+          },
           {
             id: 1,
             segmentId: 2,

@@ -11,19 +11,19 @@ Feature: Manage Letters
     And I see that I have "415" letters to review
     And I see list that contains "29" pages and I am on page "1"
     And I see letter data:
-      | name             | correspondence                             | to                | method | date       |
-      | LASTNAME R, TEST | TY MD Referral Pt Did Not Come In          | Doe, Dr. John     | fax    | 05/23/2011 |
-      | LASTNAME R, TEST | SOAP to MD and Pt                          | 4 Contacts        | paper  | 05/24/2011 |
-      | ,                | TY MD Referral Pt Not Candidate            | 2 Contacts        | paper  | 05/28/2011 |
-      | ,                | TY MD Referral Pt Did Not Accept Treatment | FAIL-FAX, Dr. Joe | fax    | 06/17/2011 |
-      | ,                | Progress Note to MD and Pt Non Compliance  | 3 Contacts        | paper  | 06/18/2011 |
-      | ,                | To Pt Did Not Accept Treatment             | 3 Contacts        | paper  | 06/22/2011 |
-      | ,                | Intro Ltr To DSS Pt of Record              | No Contacts       | paper  | 06/28/2011 |
-      | ,                | Intro Ltr To DSS Pt of Record              | No Contacts       | paper  | 06/28/2011 |
-      | ,                | Progress Note to MD and Pt Non Compliance  | 3 Contacts        | paper  | 06/28/2011 |
-      | LASTNAME R, TEST | Welcome Ltr EMail                          | 2 Contacts        | paper  | 07/05/2011 |
+      | name             | correspondence                              | to                | method | date       |
+      | LASTNAME R, TEST | TY MD Referral Pt Did Not Come In           | Doe, Dr. John     | fax    | 05/23/2011 |
+      | LASTNAME R, TEST | SOAP to MD and Pt                           | 4 Contacts        | paper  | 05/24/2011 |
+      | ,                | TY MD Referral Pt Not Candidate             | 2 Contacts        | paper  | 05/28/2011 |
+      | ,                | TY MD Referral Pt Did Not Accept Treatment  | FAIL-FAX, Dr. Joe | fax    | 06/17/2011 |
+      | ,                | Progress Note to MD and Pt Non Compliance   | 3 Contacts        | paper  | 06/18/2011 |
+      | ,                | To Pt Did Not Accept Treatment              | 3 Contacts        | paper  | 06/22/2011 |
+      | ,                | Intro Ltr To DSS Pt of Record               | No Contacts       | paper  | 06/28/2011 |
+      | ,                | Intro Ltr To DSS Pt of Record               | No Contacts       | paper  | 06/28/2011 |
+      | ,                | Progress Note to MD and Pt Non Compliance   | 3 Contacts        | paper  | 06/28/2011 |
+      | LASTNAME R, TEST | Cover Ltr for Sleep Screening Questionnaire | 2 Contacts        | paper  | 07/05/2011 |
     When I click on letter number "10" in the list
-    Then I see that the letter contains "3" pages
+    Then I see that the letter contains "2" pages
     And I see "Edit Letter" button above page "1" of letter
     When I click button with text "Edit Letter" above page "1" of letter
     Then I see that page "1" of letter displays MCE editor

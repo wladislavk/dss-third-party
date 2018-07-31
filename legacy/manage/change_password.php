@@ -4,12 +4,12 @@ namespace Ds3\Libraries\Legacy;
 include 'admin/includes/main_include.php';
 
 if($_SESSION['userid'] == '') {
-?>
+    ?>
     <script type="text/javascript">
         alert("Members Area, Please Login");
         window.close();
     </script>
-<?php
+    <?php
     trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -20,22 +20,22 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
 
     if($db->getNumberRows($chk_sql) == 0) {
         $msg="Incorrect Old Password, Please Try Again.";
-?>
+        ?>
         <script type="text/javascript">
             window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
         </script>
-<?php
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     } else {
         $up_sql = "update dental_users set password='".$db->escape( $_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
 
         $db->query($up_sql);
         $msg = "Password Changed Successfully.";
-?>
+        ?>
         <script type="text/javascript">
             window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
         </script>
-<?php
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
 }
@@ -90,7 +90,7 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
             </td>
         </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <span class="red">
                     * Required Fields
                 </span><br />
@@ -99,7 +99,7 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
             </td>
         </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td colspan="2" align="center">
                 <a href="Javascript: window.close();"><b>CLOSE WINDOW</b></a>
             </td>
         </tr>

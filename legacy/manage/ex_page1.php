@@ -145,7 +145,6 @@ if ($patient_info) {
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
     $pat_myarray = $db->getRow($pat_sql);
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if ($pat_myarray['patientid'] == '') { ?>
         <script type="text/javascript">
             window.location = 'manage_patient.php';

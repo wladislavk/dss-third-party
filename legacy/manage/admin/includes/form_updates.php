@@ -35,114 +35,111 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice = fals
     $html = '
 
 <html>
-    <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 14 (filtered)">
-        <style>
-            <!--
-                /* Font Definitions */
-                @font-face
-                {font-family:Calibri;
-                panose-1:2 15 5 2 2 2 4 3 2 4;}
-                @font-face
-                {font-family:Tahoma;
-                panose-1:2 11 6 4 3 5 4 4 2 4;}
-                /* Style Definitions */
-                p.MsoNormal, li.MsoNormal, div.MsoNormal
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:12.0pt;
-                font-family:"Times New Roman","serif";}
-                p.MsoHeader, li.MsoHeader, div.MsoHeader
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:12.0pt;
-                font-family:"Times New Roman","serif";}
-                p.MsoFooter, li.MsoFooter, div.MsoFooter
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:12.0pt;
-                font-family:"Times New Roman","serif";}
-                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-                {margin:0in;
-                margin-bottom:.0001pt;
-                text-autospace:ideograph-other;
-                font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";}
-                span.HeaderChar
-                {mso-style-name:"Header Char";}
-                span.FooterChar
-                {mso-style-name:"Footer Char";}
-                .MsoChpDefault
-                {font-size:10.0pt;}
-                .MsoPapDefault
-                {text-autospace:ideograph-other;}
-                /* Page Definitions */
-                @page WordSection1
-                {size:8.5in 11.0in;
-                margin:.4in .6in .3in .6in;}
-                div.WordSection1
-                {page:WordSection1;}
-                -->
-        </style>
-    </head>
-    <body lang=EN-US>
-        <div class=WordSection1>
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE AND SECONDARY FINANCIAL
-                            AGREEMENT</span></b>
-                        </h2>
-                        <h3 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>Non-Participating Provider</span></b>
-                        </h3>
-                    </td>
-                </tr>
-            </table>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
-                charges a customary fee for Dental Sleep Therapy (DST) of $' . $r['amount'] . ', which is our standard billable amount to Medicare.  Due to your financial status, we have agreed that your cost for treatment will be no more than $___________ out of pocket.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>We are a non-participating Medicare provider and if you have Secondary Insurance, it is possible that our office is out of network for your Secondary Insurance provider. Due to our provider status all insurance reimbursements (Medicare and Secondary Insurance) will be sent directly to you.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our normal policy to collect the full cost of Dental Sleep Therapy by the delivery of your device.  We have agreed to the following payment arrangements as outlined below:</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
-            </p>            
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments go directly to you we request that you forward us your Explanation of Benefits (EOB) from your insurance carrier once your EOB and check(s) are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB and payments to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If Medicare and your Secondary Insurance do not reimburse any amount, you agree to pay this office $______________ (max out of pocket) for treatment.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
-                this agreement you agree to pay for services rendered at our office as outlined above.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>            
-            <p style="width:100%; text-align:right;">
-                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
-                Solutions</small></span>
-            </p>
-        </div>
-    </body>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+    <meta name=Generator content="Microsoft Word 14 (filtered)">
+    <style>
+            /* Font Definitions */
+            @font-face
+            {font-family:Calibri;
+            panose-1:2 15 5 2 2 2 4 3 2 4;}
+            @font-face
+            {font-family:Tahoma;
+            panose-1:2 11 6 4 3 5 4 4 2 4;}
+            /* Style Definitions */
+            p.MsoNormal, li.MsoNormal, div.MsoNormal
+            {margin:0in;
+            margin-bottom:.0001pt;
+            text-autospace:ideograph-other;
+            font-size:12.0pt;
+            font-family:"Times New Roman","serif";}
+            p.MsoHeader, li.MsoHeader, div.MsoHeader
+            {margin:0in;
+            margin-bottom:.0001pt;
+            text-autospace:ideograph-other;
+            font-size:12.0pt;
+            font-family:"Times New Roman","serif";}
+            p.MsoFooter, li.MsoFooter, div.MsoFooter
+            {margin:0in;
+            margin-bottom:.0001pt;
+            text-autospace:ideograph-other;
+            font-size:12.0pt;
+            font-family:"Times New Roman","serif";}
+            p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+            {margin:0in;
+            margin-bottom:.0001pt;
+            text-autospace:ideograph-other;
+            font-size:8.0pt;
+            font-family:"Tahoma","sans-serif";}
+            span.HeaderChar
+            {mso-style-name:"Header Char";}
+            span.FooterChar
+            {mso-style-name:"Footer Char";}
+            .MsoChpDefault
+            {font-size:10.0pt;}
+            .MsoPapDefault
+            {text-autospace:ideograph-other;}
+            /* Page Definitions */
+            @page WordSection1
+            {size:8.5in 11.0in;
+            margin:.4in .6in .3in .6in;}
+            div.WordSection1
+            {page:WordSection1;}
+    </style>
+</head>
+<body lang=EN-US>
+<div class=WordSection1>
+    <table>
+        <tr>
+            <td width="30%">' . $logo . '</td>
+            <td width="70%">
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE AND SECONDARY FINANCIAL
+                    AGREEMENT</span></b>
+                </h2>
+                <h3 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>Non-Participating Provider</span></b>
+                </h3>
+            </td>
+        </tr>
+    </table>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
+        charges a customary fee for Dental Sleep Therapy (DST) of $' . $r['amount'] . ', which is our standard billable amount to Medicare.  Due to your financial status, we have agreed that your cost for treatment will be no more than $___________ out of pocket.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>We are a non-participating Medicare provider and if you have Secondary Insurance, it is possible that our office is out of network for your Secondary Insurance provider. Due to our provider status all insurance reimbursements (Medicare and Secondary Insurance) will be sent directly to you.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our normal policy to collect the full cost of Dental Sleep Therapy by the delivery of your device.  We have agreed to the following payment arrangements as outlined below:</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
+    </p>            
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments go directly to you we request that you forward us your Explanation of Benefits (EOB) from your insurance carrier once your EOB and check(s) are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB and payments to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If Medicare and your Secondary Insurance do not reimburse any amount, you agree to pay this office $______________ (max out of pocket) for treatment.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
+        this agreement you agree to pay for services rendered at our office as outlined above.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>            
+    <p style="width:100%; text-align:right;">
+        <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+        Solutions</small></span>
+    </p>
+</div>
+</body>
 </html>
-
 ';
 
     $title = "Financial Agreement Medicare Non-Participating";
@@ -4462,172 +4459,166 @@ function update_patient_questionnaire_form($id, $locid = null, $backoffice = fal
 
     $html = '
 <html>
-    <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 14 (filtered)">
-        <style>
-            <!--
-                /* Font Definitions */
-                @font-face
-                       {font-family:Wingdings;
-                       panose-1:5 0 0 0 0 0 0 0 0 0;}
-                @font-face
-                       {font-family:Wingdings;
-                       panose-1:5 0 0 0 0 0 0 0 0 0;}
-                @font-face
-                       {font-family:Calibri;
-                       panose-1:2 15 5 2 2 2 4 3 2 4;}
-                @font-face
-                       {font-family:Tahoma;
-                       panose-1:2 11 6 4 3 5 4 4 2 4;}
-                @font-face
-                       {font-family:"Adobe Garamond Pro";
-                       panose-1:2 2 5 2 6 5 6 2 4 3;}
-                @font-face
-                       {font-family:Webdings;
-                       panose-1:5 3 1 2 1 5 9 6 7 3;}
-                /* Style Definitions */
-                p.MsoNormal, li.MsoNormal, div.MsoNormal
-                       {margin-top:0in;
-                       margin-right:0in;
-                       margin-bottom:0in;
-                       margin-left:0in;
-                       line-height:115%;
-                       text-autospace:ideograph-other;
-                       font-size:11.0pt;
-                       font-family:"Calibri","sans-serif";}
-                p.MsoHeader, li.MsoHeader, div.MsoHeader
-                       {margin:0in;
-                       margin-bottom:.0001pt;
-                       text-autospace:ideograph-other;
-                       font-size:11.0pt;
-                       font-family:"Calibri","sans-serif";}
-                p.MsoFooter, li.MsoFooter, div.MsoFooter
-                       {margin:0in;
-                       margin-bottom:.0001pt;
-                       text-autospace:ideograph-other;
-                       font-size:11.0pt;
-                       font-family:"Calibri","sans-serif";}
-                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-                       {margin:0in;
-                       margin-bottom:.0001pt;
-                       text-autospace:ideograph-other;
-                       font-size:8.0pt;
-                       font-family:"Tahoma","sans-serif";}
-                p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-                       {margin-top:0in;
-                       margin-right:0in;
-                       margin-bottom:10.0pt;
-                       margin-left:.5in;
-                       line-height:115%;
-                       text-autospace:ideograph-other;
-                       font-size:11.0pt;
-                       font-family:"Calibri","sans-serif";}
-                span.HeaderChar
-                       {mso-style-name:"Header Char";}
-                span.FooterChar
-                       {mso-style-name:"Footer Char";}
-                span.BalloonTextChar
-                       {mso-style-name:"Balloon Text Char";
-                       font-family:"Tahoma","sans-serif";}
-                .MsoChpDefault
-                       {font-family:"Calibri","sans-serif";}
-                .MsoPapDefault
-                       {margin-bottom:10.0pt;
-                       line-height:115%;
-                       text-autospace:ideograph-other;}
-                /* Page Definitions */
-                @page WordSection1
-                       {size:8.5in 11.0in;
-                       border:solid black 1.0pt;
-                }
-                div.WordSection1
-                       {page:WordSection1;}
-                @page WordSection2
-                       {size:8.5in 11.0in;
-                       border:solid black 1.0pt;
-                }
-                div.WordSection2
-                       {page:WordSection2;}
-                @page WordSection3
-                       {size:8.5in 11.0in;
-                       margin:.4in .5in .4in .5in;
-                       border:solid black 1.0pt;
-                       padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection3
-                       {page:WordSection3;}
-                @page WordSection4
-                       {size:8.5in 11.0in;
-                       margin:.4in .5in .4in .5in;
-                       border:solid black 1.0pt;
-                       padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection4
-                       {page:WordSection4;}
-                @page WordSection5
-                       {size:8.5in 11.0in;
-                       margin:.4in .5in .4in .5in;
-                       border:solid black 1.0pt;
-                       padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-                div.WordSection5
-                       {page:WordSection5;}
-                /* List Definitions */
-                ol
-                       {margin-bottom:0in;}
-                ul
-                       {margin-bottom:0in;}
-                -->
-        </style>
-    </head>
-    <body lang=EN-US>
-        <div class=WordSection1>
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                            Patient Questionnaire</span></b>
-                        </h2>
-                    </td>
-                </tr>
-            </table>
-            <img width=780 height=950
-                src="/manage/images/patient_questionnaire_files/questionnaire_pg1.gif" align=left
-                hspace=12>
-        </div>
-        <br pagebreak="true" />
-        <br />
-        <table>
-            <tr>
-                <td width="30%">' . $logo . '</td>
-                <td width="70%">
-                    <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                        style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                        Patient Questionnaire</span></b>
-                    </h2>
-                </td>
-            </tr>
-        </table>
-        <img width=780 height=950
-            src="/manage/images/patient_questionnaire_files/questionnaire_pg2.gif" align=left
-            hspace=12>
-        <br pagebreak="true" />
-        <br />
-        <table>
-            <tr>
-                <td width="30%">' . $logo . '</td>
-                <td width="70%">
-                    <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                        style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
-                        Patient Questionnaire</span></b>
-                    </h2>
-                </td>
-            </tr>
-        </table>
-        <img width=780 height=950
-            src="/manage/images/patient_questionnaire_files/questionnaire_pg3.gif" align=left
-            hspace=12>
-    </body>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+    <meta name=Generator content="Microsoft Word 14 (filtered)">
+    <style>
+        /* Font Definitions */
+        @font-face {
+            font-family:Wingdings;
+            panose-1:5 0 0 0 0 0 0 0 0 0;
+        }
+        @font-face {
+            font-family:Wingdings;
+            panose-1:5 0 0 0 0 0 0 0 0 0;
+        }
+        @font-face
+               {font-family:Calibri;
+               panose-1:2 15 5 2 2 2 4 3 2 4;}
+        @font-face
+               {font-family:Tahoma;
+               panose-1:2 11 6 4 3 5 4 4 2 4;}
+            @font-face
+                   {font-family:"Adobe Garamond Pro";
+                   panose-1:2 2 5 2 6 5 6 2 4 3;}
+            @font-face
+                   {font-family:Webdings;
+                   panose-1:5 3 1 2 1 5 9 6 7 3;}
+            /* Style Definitions */
+            p.MsoNormal, li.MsoNormal, div.MsoNormal
+                   {margin:0;
+                   line-height:115%;
+                   text-autospace:ideograph-other;
+                   font-size:11.0pt;
+                   font-family:"Calibri","sans-serif";}
+            p.MsoHeader, li.MsoHeader, div.MsoHeader
+                   {margin:0;
+                   margin-bottom:.0001pt;
+                   text-autospace:ideograph-other;
+                   font-size:11.0pt;
+                   font-family:"Calibri","sans-serif";}
+            p.MsoFooter, li.MsoFooter, div.MsoFooter
+                   {margin:0;
+                   margin-bottom:.0001pt;
+                   text-autospace:ideograph-other;
+                   font-size:11.0pt;
+                   font-family:"Calibri","sans-serif";}
+            p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                   {margin:0;
+                   margin-bottom:.0001pt;
+                   text-autospace:ideograph-other;
+                   font-size:8.0pt;
+                   font-family:"Tahoma","sans-serif";}
+            p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph {
+                    margin: 0in 0in 10.0pt .5in;
+                   line-height:115%;
+                   text-autospace:ideograph-other;
+                   font-size:11.0pt;
+                   font-family:"Calibri","sans-serif";}
+            span.HeaderChar
+                   {mso-style-name:"Header Char";}
+            span.FooterChar
+                   {mso-style-name:"Footer Char";}
+            span.BalloonTextChar
+                   {mso-style-name:"Balloon Text Char";
+                   font-family:"Tahoma","sans-serif";}
+            .MsoChpDefault
+                   {font-family:"Calibri","sans-serif";}
+            .MsoPapDefault
+                   {margin-bottom:10.0pt;
+                   line-height:115%;
+                   text-autospace:ideograph-other;}
+            /* Page Definitions */
+            @page WordSection1
+                   {size:8.5in 11.0in;
+                   border:solid black 1.0pt;
+            }
+            div.WordSection1
+                   {page:WordSection1;}
+            @page WordSection2
+                   {size:8.5in 11.0in;
+                   border:solid black 1.0pt;
+            }
+            div.WordSection2
+                   {page:WordSection2;}
+            @page WordSection3
+                   {size:8.5in 11.0in;
+                   margin:.4in .5in .4in .5in;
+                   border:solid black 1.0pt;
+                   padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+            div.WordSection3
+                   {page:WordSection3;}
+            @page WordSection4
+                   {size:8.5in 11.0in;
+                   margin:.4in .5in .4in .5in;
+                   border:solid black 1.0pt;
+                   padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+            div.WordSection4
+                   {page:WordSection4;}
+            @page WordSection5
+                   {size:8.5in 11.0in;
+                   margin:.4in .5in .4in .5in;
+                   border:solid black 1.0pt;
+                   padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+            div.WordSection5
+                   {page:WordSection5;}
+        /* List Definitions */
+        ol {
+            margin-bottom:0;
+        }
+        ul {
+            margin-bottom:0;
+        }
+    </style>
+</head>
+<body lang=EN-US>
+<div class=WordSection1>
+    <table>
+        <tr>
+            <td width="30%">' . $logo . '</td>
+            <td width="70%">
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
+                    Patient Questionnaire</span></b>
+                </h2>
+            </td>
+        </tr>
+    </table>
+    <img width=780 height=950
+        src="/manage/images/patient_questionnaire_files/questionnaire_pg1.gif" align=left
+        hspace=12>
+</div>
+<br pagebreak="true" />
+<br />
+<table>
+    <tr>
+        <td width="30%">' . $logo . '</td>
+        <td width="70%">
+            <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
+                Patient Questionnaire</span></b>
+            </h2>
+        </td>
+    </tr>
+</table>
+<img width=780 height=950
+    src="/manage/images/patient_questionnaire_files/questionnaire_pg2.gif" align=left
+    hspace=12>
+<br pagebreak="true" />
+<br />
+<table>
+    <tr>
+        <td width="30%">' . $logo . '</td>
+        <td width="70%">
+            <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>' . $practice . '
+                Patient Questionnaire</span></b>
+            </h2>
+        </td>
+    </tr>
+</table>
+<img width=780 height=950 src="/manage/images/patient_questionnaire_files/questionnaire_pg3.gif" align=left hspace=12>
+</body>
 </html>
 ';
 
@@ -4656,6 +4647,7 @@ function update_patient_questionnaire_form($id, $locid = null, $backoffice = fal
 function update_proof_of_delivery_form($id, $locid = null, $backoffice = false)
 {
     $con = $GLOBALS['con'];
+    $db = new Db();
 
     $logo = get_logo($id, $backoffice);
     $l_sql = "SELECT logo, user_type FROM dental_users where userid=" . $db->escape( $id);
@@ -5051,10 +5043,10 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
     $pdf->writeHTML($html, true, false, true, false, '');
     //Close and output PDF document
     if ($backoffice) {
-        $pdf->Output('../../../../shared/q_file/' . $filename, 'F');
+        $pdf->Output(realpath('../../../../shared/q_file/' . $filename), 'F');
         @chmod('../../../../shared/q_file/' . $filename, 0777);
     } else {
-        $pdf->Output('../../../shared/q_file/' . $filename, 'F');
+        $pdf->Output(realpath('../../../shared/q_file/' . $filename), 'F');
         @chmod('../../../shared/q_file/' . $filename, 0777);
     }
 }

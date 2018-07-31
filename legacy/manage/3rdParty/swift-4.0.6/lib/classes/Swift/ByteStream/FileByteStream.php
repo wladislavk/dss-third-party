@@ -77,15 +77,7 @@ class Swift_ByteStream_FileByteStream
     $fp = $this->_getReadHandle();
     if (!feof($fp))
     {
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(0);
-      }
       $bytes = fread($fp, $length);
-      if ($this->_quotes)
-      {
-        set_magic_quotes_runtime(1);
-      }
       $this->_offset = ftell($fp);
       return $bytes;
     }

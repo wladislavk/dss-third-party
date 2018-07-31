@@ -11,18 +11,12 @@ $apiToken = apiToken();
 
 $db = new Db();
 
-$sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
+$sql = "SELECT manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . $db->escape($_SESSION['docid']) . "'";
 $r = $db->getRow($sql);
 
 $manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . $db->escape( $_SESSION['userid']) . "'";
 $manageStaff = $db->getRow($manageStaffSql);
-
-if ($r['homepage'] != '1'): ?>
-    <script type="text/javascript">
-        window.location = 'index2.php';
-    </script>
-    <?php
-endif ?>
+?>
 
 <table>
     <tr>

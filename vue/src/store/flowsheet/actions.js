@@ -7,13 +7,10 @@ import { APPOINTMENT_SUMMARY_SEGMENTS } from 'src/constants/chart'
 
 export default {
   [symbols.actions.appointmentSummariesByPatient] ({ rootState, commit, dispatch }, patientId) {
-    commit(symbols.mutations.clearAppointmentSummary)
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.appointmentSummaries.byPatient + '/' + patientId).then((response) => {
       const data = response.data.data
-      for (let element of data) {
-        commit(symbols.mutations.getAppointmentSummary, element)
-      }
+      commit(symbols.mutations.getAppointmentSummary, data)
       dispatch(symbols.actions.lettersByPatientAndInfo, patientId)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'appointmentSummariesByPatient', response: response})

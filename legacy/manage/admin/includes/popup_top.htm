@@ -1,5 +1,7 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
+session_write_close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -42,6 +44,7 @@ namespace Ds3\Libraries\Legacy;
     <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js?v=20160719"></script>
     <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             Metronic.init(); // init metronic core components

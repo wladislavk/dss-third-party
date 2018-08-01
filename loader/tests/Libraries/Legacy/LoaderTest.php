@@ -1,9 +1,15 @@
 <?php
+namespace Tests\Libraries\Legacy;
 
 use Ds3\Libraries\Legacy\Loader;
+use Illuminate\Http\RedirectResponse;
+use Tests\TestCase;
 
-class LoaderTest extends TestCase {
+class LoaderTest extends TestCase
+{
+    /** @var Loader */
     private $loader;
+
     private $legacyPath;
 
     public function setUp()
@@ -20,7 +26,7 @@ class LoaderTest extends TestCase {
 
     public function testSetInvalidLegacyPath()
     {
-        $this->setExpectedException('Ds3\Libraries\Legacy\LoaderException');
+        $this->expectException(\Ds3\Libraries\Legacy\LoaderException::class);
         $this->loader->setLegacyPath('/this/folder/does/not/exist');
     }
 
@@ -200,8 +206,9 @@ class LoaderTest extends TestCase {
 
     public function testLoadWithRedirect()
     {
+        /** @var RedirectResponse $response */
         $response = $this->loader->load('redirect-with-javascript.php');
-        $this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('/redirected.php', $response->getTargetUrl());
 
         // header() cannot be unit tested
@@ -212,7 +219,7 @@ class LoaderTest extends TestCase {
         $this->loader->setLegacyPath(__DIR__);
 
         $response = $this->loader->load('legacy-loader/redirect-with-javascript.php');
-        $this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('/legacy-loader/redirected.php', $response->getTargetUrl());
 
         // header() cannot be unit tested

@@ -22,7 +22,9 @@
     "require-dev": {
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~6.5",
-        "phpspec/phpspec": "~2.1"
+        "phpspec/phpspec": "~2.1",
+        "barryvdh/laravel-ide-helper": "^2.3",
+        "laravel/browser-kit-testing": "~3.0"
     },
     "autoload": {
         "classmap": [
@@ -30,13 +32,7 @@
         ],
         "psr-4": {
             "Ds3\\": "app/",
-            "Ds3\\Admin\\Contracts\\"    : "app/Contracts",
-            "Ds3\\Admin\\Repositories\\" : "app/Repositories",
-            "Ds3\\Auth\\"                : "app/Http/Controller/Auth",
-            "Ds3\\Ds3Auth\\"             : "app/Http/Controller/Ds3Auth",
-            "Ds3\\Contracts\\"           : "app/Http/Controllers/Contracts",
-            "Ds3\\Repositories\\"        : "app/Http/Controllers/Repositories"
-
+            "Tests\\": "tests/"
         }
     },
     "autoload-dev": {

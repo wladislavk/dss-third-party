@@ -13,6 +13,7 @@ class ExternalPatientSyncManager
     const MODEL_DIRTY_KEY = 'dirty';
 
     const NON_NULLABLE_PATIENT_FIELDS = [
+        'dob',
         'member_no',
         'group_no',
         'plan_no',
@@ -118,6 +119,11 @@ class ExternalPatientSyncManager
             return $externalPatient;
         }
 
+        foreach (self::NON_NULLABLE_PATIENT_FIELDS as $field) {
+            if (array_key_exists($field, $externalPatientData) && is_null($externalPatientData[$field])) {
+                $externalPatientData[$field] = '';
+            }
+        }
         $externalPatient = $this->repository->create($externalPatientData);
         $externalPatient->update($patientData);
         return $externalPatient;

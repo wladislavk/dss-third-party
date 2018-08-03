@@ -86,10 +86,10 @@ Feature: Patient Summary
     And I see "Pending Letters" letter table
     And "Pending Letters" letter table contains data:
       | Correspondence                  | Sent To     | Generated On |
-      | Intro Ltr to MD from Franchisee | No Contacts | 04/25/2011   |
-      | Intro Ltr To MD from DSSFLLC    | No Contacts | 04/25/2011   |
       | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
-      | To Pt Did Not Accept Treatment  | No Contacts | 04/25/2011   |
+      | Intro Ltr To MD from DSSFLLC    | No Contacts | 04/25/2011   |
+      | Intro Ltr to MD from Franchisee | No Contacts | 04/25/2011   |
+      | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
       | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
       | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |
       | TY MD Referral Pt Not Candidate | No Contacts | 04/25/2011   |

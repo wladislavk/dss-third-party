@@ -6,6 +6,8 @@ include_once 'includes/sescheck.php';
 include_once '../includes/constants.inc';
 include_once 'includes/access.php';
 
+session_write_close();
+
 $db = new Db();
 
 if (is_super($_SESSION['admin_access'])) {

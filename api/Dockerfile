@@ -46,8 +46,12 @@ RUN set -xe \
         php7.2-pdo \
         php7.2-tidy \
         php7.2-xml \
+        php7.2-xdebug \
         libapache2-mod-php7.2 \
     && apt-get -y upgrade \
+    # Disable Xdebug
+    && rm /etc/php/7.2/apache2/conf.d/20-xdebug.ini \
+    && rm /etc/php/7.2/cli/conf.d/20-xdebug.ini \
     # PDFtk
     && curl -sSLo pdftk-2.02-1.el6.x86_64.rpm https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm \
     && alien pdftk-2.02-1.el6.x86_64.rpm \
@@ -59,19 +63,11 @@ RUN set -xe \
 # PHPUnit
 RUN set -xe \
     && mkdir -p /opt/tmp && cd /opt/tmp \
-    # Get keys Sebastian Bergmann <sb@sebastian-bergmann.de> GPG key to validate signature
-    # Fallback servers in case one of them is down
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys D8406D0D82947747293778314AA394086372C20A \
-    #  || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
-    #  || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) \
-    && gpg --fingerprint D8406D0D82947747293778314AA394086372C20A \
     # Download phpunit and its signature
     && export PHPUNIT_VERSION=6.5 \
     && curl -sSLo phpunit.phar https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar \
     && curl -sSLo phpunit.phar.asc https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar.asc \
     && ls -la \
-    # Validate
-    && gpg --verify phpunit.phar.asc phpunit.phar \
     # Install and cleanup
     && mv phpunit.phar /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit \
     && rm -rf /opt/tmp

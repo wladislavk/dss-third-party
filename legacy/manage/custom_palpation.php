@@ -25,11 +25,11 @@ if(!empty($_REQUEST["delid"])) {
 
     $db->query($del_sql);
     $msg = "Deleted Successfully";
-?>
+    ?>
     <script type="text/javascript">
         window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
     </script>
-<?php
+    <?php
     trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -114,49 +114,47 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
                 Action
             </td>
         </tr>
-    <?php if($num_users == 0) { ?>
-        <tr class="tr_bg">
-            <td valign="top" class="col_head" colspan="10" align="center">
-                No Records
-            </td>
-        </tr>
+        <?php if($num_users == 0) { ?>
+            <tr class="tr_bg">
+                <td valign="top" class="col_head" colspan="10" align="center">
+                    No Records
+                </td>
+            </tr>
         <?php } else {
-                    foreach ($my as $myarray) {
-                        if($myarray["status"] == 1) {
-                            $tr_class = "tr_active";
-                        } else {
-                            $tr_class = "tr_inactive";
-                        }
-            ?>
-                    <tr class="<?php echo $tr_class;?>">
-                        <td valign="top">
-                            <?php echo st($myarray["palpation"]);?>
-                        </td>
-                        <td valign="top" align="center">
-                            <input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
-                        </td>
-                        <td valign="top">
-                            <a href="Javascript:;"  onclick="loadPopup('add_palpation.php?ed=<?php echo $myarray["palpationid"];?>');" class="editlink" title="EDIT">
-                                Edit
-                            </a>
-                            <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["palpationid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-        <?php
+            foreach ($my as $myarray) {
+                if($myarray["status"] == 1) {
+                    $tr_class = "tr_active";
+                } else {
+                    $tr_class = "tr_inactive";
                 }
-        ?>
-                <tr>
-                    <td valign="top" class="col_head" colspan="1">&nbsp;</td>
-                    <td valign="top" class="col_head" colspan="4">
-                        <input type="hidden" name="sortsub" value="1" />
-                        <input type="submit" value=" Change " class="button" />
+                ?>
+                <tr class="<?php echo $tr_class;?>">
+                    <td valign="top">
+                        <?php echo st($myarray["palpation"]);?>
+                    </td>
+                    <td valign="top" align="center">
+                        <input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+                    </td>
+                    <td valign="top">
+                        <a href="Javascript:;"  onclick="loadPopup('add_palpation.php?ed=<?php echo $myarray["palpationid"];?>');" class="editlink" title="EDIT">
+                            Edit
+                        </a>
+                        <a href="<?php echo $_SERVER['PHP_SELF']?>?delid=<?php echo $myarray["palpationid"];?>" onclick="return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                            Delete
+                        </a>
                     </td>
                 </tr>
-        <?php
-            }
-        ?>
+                <?php
+            } ?>
+            <tr>
+                <td valign="top" class="col_head" colspan="1">&nbsp;</td>
+                <td valign="top" class="col_head" colspan="4">
+                    <input type="hidden" name="sortsub" value="1" />
+                    <input type="submit" value=" Change " class="button" />
+                </td>
+            </tr>
+            <?php
+        } ?>
     </table>
 </form>
 

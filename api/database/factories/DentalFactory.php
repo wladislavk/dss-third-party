@@ -814,7 +814,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, functi
         'claim_margin_top'        => $faker->randomDigit,
         'claim_margin_left'       => $faker->randomDigit,
         'logo'                    => $faker->regexify('user_logo_[0-9]+\.(gif|png|bmp|jpg|jpeg)'),
-        'homepage'                => $faker->boolean,
         'use_letter_header'       => $faker->boolean,
         'access_code_id'          => $faker->randomDigit,
         'first_name'              => $faker->firstNameMale,
@@ -2345,19 +2344,19 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Login::class, funct
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Note::class, function (\Faker\Generator $faker) {
     return [
-        'patientid'       => $faker->randomDigit,
+        'patientid'       => 0,
         'notes'           => $faker->sentence($nbWords = 5),
         'edited'          => $faker->boolean,
         'editor_initials' => $faker->word,
-        'userid'          => $faker->randomDigit,
-        'docid'           => $faker->randomDigit,
-        'status'          => $faker->randomDigit,
-        'adddate'         => $faker->dateTime,
-        'procedure_date'  => Carbon::now()->format('Y-m-d'),
+        'userid'          => 0,
+        'docid'           => 0,
+        'status'          => 0,
+        'adddate'         => null,
+        'procedure_date'  => '',
         'ip_address'      => $faker->ipv4,
-        'signed_id'       => $faker->randomDigit,
-        'signed_on'       => $faker->dateTime,
-        'parentid'        => $faker->randomDigit,
+        'signed_id'       => 0,
+        'signed_on'       => null,
+        'parentid'        => 0,
     ];
 });
 

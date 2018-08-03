@@ -41,14 +41,9 @@ describe('Flowsheet module actions', () => {
         expect(this.testCase.getResults()).toEqual({
           http: this.expectedHttp,
           mutations: [
-            this.clearSummaryMutation,
             {
               type: symbols.mutations.getAppointmentSummary,
-              payload: firstItem
-            },
-            {
-              type: symbols.mutations.getAppointmentSummary,
-              payload: secondItem
+              payload: response
             }
           ],
           actions: [
@@ -69,9 +64,7 @@ describe('Flowsheet module actions', () => {
       this.testCase.wait(() => {
         expect(this.testCase.getResults()).toEqual({
           http: this.expectedHttp,
-          mutations: [
-            this.clearSummaryMutation
-          ],
+          mutations: [],
           actions: [
             this.testCase.getErrorHandler('appointmentSummariesByPatient')
           ]

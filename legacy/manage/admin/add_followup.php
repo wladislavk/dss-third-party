@@ -9,7 +9,7 @@ include("includes/sescheck.php");
 $db = new Db();
 
 if($_POST["mult_followupsub"] == 1) {
-    $op_arr = split("\n",trim($_POST['followup']));
+    $op_arr = explode("\n",trim($_POST['followup']));
 
     foreach($op_arr as $i=>$val) {
         if($val != '') {

@@ -16,6 +16,21 @@ class NotesController extends BaseRestController
     /** @var string */
     protected $filterByDoctorKey = 'docid';
 
+    /** @var string */
+    protected $filterByPatientKey = 'patientid';
+
+    /** @var string */
+    protected $updatedByUserKey = 'userid';
+
+    /** @var string */
+    protected $doctorKey = 'docid';
+
+    /** @var string */
+    protected $userKey = 'userid';
+
+    /** @var string */
+    protected $patientKey = 'patientid';
+
     /**
      * @SWG\Get(
      *     path="/notes",

@@ -329,7 +329,7 @@ if (mysqli_num_rows($patient_q) == 0) {
 
                         $epworthid = st($myarray['epworthid']);
                         if ($epworthid != '') {
-                            $epworth_arr1 = split('~',$epworthid);
+                            $epworth_arr1 = explode('~',$epworthid);
                             foreach ($epworth_arr1 as $i => $val) {
                                 $epworth_arr2 = explode('|', $val);
                                 $epid[$i] = $epworth_arr2[0];

@@ -56,7 +56,7 @@ if ($isBackOffice) {
 
 if (isset($_POST['partial_name'])) {
     $partial = $_POST['partial_name'];
-    $partial = ereg_replace("[^ A-Za-z'\-]", "", $partial);
+    $partial = preg_replace("/[^ A-Za-z'\-]/", "", $partial);
     $partial = s_for($partial);
 }
 

@@ -310,6 +310,7 @@ if($themyarray["userid"] != '') {
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr>
             <td valign="top" class="frmhead">
                 Dentist/Producer <div id="dp_info" class="info_but"></div>
                 <div id="dp_info_modal" class="info_modal" title="Dentist/Producer explanation">
@@ -328,7 +329,7 @@ if($themyarray["userid"] != '') {
                 <input type="checkbox" <?php echo ($producer_files == 1) ? 'checked="checked"' : ''; ?> value="1" id="producer_files" name="producer_files" />
             </td>
         </tr>
-        <tr class="files_field" bgcolor"#ffffff;">
+        <tr class="files_field" bgcolor="#ffffff">
             <td colspan="2">
                 Fields left blank below will default to the standard billing settings for your office.
             </td>

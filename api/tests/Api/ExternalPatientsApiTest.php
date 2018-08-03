@@ -7,6 +7,8 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Tests\TestCases\BaseApiTestCase;
 
 class ExternalPatientsApiTest extends BaseApiTestCase
@@ -35,7 +37,7 @@ class ExternalPatientsApiTest extends BaseApiTestCase
 
         $this->post($this->getRoute(), $data);
 
-        $this->assertResponseStatus(201);
+        $this->assertResponseStatus(Response::HTTP_CREATED);
         $this->seeJson([
             'redirect_url' => $url,
         ]);
@@ -50,10 +52,22 @@ class ExternalPatientsApiTest extends BaseApiTestCase
 
         $this->post($this->getRoute(), $data);
 
-        $this->assertResponseStatus(200);
+        $this->assertResponseStatus(Response::HTTP_OK);
         $this->seeJson([
             'redirect_url' => $url,
         ]);
+    }
+
+    public function testStoreWithNullValues()
+    {
+        /** @var ExternalPatient $externalPatient */
+        $externalPatient = $this->newModel();
+        $data = $this->transformer->transform($externalPatient);
+        $data = $this->nullAllFields($data);
+        $data['patient']['origin_record']['origin_software'] = $externalPatient->software;
+        $data['patient']['origin_record']['origin_patient_Id'] = $externalPatient->external_id;
+        $this->post($this->getRoute(), $data);
+        $this->assertResponseStatus(Response::HTTP_CREATED);
     }
 
     private function expectedUrl(ExternalPatient $externalPatient)
@@ -81,5 +95,19 @@ class ExternalPatientsApiTest extends BaseApiTestCase
         ]);
 
         return $externalPatient;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function nullAllFields(array $data)
+    {
+        $flatten = Arr::dot($data);
+        $data = [];
+        foreach (array_keys($flatten) as $key) {
+            Arr::set($data, $key, null);
+        }
+        return $data;
     }
 }

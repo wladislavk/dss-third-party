@@ -158,8 +158,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermission::clas
     $resourceGroup = factory(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class)->create();
     return [
         'group_id' => $resourceGroup->id,
-        'doc_id' => 0,
-        'patient_id' => 0,
+        'doc_id' => null,
+        'patient_id' => null,
     ];
 });
 
@@ -169,8 +169,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResour
         'group_id' => $resourceGroup->id,
         'slug' => $faker->slug,
         'route' => $faker->slug,
-        'created_by' => 0,
-        'updated_by' => 0,
+        'created_by' => null,
+        'updated_by' => null,
     ];
 });
 

@@ -1,10 +1,10 @@
 <?php
-namespace Tests\Api;
+namespace Tests\Validation;
 
 use Illuminate\Http\Response;
 use Tests\TestCases\BaseApiTestCase;
 
-class ValidationExceptionResponseTest extends BaseApiTestCase
+class ValidationExceptionTest extends BaseApiTestCase
 {
     public function testValidationException()
     {

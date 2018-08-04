@@ -44,11 +44,11 @@ class SummariesApiTest extends ApiTestCase
             "max_translation_from" => "omnis",
             "max_translation_to" => "nihil",
             "max_translation_equal" => "quia",
-            "initial_device_titration_1" => "49",
-            "initial_device_titration_equal_h" => "06",
-            "initial_device_titration_equal_v" => "46",
-            "optimum_echovision_ver" => "62",
-            "optimum_echovision_hor" => "33",
+            "initial_device_titration_1" => "-49",
+            "initial_device_titration_equal_h" => "+06",
+            "initial_device_titration_equal_v" => "-46",
+            "optimum_echovision_ver" => "+62",
+            "optimum_echovision_hor" => "-33",
             "type_device" => "itaque",
             "personal" => "ab",
             "lab_name" => "vero",
@@ -219,6 +219,11 @@ class SummariesApiTest extends ApiTestCase
     {
         return [
             'patient_name' => 'John Doe',
+            "initial_device_titration_1" => "+49",
+            "initial_device_titration_equal_h" => "-06",
+            "initial_device_titration_equal_v" => "+46",
+            "optimum_echovision_ver" => "-62",
+            "optimum_echovision_hor" => "+33",
         ];
     }
 

@@ -56,7 +56,7 @@ class ApiPermissionsApiTest extends ApiTestCase
         $data = [
             'group_id' => $model->id,
             'doc_id' => $this->userModel->userid,
-            'patient_id' => 0,
+            'patient_id' => null,
         ];
         return $data;
     }
@@ -75,7 +75,7 @@ class ApiPermissionsApiTest extends ApiTestCase
         $this->seeInDatabase($this->model->getTable(), [
             'group_id' => $storeData['group_id'],
             'doc_id' => $this->userModel->userid,
-            'patient_id' => 0,
+            'patient_id' => null,
         ]);
     }
 
@@ -111,7 +111,7 @@ class ApiPermissionsApiTest extends ApiTestCase
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(3, sizeof($this->getResponseData()));
-        $this->dontSeeJson(['doc_id' => 0]);
+        $this->dontSeeJson(['doc_id' => null]);
         $this->dontSeeJson(['patient_id' => $this->patientModel->patientid]);
         foreach ($this->userBasedGroups as $model) {
             $this->seeJson(['group_id' => $model->id]);
@@ -129,8 +129,8 @@ class ApiPermissionsApiTest extends ApiTestCase
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(3, sizeof($this->getResponseData()));
-        $this->dontSeeJson(['doc_id' => 0]);
-        $this->dontSeeJson(['patient_id' => 0]);
+        $this->dontSeeJson(['doc_id' => null]);
+        $this->dontSeeJson(['patient_id' => null]);
         foreach ($this->userBasedGroups as $model) {
             $this->dontSeeJson(['group_id' => $model->id]);
         }
@@ -141,11 +141,12 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     private function createPermissions()
     {
+
         foreach ($this->userBasedGroups as $model) {
             factory(ApiPermission::class)->create([
                 'group_id' => $model->id,
                 'doc_id' => $this->userModel->userid,
-                'patient_id' => 0,
+                'patient_id' => null,
             ]);
         }
         foreach ($this->patientBasedGroups as $model) {

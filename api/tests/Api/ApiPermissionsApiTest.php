@@ -10,23 +10,20 @@ use Tests\TestCases\ApiTestCase;
 
 class ApiPermissionsApiTest extends ApiTestCase
 {
-    /** @var User */
-    private $userModel;
-
-    /** @var Patient */
-    private $patientModel;
+    const USER_ID = 1;
+    const PATIENT_ID = 16;
 
     /** @var ApiPermissionResourceGroup */
-    private $userBasedGroup;
+    private $userGroup;
 
     /** @var ApiPermissionResourceGroup */
-    private $patientBasedGroup;
+    private $patientGroup;
 
     /** @var ApiPermission */
-    private $userBasedPermission;
+    private $userPermission;
 
     /** @var ApiPermission */
-    private $patientBasedPermission;
+    private $patientPermission;
 
     /** @var string */
     private $nonStandardRoute = '/api-permission/all';
@@ -44,33 +41,44 @@ class ApiPermissionsApiTest extends ApiTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->userModel = factory(User::class)->create(['docid' => 0]);
-        $this->patientModel = factory(Patient::class)->create(['docid' => $this->userModel->userid]);
-        $this->userBasedGroup = factory(ApiPermissionResourceGroup::class)->create([
+        /*
+        $this->userGroup = factory(ApiPermissionResourceGroup::class)->create([
             'authorize_per_user' => 1,
             'authorize_per_patient' => 0,
         ]);
-        $this->patientBasedGroup = factory(ApiPermissionResourceGroup::class)->create([
+        $this->patientGroup = factory(ApiPermissionResourceGroup::class)->create([
             'authorize_per_user' => 1,
             'authorize_per_patient' => 1,
         ]);
-        $this->userBasedPermission = factory(ApiPermission::class)->create([
-            'group_id' => $this->userBasedGroup->id,
-            'doc_id' => $this->userModel->userid,
+        $this->userPermission = factory(ApiPermission::class)->create([
+            'group_id' => $this->userGroup->id,
+            'doc_id' => self::USER_ID,
             'patient_id' => null,
         ]);
-        $this->patientBasedPermission = factory(ApiPermission::class)->create([
-            'group_id' => $this->patientBasedGroup->id,
-            'doc_id' => $this->userModel->userid,
-            'patient_id' => $this->patientModel->patientid,
+        $this->patientPermission = factory(ApiPermission::class)->create([
+            'group_id' => $this->patientGroup->id,
+            'doc_id' => self::USER_ID,
+            'patient_id' => self::PATIENT_ID,
         ]);
+        */
+        $this->userPermission = factory(ApiPermission::class)->create([
+            'doc_id' => self::USER_ID,
+            'patient_id' => null,
+        ]);
+        $this->userGroup = ApiPermissionResourceGroup::find($this->userPermission->group_id);
+        $this->patientPermission = factory(ApiPermission::class)->create([
+            'doc_id' => self::USER_ID,
+            'patient_id' => self::PATIENT_ID,
+        ]);
+        $this->patientGroup = ApiPermissionResourceGroup::find($this->patientPermission->group_id);
+        $this->be(User::find(1));
     }
 
     protected function getStoreData()
     {
         $data = [
-            'group_id' => $this->userBasedGroup->id,
-            'doc_id' => $this->userModel->userid,
+            'group_id' => $this->userGroup->id,
+            'doc_id' => self::USER_ID,
             'patient_id' => null,
         ];
         return $data;
@@ -83,35 +91,32 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     public function testStore()
     {
-        $this->be($this->userModel);
         $storeData = $this->getStoreData();
         $this->post(self::ROUTE_PREFIX . $this->getRoute(), $storeData);
         $this->assertResponseOk();
         $this->seeInDatabase($this->model->getTable(), [
             'group_id' => $storeData['group_id'],
-            'doc_id' => $this->userModel->userid,
+            'doc_id' => self::USER_ID,
             'patient_id' => null,
         ]);
     }
 
     public function testStoreWithPatient()
     {
-        $this->be($this->userModel);
         $storeData = $this->getStoreData();
-        $storeData['patient_id'] = $this->patientModel->patientid;
+        $storeData['patient_id'] = self::PATIENT_ID;
         $this->post(self::ROUTE_PREFIX . $this->getRoute(), $storeData);
         $this->assertResponseOk();
         $this->seeInDatabase($this->model->getTable(), [
             'group_id' => $storeData['group_id'],
-            'doc_id' => $this->userModel->userid,
-            'patient_id' => $this->patientModel->patientid,
+            'doc_id' => self::USER_ID,
+            'patient_id' => self::PATIENT_ID,
         ]);
     }
 
     public function testUpdate()
     {
-        $this->be($this->userModel);
-        $testRecord = factory($this->getModel())->make(['doc_id' => $this->userModel->userid]);
+        $testRecord = factory($this->getModel())->make(['doc_id' => self::USER_ID]);
         $updateData = $this->getUpdateData();
         $primaryKey = $this->model->getKeyName();
         $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
@@ -121,26 +126,24 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     public function testIndexAll()
     {
-        $this->be($this->userModel);
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);
-        $this->dontSeeJson(['patient_id' => $this->patientModel->patientid]);
-        $this->seeJson(['group_id' => $this->userBasedGroup->id]);
-        $this->dontSeeJson(['group_id' => $this->patientBasedGroup->id]);
+        $this->dontSeeJson(['patient_id' => self::PATIENT_ID]);
+        $this->seeJson(['group_id' => $this->userGroup->id]);
+        $this->dontSeeJson(['group_id' => $this->patientGroup->id]);
     }
 
     public function testIndexAllWithPatient()
     {
-        $this->be($this->userModel);
-        $this->be($this->patientModel, 'patient');
+        $this->be(Patient::find(self::PATIENT_ID), 'patient');
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);
         $this->dontSeeJson(['patient_id' => null]);
-        $this->dontSeeJson(['group_id' => $this->userBasedGroup->id]);
-        $this->seeJson(['group_id' => $this->patientBasedGroup->id]);
+        $this->dontSeeJson(['group_id' => $this->userGroup->id]);
+        $this->seeJson(['group_id' => $this->patientGroup->id]);
     }
 }

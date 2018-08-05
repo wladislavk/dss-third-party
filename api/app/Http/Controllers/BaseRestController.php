@@ -194,13 +194,11 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     {
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->payload();
+        $createData = $this->getCreateAttributes();
+        $data = array_merge($data, $createData);
+
         /** @var \DentalSleepSolutions\Eloquent\Models\AbstractModel $resource */
         $resource = $this->repository->create($data);
-        $createData = $this->getCreateAttributes();
-
-        if (count($createData)) {
-            $resource->forceFill($createData)->save();
-        }
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -215,15 +213,12 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     {
         $this->validate($this->request, $this->request->updateRules());
         $data = $this->request->payload();
+        $updateData = $this->getUpdateAttributes();
+        $data = array_merge($data, $updateData);
+
         /** @var \DentalSleepSolutions\Eloquent\Models\AbstractModel $resource */
         $resource = $this->repository->find($id);
         $resource->update($data);
-        $updateData = $this->getUpdateAttributes();
-
-        if (count($updateData)) {
-            $resource->forceFill($updateData);
-            $resource->save();
-        }
 
         return ApiResponse::responseOk('Resource updated');
     }

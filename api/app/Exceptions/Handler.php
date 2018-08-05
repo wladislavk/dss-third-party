@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,7 +51,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($request->wantsJson()) {
-            return $this->renderJsonException($e);
+            return $this->renderJsonException($e, $request);
         }
 
         return parent::render($request, $e);
@@ -60,16 +61,21 @@ class Handler extends ExceptionHandler
      * Render json error response.
      *
      * @param  \Exception $e
+     * @param $request
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function renderJsonException(Exception $e)
+    protected function renderJsonException(Exception $e, $request)
     {
         if ($e instanceof HttpException) {
             return ApiResponse::responseError($e->getMessage(), $e->getStatusCode());
         }
-
+        if ($e instanceof ValidationException) {
+            if ($e->response) {
+                return $e->response;
+            }
+            return $this->invalidJson($request, $e);
+        }
         $message = 'An internal error occurred. We are investigating the issue.';
-
         return ApiResponse::responseError($message, 500);
     }
 }

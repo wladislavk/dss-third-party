@@ -16,11 +16,17 @@ class ApiPermissionsApiTest extends ApiTestCase
     /** @var Patient */
     private $patientModel;
 
-    /** @var ApiPermissionResourceGroup[] */
-    private $userBasedGroups;
+    /** @var ApiPermissionResourceGroup */
+    private $userBasedGroup;
 
-    /** @var ApiPermissionResourceGroup[] */
-    private $patientBasedGroups;
+    /** @var ApiPermissionResourceGroup */
+    private $patientBasedGroup;
+
+    /** @var ApiPermission */
+    private $userBasedPermission;
+
+    /** @var ApiPermission */
+    private $patientBasedPermission;
 
     /** @var string */
     private $nonStandardRoute = '/api-permission/all';
@@ -40,21 +46,30 @@ class ApiPermissionsApiTest extends ApiTestCase
         parent::setUp();
         $this->userModel = factory(User::class)->create(['docid' => 0]);
         $this->patientModel = factory(Patient::class)->create(['docid' => $this->userModel->userid]);
-        $this->userBasedGroups = factory(ApiPermissionResourceGroup::class, 3)->create([
+        $this->userBasedGroup = factory(ApiPermissionResourceGroup::class)->create([
             'authorize_per_user' => 1,
             'authorize_per_patient' => 0,
         ]);
-        $this->patientBasedGroups = factory(ApiPermissionResourceGroup::class, 3)->create([
+        $this->patientBasedGroup = factory(ApiPermissionResourceGroup::class)->create([
             'authorize_per_user' => 1,
             'authorize_per_patient' => 1,
+        ]);
+        $this->userBasedPermission = factory(ApiPermission::class)->create([
+            'group_id' => $this->userBasedGroup->id,
+            'doc_id' => $this->userModel->userid,
+            'patient_id' => null,
+        ]);
+        $this->patientBasedPermission = factory(ApiPermission::class)->create([
+            'group_id' => $this->patientBasedGroup->id,
+            'doc_id' => $this->userModel->userid,
+            'patient_id' => $this->patientModel->patientid,
         ]);
     }
 
     protected function getStoreData()
     {
-        $model = $this->userBasedGroups[0];
         $data = [
-            'group_id' => $model->id,
+            'group_id' => $this->userBasedGroup->id,
             'doc_id' => $this->userModel->userid,
             'patient_id' => null,
         ];
@@ -106,55 +121,26 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     public function testIndexAll()
     {
-        $this->createPermissions();
         $this->be($this->userModel);
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
-        $this->assertGreaterThanOrEqual(3, sizeof($this->getResponseData()));
+        $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);
         $this->dontSeeJson(['patient_id' => $this->patientModel->patientid]);
-        foreach ($this->userBasedGroups as $model) {
-            $this->seeJson(['group_id' => $model->id]);
-        }
-        foreach ($this->patientBasedGroups as $model) {
-            $this->dontSeeJson(['group_id' => $model->id]);
-        }
+        $this->seeJson(['group_id' => $this->userBasedGroup->id]);
+        $this->dontSeeJson(['group_id' => $this->patientBasedGroup->id]);
     }
 
     public function testIndexAllWithPatient()
     {
-        $this->createPermissions();
         $this->be($this->userModel);
         $this->be($this->patientModel, 'patient');
         $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
         $this->assertResponseOk();
-        $this->assertGreaterThanOrEqual(3, sizeof($this->getResponseData()));
+        $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);
         $this->dontSeeJson(['patient_id' => null]);
-        foreach ($this->userBasedGroups as $model) {
-            $this->dontSeeJson(['group_id' => $model->id]);
-        }
-        foreach ($this->patientBasedGroups as $model) {
-            $this->seeJson(['group_id' => $model->id]);
-        }
-    }
-
-    private function createPermissions()
-    {
-
-        foreach ($this->userBasedGroups as $model) {
-            factory(ApiPermission::class)->create([
-                'group_id' => $model->id,
-                'doc_id' => $this->userModel->userid,
-                'patient_id' => null,
-            ]);
-        }
-        foreach ($this->patientBasedGroups as $model) {
-            factory(ApiPermission::class)->create([
-                'group_id' => $model->id,
-                'doc_id' => $this->userModel->userid,
-                'patient_id' => $this->patientModel->patientid,
-            ]);
-        }
+        $this->dontSeeJson(['group_id' => $this->userBasedGroup->id]);
+        $this->seeJson(['group_id' => $this->patientBasedGroup->id]);
     }
 }

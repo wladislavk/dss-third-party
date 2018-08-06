@@ -8,8 +8,7 @@ use Tests\TestCases\ApiTestCase;
 
 class ApiPermissionResourceGroupsApiTest extends ApiTestCase
 {
-    /** @var string */
-    private $nonStandardRoute = '/api-permission/groups';
+    const GROUP_ROUTE = '/api-permission/groups';
 
     protected function getModel()
     {
@@ -72,7 +71,7 @@ class ApiPermissionResourceGroupsApiTest extends ApiTestCase
     public function testGroups()
     {
         $models = factory($this->getModel(), 5)->create();
-        $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
+        $this->get(self::ROUTE_PREFIX . self::GROUP_ROUTE);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(5, sizeof($this->getResponseData()));
         foreach ($models->toArray() as $model) {

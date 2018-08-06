@@ -12,6 +12,7 @@ class ApiPermissionsApiTest extends ApiTestCase
 {
     const USER_ID = 1;
     const PATIENT_ID = 16;
+    const ALL_ROUTE = '/api-permission/all';
 
     /** @var ApiPermissionResourceGroup */
     private $userGroup;
@@ -24,9 +25,6 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     /** @var ApiPermission */
     private $patientPermission;
-
-    /** @var string */
-    private $nonStandardRoute = '/api-permission/all';
 
     protected function getModel()
     {
@@ -41,26 +39,6 @@ class ApiPermissionsApiTest extends ApiTestCase
     public function setUp()
     {
         parent::setUp();
-        /*
-        $this->userGroup = factory(ApiPermissionResourceGroup::class)->create([
-            'authorize_per_user' => 1,
-            'authorize_per_patient' => 0,
-        ]);
-        $this->patientGroup = factory(ApiPermissionResourceGroup::class)->create([
-            'authorize_per_user' => 1,
-            'authorize_per_patient' => 1,
-        ]);
-        $this->userPermission = factory(ApiPermission::class)->create([
-            'group_id' => $this->userGroup->id,
-            'doc_id' => self::USER_ID,
-            'patient_id' => null,
-        ]);
-        $this->patientPermission = factory(ApiPermission::class)->create([
-            'group_id' => $this->patientGroup->id,
-            'doc_id' => self::USER_ID,
-            'patient_id' => self::PATIENT_ID,
-        ]);
-        */
         $this->userPermission = factory(ApiPermission::class)->create([
             'doc_id' => self::USER_ID,
             'patient_id' => null,
@@ -126,7 +104,7 @@ class ApiPermissionsApiTest extends ApiTestCase
 
     public function testIndexAll()
     {
-        $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
+        $this->get(self::ROUTE_PREFIX . self::ALL_ROUTE);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);
@@ -138,7 +116,7 @@ class ApiPermissionsApiTest extends ApiTestCase
     public function testIndexAllWithPatient()
     {
         $this->be(Patient::find(self::PATIENT_ID), 'patient');
-        $this->get(self::ROUTE_PREFIX . $this->nonStandardRoute);
+        $this->get(self::ROUTE_PREFIX . self::ALL_ROUTE);
         $this->assertResponseOk();
         $this->assertGreaterThanOrEqual(1, sizeof($this->getResponseData()));
         $this->dontSeeJson(['doc_id' => null]);

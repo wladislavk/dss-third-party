@@ -1,5 +1,10 @@
 <?php
 namespace Ds3\Libraries\Legacy;
+
+if (!isset($patientStatus)) {
+    $patientStatus = 0;
+}
+
 ?>
 <br />
-<?= questionnairesExamsMenu($_SERVER['PHP_SELF'], 'menu-bottom') ?>
+<?= questionnairesExamsMenu($patientStatus, $_SERVER['PHP_SELF'], 'menu-bottom') ?>

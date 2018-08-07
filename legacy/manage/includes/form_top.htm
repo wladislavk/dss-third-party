@@ -8,7 +8,7 @@ $patientStatus = 0;
 if (!empty($patientId)) {
     $patientStatus = (int)$db->getColumn("SELECT status FROM dental_patients WHERE patientid = $patientId", 'status');
 }
-$isPatientActive = $patientStatus !== DSS_PATIENT_STATUS_ACTIVE;
+$isPatientActive = $patientStatus === DSS_PATIENT_STATUS_ACTIVE;
 
 /**
  * Missing variable in most forms

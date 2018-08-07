@@ -328,6 +328,8 @@ class Constants
         self::DSS_USER_STATUS_SUSPENDED  => 'Suspended'
     );
 
+    const DSS_PATIENT_STATUS_ACTIVE = 1;
+
     const DSS_OFFICE_TYPE_BACK   = 0;
     const DSS_OFFICE_TYPE_FRONT  = 1;
 

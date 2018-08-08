@@ -47,13 +47,6 @@ default:
                 - Contexts\Scheduler
                 - Contexts\Staff
                 - Contexts\Support
-        vue_legacy_bridge:
-            paths:
-                - "%paths.base%/Features/VueLegacyBridge"
-            contexts:
-                - Contexts\Main
-                - Contexts\Dashboard
-                - Contexts\Letters
 
 chrome:
     extensions:

@@ -5,10 +5,14 @@ $fromLegacy = isset($baseTable);
 
 $db = new Db();
 $patientStatus = 0;
+$isPatientActive = false;
 if (!empty($patientId)) {
-    $patientStatus = (int)$db->getColumn("SELECT status FROM dental_patients WHERE patientid = $patientId", 'status');
+    $patientStatus = $db->getColumn("SELECT status FROM dental_patients WHERE patientid = $patientId", 'status');
+    $patientStatus = (int)$patientStatus;
 }
-$isPatientActive = $patientStatus === DSS_PATIENT_STATUS_ACTIVE;
+if ($patientStatus === DSS_PATIENT_STATUS_ACTIVE) {
+    $isPatientActive = true;
+}
 
 /**
  * Missing variable in most forms
@@ -126,7 +130,7 @@ $sectionName = questionnairesExamsSectionName($patientStatus, $slugName);
         display: table-row;
     }
 
-    #inactive-patient {
+    .inactive-patient-notice {
         display: none;
         margin: 1em;
         text-align: center;
@@ -137,7 +141,7 @@ $sectionName = questionnairesExamsSectionName($patientStatus, $slugName);
         #archive-page-form,
         #history-selector,
         #history-timestamps { display:none; }
-        #inactive-patient,
+        .inactive-patient-notice,
         .q_form.vue-module.from-legacy,
         .ex_form.vue-module.from-legacy { display: block; }
     <?php } ?>
@@ -150,7 +154,7 @@ $sectionName = questionnairesExamsSectionName($patientStatus, $slugName);
     (Note: Sections left blank were not evaluated)
 </div>
 <?= questionnairesExamsMenu($patientStatus, $_SERVER['PHP_SELF'], 'menu-top') ?>
-<div id="inactive-patient">
+<div class="inactive-patient-notice">
     Patient Inactive -- Please mark the patient as Active to enable this page.
 </div>
 <?php if ($fromLegacy) { ?>

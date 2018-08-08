@@ -3,6 +3,17 @@ namespace Ds3\Libraries\Legacy;
 
 $fromLegacy = isset($baseTable);
 
+$db = new Db();
+$patientStatus = 0;
+$isPatientActive = false;
+if (!empty($patientId)) {
+    $patientStatus = $db->getColumn("SELECT status FROM dental_patients WHERE patientid = $patientId", 'status');
+    $patientStatus = (int)$patientStatus;
+}
+if ($patientStatus === DSS_PATIENT_STATUS_ACTIVE) {
+    $isPatientActive = true;
+}
+
 /**
  * Missing variable in most forms
  */
@@ -18,7 +29,7 @@ $initiatedTimestamp = strtotime($initiatedTimestamp) ?
 $lastModifiedTimestamp = strtotime($lastModifiedTimestamp) ?
     date('m/d/Y H:i' , strtotime($lastModifiedTimestamp)) : $lastModifiedTimestamp;
 
-$sectionName = questionnairesExamsSectionName($slugName);
+$sectionName = questionnairesExamsSectionName($patientStatus, $slugName);
 
 ?>
 <script>
@@ -118,6 +129,22 @@ $sectionName = questionnairesExamsSectionName($slugName);
     tr.hidden.unhide {
         display: table-row;
     }
+
+    .inactive-patient-notice {
+        display: none;
+        margin: 1em;
+        text-align: center;
+    }
+    <?php if (!$isPatientActive) { ?>
+        .q_form.vue-module,
+        .ex_form.vue-module,
+        #archive-page-form,
+        #history-selector,
+        #history-timestamps { display:none; }
+        .inactive-patient-notice,
+        .q_form.vue-module.from-legacy,
+        .ex_form.vue-module.from-legacy { display: block; }
+    <?php } ?>
 </style>
 <p>
     <a name="form"></a>
@@ -126,7 +153,10 @@ $sectionName = questionnairesExamsSectionName($slugName);
 <div style="text-align: center">
     (Note: Sections left blank were not evaluated)
 </div>
-<?= questionnairesExamsMenu($_SERVER['PHP_SELF'], 'menu-top') ?>
+<?= questionnairesExamsMenu($patientStatus, $_SERVER['PHP_SELF'], 'menu-top') ?>
+<div class="inactive-patient-notice">
+    Patient Inactive -- Please mark the patient as Active to enable this page.
+</div>
 <?php if ($fromLegacy) { ?>
     <div id="history-selector" class="history-selector">
         <ul>

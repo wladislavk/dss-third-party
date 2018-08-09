@@ -26,7 +26,7 @@ namespace Ds3ThirdParty\CaptchaSecurityImages;
 class CaptchaSecurityImages
 {
 
-    const FONT = './monofont.ttf';
+    const FONT = __DIR__ . '/monofont.ttf';
     const TEST_CODE = 'cg8ga';
 
     private $width;

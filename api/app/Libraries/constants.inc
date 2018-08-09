@@ -382,6 +382,8 @@ $dss_user_status_labels[DSS_USER_STATUS_ACTIVE] = 'Active';
 $dss_user_status_labels[DSS_USER_STATUS_INACTIVE] = 'In-Active';
 $dss_user_status_labels[DSS_USER_STATUS_SUSPENDED] = 'Suspended';
 
+define('DSS_PATIENT_STATUS_ACTIVE', 1);
+
 define('DSS_OFFICE_TYPE_BACK', 0);
 define('DSS_OFFICE_TYPE_FRONT', 1);
 

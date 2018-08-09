@@ -357,7 +357,7 @@ $joints = $db->getResults("SELECT *
 
 <form
     id="tmj-rom"
-    class="ex_form vue-module"
+    class="ex_form vue-module from-legacy"
     name="ex_page5frm"
     v-bind:raw-joint-exams="<?= e(json_encode($jointExams)) ?>"
     action="?pid=<?= intval($_GET['pid']) ?><?= $isHistoricView ? "&history_id=$historyId" : '' ?>"

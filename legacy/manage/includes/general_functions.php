@@ -1043,10 +1043,27 @@ function dropdown(array $fields)
 }
 
 /**
+ * @param int $patientStatus
  * @return array
  */
-function questionnairesExamSections()
+function questionnairesExamSections(int $patientStatus)
 {
+    if ($patientStatus !== DSS_PATIENT_STATUS_ACTIVE) {
+        return [
+            'questionnaire' => [
+                'q_page1' => 'Baseline Sleep Symptoms',
+                'q_page2' => 'Previous Treatments',
+                'q_page3' => 'Health Hx.',
+            ],
+            'exam' => [
+                'ex_page4' => 'Dental Exam',
+                'ex_page1' => 'Vital Data/Tongue',
+                'ex_page2' => 'Mallampati/Tonsils',
+                'ex_page3' => 'Airway Evaluation',
+                'ex_page5' => 'TMJ/ROM',
+            ]
+        ];
+    }
     return [
         'questionnaire' => [
             'q_page1' => 'Baseline Sleep Symptoms',
@@ -1068,12 +1085,13 @@ function questionnairesExamSections()
 }
 
 /**
+ * @param string $patientStatus
  * @param string $slugName
  * @return array
  */
-function questionnairesExamsSectionName($slugName)
+function questionnairesExamsSectionName(int $patientStatus, string $slugName)
 {
-    $sections = questionnairesExamSections();
+    $sections = questionnairesExamSections($patientStatus);
 
     foreach ($sections as $sectionName => $section) {
         if (array_key_exists($slugName, $section)) {
@@ -1095,11 +1113,12 @@ function questionnairesExamsSectionName($slugName)
 /**
  * Create tabs/menu for patient's Questionnaires and Exams
  *
+ * @param int $patientStatus
  * @param string $phpSelf
  * @param string $elementClass
  * @return string
  */
-function questionnairesExamsMenu($phpSelf, $elementClass)
+function questionnairesExamsMenu(int $patientStatus, string $phpSelf, string $elementClass)
 {
     $lastdot = strrpos($phpSelf, '.');
     $page_path = substr($phpSelf, 0, $lastdot);
@@ -1107,7 +1126,7 @@ function questionnairesExamsMenu($phpSelf, $elementClass)
     $lastslash = strrpos($page_path, '/') + 1;
     $cur_page = substr($page_path, $lastslash);
 
-    $sections = questionnairesExamSections();
+    $sections = questionnairesExamSections($patientStatus);
 
     $currentPage = preg_replace('/.+?\/((?:q|ex)_page\d+)\.php.*/', '$1', $phpSelf);
     $currentSection = strpos($currentPage, 'ex_') === false && $_GET['ex'] != 1 ? 'questionnaire' : 'exam';

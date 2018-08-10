@@ -61,6 +61,9 @@ services:
       DB_USERNAME: homestead
       DB_PASSWORD: secret
       DUAL_APP: "${DUAL_APP:-0}"
+      TWILIO_SID: "${TWILIO_SID:-sid}"
+      TWILIO_TOKEN: "${TWILIO_TOKEN:-token}"
+      TWILIO_NUMBER: "${TWILIO_NUMBER:-number}"
     volumes:
       - "${ROOT_PATH:-..}/legacy:/var/www/html/legacy"
       - "${ROOT_PATH:-..}/loader:/var/www/html/loader"

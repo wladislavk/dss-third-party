@@ -15,14 +15,23 @@ if (!function_exists('getUserByToken')) {
         return $result;
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
     function setSessionData(array $data)
     {
-        $_SESSION['userid'] = intval($data['userid']);
-        $_SESSION['docid'] = intval($data['docid']);
-        if (!$_SESSION['docid']) {
-            $_SESSION['docid'] = $_SESSION['userid'];
+        if ((int)$data['status'] !== DSS_USER_STATUS_ACTIVE
+            || (int)$data['doc_info']['status'] !== DSS_USER_STATUS_ACTIVE) {
+            return false;
         }
+        $_SESSION['userid'] = $data['userid'];
+        $_SESSION['docid'] = $data['doc_info']['userid'];
         $_SESSION['username'] = $data['username'];
+        $_SESSION['name'] = $data['name'];
+        $_SESSION['user_access'] = $data['user_access'];
+        $_SESSION['user_type'] = $data['user_type'];
+        return true;
     }
 }
 
@@ -42,21 +51,24 @@ if (
     $result = getUserByToken($_GET['token']);
     if (isset($result['data']['userid'])) {
         $_SESSION['api_token'] = $_GET['token'];
-        setSessionData($result['data']);
-        $loggedIn = true;
+        $loggedIn = setSessionData($result['data']);
     }
 } elseif (isset($_SESSION['api_token'])) {
     $result = getUserByToken($_SESSION['api_token']);
     if (isset($result['data']['userid'])) {
-        setSessionData($result['data']);
-        $loggedIn = true;
+        $loggedIn = setSessionData($result['data']);
     }
 }
 
-if ($loggedIn) {
-    $db = new Db();
-    $db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid='" . $db->escape($_SESSION['userid']) . "'");
-} else {
+if (!$loggedIn) {
     header('Location: login.php?goto=' . urlencode($_SERVER['REQUEST_URI']));
     trigger_error("Die called", E_USER_ERROR);
 }
+$db = new Db();
+$userId = (int)$_SESSION['userid'];
+$docId = (int)$_SESSION['docid'];
+$remoteIp = $db->escape($_SERVER['REMOTE_ADDR']);
+$db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid = $userId");
+$_SESSION['companyid'] = $db->getColumn("SELECT companyid FROM dental_user_company WHERE userid = $docId", 'companyid', 0);
+$_SESSION['loginid'] = $db->getInsertId("INSERT INTO dental_login (docid, userid, login_date, ip_address)
+        VALUES ($docId, $userId, NOW(), '$remoteIp')");

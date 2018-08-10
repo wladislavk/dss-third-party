@@ -73,6 +73,21 @@ class Letters extends BaseContext
     }
 
     /**
+     * @Then I see the following filter letter type list:
+     *
+     * @param TableNode $table
+     */
+    public function testSeeLetterTypeList(TableNode $table)
+    {
+        $expectedData = $table->getHash();
+        $options = $this->findAllCss('[name="filter"] option');
+        Assert::assertEquals(sizeof($expectedData), sizeof($options), 'The number of filter type options differ');
+        foreach ($expectedData as $key => $expectedRow) {
+            Assert::assertEquals($expectedRow['type'], trim($options[$key]->getText()));
+        }
+    }
+
+    /**
      * @Then I see that I have :numberOfLetters letters to review
      *
      * @param string $numberOfLetters

@@ -63,10 +63,14 @@ class ApiPermissionsController extends BaseRestController
      */
     protected function findAllModels()
     {
+        $patientId = $this->patient()->patientid;
+        if (!$patientId) {
+            $patientId = null;
+        }
         return $this->repository
             ->getWithFilter([], [
                 'doc_id' => $this->user()->normalizedDocId(),
-                'patient_id' => $this->patient()->patientid,
+                'patient_id' => $patientId,
             ])
             ->all()
         ;

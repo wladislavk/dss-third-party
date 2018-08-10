@@ -155,20 +155,28 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, func
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermission::class, function ($faker) {
+    /** @var DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup $resourceGroup */
+    $resourceGroup = factory(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class)->create();
+    /** @var DentalSleepSolutions\Eloquent\Models\Dental\User $user */
+    $user = factory(DentalSleepSolutions\Eloquent\Models\Dental\User::class)->create();
     return [
-        'group_id' => $faker->randomDigit,
-        'doc_id' => $faker->randomDigit,
-        'patient_id' => $faker->randomDigit,
+        'group_id' => $resourceGroup->id,
+        'doc_id' => $user->userid,
+        'patient_id' => null,
     ];
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResource::class, function ($faker) {
+    /** @var DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup $resourceGroup */
+    $resourceGroup = factory(DentalSleepSolutions\Eloquent\Models\Dental\ApiPermissionResourceGroup::class)->create();
+    /** @var DentalSleepSolutions\Eloquent\Models\Admin $admin */
+    $admin = factory(DentalSleepSolutions\Eloquent\Models\Admin::class)->create();
     return [
-        'group_id' => $faker->randomDigit,
+        'group_id' => $resourceGroup->id,
         'slug' => $faker->slug,
         'route' => $faker->slug,
-        'created_by' => $faker->randomDigit,
-        'updated_by' => $faker->randomDigit,
+        'created_by' => $admin->adminid,
+        'updated_by' => $admin->adminid,
     ];
 });
 

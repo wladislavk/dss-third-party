@@ -4,6 +4,15 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 class ApiPermissionResourcesController extends BaseRestController
 {
+    /** @var bool */
+    protected $hasIp = false;
+
+    /** @var string */
+    protected $createdByAdminKey = 'created_by';
+
+    /** @var string */
+    protected $updatedByAdminKey = 'updated_by';
+
     public function index()
     {
         return parent::index();

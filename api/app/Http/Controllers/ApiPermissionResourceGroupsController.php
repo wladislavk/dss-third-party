@@ -6,6 +6,15 @@ use DentalSleepSolutions\Facades\ApiResponse;
 
 class ApiPermissionResourceGroupsController extends BaseRestController
 {
+    /** @var bool */
+    protected $hasIp = false;
+
+    /** @var string */
+    protected $createdByAdminKey = 'created_by';
+
+    /** @var string */
+    protected $updatedByAdminKey = 'updated_by';
+
     public function index()
     {
         return parent::index();

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'tcpdf_ext.php';
+require_once __DIR__ . '/tcpdf_ext.php';
 
 class pdfWrapper {
     private $cb;

@@ -1,8 +1,8 @@
 <?php
 
-require_once './pdfGenerator.php';
-require_once './pdfWrapper.php';
-require_once './tcpdf_ext.php';
+require_once __DIR__ . '/pdfGenerator.php';
+require_once __DIR__ . '/pdfWrapper.php';
+require_once __DIR__ . '/tcpdf_ext.php';
 $debug = false;
 $error_handler = set_error_handler("PDFErrorHandler");
 

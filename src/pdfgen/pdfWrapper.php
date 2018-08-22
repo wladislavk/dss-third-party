@@ -623,7 +623,7 @@ class pdfWrapper {
             $this->cb->setX($this->offsetLeft + $sizes->dayLeftWidth);
         }
         // draws lines delemiters between days if it's week mode
-        if (count($columnHeader > 1)) {
+        if (count($columnHeader) > 1) {
             $lineStyle['color'] = $lineColor;
             for ($i = 0; $i < count($columnHeader) - 1; $i++) {
                 $x = $this->offsetLeft + $sizes->dayLeftWidth + ($i + 1)*$this->colWidth;

@@ -5,7 +5,10 @@
     "type": "library",
     "require": {
         "php": ">=7.2",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "ext-simplexml": "*",
+        "ext-libxml": "*",
+        "tecnickcom/TCPDF": "^6.2"
     },
     "autoload": {
         "psr-4": {

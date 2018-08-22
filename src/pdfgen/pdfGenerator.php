@@ -19,6 +19,11 @@ class schedulerPDF {
     private $today;
     private $multiday = Array();
 
+    /** @var pdfWrapper */
+    private $wrapper;
+
+    private $columnHeader = [];
+
     public function printScheduler($xml) {
         $this->renderData($xml);
         $this->renderScales($xml);

@@ -550,7 +550,7 @@ class pdfWrapper {
 
 
     // draws headers and grid for day and week mode
-    public function drawDayWeekHeader($columnHeader, $rowHeader, $sizes, $colors, $orientation = 'P', $multiday = Array()) {
+    public function drawDayWeekHeader(array $columnHeader, $rowHeader, $sizes, $colors, $orientation = 'P', $multiday = Array()) {
         $this->cb->addPage($orientation);
         $bgColor = $this->convertColor($colors->bgColor);
         $lineColor = $this->convertColor($colors->lineColor);
